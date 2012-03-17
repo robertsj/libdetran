@@ -1,0 +1,19 @@
+README - libdetran
+------------------
+
+This is a set of simple utilites for deterministic transport, mostly
+with a focus on reactor physics.  A lot of the code is taken from
+things I've already done, adapted a bit, and put in one set of 
+libraries for use via C++, Python, or (maybe) MATLAB.  There are
+other similar projects out there (PyTRT is a very complete 
+example), but, as is true for much development work, I needed my own tools 
+for specific things.
+
+Much of the capabilities are echoed in MATLAB for in MTP.
+
+Features (to be) included:
+  - Simple multigroup data container class
+  - Cartesian mesh class
+  - Quadrature for SN
+  - SN sweeping routines 
+  - Various solvers (SI, Krylov, etc.) for within-group and multigroup solves
