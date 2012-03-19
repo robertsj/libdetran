@@ -1,0 +1,35 @@
+/*-----------------------------------*-C-*-----------------------------------//
+/*!
+ * \file   detran_config.h.in
+ * \author Jeremy Roberts 
+ * \brief  Definitions for DETRAN packages.
+ */
+//---------------------------------------------------------------------------//
+
+#ifndef DETRAN_CONFIG_H_
+#define DETRAN_CONFIG_H_
+
+// debug on
+#cmakedefine DETRAN_ENABLE_DEBUG
+
+/*// testing*/
+/*#cmakedefine DETRAN_ENABLE_TEST*/
+
+/*// detran packages*/
+/*#cmakedefine DETRAN_BUILD_ERME*/
+/*#cmakedefine DETRAN_BUILD_DIFF2D*/
+/*#cmakedefine DETRAN_BUILD_SLABTRAN*/
+
+/*// external libraries*/
+/*#cmakedefine DETRAN_ENABLE_PETSC*/
+/*#cmakedefine DETRAN_ENABLE_SLEPC*/
+/*#cmakedefine DETRAN_ENABLE_SILO*/
+/*#cmakedefine DETRAN_ENABLE_MPI*/
+/*#cmakedefine DETRAN_ENABLE_OPENMP*/
+/*#cmakedefine DETRAN_ENABLE_XML*/
+
+#endif // DETRAN_CONFIG_H_ 
+
+//---------------------------------------------------------------------------//
+//              end of serment_config.h.in
+//---------------------------------------------------------------------------//
