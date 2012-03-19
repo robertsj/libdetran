@@ -1,0 +1,9 @@
+rm CMakeCache.txt
+cmake                                              \
+-G "Eclipse CDT4 - Unix Makefiles"                 \
+-D CMAKE_BUILD_TYPE=Debug                          \
+-D DETRAN_ENABLE_DEBUG=YES                         \
+-D DETRAN_ENABLE_PYTHON=YES                        \
+-D SWIG_EXECUTABLE=/home/robertsj/opt/swig/swig-2.0.4/bin/swig \
+/home/robertsj/Research/libdetran/src
+make
