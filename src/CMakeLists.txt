@@ -50,11 +50,13 @@ ENDIF()
 # SOURCE
 #------------------------------------------------------------------------------#
 
-#add_subdirectory(material)
-add_subdirectory(utilities)
-#add_subdirectory(geometry)
-#include_directories(material)
 include_directories(utilities)
+include_directories(material)
+include_directories(geometry)
+add_subdirectory(utilities)
+add_subdirectory(material)
+add_subdirectory(geometry)
+
 
 #-------- OUTPUT ------------------------------------------------------#
 

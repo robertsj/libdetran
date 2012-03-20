@@ -46,7 +46,7 @@ public:
 
 #ifdef DETRAN_ENABLE_DEBUG
 
-#define Assert(c)     if (!(c)) throw GenException( __LINE__, __FILE__,#c)
+#define Assert(c)     if (!(c)) throw detran_utils::GenException( __LINE__, __FILE__,#c)
 #define IsValid(obj)  Assert((obj) != NULL && (obj)->is_valid())
 #define Require(c)    Assert(c)
 #define Ensure(c)     Assert(c)

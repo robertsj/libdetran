@@ -1,26 +1,27 @@
 #------------------------------------------------------------------------------#
-# libdetran/src/material/CMakeLists.txt
+# libdetran/src/geometry/CMakeLists.txt
 #------------------------------------------------------------------------------#
 
-SET(MATERIAL_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+SET(GEOMETRY_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 #-------------------------------------#
 # SOURCE
 #-------------------------------------#
 
-SET(MATERIAL_SRC
-    Material.cc
+SET(GEOMETRY_SRC
+    Mesh.cc
+    Mesh2D.cc
 )
 
 #-------------------------------------#
 # SHARED LIBRARY
 #-------------------------------------#
 
-ADD_LIBRARY(materials
+ADD_LIBRARY(geometry
             SHARED
-            ${MATERIAL_SRC} 
+            ${GEOMETRY_SRC} 
 )
-TARGET_LINK_LIBRARIES( materials
+TARGET_LINK_LIBRARIES( geometry
                        utilities
 )
 
@@ -30,11 +31,11 @@ TARGET_LINK_LIBRARIES( materials
 
 IF( DETRAN_ENABLE_PYTHON )
 
-SET_SOURCE_FILES_PROPERTIES(detran_materials.i PROPERTIES CPLUSPLUS ON)
-SWIG_ADD_MODULE(detran_materials python detran_materials.i )
-SWIG_LINK_LIBRARIES(detran_materials
+SET_SOURCE_FILES_PROPERTIES(detran_geometry.i PROPERTIES CPLUSPLUS ON)
+SWIG_ADD_MODULE(detran_geometry python detran_geometry.i )
+SWIG_LINK_LIBRARIES(detran_geometry
                     ${PYTHON_LIBRARIES} 
                     utilities 
-                    materials)
+                    geometry)
 
 ENDIF()

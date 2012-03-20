@@ -9,6 +9,7 @@
 SET( UTILITIES_SRC 
   InputDB.cc
   GenException.cc
+  Warning.cc
 )
 
 #-------------------------------------#

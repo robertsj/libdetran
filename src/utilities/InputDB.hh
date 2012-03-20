@@ -38,13 +38,14 @@ namespace detran_utils
  * (It's anticipated this will become a serment-wide approach)
  *
  */
+//===========================================================================//
 
 class InputDB : public Object
 {
 
 public:
 
-  /*
+  /*!
    *  \brief Constructor.
    */
   InputDB();
@@ -52,7 +53,7 @@ public:
   /// \name Accessors
   //\{
 
-  /*
+  /*!
    *  \brief Return value of key
    *  \param    key     Name of the parameter.
    *  \param    value   Reference to which parameter value is assigned.
@@ -64,7 +65,7 @@ public:
 //  template <class T>
 //  void get(const std::string &key, T &value) const;
 
-  /*
+  /*!
    *  \brief Put a key and value in the database.
    *  \param    key         Name of the parameter.
    *  \param    value       Reference to which parameter value is assigned.
