@@ -8,6 +8,7 @@
 #ifndef DBC_HH
 #define DBC_HH
 
+#include "GenException.hh"
 #include "detran_config.h"
 
 namespace detran_utils
@@ -45,17 +46,17 @@ public:
 
 #ifdef DETRAN_ENABLE_DEBUG
 
-#define ASSERT(c)   if (!(c)) abort_program(#c, __FILE__, __LINE__)
-#define IS_VALID(c) ASSERT((obj) != NULL && (obj)->is_valid())
-#define REQUIRE(c)  ASSERT(bool_expression)
-#define ENSURE(c)   ASSERT(bool_expression)
+#define Assert(c)     if (!(c)) throw GenException( __LINE__, __FILE__,#c)
+#define IsValid(obj)  Assert((obj) != NULL && (obj)->is_valid())
+#define Require(c)    Assert(c)
+#define Ensure(c)     Assert(c)
 
 #else
 
-#define ASSERT(c)   ((void) 0)
-#define IS_VALID(c) ((void) 0) 
-#define REQUIRE(c)  ((void) 0)
-#define ENSURE(c)   ((void) 0)
+#define Assert(c)   ((void) 0)
+#define IsValid(c)  ((void) 0)
+#define Require(c)  ((void) 0)
+#define Ensure(c)   ((void) 0)
 
 #endif
 

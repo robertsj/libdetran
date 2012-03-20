@@ -131,7 +131,7 @@ SP<T>::SP(const SP<T> &sp_in)
 /*!
  * \brief Copy constructor for SP<X>.
  *
- * This copy constructor requires that X * is convertible to T * through a
+ * This copy constructor Requires that X * is convertible to T * through a
  * dynamic_cast.  The pointer in spx_in can point to NULL; however, it must
  * still be convertible to T * through a dynamic_cast.
  *
@@ -197,7 +197,7 @@ SP<T>& SP<T>::operator=(T *p_in)
 /*!
  * \brief Assignment operator for type X *.
  *
- * This assignment requires that X * is convertible to T * through a
+ * This assignment Requires that X * is convertible to T * through a
  * dynamic_cast.  It follows the same principle as SP(X*); however,
  * this is assignment:
  * \code
@@ -215,9 +215,9 @@ SP<T>& SP<T>::operator=(X *px_in)
 {
     Require (px_in);
 
-    // do a dynamic cast to ensure convertiblility between T* and X*
+    // do a dynamic cast to Ensure convertiblility between T* and X*
     T *np = dynamic_cast<T *>(px_in);
-    Insist(np, "Incompatible dumb pointer conversion between X and SP<T>.");
+    Require(np);//, "Incompatible dumb pointer conversion between X and SP<T>.");
 
     // now assign this to np (using previously defined assignment operator)
     *this = np;
@@ -257,7 +257,7 @@ SP<T>& SP<T>::operator=(const SP<T> sp_in)
 /*!
  * \brief Assignment operator for type SP<X>.
  *
- * This assignment requires that X * is convertible to T * through a
+ * This assignment Requires that X * is convertible to T * through a
  * dynamic_cast.  The pointer in spx_in can point to NULL; however, it must
  * still be convertible to T * through a dynamic_cast.
  *
@@ -271,8 +271,8 @@ SP<T>& SP<T>::operator=(const SP<X> spx_in)
 
     // make a pointer to T *
     T *np = dynamic_cast<T *>(spx_in.p);
-    Insist(spx_in.p ? np != 0 : true, 
-	   "Incompatible SP conversion between SP<X> and SP<T>.");
+    Require(spx_in.p ? np != 0 : true);
+	//   "Incompatible SP conversion between SP<X> and SP<T>.");
 
     // check to see if we are holding the same pointer (and np is not NULL);
     // to NULL pointers to the same type are defined to be equal by the

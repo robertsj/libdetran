@@ -74,7 +74,11 @@ void InputDB::put(const std::string &key, const vec_dbl value)
 {
   d_data_vec_dbl[key] = value;
 }
-
+template <>
+void InputDB::put(const std::string &key, const std::string value)
+{
+  d_data_str[key] = value;
+}
 
 } // end namespace detran_utils
 

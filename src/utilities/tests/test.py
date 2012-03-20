@@ -2,7 +2,7 @@ from detran_utilities import *
 import numpy as np
 
 print "inputdb: "
-db = InputDB()
+db = GenDB()
 print dir(db)
 
 db.put_int("number_groups", 2)
