@@ -47,7 +47,7 @@ Mesh::Mesh(int dim,
 /*!
  *
  */
-void Mesh::add_mesh_map(std::string map_key, vec_int &mesh_map)
+void Mesh::add_mesh_map(std::string map_key, vec_int mesh_map)
 {
   Require(mesh_map.size() > 0);
 

@@ -8,45 +8,63 @@
 
 %module detran_geometry
 %{
+#include "Definitions.hh"
 #include "Mesh.hh"
 #include "Mesh2D.hh"
 %}
+
+
 
 // Load the standard library interfaces
 %include std_vector.i
 
 %include std_vec_typemap.i
 
+%apply (std::vector<int> INPUTVECTOR, std::vector<int> INPUTVECTOR, std::vector<double> INPUTVECTOR, std::vector<double> INPUTVECTOR, std::vector<int> INPUTVECTOR)
+       {(std::vector<int> xfm, std::vector<int> yfm, std::vector<double> xcme, std::vector<double> ycme, std::vector<int> mat_map)}
+
 %apply (std::vector<int> INPUTVECTOR)
-       {(std::vector<int> value)}
+       {(vec_int xfm)}
+%apply (std::vector<int> INPUTVECTOR)
+       {(vec_int yfm)}
+%apply (std::vector<int> INPUTVECTOR)
+       {(vec_int mat_map)}
+
 %apply (std::vector<double> INPUTVECTOR)
-       {(std::vector<double> value)}
+       {(vec_dbl xcme)}
+%apply (std::vector<double> INPUTVECTOR)
+       {(vec_dbl ycme)}
+
+%rename(pyMesh2D) Mesh2D(vec_int xfm, vec_int yfm, vec_dbl xcme, vec_dbl ycme, vec_int mat_map);
+/*%apply (std::vector<int> ARG_NAME)*/
+/*       {(std::vector<int> xfm)}*/
+
+/*%apply (std::vector<double> INPUTVECTOR)*/
+/*       {(std::vector<double> value)}*/
 
 %include "Definitions.hh"
-%include "Mesh.hh"
-%include "Mesh2D.hh"
+//%include "Mesh.hh"
+//%include "Mesh2D.hh"
 
-/*namespace std*/
-/*{*/
-/*  %template(vec_int) vector<int>;*/
-/*  %template(vec_dbl) vector<double>;*/
-/*}*/
+namespace std
+{
+  %template(vec_int) vector<int>;
+  %template(vec_dbl) vector<double>;
+}
 
-/*namespace detran_utils*/
-/*{*/
+namespace detran
+{
 
-/*%template(get_int)      InputDB::get<int>;*/
-/*%template(get_dbl)      InputDB::get<double>;*/
-/*%template(get_vec_int)  InputDB::get<vec_int>;*/
-/*%template(get_vec_dbl)  InputDB::get<vec_dbl>;*/
-/*%template(get_str)      InputDB::get<std::string>;*/
-/*%template(put_int)      InputDB::put<int>;*/
-/*%template(put_dbl)      InputDB::put<double>;*/
-/*%template(put_vec_int)  InputDB::put<vec_int>;*/
-/*%template(put_vec_dbl)  InputDB::put<vec_dbl>;*/
-/*%template(put_str)      InputDB::put<std::string>;*/
+class Mesh2D
+{
 
-/*} // end namespace detran_utils*/
+public:
+
+  Mesh2D(std::vector<int> xfm, std::vector<int> yfm, std::vector<double> xcme, std::vector<double> ycme, std::vector<int> mat_map);
+
+};
+
+} // end namespace detran_utils
 
 
 

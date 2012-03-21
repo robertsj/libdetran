@@ -25,6 +25,11 @@ TARGET_LINK_LIBRARIES( geometry
                        utilities
 )
 
+ADD_EXECUTABLE(test_geometry test_geometry.cc)
+TARGET_LINK_LIBRARIES( test_geometry
+                       geometry
+                       utilities )
+
 #-------------------------------------#
 # PYTHON INTERFACE
 #-------------------------------------#

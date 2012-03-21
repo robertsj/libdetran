@@ -82,7 +82,7 @@ public:
    * \param  map_key   String description of map.
    * \param  mesh_map  Logically multi-dimensional map as 1-d vector.
    */
-  virtual void add_coarse_mesh_map(std::string map_key, vec_int &mesh_map) = 0;
+  virtual void add_coarse_mesh_map(std::string map_key, vec_int mesh_map) = 0;
 
   /*!
    * \brief  Add map of fine mesh integer properties.
@@ -96,7 +96,7 @@ public:
    * \param  map_key   String description of map.
    * \param  mesh_map  Logically multi-dimensional map as 1-d vector.
    */
-  void add_mesh_map(std::string map_key, vec_int &mesh_map);
+  void add_mesh_map(std::string map_key, vec_int mesh_map);
 
   //------------------------------------------------------------------------//
   // Getters
@@ -168,7 +168,7 @@ public:
    *
    * \param   m  Logically multi-dimensional map as 1-d vector.
    */
-  virtual void mesh_map(std::string map_key, vec_int &mesh_map) = 0;
+  virtual void mesh_map(std::string map_key, vec_int mesh_map) = 0;
 
   /// Unimplemented DBC function.
   virtual bool is_valid() const {};

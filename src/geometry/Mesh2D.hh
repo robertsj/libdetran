@@ -35,7 +35,7 @@ public:
    *  \param    ycme        Coarse mesh edges y dimension.
    *  \param    mat_map     Coarse mesh material map.
    */
-  Mesh2D(vec_int xfm, vec_int yfm, vec_dbl xcme, vec_dbl ycme, vec_int &mat_map);
+  Mesh2D(vec_int xfm, vec_int yfm, vec_dbl xcme, vec_dbl ycme, vec_int mat_map);
 
   /*!
    *  \brief Constructor.
@@ -44,15 +44,15 @@ public:
    *  \param    yfme        Fine mesh edges y dimension.
    *  \param    mat_map     Fine mesh material map.
    */
-  Mesh2D(vec_dbl xfme, vec_dbl yfme, vec_int &mat_map);
+  //Mesh2D(vec_dbl xfme, vec_dbl yfme, vec_int mat_map);
 
-protected:
-
-  /*!
-   *   We keep this as an option in the event inherited meshes need
-   *   more flexibility.
-   */
-  Mesh2D() : Mesh(2) {}
+//protected:
+//
+//  /*!
+//   *   We keep this as an option in the event inherited meshes need
+//   *   more flexibility.
+//   */
+//  Mesh2D() : Mesh(2) {}
 
 public:
 
@@ -69,7 +69,7 @@ public:
    * \param  map_key   String description of map.
    * \param  mesh_map  Logically multi-dimensional map as 1-d vector.
    */
-  void add_coarse_mesh_map(std::string map_key, vec_int &mesh_map);
+  void add_coarse_mesh_map(std::string map_key, vec_int mesh_map);
 
   /*!
    *
@@ -89,6 +89,16 @@ public:
     return i + j * d_number_cells_x;
   }
 
+  /*!
+   * \brief  Get map of fine mesh integer properties.
+   *
+   * This adds properties for fine meshes directly, and so is meanty for
+   * use with higher level mesh construction, e.g. pin cells, where
+   * assignment is not possible by simple coarse mesh bounds.
+   *
+   * \param   m  Logically multi-dimensional map as 1-d vector.
+   */
+  virtual void mesh_map(std::string map_key, vec_int mesh_map){}
 
 };
 

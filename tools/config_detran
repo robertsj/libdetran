@@ -5,5 +5,5 @@ cmake                                              \
 -D DETRAN_ENABLE_DEBUG=YES                         \
 -D DETRAN_ENABLE_PYTHON=YES                        \
 -D SWIG_EXECUTABLE=/home/robertsj/opt/swig/swig-2.0.4/bin/swig \
-/home/robertsj/Research/libdetran/src
+/home/robertsj/Research/libdetran/source/src
 make
