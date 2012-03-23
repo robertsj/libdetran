@@ -1,35 +1,37 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   Mesh.hh
- * \author Jeremy Roberts
- * \brief  Mesh class definition.
+ *  \file   Mesh.hh
+ *  \author Jeremy Roberts
+ *  \brief  Mesh class definition.
  */
 //---------------------------------------------------------------------------//
-
 
 #ifndef MESH_HH_
 #define MESH_HH_
 
+// Other libtran headers
 #include "Definitions.hh"
 #include "DBC.hh"
 #include "SP.hh"
 #include "Warning.hh"
 
+// System headers
 #include "map"
 
 namespace detran
 {
 
-//using detran_utils::vec_dbl;
-//using detran_utils::vec_int;
-
-//===========================================================================//
+//---------------------------------------------------------------------------//
 /*!
- * \class Mesh
- * \brief Abstract Cartesian mesh class.
+ *  \class Mesh
+ *  \brief Abstract Cartesian mesh class.
+ *
+ *  Note, the constructors are protected to forbid direct instantiation of
+ *  the Mesh class.  Rather, use the dimension-specific subclasses.  We
+ *  could use a pure virtual destructor as an alternative.
  *
  */
-//===========================================================================//
+//---------------------------------------------------------------------------//
 class Mesh : public detran_utils::Object
 {
 
@@ -50,6 +52,10 @@ public:
   typedef detran_utils::vec_dbl             vec_dbl;
   typedef std::map<std::string, vec_int>    mesh_map_type;
 
+protected:
+
+
+
   /*!
    *  \brief Constructor.
    *
@@ -63,9 +69,20 @@ public:
    */
   Mesh(int dim,
        vec_int xfm,  vec_int yfm,  vec_int zfm,
-       vec_dbl xcme, vec_dbl ycme, vec_dbl zcme);
+       vec_dbl xcme, vec_dbl ycme, vec_dbl zcme,
+       vec_int mat_map);
 
-protected:
+  /*!
+   *  \brief Constructor.
+   *
+   *  \param    dim         Spatial dimension
+   *  \param    xfme        Fine mesh edges x dimension.
+   *  \param    yfme        Fine mesh edges y dimension.
+   *  \param    zfme        Fine mesh edges z dimension.
+   */
+  Mesh(int dim,
+       vec_dbl xfme, vec_dbl yfme, vec_dbl zfme,
+       vec_int mat_map);
 
   Mesh(int dim) : d_dimension(dim) {}
 
@@ -79,13 +96,12 @@ public:
    * \brief  Add map of coarse mesh integer properties.
    *
    * This is an easy way to set mesh properties for meshes based on
-   * simple coarse mesh regions.  Since the mapping of the coarse mesh
-   * to fine mesh is dimension-dependent, we leave it as pure virtual.
+   * simple coarse mesh regions.
    *
    * \param  map_key   String description of map.
    * \param  mesh_map  Logically multi-dimensional map as 1-d vector.
    */
-  virtual void add_coarse_mesh_map(std::string map_key, vec_int mesh_map) = 0;
+  void add_coarse_mesh_map(std::string map_key, vec_int mesh_map);
 
   /*!
    * \brief  Add map of fine mesh integer properties.
@@ -160,12 +176,21 @@ public:
    * \param   k  Index along z axis.
    * \return     Cardinal index.
    */
-  virtual int index(int i, int j = 0, int k = 0) = 0;
+  int index(int i, int j = 0, int k = 0)
+  {
+    Require(i >= 0);
+    Require(i < d_number_cells_x);
+    Require(j >= 0);
+    Require(j < d_number_cells_y);
+    Require(k >= 0);
+    Require(k < d_number_cells_z);
+    return i + j * d_number_cells_x + k * d_number_cells_x * d_number_cells_y;
+  }
 
   /*!
    * \brief  Get map of fine mesh integer properties.
    *
-   * This adds properties for fine meshes directly, and so is meanty for
+   * This adds properties for fine meshes directly, and so is meant for
    * use with higher level mesh construction, e.g. pin cells, where
    * assignment is not possible by simple coarse mesh bounds.
    *
@@ -225,10 +250,14 @@ protected:
    */
   mesh_map_type d_mesh_map;
 
-  /// Flag indicating I'm meshed.
-  bool d_meshed;
-
   int d_dimension;
+
+private:
+
+  /*!
+   *  \brief   Common construction tasks.
+   */
+  void setup();
 
 };
 
@@ -241,3 +270,7 @@ protected:
 //#include "Mesh.i.hh"
 
 #endif /* MESH_HH_ */
+
+//---------------------------------------------------------------------------//
+//              end of Mesh.hh
+//---------------------------------------------------------------------------//

@@ -1,13 +1,13 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   Mesh2D.hh
+ * \file   Mesh3D.hh
  * \author Jeremy Roberts
  * \date   Mar 23, 2012
  */
 //---------------------------------------------------------------------------//
 
-#ifndef MESH2D_HH_
-#define MESH2D_HH_
+#ifndef MESH3D_HH_
+#define MESH3D_HH_
 
 // Geometry headers
 #include "Mesh.hh"
@@ -23,12 +23,12 @@ namespace detran
  *  This is mostly a convenience interface.
  */
 //---------------------------------------------------------------------------//
-class Mesh2D : public Mesh
+class Mesh3D : public Mesh
 {
 
 public:
 
-  typedef detran_utils::SP<Mesh2D>          SP_mesh;
+  typedef detran_utils::SP<Mesh3D>          SP_mesh;
   typedef Mesh                              Base;
   typedef Base::vec_int                     vec_int;
   typedef Base::vec_dbl                     vec_dbl;
@@ -39,20 +39,25 @@ public:
    *
    *  \param    xfm         Fine meshes per coarse mesh in x dimension.
    *  \param    yfm         Fine meshes per coarse mesh in y dimension.
+   *  \param    zfm         Fine meshes per coarse mesh in z dimension.
    *  \param    xcme        Coarse mesh edges x dimension.
    *  \param    ycme        Coarse mesh edges y dimension.
+   *  \param    zcme        Coarse mesh edges z dimension.
    *  \param    mat_map     Coarse mesh material map.
    */
-  Mesh2D(vec_int xfm, vec_int yfm, vec_dbl xcme, vec_dbl ycme, vec_int mat_map);
+  Mesh3D(vec_int xfm,  vec_int yfm,  vec_int zfm,
+         vec_dbl xcme, vec_dbl ycme, vec_dbl zcme,
+         vec_int mat_map);
 
   /*!
    *  \brief Constructor.
    *
    *  \param    xfme        Fine mesh edges x dimension.
    *  \param    yfme        Fine mesh edges y dimension.
+   *  \param    zfme        Fine mesh edges z dimension.
    *  \param    mat_map     Fine mesh material map.
    */
-   Mesh2D(vec_dbl xfme, vec_dbl yfme, vec_int mat_map);
+   Mesh3D(vec_dbl xfme, vec_dbl yfme, vec_dbl zfme, vec_int mat_map);
 
 protected:
 
@@ -60,14 +65,15 @@ protected:
    *   We keep this as an option in the event inherited meshes need
    *   more flexibility.
    */
-  Mesh2D() : Mesh(2) {}
+  Mesh3D() : Mesh(3) {}
 
 };
 
 } // end namespace detran
 
-#endif /* MESH2D_HH_ */
+
+#endif /* MESH3D_HH_ */
 
 //---------------------------------------------------------------------------//
-//              end of Mesh2D.hh
+//              end of Mesh3D.hh
 //---------------------------------------------------------------------------//

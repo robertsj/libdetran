@@ -1,34 +1,37 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- *  \file   Mesh2D.hh
+ *  \file   Mesh3D.hh
  *  \author Jeremy Roberts
- *  \brief  Mesh2D class definition.
+ *  \brief  Mesh3D class definition.
  */
 //---------------------------------------------------------------------------//
 
 // Geometry headers
-#include "Mesh2D.hh"
+#include "Mesh3D.hh"
 
 namespace detran
 {
 
-Mesh2D::Mesh2D(vec_int xfm, vec_int yfm, vec_dbl xcme, vec_dbl ycme, vec_int mat_map)
-  : Mesh(2,
+Mesh3D::Mesh3D(vec_int xfm,  vec_int yfm,  vec_int zfm,
+               vec_dbl xcme, vec_dbl ycme, vec_dbl zcme,
+               vec_int mat_map)
+  : Mesh(3,
          xfm,
          yfm,
-         vec_int(1, 1),
-         xcme, ycme,
-         vec_dbl(2, 0.0),
+         zfm,
+         xcme,
+         ycme,
+         zcme,
          mat_map)
 {
   /* ... */
 }
 
-Mesh2D::Mesh2D(vec_dbl xfme, vec_dbl yfme, vec_int mat_map)
-  : Mesh(2,
+Mesh3D::Mesh3D(vec_dbl xfme, vec_dbl yfme, vec_dbl zfme, vec_int mat_map)
+  : Mesh(3,
          xfme,
          yfme,
-         vec_dbl(2, 0.0),
+         zfme,
          mat_map)
 {
   /* ... */
@@ -37,5 +40,5 @@ Mesh2D::Mesh2D(vec_dbl xfme, vec_dbl yfme, vec_int mat_map)
 } // end namespace detran
 
 //---------------------------------------------------------------------------//
-//              end of Mesh2D.cc
+//              end of Mesh3D.cc
 //---------------------------------------------------------------------------//

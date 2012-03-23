@@ -9,11 +9,13 @@
 #ifndef INPUTDB_HH_
 #define INPUTDB_HH_
 
-#include <string>
-#include <map>
-
+// Utilities headers
 #include "DBC.hh"
 #include "Definitions.hh"
+
+// System headers
+#include <string>
+#include <map>
 
 namespace detran_utils
 {
