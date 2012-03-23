@@ -53,9 +53,12 @@ ENDIF()
 include_directories(utilities)
 include_directories(material)
 include_directories(geometry)
+include_directories(angle)
 add_subdirectory(utilities)
 add_subdirectory(material)
 add_subdirectory(geometry)
+add_subdirectory(angle)
+
 
 
 #-------- OUTPUT ------------------------------------------------------#

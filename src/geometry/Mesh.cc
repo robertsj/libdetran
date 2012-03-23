@@ -169,15 +169,20 @@ void Mesh::setup()
     ph = std::accumulate(d_xfm.begin(), d_xfm.begin() + i + 1, 0);
 
   }
+  ph = 0;
   for (int j = 0; j < d_yfm.size(); j++)
   {
     // Fine mesh y range for this Jth coarse mesh.
     int j1 = ph;
     int j2 = ph + d_yfm[j];
     for (int jj = j1; jj < j2; jj++)
+    {
+      Assert(jj < d_number_cells_y);
       d_dy[jj] = (d_ycme[j + 1] - d_ycme[j]) / d_yfm[j];
+    }
     ph = std::accumulate(d_yfm.begin(), d_yfm.begin() + j + 1, 0);
   }
+  ph = 0;
   for (int k = 0; k < d_zfm.size(); k++)
   {
     // Fine mesh z range for this Kth coarse mesh.
