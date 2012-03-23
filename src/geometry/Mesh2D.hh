@@ -26,6 +26,12 @@ class Mesh2D : public Mesh
 
 public:
 
+  typedef detran_utils::SP<Mesh2D>          SP_mesh;
+  typedef Mesh                              Base;
+  typedef Base::vec_int                     vec_int;
+  typedef Base::vec_dbl                     vec_dbl;
+
+
   /*!
    *  \brief Constructor.
    *
@@ -44,15 +50,15 @@ public:
    *  \param    yfme        Fine mesh edges y dimension.
    *  \param    mat_map     Fine mesh material map.
    */
-  //Mesh2D(vec_dbl xfme, vec_dbl yfme, vec_int mat_map);
+   Mesh2D(vec_dbl xfme, vec_dbl yfme, vec_int mat_map);
 
-//protected:
-//
-//  /*!
-//   *   We keep this as an option in the event inherited meshes need
-//   *   more flexibility.
-//   */
-//  Mesh2D() : Mesh(2) {}
+protected:
+
+  /*!
+   *   We keep this as an option in the event inherited meshes need
+   *   more flexibility.
+   */
+  Mesh2D() : Mesh(2) {}
 
 public:
 
@@ -89,16 +95,16 @@ public:
     return i + j * d_number_cells_x;
   }
 
-  /*!
-   * \brief  Get map of fine mesh integer properties.
-   *
-   * This adds properties for fine meshes directly, and so is meanty for
-   * use with higher level mesh construction, e.g. pin cells, where
-   * assignment is not possible by simple coarse mesh bounds.
-   *
-   * \param   m  Logically multi-dimensional map as 1-d vector.
-   */
-  virtual void mesh_map(std::string map_key, vec_int mesh_map){}
+//  /*!
+//   * \brief  Get map of fine mesh integer properties.
+//   *
+//   * This adds properties for fine meshes directly, and so is meanty for
+//   * use with higher level mesh construction, e.g. pin cells, where
+//   * assignment is not possible by simple coarse mesh bounds.
+//   *
+//   * \param   m  Logically multi-dimensional map as 1-d vector.
+//   */
+//  virtual void mesh_map(std::string map_key, vec_int mesh_map){}
 
 };
 

@@ -20,8 +20,8 @@
 namespace detran
 {
 
-using detran_utils::vec_dbl;
-using detran_utils::vec_int;
+//using detran_utils::vec_dbl;
+//using detran_utils::vec_int;
 
 //===========================================================================//
 /*!
@@ -45,7 +45,10 @@ public:
     NORTH
   };
 
-  typedef std::map<std::string, vec_int> mesh_map_type;
+  typedef detran_utils::SP<Mesh>            SP_mesh;
+  typedef detran_utils::vec_int             vec_int;
+  typedef detran_utils::vec_dbl             vec_dbl;
+  typedef std::map<std::string, vec_int>    mesh_map_type;
 
   /*!
    *  \brief Constructor.
@@ -168,7 +171,7 @@ public:
    *
    * \param   m  Logically multi-dimensional map as 1-d vector.
    */
-  virtual void mesh_map(std::string map_key, vec_int mesh_map) = 0;
+  const vec_int& mesh_map(std::string map_key);
 
   /// Unimplemented DBC function.
   virtual bool is_valid() const {};

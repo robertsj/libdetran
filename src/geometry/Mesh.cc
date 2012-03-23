@@ -59,6 +59,17 @@ void Mesh::add_mesh_map(std::string map_key, vec_int mesh_map)
 
   // Add the new value.
   d_mesh_map[map_key] = mesh_map;
+  vec_int a;
 }
 
+/*!
+ *
+ */
+const Mesh::vec_int& Mesh::mesh_map(std::string map_key)
+{
+  // Add the new value.
+  return d_mesh_map[map_key];
 }
+
+
+} // end namespace detran
