@@ -54,6 +54,36 @@ public:
    */
    Mesh2D(vec_dbl xfme, vec_dbl yfme, vec_int mat_map);
 
+   /*!
+    *  \brief SP Constructor.
+    *
+    *  \param    xfm         Fine meshes per coarse mesh in x dimension.
+    *  \param    yfm         Fine meshes per coarse mesh in y dimension.
+    *  \param    xcme        Coarse mesh edges x dimension.
+    *  \param    ycme        Coarse mesh edges y dimension.
+    *  \param    mat_map     Coarse mesh material map.
+    */
+   static SP_mesh CreateMesh2D(vec_int xfm, vec_int yfm, vec_dbl xcme, vec_dbl ycme, vec_int mat_map)
+   {
+     SP_mesh p;
+     p = new Mesh2D(xfm, yfm, xcme, ycme, mat_map);
+     return p;
+   }
+
+   /*!
+    *  \brief SP Constructor.
+    *
+    *  \param    xfme        Fine mesh edges x dimension.
+    *  \param    yfme        Fine mesh edges y dimension.
+    *  \param    mat_map     Fine mesh material map.
+    */
+    static SP_mesh CreateMesh2D(vec_dbl xfme, vec_dbl yfme, vec_int mat_map)
+    {
+      SP_mesh p;
+      p = new Mesh2D(xfme, yfme, mat_map);
+      return p;
+    }
+
 protected:
 
   /*!

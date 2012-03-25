@@ -10,8 +10,10 @@
 %{
 #include "Definitions.hh"
 #include "Constants.hh"
+#include "SP.hh"
 #include "Quadrature.hh"
 #include "GaussLegendre.hh"  
+#include "QuadrupleRange.hh"
 %}
 
 // Load the standard library interfaces.
@@ -26,14 +28,20 @@
 // easy way around this, but I'm not a SWIG pro.
 %include std_vec_typemap.i
 
+%include "SP.hh"
 %include "Quadrature.hh"
 %include "GaussLegendre.hh"
+%include "QuadrupleRange.hh"
 
 namespace std
 {
   %template(vec_int) vector<int>;
   %template(vec_dbl) vector<double>;
 }
+
+%template(GaussLegendreSP)  detran_utils::SP<detran::GaussLegendre>;
+%template(QuadrupleRangeSP) detran_utils::SP<detran::QuadrupleRange>;
+
 
 namespace detran
 {

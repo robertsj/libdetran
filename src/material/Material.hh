@@ -50,6 +50,23 @@ public:
            int  number_materials,
            bool downscatter = false);
 
+  /*!
+   *  \brief SP Constructor.
+   *
+   *  \param    number_groups       Number of energy groups.
+   *  \param    number_materials    Number of materials.
+   *  \param    downscatter         Switch on to use only downscatter.
+   *  \return                       Smart pointer to Material object.
+   */
+  static SP_material CreateMaterial(int number_groups,
+                                    int number_materials,
+                                    bool downscatter)
+  {
+    SP_material p;
+    p = new Material(number_groups, number_materials, downscatter);
+    return p;
+  }
+
 
   //--------------------------------------------------------------------------//
   // Setters
@@ -135,6 +152,9 @@ public:
 
   /// Computes scattering bounds and absorption cross section.
   void finalize();
+
+  /// Pretty print the material database.
+  void display();
 
   /// Unimplemented DBC function.
   bool is_valid() const {};

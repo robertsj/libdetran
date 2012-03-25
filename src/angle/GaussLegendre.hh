@@ -35,9 +35,25 @@ public:
    */
   GaussLegendre(int order);
 
+  /*!
+   *  \brief SP Constructor.
+   *
+   *  \param    order       Quadrature order.
+   */
+  static SP_quadrature CreateGaussLegendre(int order)
+  {
+    SP_quadrature p;
+    p = new GaussLegendre(order);
+    return p;
+  }
+
   void display() const;
 
 private:
+
+
+  /// \name Implementation
+  /// \{
 
   /*!
    *  \brief Compute GL parameters for arbitrary order.
@@ -47,6 +63,7 @@ private:
    */
   void generate_parameters(int order, double *mu, double *wt);
 
+  ///\}
 };
 
 } // end namespace detran

@@ -8,6 +8,7 @@
 
 %module detran_materials
 %{
+#include "SP.hh"
 #include "Material.hh"
 %}
 
@@ -22,6 +23,7 @@
        {(std::vector<double> value)}
        
 %include "Definitions.hh"
+%include "SP.hh"
 %include "Material.hh"
 
 /*namespace std*/
@@ -29,6 +31,8 @@
 /*  %template(vec_int) vector<int>;*/
 /*  %template(vec_dbl) vector<double>;*/
 /*}*/
+
+%template(MaterialSP) detran_utils::SP<detran::Material>;
 
 /*namespace detran_utils*/
 /*{*/

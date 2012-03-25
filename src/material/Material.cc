@@ -5,7 +5,13 @@
  *      Author: robertsj
  */
 
+// Material headers
 #include "Material.hh"
+
+// System headers
+#include <iostream>
+#include <cstdio>
+#include <cmath>
 
 namespace detran
 {
@@ -234,6 +240,69 @@ void Material::finalize()
 
   d_finalized = true;
 }
+
+void Material::display()
+{
+
+  using std::cout;
+  using std::endl;
+  using std::printf;
+
+  /*
+   *   "Material 1 Description"
+   *
+   *    0               1               2               3
+   *    sigma_t1        sigma_t2        ...             ...
+   *    nu_sigma_f1     nu_sigmaf2      ...             ...
+   *    chi1            chi2            ...             ...
+   *    sigma_s1<-1     sigma_s1<-2     ...
+   *    sigma_s2<-1     ...
+   *
+   *    "Material 2 ..."
+   */
+
+  for (int m = 0; m < d_number_materials; m++)
+  {
+    printf("Material %5i\n", m);
+    printf("  g ");
+    for (int g = 0; g < d_number_groups; g++)
+    {
+      printf("%13i ", g);
+    }
+    printf("\n    ");
+    // Total
+    for (int g = 0; g < d_number_groups; g++)
+    {
+      printf("%13.10f ", sigma_t(m, g));
+    }
+    printf("\n    ");
+    // Fission
+    for (int g = 0; g < d_number_groups; g++)
+    {
+      printf("%13.10f ", nu_sigma_f(m, g));
+    }
+    printf("\n    ");
+    // Chi
+    for (int g = 0; g < d_number_groups; g++)
+    {
+      printf("%13.10f ", chi(m, g));
+    }
+    printf("\n");
+    // Scatter
+    for (int gp = 0; gp < d_number_groups; gp++)
+    {
+      printf("%3i ", gp);
+      for (int g = 0; g < d_number_groups; g++)
+      {
+        printf("%13.10f ", sigma_s(m, gp, g));
+      }
+      printf("\n");
+    }
+
+  } // end material loop
+
+}
+
 
 
 } // end namespace detran

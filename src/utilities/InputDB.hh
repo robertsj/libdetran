@@ -12,6 +12,7 @@
 // Utilities headers
 #include "DBC.hh"
 #include "Definitions.hh"
+#include "SP.hh"
 
 // System headers
 #include <string>
@@ -46,6 +47,8 @@ class InputDB : public Object
 {
 
 public:
+
+  typedef SP<InputDB> SP_input;
 
   /*!
    *  \brief Constructor.

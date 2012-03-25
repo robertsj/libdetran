@@ -65,7 +65,7 @@ class Quadrature : public detran_utils::Object
 
 public:
 
-  enum cosines
+  enum directions
   {
     MU,
     ETA,

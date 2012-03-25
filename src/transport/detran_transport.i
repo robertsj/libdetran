@@ -9,7 +9,6 @@
 %module detran_geometry
 %{
 #include "Definitions.hh"
-#include "SP.hh"
 #include "Mesh.hh"
 #include "Mesh2D.hh"
 #include "Mesh3D.hh"  
@@ -38,7 +37,6 @@
 //        std::vector<int>    mat_map)}
 
 %include "Definitions.hh"
-%include "SP.hh"
 %include "Mesh.hh"
 
 namespace std
@@ -46,9 +44,6 @@ namespace std
   %template(vec_int) vector<int>;
   %template(vec_dbl) vector<double>;
 }
-
-%template(Mesh2DSP) detran_utils::SP<detran::Mesh2D>;
-%template(Mesh3DSP) detran_utils::SP<detran::Mesh3D>;
 
 namespace detran
 {
@@ -70,14 +65,6 @@ public:
   Mesh2D(std::vector<double> xfme, 
          std::vector<double> yfme, 
          std::vector<int>    mat_map);
-  static detran_utils::SP<Mesh2D> CreateMesh2D(std::vector<int>    xfm, 
-                                               std::vector<int>    yfm, 
-                                               std::vector<double> xcme, 
-                                               std::vector<double> ycme, 
-                                               std::vector<int>    mat_map);
-  static detran_utils::SP<Mesh2D> CreateMesh2D(std::vector<double> xfme, 
-                                               std::vector<double> yfme, 
-                                               std::vector<int>    mat_map); 
   void add_coarse_mesh_map(std::string map_key, std::vector<int> mesh_map);
   void add_mesh_map(std::string map_key, std::vector<int> mesh_map);
   %pythoncode 
@@ -152,17 +139,6 @@ public:
          std::vector<double> yfme,
          std::vector<double> zfme,
          std::vector<int> mat_map);
-  static detran_utils::SP<Mesh3D> CreateMesh3D(std::vector<int> xfm,
-                                               std::vector<int> yfm,
-                                               std::vector<int> zfm,
-                                               std::vector<double> xcme,
-                                               std::vector<double> ycme,
-                                               std::vector<double> zcme,
-                                               std::vector<int> mat_map);
-  static detran_utils::SP<Mesh3D> CreateMesh3D(std::vector<double> xfme,
-                                               std::vector<double> yfme,
-                                               std::vector<double> zfme,
-                                               std::vector<int> mat_map);
   void add_coarse_mesh_map(std::string map_key, std::vector<int> mesh_map);
   void add_mesh_map(std::string map_key, std::vector<int> mesh_map);
 };

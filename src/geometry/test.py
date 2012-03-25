@@ -44,6 +44,7 @@ t_map_cc[3] = 9
 
 # with python
 mesh_py = Mesh2D(xfm, yfm, xcm, ycm, m_map_py)
+mesh_py_sp = Mesh2D.CreateMesh2D(xfm, yfm, xcm, ycm, m_map_py)
 
 # with c++
 mesh_cc = Mesh2D(fm, fm, cm, cm, m_map_cc)
@@ -52,7 +53,7 @@ mesh_cc = Mesh2D(fm, fm, cm, cm, m_map_cc)
 #mesh_py2 = Mesh2D(cm, cm, m_map_py)
 
 print "are these the same? : "
-print mesh_py.dx(0),            mesh_cc.dx(0)
+print mesh_py.dx(0),            mesh_cc.dx(0), mesh_py_sp.dx(0)
 print mesh_py.number_cells(),   mesh_cc.number_cells()
 print mesh_py.number_cells_x(), mesh_cc.number_cells_x()
 print mesh_py.number_cells_y(), mesh_cc.number_cells_y()

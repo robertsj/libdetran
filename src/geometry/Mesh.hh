@@ -54,8 +54,6 @@ public:
 
 protected:
 
-
-
   /*!
    *  \brief Constructor.
    *

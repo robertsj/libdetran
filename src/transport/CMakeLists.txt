@@ -1,34 +1,34 @@
 #------------------------------------------------------------------------------#
-# libdetran/src/angle/CMakeLists.txt
+# libdetran/src/transport/CMakeLists.txt
 #------------------------------------------------------------------------------#
 
-SET(ANGLE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+SET(TRANSPORT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 #-------------------------------------#
 # SOURCE
 #-------------------------------------#
 
-SET(ANGLE_SRC
-    Quadrature.cc
-    GaussLegendre.cc
-    QuadrupleRange.cc
+SET(TRANSPORT_SRC
+    State.cc
 )
 
 #-------------------------------------#
 # SHARED LIBRARY
 #-------------------------------------#
 
-ADD_LIBRARY(angle
+ADD_LIBRARY(transport
             SHARED
-            ${ANGLE_SRC} 
+            ${TRANSPORT_SRC} 
 )
-TARGET_LINK_LIBRARIES( angle
+TARGET_LINK_LIBRARIES( transport
+                       materials
+                       geometry
                        utilities
 )
 
 #ADD_EXECUTABLE(test_geometry test_geometry.cc)
-#TARGET_LINK_LIBRARIES( test_angle
-#                       angle
+#TARGET_LINK_LIBRARIES( test_geometry
+#                       geometry
 #                       utilities )
 
 #-------------------------------------#
@@ -37,11 +37,13 @@ TARGET_LINK_LIBRARIES( angle
 
 IF( DETRAN_ENABLE_PYTHON )
 
-SET_SOURCE_FILES_PROPERTIES(detran_angle.i PROPERTIES CPLUSPLUS ON)
-SWIG_ADD_MODULE(detran_angle python detran_angle.i )
-SWIG_LINK_LIBRARIES(detran_angle
+SET_SOURCE_FILES_PROPERTIES(detran_transport.i PROPERTIES CPLUSPLUS ON)
+SWIG_ADD_MODULE(detran_transport python detran_transport.i )
+SWIG_LINK_LIBRARIES(detran_transport
                     ${PYTHON_LIBRARIES} 
-                    utilities 
-                    angle)
+                    transport 
+                    geometry
+                    materials
+                    utilities)
 
 ENDIF()
