@@ -75,9 +75,8 @@ struct SPref
  * Unfortunately, there is no way to check if another SP owns the dumb
  * pointer that you give to a SP.  This is simply something that needs to be
  * watched by the programmer.
- */
-/*! 
- * \example utils/test/tstSP.cc
+ *
+ * \example utilities/test/test_SP.cc
  *
  * denovo::SP (smart pointer) usage example.
  */

@@ -31,6 +31,7 @@
        {const std::string&};
 
 %include "Definitions.hh"
+%include "SP.hh"
 %include "InputDB.hh"
 
 namespace std
@@ -38,6 +39,9 @@ namespace std
   %template(vec_int) vector<int>;
   %template(vec_dbl) vector<double>;
 }
+
+%template(InputDBSP)  detran_utils::SP<detran_utils::InputDB>;
+
 
 namespace detran_utils
 {

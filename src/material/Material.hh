@@ -10,6 +10,7 @@
 #ifndef MATERIAL_HH_
 #define MATERIAL_HH_
 
+// Other detran headers
 #include "Definitions.hh"
 #include "DBC.hh"
 #include "SP.hh"
@@ -58,15 +59,22 @@ public:
    *  \param    downscatter         Switch on to use only downscatter.
    *  \return                       Smart pointer to Material object.
    */
-  static SP_material CreateMaterial(int number_groups,
-                                    int number_materials,
-                                    bool downscatter)
+  static SP_material Create(int number_groups,
+                            int number_materials,
+                            bool downscatter)
   {
     SP_material p;
     p = new Material(number_groups, number_materials, downscatter);
     return p;
   }
 
+  static void poo(detran_utils::SP<Material> p)
+  {
+    std::cout << "------" << std::endl;
+    p->display();
+    std::cout << "------" << std::endl;
+
+  }
 
   //--------------------------------------------------------------------------//
   // Setters

@@ -63,9 +63,9 @@ public:
     *  \param    ycme        Coarse mesh edges y dimension.
     *  \param    mat_map     Coarse mesh material map.
     */
-   static SP_mesh CreateMesh2D(vec_int xfm, vec_int yfm, vec_dbl xcme, vec_dbl ycme, vec_int mat_map)
+   static detran_utils::SP<Mesh> Create(vec_int xfm, vec_int yfm, vec_dbl xcme, vec_dbl ycme, vec_int mat_map)
    {
-     SP_mesh p;
+     detran_utils::SP<Mesh> p;
      p = new Mesh2D(xfm, yfm, xcme, ycme, mat_map);
      return p;
    }
@@ -77,9 +77,9 @@ public:
     *  \param    yfme        Fine mesh edges y dimension.
     *  \param    mat_map     Fine mesh material map.
     */
-    static SP_mesh CreateMesh2D(vec_dbl xfme, vec_dbl yfme, vec_int mat_map)
+    static detran_utils::SP<Mesh> Create(vec_dbl xfme, vec_dbl yfme, vec_int mat_map)
     {
-      SP_mesh p;
+      detran_utils::SP<Mesh> p;
       p = new Mesh2D(xfme, yfme, mat_map);
       return p;
     }

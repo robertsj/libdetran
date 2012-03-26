@@ -21,15 +21,18 @@ ADD_LIBRARY(transport
             ${TRANSPORT_SRC} 
 )
 TARGET_LINK_LIBRARIES( transport
+                       angle
                        materials
                        geometry
                        utilities
 )
 
-#ADD_EXECUTABLE(test_geometry test_geometry.cc)
-#TARGET_LINK_LIBRARIES( test_geometry
-#                       geometry
-#                       utilities )
+ADD_EXECUTABLE(test_State test_State.cc)
+TARGET_LINK_LIBRARIES( test_State
+                       transport
+                       geometry
+                       angle
+                       utilities )
 
 #-------------------------------------#
 # PYTHON INTERFACE
@@ -42,6 +45,7 @@ SWIG_ADD_MODULE(detran_transport python detran_transport.i )
 SWIG_LINK_LIBRARIES(detran_transport
                     ${PYTHON_LIBRARIES} 
                     transport 
+                    angle
                     geometry
                     materials
                     utilities)

@@ -281,7 +281,7 @@ SP<T>& SP<T>::operator=(const SP<X> spx_in)
     {
 	// if the pointers are the same the reference count better be the
 	// same 
-	ASSERT (r == spx_in.r);
+	Assert (r == spx_in.r);
 	return *this;
     }
 

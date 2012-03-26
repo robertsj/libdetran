@@ -136,9 +136,9 @@ public:
    *
    *  \param    order       Quadrature order.
    */
-  static SP_quadrature CreateQuadrupleRange(int order)
+  static detran_utils::SP<Quadrature> Create(int order)
   {
-    SP_quadrature p;
+    detran_utils::SP<Quadrature> p;
     p = new QuadrupleRange(order);
     return p;
   }

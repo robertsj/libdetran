@@ -39,6 +39,7 @@ namespace std
   %template(vec_dbl) vector<double>;
 }
 
+%template(QuadratureSP)  detran_utils::SP<detran::Quadrature>;
 %template(GaussLegendreSP)  detran_utils::SP<detran::GaussLegendre>;
 %template(QuadrupleRangeSP) detran_utils::SP<detran::QuadrupleRange>;
 

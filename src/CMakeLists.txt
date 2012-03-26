@@ -33,6 +33,10 @@ include_directories("${PROJECT_BINARY_DIR}/config")
 # EXTERNAL LIBRARIES
 #------------------------------------------------------------------------------#
 
+# BOOST (only header libraries, and really just shared_ptr)
+# find_package(Boost 1.42.0  REQUIRED)
+# include_directories(${Boost_INCLUDE_DIRS})
+
 IF( DETRAN_ENABLE_PYTHON )
   find_package(SWIG REQUIRED)
   INCLUDE(${SWIG_USE_FILE})
@@ -40,6 +44,7 @@ IF( DETRAN_ENABLE_PYTHON )
   include_directories(${PYTHON_INCLUDE_PATH})
   set(CMAKE_SWIG_FLAGS "")
 ENDIF()
+
 
 
 #------------------------------------------------------------------------------#
@@ -54,12 +59,12 @@ include_directories(utilities)
 include_directories(material)
 include_directories(geometry)
 include_directories(angle)
+include_directories(transport)
 add_subdirectory(utilities)
 add_subdirectory(material)
 add_subdirectory(geometry)
 add_subdirectory(angle)
-
-
+add_subdirectory(transport)
 
 #-------- OUTPUT ------------------------------------------------------#
 

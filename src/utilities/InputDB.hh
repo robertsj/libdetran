@@ -55,6 +55,13 @@ public:
    */
   InputDB();
 
+  static SP_input Create()
+  {
+    SP_input p;
+    p = new InputDB();
+    return p;
+  }
+
   /// \name Accessors
   //\{
 
@@ -65,10 +72,23 @@ public:
    *  \return           Check whether key is found.
    */
   template <class T>
-  T get(const std::string &key) const;
+  T get(const std::string &key) const
+  {
 
-//  template <class T>
-//  void get(const std::string &key, T &value) const;
+  }
+
+  /*!
+   *  \brief Check if the key is in a  map.
+   *
+   *  Note, if used consistently, this will prevent the
+   *  same key being used for different value types.
+   *  Maybe there's a better way to do this input
+   *  structure.
+   *
+   *  \param    key     Name of the parameter.
+   *  \return           True if exists; false otherwise.
+   */
+  bool check(const std::string &key) const;
 
   /*!
    *  \brief Put a key and value in the database.
@@ -78,7 +98,10 @@ public:
    *  \return               Check whether key is found.
    */
   template <class T>
-  void put(const std::string &key, const T value);
+  void put(const std::string &key, const T value)
+  {
+
+  }
 
   //\}
 
@@ -121,8 +144,13 @@ private:
 
 };
 
-
 } // end namespace detran_utils
+
+//---------------------------------------------------------------------------//
+// INLINE FUNCTIONS
+//---------------------------------------------------------------------------//
+
+#include "InputDB.i.hh"
 
 #endif /* INPUTDB_HH_ */
 

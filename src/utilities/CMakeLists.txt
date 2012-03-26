@@ -21,6 +21,11 @@ ADD_LIBRARY( utilities
              ${UTILITIES_SRC} 
 )
 
+ADD_EXECUTABLE(test_InputDB test_InputDB.cc)
+TARGET_LINK_LIBRARIES( test_InputDB
+                       utilities )
+
+
 #-------------------------------------#
 # PYTHON INTERFACE
 #-------------------------------------#

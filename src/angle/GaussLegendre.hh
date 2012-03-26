@@ -40,9 +40,9 @@ public:
    *
    *  \param    order       Quadrature order.
    */
-  static SP_quadrature CreateGaussLegendre(int order)
+  static detran_utils::SP<Quadrature> Create(int order)
   {
-    SP_quadrature p;
+    detran_utils::SP<Quadrature> p;
     p = new GaussLegendre(order);
     return p;
   }
