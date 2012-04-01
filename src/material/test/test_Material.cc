@@ -7,10 +7,6 @@
  * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
-// $Rev::                                               $:Rev of last commit
-// $Author:: j.alyn.roberts@gmail.com                   $:Author of last commit
-// $Date::                                              $:Date of last commit
-//---------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
 #define TEST_LIST                  \
@@ -80,6 +76,8 @@ int test_Material_basic()
     chi += mat_7g->chi(0, g);
   }
   TEST(soft_equiv(chi, 1.0)         == true);
+
+  return 0;
 }
 
 // Test of group bounds for upscatter
@@ -114,6 +112,7 @@ int test_Material_bounds()
   // Test cutoff
   TEST(mat->upscatter_cutoff() == 3);
 
+  return 0;
 }
 
 //---------------------------------------------------------------------------//

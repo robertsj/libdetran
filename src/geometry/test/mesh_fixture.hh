@@ -61,7 +61,7 @@ static SP_mesh mesh_2d_fixture()
 
   // Create the new database.
   SP_mesh mesh;
-  input = new detran::Mesh2D(fm, fm, cm, cm, mat_map);
+  mesh = new detran::Mesh2D(fm, fm, cm, cm, mat_map);
 
   // Ensure a valid mesh.
   Ensure(mesh->is_valid());
@@ -91,7 +91,7 @@ static SP_mesh mesh_3d_fixture()
 
   // Create the new database.
   SP_mesh mesh;
-  input = new detran::Mesh3D(fm, fm, fm, cm, cm, cm, mat_map);
+  mesh = new detran::Mesh3D(fm, fm, fm, cm, cm, cm, mat_map);
 
   // Ensure a valid mesh.
   Ensure(mesh->is_valid());

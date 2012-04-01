@@ -222,11 +222,11 @@ int TestDriver::d_test = 0;
 
 /// Evaluate a statement expected to be true.
 #define TEST(c)      if(TestDriver::                                 \
- test( c, #c, __FILE__, __func__, __LINE__ )) return 1; else return 0;
+ test( c, #c, __FILE__, __func__, __LINE__ )) return 1;
 
 /// Evaluate a statement expected to be false.
-#define TESTFALSE(c) if(TestDriver::                                 \
- test( c, #c, __FILE__, __func__, __LINE__ )) return 0; else return 1;
+#define TESTFALSE(c) if(!TestDriver::                                 \
+ test( c, #c, __FILE__, __func__, __LINE__ )) return 1;
 
 #endif /* TESTING_HH_ */
 

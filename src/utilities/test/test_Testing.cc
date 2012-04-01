@@ -36,11 +36,13 @@ int main(int argc, char *argv[])
 int test_Testing_pass()
 {
  TEST(1==1);
+ return 0;
 }
 
 int test_Testing_fail()
 {
  TESTFALSE(1==0);
+ return 0;
 }
 
 //---------------------------------------------------------------------------//

@@ -45,3 +45,12 @@ SWIG_LINK_LIBRARIES(detran_geometry
                     geometry)
 
 ENDIF()
+
+#-------------------------------------#
+# TESTING
+#-------------------------------------#
+
+if( DETRAN_ENABLE_TEST )
+    include_directories(${GEOMETRY_DIR}/test)
+    add_subdirectory(${GEOMETRY_DIR}/test)
+endif()
