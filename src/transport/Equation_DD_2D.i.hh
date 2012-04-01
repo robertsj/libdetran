@@ -19,9 +19,9 @@ void Equation_DD_2D::solve(int g,
                    int i,
                    int j,
                    int k,
-                   face_flux_type psi_in,
                    double source,
-                   face_flux_type psi_out,
+                   face_flux_type &psi_in,
+                   face_flux_type &psi_out,
                    moments_type &phi,
                    angular_flux_type &psi)
 {

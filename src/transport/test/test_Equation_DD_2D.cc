@@ -8,19 +8,20 @@
  */
 //---------------------------------------------------------------------------//
 
-
 // LIST OF TEST FUNCTIONS
-#define TEST_LIST                  \
-        FUNC(test_Equation_DD_2D)
+#define TEST_LIST                     \
+        FUNC(test_Equation_DD_2D_basic)
 
 // Detran headers
 #include "TestDriver.hh"
+#include "Equation_DD_2D.hh"
 
 // Setup
-#include "input_fixture.hh"
-#include "mesh_fixture.hh"
-#include "material_fixture.hh"
+#include "geometry/test/mesh_fixture.hh"
+#include "material/test/material_fixture.hh"
+#include "angle/test/quadrature_fixture.hh"
 
+using namespace detran;
 using namespace detran_test;
 using namespace detran_utils;
 using namespace std;
@@ -33,12 +34,55 @@ int main(int argc, char *argv[])
   return TestDriver::evaluate((*test_table[test])());
 }
 
-// Test definitions.
-int test_Equation_DD_2D()
+//----------------------------------------------//
+// TEST DEFINITIONS
+//----------------------------------------------//
+
+int test_Equation_DD_2D_basic()
 {
+  // Get mesh, material, and quadrature
 
+  SP_mesh mesh      = mesh_2d_fixture();
+  SP_material mat   = material_fixture_1g();
+  SP_quadrature q   = quadruplerange_fixture();
 
+  // Create
+  Equation_DD_2D eq(mesh, mat, q, false);
 
+  // Setup group, octant, and angle.
+  eq.setup_group(0);
+  eq.setup_octant(0);
+  eq.setup_angle(0);
+
+  // Create a phi and psi vector
+  Equation_DD_2D::moments_type      phi(mesh->number_cells(), 0.0);
+  Equation_DD_2D::angular_flux_type psi(mesh->number_cells(), 0.0);
+
+  // Cell sweep source [n/cm^2-s-ster]
+  double source = 1.0;
+
+  // Create incident and outgoing face fluxes.  Remember, these
+  // are dumb arrays, so be careful!
+  Equation_DD_2D::face_flux_type psi_in;
+  Equation_DD_2D::face_flux_type psi_out;
+  psi_in[0] = 1.0;
+  psi_in[1] = 1.0;
+
+  // solve
+  eq.solve(0,       // g  \todo redundant if setup_group is used!
+           0,       // i
+           0,       // j
+           0,       // k  not actually used
+           source,
+           psi_in,  // these are
+           psi_out, // passed
+           phi,     // by
+           psi);    // reference
+
+  // Check the results.
+  TEST(phi[0] == 0.0);
+
+  return 0;
 }
 
 //---------------------------------------------------------------------------//

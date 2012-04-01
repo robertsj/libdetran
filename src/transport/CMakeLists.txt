@@ -52,3 +52,12 @@ SWIG_LINK_LIBRARIES(detran_transport
                     utilities)
 
 ENDIF()
+
+#-------------------------------------#
+# TESTING
+#-------------------------------------#
+
+if( DETRAN_ENABLE_TEST )
+    include_directories(${TRANSPORT_DIR}/test)
+    add_subdirectory(${TRANSPORT_DIR}/test)
+endif()

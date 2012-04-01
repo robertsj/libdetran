@@ -45,3 +45,12 @@ SWIG_LINK_LIBRARIES(detran_angle
                     angle)
 
 ENDIF()
+
+#-------------------------------------#
+# TESTING
+#-------------------------------------#
+
+if( DETRAN_ENABLE_TEST )
+    include_directories(${ANGLE_DIR}/test)
+    add_subdirectory(${ANGLE_DIR}/test)
+endif()

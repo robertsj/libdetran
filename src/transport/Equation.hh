@@ -84,8 +84,8 @@ public:
    *   \param   i           Cell x index
    *   \param   j           Cell y index
    *   \param   k           Cell z index
-   *   \param   psi_in      Incident flux for this cell
    *   \param   source      Cell source
+   *   \param   psi_in      Incident flux for this cell
    *   \param   psi_out     Outgoing flux from this cell
    *   \param   phi         Reference to flux moments for this group
    *   \param   psi         Reference to angular flux for this group
@@ -97,9 +97,9 @@ public:
              int i,
              int j,
              int k,
-             F psi_in,
              double source,
-             F psi_out,
+             F &psi_in,
+             F &psi_out,
              moments_type &phi,
              angular_flux_type &psi)
   {

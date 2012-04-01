@@ -87,12 +87,19 @@ if ( SERMENT_ENABLE_TEST )
     ) 
     ENABLE_TESTING()
     INCLUDE(CTest)
+    # is there a better way?
+    include_directories(utilities/test)
+    include_directories(material/test)
+    include_directories(geometry/test)
+    include_directories(angle/test)
+    include_directories(transport/test)
 endif()
 
 #------------------------------------------------------------------------------#
 # SOURCE
 #------------------------------------------------------------------------------#
 
+include_directories(${DETRAN_DIR})
 include_directories(utilities)
 include_directories(material)
 include_directories(geometry)
