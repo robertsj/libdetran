@@ -86,7 +86,6 @@ if ( SERMENT_ENABLE_TEST )
        FORCE
     ) 
     ENABLE_TESTING()
-    ADD_SUBDIRECTORY(test)
     INCLUDE(CTest)
 endif()
 

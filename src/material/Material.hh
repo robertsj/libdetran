@@ -68,14 +68,6 @@ public:
     return p;
   }
 
-  static void poo(detran_utils::SP<Material> p)
-  {
-    std::cout << "------" << std::endl;
-    p->display();
-    std::cout << "------" << std::endl;
-
-  }
-
   //--------------------------------------------------------------------------//
   // Setters
   //--------------------------------------------------------------------------//
@@ -164,8 +156,12 @@ public:
   /// Pretty print the material database.
   void display();
 
-  /// Unimplemented DBC function.
-  bool is_valid() const {};
+  /// Incomplete implementation of DBC function.
+  bool is_valid() const
+  {
+    Ensure(d_number_groups >= 0);
+    Ensure(d_finalized);
+  };
 
 private:
 

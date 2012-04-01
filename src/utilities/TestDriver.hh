@@ -12,6 +12,7 @@
 #define TESTDRIVER_HH_
 
 #include "DBC.hh"
+#include "SoftEquivalence.hh"
 
 #include <iostream>
 #include <string>

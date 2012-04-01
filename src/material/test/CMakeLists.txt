@@ -1,19 +1,19 @@
 #------------------------------------------------------------------------------#
-# libdetran/src/utilities/test/CMakeLists.txt
+# libdetran/src/material/test/CMakeLists.txt
 #------------------------------------------------------------------------------#
 
-message( "++ Adding detran utilities tests." )
+message( "++ Adding detran material tests." )
 
 #------------------------------------------------------------------------------#
 # Create test executables
 #------------------------------------------------------------------------------#
 
-ADD_EXECUTABLE(test_Testing test_Testing.cc)
-TARGET_LINK_LIBRARIES(test_Testing utilities)
+ADD_EXECUTABLE(test_Material test_Material.cc)
+TARGET_LINK_LIBRARIES(test_Material materials utilities)
 
 #------------------------------------------------------------------------------#
 # Define tests
 #------------------------------------------------------------------------------#
 
-ADD_TEST( test_Testing_pass test_Testing 0)
-ADD_TEST( test_Testing_fail test_Testing 1)
+ADD_TEST( test_Material_basic  test_Material 0)
+ADD_TEST( test_Material_bounds test_Material 1)

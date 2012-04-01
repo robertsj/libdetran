@@ -42,8 +42,12 @@ SWIG_LINK_LIBRARIES(detran_utilities ${PYTHON_LIBRARIES} utilities)
 
 ENDIF()
 
-# Add testing, if required.
+#-------------------------------------#
+# TESTING
+#-------------------------------------#
+
 if( DETRAN_ENABLE_TEST )
-    ADD_SUBDIRECTORY( ${UTILITIES_DIR}/test )
+    include_directories(${UTILITIES_DIR}/test)
+    add_subdirectory(${UTILITIES_DIR}/test)
 endif()
 

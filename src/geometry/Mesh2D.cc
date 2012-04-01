@@ -17,11 +17,13 @@ Mesh2D::Mesh2D(vec_int xfm, vec_int yfm, vec_dbl xcme, vec_dbl ycme, vec_int mat
          xfm,
          yfm,
          vec_int(1, 1),
-         xcme, ycme,
+         xcme,
+         ycme,
          vec_dbl(2, 0.0),
          mat_map)
 {
-  /* ... */
+  // Set the second z mesh edge to unity.
+  d_zcme[1] = 1.0;
 }
 
 Mesh2D::Mesh2D(vec_dbl xfme, vec_dbl yfme, vec_int mat_map)
@@ -31,7 +33,8 @@ Mesh2D::Mesh2D(vec_dbl xfme, vec_dbl yfme, vec_int mat_map)
          vec_dbl(2, 0.0),
          mat_map)
 {
-  /* ... */
+  // Set the second z mesh edge to unity.
+  d_zcme[1] = 1.0;
 }
 
 } // end namespace detran

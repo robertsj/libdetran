@@ -38,3 +38,13 @@ SWIG_LINK_LIBRARIES(detran_materials
                     materials)
 
 ENDIF()
+
+#-------------------------------------#
+# TESTING
+#-------------------------------------#
+
+if( DETRAN_ENABLE_TEST )
+    include_directories(${MATERIAL_DIR}/test)
+    add_subdirectory(${MATERIAL_DIR}/test)
+endif()
+

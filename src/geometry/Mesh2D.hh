@@ -84,6 +84,11 @@ public:
       return p;
     }
 
+    bool is_valid() const
+    {
+      Ensure(d_number_cells_z == 1);
+    }
+
 protected:
 
   /*!
