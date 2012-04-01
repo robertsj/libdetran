@@ -1,6 +1,7 @@
 from detran_transport import *
 from detran_angle import *
 from detran_geometry import *
+from detran_materials import *
 from detran_utilities import *
 
 #print "transport test"
@@ -10,8 +11,7 @@ from detran_utilities import *
 input = InputDB.Create()
 input.put_int("number_groups", 2)
 input.put_int("store_angular_flux", 1)
-#print input
-#print dir(input)
+
 # Make mesh
 xcm = [0.0, 1.0, 2.0]
 xfm = [  10, 10   ]
@@ -36,3 +36,4 @@ print mesh
 print mesh.this
 state = State.Create(input.this, mesh.this, quadrature.this)
 print state
+

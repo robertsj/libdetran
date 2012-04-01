@@ -30,8 +30,6 @@
 
 %include "SP.hh"
 %include "State.hh"
-%include "Quadrature.hh"
-%include "Mesh.hh"
 
 namespace detran
 {

@@ -20,33 +20,33 @@ namespace detran_utils
 {
 
 template <>
-int InputDB::get(const std::string &key) const
+inline int InputDB::get(const std::string &key) const
 {
   return d_data_int.find(key)->second;
 }
 template <>
-double InputDB::get(const std::string &key) const
+inline double InputDB::get(const std::string &key) const
 {
   return d_data_dbl.find(key)->second;
 }
 template <>
-vec_int InputDB::get(const std::string &key) const
+inline vec_int InputDB::get(const std::string &key) const
 {
   return d_data_vec_int.find(key)->second;
 }
 template <>
-vec_dbl InputDB::get(const std::string &key) const
+inline vec_dbl InputDB::get(const std::string &key) const
 {
   return d_data_vec_dbl.find(key)->second;
 }
 template <>
-std::string InputDB::get(const std::string &key) const
+inline std::string InputDB::get(const std::string &key) const
 {
   return d_data_str.find(key)->second;
 }
 
 
-bool InputDB::check(const std::string &key) const
+inline bool InputDB::check(const std::string &key) const
 {
   bool val = true;
 
@@ -84,27 +84,27 @@ bool InputDB::check(const std::string &key) const
 }
 
 template <>
-void InputDB::put(const std::string &key, const int value)
+inline void InputDB::put(const std::string &key, const int value)
 {
   d_data_int[key] = value;
 }
 template <>
-void InputDB::put(const std::string &key, const double value)
+inline void InputDB::put(const std::string &key, const double value)
 {
   d_data_dbl[key] = value;
 }
 template <>
-void InputDB::put(const std::string &key, const vec_int value)
+inline void InputDB::put(const std::string &key, const vec_int value)
 {
   d_data_vec_int[key] = value;
 }
 template <>
-void InputDB::put(const std::string &key, const vec_dbl value)
+inline void InputDB::put(const std::string &key, const vec_dbl value)
 {
   d_data_vec_dbl[key] = value;
 }
 template <>
-void InputDB::put(const std::string &key, const std::string value)
+inline void InputDB::put(const std::string &key, const std::string value)
 {
   d_data_str[key] = value;
 }

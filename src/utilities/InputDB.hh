@@ -72,7 +72,7 @@ public:
    *  \return           Check whether key is found.
    */
   template <class T>
-  T get(const std::string &key) const
+  inline T get(const std::string &key) const
   {
 
   }
@@ -88,7 +88,7 @@ public:
    *  \param    key     Name of the parameter.
    *  \return           True if exists; false otherwise.
    */
-  bool check(const std::string &key) const;
+  inline bool check(const std::string &key) const;
 
   /*!
    *  \brief Put a key and value in the database.
@@ -98,7 +98,7 @@ public:
    *  \return               Check whether key is found.
    */
   template <class T>
-  void put(const std::string &key, const T value)
+  inline void put(const std::string &key, const T value)
   {
 
   }

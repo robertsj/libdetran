@@ -2,6 +2,8 @@
 # libdetran/src/utilities/CMakeLists.txt
 #------------------------------------------------------------------------------#
 
+SET(UTILITIES_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+
 #-------------------------------------#
 # SOURCE
 #-------------------------------------#
@@ -39,3 +41,9 @@ SWIG_ADD_MODULE(detran_utilities python detran_utilities.i )
 SWIG_LINK_LIBRARIES(detran_utilities ${PYTHON_LIBRARIES} utilities)
 
 ENDIF()
+
+# Add testing, if required.
+if( DETRAN_ENABLE_TEST )
+    ADD_SUBDIRECTORY( ${UTILITIES_DIR}/test )
+endif()
+

@@ -45,11 +45,50 @@ IF( DETRAN_ENABLE_PYTHON )
   set(CMAKE_SWIG_FLAGS "")
 ENDIF()
 
-
-
 #------------------------------------------------------------------------------#
 # TESTING
 #------------------------------------------------------------------------------#
+
+OPTION ( USE_TESTING "Build testing" ON )
+if ( SERMENT_ENABLE_TEST )
+    SET ( CTEST_INITIAL_CACHE "
+      COVERAGE_COMMAND:FILEPATH=/usr/bin/gcov
+    " )
+    # need for coverage -- probably a cleaner way to set this up.
+    SET( CMAKE_CXX_FLAGS_DEBUG        
+         "-g -O0  -fprofile-arcs -ftest-coverage" CACHE STRING 
+         "Choose"
+         FORCE
+    )
+    SET( CMAKE_CXX_FLAGS        
+         "-g -O0  -fprofile-arcs -ftest-coverage" CACHE STRING
+         "Choose"
+         FORCE
+    )
+    SET( CMAKE_C_FLAGS_DEBUG          
+         "-g -O0  -fprofile-arcs -ftest-coverage" CACHE STRING
+         "Choose"
+         FORCE
+    )
+    SET( CMAKE_EXE_LINKER_FLAGS 
+         "-g -O0  -fprofile-arcs -ftest-coverage" CACHE STRING
+         "Choose"
+         FORCE
+    )
+    SET( CTEST_MEMORYCHECK_COMMAND 
+       /home/robertsj/opt/valgrind/3.6.1/bin/valgrind CACHE STRING 
+       "Set the memory checking command."
+       FORCE
+    )
+    SET( CTEST_MEMORYCHECK_COMMAND_OPTIONS 
+       "--tool=memcheck --leak-check=full" CACHE STRING 
+       "Set the memory checking command options."
+       FORCE
+    ) 
+    ENABLE_TESTING()
+    ADD_SUBDIRECTORY(test)
+    INCLUDE(CTest)
+endif()
 
 #------------------------------------------------------------------------------#
 # SOURCE
@@ -74,6 +113,8 @@ message("++++ Build type:  ${CMAKE_BUILD_TYPE}")
 if( DETRAN_ENABLE_PYTHON )
 message("++++ Python interface enabled")
 endif()
-
+if( DETRAN_ENABLE_TEST )
+message("++++ CTest testing enabled")
+endif()
 
 

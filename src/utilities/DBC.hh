@@ -11,6 +11,8 @@
 #include "GenException.hh"
 #include "detran_config.h"
 
+#include <iostream>
+
 namespace detran_utils
 {
 
@@ -50,6 +52,7 @@ public:
 #define IsValid(obj)  Assert((obj) != NULL && (obj)->is_valid())
 #define Require(c)    Assert(c)
 #define Ensure(c)     Assert(c)
+#define Insist(c,m)   if (!(c)) {std::cerr << m << std::endl; throw detran_utils::GenException( __LINE__, __FILE__,#c);}
 
 #else
 
@@ -57,6 +60,7 @@ public:
 #define IsValid(c)  ((void) 0)
 #define Require(c)  ((void) 0)
 #define Ensure(c)   ((void) 0)
+#define Insist(c,m) ((void) 0)
 
 #endif
 
