@@ -25,10 +25,7 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-  // Initialize tests.
-  int test = TestDriver::initialize(argc, argv);
-  // Perform the test and return result.
-  return TestDriver::evaluate((*test_table[test])());
+  RUN(argc, argv);
 }
 
 // Test definitions.

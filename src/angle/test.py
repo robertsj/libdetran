@@ -4,7 +4,7 @@ print "angle test"
 print dir(Quadrature)
 print dir(GaussLegendre)
 
-quadrature = GaussLegendre(8)
+quadrature = QuadrupleRange(2, 2)
 quadrature.display()
 
 

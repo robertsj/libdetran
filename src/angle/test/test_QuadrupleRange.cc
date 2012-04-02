@@ -26,10 +26,7 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-  // Initialize tests.
-  int test = TestDriver::initialize(argc, argv);
-  // Perform the test and return result.
-  return TestDriver::evaluate((*test_table[test])());
+  RUN(argc, argv);
 }
 
 //----------------------------------------------//
@@ -40,9 +37,15 @@ int test_QuadrupleRange_basic()
 {
   // Get quadrature fixture
   SP_quadrature q = quadruplerange_fixture();
-
-  // Finish me.
-
+  TEST(q);
+  TEST(q->number_angles()   == 8);
+  TEST(q->number_octants()  == 4);
+  TEST(soft_equiv(q->mu(0, 0),  0.2582870761957));
+  TEST(soft_equiv(q->mu(0, 1),  0.7417129238043));
+  TEST(soft_equiv(q->eta(0, 0), 0.7417129238043));
+  TEST(soft_equiv(q->eta(0, 1), 0.2582870761957));
+  TEST(soft_equiv(q->weight(0), 1.5707963267949));
+  TEST(soft_equiv(q->weight(1), 1.5707963267949));
   return 0;
 }
 

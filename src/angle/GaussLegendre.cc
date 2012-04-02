@@ -7,10 +7,6 @@
  * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
-// $Rev::                                               $:Rev of last commit
-// $Author:: j.alyn.roberts@gmail.com                   $:Author of last commit
-// $Date::                                              $:Date of last commit
-//---------------------------------------------------------------------------//
 
 // Angle headers
 #include "GaussLegendre.hh"

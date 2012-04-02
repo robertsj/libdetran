@@ -100,7 +100,13 @@ class TestDriver
 
 public:
 
-  static int initialize(int argc, char *argv[])
+  /*!
+   *  \brief Run the test specified at the command line.
+   *
+   *  The user test_XYZ.cc defines the test function list, and
+   *  the command line contains the test indentifier.
+   */
+  static int run(int argc, char *argv[])
   {
 
     // Get test number
@@ -116,23 +122,38 @@ public:
     std::cout << "running: " << test_names[d_test]
               << " ......" << std::endl;
 
-
-    return d_test;
-  }
-
-  static int evaluate(int value)
-  {
-    std::cout << "...... " << test_names[d_test];
-    if (!value)
+    // Evaluate the test, and catch any exceptions; we don't want
+    // all the tests to crash (if there are more than one in some potential
+    // use case).
+    try
     {
-      std::cout << " passed ";
+      std::cout << "...... " << test_names[d_test];
+      if (!(*test_table[d_test])())
+      {
+        std::cout << " passed ";
+      }
+      else
+      {
+        std::cout << " failed ";
+      }
+      std::cout << std::endl;
+      return 0;
     }
-    else
+    catch (std::exception &err)
     {
-      std::cout << " failed ";
+      std::cout << "ERROR: While testing " << test_names[d_test]
+           << err.what()
+           << std::endl;
+      return 1;
     }
-    std::cout << std::endl;
-    return value;
+    catch ( ... )
+    {
+      return 1;
+      std::cout << "ERROR: While testing " << test_names[d_test]
+           << "An UNKNOWN exception was thrown."
+           << std::endl;
+      return 2;
+    }
   }
 
   static int number_fails()
@@ -227,6 +248,9 @@ int TestDriver::d_test = 0;
 /// Evaluate a statement expected to be false.
 #define TESTFALSE(c) if(!TestDriver::                                 \
  test( c, #c, __FILE__, __func__, __LINE__ )) return 1;
+
+/// The single function call needed in test_XYX.cc.
+#define RUN(argv, argc) return TestDriver::run(argv, argc);
 
 #endif /* TESTING_HH_ */
 

@@ -9,7 +9,7 @@
 //---------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
-#define TEST_LIST                     \
+#define TEST_LIST                    \
         FUNC(test_GaussLegendre_basic)
 
 // Detran headers
@@ -26,10 +26,7 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-  // Initialize tests.
-  int test = TestDriver::initialize(argc, argv);
-  // Perform the test and return result.
-  return TestDriver::evaluate((*test_table[test])());
+  RUN(argc, argv);
 }
 
 //----------------------------------------------//
@@ -40,9 +37,12 @@ int test_GaussLegendre_basic()
 {
   // Get quadrature fixture
   SP_quadrature q = gausslegendre_fixture();
-
-  // Finish me.
-
+  TEST(q);
+  TEST(q->number_angles()   == 8);
+  TEST(q->number_octants()  == 2);
+  TEST(soft_equiv(q->mu(0, 0),  0.9602898564975));
+  TEST(soft_equiv(q->mu(1, 0), -0.9602898564975));
+  TEST(soft_equiv(q->weight(0), 0.1012285362904));
   return 0;
 }
 

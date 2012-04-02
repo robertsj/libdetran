@@ -69,12 +69,12 @@ void QuadrupleRange::display() const
 
     cout << endl;
     cout << d_name << " abscissa and weights: " << endl << endl;
-    cout << "   m         mu              eta             wt       " << endl;
-    cout << "  ---   --------------  --------------  --------------" << endl;
+    cout << "   m            mu                 eta                wt       " << endl;
+    cout << "  ---   -----------------  -----------------  -----------------" << endl;
     double weight_sum = 0.0;
     for ( int ix = 0; ix < d_number_angles_octant; ++ix )
     {
-        printf ("%4i    %13.10f   %13.10f   %13.10f   \n",
+        printf ("%4i    %16.13f   %16.13f   %16.13f   \n",
                 ix, d_mu[ix], d_eta[ix], d_weight[ix] );
         weight_sum += d_weight[ix];
     }
