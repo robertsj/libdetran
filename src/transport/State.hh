@@ -135,6 +135,7 @@ public:
    */
   const angular_flux_type& psi(int o, int a, int g) const
   {
+    Require(d_angular_flux.size() > 0);
     Require(o >= 0);
     Require(o < d_quadrature->number_octants());
     Require(a >= 0);
@@ -155,6 +156,7 @@ public:
    */
   angular_flux_type& psi(int o, int a, int g)
   {
+    Require(d_angular_flux.size() > 0);
     Require(o >= 0);
     Require(o < d_quadrature->number_octants());
     Require(a >= 0);

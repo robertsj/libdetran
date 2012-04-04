@@ -53,11 +53,11 @@ public:
   Equation(SP_mesh mesh,
            SP_material material,
            SP_quadrature quadrature,
-           bool store_psi = false)
+           bool update_psi)
     :  d_mesh(mesh)
     ,  d_material(material)
     ,  d_quadrature(quadrature)
-    ,  d_store_psi(store_psi)
+    ,  d_update_psi(update_psi)
   {
     Require(mesh);
     Require(material);
@@ -93,15 +93,14 @@ public:
    *                        doubles depending on dimension.
    */
   template <class F>
-  void solve(int g,
-             int i,
-             int j,
-             int k,
-             double source,
-             F &psi_in,
-             F &psi_out,
-             moments_type &phi,
-             angular_flux_type &psi)
+  inline void solve(int i,
+                    int j,
+                    int k,
+                    moments_type &source,
+                    F &psi_in,
+                    F &psi_out,
+                    moments_type &phi,
+                    angular_flux_type &psi)
   {
     /* ... */
   }
@@ -155,7 +154,10 @@ protected:
   detran_utils::vec_int d_mat_map;
 
   /// Update the angular flux?
-  bool d_store_psi;
+  bool d_update_psi;
+
+  /// Current group
+  int d_g;
 };
 
 } // end namespace detran

@@ -39,7 +39,7 @@ public:
   Equation_DD_2D(SP_mesh mesh,
                  SP_material material,
                  SP_quadrature quadrature,
-                 bool store_psi);
+                 bool update_psi);
 
   /// \name Public Interface
   /// \{
@@ -66,15 +66,14 @@ public:
    *                        doubles depending on dimension.
    */
   template <class F>
-  void solve(int g,
-             int i,
-             int j,
-             int k,
-             double source,
-             F &psi_in,
-             F &psi_out,
-             moments_type &phi,
-             angular_flux_type &psi);
+  inline void solve(int i,
+                    int j,
+                    int k,
+                    moments_type &source,
+                    F &psi_in,
+                    F &psi_out,
+                    moments_type &phi,
+                    angular_flux_type &psi);
 
 
   /*!

@@ -3,7 +3,7 @@
  * \file   test_Equation_DD_2D.cc
  * \author Jeremy Roberts
  * \date   Apr 1, 2012
- * \brief  Test of Equation_DD_2D.cc
+ * \brief  Test of Equation_DD_2D
  * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
@@ -60,7 +60,7 @@ int test_Equation_DD_2D_basic()
   Equation_DD_2D::angular_flux_type psi(mesh->number_cells(), 0.0);
 
   // Cell sweep source [n/cm^2-s-ster]
-  double source = 1.0;
+  Equation_DD_2D::moments_type source(mesh->number_cells(), 1.0);
 
   // Create incident and outgoing face fluxes.  Remember, these
   // are dumb arrays, so be careful!
@@ -70,12 +70,11 @@ int test_Equation_DD_2D_basic()
   psi_in[1] = 1.0;
 
   // solve
-  eq.solve(0,       // g  \todo redundant if setup_group is used!
-           0,       // i
+  eq.solve(0,       // i
            0,       // j
            0,       // k  not actually used
-           source,
-           psi_in,  // these are
+           source,  // these
+           psi_in,  // are
            psi_out, // passed
            phi,     // by
            psi);    // reference

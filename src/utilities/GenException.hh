@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   GenException.cc
+ * \file   GenException.hh
  * \author Jeremy Roberts
  * \date   04/09/2011
- * \brief  A simple exception class.
+ * \brief  GenException class definition.
  * \note   Modified version of K. Huff's class from cyclus
  */
 //---------------------------------------------------------------------------//
@@ -59,6 +59,8 @@ public:
     virtual ~GenException() throw();
     
 };
+
+#define THROW(m) throw detran_utils::GenException(__LINE__,__FILE__,m);
 
 } // end namespace detran_utils
 

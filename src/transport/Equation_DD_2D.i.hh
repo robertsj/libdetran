@@ -15,22 +15,21 @@ namespace detran
 {
 
 template <>
-void Equation_DD_2D::solve(int g,
-                   int i,
-                   int j,
-                   int k,
-                   double source,
-                   face_flux_type &psi_in,
-                   face_flux_type &psi_out,
-                   moments_type &phi,
-                   angular_flux_type &psi)
+inline void Equation_DD_2D::solve(int i,
+                                  int j,
+                                  int k,
+                                  moments_type &source,
+                                  face_flux_type &psi_in,
+                                  face_flux_type &psi_out,
+                                  moments_type &phi,
+                                  angular_flux_type &psi)
 {
   // Compute cell-center angular flux.
   int cell = d_mesh->index(i, j);
-  double coef = 1.0 / (d_material->sigma_t(d_mat_map[cell], g) +
+  double coef = 1.0 / (d_material->sigma_t(d_mat_map[cell], d_g) +
                        d_coef_x[i] + d_coef_y[j]);
-  double psi_center = coef * (source + d_coef_x[i] * psi_in[1] +
-                                       d_coef_y[j] * psi_in[0] );
+  double psi_center = coef * (source[cell] + d_coef_x[i] * psi_in[1] +
+                                             d_coef_y[j] * psi_in[0] );
 
   // Compute outgoing fluxes.
   psi_out[0] = 2.0*psi_center - psi_in[0];
@@ -40,7 +39,7 @@ void Equation_DD_2D::solve(int g,
   phi[cell] += d_quadrature->weight(d_angle);
 
   // Store angular flux if needed.
-  if (d_store_psi)
+  if (d_update_psi)
   {
     psi[cell] = psi_center;
   }

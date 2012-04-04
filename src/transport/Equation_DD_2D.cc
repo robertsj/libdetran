@@ -16,8 +16,8 @@ namespace detran
 Equation_DD_2D::Equation_DD_2D(SP_mesh mesh,
                                SP_material material,
                                SP_quadrature quadrature,
-                               bool store_psi)
-  :  Equation(mesh, material, quadrature, store_psi)
+                               bool update_psi)
+  :  Equation(mesh, material, quadrature, update_psi)
   ,  d_coef_x(mesh->number_cells_x())
   ,  d_coef_y(mesh->number_cells_y())
 {
@@ -28,6 +28,7 @@ void Equation_DD_2D::setup_group(int g)
 {
   Require(g >= 0);
   Require(g < d_material->number_groups());
+  d_g = g;
 }
 
 void Equation_DD_2D::setup_octant(int octant)

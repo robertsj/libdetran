@@ -97,13 +97,13 @@ int test_Material_bounds()
   TEST(mat->lower(3) == 0);
   TEST(mat->upper(3) == 4);
 
-  TEST(mat->lower(4) == 3);
+  TEST(mat->lower(4) == 0);
   TEST(mat->upper(4) == 5);
 
-  TEST(mat->lower(5) == 4);
+  TEST(mat->lower(5) == 1);
   TEST(mat->upper(5) == 6);
 
-  TEST(mat->lower(6) == 4);
+  TEST(mat->lower(6) == 1);
   TEST(mat->upper(6) == 6);
 
   // Test cutoff
