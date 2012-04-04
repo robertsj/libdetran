@@ -37,6 +37,7 @@ int test_QuadrupleRange_basic()
 {
   // Get quadrature fixture
   SP_quadrature q = quadruplerange_fixture();
+  q->display();
   TEST(q);
   TEST(q->number_angles()   == 8);
   TEST(q->number_octants()  == 4);

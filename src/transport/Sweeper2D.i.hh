@@ -16,9 +16,9 @@ namespace detran
 void Sweeper2D::sweep(moments_type &phi, moments_type &source)
 {
 
-  enum FACE2D
+  enum inout
   {
-    HORZ, VERT
+    IN, OUT
   };
 
   // Reset the flux moments
@@ -38,6 +38,10 @@ void Sweeper2D::sweep(moments_type &phi, moments_type &source)
     for (int a = 0; a < d_quadrature->number_angles_octant(); a++)
     {
 
+      // Get sweep source for this angle.
+      SweepSource::sweep_source_type source = d_sweepsource->source(d_g, o, a);
+
+      // Setup equations for this angle.
       d_equation->setup_angle(a);
 
       // Get psi if update requested.
@@ -47,9 +51,9 @@ void Sweeper2D::sweep(moments_type &phi, moments_type &source)
         psi = d_state->psi(o, a, d_g);
       }
 
-      // Get boundary fluxes
-      // psi_v
-      // psi_h
+      // Get boundary fluxes (are member v's needed?)
+      d_psi_v = (*d_boundary)(d_side_index[o][VERT][IN],  o, a, d_g);
+      d_psi_h = (*d_boundary)(d_side_index[o][HORZ][OUT], o, a, d_g);
 
       // Sweep over all y
       for (int j = 0; j < d_mesh->number_cells_y(); j++)
@@ -76,7 +80,8 @@ void Sweeper2D::sweep(moments_type &phi, moments_type &source)
       } // end y loop
 
       // Update boundary
-      // d_boundary->set???
+      (*d_boundary)(d_side_index[o][VERT][OUT], o, a, d_g) = d_psi_v;
+      (*d_boundary)(d_side_index[o][HORZ][OUT], o, a, d_g) = d_psi_h;
 
     } // end angle loop
 

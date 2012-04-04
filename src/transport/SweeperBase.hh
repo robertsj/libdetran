@@ -12,11 +12,13 @@
 #define SWEEPERBASE_HH_
 
 // Other libtran headers
+#include "Boundary.hh"
 #include "Equation.hh"
 #include "Material.hh"
 #include "Mesh.hh"
 #include "Quadrature.hh"
 #include "State.hh"
+#include "SweepSource.hh"
 
 // Other libtran utils headers
 #include "Definitions.hh"
@@ -46,6 +48,7 @@ namespace detran
  *
  */
 //---------------------------------------------------------------------------//
+template <class D>
 class SweeperBase : public detran_utils::Object
 {
 
@@ -58,6 +61,10 @@ public:
   typedef Material::SP_material             SP_material;
   typedef Quadrature::SP_quadrature         SP_quadrature;
   typedef Equation::SP_equation             SP_equation;
+  typedef typename Boundary<D>::SP_boundary SP_boundary;
+  //
+  typedef SweepSource::SP_sweepsource       SP_sweepsource;
+  //
   typedef State::moments_type               moments_type;
   typedef State::angular_flux_type          angular_flux_type;
 
@@ -74,11 +81,13 @@ public:
               SP_mesh mesh,
               SP_material material,
               SP_quadrature quadrature,
-              SP_state state)
+              SP_state state,
+              SP_boundary boundary)
     :  d_input(input)
     ,  d_mesh(mesh)
     ,  d_quadrature(quadrature)
     ,  d_state(state)
+    ,  d_boundary(boundary)
     ,  d_g(-1)
     ,  d_update_psi(false)
   {
@@ -86,6 +95,7 @@ public:
     Require(mesh);
     Require(quadrature);
     Require(state);
+    Require(boundary);
 
     std::string equation;
     if (input->check("update_psi"))
@@ -146,6 +156,12 @@ protected:
   /// Equation
   SP_equation d_equation;
 
+  /// Boundary
+  SP_boundary d_boundary;
+
+  /// Sweep source
+  SP_sweepsource d_sweepsource;
+
   /// Current group
   int d_g;
 
@@ -153,6 +169,11 @@ protected:
   bool d_update_psi;
 
 };
+
+// Instantiations
+template class SweeperBase<_1D>;
+template class SweeperBase<_2D>;
+template class SweeperBase<_3D>;
 
 } // end namespace detran
 

@@ -12,6 +12,7 @@ SET(TRANSPORT_SRC
     State.cc
     Equation_DD_2D.cc
     Sweeper2D.cc
+    Boundary.cc
 )
 
 #-------------------------------------#

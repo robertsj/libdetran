@@ -11,11 +11,12 @@
 #ifndef SWEEPER2D_HH_
 #define SWEEPER2D_HH_
 
-// Other libtran headers
+// Libtran
 #include "SweeperBase.hh"
+#include "SweepSource.hh"
 #include "Equation_DD_2D.hh"
 
-// libtran utilities
+// Utilities
 #include "Definitions.hh"
 #include "GenException.hh"
 
@@ -35,19 +36,29 @@ namespace detran
  *
  */
 //---------------------------------------------------------------------------//
-class Sweeper2D : public SweeperBase
+class Sweeper2D : public SweeperBase<_2D>
 {
 
 public:
+
+  enum FACE2D
+  {
+    HORZ, VERT
+  };
 
   typedef detran_utils::SP<Sweeper2D>       SP_sweeper;
   typedef State::SP_state                   SP_state;
   typedef detran_utils::InputDB::SP_input   SP_input;
   typedef Mesh::SP_mesh                     SP_mesh;
+  typedef Material::SP_material             SP_material;
   typedef Quadrature::SP_quadrature         SP_quadrature;
+  typedef Equation::SP_equation             SP_equation;
+  typedef Boundary<_2D>                     Boundary_T;
+  typedef Boundary_T::SP_boundary           SP_boundary;
   typedef State::moments_type               moments_type;
   typedef State::angular_flux_type          angular_flux_type;
   typedef detran_utils::vec_dbl             edge_flux_type;
+  typedef Boundary<_2D>::boundary_flux_type boundary_flux_type;
 
   /*!
    *  \brief Constructor.
@@ -62,22 +73,37 @@ public:
             SP_mesh mesh,
             SP_material material,
             SP_quadrature quadrature,
-            SP_state state);
+            SP_state state,
+            SP_boundary boundary);
 
   /*!
    *  \brief Sweep over all angles and space.
    *
    */
-  inline void sweep(moments_type &phi,
-                    moments_type &source);
+  virtual inline void sweep(moments_type &phi,
+                            moments_type &source);
 
 private:
+
+  /// \name Data
+  /// \{
 
   /// Horizontal face fluxes
   edge_flux_type d_psi_h;
 
   /// Vertical face fluxes
   edge_flux_type d_psi_v;
+
+  int d_side_index[4][2][2];
+  /// \}
+
+  /// \name Implementation
+  /// \{
+
+
+  /// \}
+
+
 
 };
 

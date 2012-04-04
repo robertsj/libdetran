@@ -21,10 +21,19 @@ Sweeper2D::Sweeper2D(SP_input input,
                      SP_mesh mesh,
                      SP_material material,
                      SP_quadrature quadrature,
-                     SP_state state)
-  : SweeperBase(input, mesh, material, quadrature, state)
+                     SP_state state,
+                     SP_boundary boundary)
+  : SweeperBase<_2D>(input, mesh, material, quadrature, state, boundary)
   , d_psi_h(mesh->number_cells_x(), 0.0)
   , d_psi_v(mesh->number_cells_y(), 0.0)
+//  , d_side_index({{{Mesh::LEFT,  Mesh::BOTTOM},
+//                   {Mesh::RIGHT, Mesh::BOTTOM},
+//                   {Mesh::LEFT,  Mesh::TOP},
+//                   {Mesh::RIGHT, Mesh::TOP}},
+//                  {{Mesh::RIGHT, Mesh::TOP},
+//                   {Mesh::LEFT,  Mesh::TOP},
+//                   {Mesh::RIGHT, Mesh::BOTTOM},
+//                   {Mesh::LEFT,  Mesh::BOTTOM}}})
 {
 
   // Check to see if input has equation type. If not, default.
@@ -49,7 +58,23 @@ Sweeper2D::Sweeper2D(SP_input input,
     THROW("Unsupported equation type");
   }
 
+  d_side_index[0][HORZ][Boundary_T::IN]  = Mesh::LEFT;
+  d_side_index[0][VERT][Boundary_T::IN]  = Mesh::BOTTOM;
+  d_side_index[1][HORZ][Boundary_T::IN]  = Mesh::RIGHT;
+  d_side_index[1][VERT][Boundary_T::IN]  = Mesh::BOTTOM;
+  d_side_index[2][HORZ][Boundary_T::IN]  = Mesh::RIGHT;
+  d_side_index[2][VERT][Boundary_T::IN]  = Mesh::TOP;
+  d_side_index[3][HORZ][Boundary_T::IN]  = Mesh::LEFT;
+  d_side_index[3][VERT][Boundary_T::IN]  = Mesh::TOP;
 
+  d_side_index[0][HORZ][Boundary_T::OUT] = Mesh::RIGHT;
+  d_side_index[0][VERT][Boundary_T::OUT] = Mesh::TOP;
+  d_side_index[1][HORZ][Boundary_T::OUT] = Mesh::LEFT;
+  d_side_index[1][VERT][Boundary_T::OUT] = Mesh::TOP;
+  d_side_index[2][HORZ][Boundary_T::OUT] = Mesh::LEFT;
+  d_side_index[2][VERT][Boundary_T::OUT] = Mesh::BOTTOM;
+  d_side_index[3][HORZ][Boundary_T::OUT] = Mesh::RIGHT;
+  d_side_index[3][VERT][Boundary_T::OUT] = Mesh::BOTTOM;
 }
 
 } // end namespace detran

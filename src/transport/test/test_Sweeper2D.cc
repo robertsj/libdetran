@@ -39,9 +39,9 @@ int test_Sweeper2D_basic()
 {
 
   // Test fixtures
-  SP_mesh mesh      = mesh_2d_fixture();
-  SP_material mat   = material_fixture_1g();
-  SP_quadrature q   = quadruplerange_fixture();
+  SP_mesh mesh          = mesh_2d_fixture();
+  SP_material mat       = material_fixture_1g();
+  SP_quadrature quad    = quadruplerange_fixture();
 
   // Input
   Sweeper2D::SP_input input;
@@ -51,10 +51,15 @@ int test_Sweeper2D_basic()
 
   // State
   Sweeper2D::SP_state state;
-  state = new State(input, mesh, q);
+  state = new State(input, mesh, quad);
+
+  // Boundary
+  Boundary<_2D>::SP_boundary bound;
+  bound = new Boundary<_2D>(input, mesh, quad);
 
   // Sweeper
-  Sweeper2D sweeper(input, mesh, mat, q, state);
+  Sweeper2D sweeper(input, mesh, mat,
+                    quad, state, bound);
 
   // Get moments and make source.
   State::moments_type phi = state->phi(0);
@@ -62,6 +67,7 @@ int test_Sweeper2D_basic()
   source.assign(source.size(), 1.0);
 
   // Sweep.
+  sweeper.setup_group(0);
   sweeper.sweep(phi, source);
 
   // Tests.

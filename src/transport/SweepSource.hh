@@ -1,0 +1,212 @@
+//----------------------------------*-C++-*----------------------------------//
+/*!
+ * \file   SweepSource.hh
+ * \author robertsj
+ * \date   Apr 4, 2012
+ * \brief  SweepSource class definition.
+ * \note   Copyright (C) 2012 Jeremy Roberts. 
+ */
+//---------------------------------------------------------------------------//
+
+#ifndef SWEEPSOURCE_HH_
+#define SWEEPSOURCE_HH_
+
+// Detran
+#include "ExternalSource.hh"
+#include "FissionSource.hh"
+#include "Material.hh"
+#include "Mesh.hh"
+#include "Quadrature.hh"
+#include "State.hh"
+
+// Utilities
+#include "DBC.hh"
+#include "Definitions.hh"
+#include "SP.hh"
+
+// System
+#include <vector>
+
+
+namespace detran
+{
+
+//===========================================================================//
+/*!
+ * \class SweepSource
+ * \brief Construct the source for sweeping
+* This class defines a general right-hand-side construct for sweeps (which
+ * are the basis for all solvers).  That is, the SweepSource is a source
+ * for a sweep along a particular angle.
+ *
+ * The source for a given sweep is comprised in general of these four
+ * components:
+ *  - within-group scattering source
+ *  - in-scattering source (from both up- and down-scattering)
+ *  - fission source
+ *  - external source
+ * Algorithmically, the fission source behaves as an external source within
+ * an inner iteration.  Moreover, and of importance for response function
+ * generation, there \em can be a fission source (i.e. multiplication)
+ * together with an fixed source.
+ *
+ * Recall that a within group equation is represented as
+ * \f[
+ *    \mathbf{T}[\psi]_g = [\mathbf{M}][\mathbf{S}]_{gg}[\phi]_g + \bar{Q}_g \, ,
+ * \f]
+ * where \f$ \bar{Q}_g \f$ represents everything \em but the within-group
+ * scattering.  The right hand side is the sweep source (but \em not the
+ * right hand side for the linear system of interest, which casts the
+ * problem in terms of flux moments!).
+ *
+ * As a sanity check, consider a purely
+ * isotropic flux in one group with isotropic scattering. Then we must
+ * have the equation
+ * \f[
+ *    \mathbf{T}\psi = \Sigma_{0} \phi_{00} / 4\pi \, ,
+ * \f]
+ * which indicates that application of \f$ \mathbf{M} \f$ implies
+ * a normalization.
+ *
+ * For each inner iteration, the scattering components are stored in
+ * moments form.  The M operator is then applied using one row at a
+ * time for the associated angle being swept.
+ *
+ * \note Keep in mind where we're headed: solving the linear system
+ *       \f$ (\mathbf{I}-\mathbf{D}\mathbf{T}^{-1}\mathbf{M}\mathbf{S})\phi
+ *        = \mathbf{D}\mathbf{T}^{-1}q \f$. Hence, the sweep source is q,
+ *        and we'll invert the transport operator \em T via sweeps.
+ *
+ * \note Denovo uses a different class for each source component, and then
+ *       a "database" to house all the relevant components.  Here, we'll
+ *       keep everything in a single class, with different methods that
+ *       will set various components.  Of course, fission and external
+ *       sources are still defined externally.
+ *
+ * \sa ScatterSource, FissionSource, ExternalSource
+ */
+//===========================================================================//
+
+class SweepSource
+{
+
+public:
+
+  typedef detran_utils::SP<SweepSource>     SP_sweepsource;
+  typedef State::SP_state                   SP_state;
+  typedef detran_utils::InputDB::SP_input   SP_input;
+  typedef Mesh::SP_mesh                     SP_mesh;
+  typedef Material::SP_material             SP_material;
+  typedef Quadrature::SP_quadrature         SP_quadrature;
+  //
+  typedef ExternalSource::SP_source         SP_externalsource;
+  //typedef ScatterSource::SP_source          SP_scattersource;
+  typedef FissionSource::SP_source          SP_fissionsource;
+  //
+  typedef detran_utils::vec_dbl             sweep_source_type;
+
+  /*!
+   * \brief Constructor.
+   *
+   * This sizes the source variables.
+   *
+   * \param state           The state.
+   * \param mesh            The mesh.
+   * \param angularmesh     The angular mesh.
+   * \param materials       The material library.
+   * \param momentsindex    The moments index.
+   * \param m_operator      The moments to discrete operator.
+   *
+   */
+  SweepSource(SP_state state,
+              SP_mesh mesh,
+              SP_quadrature quadrature,
+              SP_material materials);
+
+  /*!
+   * \brief Set an external moment source.
+   *
+   * \param source  Smart pointer to external source
+   */
+  void set_moment_source(SP_externalsource source)
+  {
+    Require(source);
+    d_moment_sources->push_back(source);
+  }
+
+  /*!
+   * \brief Set an external discrete source.
+   *
+   * \param source  Smart pointer to external source
+   */
+  void set_discrete_source(SP_externalsource source)
+  {
+    Require(source);
+    d_discrete_sources->push_back(source);
+  }
+
+
+  /*!
+   * \brief Set a fission source.
+   *
+   * \param source  Smart pointer to fission source
+   */
+  void set_fission_source(SP_fissionsource source)
+  {
+    Require(source);
+    d_fissionsource = source;
+  }
+
+  /*!
+   * \brief Build the complete sweep source for this group.
+   *
+   * \param g       Group of problem we are solving.
+   * \param o       Octant of angle we are sweeping.
+   * \param a       Angle we are sweeping.
+   *
+   */
+  // void build_source(int g, int o, int a);
+
+  /*!
+   *  \brief Get the sweep source vector.
+   *
+   */
+  const &sweep_source_type source(int g, int o, int a) const
+  {
+    return d_source;
+  }
+
+
+
+private:
+
+  /// Sweep source for a given angle and group over all cells.
+  sweep_source_type d_source;
+
+  /// A container of external moments sources.
+  std::vector<SP_externalsource> d_moment_sources;
+
+  /// A container of external discrete sources
+  std::vector<SP_externalsource> d_discrete_sources;
+
+  /// Fission source
+  SP_fissionsource d_fissionsource;
+
+
+
+};
+
+} // end namespace detran
+
+//---------------------------------------------------------------------------//
+// INLINE FUNCTIONS
+//---------------------------------------------------------------------------//
+
+//#include "SweepSource.i.hh"
+
+
+#endif /* SWEEPSOURCE_HH_ */
+
+//---------------------------------------------------------------------------//
+//              end of SweepSource.hh
+//---------------------------------------------------------------------------//

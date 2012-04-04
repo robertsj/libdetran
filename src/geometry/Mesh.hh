@@ -44,7 +44,8 @@ public:
     BOTTOM,
     TOP,
     SOUTH,
-    NORTH
+    NORTH,
+    END_SIDES
   };
 
   typedef detran_utils::SP<Mesh>            SP_mesh;

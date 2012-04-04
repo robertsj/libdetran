@@ -214,6 +214,22 @@ public:
   }
 
   /*!
+   *  \brief Are the indices valid?
+   */
+  bool valid_index(int o, int a) const
+  {
+    if (o >= 0 and o < d_number_octants and
+        a >= 0 and a < d_number_angles_octant)
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+
+  /*!
    *  \brief Pretty print of the first octant parameters.
    */
   virtual void display() const = 0;
