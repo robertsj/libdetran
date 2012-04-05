@@ -33,7 +33,8 @@ class SourceIteration: public InnerIteration<D>
 public:
 
   typedef detran_utils::SP<SourceIteration>     SP_inner;
-  typedef InnerIteration<D>            Base;
+  typedef InnerIteration<D>                     Base;
+  typedef typename InnerIteration<D>::SP_inner  SP_base;
   // basic objects
   typedef detran_utils::InputDB::SP_input       SP_input;
   typedef State::SP_state                       SP_state;
@@ -71,6 +72,31 @@ public:
                  SP_boundary        boundary,
                  SP_externalsource  q_e,
                  SP_fissionsource   q_f);
+
+  /*!
+   *  \brief SP Constructor.
+   *
+   *  \param    xfm         Fine meshes per coarse mesh in x dimension.
+   *  \param    yfm         Fine meshes per coarse mesh in y dimension.
+   *  \param    xcme        Coarse mesh edges x dimension.
+   *  \param    ycme        Coarse mesh edges y dimension.
+   *  \param    mat_map     Coarse mesh material map.
+   */
+  static detran_utils::SP<SourceIteration>
+  Create(SP_input           input,
+         SP_state           state,
+         SP_mesh            mesh,
+         SP_material        material,
+         SP_quadrature      quadrature,
+         SP_MtoD            MtoD,
+         SP_boundary        boundary,
+         SP_externalsource  q_e,
+         SP_fissionsource   q_f)
+  {
+    SourceIteration::SP_base p;
+    p = new SourceIteration(input, state, mesh, material, MtoD, boundary, q_e, q_f);
+    return p;
+  }
 
   /*!
    *  \brief Solve the within group equation.

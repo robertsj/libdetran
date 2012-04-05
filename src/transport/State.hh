@@ -133,7 +133,7 @@ public:
    *  \param    a   Angle within octant
    *  \return       Constant reference to group angular flux vector.
    */
-  const angular_flux_type& psi(int o, int a, int g) const
+  const angular_flux_type& psi(int o, int a, int g) const   // State::angular_flux_type  psi = psi(o, a, g);
   {
     Require(d_angular_flux.size() > 0);
     Require(o >= 0);

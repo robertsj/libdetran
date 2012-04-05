@@ -20,10 +20,6 @@ namespace detran
 template <class D>
 void SourceIteration<D>::solve(int g)
 {
-  // Make some things visible.
-//  using InnerIteration<D>::d_sweeper;
-//  using SourceIteration<D>::d_sweepsource;
-//  using SourceIteration<D>::d_max_iters;
 
   // Setup boundary conditions.
 

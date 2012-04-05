@@ -11,14 +11,17 @@
 #ifndef BOUNDARY_HH_
 #define BOUNDARY_HH_
 
-// Other libtran headers
-#include "Definitions.hh"
-#include "SP.hh"
-#include "InputDB.hh"
+// Detran
 #include "Quadrature.hh"
 #include "Mesh.hh"
 #include "Material.hh"
 #include "Traits.hh"
+
+// Utilities
+#include "DBC.hh"
+#include "Definitions.hh"
+#include "InputDB.hh"
+#include "SP.hh"
 
 namespace detran
 {

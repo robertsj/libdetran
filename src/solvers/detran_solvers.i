@@ -1,20 +1,21 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   detran_transport.i
+ * \file   detran_solvers.i
  * \author Jeremy Roberts
- * \brief  Python interface for detran transport.
+ * \brief  Python interface for detran solvers.
  */
 //---------------------------------------------------------------------------//
 
-%module detran_transport
+%module detran_solvers
 %{
 // Detran
 #include "Boundary.hh"
+#include "InnerIteration.hh"
 #include "Material.hh"
 #include "Mesh.hh"
 #include "Quadrature.hh"
+#include "SourceIteration.hh"
 #include "State.hh"
-#include "Traits.hh"
 // Utilities
 #include "Definitions.hh"
 #include "SP.hh"
@@ -33,9 +34,8 @@
 %include std_vec_typemap.i
 
 %include "SP.hh"
-%include "Boundary.hh"
-%include "State.hh"
-#include "Traits.hh"
+%include "InnerIteration.hh"
+%include "SourceIteration.hh"
 
 namespace detran
 {
@@ -43,14 +43,12 @@ namespace detran
 
 } // end namespace detran
 
-// Traits
-//%template(_1D)
 
-%template(StateSP)  detran_utils::SP<detran::State>;
+//%template(StateSP)  detran_utils::SP<detran::State>;
 
-%template(Boundary1D)  detran::Boundary<detran::_1D>;
-//%template(Boundary2D)  detran_utils::SP<detran::Boundary<detran::_2D> >;
-//%template(Boundary3D)  detran_utils::SP<detran::Boundary<detran::_3D> >;
+%template(SourceIteration1D)  detran_utils::SP<detran::SourceIteration<detran::_1D> >;
+%template(SourceIteration2D)  detran_utils::SP<detran::SourceIteration<detran::_2D> >;
+%template(SourceIteration3D)  detran_utils::SP<detran::SourceIteration<detran::_3D> >;
 
 //---------------------------------------------------------------------------//
 //              end of detran_transport.i

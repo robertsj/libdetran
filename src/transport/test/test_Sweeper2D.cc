@@ -68,7 +68,7 @@ int test_Sweeper2D_basic()
 
   // Sweep.
   sweeper.setup_group(0);
-  sweeper.sweep(phi, source);
+  sweeper.sweep(phi);
 
   // Tests.
 

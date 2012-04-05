@@ -24,7 +24,15 @@ SourceIteration<D>::SourceIteration(SP_input          input,
                                     SP_boundary       boundary,
                                     SP_externalsource q_e,
                                     SP_fissionsource  q_f)
-  :  InnerIteration<D>::InnerIteration(input, state, mesh, material, quadrature, MtoD, boundary, q_e, q_f)
+  :  InnerIteration<D>::InnerIteration(input,
+                                       state,
+                                       mesh,
+                                       material,
+                                       quadrature,
+                                       MtoD,
+                                       boundary,
+                                       q_e,
+                                       q_f)
 {
   /* ... */
 }

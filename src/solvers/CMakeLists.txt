@@ -2,13 +2,13 @@
 # libdetran/src/solvers/CMakeLists.txt
 #------------------------------------------------------------------------------#
 
-SET(TRANSPORT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+SET(SOLVERS_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 #-------------------------------------#
 # SOURCE
 #-------------------------------------#
 
-SET(TRANSPORT_SRC
+SET(SOLVERS_SRC
     InnerIteration.cc
     SourceIteration.cc
 )
@@ -19,7 +19,7 @@ SET(TRANSPORT_SRC
 
 ADD_LIBRARY(solvers
             SHARED
-            ${TRANSPORT_SRC} 
+            ${SOLVERS_SRC} 
 )
 TARGET_LINK_LIBRARIES( solvers
                        transport
@@ -35,10 +35,11 @@ TARGET_LINK_LIBRARIES( solvers
 
 IF( DETRAN_ENABLE_PYTHON )
 
-SET_SOURCE_FILES_PROPERTIES(detran_transport.i PROPERTIES CPLUSPLUS ON)
-SWIG_ADD_MODULE(detran_transport python detran_transport.i )
-SWIG_LINK_LIBRARIES(detran_transport
+SET_SOURCE_FILES_PROPERTIES(detran_solvers.i PROPERTIES CPLUSPLUS ON)
+SWIG_ADD_MODULE(detran_solvers python detran_solvers.i )
+SWIG_LINK_LIBRARIES(detran_solvers
                     ${PYTHON_LIBRARIES} 
+                    solvers
                     transport 
                     angle
                     geometry
@@ -52,6 +53,6 @@ ENDIF()
 #-------------------------------------#
 
 if( DETRAN_ENABLE_TEST )
-    include_directories(${TRANSPORT_DIR}/test)
-    add_subdirectory(${TRANSPORT_DIR}/test)
+    include_directories(${SOLVERS_DIR}/test)
+    add_subdirectory(${SOLVERS_DIR}/test)
 endif()

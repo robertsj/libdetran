@@ -22,7 +22,7 @@ namespace detran
  */
 //===========================================================================//
 
-class Execute2 : public detran_utils::Object
+class Execute : public detran_utils::Object
 {
 
 public:
