@@ -118,8 +118,7 @@ public:
    *  be added with a third argument of psi type.
    *
    */
-  virtual inline void sweep(moments_type &phi,
-                            moments_type &source) = 0;
+  virtual inline void sweep(moments_type &phi) = 0;
 
   /// Setup the equations for the group
   void setup_group(int g)

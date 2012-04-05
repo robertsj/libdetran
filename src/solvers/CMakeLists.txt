@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------#
-# libdetran/src/transport/CMakeLists.txt
+# libdetran/src/solvers/CMakeLists.txt
 #------------------------------------------------------------------------------#
 
 SET(TRANSPORT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
@@ -9,34 +9,25 @@ SET(TRANSPORT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 #-------------------------------------#
 
 SET(TRANSPORT_SRC
-    State.cc
-    Equation_DD_2D.cc
-    Sweeper2D.cc
-    Boundary.cc
-    ScatterSource.cc
+    InnerIteration.cc
+    SourceIteration.cc
 )
 
 #-------------------------------------#
 # SHARED LIBRARY
 #-------------------------------------#
 
-ADD_LIBRARY(transport
+ADD_LIBRARY(solvers
             SHARED
             ${TRANSPORT_SRC} 
 )
-TARGET_LINK_LIBRARIES( transport
+TARGET_LINK_LIBRARIES( solvers
+                       transport
                        angle
                        materials
                        geometry
                        utilities
 )
-
-ADD_EXECUTABLE(test_State test_State.cc)
-TARGET_LINK_LIBRARIES( test_State
-                       transport
-                       geometry
-                       angle
-                       utilities )
 
 #-------------------------------------#
 # PYTHON INTERFACE

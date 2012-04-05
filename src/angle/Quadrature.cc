@@ -7,15 +7,11 @@
  * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
-// $Rev::                                               $:Rev of last commit
-// $Author:: j.alyn.roberts@gmail.com                   $:Author of last commit
-// $Date::                                              $:Date of last commit
-//---------------------------------------------------------------------------//
 
-// Angle headers
+// Detran
 #include "Quadrature.hh"
 
-// System headers
+// System 
 #include <cmath>
 
 namespace detran

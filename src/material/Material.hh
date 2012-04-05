@@ -32,7 +32,7 @@ public:
 
   /// \name Useful typedefs when using Material
   /// \{
-  typedef typename detran_utils::SP<Material>   SP_material;
+  typedef detran_utils::SP<Material>            SP_material;
   typedef detran_utils::vec_dbl                 vec_dbl;
   typedef detran_utils::vec_int                 vec_int;
   typedef detran_utils::vec2_dbl                vec2_dbl;

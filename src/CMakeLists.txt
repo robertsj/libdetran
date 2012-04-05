@@ -105,11 +105,13 @@ include_directories(material)
 include_directories(geometry)
 include_directories(angle)
 include_directories(transport)
+include_directories(solvers)
 add_subdirectory(utilities)
 add_subdirectory(material)
 add_subdirectory(geometry)
 add_subdirectory(angle)
 add_subdirectory(transport)
+add_subdirectory(solvers)
 
 #-------- OUTPUT ------------------------------------------------------#
 

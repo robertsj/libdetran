@@ -16,7 +16,9 @@
 #include "FissionSource.hh"
 #include "Material.hh"
 #include "Mesh.hh"
+#include "MomentToDiscrete.hh"
 #include "Quadrature.hh"
+#include "ScatterSource.hh"
 #include "State.hh"
 
 // Utilities
@@ -98,12 +100,14 @@ public:
   typedef Mesh::SP_mesh                     SP_mesh;
   typedef Material::SP_material             SP_material;
   typedef Quadrature::SP_quadrature         SP_quadrature;
+  typedef MomentToDiscrete::SP_MtoD         SP_MtoD;
   //
   typedef ExternalSource::SP_source         SP_externalsource;
-  //typedef ScatterSource::SP_source          SP_scattersource;
+  typedef ScatterSource::SP_source          SP_scattersource;
   typedef FissionSource::SP_source          SP_fissionsource;
   //
   typedef detran_utils::vec_dbl             sweep_source_type;
+  typedef State::moments_type               moments_type;
 
   /*!
    * \brief Constructor.
@@ -118,10 +122,11 @@ public:
    * \param m_operator      The moments to discrete operator.
    *
    */
-  SweepSource(SP_state state,
-              SP_mesh mesh,
+  SweepSource(SP_state      state,
+              SP_mesh       mesh,
               SP_quadrature quadrature,
-              SP_material materials);
+              SP_material   materials,
+              SP_MtoD       MtoD);
 
   /*!
    * \brief Set an external moment source.
@@ -131,7 +136,7 @@ public:
   void set_moment_source(SP_externalsource source)
   {
     Require(source);
-    d_moment_sources->push_back(source);
+    d_moment_external_sources.push_back(source);
   }
 
   /*!
@@ -142,7 +147,7 @@ public:
   void set_discrete_source(SP_externalsource source)
   {
     Require(source);
-    d_discrete_sources->push_back(source);
+    d_discrete_external_sources.push_back(source);
   }
 
 
@@ -157,42 +162,77 @@ public:
     d_fissionsource = source;
   }
 
+  // The following source construction routines aim to
+  // satisfy the needs of all solvers.
+
   /*!
-   * \brief Build the complete sweep source for this group.
+   *  \brief Add all fixed moments source.
    *
-   * \param g       Group of problem we are solving.
-   * \param o       Octant of angle we are sweeping.
-   * \param a       Angle we are sweeping.
+   *  Creates a fixed group source using external moments sources
+   *  and, if applicable, fission sources.  Note, fission is
+   *  only fixed within an eigenproblem.
+   */
+  void build_fixed(int g);
+
+  /*!
+   * \brief Build fixed with in-scatter.
+   *
+   * Creates a fixed group source as \ref build_fixed, but adds
+   * the in-scatter source.  This is the typical construction
+   * to be called within source iteration.
    *
    */
-  // void build_source(int g, int o, int a);
+  void build_fixed_with_scatter(int g);
+
+  /*!
+   * \brief Build within-group scattering source.
+   *
+   * Called before each sweep.
+   */
+  void build_within_group_scatter(int g, const moments_type &phi);
+
+  /*!
+   *  \brief Build total scattering source.
+   *
+   *  This builds the complete group scatter source using the
+   *  given multigroup flux vector.  This routine would find
+   *  use in a multigroup Krylov solver.
+   */
+  void build_total_scatter(int g, const State::vec_moments_type &phi);
 
   /*!
    *  \brief Get the sweep source vector.
    *
    */
-  const &sweep_source_type source(int g, int o, int a) const
-  {
-    return d_source;
-  }
-
-
+  const sweep_source_type& source(int g, int o, int a);
 
 private:
 
   /// Sweep source for a given angle and group over all cells.
   sweep_source_type d_source;
 
+  /// Fixed moments source applicable to all angles in this group.
+  moments_type d_fixed_group_source;
+
+  /// Within group scattering applicable to all angles in this group.
+  moments_type d_scatter_group_source;
+
   /// A container of external moments sources.
-  std::vector<SP_externalsource> d_moment_sources;
+  std::vector<SP_externalsource> d_moment_external_sources;
 
   /// A container of external discrete sources
-  std::vector<SP_externalsource> d_discrete_sources;
+  std::vector<SP_externalsource> d_discrete_external_sources;
 
   /// Fission source
   SP_fissionsource d_fissionsource;
 
+  /// Scattering source
+  SP_scattersource d_scattersource;
 
+  SP_state d_state;
+  SP_mesh d_mesh;
+  SP_quadrature d_quadrature;
+  SP_MtoD d_MtoD;
 
 };
 
@@ -202,8 +242,7 @@ private:
 // INLINE FUNCTIONS
 //---------------------------------------------------------------------------//
 
-//#include "SweepSource.i.hh"
-
+#include "SweepSource.i.hh"
 
 #endif /* SWEEPSOURCE_HH_ */
 

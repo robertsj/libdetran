@@ -80,8 +80,7 @@ public:
    *  \brief Sweep over all angles and space.
    *
    */
-  virtual inline void sweep(moments_type &phi,
-                            moments_type &source);
+  virtual inline void sweep(moments_type &phi);
 
 private:
 

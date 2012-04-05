@@ -13,7 +13,7 @@
 namespace detran
 {
 
-void Sweeper2D::sweep(moments_type &phi, moments_type &source)
+void Sweeper2D::sweep(moments_type &phi)
 {
 
   enum inout
@@ -71,6 +71,10 @@ void Sweeper2D::sweep(moments_type &phi, moments_type &source)
 
           // Save the horizontal flux.
           d_psi_h[i] = psi_out[HORZ];
+
+
+          // INSERT ACCELERATION MESH STUFF HERE
+
 
         } // end x loop
 
