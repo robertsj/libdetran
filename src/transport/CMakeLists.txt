@@ -31,13 +31,6 @@ TARGET_LINK_LIBRARIES( transport
                        utilities
 )
 
-ADD_EXECUTABLE(test_State test_State.cc)
-TARGET_LINK_LIBRARIES( test_State
-                       transport
-                       geometry
-                       angle
-                       utilities )
-
 #-------------------------------------#
 # PYTHON INTERFACE
 #-------------------------------------#

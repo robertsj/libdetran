@@ -31,9 +31,9 @@ public:
   // Source types
   typedef detran_utils::SP<ConstantSource>  SP_source;
 
-  IsotropicSource(SP_mesh mesh,
-                  SP_quadrature quadrature,
-                  int number_groups)
+  ConstantSource(SP_mesh mesh,
+                 SP_quadrature quadrature,
+                 int number_groups)
     :  ExternalSource(mesh, quadrature, number_groups)
   { /* ... */ }
 
@@ -54,7 +54,7 @@ public:
     Require(group < d_number_groups);
     Require(angle >=0);
     Require(angle < d_number_angles);
-    return d_source * d_quadrature->angular_norm();
+    return d_source * 1.0; //d_quadrature->angular_norm();
   }
 
   void set_source(double source)

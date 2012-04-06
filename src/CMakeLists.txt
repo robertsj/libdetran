@@ -93,6 +93,7 @@ if ( SERMENT_ENABLE_TEST )
     include_directories(geometry/test)
     include_directories(angle/test)
     include_directories(transport/test)
+    include_directories(solvers/test)
 endif()
 
 #------------------------------------------------------------------------------#

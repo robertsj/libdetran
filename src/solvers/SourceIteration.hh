@@ -42,7 +42,7 @@ public:
   typedef Material::SP_material                 SP_material;
   typedef Quadrature::SP_quadrature             SP_quadrature;
   typedef typename Boundary<D>::SP_boundary     SP_boundary;
-  typedef MomentToDiscrete::SP_MtoD             SP_MtoD;
+  typedef typename MomentToDiscrete<D>::SP_MtoD             SP_MtoD;
   // source typedefs
   typedef ExternalSource::SP_source             SP_externalsource;
   typedef FissionSource::SP_source              SP_fissionsource;
@@ -63,15 +63,14 @@ public:
    *  \param external_source   User-defined external source.
    *  \param fission_source    Fission source.
    */
-  SourceIteration(SP_input          input,
-                 SP_state           state,
-                 SP_mesh            mesh,
-                 SP_material        material,
-                 SP_quadrature      quadrature,
-                 SP_MtoD            MtoD,
-                 SP_boundary        boundary,
-                 SP_externalsource  q_e,
-                 SP_fissionsource   q_f);
+  SourceIteration(SP_input           input,
+                  SP_state           state,
+                  SP_mesh            mesh,
+                  SP_material        material,
+                  SP_quadrature      quadrature,
+                  SP_boundary        boundary,
+                  SP_externalsource  q_e,
+                  SP_fissionsource   q_f);
 
   /*!
    *  \brief SP Constructor.
@@ -94,7 +93,7 @@ public:
          SP_fissionsource   q_f)
   {
     SourceIteration::SP_base p;
-    p = new SourceIteration(input, state, mesh, material, MtoD, boundary, q_e, q_f);
+    p = new SourceIteration(input, state, mesh, material, quadrature, boundary, q_e, q_f);
     return p;
   }
 

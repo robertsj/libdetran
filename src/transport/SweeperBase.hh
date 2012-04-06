@@ -63,7 +63,7 @@ public:
   typedef Equation::SP_equation             SP_equation;
   typedef typename Boundary<D>::SP_boundary SP_boundary;
   //
-  typedef SweepSource::SP_sweepsource       SP_sweepsource;
+  typedef typename SweepSource<D>::SP_sweepsource       SP_sweepsource;
   //
   typedef State::moments_type               moments_type;
   typedef State::angular_flux_type          angular_flux_type;

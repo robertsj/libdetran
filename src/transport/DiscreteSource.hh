@@ -31,9 +31,9 @@ public:
   // Source types
   typedef detran_utils::SP<DiscreteSource>  SP_source;
 
-  IsotropicSource(SP_mesh mesh,
-                  SP_quadrature quadrature,
-                  int number_groups);
+  DiscreteSource(SP_mesh mesh,
+                 SP_quadrature quadrature,
+                 int number_groups);
 
   virtual double source(int cell, int group)
   {
@@ -44,7 +44,7 @@ public:
     double value = 0;
     for (int o = 0; o < d_quadrature->number_octants(); o++)
     {
-      for (int a = 0; a < d_quadrature->number_angles_octant; a++)
+      for (int a = 0; a < d_quadrature->number_angles_octant(); a++)
       {
         int angle = d_quadrature->index(o, a);
         value += d_source[group][angle][cell] * d_quadrature->weight(a);
@@ -76,9 +76,6 @@ private:
 
   /// Source for all points, angles, and energies
   detran_utils::vec3_dbl d_source;
-
-
-};
 
 };
 

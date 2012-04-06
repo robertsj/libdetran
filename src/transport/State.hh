@@ -17,7 +17,6 @@
 #include "InputDB.hh"
 #include "Quadrature.hh"
 #include "Mesh.hh"
-#include "Material.hh"
 
 namespace detran
 {

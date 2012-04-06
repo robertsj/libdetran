@@ -1,24 +1,23 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   test_Sweeper2D.cc
+ * \file   test_State.cc
  * \author Jeremy Roberts
- * \date   Apr 1, 2012
- * \brief  Test of test_Sweeper2D
- * \note   Copyright (C) 2012 Jeremy Roberts.
+ * \date   Mar 25, 2012
+ * \brief  Test of State.
+ * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
 #define TEST_LIST                     \
-        FUNC(test_Sweeper2D_basic)
+        FUNC(test_State_basic)
 
 // Detran headers
 #include "TestDriver.hh"
-#include "Sweeper2D.hh"
+#include "State.hh"
 
 // Setup
 #include "geometry/test/mesh_fixture.hh"
-#include "material/test/material_fixture.hh"
 #include "angle/test/quadrature_fixture.hh"
 
 using namespace detran;
@@ -35,42 +34,47 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------//
 
-int test_Sweeper2D_basic()
+int test_State_basic()
 {
 
   // Test fixtures
   SP_mesh mesh          = mesh_2d_fixture();
-  SP_material mat       = material_fixture_1g();
   SP_quadrature quad    = quadruplerange_fixture();
 
   // Input
-  Sweeper2D::SP_input input;
+  State::SP_input input;
   input = new InputDB();
   input->put<string>("equation", "dd");
   input->put<int>("number_groups", 2);
 
   // State
-  Sweeper2D::SP_state state;
+  State::SP_state state;
   state = new State(input, mesh, quad);
 
-  // Boundary
-  Boundary<_2D>::SP_boundary bound;
-  bound = new Boundary<_2D>(input, mesh, quad);
+  // Fill the fluxes.
+  for (int cell = 0; cell < mesh->number_cells(); cell++)
+  {
+    // Group 0
+    (state->phi(0))[cell] = 1.23;
+    // Group 1
+    (state->phi(1))[cell] = 2.34;
+  }
 
-  // Sweeper
-  Sweeper2D sweeper(input, mesh, mat,
-                    quad, state, bound);
+  State::moments_type phi_0 = state->phi(0);
+  State::moments_type phi_1(state->phi(1));
 
-  // Get moments and make source.
-  State::moments_type phi = state->phi(0);
-  State::moments_type source(phi);
-  source.assign(source.size(), 1.0);
+  TEST(phi_0[0] == 1.23);
+  TEST(phi_1[0] == 2.34);
 
-  // Sweep.
-  sweeper.setup_group(0);
-  //sweeper.sweep(phi);
-
-  // Tests.
+  // Should not affect.
+  phi_0[0] = 3.45;
+  TEST((state->phi(0))[0] == 1.23);
+  state->phi(0) = phi_0;
+  TEST((state->phi(0))[0] == 3.45);
 
   return 0;
 }
+
+//---------------------------------------------------------------------------//
+//              end of test_State.cc
+//---------------------------------------------------------------------------//

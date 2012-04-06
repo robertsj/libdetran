@@ -57,7 +57,7 @@ static SP_material material_fixture_1g()
   mat->set_nu_sigma_f(1, 0, 0.0);
   mat->set_chi(1, 0, 0.0);
   // Scattering
-  mat->set_sigma_s(0, 0, 0, 0.0); // 1 <- 1
+  mat->set_sigma_s(1, 0, 0, 0.0); // 1 <- 1
 
   // ---------------------------
   // Material 2: kinf = 1

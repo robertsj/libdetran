@@ -39,7 +39,7 @@ void Sweeper2D::sweep(moments_type &phi)
     {
 
       // Get sweep source for this angle.
-      SweepSource::sweep_source_type source = d_sweepsource->source(d_g, o, a);
+      SweepSource<_2D>::sweep_source_type source = d_sweepsource->source(d_g, o, a);
 
       // Setup equations for this angle.
       d_equation->setup_angle(a);

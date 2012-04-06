@@ -44,7 +44,7 @@ public:
     Require(cell < d_mesh->number_cells());
     Require(group >= 0);
     Require(group < d_number_groups);
-    return d_spectra[d_source_map[cell]][group];
+    return d_source_spectra[d_source_map[cell]][group];
   }
 
   virtual double source(int cell, int group, int angle)
@@ -55,7 +55,7 @@ public:
     Require(group < d_number_groups);
     Require(angle >=0);
     Require(angle < d_number_angles);
-    return d_spectra[d_source_map[cell]][group] * d_quadrature->angular_norm();
+    return d_source_spectra[d_source_map[cell]][group] * 1.0; // \todo norm
   }
 
   void set_source(spectra_type &spectra, Mesh::vec_int &map)
@@ -70,7 +70,7 @@ public:
 private:
 
   /// Source spectra
-  Mesh::vec_dbl d_source_spectra;
+  spectra_type d_source_spectra;
 
   /// Fine mesh source map
   Mesh::vec_int d_source_map;

@@ -42,7 +42,12 @@ public:
 
   ExternalSource(SP_mesh mesh,
                  SP_quadrature quadrature,
-                 int number_groups);
+                 int number_groups)
+    : d_mesh(mesh)
+    , d_quadrature(quadrature)
+    , d_number_groups(number_groups)
+    , d_number_angles(quadrature->number_angles())
+  {}
 
   /*!
    *  \brief Get moments source for cell.
@@ -70,10 +75,10 @@ protected:
   SP_quadrature d_quadrature;
 
   /// Number of groups.
-  int d_number_groups;
+  const int d_number_groups;
 
   /// Number of angles
-  int d_number_angles;
+  const int d_number_angles;
 
   /// Am I ready?
   int d_initialized;

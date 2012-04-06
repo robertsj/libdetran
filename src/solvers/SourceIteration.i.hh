@@ -66,6 +66,30 @@ void SourceIteration<D>::solve(int g)
 
 }
 
+template <class D>
+SourceIteration<D>::SourceIteration(SP_input          input,
+                                    SP_state          state,
+                                    SP_mesh           mesh,
+                                    SP_material       material,
+                                    SP_quadrature     quadrature,
+                                    SP_boundary       boundary,
+                                    SP_externalsource q_e,
+                                    SP_fissionsource  q_f)
+  :  InnerIteration<D>::InnerIteration(input,
+                                       state,
+                                       mesh,
+                                       material,
+                                       quadrature,
+                                       boundary,
+                                       q_e,
+                                       q_f)
+{
+  /* ... */
+}
+
+template class SourceIteration<_1D>;
+template class SourceIteration<_2D>;
+template class SourceIteration<_3D>;
 
 } // namespace detran
 

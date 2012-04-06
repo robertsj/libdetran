@@ -9,9 +9,11 @@ SET(ANGLE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 #-------------------------------------#
 
 SET(ANGLE_SRC
-    Quadrature.cc
     GaussLegendre.cc
+    MomentToDiscrete.cc
+    Quadrature.cc
     QuadrupleRange.cc
+    SphericalHarmonics.cc
 )
 
 #-------------------------------------#

@@ -20,6 +20,7 @@
 #include "Quadrature.hh"
 #include "ScatterSource.hh"
 #include "State.hh"
+#include "Traits.hh"
 
 // Utilities
 #include "DBC.hh"
@@ -28,7 +29,6 @@
 
 // System
 #include <vector>
-
 
 namespace detran
 {
@@ -89,6 +89,7 @@ namespace detran
  */
 //===========================================================================//
 
+template<class D>
 class SweepSource
 {
 
@@ -100,7 +101,8 @@ public:
   typedef Mesh::SP_mesh                     SP_mesh;
   typedef Material::SP_material             SP_material;
   typedef Quadrature::SP_quadrature         SP_quadrature;
-  typedef MomentToDiscrete::SP_MtoD         SP_MtoD;
+  typedef typename
+      MomentToDiscrete<D>::SP_MtoD          SP_MtoD;
   //
   typedef ExternalSource::SP_source         SP_externalsource;
   typedef ScatterSource::SP_source          SP_scattersource;
@@ -125,8 +127,17 @@ public:
   SweepSource(SP_state      state,
               SP_mesh       mesh,
               SP_quadrature quadrature,
-              SP_material   materials,
-              SP_MtoD       MtoD);
+              SP_material   material,
+              SP_MtoD       MtoD)
+    :  d_state(state)
+    ,  d_mesh(mesh)
+    ,  d_quadrature(quadrature)
+    ,  d_MtoD(MtoD)
+    ,  d_source(mesh->number_cells(), 0.0)
+    ,  d_fixed_group_source(mesh->number_cells(), 0.0)
+    ,  d_scatter_group_source(mesh->number_cells(), 0.0)
+    ,  d_scattersource(new ScatterSource(mesh, material, state))
+  { /* ... */ }
 
   /*!
    * \brief Set an external moment source.
@@ -208,6 +219,11 @@ public:
 
 private:
 
+  SP_state d_state;
+  SP_mesh d_mesh;
+  SP_quadrature d_quadrature;
+  SP_MtoD d_MtoD;
+
   /// Sweep source for a given angle and group over all cells.
   sweep_source_type d_source;
 
@@ -229,10 +245,7 @@ private:
   /// Scattering source
   SP_scattersource d_scattersource;
 
-  SP_state d_state;
-  SP_mesh d_mesh;
-  SP_quadrature d_quadrature;
-  SP_MtoD d_MtoD;
+
 
 };
 

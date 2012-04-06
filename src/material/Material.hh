@@ -161,6 +161,7 @@ public:
   {
     Ensure(d_number_groups >= 0);
     Ensure(d_finalized);
+    return true;
   };
 
 private:

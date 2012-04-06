@@ -13,8 +13,8 @@
 
 namespace detran
 {
-
-  inline void SweepSource::build_fixed(int g)
+  template <class D>
+  inline void SweepSource<D>::build_fixed(int g)
   {
     // Zero out moments source.
     d_fixed_group_source.assign(d_fixed_group_source.size(), 0.0);
@@ -40,7 +40,8 @@ namespace detran
 
   }
 
-  inline void SweepSource::build_fixed_with_scatter(int g)
+  template <class D>
+  inline void SweepSource<D>::build_fixed_with_scatter(int g)
   {
     // Add the external and/or fission source first.
     build_fixed(g);
@@ -50,7 +51,8 @@ namespace detran
 
   }
 
-  inline void SweepSource::build_within_group_scatter(int g, const moments_type &phi)
+  template <class D>
+  inline void SweepSource<D>::build_within_group_scatter(int g, const moments_type &phi)
   {
     // Zero out moments source.
     d_scatter_group_source.assign(phi.size(), 0.0);
@@ -60,7 +62,8 @@ namespace detran
 
   }
 
-  inline void SweepSource::build_total_scatter(int g, const State::vec_moments_type &phi)
+  template <class D>
+  inline void SweepSource<D>::build_total_scatter(int g, const State::vec_moments_type &phi)
   {
     // Zero out moments source.
     d_scatter_group_source.assign(phi.size(), 0.0);
@@ -70,7 +73,9 @@ namespace detran
 
   }
 
-  inline const SweepSource::sweep_source_type& SweepSource::source(int g, int o, int a)
+  template <class D>
+  inline const typename SweepSource<D>::sweep_source_type&
+  SweepSource<D>::source(int g, int o, int a)
   {
     // Zero out.
     d_source.assign(d_source.size(), 0.0);
@@ -78,10 +83,11 @@ namespace detran
     {
       // Add fixed contribution \todo need to use mtod
       d_source[cell] += d_fixed_group_source[cell] *
-          d_quadrature->angular_norm(1);
+                        (*d_MtoD)(o, a, 0, 0);
+
       // Add scatter contribution
       d_source[cell] += d_scatter_group_source[cell] *
-          d_quadrature->angular_norm(1);
+                        (*d_MtoD)(o, a, 0, 0);
     }
     // Add discrete contribution if present.
     for (int i = 0; i < d_discrete_external_sources.size(); i++)
@@ -95,7 +101,9 @@ namespace detran
     return d_source;
   }
 
-
+  template class SweepSource<_1D>;
+  template class SweepSource<_2D>;
+  template class SweepSource<_3D>;
 
 } // namespace detran
 
