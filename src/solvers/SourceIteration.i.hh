@@ -66,6 +66,7 @@ void SourceIteration<D>::solve(int g)
 
 }
 
+// Constructor
 template <class D>
 SourceIteration<D>::SourceIteration(SP_input          input,
                                     SP_state          state,

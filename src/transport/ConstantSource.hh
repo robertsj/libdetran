@@ -42,13 +42,15 @@ public:
   /*!
    *  \brief SP Constructor.
    */
-  static detran_utils::SP<ConstantSource>
+  static detran_utils::SP<ExternalSource>
   Create(detran_utils::SP<detran::Mesh> mesh,
          detran_utils::SP<detran::Quadrature> quadrature,
-         int number_groups)
+         int number_groups,
+         double source)
   {
-    ExternalSource::SP_source p;
+    ConstantSource::SP_source p;
     p = new ConstantSource(mesh, quadrature, number_groups);
+    p->set_source(source);
     return p;
   }
 

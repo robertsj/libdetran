@@ -11,11 +11,14 @@
 #ifndef SWEEPSOURCE_I_HH_
 #define SWEEPSOURCE_I_HH_
 
+#include <iostream>
+
 namespace detran
 {
   template <class D>
   inline void SweepSource<D>::build_fixed(int g)
   {
+
     // Zero out moments source.
     d_fixed_group_source.assign(d_fixed_group_source.size(), 0.0);
 
@@ -43,6 +46,7 @@ namespace detran
   template <class D>
   inline void SweepSource<D>::build_fixed_with_scatter(int g)
   {
+    std::cout << "build fixed w scatter" << std::endl;
     // Add the external and/or fission source first.
     build_fixed(g);
 

@@ -31,23 +31,47 @@
 
 %include "SP.hh"
 %include "InnerIteration.hh"
-%include "SourceIteration.hh"
+//%include "SourceIteration.hh"
 
 namespace detran
 {
 
+//===========================================================================//
+/*!
+ * \class SourceIteration
+ * \brief 
+ */
+//===========================================================================//
+template <class D>
+class SourceIteration: public InnerIteration<D>
+{
+public:
+  // SP Constructor
+  static detran_utils::SP<SourceIteration<D> >
+  Create(detran_utils::SP<detran_utils::InputDB>   input,
+         detran_utils::SP<detran::State>           state,
+         detran_utils::SP<detran::Mesh>            mesh,
+         detran_utils::SP<detran::Material>        material,
+         detran_utils::SP<detran::Quadrature>      quadrature,
+         detran_utils::SP<detran::Boundary<D> >    boundary,
+         detran_utils::SP<detran::ExternalSource>  q_e,
+         detran_utils::SP<detran::FissionSource>   q_f);
+         
+  // Solve
+  void solve(int g); 
+};
 
 } // end namespace detran
 
 
 //%template(StateSP)  detran_utils::SP<detran::State>;
 
-//%template(InnerIteration2D)     detran::InnerIteration<detran::_2D>;
-//%template(InnerIteration2DSP)   detran_utils::SP<detran::InnerIteration<detran::_2D> >;
-%template(SourceIteration1DSP)  detran_utils::SP<detran::SourceIteration<detran::_1D> >;
+%template(InnerIteration2D)     detran::InnerIteration<detran::_2D>;
+%template(InnerIteration2DSP)   detran_utils::SP<detran::InnerIteration<detran::_2D> >;
+
 %template(SourceIteration2D)    detran::SourceIteration<detran::_2D>;
 %template(SourceIteration2DSP)  detran_utils::SP<detran::SourceIteration<detran::_2D> >;
-%template(SourceIteration3DSP)  detran_utils::SP<detran::SourceIteration<detran::_3D> >;
+
 
 //---------------------------------------------------------------------------//
 //              end of detran_transport.i

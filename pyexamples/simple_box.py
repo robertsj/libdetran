@@ -31,16 +31,18 @@ inp.put_int("number_groups", 1)
 state = State.Create(inp, mesh, quad)
 
 # Constant source
-q_e = ConstantSource.Create(mesh, quad, 1)
-q_e.set_source(1.0)
+q_e = ConstantSource.Create(mesh, quad, 1, 1.0)
 
 # Uninitialized fission source
 q_f = FissionSourceSP()
 
 # boundary
 bound = Boundary2D.Create(inp, mesh, quad)
-
+print q_e
 solver = SourceIteration2D.Create(inp, state, mesh, mat, quad, bound, q_e, q_f)
+solver.solve(0) # solve group 0.
+
+
 
 
 
