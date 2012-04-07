@@ -31,6 +31,9 @@ TARGET_LINK_LIBRARIES( transport
                        utilities
 )
 
+INSTALL_FILES(/include .hh)
+INSTALL_TARGETS(/lib transport)
+
 #-------------------------------------#
 # PYTHON INTERFACE
 #-------------------------------------#
@@ -46,6 +49,11 @@ SWIG_LINK_LIBRARIES(detran_transport
                     geometry
                     materials
                     utilities)
+
+INSTALL(FILES ${CMAKE_BINARY_DIR}/transport/detran_transport.py
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/python/detran)
+INSTALL(FILES ${CMAKE_BINARY_DIR}/transport/_detran_transport.so
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/python/detran)
 
 ENDIF()
 

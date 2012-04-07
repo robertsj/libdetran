@@ -30,12 +30,27 @@ public:
 
   // Source types
   typedef detran_utils::SP<ConstantSource>  SP_source;
+  typedef Mesh::SP_mesh                     SP_mesh;
+  typedef Quadrature::SP_quadrature         SP_quadrature;
 
   ConstantSource(SP_mesh mesh,
                  SP_quadrature quadrature,
                  int number_groups)
     :  ExternalSource(mesh, quadrature, number_groups)
   { /* ... */ }
+
+  /*!
+   *  \brief SP Constructor.
+   */
+  static detran_utils::SP<ConstantSource>
+  Create(detran_utils::SP<detran::Mesh> mesh,
+         detran_utils::SP<detran::Quadrature> quadrature,
+         int number_groups)
+  {
+    ExternalSource::SP_source p;
+    p = new ConstantSource(mesh, quadrature, number_groups);
+    return p;
+  }
 
   virtual double source(int cell, int group)
   {

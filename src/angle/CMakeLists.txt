@@ -28,10 +28,8 @@ TARGET_LINK_LIBRARIES( angle
                        utilities
 )
 
-#ADD_EXECUTABLE(test_geometry test_geometry.cc)
-#TARGET_LINK_LIBRARIES( test_angle
-#                       angle
-#                       utilities )
+INSTALL_FILES(/include .hh)
+INSTALL_TARGETS(/lib angle)
 
 #-------------------------------------#
 # PYTHON INTERFACE
@@ -46,7 +44,14 @@ SWIG_LINK_LIBRARIES(detran_angle
                     utilities 
                     angle)
 
+INSTALL(FILES ${CMAKE_BINARY_DIR}/angle/detran_angle.py
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/python/detran)
+INSTALL(FILES ${CMAKE_BINARY_DIR}/angle/_detran_angle.so
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/python/detran)
+
 ENDIF()
+
+
 
 #-------------------------------------#
 # TESTING

@@ -120,9 +120,10 @@ public:
    *  \param    mesh        Cartesian mesh.
    *  \param    quadrature  Angular quadrature.
    */
-  static SP_boundary Create(detran_utils::SP<detran_utils::InputDB> input,
-                            detran_utils::SP<detran::Mesh>          mesh,
-                            detran_utils::SP<detran::Quadrature>    quadrature)
+  static detran_utils::SP<detran::Boundary<D> >
+  Create(detran_utils::SP<detran_utils::InputDB> input,
+         detran_utils::SP<detran::Mesh>          mesh,
+         detran_utils::SP<detran::Quadrature>    quadrature)
   {
     SP_boundary p;
     p = new Boundary(input, mesh, quadrature);

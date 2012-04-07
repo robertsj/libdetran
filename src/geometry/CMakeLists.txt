@@ -31,6 +31,9 @@ TARGET_LINK_LIBRARIES( test_geometry
                        geometry
                        utilities )
 
+INSTALL_FILES(/include .hh)
+INSTALL_TARGETS(/lib geometry)
+
 #-------------------------------------#
 # PYTHON INTERFACE
 #-------------------------------------#
@@ -43,6 +46,11 @@ SWIG_LINK_LIBRARIES(detran_geometry
                     ${PYTHON_LIBRARIES} 
                     utilities 
                     geometry)
+
+INSTALL(FILES ${CMAKE_BINARY_DIR}/geometry/detran_geometry.py
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/python/detran)
+INSTALL(FILES ${CMAKE_BINARY_DIR}/geometry/_detran_geometry.so
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/python/detran)
 
 ENDIF()
 

@@ -114,16 +114,38 @@ add_subdirectory(angle)
 add_subdirectory(transport)
 add_subdirectory(solvers)
 
-#-------- OUTPUT ------------------------------------------------------#
+#------------------------------------------------------------------------------#
+# INSTALL
+#------------------------------------------------------------------------------#
+
+# Set 
+if( NOT CMAKE_INSTALL_PREFIX)
+  set( CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR} CACHE STRING
+       "Installation prefix; default is build directory."
+       FORCE)
+endif()
+
+# Python things for installation
+add_subdirectory(python)
+
+
+#------------------------------------------------------------------------------#
+# OUTPUT
+#------------------------------------------------------------------------------#
 
 message("++++ System:      ${CMAKE_SYSTEM} ${CMAKE_SYSTEM_PROCESSOR}")
 message("++++ CXX:         ${CMAKE_CXX_COMPILER}")
 message("++++ Build type:  ${CMAKE_BUILD_TYPE}")
+message("++++ Install:     ${CMAKE_INSTALL_PREFIX}")
 if( DETRAN_ENABLE_PYTHON )
-message("++++ Python interface enabled")
+message("++++ Python:      enabled")
+elseif()
+message("++++ Python:      disabled")
 endif()
 if( DETRAN_ENABLE_TEST )
-message("++++ CTest testing enabled")
+message("++++ Testing:     enabled")
+elseif()
+message("++++ Testing:     disabled")
 endif()
 
 

@@ -24,6 +24,9 @@ TARGET_LINK_LIBRARIES( materials
                        utilities
 )
 
+INSTALL_FILES(/include .hh)
+INSTALL_TARGETS(/lib materials)
+
 #-------------------------------------#
 # PYTHON INTERFACE
 #-------------------------------------#
@@ -37,7 +40,16 @@ SWIG_LINK_LIBRARIES(detran_materials
                     utilities 
                     materials)
 
+INSTALL(FILES ${CMAKE_BINARY_DIR}/material/detran_materials.py
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/python/detran)
+INSTALL(FILES ${CMAKE_BINARY_DIR}/material/_detran_materials.so
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/python/detran)
+
 ENDIF()
+
+
+
+
 
 #-------------------------------------#
 # TESTING

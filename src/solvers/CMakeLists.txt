@@ -29,6 +29,9 @@ TARGET_LINK_LIBRARIES( solvers
                        utilities
 )
 
+INSTALL_FILES(/include .hh)
+INSTALL_TARGETS(/lib solvers)
+
 #-------------------------------------#
 # PYTHON INTERFACE
 #-------------------------------------#
@@ -45,6 +48,11 @@ SWIG_LINK_LIBRARIES(detran_solvers
                     geometry
                     materials
                     utilities)
+                    
+INSTALL(FILES ${CMAKE_BINARY_DIR}/solvers/detran_solvers.py
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/python/detran)
+INSTALL(FILES ${CMAKE_BINARY_DIR}/solvers/_detran_solvers.so
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/python/detran)          
 
 ENDIF()
 

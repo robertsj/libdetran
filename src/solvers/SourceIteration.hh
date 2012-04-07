@@ -81,18 +81,17 @@ public:
    *  \param    ycme        Coarse mesh edges y dimension.
    *  \param    mat_map     Coarse mesh material map.
    */
-  static detran_utils::SP<SourceIteration>
-  Create(SP_input           input,
-         SP_state           state,
-         SP_mesh            mesh,
-         SP_material        material,
-         SP_quadrature      quadrature,
-         SP_MtoD            MtoD,
-         SP_boundary        boundary,
-         SP_externalsource  q_e,
-         SP_fissionsource   q_f)
+  static detran_utils::SP<SourceIteration<D> >
+  Create(detran_utils::SP<detran_utils::InputDB>   input,
+         detran_utils::SP<detran::State>           state,
+         detran_utils::SP<detran::Mesh>            mesh,
+         detran_utils::SP<detran::Material>        material,
+         detran_utils::SP<detran::Quadrature>      quadrature,
+         detran_utils::SP<detran::Boundary<D> >    boundary,
+         detran_utils::SP<detran::ExternalSource>  q_e,
+         detran_utils::SP<detran::FissionSource>   q_f)
   {
-    SourceIteration::SP_base p;
+    SP_inner p;
     p = new SourceIteration(input, state, mesh, material, quadrature, boundary, q_e, q_f);
     return p;
   }

@@ -10,6 +10,8 @@
 %{
 // Detran
 #include "Boundary.hh"
+#include "ExternalSource.hh"
+#include "FissionSource.hh"
 #include "InnerIteration.hh"
 #include "Material.hh"
 #include "Mesh.hh"
@@ -18,6 +20,7 @@
 #include "State.hh"
 // Utilities
 #include "Definitions.hh"
+#include "InputDB.hh"
 #include "SP.hh"
 %}
 
@@ -25,13 +28,6 @@
 %include std_vector.i
 %include std_string.i
 
-// Load the vector maps.  Note, I am a bit unhappy with
-// how it's all used.  They work *if* I declare the class
-// interface below.  Otherwise, just including e.g.
-// Mesh2D doesn't allow the maps, since I'm using 
-// typedefs on the input arguments.  There should be an
-// easy way around this, but I'm not a SWIG pro.
-%include std_vec_typemap.i
 
 %include "SP.hh"
 %include "InnerIteration.hh"
@@ -46,9 +42,12 @@ namespace detran
 
 //%template(StateSP)  detran_utils::SP<detran::State>;
 
-%template(SourceIteration1D)  detran_utils::SP<detran::SourceIteration<detran::_1D> >;
-%template(SourceIteration2D)  detran_utils::SP<detran::SourceIteration<detran::_2D> >;
-%template(SourceIteration3D)  detran_utils::SP<detran::SourceIteration<detran::_3D> >;
+//%template(InnerIteration2D)     detran::InnerIteration<detran::_2D>;
+//%template(InnerIteration2DSP)   detran_utils::SP<detran::InnerIteration<detran::_2D> >;
+%template(SourceIteration1DSP)  detran_utils::SP<detran::SourceIteration<detran::_1D> >;
+%template(SourceIteration2D)    detran::SourceIteration<detran::_2D>;
+%template(SourceIteration2DSP)  detran_utils::SP<detran::SourceIteration<detran::_2D> >;
+%template(SourceIteration3DSP)  detran_utils::SP<detran::SourceIteration<detran::_3D> >;
 
 //---------------------------------------------------------------------------//
 //              end of detran_transport.i

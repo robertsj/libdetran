@@ -10,6 +10,9 @@
 %{
 // Detran
 #include "Boundary.hh"
+#include "FissionSource.hh"
+#include "ExternalSource.hh"
+#include "ConstantSource.hh"
 #include "Material.hh"
 #include "Mesh.hh"
 #include "Quadrature.hh"
@@ -33,10 +36,16 @@
 %include std_vec_typemap.i
 
 %include "SP.hh"
-%include "Boundary.hh"
-%include "State.hh"
-#include "Traits.hh"
 
+%include "Boundary.hh"
+%include "FissionSource.hh"
+
+// External/general sources
+%include "ExternalSource.hh"
+%include "ConstantSource.hh"
+%include "State.hh"
+%include "Traits.hh"
+//%include "Mesh.hh"
 namespace detran
 {
 
@@ -46,11 +55,21 @@ namespace detran
 // Traits
 //%template(_1D)
 
+// Templates 
+
 %template(StateSP)  detran_utils::SP<detran::State>;
 
-%template(Boundary1D)  detran::Boundary<detran::_1D>;
-//%template(Boundary2D)  detran_utils::SP<detran::Boundary<detran::_2D> >;
-//%template(Boundary3D)  detran_utils::SP<detran::Boundary<detran::_3D> >;
+%template(FissionSourceSP)  detran_utils::SP<detran::FissionSource>;
+
+%template(ExternalSourceSP) detran_utils::SP<detran::ExternalSource>;
+%template(ConstantSourceSP) detran_utils::SP<detran::ConstantSource>;
+
+%template(Boundary1D)    detran::Boundary<detran::_1D>;
+%template(Boundary1DSP)  detran_utils::SP<detran::Boundary<detran::_1D> >;
+%template(Boundary2D)    detran::Boundary<detran::_2D>;
+%template(Boundary2DSP)  detran_utils::SP<detran::Boundary<detran::_2D> >;
+%template(Boundary3D)    detran::Boundary<detran::_3D>;
+%template(Boundary3DSP)  detran_utils::SP<detran::Boundary<detran::_3D> >;
 
 //---------------------------------------------------------------------------//
 //              end of detran_transport.i
