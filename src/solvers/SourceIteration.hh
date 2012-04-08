@@ -42,12 +42,12 @@ public:
   typedef Material::SP_material                 SP_material;
   typedef Quadrature::SP_quadrature             SP_quadrature;
   typedef typename Boundary<D>::SP_boundary     SP_boundary;
-  typedef typename MomentToDiscrete<D>::SP_MtoD             SP_MtoD;
+  typedef typename MomentToDiscrete<D>::SP_MtoD SP_MtoD;
   // source typedefs
   typedef ExternalSource::SP_source             SP_externalsource;
   typedef FissionSource::SP_source              SP_fissionsource;
   //
-  typedef typename SweeperBase<D>::SP_sweeper   SP_sweeper;
+  typedef typename Sweeper<D>::SP_sweeper       SP_sweeper;
   //
   typedef State::moments_type                   moments_type;
 
@@ -92,14 +92,15 @@ public:
          detran_utils::SP<detran::FissionSource>   q_f)
   {
     SP_inner p;
-    p = new SourceIteration(input, state, mesh, material, quadrature, boundary, q_e, q_f);
+    p = new SourceIteration(input, state, mesh, material,
+                            quadrature, boundary, q_e, q_f);
     return p;
   }
 
   /*!
    *  \brief Solve the within group equation.
    */
-  virtual void solve(int g);
+  void solve(int g);
 
   // Make inherited data visible
   using Base::d_input;

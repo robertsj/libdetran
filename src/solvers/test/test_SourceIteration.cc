@@ -64,6 +64,13 @@ int test_SourceIteration_2D()
   SourceIteration<_2D> solver(input, state, mesh, mat,
                               quad, bound, q_e, q_f);
 
+  // Solve first group.
+  solver.solve(0);
+
+
+  // Solve second group.
+  //solver.solve(1);
+
 
   return 0;
 }

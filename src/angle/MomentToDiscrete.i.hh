@@ -50,14 +50,13 @@ namespace detran
 
     // Resize M.
     d_number_angles = quadrature->number_angles();
+    Ensure(d_number_angles > 0);
     d_M.resize(d_number_angles, M_Row(d_number_moments));
     Assert(d_M.size() == quadrature->number_angles());
 
     // Build the moment-to-discrete operator by looping through each octant
     // and then the angles in each octant.  The ordering is determined by the
     // order of octants in the quadrature.
-    int index = 0;
-
     for (int o = 0; o < d_quadrature->number_octants(); o++)
     {
       for (int a = 0; a < d_quadrature->number_angles_octant(); a++)
@@ -72,6 +71,7 @@ namespace detran
   template <class D>
   void MomentToDiscrete<D>::calc_row(int o, int a)
   {
+    Assert(d_quadrature);
     int angle = d_quadrature->index(o, a);
 
     // reference to current row

@@ -11,7 +11,6 @@ SET(TRANSPORT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 SET(TRANSPORT_SRC
     State.cc
     Equation_DD_2D.cc
-    Sweeper2D.cc
     Boundary.cc
     ScatterSource.cc
 )

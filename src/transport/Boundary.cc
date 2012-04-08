@@ -48,19 +48,19 @@ void Boundary<D>::initialize()
     {
         // yz planes
         d_boundary_flux[Mesh::LEFT][g].resize(na,
-          boundary_flux_type(ny, detran_utils::vec_dbl(nz, 0.0)));
+          boundary_flux_type(nz, detran_utils::vec_dbl(ny, 0.0)));
         d_boundary_flux[Mesh::RIGHT][g].resize(na,
-          boundary_flux_type(ny, detran_utils::vec_dbl(nz, 0.0)));
+          boundary_flux_type(nz, detran_utils::vec_dbl(ny, 0.0)));
         // xz planes
         d_boundary_flux[Mesh::BOTTOM][g].resize(na,
-          boundary_flux_type(nx, detran_utils::vec_dbl(nz, 0.0)));
+          boundary_flux_type(nz, detran_utils::vec_dbl(nx, 0.0)));
         d_boundary_flux[Mesh::TOP][g].resize(na,
-          boundary_flux_type(nx, detran_utils::vec_dbl(nz, 0.0)));
+          boundary_flux_type(nz, detran_utils::vec_dbl(nx, 0.0)));
         // xy planes
         d_boundary_flux[Mesh::SOUTH][g].resize(na,
-          boundary_flux_type(nx, detran_utils::vec_dbl(ny, 0.0)));
+          boundary_flux_type(ny, detran_utils::vec_dbl(nx, 0.0)));
         d_boundary_flux[Mesh::NORTH][g].resize(na,
-          boundary_flux_type(nx, detran_utils::vec_dbl(ny, 0.0)));
+          boundary_flux_type(ny, detran_utils::vec_dbl(nx, 0.0)));
     }
   }
 }

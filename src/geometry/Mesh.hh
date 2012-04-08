@@ -21,6 +21,9 @@
 namespace detran
 {
 
+
+
+
 //---------------------------------------------------------------------------//
 /*!
  *  \class Mesh
@@ -37,7 +40,8 @@ class Mesh : public detran_utils::Object
 
 public:
 
-  enum sides
+  /// Useful enumerations
+  enum SIDES
   {
     LEFT,
     RIGHT,
@@ -46,6 +50,16 @@ public:
     SOUTH,
     NORTH,
     END_SIDES
+  };
+
+  enum FACE2D
+  {
+    HORZ, VERT
+  };
+
+  enum FACE3D
+  {
+    YZ, XZ, XY
   };
 
   typedef detran_utils::SP<Mesh>            SP_mesh;
@@ -198,7 +212,10 @@ public:
   const vec_int& mesh_map(std::string map_key);
 
   /// Unimplemented DBC function.
-  virtual bool is_valid() const {};
+  bool is_valid() const
+  {
+    return true;
+  }
 
 protected:
 

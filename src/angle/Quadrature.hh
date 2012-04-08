@@ -128,7 +128,10 @@ public:
     Require(o < d_number_octants);
     Require(a >= 0);
     Require(a < d_number_angles_octant);
-    return a + (o - 1) * d_number_angles_octant;
+    int angle = a + o * d_number_angles_octant;
+    Ensure(angle >= 0);
+    Ensure(angle < d_number_angles);
+    return angle;
   }
 
   /*!
@@ -237,8 +240,8 @@ public:
   /*!
    *  \brief Unimplemented DBC method.
    */
-  virtual bool is_valid() const
-  { /* ... */ }
+  bool is_valid() const
+  { return true; }
 
 protected:
 

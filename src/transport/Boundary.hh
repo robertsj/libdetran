@@ -199,9 +199,9 @@ public:
     return d_quadrature;
   }
 
-  virtual bool is_valid() const
+  bool is_valid() const
   {
-    /* ... */
+    return true;
   }
 
 private:

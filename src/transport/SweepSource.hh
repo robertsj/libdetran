@@ -137,7 +137,12 @@ public:
     ,  d_fixed_group_source(mesh->number_cells(), 0.0)
     ,  d_scatter_group_source(mesh->number_cells(), 0.0)
     ,  d_scattersource(new ScatterSource(mesh, material, state))
-  { /* ... */ }
+  {
+    Require(d_state);
+    Require(d_mesh);
+    Require(d_quadrature);
+    Require(d_MtoD);
+  }
 
   /*!
    * \brief Set an external moment source.

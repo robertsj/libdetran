@@ -22,18 +22,12 @@ Sweeper2D::Sweeper2D(SP_input input,
                      SP_material material,
                      SP_quadrature quadrature,
                      SP_state state,
-                     SP_boundary boundary)
-  : SweeperBase<_2D>(input, mesh, material, quadrature, state, boundary)
+                     SP_boundary boundary,
+                     SP_sweepsource sweepsource)
+  : SweeperBase<_2D>(input, mesh, material, quadrature,
+		             state, boundary, sweepsource)
   , d_psi_h(mesh->number_cells_x(), 0.0)
   , d_psi_v(mesh->number_cells_y(), 0.0)
-//  , d_side_index({{{Mesh::LEFT,  Mesh::BOTTOM},
-//                   {Mesh::RIGHT, Mesh::BOTTOM},
-//                   {Mesh::LEFT,  Mesh::TOP},
-//                   {Mesh::RIGHT, Mesh::TOP}},
-//                  {{Mesh::RIGHT, Mesh::TOP},
-//                   {Mesh::LEFT,  Mesh::TOP},
-//                   {Mesh::RIGHT, Mesh::BOTTOM},
-//                   {Mesh::LEFT,  Mesh::BOTTOM}}})
 {
 
   // Check to see if input has equation type. If not, default.

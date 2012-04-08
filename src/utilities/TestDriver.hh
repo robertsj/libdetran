@@ -137,12 +137,11 @@ public:
         std::cout << " failed ";
       }
       std::cout << std::endl;
-      return 0;
     }
     catch (std::exception &err)
     {
       std::cout << "ERROR: While testing " << test_names[d_test]
-           << err.what()
+           << " " << err.what()
            << std::endl;
       return 1;
     }
@@ -154,6 +153,7 @@ public:
            << std::endl;
       return 2;
     }
+    return 1;
   }
 
   static int number_fails()

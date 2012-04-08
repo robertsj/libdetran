@@ -42,7 +42,7 @@ public:
   typedef Quadrature::SP_quadrature         SP_quadrature;
   typedef State::moments_type               moments_type;
   typedef State::angular_flux_type          angular_flux_type;
-  typedef double                            face_flux_1d[1];
+  typedef double                            face_flux_1d;
   typedef double                            face_flux_2d[2];
   typedef double                            face_flux_3d[3];
 

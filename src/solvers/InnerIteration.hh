@@ -15,7 +15,7 @@
 #include "Boundary.hh"
 #include "MomentToDiscrete.hh"
 #include "State.hh"
-#include "Sweeper2D.hh"
+#include "Sweeper.hh"
 #include "SweepSource.hh"
 
 // Utilities
@@ -91,13 +91,14 @@ public:
   typedef Material::SP_material                 SP_material;
   typedef Quadrature::SP_quadrature             SP_quadrature;
   typedef typename Boundary<D>::SP_boundary     SP_boundary;
-  typedef typename MomentToDiscrete<D>::SP_MtoD             SP_MtoD;
+  typedef typename MomentToDiscrete<D>::SP_MtoD SP_MtoD;
   // source typedefs
   typedef ExternalSource::SP_source 			      SP_externalsource;
   typedef FissionSource::SP_source 				      SP_fissionsource;
   //
-  typedef typename SweeperBase<D>::SP_sweeper   SP_sweeper;
-  typedef typename SweepSource<D>::SP_sweepsource           SP_sweepsource;
+  typedef typename Sweeper<D>::SP_sweeper       SP_sweeper;
+  typedef typename
+      SweepSource<D>::SP_sweepsource            SP_sweepsource;
   //
   typedef State::moments_type                   moments_type;
 
@@ -202,6 +203,7 @@ InnerIteration<D>::InnerIteration(SP_input          input,
   // Moments-to-Discrete
   SP_MtoD MtoD;
   MtoD = new MomentToDiscrete<D>(1); // 1 moment (0th order)
+  MtoD->build(quadrature);
 
   // Build the sweep source.
   d_sweepsource =
@@ -218,6 +220,11 @@ InnerIteration<D>::InnerIteration(SP_input          input,
     //       also allow names?
     d_sweepsource->set_moment_source(q_e);
   }
+
+  // Sweeper
+  d_sweeper = new Sweeper<D>(input, mesh, material,
+		                         quadrature, state, boundary,
+		                         d_sweepsource);
 
 }
 

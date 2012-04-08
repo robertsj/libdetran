@@ -74,7 +74,8 @@ public:
             SP_material material,
             SP_quadrature quadrature,
             SP_state state,
-            SP_boundary boundary);
+            SP_boundary boundary,
+            SP_sweepsource sweepsource);
 
   /*!
    *  \brief Sweep over all angles and space.

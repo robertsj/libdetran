@@ -10,15 +10,17 @@
 #ifndef SWEEPER2D_I_HH_
 #define SWEEPER2D_I_HH_
 
+#include <iostream>
+
 namespace detran
 {
 
 void Sweeper2D::sweep(moments_type &phi)
 {
-
-  enum inout
+  // For some clarity
+  enum FACE2D
   {
-    IN, OUT
+    HORZ, VERT
   };
 
   // Reset the flux moments

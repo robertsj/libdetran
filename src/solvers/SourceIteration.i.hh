@@ -13,6 +13,7 @@
 
 // System
 #include <algorithm>
+#include <iostream>
 
 namespace detran
 {
@@ -46,9 +47,10 @@ void SourceIteration<D>::solve(int g)
 
     // Sweep
     d_sweeper->sweep(phi);
-
+    for (int i = 0; i < 10; i++) std::cout << phi[i] << std::endl;
     // Flux residual
     residual = detran_utils::norm(phi, phi_old);
+    std::cout << "Iter: " << iter << " Res: " << residual << std::endl;
     if (residual < d_tolerance)
     {
       break;

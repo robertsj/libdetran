@@ -1,15 +1,15 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   SweeperBase.hh
+ * \file   Sweeper.hh
  * \author Jeremy Roberts
  * \date   Mar 24, 2012
- * \brief  SweeperBase class definition.
+ * \brief  Sweeper class definition.
  * \note   Copyright (C) 2012 Jeremy Roberts.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef SWEEPERBASE_HH_
-#define SWEEPERBASE_HH_
+#ifndef SWEEPER_HH_
+#define SWEEPER_HH_
 
 // Other libtran headers
 #include "Boundary.hh"
@@ -30,8 +30,8 @@ namespace detran
 
 //---------------------------------------------------------------------------//
 /*!
- * \class SweeperBase
- * \brief Base sweeper for discrete ordinates problems.
+ * \class Sweeper
+ * \brief Sweeper for discrete ordinates problems.
  *
  * The within-group transport equation is
  * \f[
@@ -49,21 +49,25 @@ namespace detran
  */
 //---------------------------------------------------------------------------//
 template <class D>
-class SweeperBase : public detran_utils::Object
+class Sweeper
 {
 
 public:
 
-  typedef detran_utils::SP<SweeperBase>     SP_sweeper;
+  typedef detran_utils::SP<Sweeper>         SP_sweeper;
   typedef State::SP_state                   SP_state;
   typedef detran_utils::InputDB::SP_input   SP_input;
   typedef Mesh::SP_mesh                     SP_mesh;
   typedef Material::SP_material             SP_material;
   typedef Quadrature::SP_quadrature         SP_quadrature;
   typedef Equation::SP_equation             SP_equation;
-  typedef typename Boundary<D>::SP_boundary SP_boundary;
+  typedef Boundary<D>                       Boundary_T;
+  typedef typename Boundary_T::SP_boundary  SP_boundary;
+  typedef typename
+      BoundaryTraits<D>::value_type         boundary_flux_type;
   //
-  typedef typename SweepSource<D>::SP_sweepsource       SP_sweepsource;
+  typedef typename
+      SweepSource<D>::SP_sweepsource        SP_sweepsource;
   //
   typedef State::moments_type               moments_type;
   typedef State::angular_flux_type          angular_flux_type;
@@ -77,34 +81,30 @@ public:
    *  \param    quadrature  Angular quadrature.
    *  \param    state       State vectors.
    */
-  SweeperBase(SP_input input,
-              SP_mesh mesh,
-              SP_material material,
-              SP_quadrature quadrature,
-              SP_state state,
-              SP_boundary boundary,
-              SP_sweepsource sweepsource)
-    :  d_input(input)
-    ,  d_mesh(mesh)
-    ,  d_quadrature(quadrature)
-    ,  d_state(state)
-    ,  d_boundary(boundary)
-    ,  d_sweepsource(sweepsource)
-    ,  d_g(-1)
-    ,  d_update_psi(false)
-  {
-    Require(d_input);
-    Require(d_mesh);
-    Require(d_quadrature);
-    Require(d_state);
-    Require(d_boundary);
-    Require(d_sweepsource);
+  Sweeper(SP_input input,
+          SP_mesh mesh,
+          SP_material material,
+          SP_quadrature quadrature,
+          SP_state state,
+          SP_boundary boundary,
+          SP_sweepsource sweepsource);
 
-    std::string equation;
-    if (input->check("update_psi"))
-    {
-      d_update_psi = input->get<int>("update_psi")==1;
-    }
+  /*!
+   *  \brief SP Constructor.
+   */
+  static detran_utils::SP<Sweeper<D> >
+  Create(detran_utils::SP<detran_utils::InputDB>   input,
+         detran_utils::SP<detran::Mesh>            mesh,
+         detran_utils::SP<detran::Material>        material,
+         detran_utils::SP<detran::Quadrature>      quadrature,
+         detran_utils::SP<detran::State>           state,
+         detran_utils::SP<detran::Boundary<D> >    boundary,
+         detran_utils::SP<detran::SweepSource<D> > sweepsource)
+  {
+    SP_sweeper p;
+    p = new Sweeper(input, mesh, material, quadrature,
+                    state, boundary, sweepsource);
+    return p;
   }
 
   /*!
@@ -121,7 +121,8 @@ public:
    *  be added with a third argument of psi type.
    *
    */
-  virtual inline void sweep(moments_type &phi) = 0;
+  inline void sweep(moments_type &phi)
+  {/* ... */}
 
   /// Setup the equations for the group
   void setup_group(int g)
@@ -141,7 +142,7 @@ public:
     return true;
   }
 
-protected:
+private:
 
   /// Input database
   SP_input d_input;
@@ -170,13 +171,47 @@ protected:
   /// Update the angular flux?
   bool d_update_psi;
 
+  /// Match incident/outgoing side with octant
+  detran_utils::vec3_int d_face_index;
+
+  /// Allocate template-specific items.
+  void setup(SP_material material)
+  {}
+
 };
 
-// Instantiations
-template class SweeperBase<_1D>;
-template class SweeperBase<_2D>;
-template class SweeperBase<_3D>;
+// Constructor
+template <class D>
+Sweeper<D>::Sweeper(SP_input input,
+                    SP_mesh mesh,
+                    SP_material material,
+                    SP_quadrature quadrature,
+                    SP_state state,
+                    SP_boundary boundary,
+                    SP_sweepsource sweepsource)
+  : d_input(input)
+  , d_mesh(mesh)
+  , d_quadrature(quadrature)
+  , d_state(state)
+  , d_boundary(boundary)
+  , d_sweepsource(sweepsource)
+{
+  Require(d_input);
+  Require(d_mesh);
+  Require(d_quadrature);
+  Require(d_state);
+  Require(d_boundary);
+  Require(d_sweepsource);
+  Require(material);
+  setup(material);
+  Ensure(d_equation);
+}
 
 } // end namespace detran
 
-#endif /* SWEEPERBASE_HH_ */
+// Template specializations
+#include "Sweeper1D.t.hh"
+#include "Sweeper2D.t.hh"
+#include "Sweeper3D.t.hh"
+
+#endif /* SWEEPER_HH_ */

@@ -14,7 +14,7 @@
 
 // Detran headers
 #include "TestDriver.hh"
-#include "Sweeper2D.hh"
+#include "Sweeper.hh"
 
 // Setup
 #include "geometry/test/mesh_fixture.hh"
@@ -37,6 +37,7 @@ int main(int argc, char *argv[])
 
 int test_Sweeper2D_basic()
 {
+  typedef Sweeper<_2D> Sweeper2D;
 
   // Test fixtures
   SP_mesh mesh          = mesh_2d_fixture();
@@ -58,16 +59,16 @@ int test_Sweeper2D_basic()
   bound = new Boundary<_2D>(input, mesh, quad);
 
   // Sweeper
-  Sweeper2D sweeper(input, mesh, mat,
-                    quad, state, bound);
-
-  // Get moments and make source.
-  State::moments_type phi = state->phi(0);
-  State::moments_type source(phi);
-  source.assign(source.size(), 1.0);
-
-  // Sweep.
-  sweeper.setup_group(0);
+//  Sweeper2D sweeper(input, mesh, mat,
+//                    quad, state, bound, source);
+//
+//  // Get moments and make source.
+//  State::moments_type phi = state->phi(0);
+//  State::moments_type source(phi);
+//  source.assign(source.size(), 1.0);
+//
+//  // Sweep.
+//  sweeper.setup_group(0);
   //sweeper.sweep(phi);
 
   // Tests.

@@ -54,7 +54,7 @@ public:
     return p;
   }
 
-  virtual double source(int cell, int group)
+  double source(int cell, int group)
   {
     Require(cell >= 0);
     Require(cell < d_mesh->number_cells());
@@ -63,7 +63,7 @@ public:
     return d_source;
   }
 
-  virtual double source(int cell, int group, int angle)
+  double source(int cell, int group, int angle)
   {
     Require(cell >= 0);
     Require(cell < d_mesh->number_cells());

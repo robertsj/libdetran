@@ -40,8 +40,9 @@ namespace detran_test
       mesh = mesh_3d_fixture();
     }
 
-    SP_source q_e;
+    detran::ConstantSource::SP_source q_e;
     q_e = new detran::ConstantSource(mesh, quad, 2);
+    q_e->set_source(1.0);
     return q_e;
 
   }
