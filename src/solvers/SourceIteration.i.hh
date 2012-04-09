@@ -21,47 +21,55 @@ namespace detran
 template <class D>
 void SourceIteration<D>::solve(int g)
 {
-
   // Setup boundary conditions.
+  // \todo
 
   // Set the equations.
   d_sweeper->setup_group(g);
 
-  // Build the fixed source.
+  // Build the fixed source.  This includes external, fission, and in-scatter.
   d_sweepsource->build_fixed_with_scatter(g);
 
   // Get flux and allocate last flux.
   moments_type phi(d_state->phi(g));
   moments_type phi_old(phi.size(), 0.0);
 
+  // Construct within group.
+  d_sweepsource->build_within_group_scatter(g, phi);
+
   // Iterate.
   double residual = 0.0;
-  int iter;
-  for (iter = 0; iter < d_max_iters; iter++)
+  int iteration;
+  for (iteration = 0; iteration < d_max_iters; iteration++)
   {
+
+    // Update boundary
+    // \todo
+
+    // Swap old and new.
+    std::swap(phi, phi_old);
+
+    // Sweep.
+    d_sweeper->sweep(phi);
+
+    // Flux residual (relative to old one to avoid 1/0)
+    residual = norm_relative_residual(phi_old, phi);
+
+    std::cout << "Iter: " << iteration << " Res: " << residual << std::endl;
+    if (residual < d_tolerance)
+    {
+      break;
+    }
 
     // Construct within group
     d_sweepsource->build_within_group_scatter(g, phi);
 
-    // Update boundary
-
-    // Sweep
-    d_sweeper->sweep(phi);
-
-    // Flux residual
-    residual = norm_relative_residual(phi, phi_old);
-    std::cout << "Iter: " << iter << " Res: " << residual << std::endl;
-    if (residual < d_tolerance) break;
-
-    // Store flux without copying.
-    //for (int i = 0; i < d_mesh->number_cells(); i++) phi_old[i] = phi[i];
-    std::swap(phi, phi_old);
-
   } // end iterations
 
   // did we converge?
+  // \todo
 
-  // Replace flux.
+  // Update the state with the new flux.
   d_state->phi(g) = phi;
 
 }

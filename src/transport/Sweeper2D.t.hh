@@ -28,7 +28,6 @@ void Sweeper<_2D>::setup(SP_material material)
   std::string equation;
   if (d_input->check("equation"))
   {
-    cout << "equation found." << endl;
     equation = d_input->get<std::string>("equation");
   }
   else
@@ -43,7 +42,6 @@ void Sweeper<_2D>::setup(SP_material material)
   }
   else
   {
-    std::cout << " equation = " << equation << std::endl;
     THROW("Unsupported equation type");
   }
 
@@ -62,6 +60,7 @@ void Sweeper<_2D>::setup(SP_material material)
 template<>
 inline void Sweeper<_2D>::sweep(moments_type &phi)
 {
+
   // Reset the flux moments
   phi.assign(phi.size(), 0.0);
 
@@ -72,16 +71,6 @@ inline void Sweeper<_2D>::sweep(moments_type &phi)
   // Reference boundary fluxes for notational clarity.
   boundary_flux_type psi_v;
   boundary_flux_type psi_h;
-
-  // Mesh loop bounds.  This is temporary: a cleaner approach will include adjoint.
-  int ib[4][3] = { {0, d_mesh->number_cells_x(),  1},
-                   {d_mesh->number_cells_x(), 0, -1},
-                   {d_mesh->number_cells_x(), 0, -1},
-                   {0, d_mesh->number_cells_x(),  1}};
-  int jb[4][3] = { {0, d_mesh->number_cells_y(),  1},
-                   {0, d_mesh->number_cells_y(),  1},
-                   {d_mesh->number_cells_y(), 0, -1},
-                   {d_mesh->number_cells_y(), 0, -1}};
 
   // Sweep over all octants
   for (int o = 0; o < 4; o++)
@@ -108,7 +97,7 @@ inline void Sweeper<_2D>::sweep(moments_type &phi)
         psi = d_state->psi(o, a, d_g);
       }
 
-      // Get boundary fluxes (are member v's needed?)
+      // Get boundary fluxes (are member v's needed?) \todo
       psi_v = (*d_boundary)
           (d_face_index[o][Mesh::VERT][Boundary_T::IN], o, a, d_g);
       psi_h = (*d_boundary)
@@ -144,11 +133,11 @@ inline void Sweeper<_2D>::sweep(moments_type &phi)
 
       } // end y loop
 
-      // Update boundary
-      (*d_boundary)
-          (d_face_index[o][Mesh::VERT][Boundary_T::OUT], o, a, d_g) = psi_v;
-      (*d_boundary)
-          (d_face_index[o][Mesh::HORZ][Boundary_T::OUT], o, a, d_g) = psi_h;
+      // Update boundary  \todo
+      //(*d_boundary)
+      //    (d_face_index[o][Mesh::VERT][Boundary_T::OUT], o, a, d_g) = psi_v;
+      //(*d_boundary)
+      //    (d_face_index[o][Mesh::HORZ][Boundary_T::OUT], o, a, d_g) = psi_h;
 
     } // end angle loop
 

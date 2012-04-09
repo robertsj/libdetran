@@ -36,7 +36,7 @@ public:
   typedef InnerIteration<D>                     Base;
   typedef typename InnerIteration<D>::SP_inner  SP_base;
   // basic objects
-  typedef InputDB::SP_input       SP_input;
+  typedef InputDB::SP_input                     SP_input;
   typedef State::SP_state                       SP_state;
   typedef Mesh::SP_mesh                         SP_mesh;
   typedef Material::SP_material                 SP_material;

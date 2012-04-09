@@ -205,7 +205,7 @@ InnerIteration<D>::InnerIteration(SP_input          input,
   }
   if (input->check("inner_tolerance"))
   {
-    d_tolerance = input->get<int>("inner_tolerance");
+    d_tolerance = input->get<double>("inner_tolerance");
   }
   else
   {

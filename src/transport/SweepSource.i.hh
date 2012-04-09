@@ -32,12 +32,12 @@ namespace detran
       }
     }
 
-    // Add fission source, if present
+    // Add fission source, if present \todo
     if (d_fissionsource)
     {
       for (int cell = 0; cell < d_mesh->number_cells(); cell++)
       {
-       // d_fixed_group_source[cell] = d_fissionsource;
+        //d_fixed_group_source[cell] = d_fissionsource;
       }
     }
 
@@ -46,7 +46,7 @@ namespace detran
   template <class D>
   inline void SweepSource<D>::build_fixed_with_scatter(int g)
   {
-    std::cout << "build fixed w scatter" << std::endl;
+
     // Add the external and/or fission source first.
     build_fixed(g);
 
@@ -63,6 +63,8 @@ namespace detran
 
     // Build within-group scattering
     d_scattersource->build_within_group_source(g, phi, d_scatter_group_source);
+
+
 
   }
 
@@ -83,6 +85,8 @@ namespace detran
   {
     // Zero out.
     d_source.assign(d_source.size(), 0.0);
+
+    // Add moment contributions.
     for (int cell = 0; cell < d_mesh->number_cells(); cell++)
     {
       // Add fixed contribution \todo need to use mtod
@@ -94,7 +98,8 @@ namespace detran
                    //     (*d_MtoD)(o, a, 0, 0);
 
     }
-    // Add discrete contribution if present.
+
+    // Add discrete contributions if present.
     for (int i = 0; i < d_discrete_external_sources.size(); i++)
     {
       for (int cell = 0; cell < d_mesh->number_cells(); cell++)

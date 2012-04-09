@@ -56,8 +56,8 @@ int test_SourceIteration_2D()
   input = new InputDB();
   input->put<string>(  "equation",          "dd");
   input->put<int>(     "number_groups",     1);
-  input->put<int>(     "inner_max_iters",   2);
-  input->put<int>(     "inner_tolerance",   1e-8);
+  input->put<int>(     "inner_max_iters",   5);
+  input->put<double>(  "inner_tolerance",   1e-14);
 
   // State
   SourceIteration<_2D>::SP_state state;
@@ -75,15 +75,9 @@ int test_SourceIteration_2D()
   solver.solve(0);
 
   State::moments_type phi = state->phi(0);
-  for (int j = 0; j < mesh->number_cells_y(); j++)
-  {
-    for (int i = 0; i < mesh->number_cells_x(); i++)
-    {
-      int cell = mesh->index(i, j, 0);
-      cout << phi[cell] << " ";
-    }
-    cout << endl;
-  }
+  TEST(soft_equiv(phi[0], 3.402625949151646e-01));
+  TEST(soft_equiv(phi[1], 4.334557647118027e-01));
+  TEST(soft_equiv(phi[4], 5.486109632367223e-01));
 
   return 0;
 }

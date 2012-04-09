@@ -6,16 +6,11 @@
  * \brief  
  * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
-//---------------------------------------------------------------------------//
-// $Rev::                                               $:Rev of last commit
-// $Author:: j.alyn.roberts@gmail.com                   $:Author of last commit
-// $Date::                                              $:Date of last commit
-//---------------------------------------------------------------------------//
 
-// Angle headers
+// Detran
 #include "QuadrupleRange.hh"
 
-// System headers
+// System
 #include <iostream>
 #include <cstdio>
 #include <cmath>
@@ -26,13 +21,13 @@ namespace detran
 QuadrupleRange::QuadrupleRange(int order, int dim)
   : Quadrature(order,
                dim,
-               order*order/2*std::pow(2, dim),
+               order*std::pow(2, dim),
                "QuadrupleRange")
 {
   Require(order % 2 == 0); // need an even order
 
-  int number_phi   = order;
-  int number_theta = order / 2;
+  int number_phi   = std::sqrt(2*order); // n*n/2
+  int number_theta = number_phi / 2;
 
   // compute mu and eta for the first quadrant
   double sintheta = 0;
@@ -44,8 +39,8 @@ QuadrupleRange::QuadrupleRange(int order, int dim)
   for (int i = 0; i < number_phi; i++)
   {
     cosphi = get_phi(number_phi, 0, i);
-    sinphi = std::sqrt(1 - cosphi * cosphi);
-    wphi = get_phi(number_phi, 1, i);
+    sinphi = std::sqrt(1.0 - cosphi * cosphi);
+    wphi   = get_phi(number_phi, 1, i);
     for (int j = 0; j < number_theta; j++)
     {
       sintheta     = get_theta(number_theta, 0, j);

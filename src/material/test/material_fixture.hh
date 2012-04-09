@@ -52,10 +52,10 @@ static SP_material material_fixture_1g()
   // Material 1: pure absorber
   // ---------------------------
   // Total
-  mat->set_sigma_t(1, 0, 1.0);
+  mat->set_sigma_t(1, 0,    1.0);
   // Fission (none)
   mat->set_nu_sigma_f(1, 0, 0.0);
-  mat->set_chi(1, 0, 0.0);
+  mat->set_chi(1, 0,        0.0);
   // Scattering
   mat->set_sigma_s(1, 0, 0, 0.0); // 1 <- 1
 

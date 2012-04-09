@@ -224,9 +224,8 @@ Sweeper<D>::Sweeper(SP_input input,
   if (d_input->check("store_angular_flux"))
   {
     d_update_psi = d_input->get<int>("store_angular_flux");
-    std::cout << "update psi found " << d_update_psi << std::endl;
   }
-  std::cout << "update psi found " << d_update_psi << std::endl;
+
 }
 
 // Mesh sweeper indices

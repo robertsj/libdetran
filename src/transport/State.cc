@@ -35,12 +35,8 @@ State::State(SP_input        input,
   if (input->check("store_angular_flux"))
   {
     store_psi = input->get<int>("store_angular_flux");
-    std::cout << " storing psi!!! " << std::endl;
   }
-  else
-  {
-    std::cout << " not storing psi!!! " << std::endl;
-  }
+
   if (store_psi > 0)
   {
     d_store_angular_flux = true;
