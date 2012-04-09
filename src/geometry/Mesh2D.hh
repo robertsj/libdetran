@@ -28,11 +28,8 @@ class Mesh2D : public Mesh
 
 public:
 
-  typedef detran_utils::SP<Mesh2D>          SP_mesh;
-  typedef Mesh                              Base;
-  typedef Base::vec_int                     vec_int;
-  typedef Base::vec_dbl                     vec_dbl;
-
+  typedef SP<Mesh2D>    SP_mesh;
+  typedef Mesh          Base;
 
   /*!
    *  \brief Constructor.
@@ -63,9 +60,11 @@ public:
     *  \param    ycme        Coarse mesh edges y dimension.
     *  \param    mat_map     Coarse mesh material map.
     */
-   static detran_utils::SP<Mesh> Create(vec_int xfm, vec_int yfm, vec_dbl xcme, vec_dbl ycme, vec_int mat_map)
+   static SP<Mesh> Create(vec_int xfm, vec_int yfm,
+                          vec_dbl xcme, vec_dbl ycme,
+                          vec_int mat_map)
    {
-     detran_utils::SP<Mesh> p;
+     SP_mesh p;
      p = new Mesh2D(xfm, yfm, xcme, ycme, mat_map);
      return p;
    }
@@ -77,9 +76,9 @@ public:
     *  \param    yfme        Fine mesh edges y dimension.
     *  \param    mat_map     Fine mesh material map.
     */
-    static detran_utils::SP<Mesh> Create(vec_dbl xfme, vec_dbl yfme, vec_int mat_map)
+    static SP<Mesh> Create(vec_dbl xfme, vec_dbl yfme, vec_int mat_map)
     {
-      detran_utils::SP<Mesh> p;
+      SP_mesh p;
       p = new Mesh2D(xfme, yfme, mat_map);
       return p;
     }

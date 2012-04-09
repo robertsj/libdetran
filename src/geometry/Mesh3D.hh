@@ -28,11 +28,8 @@ class Mesh3D : public Mesh
 
 public:
 
-  typedef detran_utils::SP<Mesh3D>          SP_mesh;
-  typedef Mesh                              Base;
-  typedef Base::vec_int                     vec_int;
-  typedef Base::vec_dbl                     vec_dbl;
-
+  typedef SP<Mesh3D>    SP_mesh;
+  typedef Mesh          Base;
 
   /*!
    *  \brief Constructor.
@@ -70,11 +67,11 @@ public:
     *  \param    zcme        Coarse mesh edges z dimension.
     *  \param    mat_map     Coarse mesh material map.
     */
-   static detran_utils::SP<Mesh>  Create(vec_int xfm,  vec_int yfm,  vec_int zfm,
-                                         vec_dbl xcme, vec_dbl ycme, vec_dbl zcme,
-                                         vec_int mat_map)
+   static SP<Mesh> Create(vec_int xfm,  vec_int yfm,  vec_int zfm,
+                          vec_dbl xcme, vec_dbl ycme, vec_dbl zcme,
+                          vec_int mat_map)
    {
-     detran_utils::SP<Mesh> p;
+     SP_mesh p;
      p = new Mesh3D(xfm, yfm, zfm, xcme, ycme, zcme, mat_map);
      return p;
    }
@@ -87,12 +84,10 @@ public:
     *  \param    zfme        Fine mesh edges z dimension.
     *  \param    mat_map     Fine mesh material map.
     */
-    static detran_utils::SP<Mesh>  Create(vec_dbl xfme,
-                                          vec_dbl yfme,
-                                          vec_dbl zfme,
-                                          vec_int mat_map)
+    static SP<Mesh> Create(vec_dbl xfme, vec_dbl yfme, vec_dbl zfme,
+                           vec_int mat_map)
     {
-      detran_utils::SP<Mesh> p;
+      SP_mesh p;
       p = new Mesh3D(xfme, yfme, zfme, mat_map);
       return p;
     }

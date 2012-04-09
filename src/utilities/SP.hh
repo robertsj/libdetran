@@ -7,12 +7,12 @@
  */
 //---------------------------------------------------------------------------//
 
-#ifndef detran_utils_SP_hh
-#define detran_utils_SP_hh
+#ifndef detran_SP_hh
+#define detran_SP_hh
 
 #include "DBC.hh"
 
-namespace detran_utils
+namespace detran
 {
  
 //===========================================================================//
@@ -166,7 +166,7 @@ class SP
     bool operator!=(const SP<T> &sp_in) const { return p != sp_in.p; }
 };
 
-} // end namespace denovo
+} // end namespace detran
 
 //---------------------------------------------------------------------------//
 // INLINE AND TEMPLATE MEMBERS
@@ -174,8 +174,8 @@ class SP
 
 #include "SP.i.hh"
 
-#endif // utils_SP_hh
+#endif // detran_SP_hh
 
 //---------------------------------------------------------------------------//
-//              end of utils/SP.hh
+//              end of SP.hh
 //---------------------------------------------------------------------------//

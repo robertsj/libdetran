@@ -114,11 +114,11 @@ public:
 
   /// \name Useful Typedefs
   //\{
-  typedef typename detran_utils::SP<MomentToDiscrete> SP_MtoD;
-  typedef unsigned int                                size_type;
-  typedef detran_utils::vec_dbl                       M_Row;
-  typedef std::vector<M_Row>                          Operator_M;
-  typedef Quadrature::SP_quadrature                   SP_quadrature;
+  typedef SP<MomentToDiscrete>              SP_MtoD;
+  typedef unsigned int                      size_type;
+  typedef vec_dbl                           M_Row;
+  typedef std::vector<M_Row>                Operator_M;
+  typedef Quadrature::SP_quadrature         SP_quadrature;
   //\}
 
   /*!

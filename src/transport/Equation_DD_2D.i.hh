@@ -23,6 +23,11 @@ inline void Equation_DD_2D::solve(int i,
                                   moments_type &phi,
                                   angular_flux_type &psi)
 {
+  // Preconditions.  (The client *must* set group and angles.)
+  Require(d_g >= 0);
+  Require(d_angle >= 0);
+  Require(d_octant >= 0);
+
   // Compute cell-center angular flux.
   int cell = d_mesh->index(i, j);
   double coef = 1.0 / (d_material->sigma_t(d_mat_map[cell], d_g) +

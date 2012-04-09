@@ -7,7 +7,7 @@
 
 #include "Warning.hh"
 
-namespace detran_utils
+namespace detran
 {
 
 #ifdef DETRAN_ENABLE_DEBUG
@@ -22,4 +22,4 @@ void warning(int type, std::string message)
 
 #endif
 
-} // end namespace detran_utils
+} // end namespace detran

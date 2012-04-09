@@ -36,7 +36,7 @@ double SphericalHarmonics::Y_lm(int l,
     Require (xi >= -1.0);
     Require (xi <= 1.0);
     Require (varphi >= 0.0);
-    Require (varphi <= detran_utils::two_pi);
+    Require (varphi <= two_pi);
 
     double sintheta = sqrt(1.0 - xi*xi);
     double mu     = sintheta*cos(varphi);
@@ -75,7 +75,6 @@ double  SphericalHarmonics::get_Y_lm(int l,
                                      double xi )
 {
   using std::fabs;
-  using detran_utils::soft_equiv;
   Require (l >= 0);
   Require (m <= l);
   Require (m >= -l);

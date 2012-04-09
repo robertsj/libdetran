@@ -10,10 +10,10 @@
 // $Id: SP.i.hh,v 1.1 2008/05/19 17:43:34 TMEvans Stab $
 //---------------------------------------------------------------------------//
 
-#ifndef utils_SP_i_hh
-#define utils_SP_i_hh
+#ifndef detran_SP_i_hh
+#define detran_SP_i_hh
 
-namespace detran_utils
+namespace detran
 {
 
 //---------------------------------------------------------------------------//
@@ -323,9 +323,9 @@ void SP<T>::free()
     }
 }
 
-}
+} // end namespace detran
 
-#endif // utils_SP_i_hh
+#endif // detran_SP_i_hh
 
 //---------------------------------------------------------------------------//
 //              end of utils/SP.i.hh

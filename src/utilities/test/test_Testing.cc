@@ -20,7 +20,7 @@
 #include <iostream>
 #include <cstdlib>
 
-using namespace detran_utils;
+using namespace detran_test;
 using namespace std;
 
 int main(int argc, char *argv[])

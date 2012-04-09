@@ -32,11 +32,11 @@ class SourceIteration: public InnerIteration<D>
 
 public:
 
-  typedef detran_utils::SP<SourceIteration>     SP_inner;
+  typedef SP<SourceIteration>                   SP_inner;
   typedef InnerIteration<D>                     Base;
   typedef typename InnerIteration<D>::SP_inner  SP_base;
   // basic objects
-  typedef detran_utils::InputDB::SP_input       SP_input;
+  typedef InputDB::SP_input       SP_input;
   typedef State::SP_state                       SP_state;
   typedef Mesh::SP_mesh                         SP_mesh;
   typedef Material::SP_material                 SP_material;
@@ -81,15 +81,15 @@ public:
    *  \param    ycme        Coarse mesh edges y dimension.
    *  \param    mat_map     Coarse mesh material map.
    */
-  static detran_utils::SP<SourceIteration<D> >
-  Create(detran_utils::SP<detran_utils::InputDB>   input,
-         detran_utils::SP<detran::State>           state,
-         detran_utils::SP<detran::Mesh>            mesh,
-         detran_utils::SP<detran::Material>        material,
-         detran_utils::SP<detran::Quadrature>      quadrature,
-         detran_utils::SP<detran::Boundary<D> >    boundary,
-         detran_utils::SP<detran::ExternalSource>  q_e,
-         detran_utils::SP<detran::FissionSource>   q_f)
+  static SP<SourceIteration<D> >
+  Create(SP<InputDB>                 input,
+         SP<detran::State>           state,
+         SP<detran::Mesh>            mesh,
+         SP<detran::Material>        material,
+         SP<detran::Quadrature>      quadrature,
+         SP<detran::Boundary<D> >    boundary,
+         SP<detran::ExternalSource>  q_e,
+         SP<detran::FissionSource>   q_f)
   {
     SP_inner p;
     p = new SourceIteration(input, state, mesh, material,

@@ -20,8 +20,6 @@ template<>
   {
 
     // Set up face/octant map.
-    using detran_utils::vec2_int;
-    using detran_utils::vec_int;
     d_face_index.resize(8, vec2_int(3, vec_int(2, 0)));
     // octant / surface type / inout
     for (int i = 0; i < 8; i++)

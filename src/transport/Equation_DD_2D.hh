@@ -25,7 +25,7 @@ class Equation_DD_2D : public Equation<_2D>
 
 public:
 
-  typedef detran_utils::SP<Equation>        SP_equation;
+  typedef SP<Equation>                      SP_equation;
   typedef Equation<_2D>::SP_material        SP_material;
   typedef Equation<_2D>::SP_mesh            SP_mesh;
   typedef Equation<_2D>::SP_quadrature      SP_quadrature;
@@ -98,16 +98,10 @@ public:
 private:
 
   /// X-directed coefficient, \f$ 2|\mu|/\Delta_x \f$.
-  detran_utils::vec_dbl d_coef_x;
+  vec_dbl d_coef_x;
 
   /// Y-directed coefficient, \f$ 2|\eta|/\Delta_y \f$.
-  detran_utils::vec_dbl d_coef_y;
-
-  /// Current octant index.
-  int d_octant;
-
-  /// Current angle index.
-  int d_angle;
+  vec_dbl d_coef_y;
 
 };
 

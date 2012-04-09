@@ -11,6 +11,7 @@
 
 // System headers
 #include <numeric>
+#include <iostream>
 
 namespace detran
 {
@@ -130,7 +131,7 @@ void Mesh::add_mesh_map(std::string map_key, vec_int mesh_map)
 /*!
  *
  */
-const Mesh::vec_int& Mesh::mesh_map(std::string map_key)
+const vec_int& Mesh::mesh_map(std::string map_key)
 {
   // Add the new value.
   return d_mesh_map[map_key];
@@ -194,6 +195,50 @@ void Mesh::setup()
   }
 
 }
+
+void Mesh::display() const
+{
+  using std::cout;
+  using std::endl;
+  cout << endl << "Detran Mesh" << endl;
+  cout << "           dimension: " << d_dimension << endl;
+  cout << "        number cells: " << d_number_cells << endl;
+  cout << "      number x cells: " << d_number_cells_x << endl;
+  cout << "      number y cells: " << d_number_cells_y << endl;
+  cout << "      number z cells: " << d_number_cells_z << endl;
+  cout << " x coarse mesh edges: " << endl << "   ";
+  for (int i = 0; i < d_xcme.size(); i++)
+  {
+    cout << d_xcme[i] << " ";
+  }
+  cout << endl << " y coarse mesh edges: " << endl << "   ";
+  for (int i = 0; i < d_ycme.size(); i++)
+  {
+    cout << d_ycme[i] << " ";
+  }
+  cout << endl << " z coarse mesh edges: " << endl << "   ";
+  for (int i = 0; i < d_zcme.size(); i++)
+  {
+    cout << d_zcme[i] << " ";
+  }
+  cout << endl << " x fine mesh count: " << endl << "   ";
+  for (int i = 0; i < d_xfm.size(); i++)
+  {
+    cout << d_xfm[i] << " ";
+  }
+  cout << endl << " y fine mesh count: " << endl << "   ";
+  for (int i = 0; i < d_yfm.size(); i++)
+  {
+    cout << d_yfm[i] << " ";
+  }
+  cout << endl << " z fine mesh count: " << endl << "   ";
+  for (int i = 0; i < d_zfm.size(); i++)
+  {
+    cout << d_zfm[i] << " ";
+  }
+  cout << endl << endl;
+}
+
 
 
 } // end namespace detran

@@ -14,7 +14,6 @@
 #include "Definitions.hh"
 #include "DBC.hh"
 #include "SP.hh"
-#include "Warning.hh"
 
 namespace detran
 {
@@ -25,19 +24,14 @@ namespace detran
  * \brief Simple cross section container.
  */
 //===========================================================================//
-class Material : public detran_utils::Object
+class Material : public Object
 {
 
 public:
 
   /// \name Useful typedefs when using Material
   /// \{
-  typedef detran_utils::SP<Material>            SP_material;
-  typedef detran_utils::vec_dbl                 vec_dbl;
-  typedef detran_utils::vec_int                 vec_int;
-  typedef detran_utils::vec2_dbl                vec2_dbl;
-  typedef detran_utils::vec2_int                vec2_int;
-  typedef detran_utils::vec3_dbl                vec3_dbl;
+  typedef SP<Material> SP_material;
   /// \}
 
   /*!

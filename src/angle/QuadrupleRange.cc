@@ -623,8 +623,7 @@ double QuadrupleRange::get_phi(int N, int i, int j)
     }
     else
     {
-        throw detran_utils::GenException(__LINE__, __FILE__,
-                                         "Unsupported value of N for phi.");
+        THROW("Unsupported value of N for phi.");
     }
     if ( i == 0 )
         return a[j]; // return cos(phi_j)
@@ -932,8 +931,7 @@ double QuadrupleRange::get_theta(int N, int i, int j)
   }
   else
   {
-    detran_utils::GenException(__LINE__, __FILE__,
-                               "Unsupported value of N for theta.");
+    THROW("Unsupported value of N for theta.");
   }
   if (i == 0)
   {

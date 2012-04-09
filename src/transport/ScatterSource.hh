@@ -32,18 +32,18 @@ namespace detran
  */
 //===========================================================================//
 
-class ScatterSource: public detran_utils::Object
+class ScatterSource: public Object
 {
 
 public:
 
-  typedef detran_utils::SP<ScatterSource>   SP_source;
+  typedef SP<ScatterSource>         SP_source;
   //
-  typedef Mesh::SP_mesh                     SP_mesh;
-  typedef Material::SP_material             SP_material;
-  typedef State::SP_state                   SP_state;
+  typedef Mesh::SP_mesh             SP_mesh;
+  typedef Material::SP_material     SP_material;
+  typedef State::SP_state           SP_state;
   //
-  typedef State::moments_type               moments_type;
+  typedef State::moments_type       moments_type;
 
   ScatterSource(SP_mesh mesh, SP_material material, SP_state state);
 
@@ -156,7 +156,7 @@ protected:
   SP_state d_state;
 
   /// Material map
-  Mesh::vec_int d_mat_map;
+  vec_int d_mat_map;
 
 };
 

@@ -15,7 +15,7 @@
 #include "DBC.hh"
 #include "Definitions.hh"
 
-namespace detran_utils
+namespace detran
 {
 
 //===========================================================================//
@@ -134,7 +134,7 @@ template <typename T>
 int SimpleDB::type_index<T>::val = -1;
 
 
-} // end namespace detran_utils
+} // end namespace detran
 
 #endif /* SIMPLEDP_HH_ */
 

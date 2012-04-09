@@ -24,7 +24,6 @@
 
 using namespace detran;
 using namespace detran_test;
-using namespace detran_utils;
 using namespace std;
 
 int main(int argc, char *argv[])
@@ -41,19 +40,25 @@ int test_SourceIteration_2D()
 
   // Test fixtures
   SP_material mat       = material_fixture_1g();
-  SP_mesh mesh          = mesh_2d_fixture(1);
+  SP_mesh mesh          = mesh_2d_fixture(1);   // pure absorbing box
   SP_quadrature quad    = quadruplerange_fixture();
-  SP_source q_e         = constant_source_fixture(2);
+
+  // Source; uniform, unit, isotropic. (mesh, quad, ng)
+  ConstantSource::SP_source q_e;
+  q_e = new detran::ConstantSource(mesh, quad, 1);
+  q_e->set_source(1.0);
+
+  // Empty fission source
   SourceIteration<_2D>::SP_fissionsource q_f;
 
   // Input
   SourceIteration<_2D>::SP_input input;
   input = new InputDB();
-  input->put<string>("equation", "dd");
-  input->put<int>("number_groups", 2);
-  input->put<int>("inner_max_iters", 100);
-  input->put<int>("inner_tolerance", 0.0001);
-  if (input->check("inner_max_iters")) cout << " found max iters " << endl;
+  input->put<string>(  "equation",          "dd");
+  input->put<int>(     "number_groups",     1);
+  input->put<int>(     "inner_max_iters",   2);
+  input->put<int>(     "inner_tolerance",   1e-8);
+
   // State
   SourceIteration<_2D>::SP_state state;
   state = new State(input, mesh, quad);
@@ -79,9 +84,6 @@ int test_SourceIteration_2D()
     }
     cout << endl;
   }
-  // Solve second group.
-  //solver.solve(1);
-
 
   return 0;
 }

@@ -21,7 +21,6 @@
 
 using namespace detran;
 using namespace detran_test;
-using namespace detran_utils;
 using namespace std;
 
 int main(int argc, char *argv[])
@@ -49,7 +48,7 @@ int test_Mesh2D_basic()
   TEST(mesh->dimension()        == 2);
   TEST(mesh->index(5, 5)        == 105);
 
-  Mesh2D::vec_int mat_map = mesh->mesh_map("MATERIAL");
+  vec_int mat_map = mesh->mesh_map("MATERIAL");
   TEST(mat_map[0]               == 0);
   TEST(mat_map[10]              == 1);
 

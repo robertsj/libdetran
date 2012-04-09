@@ -18,7 +18,7 @@
 // System
 #include <cmath>
 
-namespace detran_utils
+namespace detran
 {
 
 /// L2 norm of the residual of two vectors.
@@ -48,7 +48,7 @@ inline double norm_relative_residual(vec_dbl &x, vec_dbl &y)
   return std::sqrt(v);
 }
 
-} // namespace detran
+} // namespace
 
 #endif /* MATHUTILITIES_HH_ */
 

@@ -86,11 +86,11 @@ namespace detran
     for (int cell = 0; cell < d_mesh->number_cells(); cell++)
     {
       // Add fixed contribution \todo need to use mtod
-      d_source[cell] += d_fixed_group_source[cell] * detran_utils::inv_four_pi;
+      d_source[cell] += d_fixed_group_source[cell] * inv_four_pi;
                        // (*d_MtoD)(o, a, 0, 0);
 
       // Add scatter contribution
-      d_source[cell] += d_scatter_group_source[cell] * detran_utils::inv_four_pi;
+      d_source[cell] += d_scatter_group_source[cell] * inv_four_pi;
                    //     (*d_MtoD)(o, a, 0, 0);
 
     }

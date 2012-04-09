@@ -40,24 +40,24 @@ namespace std
   %template(vec_dbl) vector<double>;
 }
 
-%template(InputDBSP)  detran_utils::SP<detran_utils::InputDB>;
+%template(InputDBSP) detran::SP<detran::InputDB>;
 
 
-namespace detran_utils
+namespace detran
 {
 
-%template(get_int)      InputDB::get<int>;
-%template(get_dbl)      InputDB::get<double>;
-%template(get_vec_int)  InputDB::get<vec_int>;
-%template(get_vec_dbl)  InputDB::get<vec_dbl>;
-%template(get_str)      InputDB::get<std::string>;
-%template(put_int)      InputDB::put<int>;
-%template(put_dbl)      InputDB::put<double>;
-%template(put_vec_int)  InputDB::put<vec_int>;
-%template(put_vec_dbl)  InputDB::put<vec_dbl>;
-%template(put_str)      InputDB::put<std::string>;
+%template(get_int)      detran::InputDB::get<int>;
+%template(get_dbl)      detran::InputDB::get<double>;
+%template(get_vec_int)  detran::InputDB::get<detran::vec_int>;
+%template(get_vec_dbl)  detran::InputDB::get<detran::vec_dbl>;
+%template(get_str)      detran::InputDB::get<std::string>;
+%template(put_int)      detran::InputDB::put<int>;
+%template(put_dbl)      detran::InputDB::put<double>;
+%template(put_vec_int)  detran::InputDB::put<detran::vec_int>;
+%template(put_vec_dbl)  detran::InputDB::put<detran::vec_dbl>;
+%template(put_str)      detran::InputDB::put<std::string>;
 
-} // end namespace detran_utils
+} // end namespace detran
 
 
 

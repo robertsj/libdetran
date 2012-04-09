@@ -11,7 +11,7 @@
 
 #include <vector>
 
-namespace detran_utils
+namespace detran
 {
 
 typedef std::vector<int>      vec_int;
@@ -23,6 +23,7 @@ typedef std::vector<vec_dbl>  vec2_dbl;
 typedef std::vector<vec2_int> vec3_int;
 typedef std::vector<vec2_dbl> vec3_dbl;
 
-} // end namespace detran_utils
+} // end namespace detran
+
 
 #endif // DETRAN_UTILS_DEFINITIONS_HH_

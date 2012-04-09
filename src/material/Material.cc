@@ -5,8 +5,11 @@
  *      Author: robertsj
  */
 
-// Material headers
+// Detran
 #include "Material.hh"
+
+// Utilities
+#include "Warning.hh"
 
 // System headers
 #include <iostream>
@@ -232,7 +235,7 @@ void Material::finalize()
   {
     if (d_downscatter == false)
     {
-      detran_utils::warning(detran_utils::USER_INPUT,
+      warning(USER_INPUT,
         "Upscatter is being turned off since no upscatter exists in the data.");
     }
     d_downscatter = true;
@@ -260,10 +263,12 @@ void Material::display()
    *
    *    "Material 2 ..."
    */
-
+  printf("\n");
+  printf("Detran Material");
+  printf("\n");
   for (int m = 0; m < d_number_materials; m++)
   {
-    printf("Material %5i\n", m);
+    printf("material %5i\n", m);
     printf("  g ");
     for (int g = 0; g < d_number_groups; g++)
     {
@@ -298,7 +303,7 @@ void Material::display()
       }
       printf("\n");
     }
-
+    printf("\n");
   } // end material loop
 
 }

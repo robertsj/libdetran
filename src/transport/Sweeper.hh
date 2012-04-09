@@ -25,6 +25,8 @@
 #include "SP.hh"
 #include "InputDB.hh"
 
+#include <iostream>
+
 namespace detran
 {
 
@@ -46,6 +48,10 @@ namespace detran
  * flux *moments* are updated, while the discrete angular flux is
  * optionally stored.
  *
+ * Relevant input database entries:
+ *   - store_angular_flux [int]
+ *   - equation [string]
+ *
  */
 //---------------------------------------------------------------------------//
 template <class D>
@@ -54,9 +60,9 @@ class Sweeper
 
 public:
 
-  typedef detran_utils::SP<Sweeper>         SP_sweeper;
+  typedef SP<Sweeper>                       SP_sweeper;
   typedef State::SP_state                   SP_state;
-  typedef detran_utils::InputDB::SP_input   SP_input;
+  typedef InputDB::SP_input                 SP_input;
   typedef Mesh::SP_mesh                     SP_mesh;
   typedef Material::SP_material             SP_material;
   typedef Quadrature::SP_quadrature         SP_quadrature;
@@ -93,14 +99,14 @@ public:
   /*!
    *  \brief SP Constructor.
    */
-  static detran_utils::SP<Sweeper<D> >
-  Create(detran_utils::SP<detran_utils::InputDB>   input,
-         detran_utils::SP<detran::Mesh>            mesh,
-         detran_utils::SP<detran::Material>        material,
-         detran_utils::SP<detran::Quadrature>      quadrature,
-         detran_utils::SP<detran::State>           state,
-         detran_utils::SP<detran::Boundary<D> >    boundary,
-         detran_utils::SP<detran::SweepSource<D> > sweepsource)
+  static detran::SP<Sweeper<D> >
+  Create(detran::SP<InputDB>                 input,
+         detran::SP<detran::Mesh>            mesh,
+         detran::SP<detran::Material>        material,
+         detran::SP<detran::Quadrature>      quadrature,
+         detran::SP<detran::State>           state,
+         detran::SP<detran::Boundary<D> >    boundary,
+         detran::SP<detran::SweepSource<D> > sweepsource)
   {
     SP_sweeper p;
     p = new Sweeper(input, mesh, material, quadrature,
@@ -173,11 +179,17 @@ private:
   bool d_update_psi;
 
   /// Match incident/outgoing side with octant
-  detran_utils::vec3_int d_face_index;
+  vec3_int d_face_index;
+
+  /// Adjoint problem?
+  bool d_adjoint;
 
   /// Allocate template-specific items.
   void setup(SP_material material)
   {}
+
+  /// Mesh sweeper indices. \todo Allow adjoint.
+  inline int index(int o, int dim, int ijk);
 
 };
 
@@ -196,6 +208,8 @@ Sweeper<D>::Sweeper(SP_input input,
   , d_state(state)
   , d_boundary(boundary)
   , d_sweepsource(sweepsource)
+  , d_update_psi(false)
+  , d_adjoint(false)
 {
   Require(d_input);
   Require(d_mesh);
@@ -206,6 +220,40 @@ Sweeper<D>::Sweeper(SP_input input,
   Require(material);
   setup(material);
   Ensure(d_equation);
+  // Check whether we keep psi.
+  if (d_input->check("store_angular_flux"))
+  {
+    d_update_psi = d_input->get<int>("store_angular_flux");
+    std::cout << "update psi found " << d_update_psi << std::endl;
+  }
+  std::cout << "update psi found " << d_update_psi << std::endl;
+}
+
+// Mesh sweeper indices
+template <class D>
+inline int Sweeper<D>::index(int o, int dim, int ijk)
+{
+  if (dim == 1)
+  {
+    if ((o == 0 or o == 3 or o == 4 or o == 7))
+      return ijk;
+    else
+      return d_mesh->number_cells_x() - ijk - 1;
+  }
+  if (dim == 2)
+  {
+    if ((o == 0 or o == 1 or o == 4 or o == 5))
+      return ijk;
+    else
+      return d_mesh->number_cells_y() - ijk - 1;
+  }
+  if (dim == 3)
+  {
+    if ((o == 0 or o == 1 or o == 2 or o == 3))
+      return ijk;
+    else
+      return d_mesh->number_cells_z() - ijk - 1;
+  }
 }
 
 } // end namespace detran

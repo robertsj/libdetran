@@ -17,7 +17,7 @@
 #include <iterator>
 #include "../utilities/DBC.hh"
 
-namespace detran_utils
+namespace detran
 {
 
 //===========================================================================//
@@ -126,7 +126,7 @@ inline bool soft_equiv(
     return passed;
 }
 
-} // end namespace detran_utils
+} // end namespace detran
 
 #endif // Soft_Equivalence_hh
 

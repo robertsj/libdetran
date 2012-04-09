@@ -35,7 +35,7 @@ class FissionSource
 
 public:
 
-  typedef detran_utils::SP<FissionSource>     SP_source;
+  typedef SP<FissionSource>     SP_source;
 
 };
 

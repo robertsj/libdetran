@@ -11,7 +11,7 @@
 
 #include <iostream>
 
-namespace detran_utils
+namespace detran
 {
 
 SimpleDB::SimpleDB()
@@ -50,7 +50,7 @@ void SimpleDB::put(const std::string &key, const T value)
 }
 
 
-} // end namespace detran_utils
+} // end namespace detran
 
 //---------------------------------------------------------------------------//
 //              end of SimpleDB.cc

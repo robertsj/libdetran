@@ -9,7 +9,7 @@
 #ifndef INPUTDB_HH_
 #define INPUTDB_HH_
 
-// Utilities headers
+// Utilities
 #include "DBC.hh"
 #include "Definitions.hh"
 #include "SP.hh"
@@ -18,7 +18,7 @@
 #include <string>
 #include <map>
 
-namespace detran_utils
+namespace detran
 {
 
 //===========================================================================//
@@ -147,7 +147,7 @@ private:
 
 };
 
-} // end namespace detran_utils
+} // end namespace detran
 
 //---------------------------------------------------------------------------//
 // INLINE FUNCTIONS

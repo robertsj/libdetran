@@ -18,6 +18,8 @@
 
 namespace detran
 {
+using std::cout;
+using std::endl;
 
 template<>
 void Sweeper<_2D>::setup(SP_material material)
@@ -26,6 +28,7 @@ void Sweeper<_2D>::setup(SP_material material)
   std::string equation;
   if (d_input->check("equation"))
   {
+    cout << "equation found." << endl;
     equation = d_input->get<std::string>("equation");
   }
   else
@@ -45,8 +48,6 @@ void Sweeper<_2D>::setup(SP_material material)
   }
 
   // Set up face/octant map.
-  using detran_utils::vec2_int;
-  using detran_utils::vec_int;
   d_face_index.resize(4, vec2_int(2, vec_int(2, 0)));
   // octant / surface type / inout
   for (int i = 0; i < 4; i++)
@@ -72,6 +73,16 @@ inline void Sweeper<_2D>::sweep(moments_type &phi)
   boundary_flux_type psi_v;
   boundary_flux_type psi_h;
 
+  // Mesh loop bounds.  This is temporary: a cleaner approach will include adjoint.
+  int ib[4][3] = { {0, d_mesh->number_cells_x(),  1},
+                   {d_mesh->number_cells_x(), 0, -1},
+                   {d_mesh->number_cells_x(), 0, -1},
+                   {0, d_mesh->number_cells_x(),  1}};
+  int jb[4][3] = { {0, d_mesh->number_cells_y(),  1},
+                   {0, d_mesh->number_cells_y(),  1},
+                   {d_mesh->number_cells_y(), 0, -1},
+                   {d_mesh->number_cells_y(), 0, -1}};
+
   // Sweep over all octants
   for (int o = 0; o < 4; o++)
   {
@@ -93,6 +104,7 @@ inline void Sweeper<_2D>::sweep(moments_type &phi)
       State::angular_flux_type psi;
       if (d_update_psi)
       {
+        THROW(" why are you here? ");
         psi = d_state->psi(o, a, d_g);
       }
 
@@ -103,13 +115,17 @@ inline void Sweeper<_2D>::sweep(moments_type &phi)
           (d_face_index[o][Mesh::HORZ][Boundary_T::IN], o, a, d_g);
 
       // Sweep over all y
-      for (int j = 0; j < d_mesh->number_cells_y(); j++)
+      for (int jj = 0; jj < d_mesh->number_cells_y(); jj++)
       {
+        // Get actual index.
+        int j = index(o, 2, jj);
 
         psi_out[Mesh::VERT] = psi_v[j];
 
-        for (int i = 0; i < d_mesh->number_cells_x(); i++)
+        for (int ii = 0; ii < d_mesh->number_cells_x(); ii++)
         {
+          // Get actual index.
+          int i = index(o, 1, ii);
 
           psi_in[Mesh::HORZ] = psi_h[i];
           psi_in[Mesh::VERT] = psi_out[Mesh::VERT];

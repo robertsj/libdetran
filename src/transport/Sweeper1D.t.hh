@@ -18,11 +18,7 @@ template<>
   void
   Sweeper<_1D>::setup(SP_material material)
   {
-
-
     // Set up face/octant map.
-    using detran_utils::vec2_int;
-    using detran_utils::vec_int;
     d_face_index.resize(2, vec2_int(1, vec_int(2, 0)));
     // octant / surface type / inout
     d_face_index[0][Mesh::VERT][Boundary_T::IN] = Mesh::LEFT;

@@ -30,14 +30,14 @@ namespace detran
  */
 //===========================================================================//
 
-class ExternalSource: public detran_utils::Object
+class ExternalSource: public Object
 {
 
 public:
 
-  typedef detran_utils::SP<ExternalSource>  SP_source;
-  typedef Mesh::SP_mesh                     SP_mesh;
-  typedef Quadrature::SP_quadrature         SP_quadrature;
+  typedef SP<ExternalSource>        SP_source;
+  typedef Mesh::SP_mesh             SP_mesh;
+  typedef Quadrature::SP_quadrature SP_quadrature;
 
 
   ExternalSource(SP_mesh mesh,

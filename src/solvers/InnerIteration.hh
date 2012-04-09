@@ -83,9 +83,9 @@ class InnerIteration
 
 public:
 
-  typedef detran_utils::SP<InnerIteration>      SP_inner;
+  typedef SP<InnerIteration>                    SP_inner;
   // basic objects
-  typedef detran_utils::InputDB::SP_input       SP_input;
+  typedef InputDB::SP_input                     SP_input;
   typedef State::SP_state                       SP_state;
   typedef Mesh::SP_mesh                         SP_mesh;
   typedef Material::SP_material                 SP_material;
@@ -93,8 +93,8 @@ public:
   typedef typename Boundary<D>::SP_boundary     SP_boundary;
   typedef typename MomentToDiscrete<D>::SP_MtoD SP_MtoD;
   // source typedefs
-  typedef ExternalSource::SP_source 			      SP_externalsource;
-  typedef FissionSource::SP_source 				      SP_fissionsource;
+  typedef ExternalSource::SP_source 		    SP_externalsource;
+  typedef FissionSource::SP_source 			    SP_fissionsource;
   //
   typedef typename Sweeper<D>::SP_sweeper       SP_sweeper;
   typedef typename
@@ -118,11 +118,11 @@ public:
   InnerIteration(SP_input       	  input,
                  SP_state       	  state,
                  SP_mesh        	  mesh,
-                 SP_material      	material,
-                 SP_quadrature    	quadrature,
+                 SP_material      	  material,
+                 SP_quadrature    	  quadrature,
                  SP_boundary    	  boundary,
-                 SP_externalsource 	q_e,
-                 SP_fissionsource 	q_f);
+                 SP_externalsource    q_e,
+                 SP_fissionsource 	  q_f);
 
   /*!
    *  \brief Solve the within group equation.
@@ -235,14 +235,10 @@ InnerIteration<D>::InnerIteration(SP_input          input,
 
   // Sweeper
   d_sweeper = new Sweeper<D>(input, mesh, material,
-		                         quadrature, state, boundary,
-		                         d_sweepsource);
+		                     quadrature, state, boundary,
+		                     d_sweepsource);
 
 }
-
-template class InnerIteration<_1D>;
-template class InnerIteration<_2D>;
-template class InnerIteration<_3D>;
 
 } // end namespace detran
 

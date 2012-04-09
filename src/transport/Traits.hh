@@ -34,8 +34,6 @@ typedef Dimension<1> _1D;
 typedef Dimension<2> _2D;
 typedef Dimension<3> _3D;
 
-
-
 } // end namespace detran
 
 #endif /* TRAITS_HH_ */

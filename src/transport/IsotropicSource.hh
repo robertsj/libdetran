@@ -29,8 +29,8 @@ class IsotropicSource : public ExternalSource
 public:
 
   // Source types
-  typedef detran_utils::SP<IsotropicSource>  SP_source;
-  typedef detran_utils::vec2_dbl             spectra_type;
+  typedef SP<IsotropicSource>  SP_source;
+  typedef vec2_dbl             spectra_type;
 
   IsotropicSource(SP_mesh mesh,
                   SP_quadrature quadrature,
@@ -58,7 +58,7 @@ public:
     return d_source_spectra[d_source_map[cell]][group] * 1.0; // \todo norm
   }
 
-  void set_source(spectra_type &spectra, Mesh::vec_int &map)
+  void set_source(spectra_type &spectra, vec_int &map)
   {
     Require(spectra.size()>0);
     Require(spectra[0].size() == d_number_groups);
@@ -73,7 +73,7 @@ private:
   spectra_type d_source_spectra;
 
   /// Fine mesh source map
-  Mesh::vec_int d_source_map;
+  vec_int d_source_map;
 
 };
 

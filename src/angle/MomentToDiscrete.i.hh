@@ -80,7 +80,7 @@ namespace detran
     // calculate the moments and add them to the row
     for (int l = 0; l <= d_legendre_order; l++)
     {
-        double norm = (2.0 * l + 1.0) * detran_utils::inv_four_pi;;
+        double norm = (2.0 * l + 1.0) * inv_four_pi;;
         for (int m = -l; m <= l; m++)
         {
             // get cardinal moment index
@@ -113,7 +113,7 @@ namespace detran
     // loop through l>0 moments and add
     for (int l = 0; l <= d_legendre_order; l++)
     {
-      double norm = (2.0 * l + 1.0) * detran_utils::inv_four_pi;
+      double norm = (2.0 * l + 1.0) * inv_four_pi;
       for (int m = -l; m <= l; m += 2)
       {
         int i = 0; // Moments<_2D>::index(l, m);

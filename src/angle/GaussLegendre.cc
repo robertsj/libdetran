@@ -240,7 +240,7 @@ void GaussLegendre::generate_parameters(int order, double *mu, double *wt)
   m = (order + 1) / 2;
   for (i = 1; i <= m; i++)
   { /* Loop over the desired roots. */
-    z = cos(detran_utils::pi * (i - 0.25) / (order + 0.5));
+    z = cos(pi * (i - 0.25) / (order + 0.5));
     // Starting with the above approximation to the ith root, we enter
     // the main loop of refinement by Newton's method.
     int count = 0;

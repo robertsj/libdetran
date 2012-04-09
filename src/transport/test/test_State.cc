@@ -22,7 +22,6 @@
 
 using namespace detran;
 using namespace detran_test;
-using namespace detran_utils;
 using namespace std;
 
 int main(int argc, char *argv[])
@@ -52,7 +51,7 @@ int test_State_basic()
   state = new State(input, mesh, quad);
 
   // Fill the fluxes.
-  for (int cell = 0; cell < mesh->number_cells(); cell++)
+  for (int cell = 0; cell < 1; cell++)
   {
     // Group 0
     (state->phi(0))[cell] = 1.23;

@@ -21,7 +21,6 @@
 
 using namespace detran;
 using namespace detran_test;
-using namespace detran_utils;
 using namespace std;
 
 int main(int argc, char *argv[])

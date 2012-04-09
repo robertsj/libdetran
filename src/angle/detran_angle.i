@@ -11,7 +11,7 @@
 #include "Definitions.hh"
 #include "Constants.hh"
 #include "SP.hh"
-#include "Quadrature.hh"
+//#include "Quadrature.hh"
 #include "GaussLegendre.hh"  
 #include "QuadrupleRange.hh"
 %}
@@ -28,26 +28,21 @@
 // easy way around this, but I'm not a SWIG pro.
 %include std_vec_typemap.i
 
+%include "Definitions.hh"
 %include "SP.hh"
 %include "Quadrature.hh"
 %include "GaussLegendre.hh"
 %include "QuadrupleRange.hh"
 
-namespace std
-{
-  %template(vec_int) vector<int>;
-  %template(vec_dbl) vector<double>;
-}
-
-%template(QuadratureSP)  detran_utils::SP<detran::Quadrature>;
-%template(GaussLegendreSP)  detran_utils::SP<detran::GaussLegendre>;
-%template(QuadrupleRangeSP) detran_utils::SP<detran::QuadrupleRange>;
+%template(QuadratureSP)     detran::SP<detran::Quadrature>;
+%template(GaussLegendreSP)  detran::SP<detran::GaussLegendre>;
+%template(QuadrupleRangeSP) detran::SP<detran::QuadrupleRange>;
 
 
 namespace detran
 {
 
-} // end namespace detran_utils
+} // end namespace detran
 
 //---------------------------------------------------------------------------//
 //              end of detran_angle.i

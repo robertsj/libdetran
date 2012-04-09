@@ -49,7 +49,7 @@ void SourceIteration<D>::solve(int g)
     d_sweeper->sweep(phi);
 
     // Flux residual
-    residual = detran_utils::norm_relative_residual(phi, phi_old);
+    residual = norm_relative_residual(phi, phi_old);
     std::cout << "Iter: " << iter << " Res: " << residual << std::endl;
     if (residual < d_tolerance) break;
 

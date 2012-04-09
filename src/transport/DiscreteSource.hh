@@ -29,7 +29,7 @@ class DiscreteSource: public ExternalSource
 public:
 
   // Source types
-  typedef detran_utils::SP<DiscreteSource>  SP_source;
+  typedef SP<DiscreteSource>  SP_source;
 
   DiscreteSource(SP_mesh mesh,
                  SP_quadrature quadrature,
@@ -64,7 +64,7 @@ public:
     return d_source[group][angle][cell];
   }
 
-  void set_source(detran_utils::vec3_dbl &source)
+  void set_source(vec3_dbl &source)
   {
     Require(source.size() == d_number_groups);
     Require(source[0].size() == d_number_angles);
@@ -75,7 +75,7 @@ public:
 private:
 
   /// Source for all points, angles, and energies
-  detran_utils::vec3_dbl d_source;
+  vec3_dbl d_source;
 
 };
 

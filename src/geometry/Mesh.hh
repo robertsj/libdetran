@@ -35,7 +35,7 @@ namespace detran
  *
  */
 //---------------------------------------------------------------------------//
-class Mesh : public detran_utils::Object
+class Mesh : public Object
 {
 
 public:
@@ -62,11 +62,12 @@ public:
     YZ, XZ, XY
   };
 
-  typedef detran_utils::SP<Mesh>            SP_mesh;
-  typedef detran_utils::vec_int             vec_int;
-  typedef detran_utils::vec_dbl             vec_dbl;
+  typedef SP<Mesh>                          SP_mesh;
   typedef std::map<std::string, vec_int>    mesh_map_type;
 
+  // Note, these constructors are protected to hide them from the
+  // user.  These are to be called by inherited classes.  I keep
+  // the constructors at the top for convention.
 protected:
 
   /*!
@@ -210,6 +211,9 @@ public:
    * \param   m  Logically multi-dimensional map as 1-d vector.
    */
   const vec_int& mesh_map(std::string map_key);
+
+  /// Display some key features
+  void display() const;
 
   /// Unimplemented DBC function.
   bool is_valid() const

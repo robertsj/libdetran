@@ -60,7 +60,7 @@ namespace detran
  *
  */
 //---------------------------------------------------------------------------//
-class Quadrature : public detran_utils::Object
+class Quadrature : public Object
 {
 
 public:
@@ -73,11 +73,7 @@ public:
     END_COSINES
   };
 
-  typedef detran_utils::SP<Quadrature>      SP_quadrature;
-  typedef detran_utils::vec_int             vec_int;
-  typedef detran_utils::vec_dbl             vec_dbl;
-  typedef detran_utils::vec2_int            vec2_int;
-  typedef detran_utils::vec2_dbl            vec2_dbl;
+  typedef SP<Quadrature>      SP_quadrature;
 
   /*!
    *  \brief Constructor.
@@ -213,7 +209,7 @@ public:
     if (d == 1)
       return 0.5;
     else
-      return detran_utils::inv_four_pi;
+      return inv_four_pi;
   }
 
   /*!

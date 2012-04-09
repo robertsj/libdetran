@@ -26,50 +26,65 @@
 // Load the standard library interfaces.
 %include std_vector.i
 %include std_string.i
-
-// Load the vector maps.  Note, I am a bit unhappy with
-// how it's all used.  They work *if* I declare the class
-// interface below.  Otherwise, just including e.g.
-// Mesh2D doesn't allow the maps, since I'm using 
-// typedefs on the input arguments.  There should be an
-// easy way around this, but I'm not a SWIG pro.
+// Standard vec typemaps
 %include std_vec_typemap.i
 
-%include "SP.hh"
+namespace std
+{
+  %template(vec_int) vector<int>;
+  %template(vec_dbl) vector<double>;
+}
 
+%include "SP.hh"
 %include "Boundary.hh"
 %include "FissionSource.hh"
-
 // External/general sources
 %include "ExternalSource.hh"
 %include "ConstantSource.hh"
-%include "State.hh"
-%include "Traits.hh"
-//%include "Mesh.hh"
+
 namespace detran
 {
 
-
+class State
+{
+public:
+  State(SP<detran::InputDB>       input,
+        SP<detran::Mesh>          mesh,
+        SP<detran::Quadrature>    quadrature);  
+  static SP<State> Create(SP<detran::InputDB>       input,
+                          SP<detran::Mesh>          mesh,
+                          SP<detran::Quadrature>    quadrature);
+  const std::vector<double>& phi(int g) const;
+  std::vector<double>& phi(int g);
+  const std::vector<double>& psi(int o, int a, int g) const;
+  std::vector<double>& psi(int o, int a, int g);
+  double eigenvalue() const;
+  void set_eigenvalue(double v);
+  int number_groups() const;
+};
+  
 } // end namespace detran
 
-// Traits
-//%template(_1D)
+%inline %{
+typedef detran::State::moments_type moments_type;
+%}
+
 
 // Templates 
 
-%template(StateSP)  detran_utils::SP<detran::State>;
+%template(StateSP)  detran::SP<detran::State>;
 
-%template(FissionSourceSP)  detran_utils::SP<detran::FissionSource>;
+%template(FissionSourceSP)  detran::SP<detran::FissionSource>;
 
-%template(ExternalSourceSP) detran_utils::SP<detran::ExternalSource>;
-%template(ConstantSourceSP) detran_utils::SP<detran::ConstantSource>;
+%template(ExternalSourceSP) detran::SP<detran::ExternalSource>;
+%template(ConstantSourceSP) detran::SP<detran::ConstantSource>;
 
 %template(Boundary1D)    detran::Boundary<detran::_1D>;
-%template(Boundary1DSP)  detran_utils::SP<detran::Boundary<detran::_1D> >;
+%template(Boundary1DSP)  detran::SP<detran::Boundary<detran::_1D> >;
 %template(Boundary2D)    detran::Boundary<detran::_2D>;
-%template(Boundary2DSP)  detran_utils::SP<detran::Boundary<detran::_2D> >;
+%template(Boundary2DSP)  detran::SP<detran::Boundary<detran::_2D> >;
 %template(Boundary3D)    detran::Boundary<detran::_3D>;
-%template(Boundary3DSP)  detran_utils::SP<detran::Boundary<detran::_3D> >;
+%template(Boundary3DSP)  detran::SP<detran::Boundary<detran::_3D> >;
 
 //---------------------------------------------------------------------------//
 //              end of detran_transport.i

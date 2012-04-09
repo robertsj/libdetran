@@ -53,6 +53,7 @@ void Equation_DD_2D::setup_angle(int angle)
   {
     d_coef_y[j] = 2.0 * eta / d_mesh->dy(j);
   }
+  d_angle = angle;
 }
 
 } // end namespace detran

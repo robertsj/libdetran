@@ -18,6 +18,10 @@
 #include "Quadrature.hh"
 #include "Mesh.hh"
 
+// System
+#include <iostream>
+#include <vector>
+
 namespace detran
 {
 
@@ -47,21 +51,19 @@ namespace detran
  *       yields the array underneath.
  */
 //---------------------------------------------------------------------------//
-class State : public detran_utils::Object
+class State : public Object
 {
 
 public:
 
-  typedef detran_utils::SP<State>           SP_state;
-  typedef detran_utils::InputDB::SP_input   SP_input;
-  typedef Mesh::SP_mesh                     SP_mesh;
-  typedef Quadrature::SP_quadrature         SP_quadrature;
-  typedef detran_utils::vec_dbl             vec_dbl;
-  typedef detran_utils::vec2_dbl            vec2_dbl;
-  typedef detran_utils::vec_dbl             moments_type;
-  typedef detran_utils::vec2_dbl            vec_moments_type;
-  typedef detran_utils::vec_dbl             angular_flux_type;
-  typedef detran_utils::vec3_dbl            vec_angular_flux_type;
+  typedef SP<State>                                     SP_state;
+  typedef InputDB::SP_input                             SP_input;
+  typedef Mesh::SP_mesh                                 SP_mesh;
+  typedef Quadrature::SP_quadrature                     SP_quadrature;
+  typedef vec_dbl                                       moments_type;
+  typedef std::vector<moments_type>                     vec_moments_type;
+  typedef vec_dbl                                       angular_flux_type;
+  typedef std::vector<std::vector<angular_flux_type> >  vec_angular_flux_type;
 
   /*!
    *  \brief Constructor.
@@ -70,7 +72,7 @@ public:
    *  \param    mesh        Cartesian mesh.
    *  \param    quadrature  Angular quadrature.
    */
-  State(detran_utils::SP<detran_utils::InputDB>        input,
+  State(SP_input        input,
         SP_mesh         mesh,
         SP_quadrature   quadrature);
 
@@ -81,9 +83,9 @@ public:
    *  \param    mesh        Cartesian mesh.
    *  \param    quadrature  Angular quadrature.
    */
-  static SP_state Create(detran_utils::SP<detran_utils::InputDB> input,
-                         detran_utils::SP<detran::Mesh>                  mesh,
-                         detran_utils::SP<detran::Quadrature>            quadrature)
+  static SP_state Create(SP<detran::InputDB>       input,
+                         SP<detran::Mesh>          mesh,
+                         SP<detran::Quadrature>    quadrature)
   {
     SP_state p;
     p = new State(input, mesh, quadrature);
@@ -119,9 +121,13 @@ public:
    */
   moments_type& phi(int g)
   {
-    Require(g >= 0);
-    Require(g < d_number_groups);
-    return d_moments[g];
+    // Cast away return type
+    return const_cast<moments_type&>
+    (
+      // Add const to *this's type and call const version
+      static_cast<const State*>(this)->phi(g)
+    );
+
   }
 
   /*
@@ -134,6 +140,7 @@ public:
    */
   const angular_flux_type& psi(int o, int a, int g) const   // State::angular_flux_type  psi = psi(o, a, g);
   {
+    Require(d_store_angular_flux);
     Require(d_angular_flux.size() > 0);
     Require(o >= 0);
     Require(o < d_quadrature->number_octants());
@@ -155,15 +162,12 @@ public:
    */
   angular_flux_type& psi(int o, int a, int g)
   {
-    Require(d_angular_flux.size() > 0);
-    Require(o >= 0);
-    Require(o < d_quadrature->number_octants());
-    Require(a >= 0);
-    Require(a < d_quadrature->number_angles_octant());
-    Require(g >= 0);
-    Require(g < d_number_groups);
-    int angle = d_quadrature->index(o, a);
-    return d_angular_flux[angle][g];
+    // Cast away return type
+    return const_cast<angular_flux_type&>
+    (
+      // Add const to *this's type and call const version
+      static_cast<const State*>(this)->psi(o, a, g)
+    );
   }
 
   double eigenvalue() const

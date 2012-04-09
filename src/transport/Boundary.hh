@@ -33,13 +33,13 @@ template <class D>
 class BoundaryTraits
 {
 public:
-  typedef detran_utils::vec2_dbl value_type;
+  typedef vec2_dbl value_type;
 };
 template <>
 class BoundaryTraits<_2D>
 {
 public:
-  typedef detran_utils::vec_dbl value_type;
+  typedef vec_dbl value_type;
 };
 template <>
 class BoundaryTraits<_1D>
@@ -82,7 +82,7 @@ public:
  */
 //---------------------------------------------------------------------------//
 template <class D>
-class Boundary : public detran_utils::Object
+class Boundary : public Object
 {
 
 public:
@@ -93,8 +93,8 @@ public:
       OUT
   };
 
-  typedef detran_utils::SP<Boundary>                SP_boundary;
-  typedef detran_utils::InputDB::SP_input           SP_input;
+  typedef SP<Boundary>                              SP_boundary;
+  typedef InputDB::SP_input                         SP_input;
   typedef Mesh::SP_mesh                             SP_mesh;
   typedef Quadrature::SP_quadrature                 SP_quadrature;
   typedef typename BoundaryTraits<D>::value_type    boundary_flux_type;
@@ -120,10 +120,10 @@ public:
    *  \param    mesh        Cartesian mesh.
    *  \param    quadrature  Angular quadrature.
    */
-  static detran_utils::SP<detran::Boundary<D> >
-  Create(detran_utils::SP<detran_utils::InputDB> input,
-         detran_utils::SP<detran::Mesh>          mesh,
-         detran_utils::SP<detran::Quadrature>    quadrature)
+  static SP<detran::Boundary<D> >
+  Create(SP<detran::InputDB>       input,
+         SP<detran::Mesh>          mesh,
+         SP<detran::Quadrature>    quadrature)
   {
     SP_boundary p;
     p = new Boundary(input, mesh, quadrature);

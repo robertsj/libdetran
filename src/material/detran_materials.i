@@ -27,4 +27,4 @@
 %include "Material.hh"
 
 
-%template(MaterialSP) detran_utils::SP<detran::Material>;
+%template(MaterialSP) detran::SP<detran::Material>;

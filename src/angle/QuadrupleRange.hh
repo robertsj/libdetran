@@ -117,12 +117,8 @@ class QuadrupleRange : public Quadrature
 
 public:
 
-  typedef detran_utils::SP<QuadrupleRange>  SP_quadrature;
-  typedef detran_utils::SP<Quadrature>      SP_base;
-  typedef Quadrature::vec_int               vec_int;
-  typedef Quadrature::vec_dbl               vec_dbl;
-  typedef Quadrature::vec2_int              vec2_int;
-  typedef Quadrature::vec2_dbl              vec2_dbl;
+  typedef SP<QuadrupleRange>  SP_quadrature;
+  typedef SP<Quadrature>      SP_base;
 
   /*!
    *  \brief Constructor.
@@ -136,9 +132,9 @@ public:
    *
    *  \param    order       Quadrature order.
    */
-  static detran_utils::SP<Quadrature> Create(int order)
+  static SP<Quadrature> Create(int order)
   {
-    detran_utils::SP<Quadrature> p;
+    SP_quadrature p;
     p = new QuadrupleRange(order);
     return p;
   }

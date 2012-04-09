@@ -23,7 +23,7 @@
 #include "Definitions.hh"
 #include "SP.hh"
 
-namespace detran_utils
+namespace detran
 {
 
 class GenDB : public Object
@@ -116,7 +116,7 @@ private:
 
 };
 
-} // end namespace detran_utils
+} // end namespace detran
 
 #endif /* GENDB_HH_ */
 

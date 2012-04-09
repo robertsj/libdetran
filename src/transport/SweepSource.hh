@@ -95,9 +95,9 @@ class SweepSource
 
 public:
 
-  typedef detran_utils::SP<SweepSource>     SP_sweepsource;
+  typedef SP<SweepSource>                   SP_sweepsource;
   typedef State::SP_state                   SP_state;
-  typedef detran_utils::InputDB::SP_input   SP_input;
+  typedef InputDB::SP_input                 SP_input;
   typedef Mesh::SP_mesh                     SP_mesh;
   typedef Material::SP_material             SP_material;
   typedef Quadrature::SP_quadrature         SP_quadrature;
@@ -108,7 +108,7 @@ public:
   typedef ScatterSource::SP_source          SP_scattersource;
   typedef FissionSource::SP_source          SP_fissionsource;
   //
-  typedef detran_utils::vec_dbl             sweep_source_type;
+  typedef vec_dbl                           sweep_source_type;
   typedef State::moments_type               moments_type;
 
   /*!

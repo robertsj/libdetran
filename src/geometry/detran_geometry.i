@@ -47,9 +47,9 @@ namespace std
   %template(vec_dbl) vector<double>;
 }
 
-%template(MeshSP)   detran_utils::SP<detran::Mesh>;
-%template(Mesh2DSP) detran_utils::SP<detran::Mesh2D>;
-%template(Mesh3DSP) detran_utils::SP<detran::Mesh3D>;
+%template(MeshSP)   detran::SP<detran::Mesh>;
+%template(Mesh2DSP) detran::SP<detran::Mesh2D>;
+%template(Mesh3DSP) detran::SP<detran::Mesh3D>;
 
 namespace detran
 {
@@ -71,16 +71,17 @@ public:
   Mesh2D(std::vector<double> xfme, 
          std::vector<double> yfme, 
          std::vector<int>    mat_map);
-  static detran_utils::SP<Mesh> Create(std::vector<int>    xfm, 
-                                       std::vector<int>    yfm, 
-                                       std::vector<double> xcme, 
-                                       std::vector<double> ycme, 
-                                       std::vector<int>    mat_map);
-  static detran_utils::SP<Mesh> Create(std::vector<double> xfme, 
-                                       std::vector<double> yfme, 
-                                       std::vector<int>    mat_map); 
+  static SP<Mesh> Create(std::vector<int>    xfm, 
+                         std::vector<int>    yfm, 
+                         std::vector<double> xcme, 
+                         std::vector<double> ycme, 
+                         std::vector<int>    mat_map);
+  static SP<Mesh> Create(std::vector<double> xfme, 
+                         std::vector<double> yfme, 
+                         std::vector<int>    mat_map); 
   void add_coarse_mesh_map(std::string map_key, std::vector<int> mesh_map);
   void add_mesh_map(std::string map_key, std::vector<int> mesh_map);
+  
   %pythoncode 
   %{
     
@@ -112,16 +113,30 @@ public:
       plt.colorbar()
       plt.show()
       # Get the mesh axes and then make a grid of them for plotting.
-      """x, y = self.mesh_axes()
-      X, Y = np.meshgrid(x, y)
-      X = X.reshape(self.number_cells(), 1)
-      Y = Y.reshape(self.number_cells(), 1)
-      print X
-      plt.contour(X, Y, m_map2, 15,linewidths=0.5,colors='k')
-      plt.show()"""
+      #x, y = self.mesh_axes()
+      #X, Y = np.meshgrid(x, y)
+      #X = X.reshape(self.number_cells(), 1)
+      #Y = Y.reshape(self.number_cells(), 1)
+      #print X
+      #plt.contour(X, Y, m_map2, 15,linewidths=0.5,colors='k')
+      #plt.show()
     else :
       print "Warning: matplotlib or numpy not found; skipping plot."
       
+  def plot_flux(self, f) :
+    """ Plot a flux or flux-shaped vector on the mesh."
+    """
+    import matplotlib.pyplot as plt
+    import numpy as np
+    # Reshape flux.
+    f = f.reshape(self.number_cells_x(), self.number_cells_y())
+    print f
+    # Plot me. 
+    plt.imshow(f, interpolation='nearest', cmap=plt.cm.hot)
+    plt.title('flux map')
+    plt.colorbar()
+    plt.show()
+  
   def mesh_axes(self) :
     """ Get the fine mesh esges defining cells for plotting.
     """
@@ -153,22 +168,22 @@ public:
          std::vector<double> yfme,
          std::vector<double> zfme,
          std::vector<int> mat_map);
-  static detran_utils::SP<Mesh> Create(std::vector<int> xfm,
-                                       std::vector<int> yfm,
-                                       std::vector<int> zfm,
-                                       std::vector<double> xcme,
-                                       std::vector<double> ycme,
-                                       std::vector<double> zcme,
-                                       std::vector<int> mat_map);
-  static detran_utils::SP<Mesh> Create(std::vector<double> xfme,
-                                       std::vector<double> yfme,
-                                       std::vector<double> zfme,
-                                       std::vector<int> mat_map);
+  static SP<Mesh> Create(std::vector<int> xfm,
+                         std::vector<int> yfm,
+                         std::vector<int> zfm,
+                         std::vector<double> xcme,
+                         std::vector<double> ycme,
+                         std::vector<double> zcme,
+                         std::vector<int> mat_map);
+  static SP<Mesh> Create(std::vector<double> xfme,
+                         std::vector<double> yfme,
+                         std::vector<double> zfme,
+                         std::vector<int> mat_map);
   void add_coarse_mesh_map(std::string map_key, std::vector<int> mesh_map);
   void add_mesh_map(std::string map_key, std::vector<int> mesh_map);
 };
 
-} // end namespace detran_utils
+} // end namespace detran
 
 //---------------------------------------------------------------------------//
 //              end of detran_geometry.i

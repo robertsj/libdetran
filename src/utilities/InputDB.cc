@@ -11,7 +11,7 @@
 
 #include <iostream>
 
-namespace detran_utils
+namespace detran
 {
 
 InputDB::InputDB()
@@ -19,7 +19,7 @@ InputDB::InputDB()
 }
 
 
-} // end namespace detran_utils
+} // end namespace detran
 
 //---------------------------------------------------------------------------//
 //              end of InputDB.cc

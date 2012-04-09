@@ -13,7 +13,7 @@
 #include <string>
 #include "detran_config.h"
 
-namespace detran_utils
+namespace detran
 {
 
 enum WARNING
@@ -29,9 +29,10 @@ void warning(int type, std::string message);
 
 #else
 
+inline void warning(int type, std::string message){}
 
 #endif
 
-} // end namespace detran_utils
+} // end namespace detran
 
 #endif /* WARNING_HH_ */

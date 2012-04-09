@@ -50,12 +50,12 @@ public:
 //---------------------------------------------------------------------------//
 
 template <class D>
-class Equation : public detran_utils::Object
+class Equation : public Object
 {
 
 public:
 
-  typedef detran_utils::SP<Equation>        SP_equation;
+  typedef SP<Equation>                      SP_equation;
   typedef Material::SP_material             SP_material;
   typedef Mesh::SP_mesh                     SP_mesh;
   typedef Quadrature::SP_quadrature         SP_quadrature;
@@ -76,6 +76,9 @@ public:
     ,  d_material(material)
     ,  d_quadrature(quadrature)
     ,  d_update_psi(update_psi)
+    ,  d_g(-1)
+    ,  d_octant(-1)
+    ,  d_angle(-1)
   {
     Require(mesh);
     Require(material);
@@ -165,13 +168,19 @@ protected:
   double d_ksi;
 
   /// Material map
-  detran_utils::vec_int d_mat_map;
+  vec_int d_mat_map;
 
   /// Update the angular flux?
   bool d_update_psi;
 
   /// Current group
   int d_g;
+
+  /// Current octant index.
+  int d_octant;
+
+  /// Current angle index.
+  int d_angle;
 };
 
 } // end namespace detran

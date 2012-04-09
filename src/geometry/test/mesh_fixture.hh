@@ -50,15 +50,15 @@ static SP_mesh mesh_2d_fixture(int id = 0)
   {
     // Define the mesh coarse and fine meshes, and the
     // coarse mesh material map.
-    detran::Mesh::vec_dbl cm(3, 0.0);
+    detran::vec_dbl cm(3, 0.0);
     cm[1] = 10.0;
     cm[2] = 20.0;
-    detran::Mesh::vec_int fm(2, 10);
+    detran::vec_int fm(2, 10);
     // All maps are stored in a single dimension.  The
     // memory order follows the transpose of the physical
     // order.  Here, the entries are (i=0,j=0), (i=0,j=1),
     // etc.  Hence, all entries are 1 but the first.
-    detran::Mesh::vec_int mat_map(4, 1);
+    detran::vec_int mat_map(4, 1);
     mat_map[0] = 0;
 
     // Create the new database.
@@ -73,10 +73,10 @@ static SP_mesh mesh_2d_fixture(int id = 0)
   }
   else if (id == 1)
   {
-    detran::Mesh::vec_dbl cm(2, 0.0);
-    cm[1] = 0.5;
-    detran::Mesh::vec_int fm(1, 3);
-    detran::Mesh::vec_int mat_map(1, 1);
+    detran::vec_dbl cm(2, 0.0);
+    cm[1] = 1.0;
+    detran::vec_int fm(1, 3);
+    detran::vec_int mat_map(1, 1);
     // Create the new database.
     SP_mesh mesh;
     mesh = new detran::Mesh2D(fm, fm, cm, cm, mat_map);
@@ -99,11 +99,11 @@ static SP_mesh mesh_3d_fixture()
 {
   // Define the mesh coarse and fine meshes, and the
   // coarse mesh material map.
-  detran::Mesh::vec_dbl cm(3, 0.0);
+  detran::vec_dbl cm(3, 0.0);
   cm[1] = 4.0;
   cm[2] = 4.0;
-  detran::Mesh::vec_int fm(2, 4);
-  detran::Mesh::vec_int mat_map(8, 1);
+  detran::vec_int fm(2, 4);
+  detran::vec_int mat_map(8, 1);
   mat_map[0] = 0;
 
   // Create the new database.

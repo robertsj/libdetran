@@ -7,16 +7,14 @@
  * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
-// $Rev::                                               $:Rev of last commit
-// $Author:: j.alyn.roberts@gmail.com                   $:Author of last commit
-// $Date::                                              $:Date of last commit
-//---------------------------------------------------------------------------//
 
+// Detran
 #include "GenDB.hh"
 
+// System
 #include <iostream>
 
-namespace detran_utils
+namespace detran
 {
 
 GenDB::GenDB()
@@ -47,23 +45,6 @@ void GenDB::put(const std::string &key, const int value)
   d_map[key] = sp_val;
 }
 
-//template <class T>
-//bool GenDB::get(const std::string &key, T &value) const
-//{
-//  typedef SP<TemplateItem<T> > SP_titem;
-//  map_type::iterator it;
-//  it = d_map.find(key);
-//  // if found, set value and return true
-//  if (it != d_map.end())
-//  {
-//    SP_titem sp_val = (SP_titem) d_map.find(key)->second;
-//    value = *sp_val;
-//    return true;
-//  }
-//  // otherwise, return false
-//  return false;
-//}
-
 // I'm not sure if map.end()->second has a usable value...
 template <class T>
 T GenDB::get(const std::string &key) const
@@ -81,7 +62,7 @@ T GenDB::get(const std::string &key) const
 //  return *sp_val;
 //}
 
-} // end namespace detran_utils
+} // end namespace detran
 
 
 //---------------------------------------------------------------------------//

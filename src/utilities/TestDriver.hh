@@ -71,7 +71,7 @@ test_name test_names[] =
 
 /// \}
 
-namespace detran_utils
+namespace detran_test
 {
 
 /// \name Utility functions

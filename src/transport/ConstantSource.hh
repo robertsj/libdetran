@@ -29,9 +29,9 @@ class ConstantSource: public ExternalSource
 public:
 
   // Source types
-  typedef detran_utils::SP<ConstantSource>  SP_source;
-  typedef Mesh::SP_mesh                     SP_mesh;
-  typedef Quadrature::SP_quadrature         SP_quadrature;
+  typedef SP<ConstantSource>        SP_source;
+  typedef Mesh::SP_mesh             SP_mesh;
+  typedef Quadrature::SP_quadrature SP_quadrature;
 
   ConstantSource(SP_mesh mesh,
                  SP_quadrature quadrature,
@@ -42,13 +42,13 @@ public:
   /*!
    *  \brief SP Constructor.
    */
-  static detran_utils::SP<ExternalSource>
-  Create(detran_utils::SP<detran::Mesh> mesh,
-         detran_utils::SP<detran::Quadrature> quadrature,
+  static SP<ExternalSource>
+  Create(SP<detran::Mesh> mesh,
+         SP<detran::Quadrature> quadrature,
          int number_groups,
          double source)
   {
-    ConstantSource::SP_source p;
+    SP_source p;
     p = new ConstantSource(mesh, quadrature, number_groups);
     p->set_source(source);
     return p;

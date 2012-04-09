@@ -7,10 +7,6 @@
  * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
-// $Rev::                                               $:Rev of last commit
-// $Author:: j.alyn.roberts@gmail.com                   $:Author of last commit
-// $Date::                                              $:Date of last commit
-//---------------------------------------------------------------------------//
 
 #ifndef INPUT_FIXTURE_HH_
 #define INPUT_FIXTURE_HH_
@@ -23,7 +19,7 @@
 namespace detran_test
 {
 
-typedef detran_utils::InputDB::SP_input SP_input;
+typedef detran::InputDB::SP_input SP_input;
 
 /*!
  *  \brief Create a common input for transport test cases.
@@ -35,7 +31,7 @@ static SP_input input_fixture()
 {
   // Create the new database.
   SP_input input;
-  input = new detran_utils::InputDB();
+  input = new detran::InputDB();
 
   // Enter some basic things.
   input->put<int>("number_groups", 2);
