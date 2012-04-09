@@ -45,10 +45,10 @@ template<>
     phi.assign(phi.size(), 0.0);
 
     // Temporary edge fluxes.
-    Equation::face_flux_3d psi_in =
-    { 0.0, 0.0, 0.0 };
-    Equation::face_flux_3d psi_out =
-    { 0.0, 0.0, 0.0 };
+    Equation<_3D>::face_flux_type psi_in =
+      { 0.0, 0.0, 0.0 };
+    Equation<_3D>::face_flux_type psi_out =
+      { 0.0, 0.0, 0.0 };
 
     // Temporary boundary fluxes.
     boundary_flux_type psi_yz;

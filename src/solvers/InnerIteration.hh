@@ -196,9 +196,21 @@ InnerIteration<D>::InnerIteration(SP_input          input,
 
   // Get relevant input parameters.
   if (input->check("inner_max_iters"))
+  {
     d_max_iters = input->get<int>("inner_max_iters");
+  }
+  else
+  {
+    d_max_iters = 5;
+  }
   if (input->check("inner_tolerance"))
+  {
     d_tolerance = input->get<int>("inner_tolerance");
+  }
+  else
+  {
+    d_tolerance = 1e-5;
+  }
 
   // Moments-to-Discrete
   SP_MtoD MtoD;

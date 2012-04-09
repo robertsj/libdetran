@@ -14,7 +14,6 @@
 namespace detran
 {
 
-template <>
 inline void Equation_DD_2D::solve(int i,
                                   int j,
                                   int k,
@@ -30,13 +29,13 @@ inline void Equation_DD_2D::solve(int i,
                        d_coef_x[i] + d_coef_y[j]);
   double psi_center = coef * (source[cell] + d_coef_x[i] * psi_in[1] +
                                              d_coef_y[j] * psi_in[0] );
-  std::cout << "psi_center " << psi_center << std::endl;
+
   // Compute outgoing fluxes.
   psi_out[0] = 2.0*psi_center - psi_in[0];
   psi_out[1] = 2.0*psi_center - psi_in[1];
 
   // Compute flux moments.
-  phi[cell] += d_quadrature->weight(d_angle);
+  phi[cell] += d_quadrature->weight(d_angle) * psi_center;
 
   // Store angular flux if needed.
   if (d_update_psi)

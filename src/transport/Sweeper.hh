@@ -60,7 +60,8 @@ public:
   typedef Mesh::SP_mesh                     SP_mesh;
   typedef Material::SP_material             SP_material;
   typedef Quadrature::SP_quadrature         SP_quadrature;
-  typedef Equation::SP_equation             SP_equation;
+  typedef typename
+      Equation<D>::SP_equation              SP_equation;
   typedef Boundary<D>                       Boundary_T;
   typedef typename Boundary_T::SP_boundary  SP_boundary;
   typedef typename

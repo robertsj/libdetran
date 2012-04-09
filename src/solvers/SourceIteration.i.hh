@@ -47,16 +47,14 @@ void SourceIteration<D>::solve(int g)
 
     // Sweep
     d_sweeper->sweep(phi);
-    for (int i = 0; i < 10; i++) std::cout << phi[i] << std::endl;
+
     // Flux residual
-    residual = detran_utils::norm(phi, phi_old);
+    residual = detran_utils::norm_relative_residual(phi, phi_old);
     std::cout << "Iter: " << iter << " Res: " << residual << std::endl;
-    if (residual < d_tolerance)
-    {
-      break;
-    }
+    if (residual < d_tolerance) break;
 
     // Store flux without copying.
+    //for (int i = 0; i < d_mesh->number_cells(); i++) phi_old[i] = phi[i];
     std::swap(phi, phi_old);
 
   } // end iterations

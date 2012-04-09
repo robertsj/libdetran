@@ -20,18 +20,18 @@
 namespace detran
 {
 
-class Equation_DD_2D : public Equation
+class Equation_DD_2D : public Equation<_2D>
 {
 
 public:
 
   typedef detran_utils::SP<Equation>        SP_equation;
-  typedef Equation::SP_material             SP_material;
-  typedef Equation::SP_mesh                 SP_mesh;
-  typedef Equation::SP_quadrature           SP_quadrature;
-  typedef Equation::moments_type            moments_type;
-  typedef Equation::angular_flux_type       angular_flux_type;
-  typedef Equation::face_flux_2d            face_flux_type;
+  typedef Equation<_2D>::SP_material        SP_material;
+  typedef Equation<_2D>::SP_mesh            SP_mesh;
+  typedef Equation<_2D>::SP_quadrature      SP_quadrature;
+  typedef Equation<_2D>::moments_type       moments_type;
+  typedef Equation<_2D>::angular_flux_type  angular_flux_type;
+  typedef Equation<_2D>::face_flux_type     face_flux_type;
 
   /*!
    *  \brief Constructor
@@ -65,13 +65,12 @@ public:
    *   \tparam  F           Edge flux type.  A vector of 1, 2, or 3
    *                        doubles depending on dimension.
    */
-  template <class F>
   inline void solve(int i,
                     int j,
                     int k,
                     moments_type &source,
-                    F &psi_in,
-                    F &psi_out,
+                    face_flux_type &psi_in,
+                    face_flux_type &psi_out,
                     moments_type &phi,
                     angular_flux_type &psi);
 
@@ -80,19 +79,19 @@ public:
    *  @brief Setup the equations for a group.
    *  @param g     Current group.
    */
-  virtual void setup_group(int g);
+  void setup_group(int g);
 
   /*!
    *  @brief Setup the equations for an octant.
    *  @param octant    Current octant.
    */
-  virtual void setup_octant(int octant);
+  void setup_octant(int octant);
 
   /*!
    *  \brief Setup the equations for an angle.
    *  \param angle  Angle index within octant.
    */
-  virtual void setup_angle(int angle);
+  void setup_angle(int angle);
 
   /// \}
 

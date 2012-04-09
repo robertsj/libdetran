@@ -40,8 +40,8 @@ int test_SourceIteration_2D()
 {
 
   // Test fixtures
-  SP_material mat       = material_fixture_2g();
-  SP_mesh mesh          = mesh_2d_fixture();
+  SP_material mat       = material_fixture_1g();
+  SP_mesh mesh          = mesh_2d_fixture(1);
   SP_quadrature quad    = quadruplerange_fixture();
   SP_source q_e         = constant_source_fixture(2);
   SourceIteration<_2D>::SP_fissionsource q_f;
@@ -51,7 +51,9 @@ int test_SourceIteration_2D()
   input = new InputDB();
   input->put<string>("equation", "dd");
   input->put<int>("number_groups", 2);
-
+  input->put<int>("inner_max_iters", 100);
+  input->put<int>("inner_tolerance", 0.0001);
+  if (input->check("inner_max_iters")) cout << " found max iters " << endl;
   // State
   SourceIteration<_2D>::SP_state state;
   state = new State(input, mesh, quad);
@@ -67,7 +69,16 @@ int test_SourceIteration_2D()
   // Solve first group.
   solver.solve(0);
 
-
+  State::moments_type phi = state->phi(0);
+  for (int j = 0; j < mesh->number_cells_y(); j++)
+  {
+    for (int i = 0; i < mesh->number_cells_x(); i++)
+    {
+      int cell = mesh->index(i, j, 0);
+      cout << phi[cell] << " ";
+    }
+    cout << endl;
+  }
   // Solve second group.
   //solver.solve(1);
 

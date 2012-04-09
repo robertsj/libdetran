@@ -22,12 +22,29 @@ namespace detran_utils
 {
 
 /// L2 norm of the residual of two vectors.
-inline double norm(vec_dbl &x, vec_dbl &y)
+inline double norm(vec_dbl &x)
+{
+  double v = 0.0;
+  for (int i = 0; i < x.size(); i++)
+    v += pow(x[i]*x[i], 2);
+  return std::sqrt(v);
+}
+
+inline double norm_residual(vec_dbl &x, vec_dbl &y)
 {
   Require(x.size() == y.size());
   double v = 0.0;
   for (int i = 0; i < x.size(); i++)
     v += pow(x[i]-y[i], 2);
+  return std::sqrt(v);
+}
+
+inline double norm_relative_residual(vec_dbl &x, vec_dbl &y)
+{
+  Require(x.size() == y.size());
+  double v = 0.0;
+  for (int i = 0; i < x.size(); i++)
+    v += pow((x[i]-y[i])/y[i], 2);
   return std::sqrt(v);
 }
 

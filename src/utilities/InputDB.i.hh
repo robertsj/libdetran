@@ -48,39 +48,38 @@ inline std::string InputDB::get(const std::string &key) const
 
 inline bool InputDB::check(const std::string &key) const
 {
-  bool val = true;
 
   // Check integers
   std::map<std::string, int>::const_iterator it1;
   it1 = d_data_int.find(key);
-  if (it1 == d_data_int.end())
-    val = false;
+  if (it1 != d_data_int.end())
+    return true;
 
   // Check doubles
   std::map<std::string, double>::const_iterator it2;
   it2 = d_data_dbl.find(key);
-  if (it2 == d_data_dbl.end())
-    val = false;
+  if (it2 != d_data_dbl.end())
+    return true;
 
   // Check integer vectors
   std::map<std::string, vec_int>::const_iterator it3;
   it3 = d_data_vec_int.find(key);
   if (it3 == d_data_vec_int.end())
-    val = false;
+    return true;
 
   // Check double vectors
   std::map<std::string, vec_dbl>::const_iterator it4;
   it4 = d_data_vec_dbl.find(key);
   if (it4 == d_data_vec_dbl.end())
-    val = false;
+    return true;
 
   // Check strings
   std::map<std::string, std::string>::const_iterator it5;
   it5 = d_data_str.find(key);
   if (it5 == d_data_str.end())
-    val = false;
+    return true;
 
-  return val;
+  return false;
 }
 
 template <>

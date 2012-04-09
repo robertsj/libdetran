@@ -44,30 +44,47 @@ typedef detran::Mesh::SP_mesh SP_mesh;
  *  The bottom left coarse mesh has material 0, while
  *  the rest have material 1.
  */
-static SP_mesh mesh_2d_fixture()
+static SP_mesh mesh_2d_fixture(int id = 0)
 {
-  // Define the mesh coarse and fine meshes, and the
-  // coarse mesh material map.
-  detran::Mesh::vec_dbl cm(3, 0.0);
-  cm[1] = 10.0;
-  cm[2] = 20.0;
-  detran::Mesh::vec_int fm(2, 10);
-  // All maps are stored in a single dimension.  The
-  // memory order follows the transpose of the physical
-  // order.  Here, the entries are (i=0,j=0), (i=0,j=1),
-  // etc.  Hence, all entries are 1 but the first.
-  detran::Mesh::vec_int mat_map(4, 1);
-  mat_map[0] = 0;
+  if (id == 0)
+  {
+    // Define the mesh coarse and fine meshes, and the
+    // coarse mesh material map.
+    detran::Mesh::vec_dbl cm(3, 0.0);
+    cm[1] = 10.0;
+    cm[2] = 20.0;
+    detran::Mesh::vec_int fm(2, 10);
+    // All maps are stored in a single dimension.  The
+    // memory order follows the transpose of the physical
+    // order.  Here, the entries are (i=0,j=0), (i=0,j=1),
+    // etc.  Hence, all entries are 1 but the first.
+    detran::Mesh::vec_int mat_map(4, 1);
+    mat_map[0] = 0;
 
-  // Create the new database.
-  SP_mesh mesh;
-  mesh = new detran::Mesh2D(fm, fm, cm, cm, mat_map);
+    // Create the new database.
+    SP_mesh mesh;
+    mesh = new detran::Mesh2D(fm, fm, cm, cm, mat_map);
 
-  // Ensure a valid mesh.
-  Ensure(mesh->is_valid());
+    // Ensure a valid mesh.
+    Ensure(mesh->is_valid());
 
-  // Return the fixture.
-  return mesh;
+    // Return the fixture.
+    return mesh;
+  }
+  else if (id == 1)
+  {
+    detran::Mesh::vec_dbl cm(2, 0.0);
+    cm[1] = 0.5;
+    detran::Mesh::vec_int fm(1, 3);
+    detran::Mesh::vec_int mat_map(1, 1);
+    // Create the new database.
+    SP_mesh mesh;
+    mesh = new detran::Mesh2D(fm, fm, cm, cm, mat_map);
+    // Ensure a valid mesh.
+    Ensure(mesh->is_valid());
+    // Return the fixture.
+    return mesh;
+  }
 }
 
 /*!

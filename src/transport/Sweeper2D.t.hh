@@ -40,6 +40,7 @@ void Sweeper<_2D>::setup(SP_material material)
   }
   else
   {
+    std::cout << " equation = " << equation << std::endl;
     THROW("Unsupported equation type");
   }
 
@@ -64,8 +65,8 @@ inline void Sweeper<_2D>::sweep(moments_type &phi)
   phi.assign(phi.size(), 0.0);
 
   // Temporary edge fluxes
-  Equation::face_flux_2d psi_in  = {0.0, 0.0};
-  Equation::face_flux_2d psi_out = {0.0, 0.0};
+  Equation<_2D>::face_flux_type psi_in  = {0.0, 0.0};
+  Equation<_2D>::face_flux_type psi_out = {0.0, 0.0};
 
   // Reference boundary fluxes for notational clarity.
   boundary_flux_type psi_v;

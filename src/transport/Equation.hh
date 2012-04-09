@@ -11,19 +11,36 @@
 #ifndef EQUATION_HH_
 #define EQUATION_HH_
 
-// Detran utilities
-#include "Definitions.hh"
-#include "SP.hh"
-//#include "InputDB.hh"
-
 // Detran
 #include "Material.hh"
 #include "Mesh.hh"
 #include "Quadrature.hh"
 #include "State.hh"
+#include "Traits.hh"
+
+// Utilities
+#include "Definitions.hh"
+#include "SP.hh"
 
 namespace detran
 {
+
+/*!
+ *  \brief Boundary traits for simplify type access.
+ */
+template <class D>
+class EquationTraits
+{
+public:
+  typedef double face_flux_type[D::dimension];
+};
+template <>
+class EquationTraits<_1D>
+{
+public:
+  typedef double face_flux_type;
+};
+
 
 //---------------------------------------------------------------------------//
 /*!
@@ -31,6 +48,8 @@ namespace detran
  * \brief Discrete ordinates equation base.
  */
 //---------------------------------------------------------------------------//
+
+template <class D>
 class Equation : public detran_utils::Object
 {
 
@@ -42,9 +61,8 @@ public:
   typedef Quadrature::SP_quadrature         SP_quadrature;
   typedef State::moments_type               moments_type;
   typedef State::angular_flux_type          angular_flux_type;
-  typedef double                            face_flux_1d;
-  typedef double                            face_flux_2d[2];
-  typedef double                            face_flux_3d[3];
+  typedef typename
+      EquationTraits<D>::face_flux_type     face_flux_type;
 
 
   /*!
@@ -92,18 +110,14 @@ public:
    *   \tparam  F           Edge flux type.  A vector of 1, 2, or 3
    *                        doubles depending on dimension.
    */
-  template <class F>
-  inline void solve(int i,
-                    int j,
-                    int k,
-                    moments_type &source,
-                    F &psi_in,
-                    F &psi_out,
-                    moments_type &phi,
-                    angular_flux_type &psi)
-  {
-    /* ... */
-  }
+  virtual void solve(int i,
+                     int j,
+                     int k,
+                     moments_type &source,
+                     face_flux_type &psi_in,
+                     face_flux_type &psi_out,
+                     moments_type &phi,
+                     angular_flux_type &psi) = 0;
 
 public:
 
@@ -128,7 +142,7 @@ public:
   /// \}
 
   bool is_valid() const
-  { /* ... */ }
+  {return true;}
 
 protected:
 

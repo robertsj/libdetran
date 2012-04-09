@@ -41,8 +41,8 @@ template<>
     phi.assign(phi.size(), 0.0);
 
     // Temporary edge fluxes
-    Equation::face_flux_1d psi_in  = 0.0;
-    Equation::face_flux_1d psi_out = 0.0;
+    Equation<_1D>::face_flux_type psi_in  = 0.0;
+    Equation<_1D>::face_flux_type psi_out = 0.0;
 
     // Sweep over all octants
     for (int o = 0; o < 2; o++)
