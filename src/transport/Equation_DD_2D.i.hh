@@ -29,6 +29,7 @@ inline void Equation_DD_2D::solve(int i,
   Require(d_g >= 0);
   Require(d_angle >= 0);
   Require(d_octant >= 0);
+  Require(k == 0);
 
   // Compute cell-center angular flux.
   int cell = d_mesh->index(i, j);

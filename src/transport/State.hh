@@ -89,7 +89,6 @@ public:
   {
     SP_state p;
     p = new State(input, mesh, quadrature);
-    quadrature->display();
     return p;
   }
 

@@ -93,15 +93,6 @@ public:
   /*!
    *   \brief Solve for the cell-center and outgoing edge fluxes.
    *
-   *   Note, updating psi is optional.  Only if \ref store_psi is
-   *   true will it be accesses; if store_psi is false, it's
-   *   assumed the corresponding vectors are not sized.
-   *
-   *   This would be virtual, but template functions cannot be.  Hence,
-   *   we simply make it protected so that public access is via
-   *   derived implementations.
-   *
-   *   \param   g           Group
    *   \param   i           Cell x index
    *   \param   j           Cell y index
    *   \param   k           Cell z index
@@ -110,8 +101,6 @@ public:
    *   \param   psi_out     Outgoing flux from this cell
    *   \param   phi         Reference to flux moments for this group
    *   \param   psi         Reference to angular flux for this group
-   *   \tparam  F           Edge flux type.  A vector of 1, 2, or 3
-   *                        doubles depending on dimension.
    */
   virtual void solve(int i,
                      int j,

@@ -1,15 +1,15 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   Equation_DD_2D.hh
- * \author Jeremy Roberts
- * \date   Mar 31, 2012
- * \brief  Equation_DD_2D class definition.
+ * \file   Equation_SC_2D.hh
+ * \author robertsj
+ * \date   Apr 10, 2012
+ * \brief  Equation_SC_2D class definition.
  * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 
-#ifndef EQUATION_DD_2D_HH_
-#define EQUATION_DD_2D_HH_
+#ifndef EQUATION_SC_2D_HH_
+#define EQUATION_SC_2D_HH_
 
 // Detran headers
 #include "Equation.hh"
@@ -22,10 +22,14 @@ namespace detran
 
 /*!
  *  \class Equation_DD_2D
- *  \brief Diamond difference discretization in two dimensions.
+ *  \brief Step characteristic discretization in two dimensions.
+ *
+ *  Reference: Lathrop, K. D. "Spatial differencing of the Transport
+ *             Equation: Positivity vs. Accuracy", J. Comp. Phys. 4,
+ *             475-498 (1969)
  *
  */
-class Equation_DD_2D : public Equation<_2D>
+class Equation_SC_2D : public Equation<_2D>
 {
 
 public:
@@ -41,7 +45,7 @@ public:
   /*!
    *  \brief Constructor
    */
-  Equation_DD_2D(SP_mesh mesh,
+  Equation_SC_2D(SP_mesh mesh,
                  SP_material material,
                  SP_quadrature quadrature,
                  bool update_psi);
@@ -86,11 +90,32 @@ public:
 
 private:
 
-  /// X-directed coefficient, \f$ 2|\mu|/\Delta_x \f$.
-  vec_dbl d_coef_x;
+  /// X-directed coefficient, \f$ \Delta_x / |\mu| \f$.
+  vec_dbl d_alpha;
 
-  /// Y-directed coefficient, \f$ 2|\eta|/\Delta_y \f$.
-  vec_dbl d_coef_y;
+  /// Y-directed coefficient, \f$ \Delta_y / |\eta|  \f$.
+  vec_dbl d_beta;
+
+  /*!
+   *  \brief Approximate exponential.
+   *
+   *  For SC, Denovo uses a 7th order truncate expansion for
+   *  exp about zero for x <= 0.025.  For that value, the
+   *  approximation yields an error of about 1e-15 (found in Maple
+   *  using high precision).  This makes sense, since the error
+   *  of the series is bounded by \f$ x^n / n! \f$ for \f$ x < 1 \f$
+   *  and where \f$ n \f$ is the first truncated order.  Keeping this
+   *  as the desired precision,
+   *
+   *  Here, we do the same but allow for the approximation's use
+   *  over a intervals of width 0.1 from x = 0 to 1.0, which should
+   *  bound most use cases.
+   *
+   *  \todo Performance study to see what effect this actually has!
+   *
+   */
+  inline double exp_appx(double x);
+
 
 };
 
@@ -100,10 +125,10 @@ private:
 // INLINE FUNCTIONS
 //---------------------------------------------------------------------------//
 
-#include "Equation_DD_2D.i.hh"
+#include "Equation_SC_2D.i.hh"
 
-#endif /* EQUATION_DD_2D_HH_ */
+#endif /* EQUATION_SC_2D_HH_ */
 
 //---------------------------------------------------------------------------//
-//              end of Equation_DD_2D.hh
+//              end of Equation_SC_2D.hh
 //---------------------------------------------------------------------------//

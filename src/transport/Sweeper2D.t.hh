@@ -12,6 +12,7 @@
 
 // Detran
 #include "Equation_DD_2D.hh"
+#include "Equation_SC_2D.hh"
 
 // System
 #include <iostream>
@@ -24,21 +25,22 @@ using std::endl;
 template<>
 void Sweeper<_2D>::setup(SP_material material)
 {
-  // Check to see if input has equation type. If not, default.
-  std::string equation;
+  // Check to see if input has equation type. If not, default is dd.
+  std::string equation = "dd";
   if (d_input->check("equation"))
   {
     equation = d_input->get<std::string>("equation");
-  }
-  else
-  {
-    equation = "dd";
   }
   // Set the equation.
   if (equation == "dd")
   {
     d_equation =
         new Equation_DD_2D(d_mesh, material, d_quadrature, d_update_psi);
+  }
+  else if (equation == "sc")
+  {
+    d_equation =
+        new Equation_SC_2D(d_mesh, material, d_quadrature, d_update_psi);
   }
   else
   {
@@ -96,7 +98,6 @@ inline void Sweeper<_2D>::sweep(moments_type &phi)
       State::angular_flux_type psi;
       if (d_update_psi)
       {
-        THROW(" why are you here? ");
         psi = d_state->psi(o, a, d_g);
       }
 
