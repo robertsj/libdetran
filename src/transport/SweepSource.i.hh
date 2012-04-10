@@ -35,9 +35,10 @@ namespace detran
     // Add fission source, if present \todo
     if (d_fissionsource)
     {
+      State::moments_type qf = d_fissionsource->source(g);
       for (int cell = 0; cell < d_mesh->number_cells(); cell++)
       {
-        //d_fixed_group_source[cell] = d_fissionsource;
+        d_fixed_group_source[cell] += qf[cell];
       }
     }
 

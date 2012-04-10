@@ -22,14 +22,35 @@
 namespace detran
 {
 
-/// L2 norm of the residual of two vectors.
-inline double norm(vec_dbl &x)
+/*!
+ *  \brief Norm of a vector.
+ *  \param  flag    Default is false for L2.  True for L-infinity.
+ */
+inline double norm(vec_dbl &x, bool flag = false)
 {
   double v = 0.0;
-  for (int i = 0; i < x.size(); i++)
-    v += std::pow(x[i]*x[i], 2);
-  return std::sqrt(v);
+  if (!flag)
+  {
+    for (int i = 0; i < x.size(); i++)
+      v += std::pow(x[i]*x[i], 2);
+    return std::sqrt(v);
+  }
+  else
+  {
+    v = x[0];
+    for (int i = 1; i < x.size(); i++)
+      v = std::max(std::abs(x[i]), v);
+    return v;
+  }
 }
+
+/// Scale a double vector.
+inline void vec_scale(vec_dbl &x, double scale)
+{
+  for (int i = 0; i < x.size(); i++)
+    x[i] = x[i] * scale;
+}
+
 
 /*!
  *  \brief Norm of the residual of two double vectors.

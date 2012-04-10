@@ -11,6 +11,9 @@
 #ifndef REFLECTIVE_I_HH_
 #define REFLECTIVE_I_HH_
 
+// System
+#include <iostream>
+
 namespace detran
 {
 
@@ -129,31 +132,31 @@ void Reflective<_2D>::setup_octant()
           d_side == Mesh::BOTTOM || d_side == Mesh::TOP   );
   if (d_side == Mesh::LEFT)
   {
-    d_octants[0][0] = 0;
+    d_octants[0][0] = 0; // [left/right oct][in/out]
     d_octants[1][0] = 3;
     d_octants[0][1] = 1;
     d_octants[1][1] = 2;
   }
   else if (d_side == Mesh::RIGHT)
   {
-    d_octants[0][0] = 1;
-    d_octants[0][1] = 0;
-    d_octants[1][0] = 2;
-    d_octants[1][1] = 3;
+    d_octants[0][0] = 2;
+    d_octants[1][0] = 1;
+    d_octants[0][1] = 3;
+    d_octants[1][1] = 0;
   }
   else if (d_side == Mesh::BOTTOM)
   {
-    d_octants[0][0] = 0;
-    d_octants[0][1] = 3;
-    d_octants[1][1] = 2;
-    d_octants[1][0] = 1;
-  }
-  else
-  {
-    d_octants[0][1] = 2;
     d_octants[0][0] = 1;
     d_octants[1][0] = 0;
+    d_octants[0][1] = 2;
     d_octants[1][1] = 3;
+  }
+  else // TOP
+  {
+    d_octants[0][0] = 3;
+    d_octants[1][0] = 2;
+    d_octants[0][1] = 0;
+    d_octants[1][1] = 1;
   }
 }
 

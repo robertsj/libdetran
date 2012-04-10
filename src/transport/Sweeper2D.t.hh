@@ -23,7 +23,7 @@ using std::cout;
 using std::endl;
 
 template<>
-void Sweeper<_2D>::setup(SP_material material)
+inline void Sweeper<_2D>::setup(SP_material material)
 {
   // Check to see if input has equation type. If not, default is dd.
   std::string equation = "dd";

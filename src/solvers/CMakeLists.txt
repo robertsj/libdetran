@@ -12,6 +12,7 @@ SET(SOLVERS_SRC
     InnerIteration.cc
     SourceIteration.cc
     GaussSeidel.cc
+    PowerIteration.cc
 )
 
 #-------------------------------------#

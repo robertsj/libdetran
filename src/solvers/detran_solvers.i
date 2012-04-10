@@ -16,6 +16,7 @@
 #include "InnerIteration.hh"
 #include "Material.hh"
 #include "Mesh.hh"
+#include "PowerIteration.hh"
 #include "Quadrature.hh"
 #include "SourceIteration.hh"
 #include "State.hh"
@@ -32,7 +33,7 @@
 
 %include "SP.hh"
 %include "InnerIteration.hh"
-//%include "GaussSeidel.hh"
+%include "PowerIteration.hh"
 
 namespace detran
 {
@@ -99,6 +100,8 @@ public:
 %template(GaussSeidel2D)        detran::GaussSeidel<detran::_2D>;
 %template(GaussSeidel2DSP)      detran::SP<detran::GaussSeidel<detran::_2D> >;
 
+%template(PowerIteration2D)     detran::PowerIteration<detran::_2D>;
+%template(PowerIteration2DSP)   detran::SP<detran::PowerIteration<detran::_2D> >;
 //---------------------------------------------------------------------------//
 //              end of detran_transport.i
 //---------------------------------------------------------------------------//

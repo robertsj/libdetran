@@ -37,14 +37,16 @@ namespace std
 
 %include "SP.hh"
 %include "Boundary.hh"
-%include "FissionSource.hh"
+//%include "FissionSource.hh"
 // External/general sources
 %include "ExternalSource.hh"
 %include "ConstantSource.hh"
 
+
 namespace detran
 {
 
+// Simplified State interface.
 class State
 {
 public:
@@ -63,12 +65,28 @@ public:
   int number_groups() const;
 };
   
+// Simplified FissionSource interface.
+class FissionSource
+{
+public:
+  FissionSource(SP<detran::State>     state, 
+                SP<detran::Mesh>      mesh, 
+                SP<detran::Material>  material);
+  static SP<FissionSource> Create(SP<detran::State>     state, 
+                                  SP<detran::Mesh>      mesh, 
+                                  SP<detran::Material>  material);
+  void initialize();
+  void update();
+  void setup_outer(double scale);
+  const std::vector<double>& source(int g);
+  const std::vector<double>& density();
+};
+
 } // end namespace detran
 
 %inline %{
 typedef detran::State::moments_type moments_type;
 %}
-
 
 // Templates 
 
