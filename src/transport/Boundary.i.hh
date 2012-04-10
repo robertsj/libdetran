@@ -50,6 +50,13 @@ template <class D>
 inline const typename Boundary<D>::boundary_flux_type&
 Boundary<D>::incident(int side, int angle, int g) const
 {
+  Require(side >= 0);
+  Require(side < D::dimension*2);
+  Require(angle >= 0);
+  Require(angle < d_quadrature->number_angles_octant());
+  Require(g >= 0);
+  Require(g < d_number_groups);
+  //return d_boundary_flux[side][g][angle];
   int index = ordered_angle(side, angle, IN);
   return d_boundary_flux[side][g][index];
 }

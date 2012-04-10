@@ -87,7 +87,7 @@ public:
   virtual bool is_valid() const
   {return true;}
 
-private:
+protected:
 
   /// Boundary flux container. \todo Is there a way around using a reference?
   Boundary<D>& d_boundary;

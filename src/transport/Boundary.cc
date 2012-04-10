@@ -10,6 +10,8 @@
 
 // Detran
 #include "Boundary.hh"
+#include "Reflective.hh"
+#include "Vacuum.hh"
 
 // System
 #include <string>
@@ -62,10 +64,10 @@ Boundary<D>::Boundary(SP_input        input,
       d_bc[side] =
           new Vacuum<D>((*this), side, input, mesh, quadrature);
     }
-    else if (type == "reflective")
+    else if (type == "reflect")
     {
-     // d_bc[side] =
-     //     new Reflective<D>(this_boundary, side, input, mesh, quadrature);
+      d_bc[side] =
+          new Reflective<D>((*this), side, input, mesh, quadrature);
     }
     else
     {

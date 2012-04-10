@@ -15,9 +15,7 @@
 #include "BoundaryCondition.hh"
 #include "Quadrature.hh"
 #include "Mesh.hh"
-//#include "Reflective.hh"
 #include "Traits.hh"
-#include "Vacuum.hh"
 
 // Utilities
 #include "DBC.hh"
