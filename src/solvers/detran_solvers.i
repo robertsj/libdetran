@@ -12,6 +12,7 @@
 #include "Boundary.hh"
 #include "ExternalSource.hh"
 #include "FissionSource.hh"
+#include "GaussSeidel.hh"
 #include "InnerIteration.hh"
 #include "Material.hh"
 #include "Mesh.hh"
@@ -31,17 +32,12 @@
 
 %include "SP.hh"
 %include "InnerIteration.hh"
-//%include "SourceIteration.hh"
+//%include "GaussSeidel.hh"
 
 namespace detran
 {
 
-//===========================================================================//
-/*!
- * \class SourceIteration
- * \brief 
- */
-//===========================================================================//
+// SourceIteration simple SWIG interface.
 template <class D>
 class SourceIteration: public InnerIteration<D>
 {
@@ -56,9 +52,36 @@ public:
          detran::SP<detran::Boundary<D> >    boundary,
          detran::SP<detran::ExternalSource>  q_e,
          detran::SP<detran::FissionSource>   q_f);
-         
   // Solve
   void solve(int g); 
+};
+
+// GaussSeidelsimple SWIG interface.
+template <class D>
+class GaussSeidel
+{
+public:
+  // SP Constructor
+  GaussSeidel(detran::SP<detran::InputDB>         input,
+              detran::SP<detran::State>           state,
+              detran::SP<detran::Mesh>            mesh,
+              detran::SP<detran::Material>        material,
+              detran::SP<detran::Quadrature>      quadrature,
+              detran::SP<detran::Boundary<D> >    boundary,
+              detran::SP<detran::ExternalSource>  q_e,
+              detran::SP<detran::FissionSource>   q_f);
+  // SP Constructor
+  static detran::SP<GaussSeidel<D> >
+  Create(detran::SP<detran::InputDB>         input,
+         detran::SP<detran::State>           state,
+         detran::SP<detran::Mesh>            mesh,
+         detran::SP<detran::Material>        material,
+         detran::SP<detran::Quadrature>      quadrature,
+         detran::SP<detran::Boundary<D> >    boundary,
+         detran::SP<detran::ExternalSource>  q_e,
+         detran::SP<detran::FissionSource>   q_f);
+  // Solve
+  void solve(); 
 };
 
 } // end namespace detran
@@ -66,12 +89,15 @@ public:
 
 //%template(StateSP)  detran::SP<detran::State>;
 
+
 %template(InnerIteration2D)     detran::InnerIteration<detran::_2D>;
 %template(InnerIteration2DSP)   detran::SP<detran::InnerIteration<detran::_2D> >;
 
 %template(SourceIteration2D)    detran::SourceIteration<detran::_2D>;
 %template(SourceIteration2DSP)  detran::SP<detran::SourceIteration<detran::_2D> >;
 
+%template(GaussSeidel2D)        detran::GaussSeidel<detran::_2D>;
+%template(GaussSeidel2DSP)      detran::SP<detran::GaussSeidel<detran::_2D> >;
 
 //---------------------------------------------------------------------------//
 //              end of detran_transport.i

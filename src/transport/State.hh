@@ -62,6 +62,7 @@ public:
   typedef Quadrature::SP_quadrature                     SP_quadrature;
   typedef vec_dbl                                       moments_type;
   typedef std::vector<moments_type>                     vec_moments_type;
+  typedef std::vector<moments_type>                     group_moments_type;
   typedef vec_dbl                                       angular_flux_type;
   typedef std::vector<std::vector<angular_flux_type> >  vec_angular_flux_type;
 
@@ -125,6 +126,28 @@ public:
     (
       // Add const to *this's type and call const version
       static_cast<const State*>(this)->phi(g)
+    );
+
+  }
+
+  /*
+   *  \brief Const accessor to all group moments.
+   */
+  const group_moments_type& all_phi() const
+  {
+    return d_moments;
+  }
+
+  /*
+   *  \brief Mutable accessor to all group moments.
+   */
+  group_moments_type& all_phi()
+  {
+    // Cast away return type
+    return const_cast<group_moments_type&>
+    (
+      // Add const to *this's type and call const version
+      static_cast<const State*>(this)->all_phi()
     );
 
   }

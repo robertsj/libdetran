@@ -72,9 +72,7 @@ public:
                   SP_externalsource  q_e,
                   SP_fissionsource   q_f);
 
-  /*!
-   *  \brief SP Constructor.
-   */
+  /// SP Constructor
   static SP<SourceIteration<D> >
   Create(SP<InputDB>                 input,
          SP<detran::State>           state,
@@ -91,10 +89,22 @@ public:
     return p;
   }
 
-  /*!
-   *  \brief Solve the within group equation.
-   */
+  /// Solve the within group equation.
   void solve(int g);
+
+  /// Reset the tolerance.
+  void set_tolerance(double tol)
+  {
+    Require(tol > 0.0);
+    d_tolerance = tol;
+  }
+
+  /// Reset the maximum iterations.
+  void set_max_iters(int max_iters)
+  {
+    Require(max_iters > 0);
+    d_max_iters = max_iters;
+  }
 
   // Make inherited data visible
   using Base::d_input;

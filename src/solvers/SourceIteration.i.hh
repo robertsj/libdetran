@@ -21,6 +21,8 @@ namespace detran
 template <class D>
 void SourceIteration<D>::solve(int g)
 {
+  std::cout << "    Starting SI." << std::endl;
+
   // Setup boundary conditions.  This sets any conditions fixed for the solve.
   d_boundary->set(g);
 
@@ -38,7 +40,7 @@ void SourceIteration<D>::solve(int g)
   d_sweepsource->build_within_group_scatter(g, phi);
 
   // Iterate.
-  double residual = 0.0;
+  double error = 1.0;
   int iteration;
   for (iteration = 0; iteration < d_max_iters; iteration++)
   {
@@ -52,22 +54,19 @@ void SourceIteration<D>::solve(int g)
     // Sweep.
     d_sweeper->sweep(phi);
 
-    // Flux residual (relative to old one to avoid 1/0)
-    residual = norm_relative_residual(phi_old, phi);
+    // Flux residual using L-infinity.
+    error = norm_residual(phi_old, phi, true);
 
-    std::cout << "Iter: " << iteration << " Res: " << residual << std::endl;
-    if (residual < d_tolerance)
-    {
-      break;
-    }
+    std::cout << "    SI Iter: " << iteration << " Error: " << error << std::endl;
+    if (error < d_tolerance) break;
 
     // Construct within group
     d_sweepsource->build_within_group_scatter(g, phi);
 
   } // end iterations
 
-  // did we converge?
-  // \todo
+  if (error > d_tolerance)
+    warning(SOLVER_CONVERGENCE, "    SourceIteration did not converge.");
 
   // Update the state with the new flux.
   d_state->phi(g) = phi;
