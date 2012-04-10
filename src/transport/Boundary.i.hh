@@ -85,6 +85,28 @@ Boundary<D>::outgoing(int side, int angle, int g)
   );
 }
 
+template <class D>
+inline void Boundary<D>::set(int g)
+{
+  // Set boundary conditions.
+  for(int side = 0; side < 2*D::dimension; side++)
+  {
+    d_bc[side]->set(g);
+  }
+}
+
+template <class D>
+inline void Boundary<D>::update(int g)
+{
+  // Set boundary conditions.
+  for(int side = 0; side < 2*D::dimension; side++)
+  {
+    d_bc[side]->update(g);
+  }
+}
+
+
+
 //---------------------------------------------------------------------------//
 // Local ordering index.
 //---------------------------------------------------------------------------//

@@ -21,8 +21,8 @@ namespace detran
 template <class D>
 void SourceIteration<D>::solve(int g)
 {
-  // Setup boundary conditions.
-  // \todo
+  // Setup boundary conditions.  This sets any conditions fixed for the solve.
+  d_boundary->set(g);
 
   // Set the equations.
   d_sweeper->setup_group(g);
@@ -43,8 +43,8 @@ void SourceIteration<D>::solve(int g)
   for (iteration = 0; iteration < d_max_iters; iteration++)
   {
 
-    // Update boundary
-    // \todo
+    // Update boundary.  This updates boundaries due to reflection, etc.
+    d_boundary->update(g);
 
     // Swap old and new.
     std::swap(phi, phi_old);

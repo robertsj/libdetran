@@ -21,15 +21,20 @@ template<>
 
     // Set up face/octant map.
     d_face_index.resize(8, vec2_int(3, vec_int(2, 0)));
-    // octant / surface type / inout
+
+    int inc[8][3] = {0, 2, 4,  1, 2, 4,  1, 3, 4,  0, 3, 4,
+                     0, 2, 5,  1, 2, 5,  1, 3, 5,  0, 3, 5};
+    int out[8][3] = {1, 3, 5,  0, 3, 5,  0, 2, 5,  1, 2, 5,
+                     1, 3, 4,  0, 3, 4,  0, 2, 4,  1, 2, 4};
     for (int i = 0; i < 8; i++)
     {
-      d_face_index[i][Mesh::YZ][Boundary_T::IN] = i % 2 + Mesh::LEFT;
-      d_face_index[i][Mesh::XZ][Boundary_T::IN] = i % 2 + Mesh::BOTTOM;
-      d_face_index[i][Mesh::XY][Boundary_T::IN] = i % 2 + Mesh::SOUTH;
-      d_face_index[i][Mesh::YZ][Boundary_T::OUT] = Mesh::RIGHT - (i + 1) % 2;
-      d_face_index[i][Mesh::XZ][Boundary_T::OUT] = Mesh::TOP -   (i + 1) % 2;
-      d_face_index[i][Mesh::XY][Boundary_T::OUT] = Mesh::NORTH - (i + 1) % 2;
+      // octant     surface type    inout
+      d_face_index[i][Mesh::YZ][Boundary_T::IN]  = inc[i][0];
+      d_face_index[i][Mesh::XZ][Boundary_T::IN]  = inc[i][1];
+      d_face_index[i][Mesh::XY][Boundary_T::IN]  = inc[i][2];
+      d_face_index[i][Mesh::YZ][Boundary_T::OUT] = out[i][0];
+      d_face_index[i][Mesh::XZ][Boundary_T::OUT] = out[i][1];
+      d_face_index[i][Mesh::XY][Boundary_T::OUT] = out[i][2];
     }
   }
 

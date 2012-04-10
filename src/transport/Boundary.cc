@@ -8,7 +8,11 @@
  */
 //---------------------------------------------------------------------------//
 
+// Detran
 #include "Boundary.hh"
+
+// System
+#include <string>
 
 namespace detran
 {
@@ -24,6 +28,7 @@ Boundary<D>::Boundary(SP_input        input,
   , d_number_groups(input->get<int>("number_groups"))
   , d_boundary_flux(2*D::dimension, // number of sides
                     vec2_boundary_flux(d_number_groups))
+  , d_bc(2*D::dimension)
 {
   Require(input);
   Require(mesh);
@@ -32,6 +37,45 @@ Boundary<D>::Boundary(SP_input        input,
 
   // Allocate the boundary flux container.
   initialize();
+
+  std::vector<std::string> names(6);
+  names[Mesh::LEFT]   = "bc_left";
+  names[Mesh::RIGHT]  = "bc_right";
+  names[Mesh::BOTTOM] = "bc_bottom";
+  names[Mesh::TOP]    = "bc_top";
+  names[Mesh::SOUTH]  = "bc_south";
+  names[Mesh::NORTH]  = "bc_north";
+
+  // Create SP of me.
+
+  // Assign boundary conditions.
+  for(int side = 0; side < 2*D::dimension; side++)
+  {
+    // Vacuum is default.
+    std::string type = "vacuum";
+    if (input->check(names[side]))
+    {
+      type = input->get<std::string>(names[side]);
+    }
+    if (type == "vacuum")
+    {
+      d_bc[side] =
+          new Vacuum<D>((*this), side, input, mesh, quadrature);
+    }
+    else if (type == "reflective")
+    {
+     // d_bc[side] =
+     //     new Reflective<D>(this_boundary, side, input, mesh, quadrature);
+    }
+    else
+    {
+      type.append(" is not a supported bc type.");
+      THROW(type);
+      break;
+    }
+  }
+
+
 
 }
 

@@ -47,13 +47,16 @@ void Sweeper<_2D>::setup(SP_material material)
 
   // Set up face/octant map.
   d_face_index.resize(4, vec2_int(2, vec_int(2, 0)));
-  // octant / surface type / inout
+
+  int inc[4][2] = {0, 2, 1, 2, 1, 3, 0, 3};
+  int out[4][2] = {1, 3, 0, 3, 0, 2, 1, 2};
   for (int i = 0; i < 4; i++)
   {
-    d_face_index[i][Mesh::VERT][Boundary_T::IN]  = i % 2 + Mesh::LEFT;
-    d_face_index[i][Mesh::HORZ][Boundary_T::IN]  = i % 2 + Mesh::BOTTOM;
-    d_face_index[i][Mesh::VERT][Boundary_T::OUT] = Mesh::RIGHT - (i + 1) % 2;
-    d_face_index[i][Mesh::HORZ][Boundary_T::OUT] = Mesh::TOP   - (i + 1) % 2;
+    //      octant   surface type   inout
+    d_face_index[i][Mesh::VERT][Boundary_T::IN]  = inc[i][0];
+    d_face_index[i][Mesh::HORZ][Boundary_T::IN]  = inc[i][1];
+    d_face_index[i][Mesh::VERT][Boundary_T::OUT] = out[i][0];
+    d_face_index[i][Mesh::HORZ][Boundary_T::OUT] = out[i][1];
   }
 }
 
@@ -133,11 +136,11 @@ inline void Sweeper<_2D>::sweep(moments_type &phi)
 
       } // end y loop
 
-      // Update boundary  \todo
-      //(*d_boundary)
-      //    (d_face_index[o][Mesh::VERT][Boundary_T::OUT], o, a, d_g) = psi_v;
-      //(*d_boundary)
-      //    (d_face_index[o][Mesh::HORZ][Boundary_T::OUT], o, a, d_g) = psi_h;
+      // Update boundary
+      (*d_boundary)
+          (d_face_index[o][Mesh::VERT][Boundary_T::OUT], o, a, d_g) = psi_v;
+      (*d_boundary)
+          (d_face_index[o][Mesh::HORZ][Boundary_T::OUT], o, a, d_g) = psi_h;
 
     } // end angle loop
 

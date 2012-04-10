@@ -1,40 +1,42 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   SourceIteration.hh
+ * \file   GaussSeidel.hh
  * \author robertsj
- * \date   Apr 4, 2012
- * \brief  SourceIteration class definition.
+ * \date   Apr 9, 2012
+ * \brief  GaussSeidel class definition.
  * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 
-#ifndef SOURCEITERATION_HH_
-#define SOURCEITERATION_HH_
+#ifndef GAUSSSEIDEL_HH_
+#define GAUSSSEIDEL_HH_
 
 // Detran
 #include "InnerIteration.hh"
 
 // Utilities
+#include "DBC.hh"
+#include "InputDB.hh"
 #include "SP.hh"
+
 
 namespace detran
 {
 
 //===========================================================================//
 /*!
- * \class SourceIteration
- * \brief 
+ * \class GaussSeidel
+ * \brief Solves the multigroup transport equation via Gauss-Seidel.
  */
 //===========================================================================//
 template <class D>
-class SourceIteration: public InnerIteration<D>
+class GaussSeidel: public Object
 {
 
 public:
 
-  typedef SP<SourceIteration>                   SP_inner;
-  typedef InnerIteration<D>                     Base;
-  typedef typename InnerIteration<D>::SP_inner  SP_base;
+  typedef SP<GaussSeidel<D> >                   SP_solver;
+  typedef InnerIteration<D>                     SP_inner;
   // basic objects
   typedef InputDB::SP_input                     SP_input;
   typedef State::SP_state                       SP_state;
@@ -42,14 +44,9 @@ public:
   typedef Material::SP_material                 SP_material;
   typedef Quadrature::SP_quadrature             SP_quadrature;
   typedef typename Boundary<D>::SP_boundary     SP_boundary;
-  typedef typename MomentToDiscrete<D>::SP_MtoD SP_MtoD;
   // source typedefs
   typedef ExternalSource::SP_source             SP_externalsource;
   typedef FissionSource::SP_source              SP_fissionsource;
-  //
-  typedef typename Sweeper<D>::SP_sweeper       SP_sweeper;
-  //
-  typedef State::moments_type                   moments_type;
 
   /*!
    *  \brief Constructor
@@ -63,20 +60,20 @@ public:
    *  \param external_source   User-defined external source.
    *  \param fission_source    Fission source.
    */
-  SourceIteration(SP_input           input,
-                  SP_state           state,
-                  SP_mesh            mesh,
-                  SP_material        material,
-                  SP_quadrature      quadrature,
-                  SP_boundary        boundary,
-                  SP_externalsource  q_e,
-                  SP_fissionsource   q_f);
+  GaussSeidel(SP_input           input,
+              SP_state           state,
+              SP_mesh            mesh,
+              SP_material        material,
+              SP_quadrature      quadrature,
+              SP_boundary        boundary,
+              SP_externalsource  q_e,
+              SP_fissionsource   q_f);
 
   /*!
    *  \brief SP Constructor.
    */
-  static SP<SourceIteration<D> >
-  Create(SP<InputDB>                 input,
+  static SP<GaussSeidel<D> >
+  Create(SP<detran::InputDB>         input,
          SP<detran::State>           state,
          SP<detran::Mesh>            mesh,
          SP<detran::Material>        material,
@@ -85,28 +82,18 @@ public:
          SP<detran::ExternalSource>  q_e,
          SP<detran::FissionSource>   q_f)
   {
-    SP_inner p;
-    p = new SourceIteration(input, state, mesh, material,
-                            quadrature, boundary, q_e, q_f);
+    SP_solver p;
+    p = new GaussSeidel(input, state, mesh, material,
+                        quadrature, boundary, q_e, q_f);
     return p;
   }
 
-  /*!
-   *  \brief Solve the within group equation.
-   */
-  void solve(int g);
+  /// Solve the multigroup equations.
+  void solve();
 
-  // Make inherited data visible
-  using Base::d_input;
-  using Base::d_state;
-  using Base::d_mesh;
-  using Base::d_material;
-  using Base::d_quadrature;
-  using Base::d_boundary;
-  using Base::d_sweeper;
-  using Base::d_sweepsource;
-  using Base::d_tolerance;
-  using Base::d_max_iters;
+  /// Unimplemented DBC function.
+  bool is_valid() const
+  {return true;}
 
 };
 
@@ -118,8 +105,5 @@ public:
 
 #include "SourceIteration.i.hh"
 
-#endif /* SOURCEITERATION_HH_ */
 
-//---------------------------------------------------------------------------//
-//              end of SourceIteration.hh
-//---------------------------------------------------------------------------//
+#endif /* GAUSSSEIDEL_HH_ */

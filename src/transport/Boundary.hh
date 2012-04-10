@@ -12,16 +12,21 @@
 #define BOUNDARY_HH_
 
 // Detran
+#include "BoundaryCondition.hh"
 #include "Quadrature.hh"
 #include "Mesh.hh"
-#include "Material.hh"
+//#include "Reflective.hh"
 #include "Traits.hh"
+#include "Vacuum.hh"
 
 // Utilities
 #include "DBC.hh"
 #include "Definitions.hh"
 #include "InputDB.hh"
 #include "SP.hh"
+
+// System
+#include <vector>
 
 namespace detran
 {
@@ -98,6 +103,7 @@ public:
   typedef Mesh::SP_mesh                             SP_mesh;
   typedef Quadrature::SP_quadrature                 SP_quadrature;
   typedef typename BoundaryTraits<D>::value_type    boundary_flux_type;
+  typedef typename BoundaryCondition<D>::SP_bc      SP_bc;
   typedef std::vector<boundary_flux_type>           vec_boundary_flux;
   typedef std::vector<vec_boundary_flux>            vec2_boundary_flux;
   typedef std::vector<vec2_boundary_flux>           vec3_boundary_flux;
@@ -170,6 +176,13 @@ public:
    */
   boundary_flux_type& outgoing(int side, int angle, int g);
 
+  /// Set the boundaries for a within-group solve.
+  void set(int g);
+
+  /// Update the boundaries for each sweep.
+  void update(int g);
+
+
   /*!
    *  \brief  Map the local index to cardinal index.
    *
@@ -223,6 +236,9 @@ private:
 
   /// Boundary flux (side, energy, angle, space)
   vec3_boundary_flux d_boundary_flux;
+
+  /// Vector of boundary conditions.
+  std::vector<SP_bc> d_bc;
 
   /// \}
 
