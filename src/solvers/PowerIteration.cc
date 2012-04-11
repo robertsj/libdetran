@@ -36,6 +36,8 @@ PowerIteration<D>::PowerIteration(SP_input          input,
   , d_fission_source(q_f)
   , d_max_iters(100)
   , d_tolerance(1e-5)
+  , d_print_out(2)
+  , d_print_interval(10)
 {
   Require(d_input);
   Require(d_state);

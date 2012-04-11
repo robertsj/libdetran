@@ -123,6 +123,15 @@ void Material::set_sigma_t(int m, vec_dbl &v)
   d_sigma_t[m] = v;
 }
 
+void Material::set_sigma_a(int m, vec_dbl &v)
+{
+  Require(m >= 0);
+  Require(m < d_number_materials);
+  Require(v.size() == d_number_groups);
+  d_sigma_a[m] = v;
+}
+
+
 void Material::set_nu_sigma_f(int m, vec_dbl &v)
 {
   Require(m >= 0);
@@ -268,25 +277,25 @@ void Material::display()
   printf("\n");
   for (int m = 0; m < d_number_materials; m++)
   {
-    printf("material %5i\n", m);
-    printf("  g ");
+    printf("material      %5i\n", m);
+    printf("     gp: ");
     for (int g = 0; g < d_number_groups; g++)
     {
       printf("%13i ", g);
     }
-    printf("\n    ");
+    printf("\n  total  ");
     // Total
     for (int g = 0; g < d_number_groups; g++)
     {
       printf("%13.10f ", sigma_t(m, g));
     }
-    printf("\n    ");
+    printf("\n  nufis  ");
     // Fission
     for (int g = 0; g < d_number_groups; g++)
     {
       printf("%13.10f ", nu_sigma_f(m, g));
     }
-    printf("\n    ");
+    printf("\n  chi    ");
     // Chi
     for (int g = 0; g < d_number_groups; g++)
     {
@@ -296,7 +305,7 @@ void Material::display()
     // Scatter
     for (int gp = 0; gp < d_number_groups; gp++)
     {
-      printf("%3i ", gp);
+      printf("%3i<-gp  ", gp);
       for (int g = 0; g < d_number_groups; g++)
       {
         printf("%13.10f ", sigma_s(m, gp, g));

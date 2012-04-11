@@ -70,15 +70,17 @@ namespace detran
  * MATLAB's own GMRES (and other Krylov solvers).
  *
  * Input parameters specific to InnerIteration and derived classes:
- * - inner_max_iters (default: 100)
- * - inner_tolerance (default: 1e-5)
+ * - inner_max_iters        [100]
+ * - inner_tolerance        [1e-5]
+ * - inner_print_out        [2], 0=never, 1=final, 2=every interval
+ * - inner_print_interval   [10]
  *
  * \sa SourceIteration, Livolant, GMRESIteration
  */
 // ==============================================================================
 
 template <class D>
-class InnerIteration
+class InnerIteration: public Object
 {
 
 public:
@@ -95,7 +97,7 @@ public:
   // source typedefs
   typedef ExternalSource::SP_source 		    SP_externalsource;
   typedef FissionSource::SP_source 			    SP_fissionsource;
-  //
+  // sweep
   typedef typename Sweeper<D>::SP_sweeper       SP_sweeper;
   typedef typename
       SweepSource<D>::SP_sweepsource            SP_sweepsource;
@@ -147,13 +149,10 @@ protected:
   /// Boundary fluxes.
   SP_boundary d_boundary;
 
-
   /// Sweeper over the space-angle domain.
   SP_sweeper d_sweeper;
-
   /// Sweep source constructor
   SP_sweepsource d_sweepsource;
-
   /// User-defined external source
   SP_externalsource d_external_source;
   /// Fission source, if used
@@ -163,6 +162,12 @@ protected:
   int d_max_iters;
   /// Convergence tolerance
   double d_tolerance;
+
+  /// Print out flag
+  int d_print_out;
+  /// Interval for print out
+  int d_print_interval;
+
   /// Group we are solving.
   int d_g;
   /// Numer of sweeps
@@ -186,6 +191,8 @@ InnerIteration<D>::InnerIteration(SP_input          input,
   ,  d_boundary(boundary)
   ,  d_max_iters(100)
   ,  d_tolerance(1e-5)
+  ,  d_print_out(2)
+  ,  d_print_interval(10)
 {
   Require(input);
   Require(state);
@@ -199,17 +206,17 @@ InnerIteration<D>::InnerIteration(SP_input          input,
   {
     d_max_iters = input->get<int>("inner_max_iters");
   }
-  else
-  {
-    d_max_iters = 5;
-  }
   if (input->check("inner_tolerance"))
   {
     d_tolerance = input->get<double>("inner_tolerance");
   }
-  else
+  if (input->check("inner_print_out"))
   {
-    d_tolerance = 1e-5;
+    d_print_out = input->get<int>("inner_print_out");
+  }
+  if (input->check("inner_print_interval"))
+  {
+    d_print_interval = input->get<int>("inner_print_interval");
   }
 
   // Moments-to-Discrete
@@ -221,10 +228,7 @@ InnerIteration<D>::InnerIteration(SP_input          input,
   d_sweepsource =
       new SweepSource<D>(state, mesh, quadrature, material, MtoD);
 
-  if (q_f)
-  {
-    d_sweepsource->set_fission_source(q_f);
-  }
+  if (q_f) d_sweepsource->set_fission_source(q_f);
 
   if (q_e)
   {
@@ -235,8 +239,8 @@ InnerIteration<D>::InnerIteration(SP_input          input,
 
   // Sweeper
   d_sweeper = new Sweeper<D>(input, mesh, material,
-		                     quadrature, state, boundary,
-		                     d_sweepsource);
+                             quadrature, state, boundary,
+                             d_sweepsource);
 
 }
 

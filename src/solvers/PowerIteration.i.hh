@@ -17,6 +17,7 @@
 
 // System
 #include <algorithm>
+#include <cstdio>
 
 namespace detran
 {
@@ -25,7 +26,7 @@ template <class D>
 void PowerIteration<D>::solve()
 {
 
-  std::cout << "Starting PI." << d_max_iters << std::endl;
+  std::cout << "Starting PI." << std::endl;
 
   // K-eigenvalue
   double keff = 1.0;
@@ -37,7 +38,7 @@ void PowerIteration<D>::solve()
   // Power iterations.
   int iteration;
   double error;
-  for (iteration = 0; iteration < d_max_iters; iteration++)
+  for (iteration = 1; iteration <= d_max_iters; iteration++)
   {
     // Reset the error.
     error = 0.0;
@@ -62,12 +63,23 @@ void PowerIteration<D>::solve()
 
     // Compute error in fission density.
     error = norm_residual(fd, fd_old, "L1");
-    std::cout << "  PI Iter: " << iteration
-              << " Error: " << error
-              <<  " keff: " << keff << std::endl;
+
+    if (d_print_out > 1 and iteration % d_print_interval == 0)
+    {
+      printf("PI Iter: %3i  Error: %12.9f  keff: %12.9f \n",
+             iteration, error, keff);
+    }
     if (error < d_tolerance) break;
 
   } // eigensolver loop
+
+  if (d_print_out > 0)
+  {
+    printf("*********************************************************************\n");
+    printf(" PI Final: Number Iters: %3i  Error: %12.9f keff: %12.9f \n",
+           iteration, error, keff);
+    printf("*********************************************************************\n");
+  }
 
   if (error > d_tolerance) warning(SOLVER_CONVERGENCE,
                                    "PowerIteration did not converge.");

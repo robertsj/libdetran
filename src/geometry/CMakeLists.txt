@@ -10,6 +10,7 @@ SET(GEOMETRY_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 SET(GEOMETRY_SRC
     Mesh.cc
+    Mesh1D.cc
     Mesh2D.cc
     Mesh3D.cc
 )

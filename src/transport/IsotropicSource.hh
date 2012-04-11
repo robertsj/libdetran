@@ -34,9 +34,13 @@ public:
 
   IsotropicSource(SP_mesh mesh,
                   SP_quadrature quadrature,
-                  int number_groups)
+                  int number_groups,
+                  spectra_type &spectra,
+                  vec_int &map)
     :  ExternalSource(mesh, quadrature, number_groups)
-  { /* ... */ }
+  {
+    set_source(spectra, map);
+  }
 
   virtual double source(int cell, int group)
   {

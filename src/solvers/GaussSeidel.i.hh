@@ -16,6 +16,7 @@
 
 // System
 #include <algorithm>
+#include <cstdio>
 
 namespace detran
 {
@@ -38,7 +39,7 @@ void GaussSeidel<D>::solve()
     // Upscatter iterations.
     int iteration;
     double error;
-    for (iteration = 0; iteration < d_max_iters; iteration++)
+    for (iteration = 1; iteration <= d_max_iters; iteration++)
     {
       // Reset the error.
       error = 0.0;
@@ -52,13 +53,23 @@ void GaussSeidel<D>::solve()
       {
         d_inner_solver->solve(g);
         // Constructing the L-inf norm piecewise.
-        error = std::max(error, norm_residual(d_state->phi(g), phi_old[g], "Linf"));
+        error = std::max(error,
+                         norm_residual(d_state->phi(g), phi_old[g], "Linf"));
       }
 
-      std::cout << "  GS Iter: " << iteration << " Error: " << error << std::endl;
+      if (d_print_out > 1  and iteration % d_print_interval == 0)
+      {
+        printf("  GS Iter: %3i  Error: %12.9f \n", iteration, error);
+      }
       if (error < d_tolerance) break;
 
     } // upscatter loop
+
+    if (d_print_out > 0)
+    {
+      printf("  GS Final: Number Iter: %3i  Error: %12.9f \n",
+             iteration, error);
+    }
 
     if (error > d_tolerance)
       warning(SOLVER_CONVERGENCE, "Gauss-Seidel did not converge.");

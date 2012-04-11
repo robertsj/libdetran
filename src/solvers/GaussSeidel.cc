@@ -34,9 +34,11 @@ GaussSeidel<D>::GaussSeidel(SP_input          input,
   , d_material(material)
   , d_quadrature(quadrature)
   , d_boundary(boundary)
+  , d_downscatter(false)
   , d_max_iters(100)
   , d_tolerance(1e-5)
-  , d_downscatter(false)
+  , d_print_out(2)
+  , d_print_interval(10)
 {
   Require(d_input);
   Require(d_state);

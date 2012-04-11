@@ -10,8 +10,10 @@ message( "++ Adding detran utilities tests." )
 
 ADD_EXECUTABLE(test_Testing test_Testing.cc)
 TARGET_LINK_LIBRARIES(test_Testing utilities)
+
 ADD_EXECUTABLE(test_InputDB test_InputDB.cc)
 TARGET_LINK_LIBRARIES(test_InputDB utilities)
+
 ADD_EXECUTABLE(test_MathUtilities test_MathUtilities.cc)
 TARGET_LINK_LIBRARIES(test_MathUtilities utilities)
 

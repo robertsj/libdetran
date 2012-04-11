@@ -2,7 +2,7 @@
 /*!
  *  \file   Mesh3D.hh
  *  \author Jeremy Roberts
- *  \brief  Mesh3D class definition.
+ *  \brief  Mesh3D member definitions.
  */
 //---------------------------------------------------------------------------//
 

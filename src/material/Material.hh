@@ -82,6 +82,8 @@ public:
 
   void set_sigma_t(int m, vec_dbl &v);
 
+  void set_sigma_a(int m, vec_dbl &v);
+
   void set_nu_sigma_f(int m, vec_dbl &v);
 
   void set_chi(int m, vec_dbl &v);

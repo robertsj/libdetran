@@ -41,8 +41,7 @@ namespace detran_test
     }
 
     detran::ConstantSource::SP_source q_e;
-    q_e = new detran::ConstantSource(mesh, quad, 2);
-    q_e->set_source(1.0);
+    q_e = new detran::ConstantSource(mesh, quad, 2, 1.0);
     return q_e;
 
   }

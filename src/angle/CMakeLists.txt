@@ -12,6 +12,7 @@ SET(ANGLE_SRC
     GaussLegendre.cc
     MomentToDiscrete.cc
     Quadrature.cc
+    QuadratureFactory.cc
     QuadrupleRange.cc
     SphericalHarmonics.cc
 )

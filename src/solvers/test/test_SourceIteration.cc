@@ -45,8 +45,7 @@ int test_SourceIteration_2D()
 
   // Source; uniform, unit, isotropic. (mesh, quad, ng)
   ConstantSource::SP_source q_e;
-  q_e = new detran::ConstantSource(mesh, quad, 1);
-  q_e->set_source(1.0);
+  q_e = new detran::ConstantSource(mesh, quad, 1, 1.0);
 
   // Empty fission source
   SourceIteration<_2D>::SP_fissionsource q_f;

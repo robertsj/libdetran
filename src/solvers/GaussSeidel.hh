@@ -122,6 +122,8 @@ private:
 
   /// Inner solver
   SP_inner d_inner_solver;
+  /// Downscatter switch.
+  bool d_downscatter;
 
   /// Number of energy groups.
   int d_number_groups;
@@ -129,8 +131,12 @@ private:
   int d_max_iters;
   /// Outer tolerance
   double d_tolerance;
-  /// Downscatter switch.
-  bool d_downscatter;
+  /// Print out flag
+  int d_print_out;
+  /// Interval for print out
+  int d_print_interval;
+
+
 
 };
 

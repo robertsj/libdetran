@@ -94,6 +94,7 @@ if ( SERMENT_ENABLE_TEST )
     include_directories(angle/test)
     include_directories(transport/test)
     include_directories(solvers/test)
+    include_directories(drivers/test)
 endif()
 
 #------------------------------------------------------------------------------#
@@ -107,12 +108,14 @@ include_directories(geometry)
 include_directories(angle)
 include_directories(transport)
 include_directories(solvers)
+include_directories(drivers)
 add_subdirectory(utilities)
 add_subdirectory(material)
 add_subdirectory(geometry)
 add_subdirectory(angle)
 add_subdirectory(transport)
 add_subdirectory(solvers)
+add_subdirectory(drivers)
 
 #------------------------------------------------------------------------------#
 # INSTALL

@@ -31,6 +31,13 @@ namespace detran
 /*!
  * \class PowerIteration
  * \brief Solves the multigroup transport equation via Gauss-Seidel.
+ *
+ * Input parameters specific to PowerIteration and derived classes:
+ * - eigen_max_iters        [100]
+ * - eigen_error_metric     [source], "keff", "source"
+ * - eigen_tolerance        [1e-5]
+ * - eigen_print_out        [2], 0=never, 1=final, 2=every interval
+ * - eigen_print_interval   [10]
  */
 //===========================================================================//
 template <class D>
@@ -127,7 +134,10 @@ private:
   int d_max_iters;
   /// Eigensolver tolerance
   double d_tolerance;
-
+  /// Print out flag
+  int d_print_out;
+  /// Interval for print out
+  int d_print_interval;
 
 };
 

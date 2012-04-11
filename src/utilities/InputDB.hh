@@ -105,6 +105,9 @@ public:
 
   //\}
 
+  /// Display all my contents.
+  void display() const;
+
   /*
    *  \brief Validate the input database.
    *

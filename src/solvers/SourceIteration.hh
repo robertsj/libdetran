@@ -117,6 +117,8 @@ public:
   using Base::d_sweepsource;
   using Base::d_tolerance;
   using Base::d_max_iters;
+  using Base::d_print_out;
+  using Base::d_print_interval;
 
 };
 

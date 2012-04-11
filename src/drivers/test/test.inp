@@ -1,0 +1,48 @@
+# examples/simple_box.inp
+#
+# A simple 2-d square region, 1 group, uniform isotropic source
+
+# Input
+int number_groups   2
+int dimension       2
+str problem_type    fixed
+str equation        sc
+int inner_max_iters 1000
+dbl inner_tolerance 1e-12
+int outer_max_iters 1000
+dbl outer_tolerance 1e-8
+int eigen_max_iters 2
+dbl eigen_tolerance 1e-4
+str bc_left         reflect
+str bc_right        reflect
+str bc_bottom       reflect
+str bc_top          reflect
+vec_int testvecint  1 2 3 4 5
+str quad_type       quadruplerange
+int quad_order      50
+
+# Mesh
+vec_dbl mesh_xcme    0.0 2.0 4.0
+vec_dbl mesh_ycme    0.0 2.0 4.0
+vec_int mesh_xfm     20 20
+vec_int mesh_yfm     20 20
+vec_int mesh_mat_map 0 0 1 0
+
+# Material
+material number_materials 2
+# moderator
+material sigma_t    0   0.1890 1.4633
+material sigma_s    0 0 0.1507 0.0000
+material sigma_s    0 1 0.0380 1.4536
+# fuel
+material sigma_t    1   0.2263 1.0119
+material sigma_s    1 0 0.2006 0.0000
+material sigma_s    1 1 0.0161 0.9355
+material nu_sigma_f 1   0.0067 0.1241
+material chi        1   1.0000 0.0000
+
+# Fixed source
+str source_type             isotropic
+int source_number_spectra   2
+vec_dbl source_spectra      1.00 1.00   0.00 0.00
+vec_int source_spectra_map  0 0 0 0

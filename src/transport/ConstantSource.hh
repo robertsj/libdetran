@@ -35,9 +35,12 @@ public:
 
   ConstantSource(SP_mesh mesh,
                  SP_quadrature quadrature,
-                 int number_groups)
+                 int number_groups,
+                 double strength)
     :  ExternalSource(mesh, quadrature, number_groups)
-  { /* ... */ }
+  {
+    d_source = strength;
+  }
 
   /*!
    *  \brief SP Constructor.
@@ -46,11 +49,10 @@ public:
   Create(SP<detran::Mesh> mesh,
          SP<detran::Quadrature> quadrature,
          int number_groups,
-         double source)
+         double strength)
   {
     SP_source p;
-    p = new ConstantSource(mesh, quadrature, number_groups);
-    p->set_source(source);
+    p = new ConstantSource(mesh, quadrature, number_groups, strength);
     return p;
   }
 

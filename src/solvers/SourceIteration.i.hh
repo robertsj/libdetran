@@ -13,6 +13,7 @@
 
 // System
 #include <algorithm>
+#include <cstdio>
 #include <iostream>
 
 namespace detran
@@ -21,7 +22,10 @@ namespace detran
 template <class D>
 void SourceIteration<D>::solve(int g)
 {
-  std::cout << "    Starting SI." << std::endl;
+  using std::cout;
+  using std::endl;
+
+  if (d_print_out) std::cout << "    Starting SI." << std::endl;
 
   // Setup boundary conditions.  This sets any conditions fixed for the solve.
   d_boundary->set(g);
@@ -42,7 +46,7 @@ void SourceIteration<D>::solve(int g)
   // Iterate.
   double error = 1.0;
   int iteration;
-  for (iteration = 0; iteration < d_max_iters; iteration++)
+  for (iteration = 1; iteration <= d_max_iters; iteration++)
   {
 
     // Update boundary.  This updates boundaries due to reflection, etc.
@@ -57,7 +61,10 @@ void SourceIteration<D>::solve(int g)
     // Flux residual using L-infinity.
     error = norm_residual(phi_old, phi, "Linf");
 
-    std::cout << "    SI Iter: " << iteration << " Error: " << error << std::endl;
+    if (d_print_out > 1 and iteration % d_print_interval == 0)
+    {
+      printf("    SI Iter: %3i  Error: %12.9f \n", iteration, error);
+    }
     if (error < d_tolerance) break;
 
     // Construct within group
@@ -65,34 +72,17 @@ void SourceIteration<D>::solve(int g)
 
   } // end iterations
 
+  if (d_print_out > 0)
+  {
+    printf("    SI Final: Number Iters: %3i  Error: %12.9f \n", iteration, error);
+  }
+
   if (error > d_tolerance)
     warning(SOLVER_CONVERGENCE, "    SourceIteration did not converge.");
 
   // Update the state with the new flux.
   d_state->phi(g) = phi;
 
-}
-
-// Constructor
-template <class D>
-SourceIteration<D>::SourceIteration(SP_input          input,
-                                    SP_state          state,
-                                    SP_mesh           mesh,
-                                    SP_material       material,
-                                    SP_quadrature     quadrature,
-                                    SP_boundary       boundary,
-                                    SP_externalsource q_e,
-                                    SP_fissionsource  q_f)
-  :  InnerIteration<D>::InnerIteration(input,
-                                       state,
-                                       mesh,
-                                       material,
-                                       quadrature,
-                                       boundary,
-                                       q_e,
-                                       q_f)
-{
-  /* ... */
 }
 
 template class SourceIteration<_1D>;

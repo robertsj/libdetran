@@ -1,4 +1,4 @@
-export LIBDETRAN=/home/robertsj/Research/libdetran/libdetran
+export LIBDETRAN=/home/robertsj/Research/libdetran/build
 export PYTHONPATH=$PYTHONPATH:$LIBDETRAN/angle:$LIBDETRAN/geometry:$LIBDETRAN/material:$LIBDETRAN/transport:$LIBDETRAN/utilities
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$LIBDETRAN/angle:$LIBDETRAN/geometry:$LIBDETRAN/material:$LIBDETRAN/transport:$LIBDETRAN/utilities
 python $1

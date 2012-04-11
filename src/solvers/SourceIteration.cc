@@ -9,12 +9,32 @@
 //---------------------------------------------------------------------------//
 
 // Detran
-//#include "SourceIteration.hh"
+#include "SourceIteration.hh"
 
 namespace detran
 {
 
-
+// Constructor
+template <class D>
+SourceIteration<D>::SourceIteration(SP_input          input,
+                                    SP_state          state,
+                                    SP_mesh           mesh,
+                                    SP_material       material,
+                                    SP_quadrature     quadrature,
+                                    SP_boundary       boundary,
+                                    SP_externalsource q_e,
+                                    SP_fissionsource  q_f)
+  :  InnerIteration<D>::InnerIteration(input,
+                                       state,
+                                       mesh,
+                                       material,
+                                       quadrature,
+                                       boundary,
+                                       q_e,
+                                       q_f)
+{
+  /* ... */
+}
 
 } // end namespace detran
 

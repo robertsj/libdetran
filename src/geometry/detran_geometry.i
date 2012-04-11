@@ -11,6 +11,7 @@
 #include "Definitions.hh"
 #include "SP.hh"
 #include "Mesh.hh"
+#include "Mesh1D.hh"
 #include "Mesh2D.hh"
 #include "Mesh3D.hh"  
 %}
@@ -48,6 +49,7 @@ namespace std
 }
 
 %template(MeshSP)   detran::SP<detran::Mesh>;
+%template(Mesh1DSP) detran::SP<detran::Mesh1D>;
 %template(Mesh2DSP) detran::SP<detran::Mesh2D>;
 %template(Mesh3DSP) detran::SP<detran::Mesh3D>;
 
@@ -57,7 +59,24 @@ namespace detran
 // some Python-specific extensions for plotting, etc.
 
 //----------------------------------------------------------------------------//
-// class Mesh1D ...
+class Mesh1D : public Mesh
+{
+public:
+  Mesh1D(std::vector<int>    xfm, 
+         std::vector<double> xcme, 
+         std::vector<int>    mat_map);
+  Mesh1D(std::vector<double> xfme, 
+         std::vector<int>    mat_map);
+  static SP<Mesh> Create(std::vector<int>    xfm, 
+                         std::vector<double> xcme, 
+                         std::vector<int>    mat_map);
+  static SP<Mesh> Create(std::vector<double> xfme, 
+                         std::vector<int>    mat_map); 
+  void add_coarse_mesh_map(std::string map_key, std::vector<int> mesh_map);
+  void add_mesh_map(std::string map_key, std::vector<int> mesh_map);
+};
+
+
 
 //----------------------------------------------------------------------------//
 class Mesh2D : public Mesh
