@@ -37,7 +37,7 @@ void PowerIteration<D>::solve()
   // Power iterations.
   int iteration;
   double error;
-  for (iteration = 0; iteration < 2; iteration++)
+  for (iteration = 0; iteration < d_max_iters; iteration++)
   {
     // Reset the error.
     error = 0.0;
@@ -54,24 +54,24 @@ void PowerIteration<D>::solve()
     // Update density.
     d_fission_source->update();
 
-    // Compute keff.
+    // Compute keff.  Here, using L1.  Could implement
+    // volume-integrated fission rate if desired.
     State::moments_type fd(d_fission_source->density());
     keff_old = keff;
-    double norm_fd = norm(fd);
-    double norm_fd_old = norm(fd_old);
-    std::cout << "  norm_fd " << norm_fd << " norm_fd_old " << norm_fd_old << std::endl;
-    keff = keff_old * norm(fd, true) / norm(fd_old, true);
-    THROW("lala");
+    keff = keff_old * norm(fd, "L1") / norm(fd_old, "L1");
+
     // Compute error in fission density.
-    error = norm_residual(fd, fd_old, true);
-    std::cout << "  PI Iter: " << iteration << " Error: " << error <<  " keff: " << keff << std::endl;
-    //if (error < d_tolerance) break;
+    error = norm_residual(fd, fd_old, "L1");
+    std::cout << "  PI Iter: " << iteration
+              << " Error: " << error
+              <<  " keff: " << keff << std::endl;
+    if (error < d_tolerance) break;
 
   } // eigensolver loop
 
   if (error > d_tolerance) warning(SOLVER_CONVERGENCE,
                                    "PowerIteration did not converge.");
-
+  d_state->set_eigenvalue(keff);
   std::cout << "PI done." << std::endl;
 }
 

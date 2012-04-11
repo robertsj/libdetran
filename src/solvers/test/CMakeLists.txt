@@ -16,6 +16,14 @@ TARGET_LINK_LIBRARIES(test_SourceIteration
                       materials 
                       utilities)
 
+ADD_EXECUTABLE(test_PowerIteration test_PowerIteration.cc)
+TARGET_LINK_LIBRARIES(test_PowerIteration 
+                      solvers 
+                      transport 
+                      geometry 
+                      materials 
+                      utilities)
+
 #------------------------------------------------------------------------------#
 # Define tests
 #------------------------------------------------------------------------------#
@@ -23,3 +31,4 @@ TARGET_LINK_LIBRARIES(test_SourceIteration
 #ADD_TEST(test_SourceIteration_1D  test_SourceIteration 0)
 ADD_TEST(test_SourceIteration_2D  test_SourceIteration 0)
 #ADD_TEST(test_SourceIteration_3D  test_SourceIteration 3)
+ADD_TEST(test_PowerIteration_2D test_PowerIteration 0)

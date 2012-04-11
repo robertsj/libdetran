@@ -55,7 +55,7 @@ void SourceIteration<D>::solve(int g)
     d_sweeper->sweep(phi);
 
     // Flux residual using L-infinity.
-    error = norm_residual(phi_old, phi, true);
+    error = norm_residual(phi_old, phi, "Linf");
 
     std::cout << "    SI Iter: " << iteration << " Error: " << error << std::endl;
     if (error < d_tolerance) break;

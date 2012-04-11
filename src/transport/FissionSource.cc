@@ -43,13 +43,9 @@ void FissionSource::initialize()
   for (int cell = 0; cell < d_mesh->number_cells(); cell++)
   {
     d_density[cell] = d_material->nu_sigma_f(mat_map[cell], 0);
-    std::cout << " cell= " << cell << " " << d_density[cell]  << std::endl;
   }
-  double norm_density = norm(d_density);
-
-  std::cout << " norm_density  = " << norm_density << std::endl;
-  //vec_scale(d_density, 1.0/norm_density);
-  //std::cout << " density norm = " << norm(d_density) << std::endl;
+  double norm_density = norm(d_density, "L2");
+  vec_scale(d_density, 1.0/norm_density);
 }
 
 void FissionSource::update()

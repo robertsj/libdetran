@@ -52,7 +52,7 @@ void GaussSeidel<D>::solve()
       {
         d_inner_solver->solve(g);
         // Constructing the L-inf norm piecewise.
-        error = std::max(error, norm_residual(d_state->phi(g), phi_old[g], true));
+        error = std::max(error, norm_residual(d_state->phi(g), phi_old[g], "Linf"));
       }
 
       std::cout << "  GS Iter: " << iteration << " Error: " << error << std::endl;

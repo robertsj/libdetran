@@ -18,30 +18,40 @@
 // System
 #include <algorithm>
 #include <cmath>
+#include <string>
 
 namespace detran
 {
 
 /*!
  *  \brief Norm of a vector.
- *  \param  flag    Default is false for L2.  True for L-infinity.
+ *  \param  flag    L2 (Default), L1, or Linf
  */
-inline double norm(vec_dbl &x, bool flag = false)
+inline double norm(vec_dbl &x, std::string flag = "L2")
 {
   double v = 0.0;
-  if (!flag)
+  if (flag == "L2")
   {
     for (int i = 0; i < x.size(); i++)
-      v += std::pow(x[i]*x[i], 2);
-    return std::sqrt(v);
+      v += x[i]*x[i];
+    v = std::sqrt(v);
   }
-  else
+  else if (flag == "L1")
+  {
+    for (int i = 0; i < x.size(); i++)
+      v += std::abs(x[i]);
+  }
+  else if (flag == "Linf")
   {
     v = x[0];
     for (int i = 1; i < x.size(); i++)
       v = std::max(std::abs(x[i]), v);
-    return v;
   }
+  else
+  {
+    THROW("Bad norm flag.");
+  }
+  return v;
 }
 
 /// Scale a double vector.
@@ -56,34 +66,66 @@ inline void vec_scale(vec_dbl &x, double scale)
  *  \brief Norm of the residual of two double vectors.
  *  \param  flag    Default is false for L2.  True for L-infinity.
  */
-inline double norm_residual(vec_dbl &x, vec_dbl &y, bool flag = false)
+inline double norm_residual(vec_dbl &x, vec_dbl &y, std::string flag = "L2")
 {
   Require(x.size() == y.size());
   double v = 0.0;
-  // L2 norm
-  if (!flag)
+  if (flag == "L2")
   {
+    // Square root of sum of square of differences.
     for (int i = 0; i < x.size(); i++)
       v += std::pow(x[i]-y[i], 2);
-    return std::sqrt(v);
+    v = std::sqrt(v);
   }
-  // L-infinity norm
-  else
+  else if (flag == "L1")
   {
+    // Sum of absolute value of differences.
+    for (int i = 0; i < x.size(); i++)
+      v += std::abs(x[i]-y[i]);
+  }
+  else if (flag == "Linf")
+  {
+    // Max absolute value of differences.
     v = std::abs(x[0] - y[0]);
     for (int i = 1; i < x.size(); i++)
       v = std::max(std::abs(x[i]-y[i]), v);
-    return v;
   }
+  else
+  {
+    THROW("Bad norm residual flag.");
+  }
+  return v;
 }
 
-inline double norm_relative_residual(vec_dbl &x, vec_dbl &y)
+inline double norm_relative_residual(vec_dbl &x, vec_dbl &y, std::string flag = "L2")
 {
   Require(x.size() == y.size());
   double v = 0.0;
-  for (int i = 0; i < x.size(); i++)
-    v += std::pow((x[i]-y[i])/y[i], 2);
-  return std::sqrt(v);
+  if (flag == "L2")
+  {
+    // Square root of sum of square of differences.
+    for (int i = 0; i < x.size(); i++)
+      v += std::pow((x[i]-y[i])/y[i], 2);
+    v = std::sqrt(v);
+  }
+  else if (flag == "L1")
+  {
+    // Sum of absolute value of differences.
+    for (int i = 0; i < x.size(); i++)
+      v += std::abs((x[i]-y[i])/y[i]);
+  }
+  else if (flag == "Linf")
+  {
+    // Max absolute value of differences.
+    v = std::abs(x[0] - y[0]);
+    for (int i = 1; i < x.size(); i++)
+      v = std::max(std::abs((x[i]-y[i])/y[i]), v);
+  }
+  else
+  {
+    THROW("Bad norm relative residual flag.");
+  }
+  return v;
 }
 
 } // namespace
