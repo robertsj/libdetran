@@ -11,7 +11,7 @@
 #ifndef SWEEPER_HH_
 #define SWEEPER_HH_
 
-// Other libtran headers
+// Detran
 #include "Boundary.hh"
 #include "Equation.hh"
 #include "Material.hh"
@@ -19,6 +19,7 @@
 #include "Quadrature.hh"
 #include "State.hh"
 #include "SweepSource.hh"
+#include "detran_config.h"
 
 // Other libtran utils headers
 #include "Definitions.hh"

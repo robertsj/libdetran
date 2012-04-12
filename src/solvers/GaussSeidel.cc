@@ -47,8 +47,6 @@ GaussSeidel<D>::GaussSeidel(SP_input          input,
   Require(d_quadrature);
   Require(d_boundary);
 
-
-
   Assert(d_input->check("number_groups"));
   d_number_groups = d_input->get<int>("number_groups");
 
@@ -58,6 +56,12 @@ GaussSeidel<D>::GaussSeidel(SP_input          input,
 
   if (input->check("outer_tolerance"))
     d_tolerance = input->get<double>("outer_tolerance");
+
+  if (input->check("outer_print_out"))
+    d_print_out = input->get<int>("outer_print_out");
+
+  if (input->check("outer_print_interval"))
+    d_print_interval = input->get<int>("outer_print_interval");
 
   // We can turn off downscatter even if the material has
   // it and is set to use it.  This might be desirable when

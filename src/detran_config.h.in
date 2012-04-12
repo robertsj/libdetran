@@ -25,7 +25,7 @@
 /*#cmakedefine DETRAN_ENABLE_SLEPC*/
 /*#cmakedefine DETRAN_ENABLE_SILO*/
 /*#cmakedefine DETRAN_ENABLE_MPI*/
-/*#cmakedefine DETRAN_ENABLE_OPENMP*/
+#cmakedefine DETRAN_ENABLE_OPENMP
 /*#cmakedefine DETRAN_ENABLE_XML*/
 
 #endif // DETRAN_CONFIG_H_ 

@@ -25,7 +25,7 @@ template <class D>
 void GaussSeidel<D>::solve()
 {
 
-  std::cout << "  Starting GS." << std::endl;
+  if (d_print_out > 0) std::cout << "  Starting GS." << std::endl;
 
   // Initial downscatter.
   for (int g = 0; g < d_number_groups; g++)
@@ -76,7 +76,8 @@ void GaussSeidel<D>::solve()
 
   }
 
-  std::cout << "  GS done." << std::endl;
+ if (d_print_out > 0) std::cout << "  GS done." << std::endl;
+
 }
 
 // Explicit instantiations

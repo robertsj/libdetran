@@ -3,82 +3,42 @@
 # A simple 2-d square region, 1 group, uniform isotropic source
 
 # Input
-int number_groups   1
+int number_groups   2
+int dimension       2
+str problem_type    eigenvalue
 str equation        dd
-int inner_max_iters 10
-dbl inner_tolerance 1e-4
+int inner_max_iters 1
+dbl inner_tolerance 1e-6
+int inner_print_out 0
+int outer_max_iters 1
+dbl outer_tolerance 1e-6
+int outer_print_out 0
+int eigen_max_iters 20
+dbl eigen_tolerance 1e-6
 str bc_left         reflect
 str bc_right        reflect
 str bc_bottom       reflect
-str bc_top          vacuum
-
-# Material
-mat = Material.Create(1, 2, False)
-mat.set_sigma_t(0, 0,    1.0)
-mat.set_sigma_s(0, 0, 0, 0.5)
-mat.set_nu_sigma_f(0, 0, 0.5)
-mat.set_chi(0, 0,        1.0)
-mat.set_sigma_t(1, 0,    1.0)
-mat.set_sigma_s(1, 0, 0, 0.9)
-mat.finalize()
-#mat.display()
+str bc_top          reflect
+str quad_type       quadruplerange
+int quad_order      50
 
 # Mesh
-cm = [0.0, 10.0]
-fm = [100]
-cm_mat = [0]
-#cm = [0.0, 5.0, 10.0, 15.0, 20.0]
-#fm = [ 10, 10, 10, 10]
-#cm_mat = [0, 0, 0, 0,
-#          0, 0, 0, 0,
-#          0, 0, 0, 0,
-#          0, 0, 0, 0]
+vec_dbl mesh_xcme    0.0 5.0 10.0 15.0 20.0
+vec_dbl mesh_ycme    0.0 5.0 10.0 15.0 20.0
+vec_int mesh_xfm       50 50 50 50
+vec_int mesh_yfm       50 50 50 50
+vec_int mesh_mat_map 1 1 1 1  1 0 1 1  1 1 0 1  1 1 1 1
 
-#cm_mat2 = [[1, 1, 1, 0],
-#           [0, 0, 0, 0],
-#           [0, 0, 0, 0],
-#           [0, 0, 0, 0]]
-#print cm_mat2
-#print np.flipud(cm_mat2)
-#print np.transpose(np.flipud(cm_mat2))
-#print np.squeeze(np.asarray(np.reshape(np.transpose(np.flipud(cm_mat2)), (16,-1))))
-
-mesh = Mesh2D.Create(fm, fm, cm, cm, cm_mat)
-mesh.display()
-
-mesh2 = Mesh2D(fm, fm, cm, cm, cm_mat)
-
-# Quadrature
-quad = QuadrupleRange.Create(8)
-#quad.display()
-
-# State
-state = State.Create(inp, mesh, quad)
-
-# Constant source
-q_e = ExternalSourceSP()#ConstantSource.Create(mesh, quad, 1, 1.0)
-
-# Uninitialized fission source
-q_f = FissionSource.Create(state, mesh, mat)
-q_f.initialize()
-
-# boundary
-bound = Boundary2D.Create(inp, mesh, quad)
-print(dir(bound))
-bv = bound(0, 0, 0, 0)
-print bv
-solver = PowerIteration2D.Create(inp, state, mesh, mat, quad, bound, q_e, q_f)
-
-start = time.time()
-solver.solve() # solve group 0.
-elapsed = (time.time() - start)
-print elapsed, " seconds"
-
-v = np.asarray(state.phi(0))
-print v[0:3]
-mesh2.plot_flux(v)
-
-
-#print dir(State)
-
+# Material
+material number_materials 2
+# moderator
+material sigma_t    0   0.1890 1.4633
+material sigma_s    0 0 0.1507 0.0000
+material sigma_s    0 1 0.0380 1.4536
+# fuel
+material sigma_t    1   0.2263 1.0119
+material sigma_s    1 0 0.2006 0.0000
+material sigma_s    1 1 0.0161 0.9355
+material nu_sigma_f 1   0.0067 0.1241
+material chi        1   1.0000 0.0000
 

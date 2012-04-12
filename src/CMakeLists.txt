@@ -22,6 +22,11 @@ SET( DETRAN_ENABLE_PYTHON NO CACHE BOOL
   "Enable Python bindings via SWIG."
 )
 
+# Options for OpenMP directives. On or Off.
+SET( DETRAN_ENABLE_OPENMC NO CACHE BOOL
+  "Enable OpenMP for multithreaded solves."
+)
+
 # Write config file, install it, and include that directory for all source
 set(DETRAN_CONFIG_IN  "${CMAKE_CURRENT_SOURCE_DIR}/detran_config.h.in")
 set(DETRAN_CONFIG_OUT "${PROJECT_BINARY_DIR}/config/detran_config.h")
@@ -43,6 +48,11 @@ IF( DETRAN_ENABLE_PYTHON )
   find_package(PythonLibs REQUIRED)
   include_directories(${PYTHON_INCLUDE_PATH})
   set(CMAKE_SWIG_FLAGS "")
+ENDIF()
+
+IF( DETRAN_ENABLE_OPENMP )
+  find_package(OpenMP REQUIRED)
+  set(CMAKE_CXX_FLAGS ${OpenMP_CXX_FLAGS})
 ENDIF()
 
 #------------------------------------------------------------------------------#
@@ -144,6 +154,11 @@ if( DETRAN_ENABLE_PYTHON )
 message("++++ Python:      enabled")
 elseif()
 message("++++ Python:      disabled")
+endif()
+if( DETRAN_ENABLE_OPENMP )
+message("++++ OpenMP:      enabled")
+elseif()
+message("++++ OpenMP:      disabled")
 endif()
 if( DETRAN_ENABLE_TEST )
 message("++++ Testing:     enabled")

@@ -25,7 +25,7 @@ void SourceIteration<D>::solve(int g)
   using std::cout;
   using std::endl;
 
-  if (d_print_out) std::cout << "    Starting SI." << std::endl;
+  if (d_print_out > 0) std::cout << "    Starting SI." << std::endl;
 
   // Setup boundary conditions.  This sets any conditions fixed for the solve.
   d_boundary->set(g);

@@ -46,7 +46,6 @@ void FissionSource::initialize()
   }
   double norm_density = norm(d_density, "L2");
   Require(norm_density > 0.0);
-  std::cout << " norm density = " << norm_density << std::endl;
   vec_scale(d_density, 1.0/norm_density);
 }
 

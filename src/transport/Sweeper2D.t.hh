@@ -13,7 +13,7 @@
 // Detran
 #include "Equation_DD_2D.hh"
 #include "Equation_SC_2D.hh"
-
+#include "detran_config.h"
 // System
 #include <iostream>
 
@@ -63,20 +63,24 @@ inline void Sweeper<_2D>::setup(SP_material material)
 }
 
 template<>
-inline void Sweeper<_2D>::sweep(moments_type &phi)
+inline void Sweeper<_2D>::sweep(moments_type &phi_in)
 {
 
   // Reset the flux moments
-  phi.assign(phi.size(), 0.0);
+  phi_in.assign(phi_in.size(), 0.0);
 
-  // Temporary edge fluxes
-  Equation<_2D>::face_flux_type psi_in  = {0.0, 0.0};
-  Equation<_2D>::face_flux_type psi_out = {0.0, 0.0};
+#ifndef DETRAN_ENABLE_OPENMP
+  // Reference the input flux with short name.
+  moments_type &phi = phi_in;
+#else
+  // Declare a local flux vector.
+  moments_type phi;
+#pragma omp parallel default(shared) private(phi)
+  // Make private copy of shared phi_in.
+  moments_type phi = phi_in;
+#endif
 
-  // Reference boundary fluxes for notational clarity.
-  boundary_flux_type psi_v;
-  boundary_flux_type psi_h;
-
+#pragma omp for
   // Sweep over all octants
   for (int o = 0; o < 4; o++)
   {
@@ -102,10 +106,14 @@ inline void Sweeper<_2D>::sweep(moments_type &phi)
       }
 
       // Get boundary fluxes (are member v's needed?) \todo
-      psi_v = (*d_boundary)
+      boundary_flux_type psi_v = (*d_boundary)
           (d_face_index[o][Mesh::VERT][Boundary_T::IN], o, a, d_g);
-      psi_h = (*d_boundary)
+      boundary_flux_type psi_h = (*d_boundary)
           (d_face_index[o][Mesh::HORZ][Boundary_T::IN], o, a, d_g);
+
+      // Temporary edge fluxes
+      Equation<_2D>::face_flux_type psi_in  = {0.0, 0.0};
+      Equation<_2D>::face_flux_type psi_out = {0.0, 0.0};
 
       // Sweep over all y
       for (int jj = 0; jj < d_mesh->number_cells_y(); jj++)
@@ -146,6 +154,19 @@ inline void Sweeper<_2D>::sweep(moments_type &phi)
     } // end angle loop
 
   } // end octant loop
+
+// end omp for
+
+#ifdef DETRAN_ENABLE_OPENMP
+  // Reduce local copies to incoming.
+  for (int cell; cell < d_mesh->number_cells(); cell++)
+  {
+#pragma omp atomic
+    phi_in[cell] += phi[cell]; // Recall that phi_in was set to zero above.
+  }
+#endif
+
+// end omp parallel
 
   return;
 }
