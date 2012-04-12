@@ -5,13 +5,13 @@
 # Input
 int number_groups   2
 int dimension       2
-str problem_type    fixed
+str problem_type    eigenvalue
 str equation        sc
 int inner_max_iters 1000
-dbl inner_tolerance 1e-12
+dbl inner_tolerance 1e-6
 int outer_max_iters 1000
-dbl outer_tolerance 1e-8
-int eigen_max_iters 2
+dbl outer_tolerance 1e-6
+int eigen_max_iters 10
 dbl eigen_tolerance 1e-4
 str bc_left         reflect
 str bc_right        reflect
@@ -24,9 +24,9 @@ int quad_order      50
 # Mesh
 vec_dbl mesh_xcme    0.0 2.0 4.0
 vec_dbl mesh_ycme    0.0 2.0 4.0
-vec_int mesh_xfm     20 20
+vec_int mesh_xfm     10 10
 vec_int mesh_yfm     20 20
-vec_int mesh_mat_map 0 0 1 0
+vec_int mesh_mat_map 1 1 1 1
 
 # Material
 material number_materials 2

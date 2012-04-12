@@ -11,10 +11,17 @@
 // Detran
 #include "StupidParser.hh"
 #include "Execute.hh"
+#include "Timer.hh"
 #include "Traits.hh"
 
 int main(int argc, char **argv)
 {
+
+  // Timer
+  detran::Timer timer;
+
+  // Start timer.
+  timer.tic();
 
   // Create parser.
   detran::StupidParser parser(argc, argv);
@@ -29,6 +36,8 @@ int main(int argc, char **argv)
     boss.solve<detran::_2D>();
   else
     boss.solve<detran::_3D>();
+
+  timer.toc(true);
 
   return 0;
 }

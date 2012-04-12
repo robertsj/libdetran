@@ -48,10 +48,30 @@ int test_StupidParser()
 
   // Parse the material.
   StupidParser::SP_material mat = parser.parse_material();
+  mat->display();
   TEST(mat->number_materials() == 2);
   TEST(mat->number_groups() == 2);
-  TEST(soft_equiv(mat->sigma_t(0, 0), 0.1890));
+  TEST(soft_equiv(mat->sigma_t(0, 0),    0.1890));
+  TEST(soft_equiv(mat->sigma_t(0, 1),    1.4633));
+  TEST(soft_equiv(mat->sigma_s(0, 0, 0), 0.1507));
+  TEST(soft_equiv(mat->sigma_s(0, 0, 1), 0.0000));
+  TEST(soft_equiv(mat->sigma_s(0, 1, 0), 0.0380));
+  TEST(soft_equiv(mat->sigma_s(0, 1, 1), 1.4536));
+  TEST(soft_equiv(mat->nu_sigma_f(0, 0), 0.0000));
+  TEST(soft_equiv(mat->nu_sigma_f(0, 1), 0.0000));
+  TEST(soft_equiv(mat->chi(0, 0),        0.0000));
+  TEST(soft_equiv(mat->chi(0, 1),        0.0000));
 
+  TEST(soft_equiv(mat->sigma_t(1, 0),    0.2263));
+  TEST(soft_equiv(mat->sigma_t(1, 1),    1.0119));
+  TEST(soft_equiv(mat->sigma_s(1, 0, 0), 0.2006));
+  TEST(soft_equiv(mat->sigma_s(1, 0, 1), 0.0000));
+  TEST(soft_equiv(mat->sigma_s(1, 1, 0), 0.0161));
+  TEST(soft_equiv(mat->sigma_s(1, 1, 1), 0.9355));
+  TEST(soft_equiv(mat->nu_sigma_f(1, 0), 0.0067));
+  TEST(soft_equiv(mat->nu_sigma_f(1, 1), 0.1241));
+  TEST(soft_equiv(mat->chi(1, 0),        1.0000));
+  TEST(soft_equiv(mat->chi(1, 1),        0.0000));
   // Parse the mesh.
   StupidParser::SP_mesh mesh = parser.parse_mesh();
   TEST(mesh->number_cells() == 800);

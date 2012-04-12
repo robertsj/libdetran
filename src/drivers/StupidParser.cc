@@ -190,7 +190,7 @@ Material::SP_material StupidParser::parse_material()
           int mat = read_scalar<int>(iss);
           vec_dbl value = read_vector<double>(iss);
           Insist(value.size() == number_groups, "chi wrong length.");
-          d_material->set_sigma_a(mat, value);
+          d_material->set_chi(mat, value);
         }
         if (val == "diff_coef")
         {

@@ -128,6 +128,7 @@ void Execute::solve()
 
   if (d_problem_type == "eigenvalue")
   {
+    Require(d_fissionsource);
     PowerIteration<D> solver(d_input,
                              d_state,
                              d_mesh,
