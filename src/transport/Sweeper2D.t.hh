@@ -63,22 +63,11 @@ inline void Sweeper<_2D>::setup(SP_material material)
 }
 
 template<>
-inline void Sweeper<_2D>::sweep(moments_type &phi_in)
+inline void Sweeper<_2D>::sweep(moments_type &phi)
 {
 
   // Reset the flux moments
-  phi_in.assign(phi_in.size(), 0.0);
-
-#ifndef DETRAN_ENABLE_OPENMP
-  // Reference the input flux with short name.
-  moments_type &phi = phi_in;
-#else
-  // Declare a local flux vector.
-  moments_type phi;
-#pragma omp parallel default(shared) private(phi)
-  // Make private copy of shared phi_in.
-  moments_type phi = phi_in;
-#endif
+  phi.assign(phi.size(), 0.0);
 
 #pragma omp for
   // Sweep over all octants

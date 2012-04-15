@@ -13,6 +13,8 @@ SET(GEOMETRY_SRC
     Mesh1D.cc
     Mesh2D.cc
     Mesh3D.cc
+    PinCell.cc
+    Assembly.cc
 )
 
 #-------------------------------------#

@@ -14,10 +14,15 @@ from detran import *
 inp = InputDB.Create()
 inp.put_int("number_groups",   1)
 inp.put_str("equation",        "dd")
-inp.put_int("inner_max_iters", 10)
+inp.put_int("inner_max_iters", 1)
 inp.put_dbl("inner_tolerance", 1e-4)
-
-inp.put_str("bc_left",         "vacuum")
+inp.put_int("inner_print_out", 0)
+inp.put_int("outer_max_iters", 1)
+inp.put_dbl("outer_tolerance", 1e-4)
+inp.put_int("outer_print_out", 0)
+inp.put_int("eigen_max_iters", 1000)
+inp.put_dbl("eigen_tolerance", 1e-4)
+inp.put_str("bc_left",         "reflect")
 inp.put_str("bc_right",        "reflect")
 inp.put_str("bc_bottom",       "reflect")
 inp.put_str("bc_top",          "reflect")
@@ -25,10 +30,12 @@ inp.put_str("bc_top",          "reflect")
 
 # Material
 mat = Material.Create(1, 2, False)
+#
 mat.set_sigma_t(0, 0,    1.0)
 mat.set_sigma_s(0, 0, 0, 0.5)
 mat.set_nu_sigma_f(0, 0, 0.5)
 mat.set_chi(0, 0,        1.0)
+#
 mat.set_sigma_t(1, 0,    1.0)
 mat.set_sigma_s(1, 0, 0, 0.9)
 mat.finalize()
@@ -87,7 +94,7 @@ print elapsed, " seconds"
 
 v = np.asarray(state.phi(0))
 #print v[0:3]
-mesh2.plot_flux(v)
+pin2.plot_flux(v)
 
 
 #print dir(State)
