@@ -14,52 +14,65 @@
 namespace detran
 {
 
-PinCell::PinCell(double pitch, vec_dbl radii, vec_int mat_map, int number_meshes)
+// Constructor
+PinCell::PinCell(double pitch, vec_dbl radii, vec_int mat_map)
   : d_pitch(pitch)
   , d_radii(radii)
+  , d_mat_map(mat_map)
 {
   Require(d_pitch > 0.0);
+  Require(d_mat_map.size() == 1 + d_radii.size());
+}
+
+// Mesh the object
+void PinCell::meshify(int number_meshes)
+{
   Require(number_meshes > 0);
-  Require(mat_map.size() == 1 + radii.size());
-  //
+
+  // Fine mesh width.
   double width = d_pitch / number_meshes;
-  d_dx.resize(number_meshes, width);
-  d_dy.resize(number_meshes, width);
-  d_dz.resize(1, 1.0);
-  d_number_cells_x = number_meshes;
-  d_number_cells_y = number_meshes;
-  d_number_cells_z = 1;
-  d_number_cells   = number_meshes * number_meshes;
+
+  // Fine mesh edges.  Assumes constant spacing.
+  vec_dbl edges(number_meshes + 1, 0.0);
+
+  // Number of cells in the meshed pin cell.
+  int number_cells = number_meshes*number_meshes;
 
   // Temporary fine mesh material map
-  vec_int tmp_mat_map(d_number_cells, 1);
-  vec_int tmp_reg_map(d_number_cells, 1);
+  vec_int tmp_mat_map(number_cells, 1);
+  vec_int tmp_reg_map(number_cells, 1);
 
   //double volume = d_number_regions, 1);
   for (int j = 0; j < number_meshes; j++)
   {
+    edges[j+1] = edges[j] + width;
     for (int i = 0; i < number_meshes; i++)
     {
       // Which region am I in?
-      int r = find_region(i, j);
+      int r = find_region(i, j, width);
       // Which material does this region have?
-      int m = mat_map[r];
+      int m = d_mat_map[r];
       // Assign the values.
-      int cell = index(i, j, 0);
+      int cell = i + j * number_meshes;
       tmp_mat_map[cell] = m;
       tmp_reg_map[cell] = r;
     }
   }
+
+  // Create my mesh.
+  d_mesh = new Mesh2D(edges, edges, tmp_mat_map);
+
   // Add maps
-  add_mesh_map("MATERIAL", tmp_mat_map);
-  add_mesh_map("REGION", tmp_reg_map);
+  d_mesh->add_mesh_map("MATERIAL", tmp_mat_map);
+  d_mesh->add_mesh_map("REGION", tmp_reg_map);
+
 }
 
 
-int PinCell::find_region(int i, int j)
+int PinCell::find_region(int i, int j, double width)
 {
-  double x = (i + 0.5) * d_dx[0];
-  double y = (j + 0.5) * d_dx[0];
+  double x = (i + 0.5) * width;
+  double y = (j + 0.5) * width;
   // Loop through the radii. If I'm in there, that's where I live.
   int r = d_radii.size(); // start off in outer region.
   double hp = 0.5 * d_pitch;

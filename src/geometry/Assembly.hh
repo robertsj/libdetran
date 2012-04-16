@@ -14,14 +14,14 @@
 namespace detran
 {
 
-class Assembly : public Mesh2D
+class Assembly : public Object
 {
 
 public:
 
-  typedef SP<Assembly>            SP_mesh;
-  typedef Mesh2D                  Base;
-  typedef PinCell::SP_mesh        SP_pincell;
+  typedef SP<Assembly>            SP_assembly;
+  typedef Mesh::SP_mesh           SP_mesh;
+  typedef PinCell::SP_pincell     SP_pincell;
   typedef std::vector<SP_pincell> vec_pincell;
 
   /*!
@@ -32,20 +32,53 @@ public:
    *  \param    mat_map     Region material map (cell-center outward)
    *  \param    meshes      Number of evenly-spaced meshes per direction
    */
-  Assembly(vec_pincell pincells, vec_int pincell_map);
+  Assembly(int dimension, vec_pincell pincells, vec_int pincell_map);
 
-   /*!
-    *  \brief SP Constructor.
-    */
-   static SP<Mesh> Create(vec_pincell pincells,
-                          vec_int pincell_map)
-   {
-     SP_mesh p;
-     p = new Assembly(pincells, pincell_map);
-     return p;
-   }
+  /*!
+   *  \brief Constructor.
+   *
+   *  \param    dimension   Number of pins per row (e.g 17 for 17x17)
+   */
+  explicit Assembly(int dimension);
+
+  /// SP Constructor
+  static SP<Assembly> Create(int dimension)
+  {
+    SP_assembly p;
+    p = new Assembly(dimension);
+    return p;
+  }
+
+  /// Return underlying meshed object.
+  Mesh::SP_mesh mesh()
+  {
+    return d_mesh;
+  }
+
+  /// Get const reference to my mesh.
+  const Mesh2D& mesh_ref() const
+  {
+    return *d_mesh;
+  }
+
+  /// Add a pincell
+  void add_pincell(SP_pincell pin);
+
+  /// Mesh the assembly.
+  void finalize(vec_int pincell_map);
+
+  bool is_valid() const
+  {
+    return true;
+  }
 
 private:
+
+  /// Meshed object
+  Mesh2D::SP_mesh d_mesh;
+
+  /// Dimension, e.g. 17 in 17x17.
+  int d_dimension;
 
   /// Assembly pitch
   double d_pitch;

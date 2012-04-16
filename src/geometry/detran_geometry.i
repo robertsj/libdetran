@@ -15,6 +15,7 @@
 #include "Mesh2D.hh"
 #include "Mesh3D.hh"  
 #include "PinCell.hh"
+#include "Assembly.hh"
 %}
 
 // Load the standard library interfaces.
@@ -53,6 +54,8 @@ namespace std
 %template(Mesh1DSP) detran::SP<detran::Mesh1D>;
 %template(Mesh2DSP) detran::SP<detran::Mesh2D>;
 %template(Mesh3DSP) detran::SP<detran::Mesh3D>;
+%template(PinCellSP) detran::SP<detran::PinCell>;
+%template(AssemblySP) detran::SP<detran::Assembly>;
 
 namespace detran
 {
@@ -202,79 +205,30 @@ public:
 };
 
 //----------------------------------------------------------------------------//
-class PinCell : public Mesh2D
+class PinCell
 {
 public:
   PinCell(double pitch, 
           std::vector<double> radii, 
-          std::vector<int> mat_map, 
-          int meshes);
-  static SP<Mesh> Create(double pitch,
-                         std::vector<double> radii,
-                         std::vector<int> mat_map,
-                         int meshes);
-//  %pythoncode 
-//  %{
-//    
-//  def check(self) :
-//    """ Check for matplotlib and numpy.  Call at top of all plotting methods.
-//    """  
-//    try :
-//      import matplotlib.pyplot as plt
-//      import numpy as np
-//      self.PLOT = True
-//    except ImportError :
-//      self.PLOT = False
-//      
-//  def plot_mesh_map1(self, map_key) :
-//    """ Plot the mesh map.
-//    """
-//    self.check()  
-//    if self.PLOT :
-//      import matplotlib.pyplot as plt
-//      import numpy as np
-//      # Get the map.
-//      m_map = np.asarray(self.mesh_map(map_key))
-//      # Reshape it.
-//      m_map2 = m_map.reshape(self.number_cells_x(), self.number_cells_y())
-//      print m_map2
-//      # Plot me. 
-//      plt.imshow(m_map2, interpolation='nearest', cmap=plt.cm.hot)
-//      plt.title(map_key)
-//      plt.colorbar()
-//      plt.show()
-//    else :
-//      print "Warning: matplotlib or numpy not found; skipping plot."
-//      
-//  def plot_flux(self, f) :
-//    """ Plot a flux or flux-shaped vector on the mesh."
-//    """
-//    import matplotlib.pyplot as plt
-//    import numpy as np
-//    # Reshape flux.
-//    f = f.reshape(self.number_cells_x(), self.number_cells_y())
-//    print f
-//    # Plot me. 
-//    plt.imshow(f, interpolation='nearest', cmap=plt.cm.hot)
-//    plt.title('flux map')
-//    plt.colorbar()
-//    plt.show()
-//  
-//  def mesh_axes(self) :
-//    """ Get the fine mesh esges defining cells for plotting.
-//    """
-//    import matplotlib.pyplot as plt
-//    import numpy as np
-//    x = np.zeros(self.number_cells_x()+1)
-//    y = np.zeros(self.number_cells_y()+1)
-//    for i in range(0, self.number_cells_x()) :
-//      x[i + 1] = x[i] + self.dx(i)
-//    for j in range(0, self.number_cells_y()) :
-//      y[i + 1] = y[i] + self.dy(j)
-//    return (x, y)
-//         
-//  %}
+          std::vector<int> mat_map);
+  static SP<PinCell> Create(double pitch,
+                            std::vector<double> radii,
+                            std::vector<int> mat_map);
+  SP<Mesh> mesh();
+  const Mesh2D& mesh_ref() const;
+  void meshify(int number_meshes);
 }; // end class PinCell
+
+class Assembly
+{
+public:
+  explicit Assembly(int dimension);
+  static SP<Assembly> Create(int dimension);
+  void add_pincell(SP<detran::PinCell>);
+  void finalize(std::vector<int> pincell_map);
+  SP<Mesh> mesh();
+  const Mesh2D& mesh_ref() const;
+}; // end class Assembly
 
 } // end namespace detran
 

@@ -5,13 +5,15 @@ import numpy as np
 import time
 from detran import *
 
-pin = PinCell.Create(1.27, [0.30,0.40,0.50], [0,0,0,1], 300)
-pin2 = PinCell(1.27, [0.30,0.40,0.50], [0,0,0,1], 300) 
+pin = PinCell.Create(1.27, [0.30,0.40,0.50], [0,0,0,1])
+pin.meshify(300)
+mesh = pin.mesh()
+mesh_ref = pin.mesh_ref()
 
 # Input
 inp = InputDB.Create()
 inp.put_int("number_groups",   1)
-inp.put_str("equation",        "dd")
+inp.put_str("equation",        "sc")
 inp.put_int("inner_max_iters", 1)
 inp.put_dbl("inner_tolerance", 1e-4)
 inp.put_int("inner_print_out", 0)
@@ -41,18 +43,18 @@ mat.finalize()
 quad = QuadrupleRange.Create(8)
 
 # State
-state = State.Create(inp, pin, quad)
+state = State.Create(inp, pin.mesh(), quad)
 
 # Constant source
 q_e = ExternalSourceSP()
 
 # Uninitialized fission source
-q_f = FissionSource.Create(state, pin, mat)
+q_f = FissionSource.Create(state, pin.mesh(), mat)
 q_f.initialize()
 
 # boundary
-bound = Boundary2D.Create(inp, pin, quad)
-solver = PowerIteration2D.Create(inp, state, pin, mat, quad, bound, q_e, q_f)
+bound = Boundary2D.Create(inp, pin.mesh(), quad)
+solver = PowerIteration2D.Create(inp, state, pin.mesh(), mat, quad, bound, q_e, q_f)
 
 # Solve and time.
 start = time.time()
@@ -61,6 +63,6 @@ elapsed = (time.time() - start)
 print elapsed, " seconds"
 
 v = np.asarray(state.phi(0))
-pin2.plot_flux(v)
+mesh_ref.plot_flux(v)
 
 

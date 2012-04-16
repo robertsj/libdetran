@@ -91,7 +91,7 @@ public:
     //source.assign(source.size(), 0.0);
 
     // Add downscatter.
-    for (int gp = d_material->lower(g); gp < g; gp++)
+    for (int gp = d_material->lower(g); gp < g; gp++) //
     {
       moments_type phi = d_state->phi(gp);
       for (int cell = 0; cell < d_mesh->number_cells(); cell++)
@@ -100,7 +100,7 @@ public:
       }
     }
     // Add upscatter.
-    for (int gp = g + 1; gp < d_material->upper(g); gp++)
+    for (int gp = g + 1; gp <= d_material->upper(g); gp++)
     {
       moments_type phi = d_state->phi(gp);
       for (int cell = 0; cell < d_mesh->number_cells(); cell++)

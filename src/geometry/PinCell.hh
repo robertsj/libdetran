@@ -26,13 +26,13 @@ namespace detran
  *  This is mostly a convenience interface.
  */
 //---------------------------------------------------------------------------//
-class PinCell : public Mesh2D
+class PinCell : public Object
 {
 
 public:
 
-  typedef SP<PinCell>   SP_mesh;
-  typedef Mesh2D        Base;
+  typedef SP<PinCell>    SP_pincell;
+  typedef Mesh::SP_mesh  SP_mesh;
 
   /*!
    *  \brief Constructor.
@@ -40,38 +40,66 @@ public:
    *  \param    pitch       Pin cell pitch (assumed square)
    *  \param    radii       Vector of fuel pin radii (can be zero length)
    *  \param    mat_map     Region material map (cell-center outward)
-   *  \param    meshes      Number of evenly-spaced meshes per direction
    */
-  PinCell(double pitch, vec_dbl radii, vec_int mat_map, int meshes);
+  PinCell(double pitch, vec_dbl radii, vec_int mat_map);
 
-   /*!
-    *  \brief SP Constructor.
-    */
-   static SP<Mesh> Create(double pitch,
-                          vec_dbl radii,
-                          vec_int mat_map,
-                          int meshes)
-   {
-     SP_mesh p;
-     p = new PinCell(pitch, radii, mat_map, meshes);
-     return p;
-   }
+  /// SP Constructor
+  static SP<PinCell> Create(double pitch, vec_dbl radii, vec_int mat_map)
+  {
+    SP_pincell p;
+    p = new PinCell(pitch, radii, mat_map);
+    return p;
+  }
+
+  /// Return the smart pointer to my mesh.
+  Mesh::SP_mesh mesh()
+  {
+    return d_mesh;
+  }
+
+  /// Get const reference to my mesh.
+  const Mesh2D& mesh_ref() const
+  {
+    return *d_mesh;
+  }
+
+
+  /*!
+   *  \brief Mesh the pin cell.
+   *  \param number_meshes  Number of uniformly-spaced meshes per direction.
+   */
+  void meshify(int number_meshes);
+
+  /// DBC method.
+  bool is_valid() const
+  {
+    return true;
+  }
 
 private:
 
-    double d_pitch;
+  /// Underlying meshed object
+  Mesh2D::SP_mesh d_mesh;
 
-    vec_dbl d_radii;
+  /// Pin cell pitch.
+  double d_pitch;
 
-    /*! ======================================================================
-     * @brief Determine in what region a mesh center resides.
-     *
-     *
-     * @param  i  Horizontal index.
-     * @param  j  Vertical index.
-     * @return      Region index.
-     */
-    int find_region(int i, int j);
+  /// Pin shell radii.
+  vec_dbl d_radii;
+
+  // Region material map.
+  vec_int d_mat_map;
+
+
+  /*! ======================================================================
+   * @brief Determine in what region a mesh center resides.
+   *
+   *
+   * @param  i  Horizontal index.
+   * @param  j  Vertical index.
+   * @return      Region index.
+   */
+  int find_region(int i, int j, double width);
 
 };
 

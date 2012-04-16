@@ -315,6 +315,13 @@ void Material::display()
     printf("\n");
   } // end material loop
 
+  // Other info
+  printf("scattering bounds: \n");
+  for (int g = 0; g < d_number_groups; g++)
+  {
+    printf("group %3i  lower = %3i  upper %3i \n", g, lower(g), upper(g));
+  }
+  printf("\n");
 }
 
 
