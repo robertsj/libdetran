@@ -16,6 +16,7 @@
 #include "Mesh3D.hh"  
 #include "PinCell.hh"
 #include "Assembly.hh"
+#include "Core.hh"
 %}
 
 // Load the standard library interfaces.
@@ -50,12 +51,13 @@ namespace std
   %template(vec_dbl) vector<double>;
 }
 
-%template(MeshSP)   detran::SP<detran::Mesh>;
-%template(Mesh1DSP) detran::SP<detran::Mesh1D>;
-%template(Mesh2DSP) detran::SP<detran::Mesh2D>;
-%template(Mesh3DSP) detran::SP<detran::Mesh3D>;
-%template(PinCellSP) detran::SP<detran::PinCell>;
+%template(MeshSP)     detran::SP<detran::Mesh>;
+%template(Mesh1DSP)   detran::SP<detran::Mesh1D>;
+%template(Mesh2DSP)   detran::SP<detran::Mesh2D>;
+%template(Mesh3DSP)   detran::SP<detran::Mesh3D>;
+%template(PinCellSP)  detran::SP<detran::PinCell>;
 %template(AssemblySP) detran::SP<detran::Assembly>;
+%template(CoreSP)     detran::SP<detran::Core>;
 
 namespace detran
 {
@@ -226,6 +228,17 @@ public:
   static SP<Assembly> Create(int dimension);
   void add_pincell(SP<detran::PinCell>);
   void finalize(std::vector<int> pincell_map);
+  SP<Mesh> mesh();
+  const Mesh2D& mesh_ref() const;
+}; // end class Assembly
+
+class Core
+{
+public:
+  explicit Core(int dimension);
+  static SP<Core> Create(int dimension);
+  void add_assembly(SP<detran::Assembly>);
+  void finalize(std::vector<int> assembly_map);
   SP<Mesh> mesh();
   const Mesh2D& mesh_ref() const;
 }; // end class Assembly

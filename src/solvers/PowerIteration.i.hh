@@ -63,7 +63,6 @@ void PowerIteration<D>::solve()
 
     // Compute error in fission density.
     error = norm_residual(fd, fd_old, "L1");
-
     if (d_print_out > 1 and iteration % d_print_interval == 0)
     {
       printf("PI Iter: %3i  Error: %12.9f  keff: %12.9f \n",

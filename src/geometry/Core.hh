@@ -1,33 +1,32 @@
 /*
- * Assembly.hh
+ * Core.hh
  *
- *  Created on: Apr 14, 2012
+ *  Created on: Apr 16, 2012
  *      Author: robertsj
  */
 
-#ifndef ASSEMBLY_HH_
-#define ASSEMBLY_HH_
+#ifndef CORE_HH_
+#define CORE_HH_
 
 #include "Mesh2D.hh"
-#include "PinCell.hh"
+#include "Assembly.hh"
 
 namespace detran
 {
 
 /*!
- *  \class Assembly
- *  \brief Simple square assembly.
- *
+ *  \class Core
+ *  \brief Simple 2-D core of assemblies.
  */
-class Assembly : public Object
+class Core : public Object
 {
 
 public:
 
-  typedef SP<Assembly>            SP_assembly;
-  typedef Mesh::SP_mesh           SP_mesh;
-  typedef PinCell::SP_pincell     SP_pincell;
-  typedef std::vector<SP_pincell> vec_pincell;
+  typedef SP<Core>                  SP_core;
+  typedef Mesh::SP_mesh             SP_mesh;
+  typedef Assembly::SP_assembly     SP_assembly;
+  typedef std::vector<SP_assembly>  vec_assembly;
 
   /*!
    *  \brief Constructor.
@@ -37,20 +36,20 @@ public:
    *  \param    mat_map     Region material map (cell-center outward)
    *  \param    meshes      Number of evenly-spaced meshes per direction
    */
-  Assembly(int dimension, vec_pincell pincells, vec_int pincell_map);
+  Core(int dimension, vec_assembly assemblies, vec_int assembly_map);
 
   /*!
    *  \brief Constructor.
    *
    *  \param    dimension   Number of pins per row (e.g 17 for 17x17)
    */
-  explicit Assembly(int dimension);
+  explicit Core(int dimension);
 
   /// SP Constructor
-  static SP<Assembly> Create(int dimension)
+  static SP<Core> Create(int dimension)
   {
-    SP_assembly p;
-    p = new Assembly(dimension);
+    SP_core p;
+    p = new Core(dimension);
     return p;
   }
 
@@ -66,11 +65,11 @@ public:
     return *d_mesh;
   }
 
-  /// Add a pincell
-  void add_pincell(SP_pincell pin);
+  /// Add an assembly.
+  void add_assembly(SP_assembly assembly);
 
   /// Mesh the assembly.
-  void finalize(vec_int pincell_map);
+  void finalize(vec_int assembly_map);
 
   bool is_valid() const
   {
@@ -85,16 +84,13 @@ private:
   /// Dimension, e.g. 17 in 17x17.
   int d_dimension;
 
-  /// Assembly pitch
-  double d_pitch;
-
   /// Vector of SP pointers to pin cells in the assembly
-  vec_pincell d_pincells;
+  vec_assembly d_assemblies;
 
   /// Logically 2-D map of pin cell locations
-  vec_int d_pincell_map;
+  vec_int d_assembly_map;
 };
 
 } // end namespace detran
 
-#endif /* ASSEMBLY_HH_ */
+#endif /* CORE_HH_ */

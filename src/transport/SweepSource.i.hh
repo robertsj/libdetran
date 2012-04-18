@@ -20,7 +20,11 @@ namespace detran
   {
 
     // Zero out moments source.
-    d_fixed_group_source.assign(d_fixed_group_source.size(), 0.0);
+    for (int cell = 0; cell < d_mesh->number_cells(); cell++)
+    {
+      d_fixed_group_source[cell] = 0.0;
+    }
+    //d_fixed_group_source.assign(d_fixed_group_source.size(), 0.0);
 
     // Add external sources, if present.
     for (int i = 0; i < d_moment_external_sources.size(); i++)
@@ -60,7 +64,10 @@ namespace detran
   inline void SweepSource<D>::build_within_group_scatter(int g, const moments_type &phi)
   {
     // Zero out moments source.
-    d_scatter_group_source.assign(phi.size(), 0.0);
+    //d_scatter_group_source.assign(phi.size(), 0.0);
+
+    for (int cell = 0; cell < d_mesh->number_cells(); cell++)
+      d_scatter_group_source[cell] = 0.0;
 
     // Build within-group scattering
     d_scattersource->build_within_group_source(g, phi, d_scatter_group_source);
@@ -85,7 +92,9 @@ namespace detran
   SweepSource<D>::source(int g, int o, int a)
   {
     // Zero out.
-    d_source.assign(d_source.size(), 0.0);
+    //d_source.assign(d_source.size(), 0.0);
+    for (int cell = 0; cell < d_mesh->number_cells(); cell++)
+      d_source[cell] = 0.0;
 
     // Add moment contributions.
     for (int cell = 0; cell < d_mesh->number_cells(); cell++)

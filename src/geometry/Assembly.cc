@@ -20,9 +20,9 @@ Assembly::Assembly(int dimension, vec_pincell pincells, vec_int pincell_map)
   , d_pincells(pincells)
   , d_pincell_map(pincell_map)
 {
-  Require(dimension > 0);
-  Require(pincells.size() > 0);
-  finalize(pincell_map);
+  Require(d_dimension > 0);
+  Require(d_pincells.size() > 0);
+  finalize(d_pincell_map);
 }
 
 Assembly::Assembly(int dimension)

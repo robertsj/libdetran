@@ -53,6 +53,12 @@ PowerIteration<D>::PowerIteration(SP_input          input,
   if (input->check("eigen_tolerance"))
     d_tolerance = input->get<double>("eigen_tolerance");
 
+  if (input->check("eigen_print_out"))
+    d_print_out = input->get<int>("eigen_print_out");
+
+  if (input->check("eigen_print_interval"))
+    d_print_interval = input->get<int>("eigen_print_interval");
+
   // Create multigroup solver.
   d_mg_solver = new GaussSeidel<D>(input, state, mesh, material,
                                    quadrature, boundary, q_e, q_f);

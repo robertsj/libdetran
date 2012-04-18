@@ -15,6 +15,7 @@ SET(GEOMETRY_SRC
     Mesh3D.cc
     PinCell.cc
     Assembly.cc
+    Core.cc
 )
 
 #-------------------------------------#

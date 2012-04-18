@@ -27,6 +27,7 @@ SET( DETRAN_ENABLE_OPENMC NO CACHE BOOL
   "Enable OpenMP for multithreaded solves."
 )
 
+
 # Write config file, install it, and include that directory for all source
 set(DETRAN_CONFIG_IN  "${CMAKE_CURRENT_SOURCE_DIR}/detran_config.h.in")
 set(DETRAN_CONFIG_OUT "${PROJECT_BINARY_DIR}/config/detran_config.h")
