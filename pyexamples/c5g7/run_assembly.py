@@ -4,7 +4,8 @@ from detran import *
 import assemblies_c5g7
 import material_c5g7
 
-assem1 = assemblies_c5g7.get_assemblies()
+assemblies= assemblies_c5g7.get_assemblies()
+assem1 = assemblies[0]
 mesh = assem1.mesh()
 meshref = assem1.mesh_ref()
 matmap = mesh.mesh_map("MATERIAL")
@@ -28,8 +29,8 @@ inp.put_dbl("inner_tolerance", 1e-9)
 inp.put_int("inner_print_out", 0)
 inp.put_int("outer_max_iters", 1)
 inp.put_dbl("outer_tolerance", 1e-9)
-inp.put_int("outer_print_out", 3)
-inp.put_int("eigen_max_iters", 10000)
+inp.put_int("outer_print_out", 0)
+inp.put_int("eigen_max_iters", 10)
 inp.put_dbl("eigen_tolerance", 1e-6)
 inp.put_str("bc_left",         "reflect")
 inp.put_str("bc_right",        "reflect")
@@ -40,7 +41,7 @@ inp.put_str("bc_top",          "reflect")
 mat = material_c5g7.get_materials()
 
 # Quadrature
-quad = QuadrupleRange.Create(2)
+quad = QuadrupleRange.Create(8)
 
 # State
 state = State.Create(inp, mesh, quad)
