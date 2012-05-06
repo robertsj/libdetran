@@ -180,6 +180,8 @@ public:
   /// Update the boundaries for each sweep.
   void update(int g);
 
+  /// Update the boundaries for a single angle. \todo finish the idea
+  void update(int g, int o, int a);
 
   /*!
    *  \brief  Map the local index to cardinal index.

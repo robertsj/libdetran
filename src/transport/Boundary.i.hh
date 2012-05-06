@@ -112,6 +112,15 @@ inline void Boundary<D>::update(int g)
   }
 }
 
+template <class D>
+inline void Boundary<D>::update(int g, int o, int a)
+{
+  // Set boundary conditions.
+  for(int side = 0; side < 2*D::dimension; side++)
+  {
+    d_bc[side]->update(g);
+  }
+}
 
 
 //---------------------------------------------------------------------------//

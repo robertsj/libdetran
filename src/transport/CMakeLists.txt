@@ -10,8 +10,10 @@ SET(TRANSPORT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 SET(TRANSPORT_SRC
     Boundary.cc
+    Equation_DD_1D.cc
     Equation_DD_2D.cc
     Equation_SC_2D.cc
+    Equation_DD_3D.cc
     FissionSource.cc
     ScatterSource.cc
     State.cc
@@ -30,6 +32,7 @@ TARGET_LINK_LIBRARIES( transport
                        materials
                        geometry
                        utilities
+                       ${GPERFTOOLS_LIBRARIES}
 )
 
 INSTALL_FILES(/include .hh)

@@ -20,13 +20,19 @@
 #include "State.hh"
 #include "SweepSource.hh"
 #include "detran_config.h"
+#include "Equation_DD_2D.hh"
 
 // Other libtran utils headers
+#include "DBC.hh"
 #include "Definitions.hh"
-#include "SP.hh"
 #include "InputDB.hh"
+#include "Profiler.hh"
+#include "SP.hh"
 
+// System
 #include <iostream>
+
+
 
 namespace detran
 {
@@ -67,8 +73,6 @@ public:
   typedef Mesh::SP_mesh                     SP_mesh;
   typedef Material::SP_material             SP_material;
   typedef Quadrature::SP_quadrature         SP_quadrature;
-  typedef typename
-      Equation<D>::SP_equation              SP_equation;
   typedef Boundary<D>                       Boundary_T;
   typedef typename Boundary_T::SP_boundary  SP_boundary;
   typedef typename
@@ -129,15 +133,10 @@ public:
    *  be added with a third argument of psi type.
    *
    */
-  inline void sweep(moments_type &phi)
-  {/* ... */}
+  virtual void sweep(moments_type &phi) = 0;
 
   /// Setup the equations for the group
-  void setup_group(int g)
-  {
-    d_g = g;
-    d_equation->setup_group(g);
-  }
+  virtual void setup_group(int g) = 0;
 
   /// Allows the psi update to occur whenever needed
   void set_update_psi(bool v)
@@ -150,10 +149,13 @@ public:
     return true;
   }
 
-private:
+protected:
 
   /// Input database
   SP_input d_input;
+
+  /// Material
+  SP_material d_material;
 
   /// Mesh
   SP_mesh d_mesh;
@@ -163,9 +165,6 @@ private:
 
   /// State vectors
   SP_state d_state;
-
-  /// Equation
-  SP_equation d_equation;
 
   /// Boundary
   SP_boundary d_boundary;
@@ -186,81 +185,15 @@ private:
   bool d_adjoint;
 
   /// Allocate template-specific items.
-  void setup(SP_material material)
-  {}
+  void setup();
 
   /// Mesh sweeper indices. \todo Allow adjoint.
   inline int index(int o, int dim, int ijk);
 
 };
 
-// Constructor
-template <class D>
-Sweeper<D>::Sweeper(SP_input input,
-                    SP_mesh mesh,
-                    SP_material material,
-                    SP_quadrature quadrature,
-                    SP_state state,
-                    SP_boundary boundary,
-                    SP_sweepsource sweepsource)
-  : d_input(input)
-  , d_mesh(mesh)
-  , d_quadrature(quadrature)
-  , d_state(state)
-  , d_boundary(boundary)
-  , d_sweepsource(sweepsource)
-  , d_update_psi(false)
-  , d_adjoint(false)
-{
-  Require(d_input);
-  Require(d_mesh);
-  Require(d_quadrature);
-  Require(d_state);
-  Require(d_boundary);
-  Require(d_sweepsource);
-  Require(material);
-  setup(material);
-  Ensure(d_equation);
-  // Check whether we keep psi.
-  if (d_input->check("store_angular_flux"))
-  {
-    d_update_psi = d_input->get<int>("store_angular_flux");
-  }
-
-}
-
-// Mesh sweeper indices
-template <class D>
-inline int Sweeper<D>::index(int o, int dim, int ijk)
-{
-  if (dim == 1)
-  {
-    if ((o == 0 or o == 3 or o == 4 or o == 7))
-      return ijk;
-    else
-      return d_mesh->number_cells_x() - ijk - 1;
-  }
-  if (dim == 2)
-  {
-    if ((o == 0 or o == 1 or o == 4 or o == 5))
-      return ijk;
-    else
-      return d_mesh->number_cells_y() - ijk - 1;
-  }
-  if (dim == 3)
-  {
-    if ((o == 0 or o == 1 or o == 2 or o == 3))
-      return ijk;
-    else
-      return d_mesh->number_cells_z() - ijk - 1;
-  }
-}
-
 } // end namespace detran
 
-// Template specializations
-#include "Sweeper1D.t.hh"
-#include "Sweeper2D.t.hh"
-#include "Sweeper3D.t.hh"
+#include "Sweeper.t.hh"
 
 #endif /* SWEEPER_HH_ */

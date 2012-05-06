@@ -64,6 +64,8 @@ public:
   typedef typename
       EquationTraits<D>::face_flux_type     face_flux_type;
 
+  /// Dimension of equation.
+  static const int dimension = D::dimension;
 
   /*!
    *  \brief Constructor
@@ -87,6 +89,8 @@ public:
     //Ensure(d_mat_map);
   }
 
+  virtual ~Equation(){}
+
   /// \name Public Interface
   /// \{
 
@@ -102,14 +106,14 @@ public:
    *   \param   phi         Reference to flux moments for this group
    *   \param   psi         Reference to angular flux for this group
    */
-  virtual void solve(int i,
-                     int j,
-                     int k,
-                     moments_type &source,
-                     face_flux_type &psi_in,
-                     face_flux_type &psi_out,
-                     moments_type &phi,
-                     angular_flux_type &psi) = 0;
+  virtual inline void solve(int i,
+                            int j,
+                            int k,
+                            moments_type &source,
+                            face_flux_type &psi_in,
+                            face_flux_type &psi_out,
+                            moments_type &phi,
+                            angular_flux_type &psi) = 0;
 
 public:
 
