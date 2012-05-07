@@ -22,6 +22,11 @@ ADD_LIBRARY( utilities
              SHARED
              ${UTILITIES_SRC} 
 )
+if( DETRAN_ENABLE_GPERFTOOLS )
+TARGET_LINK_LIBRARIES( ${GPERFTOOLS_LIBRARIES}
+)
+endif()
+
 
 INSTALL_FILES(/include .hh)
 INSTALL_TARGETS(/lib utilities)

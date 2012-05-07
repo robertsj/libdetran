@@ -22,6 +22,7 @@ ADD_LIBRARY(materials
 )
 TARGET_LINK_LIBRARIES( materials
                        utilities
+                       ${GPERFTOOLS_LIBRARIES}                       
 )
 
 INSTALL_FILES(/include .hh)

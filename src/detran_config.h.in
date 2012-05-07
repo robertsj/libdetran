@@ -26,8 +26,7 @@
 /*#cmakedefine DETRAN_ENABLE_SILO*/
 /*#cmakedefine DETRAN_ENABLE_MPI*/
 #cmakedefine DETRAN_ENABLE_OPENMP
-/*#cmakedefine DETRAN_ENABLE_XML*/
-
+#cmakedefine DETRAN_ENABLE_GPERFTOOLS
 #endif // DETRAN_CONFIG_H_ 
 
 //---------------------------------------------------------------------------//

@@ -5,7 +5,7 @@
 project(detran)
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 set(DETRAN_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-
+add_definitions(-pg)
 #------------------------------------------------------------------------------#
 # OPTIONS
 #------------------------------------------------------------------------------#
@@ -27,6 +27,10 @@ SET( DETRAN_ENABLE_OPENMC NO CACHE BOOL
   "Enable OpenMP for multithreaded solves."
 )
 
+# Options for OpenMP directives. On or Off.
+SET( DETRAN_ENABLE_GPERFTOOLS NO CACHE BOOL
+  "Enable Google Performance Tools for profiling."
+)
 
 # Write config file, install it, and include that directory for all source
 set(DETRAN_CONFIG_IN  "${CMAKE_CURRENT_SOURCE_DIR}/detran_config.h.in")
@@ -54,6 +58,13 @@ ENDIF()
 IF( DETRAN_ENABLE_OPENMP )
   find_package(OpenMP REQUIRED)
   set(CMAKE_CXX_FLAGS ${OpenMP_CXX_FLAGS})
+ENDIF()
+
+# This is a hack for now.  Probably worth generating a CMake finder thing.
+IF( DETRAN_ENABLE_GPERFTOOLS )
+  set(GPERFTOOLS_LIBRARIES "/home/robertsj/opt/gperftools/lib/libprofiler.so")
+  set(GPERFTOOLS_INCLUDE   "/home/robertsj/opt/gperftools/include")
+  include_directories(${GPERFTOOLS_INCLUDE})
 ENDIF()
 
 #------------------------------------------------------------------------------#
@@ -160,6 +171,11 @@ if( DETRAN_ENABLE_OPENMP )
 message("++++ OpenMP:      enabled")
 elseif()
 message("++++ OpenMP:      disabled")
+endif()
+if( DETRAN_ENABLE_GPERFTOOLS )
+message("++++ Profiling:   enabled")
+elseif()
+message("++++ Profiling:   disabled")
 endif()
 if( DETRAN_ENABLE_TEST )
 message("++++ Testing:     enabled")

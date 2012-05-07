@@ -13,9 +13,12 @@
 #include "Execute.hh"
 #include "Timer.hh"
 #include "Traits.hh"
+#include "Profiler.hh"
 
 int main(int argc, char **argv)
 {
+
+  START_PROFILER();
 
   // Timer
   detran::Timer timer;
@@ -38,6 +41,8 @@ int main(int argc, char **argv)
     boss.solve<detran::_3D>();
 
   timer.toc(true);
+
+  STOP_PROFILER();
 
   return 0;
 }

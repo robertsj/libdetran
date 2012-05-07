@@ -60,7 +60,7 @@ void SourceIteration<D>::solve(int g)
 
     // Flux residual using L-infinity.
     error = norm_residual(phi_old, phi, "Linf");
-    Require(norm(phi, "L2") > 0.0);
+    //Require(norm(phi, "L2") > 0.0);
 
     if (d_print_out > 1 and iteration % d_print_interval == 0)
     {

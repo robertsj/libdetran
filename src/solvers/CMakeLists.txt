@@ -29,6 +29,7 @@ TARGET_LINK_LIBRARIES( solvers
                        materials
                        geometry
                        utilities
+                       ${GPERFTOOLS_LIBRARIES}
 )
 
 INSTALL_FILES(/include .hh)

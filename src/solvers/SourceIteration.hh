@@ -48,6 +48,8 @@ public:
   typedef FissionSource::SP_source              SP_fissionsource;
   //
   typedef typename Sweeper<D>::SP_sweeper       SP_sweeper;
+  typedef typename
+      SweepSource<D>::SP_sweepsource            SP_sweepsource;
   //
   typedef State::moments_type                   moments_type;
 

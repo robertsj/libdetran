@@ -27,6 +27,7 @@ ADD_LIBRARY(angle
 )
 TARGET_LINK_LIBRARIES( angle
                        utilities
+                       ${GPERFTOOLS_LIBRARIES}                        
 )
 
 INSTALL_FILES(/include .hh)

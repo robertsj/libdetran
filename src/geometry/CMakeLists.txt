@@ -28,6 +28,7 @@ ADD_LIBRARY(geometry
 )
 TARGET_LINK_LIBRARIES( geometry
                        utilities
+                       ${GPERFTOOLS_LIBRARIES}                      
 )
 
 INSTALL_FILES(/include .hh)
