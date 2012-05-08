@@ -62,6 +62,9 @@ public:
   /// Update a boundary following a sweep.  Vacuum does nothing.
   void update(int g){}
 
+  ///
+  void update(int g, int o, int a){}
+
 private:
 
 };

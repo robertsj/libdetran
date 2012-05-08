@@ -64,6 +64,9 @@ public:
   /// Update a boundary following a sweep.
   void update(int g);
 
+  /// Update a boundary for a given angle following a sweep.
+  void update(int g, int o, int a);
+
 private:
 
   // Index of octant reflection pairs.

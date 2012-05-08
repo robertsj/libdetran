@@ -26,8 +26,28 @@ void Reflective<D>::update(int g)
     {
       // Reroute reflecting fluxes.
       d_boundary(d_side, d_octants[o][Boundary<D>::IN], a, g) =
-          d_boundary(d_side, d_octants[o][Boundary<D>::OUT], a, g);
+        d_boundary(d_side, d_octants[o][Boundary<D>::OUT], a, g);
     }
+  }
+}
+
+template <class D>
+void Reflective<D>::update(int g, int o, int a)
+{
+  int o_out = -1;
+  for (int i = 0; i < 2; i++)
+  {
+    if (d_octants[i][Boundary<D>::IN] == o)
+    {
+      o_out = d_octants[i][Boundary<D>::OUT];
+    }
+  }
+  // Only reroute fluxes if I am an outgoing side
+  if (o_out >= 0)
+  {
+    // Reroute reflecting fluxes.
+    d_boundary(d_side, o, a, g) =
+      d_boundary(d_side, o_out, a, g);
   }
 }
 

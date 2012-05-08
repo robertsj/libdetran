@@ -20,7 +20,7 @@ inp.put_int("inner_print_out", 0)
 inp.put_int("outer_max_iters", 1)
 inp.put_dbl("outer_tolerance", 1e-4)
 inp.put_int("outer_print_out", 0)
-inp.put_int("eigen_max_iters", 1000)
+inp.put_int("eigen_max_iters", 100)
 inp.put_dbl("eigen_tolerance", 1e-4)
 inp.put_str("bc_left",         "reflect")
 inp.put_str("bc_right",        "reflect")
@@ -49,7 +49,7 @@ cm = [0.0, 5.0, 10.0, 15.0, 20.0]
 fm = [ 20, 20, 20, 20]
 cm_mat = [1, 1, 1, 0,
           0, 0, 0, 0,
-          1, 0, 0, 0,
+          0, 0, 0, 0,
           0, 0, 0, 0]
 
 cm_mat2 = [[1, 1, 1, 0],
@@ -94,7 +94,7 @@ print elapsed, " seconds"
 
 v = np.asarray(state.phi(0))
 #print v[0:3]
-pin2.plot_flux(v)
+mesh2.plot_flux(v)
 
 
 #print dir(State)

@@ -6,15 +6,23 @@ import material_c5g7
 
 assemblies = assemblies_c5g7.get_assemblies()
 pins       = assemblies_c5g7.get_pins()
-core       = Core.Create(2)
+core       = Core.Create(3)
 
 core.add_assembly(assemblies[0])
 core.add_assembly(assemblies[1])
 core.add_assembly(assemblies[2])
 
+#core_map = [0,1,0,1,0,1,2,
+#            1,0,1,0,1,0,2,
+#            0,1,0,1,0,1,2,
+#            1,0,1,0,1,0,2,
+#            0,1,0,1,0,1,2,
+#            1,0,1,0,1,0,2,
+#            2,2,2,2,2,2,2]
 core_map = [0,1,2,
             1,0,2,
             2,2,2]
+
 core.finalize(core_map)
 mesh = core.mesh()
 meshref = core.mesh_ref()
@@ -44,10 +52,12 @@ inp.put_str("equation",        "dd")
 inp.put_int("inner_max_iters", 1)
 inp.put_dbl("inner_tolerance", 1e-9)
 inp.put_int("inner_print_out", 0)
+inp.put_int("inner_print_interval", 10)
 inp.put_int("outer_max_iters", 1)
 inp.put_dbl("outer_tolerance", 1e-9)
 inp.put_int("outer_print_out", 0)
-inp.put_int("eigen_max_iters", 2000)
+inp.put_int("outer_print_interval", 10)
+inp.put_int("eigen_max_iters", 1000)
 inp.put_dbl("eigen_tolerance", 1e-4)
 inp.put_int("eigen_print_out", 2)
 inp.put_int("eigen_print_interval", 1)

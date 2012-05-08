@@ -50,8 +50,8 @@ inline void Sweeper2D<EQ>::sweep(moments_type &phi)
       State::angular_flux_type psi;
       if (d_update_psi) psi = d_state->psi(o, a, d_g);
 
-      // Update \todo have angle-wise update
-      d_boundary->update(d_g);
+      // Update (angle-wise)
+      d_boundary->update(d_g, o, a);
 
       // Get boundary fluxes (are member v's needed?) \todo
       boundary_flux_type psi_v = (*d_boundary)

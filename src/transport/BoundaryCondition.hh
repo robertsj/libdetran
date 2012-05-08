@@ -84,6 +84,9 @@ public:
   /// Update a boundary following a sweep.
   virtual void update(int g) = 0;
 
+  /// Update a boundary for a given angle following a sweep.
+  virtual void update(int g, int o, int a) = 0;
+
   virtual bool is_valid() const
   {return true;}
 

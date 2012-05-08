@@ -13,7 +13,7 @@ int inner_print_out 0
 int outer_max_iters 1
 dbl outer_tolerance 1e-6
 int outer_print_out 0
-int eigen_max_iters 20
+int eigen_max_iters 5
 dbl eigen_tolerance 1e-6
 str bc_left         reflect
 str bc_right        reflect
@@ -25,8 +25,8 @@ int quad_order      50
 # Mesh
 vec_dbl mesh_xcme    0.0 5.0 10.0 15.0 20.0
 vec_dbl mesh_ycme    0.0 5.0 10.0 15.0 20.0
-vec_int mesh_xfm       50 50 50 50
-vec_int mesh_yfm       50 50 50 50
+vec_int mesh_xfm       80 80 80 80
+vec_int mesh_yfm       80 80 80 80
 vec_int mesh_mat_map 1 1 1 1  1 0 1 1  1 1 0 1  1 1 1 1
 
 # Material

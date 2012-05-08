@@ -118,7 +118,7 @@ inline void Boundary<D>::update(int g, int o, int a)
   // Set boundary conditions.
   for(int side = 0; side < 2*D::dimension; side++)
   {
-    d_bc[side]->update(g);
+    d_bc[side]->update(g, o, a);
   }
 }
 
