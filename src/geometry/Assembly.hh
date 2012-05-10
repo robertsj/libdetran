@@ -18,6 +18,11 @@ namespace detran
  *  \class Assembly
  *  \brief Simple square assembly.
  *
+ *  Assembly represents a square array of pin cells that
+ *  are assumed to have the same meshing.  The meshing is
+ *  also assumed to be isotropic (same in x and y) but not
+ *  necessarily uniform.
+ *
  */
 class Assembly : public Object
 {

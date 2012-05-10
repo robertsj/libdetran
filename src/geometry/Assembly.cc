@@ -42,14 +42,28 @@ void Assembly::finalize(vec_int pincell_map)
   using std::cout;
   using std::endl;
 
+  // Verify that pin cells are consistent, using first
+  // pin as the reference.
+  for (int i = 1; i < d_pincells.size(); i++)
+  {
+    Insist(d_pincells[0]->mesh()->number_cells_x() ==
+           d_pincells[i]->mesh()->number_cells_x(),
+           "X fine mesh inconsistent.");
+    Insist(d_pincells[0]->mesh()->number_cells_y() ==
+           d_pincells[i]->mesh()->number_cells_y(),
+           "Y fine mesh inconsistent.");
+  }
+
   Require(pincell_map.size() == d_dimension*d_dimension);
   d_pincell_map = pincell_map;
 
   // Set number of cells.  This *assumes* all pins have the same meshing.
   int number_pins_row = std::sqrt(pincell_map.size());
   Assert(pincell_map.size() == number_pins_row*number_pins_row);
-  int number_cells_x = (d_pincells[0]->mesh())->number_cells_x() * number_pins_row;
-  int number_cells_y = (d_pincells[0]->mesh())->number_cells_x() * number_pins_row;
+  int number_cells_x =
+    (d_pincells[0]->mesh())->number_cells_x() * number_pins_row;
+  int number_cells_y =
+    (d_pincells[0]->mesh())->number_cells_x() * number_pins_row;
   int number_cells = number_cells_x * number_cells_y;
 
   // Compute the widths.
@@ -77,7 +91,8 @@ void Assembly::finalize(vec_int pincell_map)
     for (int jj = j1; jj < j2; jj++)
     {
       // All pins have same mesh in a direction.
-      edges[jj + 1] = edges[jj] + d_pincells[pincell_map[j*number_pins_row]]->mesh()->dy(j1 - j_save);
+      edges[jj + 1] = edges[jj] +
+        d_pincells[pincell_map[j*number_pins_row]]->mesh()->dy(jj - j_save);
     }
 
     for (int i = 0; i < number_pins_row; i++)

@@ -5,8 +5,8 @@ import numpy as np
 import time
 from detran import *
 
-pin = PinCell.Create(1.27, [0.30,0.40,0.50], [0,0,0,1])
-pin.meshify(300)
+pin = PinCell.Create(1.27, [0.45], [0,1])
+pin.meshify(12, True)
 mesh = pin.mesh()
 mesh_ref = pin.mesh_ref()
 
@@ -63,6 +63,7 @@ elapsed = (time.time() - start)
 print elapsed, " seconds"
 
 v = np.asarray(state.phi(0))
-mesh_ref.plot_flux(v)
+v = np.asarray(mesh_ref.mesh_map("MATERIAL"))
+mesh_ref.plot_mesh_map("MATERIAL")
 
 

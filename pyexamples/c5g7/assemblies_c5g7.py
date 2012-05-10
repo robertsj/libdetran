@@ -10,28 +10,29 @@ def get_pins() :
   # Shared
   pitch = 1.26
   radii = [0.54]
-  number = 13
+  number = 7
+  flag = True
   # Pin 0 - UO2 
   pin0 = PinCell.Create(pitch, radii, [0,6])
-  pin0.meshify(number)
+  pin0.meshify(number, flag)
   # Pin 1 - 4.3% MOX
   pin1 = PinCell.Create(pitch, radii, [1,6])
-  pin1.meshify(number)
+  pin1.meshify(number, flag)
   # Pin 2 - 7.0% MOX
   pin2 = PinCell.Create(pitch, radii, [2,6])
-  pin2.meshify(number)
+  pin2.meshify(number, flag)
   # Pin 3 - 8.7% MOX
   pin3 = PinCell.Create(pitch, radii, [3,6])
-  pin3.meshify(number)
+  pin3.meshify(number, flag)
   # Pin 4 - Guide Tube
   pin4 = PinCell.Create(pitch, radii, [4,6])
-  pin4.meshify(number)
+  pin4.meshify(number, flag)
   # Pin 5 - Fission Chamber
   pin5 = PinCell.Create(pitch, radii, [5,6])
-  pin5.meshify(number)
+  pin5.meshify(number, flag)
   # Pin 6 - Moderator
-  pin6 = PinCell.Create(pitch, [], [6])
-  pin6.meshify(number)
+  pin6 = PinCell.Create(pitch, radii, [6,6])
+  pin6.meshify(number, flag)
 
   return pin0, pin1, pin2, pin3, pin4, pin5, pin6
 
@@ -43,7 +44,7 @@ def get_assemblies() :
   pin0, pin1, pin2, pin3, pin4, pin5, pin6 = get_pins()
 
   # Assembly 1 -- UO2
-  assem1 = Assembly.Create(17)
+  assem1 = Assembly.Create(0)
   assem1.add_pincell(pin0)
   assem1.add_pincell(pin1)
   assem1.add_pincell(pin2)

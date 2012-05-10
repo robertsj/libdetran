@@ -66,9 +66,10 @@ public:
 
   /*!
    *  \brief Mesh the pin cell.
-   *  \param number_meshes  Number of uniformly-spaced meshes per direction.
+   *  \param number_meshes  Number of meshes per direction.
+   *  \param flag           Switch between uniform and "best fit"
    */
-  void meshify(int number_meshes);
+  void meshify(int number_meshes, bool flag = false);
 
   /// DBC method.
   bool is_valid() const
@@ -89,7 +90,6 @@ private:
 
   // Region material map.
   vec_int d_mat_map;
-
 
   /*! ======================================================================
    * @brief Determine in what region a mesh center resides.

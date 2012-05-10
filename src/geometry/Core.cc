@@ -47,8 +47,10 @@ void Core::finalize(vec_int assembly_map)
   // Set number of cells.  This *assumes* all pins have the same meshing.
   int number_row = std::sqrt(assembly_map.size());
   Assert(assembly_map.size() == number_row*number_row);
-  int number_cells_x = (d_assemblies[0]->mesh())->number_cells_x() * number_row;
-  int number_cells_y = (d_assemblies[0]->mesh())->number_cells_x() * number_row;
+  int number_cells_x =
+    (d_assemblies[0]->mesh())->number_cells_x() * number_row;
+  int number_cells_y =
+    (d_assemblies[0]->mesh())->number_cells_x() * number_row;
   int number_cells = number_cells_x * number_cells_y;
 
   // Compute the widths.
@@ -76,7 +78,8 @@ void Core::finalize(vec_int assembly_map)
     for (int jj = j1; jj < j2; jj++)
     {
       // All pins have same mesh in a direction.
-      edges[jj + 1] = edges[jj] + d_assemblies[assembly_map[j*number_row]]->mesh()->dy(j1 - j_save);
+      edges[jj + 1] = edges[jj] +
+          d_assemblies[assembly_map[j*number_row]]->mesh()->dy(jj - j_save);
     }
 
     for (int i = 0; i < number_row; i++)

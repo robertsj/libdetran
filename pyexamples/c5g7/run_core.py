@@ -6,7 +6,7 @@ import material_c5g7
 
 assemblies = assemblies_c5g7.get_assemblies()
 pins       = assemblies_c5g7.get_pins()
-core       = Core.Create(3)
+core       = Core.Create(1)
 
 core.add_assembly(assemblies[0])
 core.add_assembly(assemblies[1])
@@ -30,7 +30,7 @@ meshref = core.mesh_ref()
 # 1 = mox 4.3
 # 2 = mox 7.0
 # 3 = mox 8.7
-#pin = pins[2]
+#pin = assemblies[0]
 #mesh = pin.mesh()
 #meshref = pin.mesh_ref()
 #matmap = mesh.mesh_map("MATERIAL")
@@ -57,7 +57,7 @@ inp.put_int("outer_max_iters", 1)
 inp.put_dbl("outer_tolerance", 1e-9)
 inp.put_int("outer_print_out", 0)
 inp.put_int("outer_print_interval", 10)
-inp.put_int("eigen_max_iters", 1000)
+inp.put_int("eigen_max_iters", 600)
 inp.put_dbl("eigen_tolerance", 1e-4)
 inp.put_int("eigen_print_out", 2)
 inp.put_int("eigen_print_interval", 1)
@@ -70,7 +70,7 @@ inp.put_str("bc_top",          "vacuum")
 mat = material_c5g7.get_materials()
 
 # Quadrature
-quad = QuadrupleRange.Create(8)
+quad = QuadrupleRange.Create(18)
 
 # State
 state = State.Create(inp, mesh, quad)
@@ -100,7 +100,9 @@ print elapsed, " seconds"
 #  vv[i] = v[0]
 
 #print vv
-v = np.asarray(q_f.density())
+#v = np.asarray(q_f.density())
 #meshref = pin.mesh_ref()
 #print v
-meshref.plot_flux(v)
+#meshref.plot_flux(v)
+#mesh.display()
+#meshref.plot_mesh_map("MATERIAL")

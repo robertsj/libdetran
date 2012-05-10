@@ -131,18 +131,20 @@ public:
       m_map2 = m_map.reshape(self.number_cells_x(), self.number_cells_y())
       print m_map2
       # Plot me. 
-      plt.imshow(m_map2, interpolation='nearest', cmap=plt.cm.hot)
-      plt.title(map_key)
-      plt.colorbar()
-      plt.show()
-      # Get the mesh axes and then make a grid of them for plotting.
-      #x, y = self.mesh_axes()
-      #X, Y = np.meshgrid(x, y)
-      #X = X.reshape(self.number_cells(), 1)
-      #Y = Y.reshape(self.number_cells(), 1)
-      #print X
-      #plt.contour(X, Y, m_map2, 15,linewidths=0.5,colors='k')
+      #plt.imshow(m_map2, interpolation='nearest', cmap=plt.cm.hot)
+      #plt.title(map_key)
+      #plt.colorbar()
       #plt.show()
+      # Get the mesh axes and then make a grid of them for plotting.
+      x, y = self.mesh_axes()
+      X, Y = np.meshgrid(x, y)
+      print y
+      print "size of X = ", np.size(X), " number cells = ", self.number_cells()
+      #X = X.reshape((self.number_cells_x()+1)*(self.number_cells_y()+1), 1)
+      #Y = Y.reshape((self.number_cells_x()+1)*(self.number_cells_y()+1), 1)
+      #print X
+      plt.pcolor(X, Y, m_map2, edgecolors='black')
+      plt.show()
     else :
       print "Warning: matplotlib or numpy not found; skipping plot."
       
@@ -170,7 +172,8 @@ public:
     for i in range(0, self.number_cells_x()) :
       x[i + 1] = x[i] + self.dx(i)
     for j in range(0, self.number_cells_y()) :
-      y[i + 1] = y[i] + self.dy(j)
+      y[j + 1] = y[j] + self.dy(j)
+    print y
     return (x, y)
          
   %}
@@ -218,7 +221,7 @@ public:
                             std::vector<int> mat_map);
   SP<Mesh> mesh();
   const Mesh2D& mesh_ref() const;
-  void meshify(int number_meshes);
+  void meshify(int number_meshes, bool flag);
 }; // end class PinCell
 
 class Assembly

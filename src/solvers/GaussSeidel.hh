@@ -136,8 +136,6 @@ private:
   /// Interval for print out
   int d_print_interval;
 
-
-
 };
 
 } // namespace detran
