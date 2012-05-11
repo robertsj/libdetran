@@ -290,8 +290,8 @@ Mesh::SP_mesh StupidParser::parse_mesh()
 
   if (dimension == 1)
   {
-    //if (coarse)  d_mesh = new Mesh1D(xme, xfm, mesh_map);
-    //if (!coarse) d_mesh = new Mesh1D(xme, mesh_map);
+    if (coarse)  d_mesh = new Mesh1D(xfm, xme, mesh_map);
+    if (!coarse) d_mesh = new Mesh1D(xme, mesh_map);
   }
   else if (dimension == 2 and coarse)
   {

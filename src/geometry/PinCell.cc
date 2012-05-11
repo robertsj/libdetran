@@ -9,6 +9,7 @@
 #include "PinCell.hh"
 
 // Utilities
+#include "SoftEquivalence.hh"
 #include "Warning.hh"
 
 // System

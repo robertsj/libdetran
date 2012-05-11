@@ -172,12 +172,12 @@ public:
    * \brief Return an element from \f$ M\f$.
    *
    * \param     o           Octant index.
-   * \param     n           Angle index (within octant).
+   * \param     a           Angle index (within octant).
    * \param     l           Legendre degree.
    * \param     m           Legendre order.
    * \return                Element of operator.
    */
-  const double& operator()(const int o, const int n,
+  const double& operator()(const int o, const int a,
                            const int l, const int m) const;
 
   /*!

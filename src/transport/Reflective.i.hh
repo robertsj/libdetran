@@ -35,7 +35,7 @@ template <class D>
 void Reflective<D>::update(int g, int o, int a)
 {
   int o_out = -1;
-  for (int i = 0; i < 2; i++)
+  for (int i = 0; i < d_octants.size(); i++)
   {
     if (d_octants[i][Boundary<D>::IN] == o)
     {

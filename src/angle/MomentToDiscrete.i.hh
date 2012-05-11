@@ -21,6 +21,7 @@
 
 // System
 #include <cmath>
+#include <iostream>
 
 namespace detran
 {
@@ -59,6 +60,7 @@ void MomentToDiscrete<D>::build(SP_quadrature quadrature)
   // order of octants in the quadrature.
   for (int o = 0; o < d_quadrature->number_octants(); o++)
   {
+    std::cout << " o = " << o << std::endl;
     for (int a = 0; a < d_quadrature->number_angles_octant(); a++)
     {
       calc_row(o, a);
@@ -124,7 +126,7 @@ inline void MomentToDiscrete<_2D>::calc_row(const int o, const int a)
 
 // 1-d
 template <>
-inline void MomentToDiscrete<_1D>::calc_row(const int a, const int o)
+inline void MomentToDiscrete<_1D>::calc_row(const int o, const int a)
 {
   int angle = d_quadrature->index(o, a);
 
@@ -168,11 +170,11 @@ operator()(const int angle, const int l, const int m) const
 // Operator(octant_index, angle_in_octant, legendre_degree, legendre_order)
 template <class D>
 inline const double& MomentToDiscrete<D>::
-operator()(const int o, const int n,
+operator()(const int o, const int a,
            const int l, const int m) const
 {
   // Angle cardinal index
-  int angle = d_quadrature->index(o, n);
+  int angle = d_quadrature->index(o, a);
   // Moment cardinal index
   int moment = 0; //Moments<D>::index(l, m);
   return (*this)(angle, moment);

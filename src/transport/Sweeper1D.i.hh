@@ -12,6 +12,8 @@
 
 #include "Equation_DD_1D.hh"
 
+#include <iostream>
+
 namespace detran
 {
 
@@ -46,30 +48,34 @@ inline void Sweeper1D<EQ>::sweep(moments_type &phi)
 
       // Get psi if update requested.
       State::angular_flux_type psi;
-      if (d_update_psi)
-      {
-        psi = d_state->psi(o, a, d_g);
-      }
+      if (d_update_psi) psi = d_state->psi(o, a, d_g);
+
+      // Update (angle-wise)
+      d_boundary->update(d_g, o, a);
 
       // Get boundary fluxes (are member v's needed?)
-      psi_out = (*d_boundary)(d_face_index[o][Mesh::VERT][Boundary_T::IN], o,
-                              a, d_g);
+      psi_out =
+        (*d_boundary)(d_face_index[o][Mesh::VERT][Boundary_T::IN], o, a, d_g);
 
       // Sweep over all cells.
-      for (int i = 0; i < d_mesh->number_cells_x(); i++)
+      for (int ii = 0; ii < d_mesh->number_cells_x(); ii++)
       {
+        // Get actual index.
+        int i = index(o, 1, ii);
 
         psi_in = psi_out;
 
         d_equation.solve(i, 0, 0, source, psi_in, psi_out, phi, psi);
 
         // INSERT ACCELERATION MESH STUFF HERE
-
+//        std::cout << " o = " << o << " a = " << a
+//                  << " i = " << i << " psi_out = " << psi_out
+//                  << " phi = " << phi[i] << std::endl;
       } // end x loop
 
       // Update boundary.
       (*d_boundary)(d_face_index[o][Mesh::VERT][Boundary_T::OUT], o, a, d_g) =
-          psi_out;
+        psi_out;
 
     } // end angle loop
 

@@ -72,8 +72,6 @@ namespace detran
     // Build within-group scattering
     d_scattersource->build_within_group_source(g, phi, d_scatter_group_source);
 
-
-
   }
 
   template <class D>
@@ -100,13 +98,14 @@ namespace detran
     for (int cell = 0; cell < d_mesh->number_cells(); cell++)
     {
       // Add fixed contribution \todo need to use mtod
-      d_source[cell] += d_fixed_group_source[cell] * inv_four_pi;
-                       // (*d_MtoD)(o, a, 0, 0);
-
+      d_source[cell] += d_fixed_group_source[cell] *  //inv_four_pi;
+                        (*d_MtoD)(o, a, 0, 0);
+      //std::cout << " m2d = " << (*d_MtoD)(o, a, 0, 0) << std::endl;
       // Add scatter contribution
-      d_source[cell] += d_scatter_group_source[cell] * inv_four_pi;
-                   //     (*d_MtoD)(o, a, 0, 0);
-
+      d_source[cell] += d_scatter_group_source[cell] * //inv_four_pi;
+                        (*d_MtoD)(o, a, 0, 0);
+      //std::cout << " m2d2 = " << (*d_MtoD)(o, a, 0, 0) << std::endl;
+      //THROW("fudge.");
     }
 
     // Add discrete contributions if present.

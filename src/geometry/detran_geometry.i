@@ -80,6 +80,58 @@ public:
                          std::vector<int>    mat_map); 
   void add_coarse_mesh_map(std::string map_key, std::vector<int> mesh_map);
   void add_mesh_map(std::string map_key, std::vector<int> mesh_map);
+  %pythoncode 
+  %{
+    
+  def check(self) :
+    """ Check for matplotlib and numpy.  Call at top of all plotting methods.
+    """  
+    try :
+      import matplotlib.pyplot as plt
+      import numpy as np
+      self.PLOT = True
+    except ImportError :
+      self.PLOT = False
+      
+  def plot_mesh_map(self, map_key) :
+    """ Plot the mesh map.
+    """
+    self.check()  
+    if self.PLOT :
+      import matplotlib.pyplot as plt
+      import numpy as np
+      # Get the map.
+      m_map = np.asarray(self.mesh_map(map_key))
+      x = self.mesh_axes()
+      plt.plot(x, f)
+      plt.title('mesh map')
+      plt.show()
+    else :
+      print "Warning: matplotlib or numpy not found; skipping plot."
+      
+  def plot_flux(self, f) :
+    """ Plot a flux or flux-shaped vector on the mesh."
+    """
+    import matplotlib.pyplot as plt
+    import numpy as np
+    x = self.mesh_axes()
+    plt.plot(x, f)
+    plt.title('flux map')
+    plt.show()
+  
+  def mesh_axes(self) :
+    """ Get the fine mesh esges defining cells for plotting.
+    """
+    import matplotlib.pyplot as plt
+    import numpy as np
+    x = np.zeros(self.number_cells_x())
+    x[0] = 0.5*self.dx(0)
+    for i in range(1, self.number_cells_x()) :
+      x[i] = x[i-1] + self.dx(i)
+    return x
+ 
+  %}  
+  
 };
 
 //----------------------------------------------------------------------------//

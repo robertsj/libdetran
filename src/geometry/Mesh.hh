@@ -54,7 +54,7 @@ public:
 
   enum FACE2D
   {
-    HORZ, VERT
+    VERT, HORZ
   };
 
   enum FACE3D

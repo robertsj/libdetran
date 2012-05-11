@@ -43,7 +43,6 @@ void Equation_DD_1D::setup_angle(int angle)
   Require(angle >= 0);
   Require(angle < d_quadrature->number_angles_octant());
   double mu  = d_quadrature->mu(0, angle);
-  double eta = d_quadrature->eta(0, angle);
   for (int i = 0; i < d_mesh->number_cells_x(); i++)
   {
     d_coef_x[i] = 2.0 * mu / d_mesh->dx(i);

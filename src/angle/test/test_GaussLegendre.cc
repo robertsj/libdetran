@@ -37,8 +37,9 @@ int test_GaussLegendre_basic()
   // Get quadrature fixture
   SP_quadrature q = gausslegendre_fixture();
   TEST(q);
-  TEST(q->number_angles()   == 8);
-  TEST(q->number_octants()  == 2);
+  TEST(q->number_angles()  == 8);
+  TEST(q->number_octants() == 2);
+  TEST(q->number_angles_octant() == 4);
   TEST(soft_equiv(q->mu(0, 0),  0.9602898564975));
   TEST(soft_equiv(q->mu(1, 0), -0.9602898564975));
   TEST(soft_equiv(q->weight(0), 0.1012285362904));
