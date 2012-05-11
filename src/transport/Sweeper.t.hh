@@ -75,7 +75,8 @@ inline void Sweeper<_2D>::setup()
 {
   // Set up face/octant map.
   d_face_index.resize(4, vec2_int(2, vec_int(2, 0)));
-
+  // Example:  octant 1 is incident on faces 0 and 2
+  //           and leaves faces 1 and 3.
   int inc[4][2] = {0, 2, 1, 2, 1, 3, 0, 3};
   int out[4][2] = {1, 3, 0, 3, 0, 2, 1, 2};
   for (int i = 0; i < 4; i++)

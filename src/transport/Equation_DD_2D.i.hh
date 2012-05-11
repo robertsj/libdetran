@@ -35,12 +35,12 @@ inline void Equation_DD_2D::solve(int i,
   int cell = d_mesh->index(i, j);
   double coef = 1.0 / (d_material->sigma_t(d_mat_map[cell], d_g) +
                        d_coef_x[i] + d_coef_y[j]);
-  double psi_center = coef * (source[cell] + d_coef_x[i] * psi_in[1] +
-                                             d_coef_y[j] * psi_in[0] );
+  double psi_center = coef * (source[cell] + d_coef_x[i] * psi_in[Mesh::VERT] +
+                                             d_coef_y[j] * psi_in[Mesh::HORZ] );
 
   // Compute outgoing fluxes.
-  psi_out[0] = 2.0*psi_center - psi_in[0];
-  psi_out[1] = 2.0*psi_center - psi_in[1];
+  psi_out[Mesh::HORZ] = 2.0*psi_center - psi_in[Mesh::HORZ];
+  psi_out[Mesh::VERT] = 2.0*psi_center - psi_in[Mesh::VERT];
 
   // Compute flux moments.
   phi[cell] += d_quadrature->weight(d_angle) * psi_center;

@@ -6,7 +6,7 @@ import material_c5g7
 
 assemblies = assemblies_c5g7.get_assemblies()
 pins       = assemblies_c5g7.get_pins()
-core       = Core.Create(1)
+core       = Core.Create(3)
 
 core.add_assembly(assemblies[0])
 core.add_assembly(assemblies[1])

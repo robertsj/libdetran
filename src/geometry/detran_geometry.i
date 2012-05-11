@@ -296,7 +296,7 @@ public:
   void finalize(std::vector<int> assembly_map);
   SP<Mesh> mesh();
   const Mesh2D& mesh_ref() const;
-}; // end class Assembly
+}; // end class Core
 
 } // end namespace detran
 

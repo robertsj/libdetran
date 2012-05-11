@@ -21,9 +21,6 @@ template <class EQ>
 inline void Sweeper2D<EQ>::sweep(moments_type &phi)
 {
 
-
-  //START_PROFILER();
-
   d_equation.setup_group(d_g);
 
   // Reset the flux moments

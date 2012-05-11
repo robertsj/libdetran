@@ -44,7 +44,7 @@ def get_assemblies() :
   pin0, pin1, pin2, pin3, pin4, pin5, pin6 = get_pins()
 
   # Assembly 1 -- UO2
-  assem1 = Assembly.Create(0)
+  assem1 = Assembly.Create(17)
   assem1.add_pincell(pin0)
   assem1.add_pincell(pin1)
   assem1.add_pincell(pin2)
