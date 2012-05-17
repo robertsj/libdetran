@@ -46,6 +46,7 @@ void PinCell::meshify(int number_meshes, bool flag)
     flag = false;
   }
 
+  // Use cell-center material and uniform mesh
   if (!flag)
   {
 
@@ -87,6 +88,7 @@ void PinCell::meshify(int number_meshes, bool flag)
     d_mesh->add_mesh_map("REGION", tmp_reg_map);
 
   }
+  // Use volume-conserving approximate cylinder
   else
   {
     // Best fit parameters. 1.604968750000000   0.176223981031790

@@ -30,16 +30,16 @@
 // typedefs on the input arguments.  There should be an
 // easy way around this, but I'm not a SWIG pro.
 %include std_vec_typemap.i
-//%apply (std::vector<int>    INPUTVECTOR, 
-//        std::vector<int>    INPUTVECTOR, 
-//        std::vector<double> INPUTVECTOR, 
-//        std::vector<double> INPUTVECTOR, 
-//        std::vector<int>    INPUTVECTOR)
-//      {(std::vector<int>    xfm, 
-//        std::vector<int>    yfm, 
-//        std::vector<double> xcme, 
-//        std::vector<double> ycme, 
-//        std::vector<int>    mat_map)}
+%apply (std::vector<int>    INPUTVECTOR, 
+        std::vector<int>    INPUTVECTOR, 
+        std::vector<double> INPUTVECTOR, 
+        std::vector<double> INPUTVECTOR, 
+        std::vector<int>    INPUTVECTOR)
+      {(std::vector<int>    xfm, 
+        std::vector<int>    yfm, 
+        std::vector<double> xcme, 
+        std::vector<double> ycme, 
+        std::vector<int>    mat_map)}
 
 %include "Definitions.hh"
 %include "SP.hh"
@@ -82,7 +82,7 @@ public:
   void add_mesh_map(std::string map_key, std::vector<int> mesh_map);
   %pythoncode 
   %{
-    
+      
   def check(self) :
     """ Check for matplotlib and numpy.  Call at top of all plotting methods.
     """  
@@ -103,7 +103,7 @@ public:
       # Get the map.
       m_map = np.asarray(self.mesh_map(map_key))
       x = self.mesh_axes()
-      plt.plot(x, f)
+      plt.plot(x, m_map)
       plt.title('mesh map')
       plt.show()
     else :
@@ -170,33 +170,42 @@ public:
     except ImportError :
       self.PLOT = False
       
-  def plot_mesh_map(self, map_key) :
+  def plot_mesh_map(self, map_key, edges=False) :
     """ Plot the mesh map.
     """
     self.check()  
     if self.PLOT :
+    
+      # Imports
+      import matplotlib
       import matplotlib.pyplot as plt
       import numpy as np
+      
       # Get the map.
       m_map = np.asarray(self.mesh_map(map_key))
+      if len(m_map) == 0 :
+        print "Oops! Map has size zero!"
+        return
+            
       # Reshape it.
       m_map2 = m_map.reshape(self.number_cells_x(), self.number_cells_y())
-      print m_map2
-      # Plot me. 
-      #plt.imshow(m_map2, interpolation='nearest', cmap=plt.cm.hot)
-      #plt.title(map_key)
-      #plt.colorbar()
-      #plt.show()
+      
+      # Define random color map.
+      colormap = matplotlib.colors.ListedColormap ( np.random.rand ( 10000,3))
+      
       # Get the mesh axes and then make a grid of them for plotting.
       x, y = self.mesh_axes()
       X, Y = np.meshgrid(x, y)
-      print y
-      print "size of X = ", np.size(X), " number cells = ", self.number_cells()
-      #X = X.reshape((self.number_cells_x()+1)*(self.number_cells_y()+1), 1)
-      #Y = Y.reshape((self.number_cells_x()+1)*(self.number_cells_y()+1), 1)
-      #print X
-      plt.pcolor(X, Y, m_map2, edgecolors='black')
+      
+      if edges == False :
+        edges = None
+      else :
+        edges = "black"
+
+      # Create the plot a
+      plt.pcolor(X, Y, m_map2, cmap=colormap)
       plt.show()
+      
     else :
       print "Warning: matplotlib or numpy not found; skipping plot."
       

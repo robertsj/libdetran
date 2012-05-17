@@ -28,9 +28,12 @@ void PowerIteration<D>::solve()
 
   std::cout << "Starting PI." << std::endl;
 
-  // K-eigenvalue
+  // New k-eigenvalue
   double keff = 1.0;
-  double keff_old = 1.0;
+  // k-eigenvalue from 1 time ago
+  double keff_1 = 1.0;
+  // k-eigenvalue from 2 times ago
+  double keff_2 = 1.0;
 
   // Initialize the fission density
   d_fission_source->initialize();
@@ -58,15 +61,27 @@ void PowerIteration<D>::solve()
     // Compute keff.  Here, using L1.  Could implement
     // volume-integrated fission rate if desired.
     State::moments_type fd(d_fission_source->density());
-    keff_old = keff;
-    keff = keff_old * norm(fd, "L1") / norm(fd_old, "L1");
+    keff_2 = keff_1;
+    keff_1 = keff;
+    keff = keff_1 * norm(fd, "L1") / norm(fd_old, "L1");
 
     // Compute error in fission density.
     error = norm_residual(fd, fd_old, "L1");
     if (d_print_out > 1 and iteration % d_print_interval == 0)
     {
-      printf("PI Iter: %3i  Error: %12.9f  keff: %12.9f \n",
-             iteration, error, keff);
+      if (d_aitken)
+      {
+        double keff_aitken =
+            keff_2 - (keff_1 - keff_2)*(keff_1 - keff_2)/
+                     (keff - 2*keff_1 + keff_2);
+        printf("PI Iter: %3i  Error: %12.9f  keff: %12.9f keffa: %12.9f \n",
+               iteration, error, keff, keff_aitken);
+      }
+      else
+      {
+        printf("PI Iter: %3i  Error: %12.9f  keff: %12.9f \n",
+               iteration, error, keff);
+      }
     }
     if (error < d_tolerance) break;
 

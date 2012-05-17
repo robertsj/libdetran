@@ -52,10 +52,10 @@ public:
   explicit Assembly(int dimension);
 
   /// SP Constructor
-  static SP<Assembly> Create(int dimension)
+  static SP<Assembly> Create(int dim)
   {
     SP_assembly p;
-    p = new Assembly(dimension);
+    p = new Assembly(dim);
     return p;
   }
 
@@ -76,6 +76,12 @@ public:
 
   /// Mesh the assembly.
   void finalize(vec_int pincell_map);
+
+  /// Get dimension
+  int dimension() const
+  {
+    return d_dimension;
+  }
 
   bool is_valid() const
   {

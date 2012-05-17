@@ -63,6 +63,11 @@ void Core::finalize(vec_int assembly_map)
   vec_int tmp_mat_map(number_cells, 0);
   vec_int tmp_reg_map(number_cells, 0);
   vec_int tmp_pin_map(number_cells, 0);
+  vec_int tmp_ass_map(number_cells, 0);
+
+  // Number of pin cells per assembly
+  int number_pins_assembly = d_assemblies[0]->dimension();
+  number_pins_assembly *= number_pins_assembly;
 
   int assembly_count = 1;
   int j_save = 0;
@@ -93,8 +98,9 @@ void Core::finalize(vec_int assembly_map)
       int i2 = i_save + d_assemblies[0]->mesh()->number_cells_x();
 
       // Get the material and region maps for this pin.
-      vec_int m = d_assemblies[assembly_map[pin]]->mesh()->mesh_map("MATERIAL");
-      vec_int r = d_assemblies[assembly_map[pin]]->mesh()->mesh_map("REGION");
+      vec_int ass_mat = d_assemblies[assembly_map[pin]]->mesh()->mesh_map("MATERIAL");
+      vec_int ass_reg = d_assemblies[assembly_map[pin]]->mesh()->mesh_map("REGION");
+      vec_int ass_pin = d_assemblies[assembly_map[pin]]->mesh()->mesh_map("PINS");
 
       // Assign the values.
       int count = 0;
@@ -104,9 +110,10 @@ void Core::finalize(vec_int assembly_map)
         for (int ii = i1; ii < i2; ii++)
         {
           int cell = ii + jj*number_cells_x;
-          tmp_mat_map[cell] = m[count];
-          tmp_reg_map[cell] = r[count];
-          tmp_pin_map[cell] = assembly_count;
+          tmp_mat_map[cell] = ass_mat[count];
+          tmp_reg_map[cell] = ass_reg[count];
+          tmp_pin_map[cell] = ass_pin[count] + (assembly_count-1) * 17*17;
+          tmp_ass_map[cell] = assembly_count;
           count++;
         }
       }
@@ -122,8 +129,9 @@ void Core::finalize(vec_int assembly_map)
   d_mesh = new Mesh2D(edges, edges, tmp_mat_map);
   // Add maps.
   d_mesh->add_mesh_map("REGION", tmp_reg_map);
-  // Assigns unique edit region for each pin in an Core.
-  d_mesh->add_mesh_map("ASSEMBLIES", tmp_pin_map);
+  // Assigns unique edit region for each pin and assembly in an Core.
+  d_mesh->add_mesh_map("PINS", tmp_pin_map);
+  d_mesh->add_mesh_map("ASSEMBLIES", tmp_ass_map);
 
 }
 

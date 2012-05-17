@@ -38,8 +38,12 @@ class Object
 
 public:
 
+  /// Virtual destructor
+  ~Object(){}
+
 #ifdef DETRAN_ENABLE_DEBUG
-    virtual bool is_valid() const = 0;
+  /// Tests the object's state.
+  virtual bool is_valid() const = 0;
 #endif
 
 };

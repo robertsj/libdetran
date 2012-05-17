@@ -38,6 +38,7 @@ PowerIteration<D>::PowerIteration(SP_input          input,
   , d_tolerance(1e-5)
   , d_print_out(2)
   , d_print_interval(10)
+  , d_aitken(false)
 {
   Require(d_input);
   Require(d_state);
@@ -58,6 +59,10 @@ PowerIteration<D>::PowerIteration(SP_input          input,
 
   if (input->check("eigen_print_interval"))
     d_print_interval = input->get<int>("eigen_print_interval");
+
+  if (input->check("eigen_aitken"))
+    d_aitken = input->get<int>("eigen_aitken");
+
 
   // Create multigroup solver.
   d_mg_solver = new GaussSeidel<D>(input, state, mesh, material,

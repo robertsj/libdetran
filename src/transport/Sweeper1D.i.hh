@@ -40,7 +40,7 @@ inline void Sweeper1D<EQ>::sweep(moments_type &phi)
     {
 
       // Get sweep source for this angle.
-      SweepSource<_1D>::sweep_source_type
+      SweepSource<_1D>::sweep_source_type source;
         source = d_sweepsource->source(d_g, o, a);
 
       // Setup equations for this angle.

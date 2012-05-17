@@ -138,6 +138,8 @@ private:
   int d_print_out;
   /// Interval for print out
   int d_print_interval;
+  /// Display Aitken extrapolation
+  bool d_aitken;
 
 };
 

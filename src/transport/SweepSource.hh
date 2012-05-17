@@ -166,7 +166,6 @@ public:
     d_discrete_external_sources.push_back(source);
   }
 
-
   /*!
    * \brief Set a fission source.
    *
@@ -249,8 +248,6 @@ private:
 
   /// Scattering source
   SP_scattersource d_scattersource;
-
-
 
 };
 
