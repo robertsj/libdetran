@@ -15,6 +15,7 @@
 #include "GaussLegendre.hh"  
 #include "LevelSymmetric.hh"
 #include "QuadrupleRange.hh"
+#include "UniformEqual.hh"
 %}
 
 // Load the standard library interfaces.
@@ -35,11 +36,13 @@
 %include "GaussLegendre.hh"
 %include "LevelSymmetric.hh"
 %include "QuadrupleRange.hh"
+%include "UniformEqual.hh"
 
 %template(QuadratureSP)     detran::SP<detran::Quadrature>;
 %template(GaussLegendreSP)  detran::SP<detran::GaussLegendre>;
 %template(LevelSymmetricSP) detran::SP<detran::LevelSymmetric>;
 %template(QuadrupleRangeSP) detran::SP<detran::QuadrupleRange>;
+%template(UniformEqualSP)   detran::SP<detran::UniformEqual>;
 
 namespace detran
 {

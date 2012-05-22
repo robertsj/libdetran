@@ -16,6 +16,7 @@ SET(ANGLE_SRC
     QuadratureFactory.cc
     QuadrupleRange.cc
     SphericalHarmonics.cc
+    UniformEqual.cc
 )
 
 #-------------------------------------#
