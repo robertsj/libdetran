@@ -12,6 +12,7 @@
 #define SWEEPER_HH_
 
 // Detran
+#include "Acceleration.hh"
 #include "Boundary.hh"
 #include "Equation.hh"
 #include "Material.hh"
@@ -31,8 +32,6 @@
 
 // System
 #include <iostream>
-
-
 
 namespace detran
 {
@@ -77,6 +76,8 @@ public:
   typedef typename Boundary_T::SP_boundary  SP_boundary;
   typedef typename
       BoundaryTraits<D>::value_type         boundary_flux_type;
+  typedef typename
+      Acceleration<D>::SP_acceleration      SP_acceleration;
   //
   typedef typename
       SweepSource<D>::SP_sweepsource        SP_sweepsource;
@@ -144,6 +145,12 @@ public:
     d_update_psi = v;
   }
 
+  /// Set an acceleration scheme.
+  void set_acceleration(SP_acceleration acceleration)
+  {
+    d_acceleration = acceleration;
+  }
+
   bool is_valid() const
   {
     return true;
@@ -171,6 +178,9 @@ protected:
 
   /// Sweep source
   SP_sweepsource d_sweepsource;
+
+  /// Acceleration
+  SP_acceleration d_acceleration;
 
   /// Current group
   int d_g;

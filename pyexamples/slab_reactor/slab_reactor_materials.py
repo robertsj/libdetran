@@ -1,6 +1,6 @@
 # pyexamples/slab_reactor/slab_reactor_materials.py
 #
-# C5G7 materials
+# Two group materials from Ilas, Mosher, and others.
 
 from detran.detran_materials import *
 

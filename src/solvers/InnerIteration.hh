@@ -12,6 +12,7 @@
 #define INNERITERATION_HH_
 
 // Detran
+#include "Acceleration.hh"
 #include "Boundary.hh"
 #include "MomentToDiscrete.hh"
 #include "State.hh"
@@ -107,6 +108,9 @@ public:
   typedef typename Sweeper<D>::SP_sweeper       SP_sweeper;
   typedef typename
       SweepSource<D>::SP_sweepsource            SP_sweepsource;
+  // acceleration
+  typedef typename
+      Acceleration<D>::SP_acceleration          SP_acceleration;
   //
   typedef State::moments_type                   moments_type;
 
@@ -184,6 +188,9 @@ protected:
   int d_g;
   /// Numer of sweeps
   int d_number_sweeps;
+
+  /// Low order acceleration
+  SP_acceleration b_acceleration;
 
 private:
 

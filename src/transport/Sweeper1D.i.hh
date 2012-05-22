@@ -67,11 +67,9 @@ inline void Sweeper1D<EQ>::sweep(moments_type &phi)
 
         d_equation.solve(i, 0, 0, source, psi_in, psi_out, phi, psi);
 
-        // INSERT ACCELERATION MESH STUFF HERE
-        // d_accelerate.tally(i, 0, 0, o, a, d_g, psi_out);
-//        std::cout << " o = " << o << " a = " << a
-//                  << " i = " << i << " psi_out = " << psi_out
-//                  << " phi = " << phi[i] << std::endl;
+        // ACCELERATION
+        if (d_acceleration) d_acceleration->tally(i, 0, 0, o, a, psi_out);
+
       } // end x loop
 
       // Update boundary.

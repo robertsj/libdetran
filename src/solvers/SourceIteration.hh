@@ -121,6 +121,7 @@ public:
   using Base::d_max_iters;
   using Base::d_print_out;
   using Base::d_print_interval;
+  using Base::b_acceleration;
 
 };
 

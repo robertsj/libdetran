@@ -9,6 +9,7 @@
 #define ACCELERATION_HH_
 
 // Detran
+#include "Equation.hh"
 #include "Material.hh"
 #include "Mesh.hh"
 #include "Quadrature.hh"
@@ -38,6 +39,7 @@ namespace detran
  *      high order solution
  *
  */
+template <class D>
 class Acceleration : public Object
 {
 
@@ -46,11 +48,12 @@ public:
   /// \name Useful Typedefs
   // \{
 
-  typedef SP<Acceleration>          SP_acceleration;
-  typedef Mesh::SP_mesh             SP_mesh;
-  typedef Material::SP_material     SP_material;
-  typedef Quadrature::SP_quadrature SP_quadrature;
-  typedef State::SP_state           SP_state;
+  typedef SP<Acceleration>                            SP_acceleration;
+  typedef Mesh::SP_mesh                               SP_mesh;
+  typedef Material::SP_material                       SP_material;
+  typedef Quadrature::SP_quadrature                   SP_quadrature;
+  typedef State::SP_state                             SP_state;
+  typedef typename EquationTraits<D>::face_flux_type  face_flux_type;
 
   // \}
 
@@ -67,15 +70,19 @@ public:
   ~Acceleration(){}
 
   /*!
-   *  \brief Create acceleration mesh given coarseness level
+   *  \brief Create acceleration mesh given coarseness level and other setup.
    *
-   *  Initialize the coarse mesh by assigning a desired number
+   *  By default, this initializes the coarse mesh by
+   *  assigning a desired number
    *  of fine meshes per coarse mesh.  Extra meshes are
    *  assigned by round-robin addition until all are assigned.
    *
+   *  Clients may re-implement this to do more than just coarsen (e.g.
+   *  allocations).
+   *
    *  \param level  Desired number of fine meshes per coarse mesh
    */
-  virtual void initialize(int level);
+  virtual void initialize(int level) = 0;
 
   /*!
    *  \brief Add contribution to an arbitrary function of the coarse
@@ -84,12 +91,19 @@ public:
    *  \param  i   x mesh index
    *  \param  j   y mesh index
    *  \param  k   z mesh index
-   *  \param  psi edge angular flux
    *  \param  o   octant
    *  \param  a   angle within octant
-   *  \param  g   group
+   *  \param  psi edge angular flux
    */
-  virtual void tally(int i, int j, int k, int o, int a, int g, double psi) = 0;
+  virtual void tally(int i, int j, int k, int o, int a, face_flux_type psi) = 0;
+
+  /// Reset for a new sweep.
+  virtual void reset() = 0;
+
+  void set_group(int g)
+  {
+    b_g = g;
+  }
 
   /*!
    *  \brief Homogenize the material data
@@ -99,7 +113,7 @@ public:
    *
    *  \param state  The current state vector
    */
-  void homogenize(SP_state state);
+  //void homogenize(SP_state state, int group);
 
   /*!
    *  \brief Get the coarse mesh index for a fine mesh
@@ -107,16 +121,16 @@ public:
    *  \param  dim dimension of index
    *  \return     coarse mesh index
    */
-  int fine_to_coarse(int ijk, int dim);
+  int fine_to_coarse(int ijk, int dim) const;
 
   /// Return the actual mesh
-  SP_mesh get_mesh()
+  SP_mesh get_mesh() const
   {
     return b_mesh;
   }
 
   /// Return the coarse mesh
-  SP_mesh get_coarse_mesh()
+  SP_mesh get_coarse_mesh() const
   {
     return b_coarse_mesh;
   }
@@ -127,10 +141,10 @@ public:
     return b_material;
   }
 
-  /// Return the coarse mesh material
-  SP_material get_coarse_material()
+  /// Return the quadrature
+  SP_material get_quadrature()
   {
-    return b_coarse_material;
+    return b_quadrature;
   }
 
   /// Check if the object is in a valid state.
@@ -142,7 +156,7 @@ public:
 protected:
 
   /// \name Protected Data
-  //
+  /// \{
 
   /// The fine mesh
   SP_mesh b_mesh;
@@ -153,19 +167,48 @@ protected:
   /// Fine mesh material
   SP_material b_material;
 
-  /// Coarse mesh material
-  SP_material b_coarse_material;
-
   /// Quadrature
   SP_quadrature b_quadrature;
 
   /// Fine-to-coarse maps
-  vec_int b_fine_to_coarse_x;
-  vec_int b_fine_to_coarse_y;
-  vec_int b_fine_to_coarse_z;
+  vec2_int b_fine_to_coarse;
+
+  /// Fine mesh coarse edge flags
+  vec2_int b_coarse_edge_flag;
+
+  ///
+  vec2_int b_octant_shift;
 
   /// Coarseness level
   int b_level;
+
+  /// Group
+  int b_g;
+
+  /// \}
+
+  /// \name Implementation
+  /// \{
+
+  /*!
+   *  \brief Create the coarse mesh for a given level.
+   *  \param  level   Desired number of fine cells per coarse cell
+   */
+  void coarsen(int level);
+
+  /*!
+   *  \brief Check the outgoing edge of a fine mesh cell is on a coarse
+   *         mesh boundary.
+   *  \param  i   x fine mesh index
+   *  \param  j   y fine mesh index
+   *  \param  k   z fine mesh index
+   *  \param  o   octant index
+   */
+  bool on_coarse_boundary(int i, int j, int k, int o) const;
+
+  /// \}
+
+
 
 };
 

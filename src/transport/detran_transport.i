@@ -11,7 +11,7 @@
 // Detran
 #include "Acceleration.hh"
 #include "Boundary.hh"
-#include "CMR.hh"
+//#include "CMR.hh"
 #include "FissionSource.hh"
 #include "ExternalSource.hh"
 #include "ConstantSource.hh"
@@ -85,31 +85,31 @@ public:
   const std::vector<double>& density();
 };
 
-class Acceleration
-{
-public:
-  Acceleration(SP<detran::Mesh>       mesh, 
-               SP<detran::Material>   material, 
-               SP<detran::Quadrature> quadrature);
-  ~Acceleration(){}
-  virtual void initialize(int level);
-  virtual void tally(int i, int j, int k, int o, int a, int g, double psi) = 0;
-  void homogenize(SP<detran::State> state);
-  int fine_to_coarse(int ijk, int dim);
-  SP<detran::Mesh> get_mesh();
-  SP<detran::Mesh> get_coarse_mesh();
-  SP<detran::Material> get_material();
-  SP<detran::Material> get_coarse_material();
-};
+//class Acceleration
+//{
+//public:
+//  Acceleration(SP<detran::Mesh>       mesh, 
+//               SP<detran::Material>   material, 
+//               SP<detran::Quadrature> quadrature);
+//  ~Acceleration(){}
+//  virtual void initialize(int level);
+//  virtual void tally(int i, int j, int k, int o, int a, int g, double psi) = 0;
+//  void homogenize(SP<detran::State> state);
+//  int fine_to_coarse(int ijk, int dim);
+//  SP<detran::Mesh> get_mesh();
+//  SP<detran::Mesh> get_coarse_mesh();
+//  SP<detran::Material> get_material();
+//  SP<detran::Material> get_coarse_material();
+//};
 
-class CMR : public Acceleration
-{
-public:
-  CMR(SP<detran::Mesh>       mesh, 
-      SP<detran::Material>   material, 
-      SP<detran::Quadrature> quadrature);
-  void tally(int i, int j, int k, int o, int a, int g, double psi);
-};
+//class CMR : public Acceleration
+//{
+//public:
+//  CMR(SP<detran::Mesh>       mesh, 
+//      SP<detran::Material>   material, 
+//      SP<detran::Quadrature> quadrature);
+//  void tally(int i, int j, int k, int o, int a, int g, double psi);
+//};
 
 } // end namespace detran
 

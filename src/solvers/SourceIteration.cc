@@ -10,6 +10,8 @@
 
 // Detran
 #include "SourceIteration.hh"
+//
+#include "CMR.hh"
 
 namespace detran
 {
@@ -33,7 +35,7 @@ SourceIteration<D>::SourceIteration(SP_input          input,
                                        q_e,
                                        q_f)
 {
-  /* ... */
+  //b_acceleration = new CMR<D>(mesh, material, quadrature);
 }
 
 } // end namespace detran
