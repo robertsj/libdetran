@@ -135,9 +135,23 @@ public:
   // Getters
   //------------------------------------------------------------------------//
 
+  /// Return total number of cells.
   int number_cells()
   {
     return d_number_cells;
+  }
+
+  /// Return number of cells in specified dimension.
+  int number_cells(int dim)
+  {
+    Require(dim >= 0);
+    Require(dim < d_dimension);
+    if (dim == 0)
+      return d_number_cells_x;
+    else if (dim == 1)
+      return d_number_cells_y;
+    else
+      return d_number_cells_z;
   }
 
   int number_cells_x()
@@ -153,6 +167,18 @@ public:
   int number_cells_z()
   {
     return d_number_cells_z;
+  }
+
+  double width(int dim, int ijk)
+  {
+    Require(dim >= 0);
+    Require(dim < d_dimension);
+    if (dim == 0)
+      return dx(ijk);
+    else if (dim == 1)
+      return dy(ijk);
+    else
+      return dz(ijk);
   }
 
   double dx(int i)

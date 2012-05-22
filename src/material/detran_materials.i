@@ -26,5 +26,4 @@
 %include "SP.hh"
 %include "Material.hh"
 
-
 %template(MaterialSP) detran::SP<detran::Material>;

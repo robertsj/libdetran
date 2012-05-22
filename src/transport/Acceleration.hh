@@ -9,16 +9,37 @@
 #define ACCELERATION_HH_
 
 // Detran
+#include "Equation.hh"
 #include "Material.hh"
 #include "Mesh.hh"
+#include "Quadrature.hh"
 #include "State.hh"
 
 // Utilities
 #include "DBC.hh"
+#include "Definitions.hh"
+#include "SP.hh"
 
 namespace detran
 {
 
+/*!
+ *  \class Acceleration
+ *  \brief Base class for coarse mesh acceleration schemes
+ *
+ *  All anticipated acceleration schemes have several shared
+ *  features.  These include
+ *    + Requiring reaction rates within a coarse mesh
+ *    + Requiring knowledge of the angular flux at coarse
+ *      mesh boundaries (to compute net currents, partial
+ *      currents, or some other function of the flux)
+ *    + Solution of some lower order equation with the
+ *      condition that the lower order solution is
+ *      equivelent to the homogenized (and converged)
+ *      high order solution
+ *
+ */
+template <class D>
 class Acceleration : public Object
 {
 
@@ -27,34 +48,72 @@ public:
   /// \name Useful Typedefs
   // \{
 
-  Mesh::SP_mesh SP_mesh;
-
-  Material::SP_material SP_material;
-
-  State::SP_state SP_state;
+  typedef SP<Acceleration>                            SP_acceleration;
+  typedef Mesh::SP_mesh                               SP_mesh;
+  typedef Material::SP_material                       SP_material;
+  typedef Quadrature::SP_quadrature                   SP_quadrature;
+  typedef State::SP_state                             SP_state;
+  typedef typename EquationTraits<D>::face_flux_type  face_flux_type;
 
   // \}
 
-  Acceleration(SP_mesh m, SP_material mat);
+  /*!
+   *  \brief Constructor
+   *
+   *  \param mesh       Mesh smart pointer
+   *  \param material   Material smart pointer
+   *  \param quadrature Quadrature smart pointer
+   */
+  Acceleration(SP_mesh mesh, SP_material material, SP_quadrature quadrature);
 
+  /// Virtual destructor
   ~Acceleration(){}
 
   /*!
-   *  \brief Create acceleration mesh given coarseness level
+   *  \brief Create acceleration mesh given coarseness level and other setup.
    *
-   *  Initialize the coarse mesh by assigning a desired number
+   *  By default, this initializes the coarse mesh by
+   *  assigning a desired number
    *  of fine meshes per coarse mesh.  Extra meshes are
    *  assigned by round-robin addition until all are assigned.
    *
+   *  Clients may re-implement this to do more than just coarsen (e.g.
+   *  allocations).
+   *
    *  \param level  Desired number of fine meshes per coarse mesh
    */
-  void initialize(int level);
+  virtual void initialize(int level) = 0;
+
+  /*!
+   *  \brief Add contribution to an arbitrary function of the coarse
+   *         mesh edge flux.
+   *
+   *  \param  i   x mesh index
+   *  \param  j   y mesh index
+   *  \param  k   z mesh index
+   *  \param  o   octant
+   *  \param  a   angle within octant
+   *  \param  psi edge angular flux
+   */
+  virtual void tally(int i, int j, int k, int o, int a, face_flux_type psi) = 0;
+
+  /// Reset for a new sweep.
+  virtual void reset() = 0;
+
+  void set_group(int g)
+  {
+    b_g = g;
+  }
 
   /*!
    *  \brief Homogenize the material data
    *
+   *  This function takes the current state vector and homogenizes the
+   *  group constants via flux-weighting.
+   *
+   *  \param state  The current state vector
    */
-  void homogenize(SP_state state);
+  //void homogenize(SP_state state, int group);
 
   /*!
    *  \brief Get the coarse mesh index for a fine mesh
@@ -62,32 +121,33 @@ public:
    *  \param  dim dimension of index
    *  \return     coarse mesh index
    */
-  int fine_to_coarse(int ijk, int dim);
+  int fine_to_coarse(int ijk, int dim) const;
 
   /// Return the actual mesh
-  SP_mesh mesh()
+  SP_mesh get_mesh() const
   {
-    return d_mesh;
+    return b_mesh;
   }
 
   /// Return the coarse mesh
-  SP_mesh course_mesh()
+  SP_mesh get_coarse_mesh() const
   {
-    return d_coarse_mesh;
+    return b_coarse_mesh;
   }
 
   /// Return the actual material
-  SP_material material()
+  SP_material get_material()
   {
-    return d_material;
+    return b_material;
   }
 
-  /// Return the coarse mesh material
-  SP_material coarse_material()
+  /// Return the quadrature
+  SP_material get_quadrature()
   {
-    return d_coarse_material;
+    return b_quadrature;
   }
 
+  /// Check if the object is in a valid state.
   bool is_valid() const
   {
     return true;
@@ -96,28 +156,65 @@ public:
 protected:
 
   /// \name Protected Data
-  //
+  /// \{
 
   /// The fine mesh
-  SP_mesh d_mesh;
+  SP_mesh b_mesh;
 
   /// The coarse mesh
-  SP_mesh d_coarse_mesh;
+  SP_mesh b_coarse_mesh;
 
   /// Fine mesh material
-  SP_material d_material;
+  SP_material b_material;
 
-  /// Coarse mesh material
-  SP_material d_coarse_material;
+  /// Quadrature
+  SP_quadrature b_quadrature;
 
   /// Fine-to-coarse maps
-  vec_int d_fine_to_coarse_x;
-  vec_int d_fine_to_coarse_y;
-  vec_int d_fine_to_coarse_z;
+  vec2_int b_fine_to_coarse;
+
+  /// Fine mesh coarse edge flags
+  vec2_int b_coarse_edge_flag;
+
+  ///
+  vec2_int b_octant_shift;
+
+  /// Coarseness level
+  int b_level;
+
+  /// Group
+  int b_g;
+
+  /// \}
+
+  /// \name Implementation
+  /// \{
+
+  /*!
+   *  \brief Create the coarse mesh for a given level.
+   *  \param  level   Desired number of fine cells per coarse cell
+   */
+  void coarsen(int level);
+
+  /*!
+   *  \brief Check the outgoing edge of a fine mesh cell is on a coarse
+   *         mesh boundary.
+   *  \param  i   x fine mesh index
+   *  \param  j   y fine mesh index
+   *  \param  k   z fine mesh index
+   *  \param  o   octant index
+   */
+  bool on_coarse_boundary(int i, int j, int k, int o) const;
+
+  /// \}
+
+
 
 };
 
 } // end namespace detran
 
+// Inline member definitions
+#include "Acceleration.i.hh"
 
 #endif /* ACCELERATION_HH_ */

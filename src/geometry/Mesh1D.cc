@@ -13,7 +13,7 @@ namespace detran
 {
 
 Mesh1D::Mesh1D(vec_int xfm, vec_dbl xcme, vec_int mat_map)
-  : Mesh(2,
+  : Mesh(1,
          xfm,
          vec_int(1, 1),
          vec_int(1, 1),
