@@ -51,7 +51,7 @@ LevelSymmetric::LevelSymmetric(int order, int dim)
       d_mu[m] = att[i];
       d_eta[m] = att[j];
       d_xi[m] = std::sqrt(1.0 - d_mu[m] * d_mu[m] - d_eta[m] * d_eta[m]);
-      d_weight[m] *= four_pi;
+      d_weight[m] *= pi; // pre-computed weights sum to 1.0 per octant
       ++m;
     }
   }
