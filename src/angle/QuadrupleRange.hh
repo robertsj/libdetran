@@ -15,7 +15,7 @@
 #ifndef QUADRUPLERANGE_HH_
 #define QUADRUPLERANGE_HH_
 
-// Angle headers
+// Detran
 #include "Quadrature.hh"
 
 namespace detran

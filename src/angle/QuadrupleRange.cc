@@ -52,6 +52,8 @@ QuadrupleRange::QuadrupleRange(int order, int dim)
       ++k;
     }
   }
+  //d_mu[0]=0.3124597141; d_eta[1]=0.3124597141;
+  //d_mu[1]=0.7543444795; d_eta[0]=0.7543444795;
   Ensure(k == d_number_angles_octant);
 }
 
@@ -97,6 +99,10 @@ double QuadrupleRange::get_phi(int N, int i, int j)
         a[1] = 0.9443782254288237;
         b[0] = 0.7853981633974483;
         b[1] = 0.7853981633974483;
+//        a[0] = 0.328861319306339;
+//        a[1] = 0.9443782254288237;
+//        b[0] = 0.7853981633974483;
+//        b[1] = 0.7853981633974483;
     }
     else if( N == 4 )
     {

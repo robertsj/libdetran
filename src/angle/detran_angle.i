@@ -13,6 +13,7 @@
 #include "SP.hh"
 //#include "Quadrature.hh"
 #include "GaussLegendre.hh"  
+#include "LevelSymmetric.hh"
 #include "QuadrupleRange.hh"
 %}
 
@@ -32,12 +33,13 @@
 %include "SP.hh"
 %include "Quadrature.hh"
 %include "GaussLegendre.hh"
+%include "LevelSymmetric.hh"
 %include "QuadrupleRange.hh"
 
 %template(QuadratureSP)     detran::SP<detran::Quadrature>;
 %template(GaussLegendreSP)  detran::SP<detran::GaussLegendre>;
+%template(LevelSymmetricSP) detran::SP<detran::LevelSymmetric>;
 %template(QuadrupleRangeSP) detran::SP<detran::QuadrupleRange>;
-
 
 namespace detran
 {

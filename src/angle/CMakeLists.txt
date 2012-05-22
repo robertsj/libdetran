@@ -10,6 +10,7 @@ SET(ANGLE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 SET(ANGLE_SRC
     GaussLegendre.cc
+    LevelSymmetric.cc
     MomentToDiscrete.cc
     Quadrature.cc
     QuadratureFactory.cc
