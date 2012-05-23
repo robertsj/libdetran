@@ -8,7 +8,11 @@
  */
 //---------------------------------------------------------------------------//
 
+// Detran
 #include "State.hh"
+
+// System
+#include <iostream>
 
 namespace detran
 {
@@ -23,6 +27,7 @@ State::State(SP_input        input,
   , d_number_groups(input->get<int>("number_groups"))
   , d_store_angular_flux(false)
   , d_moments(d_number_groups, vec_dbl(mesh->number_cells(), 0.0))
+  , d_angular_flux(d_number_groups)
   , d_eigenvalue(0.0)
 {
   Require(input);
@@ -40,10 +45,13 @@ State::State(SP_input        input,
   if (store_psi > 0)
   {
     d_store_angular_flux = true;
-    d_angular_flux.resize(d_number_groups,
-                          vec2_dbl(quadrature->number_angles(),
-                                   vec_dbl(mesh->number_cells(),
-                                           0.0)));
+
+    for (int g = 0; g < d_number_groups; g++)
+    {
+      d_angular_flux[g].resize(quadrature->number_angles(),
+                               vec_dbl(mesh->number_cells(), 0.0));
+    }
+
   }
 
 }

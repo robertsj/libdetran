@@ -15,11 +15,26 @@
 #include "Traits.hh"
 #include "Profiler.hh"
 
+// System
+#include <iostream>
+#include <ctime>
+
 int main(int argc, char **argv)
 {
 
   START_PROFILER();
 
+  std::time_t t;
+  std::time(&t);
+  std::cout << std::endl << std::endl;
+  std::cout << "       _|              _|                                    " << std::endl;
+  std::cout << "   _|_|_|    _|_|    _|_|_|_|  _|  _|_|    _|_|_|  _|_|_|    " << std::endl;
+  std::cout << " _|    _|  _|_|_|_|    _|      _|_|      _|    _|  _|    _|  " << std::endl;
+  std::cout << " _|    _|  _|          _|      _|        _|    _|  _|    _|  " << std::endl;
+  std::cout << "   _|_|_|    _|_|_|      _|_|  _|          _|_|_|  _|    _|  " << std::endl;
+  std::cout << " a DETerministic TRANsport tool" << std::endl;
+  std::cout << " Run on: " << std::ctime(&t);
+  std::cout << std::endl << std::endl;
   // Timer
   detran::Timer timer;
 

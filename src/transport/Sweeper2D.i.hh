@@ -13,6 +13,8 @@
 #include "Equation_DD_2D.hh"
 #include "Equation_SC_2D.hh"
 
+#include <iostream>
+
 namespace detran
 {
 
@@ -43,9 +45,9 @@ inline void Sweeper2D<EQ>::sweep(moments_type &phi)
       // Setup equations for this angle.
       d_equation.setup_angle(a);
 
-      // Get psi if update requested.
+      // Get psi if needed.
       State::angular_flux_type psi;
-      if (d_update_psi) psi = d_state->psi(o, a, d_g);
+      if (d_update_psi) psi = d_state->psi(d_g, o, a);
 
       // Update (angle-wise)
       d_boundary->update(d_g, o, a);
@@ -97,6 +99,9 @@ inline void Sweeper2D<EQ>::sweep(moments_type &phi)
       (*d_boundary)
           (d_face_index[o][Mesh::HORZ][Boundary_T::OUT], o, a, d_g) = psi_h;
 
+      // Angular flux update
+      if (d_update_psi) d_state->psi(d_g, o, a) = psi;
+
     } // end angle loop
 
   } // end octant loop
@@ -107,7 +112,7 @@ inline void Sweeper2D<EQ>::sweep(moments_type &phi)
 }
 
 // Instantiate
-//template class Sweeper1D<Equation_SD_1D>;
+//template class Sweeper1D<Equation_SD_2D>;
 template class Sweeper2D<Equation_DD_2D>;
 template class Sweeper2D<Equation_SC_2D>;
 

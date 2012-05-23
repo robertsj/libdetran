@@ -85,7 +85,7 @@ public:
    *
    */
   void build_in_scatter_source(int g,
-                                 moments_type &source)
+                               moments_type &source)
   {
     // Ensure source is zero.
     //source.assign(source.size(), 0.0);
@@ -140,9 +140,9 @@ public:
   }
 
   bool is_valid() const
-  { /* ... */ }
-
-
+  {
+    return true;
+  }
 
 protected:
 

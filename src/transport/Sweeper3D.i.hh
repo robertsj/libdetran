@@ -100,6 +100,9 @@ inline void Sweeper3D<EQ>::sweep(moments_type &phi)
       (*d_boundary)(d_face_index[o][Mesh::XY][Boundary_T::OUT], o, a, d_g) =
           psi_xy;
 
+      // Angular flux update
+      if (d_update_psi) d_state->psi(d_g, o, a) = psi;
+
     } // end angle loop
 
   } // end octant loop

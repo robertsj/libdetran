@@ -160,7 +160,7 @@ public:
    *  \param    a   Angle within octant
    *  \return       Constant reference to group angular flux vector.
    */
-  const angular_flux_type& psi(int o, int a, int g) const   // State::angular_flux_type  psi = psi(o, a, g);
+  const angular_flux_type& psi(int g, int o, int a) const   // State::angular_flux_type  psi = psi(o, a, g);
   {
     Require(d_store_angular_flux);
     Require(d_angular_flux.size() > 0);
@@ -171,7 +171,7 @@ public:
     Require(g >= 0);
     Require(g < d_number_groups);
     int angle = d_quadrature->index(o, a);
-    return d_angular_flux[angle][g];
+    return d_angular_flux[g][angle];
   }
 
   /*
@@ -182,13 +182,13 @@ public:
    *  \param    a   Angle within octant
    *  \return       Mutable reference to group angular flux vector.
    */
-  angular_flux_type& psi(int o, int a, int g)
+  angular_flux_type& psi(int g, int o, int a)
   {
     // Cast away return type
     return const_cast<angular_flux_type&>
     (
       // Add const to *this's type and call const version
-      static_cast<const State*>(this)->psi(o, a, g)
+      static_cast<const State*>(this)->psi(g, o, a)
     );
   }
 
