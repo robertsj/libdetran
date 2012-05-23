@@ -16,6 +16,7 @@
 
 // Utilities
 #include "SP.hh"
+#include "InputDB.hh"
 
 namespace detran
 {
@@ -76,7 +77,7 @@ public:
 
   /// SP Constructor
   static SP<SourceIteration<D> >
-  Create(SP<InputDB>                 input,
+  Create(SP<detran::InputDB>         input,
          SP<detran::State>           state,
          SP<detran::Mesh>            mesh,
          SP<detran::Material>        material,
@@ -121,7 +122,7 @@ public:
   using Base::d_max_iters;
   using Base::d_print_out;
   using Base::d_print_interval;
-  using Base::b_acceleration;
+  //using Base::b_acceleration;
 
 };
 

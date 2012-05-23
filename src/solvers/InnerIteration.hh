@@ -12,7 +12,7 @@
 #define INNERITERATION_HH_
 
 // Detran
-#include "Acceleration.hh"
+//#include "Acceleration.hh"
 #include "Boundary.hh"
 #include "MomentToDiscrete.hh"
 #include "State.hh"
@@ -23,6 +23,7 @@
 #include "SweepSource.hh"
 
 // Utilities
+#include "InputDB.hh"
 #include "MathUtilities.hh"
 
 // System
@@ -109,8 +110,8 @@ public:
   typedef typename
       SweepSource<D>::SP_sweepsource            SP_sweepsource;
   // acceleration
-  typedef typename
-      Acceleration<D>::SP_acceleration          SP_acceleration;
+//  typedef typename
+//      Acceleration<D>::SP_acceleration          SP_acceleration;
   //
   typedef State::moments_type                   moments_type;
 
@@ -143,6 +144,20 @@ public:
    *  \brief Solve the within group equation.
    */
   virtual void solve(int g) = 0;
+
+  /// Reset the tolerance.
+  void set_tolerance(double tol)
+  {
+    Require(tol > 0.0);
+    d_tolerance = tol;
+  }
+
+  /// Reset the maximum iterations.
+  void set_max_iters(int max_iters)
+  {
+    Require(max_iters > 0);
+    d_max_iters = max_iters;
+  }
 
   /// Unimplemented DBC function.
   virtual bool is_valid() const
@@ -190,7 +205,7 @@ protected:
   int d_number_sweeps;
 
   /// Low order acceleration
-  SP_acceleration b_acceleration;
+ // SP_acceleration b_acceleration;
 
 private:
 

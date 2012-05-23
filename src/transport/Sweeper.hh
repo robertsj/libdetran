@@ -12,7 +12,7 @@
 #define SWEEPER_HH_
 
 // Detran
-#include "Acceleration.hh"
+//#include "Acceleration.hh"
 #include "Boundary.hh"
 #include "Equation.hh"
 #include "Material.hh"
@@ -76,8 +76,8 @@ public:
   typedef typename Boundary_T::SP_boundary  SP_boundary;
   typedef typename
       BoundaryTraits<D>::value_type         boundary_flux_type;
-  typedef typename
-      Acceleration<D>::SP_acceleration      SP_acceleration;
+//  typedef typename
+//      Acceleration<D>::SP_acceleration      SP_acceleration;
   //
   typedef typename
       SweepSource<D>::SP_sweepsource        SP_sweepsource;
@@ -106,13 +106,13 @@ public:
    *  \brief SP Constructor.
    */
   static detran::SP<Sweeper<D> >
-  Create(detran::SP<InputDB>                 input,
-         detran::SP<detran::Mesh>            mesh,
-         detran::SP<detran::Material>        material,
-         detran::SP<detran::Quadrature>      quadrature,
-         detran::SP<detran::State>           state,
-         detran::SP<detran::Boundary<D> >    boundary,
-         detran::SP<detran::SweepSource<D> > sweepsource)
+  Create(detran::SP<detran::InputDB>          input,
+         detran::SP<detran::Mesh>             mesh,
+         detran::SP<detran::Material>         material,
+         detran::SP<detran::Quadrature>       quadrature,
+         detran::SP<detran::State>            state,
+         detran::SP<detran::Boundary<D> >     boundary,
+         detran::SP<detran::SweepSource<D> >  sweepsource)
   {
     SP_sweeper p;
     p = new Sweeper(input, mesh, material, quadrature,
@@ -146,10 +146,10 @@ public:
   }
 
   /// Set an acceleration scheme.
-  void set_acceleration(SP_acceleration acceleration)
-  {
-    d_acceleration = acceleration;
-  }
+//  void set_acceleration(SP_acceleration acceleration)
+//  {
+//    d_acceleration = acceleration;
+//  }
 
   bool is_valid() const
   {
@@ -180,7 +180,7 @@ protected:
   SP_sweepsource d_sweepsource;
 
   /// Acceleration
-  SP_acceleration d_acceleration;
+  //SP_acceleration d_acceleration;
 
   /// Current group
   int d_g;

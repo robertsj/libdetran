@@ -49,7 +49,7 @@ namespace
 //---------------------------------------------------------------------------//  
   
 // Transport
-#include "Acceleration.hh"
+//#include "Acceleration.hh"
 #include "Boundary.hh"
 #include "FissionSource.hh"
 #include "ExternalSource.hh"
@@ -57,7 +57,7 @@ namespace
 #include "State.hh"
 #include "SweepSource.hh"
 #include "Traits.hh"
-#include "WithinGroupAcceleration.hh"
+//#include "WithinGroupAcceleration.hh"
 #include "Sweeper.hh"
 #include "Sweeper1D.hh"
 #include "Sweeper2D.hh"

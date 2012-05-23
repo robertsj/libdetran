@@ -68,7 +68,7 @@ inline void Sweeper1D<EQ>::sweep(moments_type &phi)
         d_equation.solve(i, 0, 0, source, psi_in, psi_out, phi, psi);
 
         // ACCELERATION
-        if (d_acceleration) d_acceleration->tally(i, 0, 0, o, a, psi_out);
+        //if (d_acceleration) d_acceleration->tally(i, 0, 0, o, a, psi_out);
 
       } // end x loop
 

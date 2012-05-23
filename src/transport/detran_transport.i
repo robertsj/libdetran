@@ -15,7 +15,7 @@
 %include "ConstantSource.hh"
 %include "FissionSource.hh"
 // Acceleration
-%include "Acceleration.hh"
+//%include "Acceleration.hh"
 // Trait
 %include "Traits.hh"
 // Equations
@@ -55,6 +55,10 @@
 %template(SweepSource1D)    detran::SweepSource<detran::_1D>;
 %template(SweepSource2D)    detran::SweepSource<detran::_2D>;
 %template(SweepSource3D)    detran::SweepSource<detran::_3D>;
+
+//%template(Acceleration1DSP) detran::Acceleration<detran::_1D>;
+//%template(Acceleration2DSP) detran::Acceleration<detran::_2D>;
+//%template(Acceleration3DSP) detran::Acceleration<detran::_3D>;
 
 // SWEEPER
 //%template(Sweeper1D_T)      detran::Sweeper<detran::_1D>;
