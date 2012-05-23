@@ -40,13 +40,13 @@ public:
   //
   typedef Dimension<EQ::dimension>          D;
   typedef EQ                                Equation_T;
-  typedef Boundary<D>                       Boundary_T;
+  typedef Boundary<_1D>                     Boundary_T;
   typedef typename Boundary_T::SP_boundary  SP_boundary;
   typedef typename
-      BoundaryTraits<D>::value_type         boundary_flux_type;
+      BoundaryTraits<_1D>::value_type       boundary_flux_type;
   //
   typedef typename
-      SweepSource<D>::SP_sweepsource        SP_sweepsource;
+      SweepSource<_1D>::SP_sweepsource      SP_sweepsource;
   //
   typedef State::moments_type               moments_type;
   typedef State::angular_flux_type          angular_flux_type;
@@ -79,13 +79,13 @@ public:
    *  \brief SP Constructor.
    */
   static detran::SP<Sweeper1D<EQ> >
-  Create(detran::SP<InputDB>                 input,
-         detran::SP<detran::Mesh>            mesh,
-         detran::SP<detran::Material>        material,
-         detran::SP<detran::Quadrature>      quadrature,
-         detran::SP<detran::State>           state,
-         detran::SP<detran::Boundary<D> >    boundary,
-         detran::SP<detran::SweepSource<D> > sweepsource)
+  Create(detran::SP<InputDB>                    input,
+         detran::SP<detran::Mesh>               mesh,
+         detran::SP<detran::Material>           material,
+         detran::SP<detran::Quadrature>         quadrature,
+         detran::SP<detran::State>              state,
+         detran::SP<detran::Boundary<_1D> >     boundary,
+         detran::SP<detran::SweepSource<_1D> >  sweepsource)
   {
     SP_sweeper p;
     p = new Sweeper1D(input, mesh, material, quadrature,

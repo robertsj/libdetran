@@ -39,21 +39,21 @@ INSTALL_TARGETS(/lib angle)
 # PYTHON INTERFACE
 #-------------------------------------#
 
-IF( DETRAN_ENABLE_PYTHON )
+#IF( DETRAN_ENABLE_PYTHON )
 
-SET_SOURCE_FILES_PROPERTIES(detran_angle.i PROPERTIES CPLUSPLUS ON)
-SWIG_ADD_MODULE(detran_angle python detran_angle.i )
-SWIG_LINK_LIBRARIES(detran_angle
-                    ${PYTHON_LIBRARIES} 
-                    utilities 
-                    angle)
+#SET_SOURCE_FILES_PROPERTIES(detran_angle.i PROPERTIES CPLUSPLUS ON)
+#SWIG_ADD_MODULE(detran_angle python detran_angle.i )
+#SWIG_LINK_LIBRARIES(detran_angle
+#                    ${PYTHON_LIBRARIES} 
+#                    utilities 
+#                    angle)
 
-INSTALL(FILES ${CMAKE_BINARY_DIR}/angle/detran_angle.py
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/python/detran)
-INSTALL(FILES ${CMAKE_BINARY_DIR}/angle/_detran_angle.so
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/python/detran)
+#INSTALL(FILES ${CMAKE_BINARY_DIR}/angle/detran_angle.py
+#        DESTINATION ${CMAKE_INSTALL_PREFIX}/python/detran)
+#INSTALL(FILES ${CMAKE_BINARY_DIR}/angle/_detran_angle.so
+#        DESTINATION ${CMAKE_INSTALL_PREFIX}/python/detran)
 
-ENDIF()
+#ENDIF()
 
 
 

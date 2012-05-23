@@ -17,9 +17,5 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-from detran_utilities import *
-from detran_materials import *
-from detran_geometry  import *
-from detran_angle     import *
-from detran_transport import *
-from detran_solvers   import *
+from pydetran import *
+

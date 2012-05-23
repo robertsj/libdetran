@@ -39,25 +39,25 @@ INSTALL_TARGETS(/lib solvers)
 # PYTHON INTERFACE
 #-------------------------------------#
 
-IF( DETRAN_ENABLE_PYTHON )
+#IF( DETRAN_ENABLE_PYTHON )
 
-SET_SOURCE_FILES_PROPERTIES(detran_solvers.i PROPERTIES CPLUSPLUS ON)
-SWIG_ADD_MODULE(detran_solvers python detran_solvers.i )
-SWIG_LINK_LIBRARIES(detran_solvers
-                    ${PYTHON_LIBRARIES} 
-                    solvers
-                    transport 
-                    angle
-                    geometry
-                    materials
-                    utilities)
-                    
-INSTALL(FILES ${CMAKE_BINARY_DIR}/solvers/detran_solvers.py
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/python/detran)
-INSTALL(FILES ${CMAKE_BINARY_DIR}/solvers/_detran_solvers.so
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/python/detran)          
+#SET_SOURCE_FILES_PROPERTIES(detran_solvers.i PROPERTIES CPLUSPLUS ON)
+#SWIG_ADD_MODULE(detran_solvers python detran_solvers.i )
+#SWIG_LINK_LIBRARIES(detran_solvers
+#                    ${PYTHON_LIBRARIES} 
+#                    solvers
+#                    transport 
+#                    angle
+#                    geometry
+#                    materials
+#                    utilities)
+#                    
+#INSTALL(FILES ${CMAKE_BINARY_DIR}/solvers/detran_solvers.py
+#        DESTINATION ${CMAKE_INSTALL_PREFIX}/python/detran)
+#INSTALL(FILES ${CMAKE_BINARY_DIR}/solvers/_detran_solvers.so
+#        DESTINATION ${CMAKE_INSTALL_PREFIX}/python/detran)          
 
-ENDIF()
+#ENDIF()
 
 #-------------------------------------#
 # TESTING

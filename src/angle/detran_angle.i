@@ -6,54 +6,30 @@
  */
 //---------------------------------------------------------------------------//
 
-%module detran_angle
-%{
-#include "Definitions.hh"
-#include "Constants.hh"
-#include "SP.hh"
-//#include "Quadrature.hh"
-#include "GaussLegendre.hh"  
-#include "LevelSymmetric.hh"
-#include "QuadrupleRange.hh"
-#include "UniformEqual.hh"
-%}
+%include "detran_utilities.i"
 
-// Load the standard library interfaces.
-%include std_vector.i
-%include std_string.i
-
-// Load the vector maps.  Note, I am a bit unhappy with
-// how it's all used.  They work *if* I declare the class
-// interface below.  Otherwise, just including e.g.
-// Mesh2D doesn't allow the maps, since I'm using 
-// typedefs on the input arguments.  There should be an
-// easy way around this, but I'm not a SWIG pro.
-%include std_vec_typemap.i
-
-%include "Definitions.hh"
-%include "SP.hh"
 %include "Quadrature.hh"
 %include "GaussLegendre.hh"
 %include "LevelSymmetric.hh"
 %include "QuadrupleRange.hh"
 %include "UniformEqual.hh"
+%include "MomentToDiscrete.hh"
 
 %template(QuadratureSP)     detran::SP<detran::Quadrature>;
 %template(GaussLegendreSP)  detran::SP<detran::GaussLegendre>;
 %template(LevelSymmetricSP) detran::SP<detran::LevelSymmetric>;
 %template(QuadrupleRangeSP) detran::SP<detran::QuadrupleRange>;
 %template(UniformEqualSP)   detran::SP<detran::UniformEqual>;
+//
+%template(MomentToDiscrete1D) detran::MomentToDiscrete<detran::_1D>;
+%template(MomentToDiscrete2D) detran::MomentToDiscrete<detran::_2D>;
+%template(MomentToDiscrete3D) detran::MomentToDiscrete<detran::_3D>;
+//
+%template(MomentToDiscrete1DSP) detran::SP<detran::MomentToDiscrete<detran::_1D> >;
+%template(MomentToDiscrete2DSP) detran::SP<detran::MomentToDiscrete<detran::_2D> >;
+%template(MomentToDiscrete3DSP) detran::SP<detran::MomentToDiscrete<detran::_3D> >;
 
-namespace detran
-{
-
-} // end namespace detran
 
 //---------------------------------------------------------------------------//
 //              end of detran_angle.i
 //---------------------------------------------------------------------------//
-
-
-
-
-

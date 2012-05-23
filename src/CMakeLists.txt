@@ -43,10 +43,6 @@ include_directories("${PROJECT_BINARY_DIR}/config")
 # EXTERNAL LIBRARIES
 #------------------------------------------------------------------------------#
 
-# BOOST (only header libraries, and really just shared_ptr)
-# find_package(Boost 1.42.0  REQUIRED)
-# include_directories(${Boost_INCLUDE_DIRS})
-
 IF( DETRAN_ENABLE_PYTHON )
   find_package(SWIG REQUIRED)
   INCLUDE(${SWIG_USE_FILE})
@@ -119,29 +115,26 @@ if ( SERMENT_ENABLE_TEST )
     include_directories(drivers/test)
 endif()
 
-#------------------------------------------------------------------------------#
-# SOURCE
-#------------------------------------------------------------------------------#
-
-include_directories(${DETRAN_DIR})
-include_directories(utilities)
-include_directories(material)
-include_directories(geometry)
-include_directories(angle)
-include_directories(transport)
-include_directories(solvers)
-include_directories(drivers)
-add_subdirectory(utilities)
-add_subdirectory(material)
-add_subdirectory(geometry)
-add_subdirectory(angle)
-add_subdirectory(transport)
-add_subdirectory(solvers)
-add_subdirectory(drivers)
 
 #------------------------------------------------------------------------------#
 # INSTALL
 #------------------------------------------------------------------------------#
+
+include_directories(${DETRAN_DIR})
+#
+include_directories(python)
+#
+include_directories(utilities)
+#
+include_directories(angle)
+include_directories(geometry)
+include_directories(material)
+#
+include_directories(transport)
+#
+include_directories(solvers)
+#
+include_directories(drivers)
 
 # Set 
 if( NOT CMAKE_INSTALL_PREFIX)
@@ -152,6 +145,18 @@ endif()
 
 # Python things for installation
 add_subdirectory(python)
+
+#------------------------------------------------------------------------------#
+# SOURCE
+#------------------------------------------------------------------------------#
+
+add_subdirectory(utilities)
+add_subdirectory(material)
+add_subdirectory(geometry)
+add_subdirectory(angle)
+add_subdirectory(transport)
+add_subdirectory(solvers)
+add_subdirectory(drivers)
 
 
 #------------------------------------------------------------------------------#

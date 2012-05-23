@@ -13,11 +13,11 @@
 
 // Detran
 #include "Quadrature.hh"
-#include "Traits.hh"
 
 // Utilities
 #include "Definitions.hh"
 #include "SP.hh"
+#include "Traits.hh"
 
 // System
 #include <vector>

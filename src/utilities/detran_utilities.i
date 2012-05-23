@@ -1,51 +1,37 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   utilities.hh
+ * \file   detran_utilities.i
  * \author Jeremy Roberts
  * \brief  Python interface for detran utilities.
  */
 //---------------------------------------------------------------------------//
 
-%module detran_utilities
-%{
-#include "Definitions.hh"
-#include "DBC.hh"
-#include "InputDB.hh"
-%}
-
-// Load the standard library interfaces
+// STL
 %include std_map.i
 %include std_string.i
 %include std_vector.i
 
-%include std_vec_typemap.i
-//%apply (int DIM1,  int* IN_ARRAY1)
-//      {(int len1,  int* x1),
-//       (int len2,  int* x2)}
-
-%apply (std::vector<int> INPUTVECTOR)
-       {(std::vector<int> value)}
-%apply (std::vector<double> INPUTVECTOR)
-       {(std::vector<double> value)}
-%apply (const std::string&) 
-       {const std::string&};
-
-%include "Definitions.hh"
+// SP
 %include "SP.hh"
-%include "InputDB.hh"
 
+// Vectors
+%include "Definitions.hh"
 namespace std
 {
   %template(vec_int) vector<int>;
   %template(vec_dbl) vector<double>;
 }
 
+// Dimension
+%include "Traits.hh"
+
+// Input
+%include "InputDB.hh"
+
+// SP template of input database
 %template(InputDBSP) detran::SP<detran::InputDB>;
 
-
-namespace detran
-{
-
+// Template getters and setters
 %template(get_int)      detran::InputDB::get<int>;
 %template(get_dbl)      detran::InputDB::get<double>;
 %template(get_vec_int)  detran::InputDB::get<detran::vec_int>;
@@ -57,10 +43,6 @@ namespace detran
 %template(put_vec_dbl)  detran::InputDB::put<detran::vec_dbl>;
 %template(put_str)      detran::InputDB::put<std::string>;
 
-} // end namespace detran
-
-
-
-
-
-
+//---------------------------------------------------------------------------//
+//              end of detran_utilities.i
+//---------------------------------------------------------------------------//

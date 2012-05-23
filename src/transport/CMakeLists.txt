@@ -44,24 +44,24 @@ INSTALL_TARGETS(/lib transport)
 # PYTHON INTERFACE
 #-------------------------------------#
 
-IF( DETRAN_ENABLE_PYTHON )
+#IF( DETRAN_ENABLE_PYTHON )
 
-SET_SOURCE_FILES_PROPERTIES(detran_transport.i PROPERTIES CPLUSPLUS ON)
-SWIG_ADD_MODULE(detran_transport python detran_transport.i )
-SWIG_LINK_LIBRARIES(detran_transport
-                    ${PYTHON_LIBRARIES} 
-                    transport 
-                    angle
-                    geometry
-                    materials
-                    utilities)
+#SET_SOURCE_FILES_PROPERTIES(detran_transport.i PROPERTIES CPLUSPLUS ON)
+#SWIG_ADD_MODULE(detran_transport python detran_transport.i )
+#SWIG_LINK_LIBRARIES(detran_transport
+#                    ${PYTHON_LIBRARIES} 
+#                    transport 
+#                    angle
+#                    geometry
+#                    materials
+#                    utilities)
 
-INSTALL(FILES ${CMAKE_BINARY_DIR}/transport/detran_transport.py
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/python/detran)
-INSTALL(FILES ${CMAKE_BINARY_DIR}/transport/_detran_transport.so
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/python/detran)
+#INSTALL(FILES ${CMAKE_BINARY_DIR}/transport/detran_transport.py
+#        DESTINATION ${CMAKE_INSTALL_PREFIX}/python/detran)
+#INSTALL(FILES ${CMAKE_BINARY_DIR}/transport/_detran_transport.so
+#        DESTINATION ${CMAKE_INSTALL_PREFIX}/python/detran)
 
-ENDIF()
+#ENDIF()
 
 #-------------------------------------#
 # TESTING
