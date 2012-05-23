@@ -2,7 +2,7 @@
 #
 # C5G7 materials
 
-from detran.detran_materials import *
+from detran import Material
 
 def get_materials() :
 
