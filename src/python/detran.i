@@ -29,6 +29,7 @@ namespace
 #include "GaussLegendre.hh"
 #include "LevelSymmetric.hh"
 #include "MomentToDiscrete.hh"
+#include "LevelSymmetric.hh"
 #include "Quadrature.hh"
 #include "QuadrupleRange.hh"
 #include "SphericalHarmonics.hh"
