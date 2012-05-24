@@ -48,7 +48,28 @@ public:
 
 };
 
-
+//===========================================================================//
+/*!
+ * \page  DBC
+ * \brief Design-By-Contract
+ *
+ * DBC is a framework for ensuring consistency between a client's request
+ * and a server's response.  Here, we use a few macro's that help
+ * implement the idea:
+ *  - Require: precondition upon entering a method that must be satisfied;
+ *             if not satisfied, the client is to blame
+ *  - Ensure:  postcondition that must be satisfied for the server to be
+ *             correct
+ *  - IsValid: check an object's state for correctness
+ *  - Assert:  a general assertion macro
+ *  - Insist:  Conditions that must always be true (i.e. these are always
+ *             checked)
+ *
+ * See the nice tutorial at:
+ * http://eventhelix.com/realtimemantra/object_oriented/design_by_contract.htm
+ *
+ */
+//===========================================================================//
 
 #ifdef DETRAN_ENABLE_DEBUG
 
@@ -56,7 +77,6 @@ public:
 #define IsValid(obj)  Assert((obj) != NULL && (obj)->is_valid())
 #define Require(c)    Assert(c)
 #define Ensure(c)     Assert(c)
-#define Insist(c,m)   if (!(c)) {std::cerr << m << std::endl; throw detran::GenException( __LINE__, __FILE__,#c);}
 
 #else
 
@@ -64,9 +84,10 @@ public:
 #define IsValid(c)  ((void) 0)
 #define Require(c)  ((void) 0)
 #define Ensure(c)   ((void) 0)
-#define Insist(c,m) ((void) 0)
 
 #endif
+
+#define Insist(c,m)   if (!(c)) {std::cerr << m << std::endl; throw detran::GenException( __LINE__, __FILE__,#c);}
 
 } // end namespace detran
 

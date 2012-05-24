@@ -28,9 +28,11 @@ namespace
 // Angle
 #include "GaussLegendre.hh"
 #include "MomentToDiscrete.hh"
+#include "LevelSymmetric.hh"
 #include "Quadrature.hh"
 #include "QuadrupleRange.hh"
 #include "SphericalHarmonics.hh"
+#include "UniformEqual.hh"
 
 // Geometry
 #include "Mesh.hh"
