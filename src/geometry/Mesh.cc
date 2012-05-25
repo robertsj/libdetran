@@ -128,6 +128,17 @@ void Mesh::add_mesh_map(std::string map_key, vec_int mesh_map)
 
 }
 
+// Check if fine mesh map exists.
+bool Mesh::mesh_map_exists(std::string map_key)
+{
+  mesh_map_type::iterator iter;
+  iter = d_mesh_map.find(map_key);
+  if (iter != d_mesh_map.end())
+    return true;
+  else
+    return false;
+}
+
 /*!
  *
  */

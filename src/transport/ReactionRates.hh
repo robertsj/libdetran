@@ -23,6 +23,9 @@
 #include "Definitions.hh"
 #include "SP.hh"
 
+// System
+#include <string>
+
 namespace detran
 {
 
@@ -42,6 +45,7 @@ public:
   typedef Material::SP_material     SP_material;
   typedef Mesh::SP_mesh             SP_mesh;
   typedef State::SP_state           SP_state;
+  typedef FissionSource::SP_source  SP_fissionsource;
   /// \}
 
   /*!
@@ -60,15 +64,38 @@ public:
   static SP<ReactionRates> Create(SP_material material, SP_mesh mesh, SP_state state)
   {
     SP_reactionrates p;
-    p = new ReactionRates(SP_material material, SP_mesh mesh, SP_state state);
+    p = new ReactionRates(material, mesh, state);
     return p;
   }
+
+  /// Set a fission source.
+  void set_fission_source(SP_fissionsource fissionsource)
+  {
+    Require(fissionsource);
+    b_fissionsource = fissionsource;
+  }
+
+  /// Compute pin power peaking factors.
+  vec_dbl pin_peaking();
+
+  /// Compute assembly power peaking factors.
+  vec_dbl assembly_peaking();
 
   /// Verify state correctness.
   bool is_valid()
   {
     return true;
   }
+
+private:
+
+  SP_material b_material;
+  SP_mesh     b_mesh;
+  SP_state    b_state;
+  SP_fissionsource b_fissionsource;
+
+  /// Generic peaking function.
+  vec_dbl peaking(std::string key);
 
 };
 

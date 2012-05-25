@@ -227,6 +227,9 @@ public:
     return i + j * d_number_cells_x + k * d_number_cells_x * d_number_cells_y;
   }
 
+  /// Check if fine mesh map exists.
+  bool mesh_map_exists(std::string map_key);
+
   /*!
    * \brief  Get map of fine mesh integer properties.
    *

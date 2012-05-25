@@ -33,6 +33,9 @@
 %include "Sweeper2D.hh"
 %include "Sweeper3D.hh"
 
+// Helpers
+%include "ReactionRates.hh"
+
 // Templates 
 
 %template(StateSP)          detran::SP<detran::State>;
@@ -70,6 +73,9 @@
 %template(Sweeper2D_DDSP)   detran::SP<detran::Sweeper2D<detran::Equation_DD_2D> >;
 %template(Sweeper3D_DDSP)   detran::SP<detran::Sweeper3D<detran::Equation_DD_3D> >;
 %template(Sweeper2D_SCSP)   detran::SP<detran::Sweeper2D<detran::Equation_SC_2D> >;
+
+// Helpers
+%template(ReactionRatesSP)  detran::SP<detran::ReactionRates>;
 
 //---------------------------------------------------------------------------//
 //              end of detran_transport.i

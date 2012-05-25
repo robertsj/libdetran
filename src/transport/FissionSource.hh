@@ -109,10 +109,20 @@ public:
    */
   const State::moments_type& density();
 
+  /*!
+   *   \brief Set the fission density.
+   *   \param   f   User-defined density.
+   */
+  void set_density(State::moments_type& f)
+  {
+    d_density = f;
+  }
 
   /// Unimplemented DBC function
   bool is_valid() const
-  {return true;}
+  {
+    return true;
+  }
 
 private:
 

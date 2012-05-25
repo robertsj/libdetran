@@ -119,7 +119,7 @@ void Assembly::finalize(vec_int pincell_map)
           int cell = ii + jj*number_cells_x;
           tmp_mat_map[cell] = m[count];
           tmp_reg_map[cell] = r[count];
-          tmp_pin_map[cell] = pin_count;
+          tmp_pin_map[cell] = pin_count - 1;
           count++;
         }
       }

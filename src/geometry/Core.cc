@@ -69,7 +69,7 @@ void Core::finalize(vec_int assembly_map)
   int number_pins_assembly = d_assemblies[0]->dimension();
   number_pins_assembly *= number_pins_assembly;
 
-  int assembly_count = 1;
+  int assembly_count = 0;
   int j_save = 0;
   int i_save = 0;
 
@@ -112,8 +112,8 @@ void Core::finalize(vec_int assembly_map)
           int cell = ii + jj*number_cells_x;
           tmp_mat_map[cell] = ass_mat[count];
           tmp_reg_map[cell] = ass_reg[count];
-          tmp_pin_map[cell] = ass_pin[count] + (assembly_count-1) * 17*17;
-          tmp_ass_map[cell] = assembly_count;
+          tmp_pin_map[cell] = ass_pin[count] + (assembly_count) * number_pins_assembly;
+          tmp_ass_map[cell] = assembly_count;// - 1;
           count++;
         }
       }
