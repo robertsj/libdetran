@@ -1,3 +1,4 @@
+import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
 
@@ -39,7 +40,8 @@ def plot_flux(obj, f) :
   # Plot me. 
   x, y = mesh_axes(obj)
   X, Y = np.meshgrid(x, y)
-  plt.pcolor(X, Y, f, cmap="jet")
+  plt.pcolor(X, Y, f, cmap="hot")
+  plt.colorbar()
   plt.show()
 
 #  plt.imshow(f, interpolation='nearest', cmap=plt.cm.hot)
@@ -56,5 +58,4 @@ def mesh_axes(obj) :
     x[i + 1] = x[i] + obj.dx(i)
   for j in range(0, obj.number_cells_y()) :
     y[j + 1] = y[j] + obj.dy(j)
-  print y
   return (x, y)

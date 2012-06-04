@@ -54,10 +54,15 @@ void Assembly::finalize(vec_int pincell_map)
            "Y fine mesh inconsistent.");
   }
 
-  Require(pincell_map.size() == d_dimension*d_dimension);
+  // Verify the pin cell map is correct.
+  Insist(pincell_map.size() == d_dimension*d_dimension,
+         "Pincell map is the wrong size.");
   d_pincell_map = pincell_map;
 
-  // Set number of cells.  This *assumes* all pins have the same meshing.
+  d_number_pincells = d_dimension*d_dimension;
+
+  // Set number of cells.  This *assumes* all pins have the same meshing,
+  // which was already checked above.
   int number_pins_row = std::sqrt(pincell_map.size());
   Assert(pincell_map.size() == number_pins_row*number_pins_row);
   int number_cells_x =
@@ -66,18 +71,15 @@ void Assembly::finalize(vec_int pincell_map)
     (d_pincells[0]->mesh())->number_cells_x() * number_pins_row;
   int number_cells = number_cells_x * number_cells_y;
 
-  // Compute the widths.
-  double width = d_pincells[0]->mesh()->dx(0);
-
   // Fine mesh edges
   vec_dbl edges(number_cells_x + 1, 0.0);
 
-  // Temporary maps.
-  vec_int tmp_mat_map(number_cells, 0);
-  vec_int tmp_reg_map(number_cells, 0);
-  vec_int tmp_pin_map(number_cells, 0);
+  // Temporary fine mesh maps.
+  vec_int ass_mat_map(number_cells, 0);
+  vec_int ass_reg_map(number_cells, 0);
+  vec_int ass_pin_map(number_cells, 0);
 
-  int pin_count = 1;
+  int pin_count = 0;
   int j_save = 0;
   int i_save = 0;
 
@@ -87,7 +89,7 @@ void Assembly::finalize(vec_int pincell_map)
     int j1 = j_save;
     int j2 = j_save + d_pincells[0]->mesh()->number_cells_y();
 
-    // Do edges once, since they are shared.
+    // Do edges once, since they are shared by x and y.
     for (int jj = j1; jj < j2; jj++)
     {
       // All pins have same mesh in a direction.
@@ -106,37 +108,45 @@ void Assembly::finalize(vec_int pincell_map)
       int i2 = i_save + d_pincells[0]->mesh()->number_cells_x();
 
       // Get the material and region maps for this pin.
-      vec_int m = d_pincells[pincell_map[pin]]->mesh()->mesh_map("MATERIAL");
-      vec_int r = d_pincells[pincell_map[pin]]->mesh()->mesh_map("REGION");
+      vec_int pin_mat_map = d_pincells[pincell_map[pin]]->mesh()->mesh_map("MATERIAL");
+      vec_int pin_reg_map = d_pincells[pincell_map[pin]]->mesh()->mesh_map("REGION");
+
+      // Is this a fuel pin?  If not, assign -1 to the pin map.  Then, 0..N are
+      // the actual fuel pins.
+      int pin_id = -1;
+      if (1==1)//d_pincells[pincell_map[pin]]->is_fuel())
+      {
+        pin_id = pin_count;
+        pin_count++;
+      }
 
       // Assign the values.
       int count = 0;
       for (int jj = j1; jj < j2; jj++)
       {
-        //cout << " jj = " << jj << endl;
         for (int ii = i1; ii < i2; ii++)
         {
           int cell = ii + jj*number_cells_x;
-          tmp_mat_map[cell] = m[count];
-          tmp_reg_map[cell] = r[count];
-          tmp_pin_map[cell] = pin_count - 1;
+          ass_mat_map[cell] = pin_mat_map[count];
+          ass_reg_map[cell] = pin_reg_map[count];
+          ass_pin_map[cell] = pin_id;
           count++;
         }
       }
+
       i_save += d_pincells[0]->mesh()->number_cells_x();
-      pin_count++;
     }
+
     i_save = 0;
     j_save += d_pincells[0]->mesh()->number_cells_y();
-
   }
 
   // Create my mesh.
-  d_mesh = new Mesh2D(edges, edges, tmp_mat_map);
+  d_mesh = new Mesh2D(edges, edges, ass_mat_map);
   // Add maps.
-  d_mesh->add_mesh_map("REGION", tmp_reg_map);
+  d_mesh->add_mesh_map("REGION", ass_reg_map);
   // Assigns unique edit region for each pin in an assembly.
-  d_mesh->add_mesh_map("PINS", tmp_pin_map);
+  d_mesh->add_mesh_map("PINS", ass_pin_map);
 
 }
 

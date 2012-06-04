@@ -20,10 +20,11 @@ namespace detran
 {
 
 // Constructor
-PinCell::PinCell(double pitch, vec_dbl radii, vec_int mat_map)
+PinCell::PinCell(double pitch, vec_dbl radii, vec_int mat_map, bool fuel_flag)
   : d_pitch(pitch)
   , d_radii(radii)
   , d_mat_map(mat_map)
+  , d_fuel_flag(fuel_flag)
 {
   Require(d_pitch > 0.0);
   Require(d_mat_map.size() == 1 + d_radii.size());
@@ -107,38 +108,31 @@ void PinCell::meshify(int number_meshes, bool flag)
 
     int num_mesh = 2*num_mod + 2*num_delta + 2*num_L_4 + num_L_2;
 
-    std::cout << "num_mesh = " << number_meshes-num_mesh << std::endl;
     if ( (number_meshes-num_mesh) > 0)
     {
       num_L_2 += 1;
-      num_mesh += 1; std::cout << "1 num_mesh - number = " << number_meshes-num_mesh << std::endl;
+      num_mesh += 1;
     }
     if ( (number_meshes-num_mesh) > 1)
     {
       num_L_4 += 1;
-      num_mesh += 2; std::cout << "2 num_mesh - number = = " << number_meshes-num_mesh << std::endl;
+      num_mesh += 2;
     }
     if ( (number_meshes-num_mesh) > 1)
     {
       num_mod += 1;
-      num_mesh += 2;std::cout << "3 num_mesh - number = = " << number_meshes-num_mesh << std::endl;
+      num_mesh += 2;
     }
     if ( (number_meshes-num_mesh) > 1)
     {
       num_delta += 1;
-      num_mesh += 2;std::cout << "4 num_mesh - number = = " << number_meshes-num_mesh << std::endl;
+      num_mesh += 2;
     }
     if ( (number_meshes-num_mesh) > 0)
     {
       num_L_2 += 1;
-      num_mesh += 1;std::cout << "5 num_mesh - number = = " << number_meshes-num_mesh << std::endl;
+      num_mesh += 1;
     }
-
-
-    std::cout << " num_mod " << num_mod << std::endl;
-    std::cout << " num_delta " << num_delta << std::endl;
-    std::cout << " num_L_4 " << num_L_4 << std::endl;
-    std::cout << " num_L_2 " << num_L_2 << std::endl;
 
     Ensure(num_mod > 0);
     Ensure(num_delta > 0);
@@ -185,7 +179,7 @@ void PinCell::meshify(int number_meshes, bool flag)
     // Create my mesh.
     d_mesh = new Mesh2D(fine, fine, coarse, coarse, material);
     d_mesh->add_coarse_mesh_map("REGION", regions);
-    d_mesh->display();
+
   }
 
 }

@@ -83,6 +83,11 @@ public:
     return d_dimension;
   }
 
+  int number_pincells()
+  {
+    return d_number_pincells;
+  }
+
   bool is_valid() const
   {
     return true;
@@ -104,6 +109,8 @@ private:
 
   /// Logically 2-D map of pin cell locations
   vec_int d_pincell_map;
+
+  int d_number_pincells;
 };
 
 } // end namespace detran

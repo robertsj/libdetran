@@ -41,7 +41,8 @@ void Core::finalize(vec_int assembly_map)
   using std::cout;
   using std::endl;
 
-  Require(assembly_map.size() == d_dimension*d_dimension);
+  Insist(assembly_map.size() == d_dimension*d_dimension,
+    "Assembly map is wrong size.");
   d_assembly_map = assembly_map;
 
   // Set number of cells.  This *assumes* all pins have the same meshing.
@@ -53,17 +54,48 @@ void Core::finalize(vec_int assembly_map)
     (d_assemblies[0]->mesh())->number_cells_x() * number_row;
   int number_cells = number_cells_x * number_cells_y;
 
-  // Compute the widths.
-  double width = d_assemblies[0]->mesh()->dx(0);
+  // Number of pins per dimension
+  d_number_assemblies   = d_dimension * d_dimension;
+  d_number_pincells     =
+    d_number_assemblies * d_assemblies[0]->number_pincells();
+  d_number_pincells_dim = d_dimension * d_assemblies[0]->dimension();
+  int ass_dim = d_assemblies[0]->dimension();
+
+
+  // Create map from the assembly pin indices to the core level.
+  vec_int core_pins(d_number_pincells, -1);
+  // Loop through all pins.
+  for (int j = 0; j < d_number_pincells_dim; j++)
+  {
+    for (int i = 0; i < d_number_pincells_dim; i++)
+    {
+      // What pin?
+      int pin = i + j * d_number_pincells_dim;
+
+      // What assembly?
+      int a_i = std::floor(i / ass_dim);
+      int a_j = std::floor(j / ass_dim);
+      int a   = a_i + a_j * d_dimension;
+
+      // What pin within the assembly?
+      int p_i = i % ass_dim;
+      int p_j = j % ass_dim;
+      int p   = p_i + p_j * ass_dim;
+
+      // Map to core.
+      p += a * ass_dim * ass_dim;
+      core_pins[p] = pin;
+    }
+  } // end assembly loop
 
   // Fine mesh edges
   vec_dbl edges(number_cells_x + 1, 0.0);
 
   // Temporary maps.
-  vec_int tmp_mat_map(number_cells, 0);
-  vec_int tmp_reg_map(number_cells, 0);
-  vec_int tmp_pin_map(number_cells, 0);
-  vec_int tmp_ass_map(number_cells, 0);
+  vec_int core_mat_map(number_cells, 0);
+  vec_int core_reg_map(number_cells, 0);
+  vec_int core_pin_map(number_cells, 0);
+  vec_int core_ass_map(number_cells, 0);
 
   // Number of pin cells per assembly
   int number_pins_assembly = d_assemblies[0]->dimension();
@@ -73,6 +105,7 @@ void Core::finalize(vec_int assembly_map)
   int j_save = 0;
   int i_save = 0;
 
+  // Assembly y-loop
   for (int j = 0; j < number_row; j++)
   {
     // Fine mesh y range for this jth coarse mesh.
@@ -84,36 +117,42 @@ void Core::finalize(vec_int assembly_map)
     {
       // All pins have same mesh in a direction.
       edges[jj + 1] = edges[jj] +
-          d_assemblies[assembly_map[j*number_row]]->mesh()->dy(jj - j_save);
+        d_assemblies[assembly_map[j*number_row]]->mesh()->dy(jj - j_save);
     }
 
+    // Assembly x-loop
     for (int i = 0; i < number_row; i++)
     {
 
       // Pin index
       int pin = i + j*number_row;
 
+      // given assembly i and j, assembly pin id, what's core pin id?
+
       // Fine mesh x range.
       int i1 = i_save;
       int i2 = i_save + d_assemblies[0]->mesh()->number_cells_x();
 
       // Get the material and region maps for this pin.
-      vec_int ass_mat = d_assemblies[assembly_map[pin]]->mesh()->mesh_map("MATERIAL");
-      vec_int ass_reg = d_assemblies[assembly_map[pin]]->mesh()->mesh_map("REGION");
-      vec_int ass_pin = d_assemblies[assembly_map[pin]]->mesh()->mesh_map("PINS");
+      vec_int ass_mat =
+        d_assemblies[assembly_map[pin]]->mesh()->mesh_map("MATERIAL");
+      vec_int ass_reg =
+        d_assemblies[assembly_map[pin]]->mesh()->mesh_map("REGION");
+      vec_int ass_pin =
+        d_assemblies[assembly_map[pin]]->mesh()->mesh_map("PINS");
 
       // Assign the values.
       int count = 0;
       for (int jj = j1; jj < j2; jj++)
       {
-        //cout << " jj = " << jj << endl;
         for (int ii = i1; ii < i2; ii++)
         {
           int cell = ii + jj*number_cells_x;
-          tmp_mat_map[cell] = ass_mat[count];
-          tmp_reg_map[cell] = ass_reg[count];
-          tmp_pin_map[cell] = ass_pin[count] + (assembly_count) * number_pins_assembly;
-          tmp_ass_map[cell] = assembly_count;// - 1;
+          core_mat_map[cell] = ass_mat[count];
+          core_reg_map[cell] = ass_reg[count];
+          core_pin_map[cell] = core_pins[ass_pin[count] +
+                                 (assembly_count) * number_pins_assembly];
+          core_ass_map[cell] = assembly_count;
           count++;
         }
       }
@@ -125,13 +164,11 @@ void Core::finalize(vec_int assembly_map)
 
   }
 
-  // Create my mesh.
-  d_mesh = new Mesh2D(edges, edges, tmp_mat_map);
-  // Add maps.
-  d_mesh->add_mesh_map("REGION", tmp_reg_map);
-  // Assigns unique edit region for each pin and assembly in an Core.
-  d_mesh->add_mesh_map("PINS", tmp_pin_map);
-  d_mesh->add_mesh_map("ASSEMBLIES", tmp_ass_map);
+  // Create my mesh and add mesh maps.
+  d_mesh = new Mesh2D(edges, edges, core_mat_map);
+  d_mesh->add_mesh_map("REGION",     core_reg_map);
+  d_mesh->add_mesh_map("PINS",       core_pin_map);
+  d_mesh->add_mesh_map("ASSEMBLIES", core_ass_map);
 
 }
 

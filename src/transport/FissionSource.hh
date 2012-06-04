@@ -113,7 +113,7 @@ public:
    *   \brief Set the fission density.
    *   \param   f   User-defined density.
    */
-  void set_density(State::moments_type& f)
+  void set_density(std::vector<double> f)
   {
     d_density = f;
   }
