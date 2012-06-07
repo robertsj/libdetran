@@ -72,6 +72,10 @@ public:
 
   void set_nu_sigma_f(int m, int g, double v);
 
+  void set_sigma_f(int m, int g, double v);
+
+  void set_nu(int m, int g, double v);
+
   void set_chi(int m, int g, double v);
 
   void set_sigma_s(int m, int g, int gp, double v);
@@ -101,6 +105,10 @@ public:
   inline double sigma_a(int m, int g) const;
 
   inline double nu_sigma_f(int m, int g) const;
+
+  inline double sigma_f(int m, int g) const;
+
+  inline double nu(int m, int g) const;
 
   inline double chi(int m, int g) const;
 
@@ -177,8 +185,14 @@ private:
   /// Absorption cross section [material, group]
   vec2_dbl d_sigma_a;
 
-  /// Fission [material, group]
+  /// nu * Fission [material, group]
   vec2_dbl d_nu_sigma_f;
+
+  /// Fission [material, group]
+  vec2_dbl d_sigma_f;
+
+  /// nu [material, group]
+  vec2_dbl d_nu;
 
   /// Fission spectrum [material, group]
   vec2_dbl d_chi;

@@ -2,7 +2,7 @@
 #
 # Two group materials from Ilas, Mosher, and others.
 
-from detran.detran_materials import *
+from detran import *
 
 def get_materials() :
     # Two-group data from 1-d coarse mesh benchmarks (Mosher, Ilas etc.)
@@ -19,8 +19,8 @@ def get_materials() :
     mat.set_sigma_t(0, 1, 1.4633);       
 
     # Fission 
-    mat.set_nu_sigma_f(0, 0, 0.0);       # Note, default is zero
-    mat.set_nu_sigma_f(0, 1, 0.0);   
+    mat.set_sigma_f(0, 0, 0.0);         # Note, default is zero
+    mat.set_sigma_f(0, 1, 0.0);   
     mat.set_chi(0, 0, 0.0); 
     mat.set_chi(0, 1, 0.0);        
 
@@ -39,8 +39,8 @@ def get_materials() :
     mat.set_sigma_t(1, 1, 1.0119);       
 
     # Fission 
-    mat.set_nu_sigma_f(1, 0, 0.0067);
-    mat.set_nu_sigma_f(1, 1, 0.1241);   
+    mat.set_sigma_f(1, 0, 0.0067);
+    mat.set_sigma_f(1, 1, 0.1241);   
     mat.set_chi(1, 0, 1.0); 
     mat.set_chi(1, 1, 0.0);        
 
@@ -59,8 +59,8 @@ def get_materials() :
     mat.set_sigma_t(2, 1, 0.9915);       
 
     # Fission 
-    mat.set_nu_sigma_f(2, 0, 0.0078);
-    mat.set_nu_sigma_f(2, 1, 0.1542);   
+    mat.set_sigma_f(2, 0, 0.0078);
+    mat.set_sigma_f(2, 1, 0.1542);   
     mat.set_chi(2, 0, 1.0); 
     mat.set_chi(2, 1, 0.0);        
 
@@ -79,8 +79,8 @@ def get_materials() :
     mat.set_sigma_t(3, 1, 1.0606);       
 
     # Fission 
-    mat.set_nu_sigma_f(3, 0, 0.0056);
-    mat.set_nu_sigma_f(3, 1, 0.0187);   
+    mat.set_sigma_f(3, 0, 0.0056);
+    mat.set_sigma_f(3, 1, 0.0187);   
     mat.set_chi(3, 0, 1.0); 
     mat.set_chi(3, 1, 0.0);        
 

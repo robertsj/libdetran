@@ -81,33 +81,40 @@ mesh = Mesh1D.Create(xfm_c, xcm_c, core_3);
 mesh.display()
 mesh_ref = Mesh1D(xfm_c, xcm_c, core_1);
 
-## Quadrature
+#------------------------------------------------------------------------------#
+# Quadratures
+#------------------------------------------------------------------------------#
+
 quad = GaussLegendre.Create(4)
 quad.display()
 
-## State
+#------------------------------------------------------------------------------#
+# Setup
+#------------------------------------------------------------------------------#
+
+# State
 state = State.Create(inp, mesh, quad)
-
-## Constant source
+# Empty source
 q_e = ExternalSourceSP()
-
-print mat
-
-mat.display()
-## Uninitialized fission source
+# Fission source
 q_f = FissionSource.Create(state, mesh, mat)
 q_f.initialize()
-v = np.asarray(q_f.density())
-print v
-## boundary
+# boundary
 bound = Boundary1D.Create(inp, mesh, quad)
 
-## solver
+#------------------------------------------------------------------------------#
+# Solve
+#------------------------------------------------------------------------------#
+
 solver = PowerIteration1D.Create(inp, state, mesh, mat, quad, bound, q_e, q_f)
 start = time.time()
 solver.solve() 
 elapsed = (time.time() - start)
 print elapsed, " seconds"
+
+#------------------------------------------------------------------------------#
+# Post process
+#------------------------------------------------------------------------------#
 
 # Plots and things
 v1 = np.asarray(state.phi(0))
@@ -115,7 +122,7 @@ v2 = np.asarray(state.phi(1))
 qf = np.asarray(q_f.density())
 #print v
 #mesh_ref.plot_mesh_map("MATERIAL")
-mesh_ref.plot_flux(v2)
+#mesh_ref.plot_flux(v2)
 #mesh_ref.plot_flux(v2)
 ##print dir(State)
 

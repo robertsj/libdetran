@@ -33,6 +33,8 @@ Material::Material(int number_groups,
  , d_sigma_t(number_materials, vec_dbl(number_groups, 0.0))
  , d_sigma_a(number_materials, vec_dbl(number_groups, 0.0))
  , d_nu_sigma_f(number_materials, vec_dbl(number_groups, 0.0))
+ , d_sigma_f(number_materials, vec_dbl(number_groups, 0.0))
+ , d_nu(number_materials, vec_dbl(number_groups, 1.0))
  , d_chi(number_materials, vec_dbl(number_groups, 0.0))
  , d_diff_coef(number_materials, vec_dbl(number_groups, 0.0))
  , d_sigma_s(number_materials, vec2_dbl(number_groups, vec_dbl(number_groups, 0.0)))
@@ -80,6 +82,26 @@ void Material::set_nu_sigma_f(int m, int g, double v)
   Require(g < d_number_groups);
   Require(v >= 0.0);
   d_nu_sigma_f[m][g] = v;
+}
+
+void Material::set_sigma_f(int m, int g, double v)
+{
+  Require(m >= 0);
+  Require(m < d_number_materials);
+  Require(g >= 0);
+  Require(g < d_number_groups);
+  Require(v >= 0.0);
+  d_sigma_f[m][g] = v;
+}
+
+void Material::set_nu(int m, int g, double v)
+{
+  Require(m >= 0);
+  Require(m < d_number_materials);
+  Require(g >= 0);
+  Require(g < d_number_groups);
+  Require(v >= 0.0);
+  d_nu[m][g] = v;
 }
 
 void Material::set_chi(int m, int g, double v)
@@ -215,6 +237,9 @@ void Material::finalize()
       {
         if (d_sigma_s[m][g][gp] > 0.0) upper = std::max(gp, upper);
       }
+
+      // Compute nu*sigma_f
+      d_nu_sigma_f[m][g] = d_nu[m][g] * d_sigma_f[m][g];
 
     }
     d_scatter_bounds[g][0] = lower;

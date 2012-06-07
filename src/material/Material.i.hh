@@ -38,6 +38,24 @@ double Material::nu_sigma_f(int m, int g) const
   return d_nu_sigma_f[m][g];
 }
 
+double Material::sigma_f(int m, int g) const
+{
+  Require(m >= 0);
+  Require(m < d_number_materials);
+  Require(g >= 0);
+  Require(g < d_number_groups);
+  return d_sigma_f[m][g];
+}
+
+double Material::nu(int m, int g) const
+{
+  Require(m >= 0);
+  Require(m < d_number_materials);
+  Require(g >= 0);
+  Require(g < d_number_groups);
+  return d_nu[m][g];
+}
+
 double Material::chi(int m, int g) const
 {
   Require(m >= 0);
