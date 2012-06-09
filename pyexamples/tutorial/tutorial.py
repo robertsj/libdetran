@@ -90,10 +90,12 @@ solver.solve()
 # For fun, we can plot the flux. 
 import matplotlib.pyplot as plt
 phi = state.phi(0)
-x   = np.linspace(0.0, 10.0, 100)
+x   = np.linspace(0.0, 10.0, 101)
+x   = 0.5*x[1] + x[0:100]
 plt.plot(x, phi, linewidth = 2)
 plt.grid(True)
 plt.xlabel('x [cm]')
 plt.ylabel('$\phi(x)$')
 plt.title('A Monoenergetic Slab')
 plt.savefig('tutorial.png')
+plt.show()
