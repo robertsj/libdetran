@@ -152,6 +152,15 @@ public:
 
   }
 
+  /*!
+   *   \brief Set a group moment vector.
+   *   \param   f   User-defined moment vector.
+   */
+  void set_moments(int g, std::vector<double> f)
+  {
+    d_moments[g] = f;
+  }
+
   /*
    *  \brief Const accessor to a group angular flux.
    *

@@ -70,6 +70,8 @@ namespace
 #include "Equation_DD_2D.hh"
 #include "Equation_DD_3D.hh"
 #include "Equation_SC_2D.hh"
+#include "Equation_SD_1D.hh"
+#include "Equation_SD_2D.hh"
 //
 #include "ReactionRates.hh"
 

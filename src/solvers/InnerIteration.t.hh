@@ -95,7 +95,6 @@ InnerIteration<D>::InnerIteration(SP_input          input,
     THROW(message);
   }
 
-
 }
 
 // 3-D
@@ -114,8 +113,9 @@ inline bool InnerIteration<D>::set_sweep(std::string equation)
 
 // 2-D
 template <>
-inline bool InnerIteration<_2D>::set_sweep(std::string       equation)
+inline bool InnerIteration<_2D>::set_sweep(std::string equation)
 {
+
   if (equation == "dd")
   {
     d_sweeper = new Sweeper2D<Equation_DD_2D>(
@@ -130,6 +130,13 @@ inline bool InnerIteration<_2D>::set_sweep(std::string       equation)
       d_sweepsource);
     return true;
   }
+  else if (equation == "sd")
+  {
+    d_sweeper = new Sweeper2D<Equation_SD_2D>(
+      d_input, d_mesh, d_material, d_quadrature, d_state, d_boundary,
+      d_sweepsource);
+    return true;
+  }
   return false;
 }
 
@@ -140,6 +147,13 @@ inline bool InnerIteration<_1D>::set_sweep(std::string       equation)
   if (equation == "dd")
   {
     d_sweeper = new Sweeper1D<Equation_DD_1D>(
+      d_input, d_mesh, d_material, d_quadrature, d_state, d_boundary,
+      d_sweepsource);
+    return true;
+  }
+  else if (equation == "sd")
+  {
+    d_sweeper = new Sweeper1D<Equation_SD_1D>(
       d_input, d_mesh, d_material, d_quadrature, d_state, d_boundary,
       d_sweepsource);
     return true;

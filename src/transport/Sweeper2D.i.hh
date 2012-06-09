@@ -10,9 +10,12 @@
 #ifndef SWEEPER2D_I_HH_
 #define SWEEPER2D_I_HH_
 
+// Detran
+#include "Equation_SD_2D.hh"
 #include "Equation_DD_2D.hh"
 #include "Equation_SC_2D.hh"
 
+// System
 #include <iostream>
 
 namespace detran
@@ -112,9 +115,9 @@ inline void Sweeper2D<EQ>::sweep(moments_type &phi)
 }
 
 // Instantiate
-//template class Sweeper1D<Equation_SD_2D>;
 template class Sweeper2D<Equation_DD_2D>;
 template class Sweeper2D<Equation_SC_2D>;
+template class Sweeper2D<Equation_SD_2D>;
 
 } // end namespace detran
 

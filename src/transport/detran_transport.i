@@ -24,6 +24,8 @@
 %include "Equation_DD_2D.hh"
 %include "Equation_DD_3D.hh"
 %include "Equation_SC_2D.hh"
+%include "Equation_SD_1D.hh"
+%include "Equation_SD_2D.hh"
 // SweepSource
 %include "SweepSource.hh"
 
@@ -69,10 +71,14 @@
 %template(Sweeper2D_DD)     detran::Sweeper2D<detran::Equation_DD_2D>;
 %template(Sweeper3D_DD)     detran::Sweeper3D<detran::Equation_DD_3D>;
 %template(Sweeper2D_SC)     detran::Sweeper2D<detran::Equation_SC_2D>;
+%template(Sweeper1D_SD)     detran::Sweeper1D<detran::Equation_SD_1D>;
+%template(Sweeper2D_SD)     detran::Sweeper2D<detran::Equation_SD_2D>;
 %template(Sweeper1D_DDSP)   detran::SP<detran::Sweeper1D<detran::Equation_DD_1D> >;
 %template(Sweeper2D_DDSP)   detran::SP<detran::Sweeper2D<detran::Equation_DD_2D> >;
 %template(Sweeper3D_DDSP)   detran::SP<detran::Sweeper3D<detran::Equation_DD_3D> >;
 %template(Sweeper2D_SCSP)   detran::SP<detran::Sweeper2D<detran::Equation_SC_2D> >;
+%template(Sweeper1D_SDSP)   detran::SP<detran::Sweeper1D<detran::Equation_SD_1D> >;
+%template(Sweeper2D_SDSP)   detran::SP<detran::Sweeper2D<detran::Equation_SD_2D> >;
 
 // Helpers
 %template(ReactionRatesSP)  detran::SP<detran::ReactionRates>;

@@ -1,15 +1,15 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   Equation_DD_1D.hh
- * \author Jeremy Roberts
- * \date   Mar 31, 2012
- * \brief  Equation_DD_1D class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts.
+ * \file   Equation_SD_1D.hh
+ * \author robertsj
+ * \date   Jun 9, 2012
+ * \brief  Equation_SD_1D class definition.
+ * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 
-#ifndef EQUATION_DD_1D_HH_
-#define EQUATION_DD_1D_HH_
+#ifndef EQUATION_SD_1D_HH_
+#define EQUATION_SD_1D_HH_
 
 // Detran headers
 #include "Equation.hh"
@@ -21,12 +21,24 @@ namespace detran
 {
 
 /*!
- *  \class Equation_DD_1D
- *  \brief Diamond difference discretization in one dimension.
+ *  \class Equation_SD_1D
+ *  \brief Step difference discretization in one dimension.
  *
+ *  The step difference approximation defines
+ *  \f[
+ *      \psi_{i,n} = \left\{
+ *        \begin{array}{l l}
+ *          \psi_{i+1/2,n}      & \quad \text{if $\mu_n > 0$} \\
+ *          \psi_{i-1/2,n}      & \quad \text{if $\mu_n < 0$} \\
+ *        \end{array} \right\}
+ *  \f]
+ *
+ *  This is a first order method, but is strictly positive.
+ *  Moreover, it essentially defines a "flat flux" within
+ *  the cell, and so it is consistent for DGM.
  *
  */
-class Equation_DD_1D : public Equation<_1D>
+class Equation_SD_1D : public Equation<_1D>
 {
 
 public:
@@ -42,7 +54,7 @@ public:
   /*!
    *  \brief Constructor
    */
-  Equation_DD_1D(SP_mesh mesh,
+  Equation_SD_1D(SP_mesh mesh,
                  SP_material material,
                  SP_quadrature quadrature,
                  bool update_psi);
@@ -66,14 +78,14 @@ public:
 
 
   /*!
-   *  @brief Setup the equations for a group.
-   *  @param g     Current group.
+   *  \brief Setup the equations for a group.
+   *  \param g     Current group.
    */
   void setup_group(int g);
 
   /*!
-   *  @brief Setup the equations for an octant.
-   *  @param octant    Current octant.
+   *  \brief Setup the equations for an octant.
+   *  \param octant    Current octant.
    */
   void setup_octant(int octant);
 
@@ -98,10 +110,10 @@ private:
 // INLINE FUNCTIONS
 //---------------------------------------------------------------------------//
 
-#include "Equation_DD_1D.i.hh"
+#include "Equation_SD_1D.i.hh"
 
-#endif /* EQUATION_DD_1D_HH_ */
+#endif /* EQUATION_SD_1D_HH_ */
 
 //---------------------------------------------------------------------------//
-//              end of Equation_DD_1D.hh
+//              end of Equation_SD_1D.hh
 //---------------------------------------------------------------------------//

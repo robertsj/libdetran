@@ -75,11 +75,17 @@ public:
     b_fissionsource = fissionsource;
   }
 
-  /// Compute pin power peaking factors.
-  vec_dbl pin_peaking();
+  /*!
+   *  \brief Compute pin powers.
+   *  \param scale  Normalization for total power (default: unity)
+   */
+  vec_dbl pin_power(double scale = 1.0);
 
-  /// Compute assembly power peaking factors.
-  vec_dbl assembly_peaking();
+  /*!
+   *  \brief Compute assembly powers.
+   *  \param scale  Normalization for total power (default: unity)
+   */
+  vec_dbl assembly_power(double scale = 1.0);
 
   /// Verify state correctness.
   bool is_valid()
@@ -89,13 +95,29 @@ public:
 
 private:
 
+  /// \name Data
+  /// \{
+
   SP_material b_material;
   SP_mesh     b_mesh;
   SP_state    b_state;
   SP_fissionsource b_fissionsource;
 
-  /// Generic peaking function.
-  vec_dbl peaking(std::string key);
+  /// \}
+
+
+  /// \name Implementation
+  /// \{
+
+  /*!
+   *  \brief  Generic power function.
+   *
+   *  \param    key     Mesh map key designating region over which to integrate
+   *  \param    scale   Value to which total power is normalized
+   */
+  vec_dbl power(std::string key, double scale);
+
+  /// \}
 
 };
 

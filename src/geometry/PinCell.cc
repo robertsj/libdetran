@@ -104,7 +104,13 @@ void PinCell::meshify(int number_meshes, bool flag)
     int num_mod    = std::max(std::floor(0.5*number_meshes * width_mod / half_pitch), 1.0);
     int num_delta  = std::max(std::floor(0.5 * number_meshes * delta / half_pitch),   1.0);
     int num_L_4    = std::max(std::floor(0.5 * number_meshes * 0.25*L / half_pitch), 1.0);
-    int num_L_2    = std::max(std::floor(0.25*L / half_pitch), 1.0);
+    int num_L_2    = std::max(std::floor(0.25 * number_meshes * L / half_pitch)-1.0,
+                          double(number_meshes-2.0*(num_mod+num_delta+num_L_4)));
+
+//    std::cout << " num_mod = "      << num_mod      << std::endl;
+//    std::cout << " num_delta = "    << num_delta    << std::endl;
+//    std::cout << " num_L_4 = "      << num_L_4      << std::endl;
+//    std::cout << " num_L_2 = "      << num_L_2      << std::endl;
 
     int num_mesh = 2*num_mod + 2*num_delta + 2*num_L_4 + num_L_2;
 
@@ -134,6 +140,7 @@ void PinCell::meshify(int number_meshes, bool flag)
       num_mesh += 1;
     }
 
+    Ensure(num_mesh == number_meshes);
     Ensure(num_mod > 0);
     Ensure(num_delta > 0);
     Ensure(num_L_4 > 0);

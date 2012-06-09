@@ -10,8 +10,11 @@
 #ifndef SWEEPER1D_I_HH_
 #define SWEEPER1D_I_HH_
 
+// Detran
 #include "Equation_DD_1D.hh"
+#include "Equation_SD_1D.hh"
 
+// System
 #include <iostream>
 
 namespace detran
@@ -87,7 +90,7 @@ inline void Sweeper1D<EQ>::sweep(moments_type &phi)
 }
 
 // Instantiate
-//template class Sweeper1D<Equation_SD_1D>;
+template class Sweeper1D<Equation_SD_1D>;
 template class Sweeper1D<Equation_DD_1D>;
 //template class Sweeper1D<Equation_SC_1D>;
 

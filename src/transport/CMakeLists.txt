@@ -14,8 +14,10 @@ SET(TRANSPORT_SRC
     CMR.cc
     Equation_DD_1D.cc
     Equation_DD_2D.cc
-    Equation_SC_2D.cc
     Equation_DD_3D.cc
+    Equation_SC_2D.cc
+    Equation_SD_1D.cc
+    Equation_SD_2D.cc
     FissionSource.cc
     ReactionRates.cc
     ScatterSource.cc
