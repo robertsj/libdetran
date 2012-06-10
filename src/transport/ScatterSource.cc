@@ -14,7 +14,9 @@
 namespace detran
 {
 
-ScatterSource::ScatterSource(SP_mesh mesh, SP_material material, SP_state state)
+ScatterSource::ScatterSource(SP_mesh mesh,
+                             SP_material material,
+                             SP_state state)
   :  d_mesh(mesh)
   ,  d_material(material)
   ,  d_state(state)

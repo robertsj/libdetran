@@ -11,6 +11,7 @@
 #ifndef EQUATION_SC_2D_I_HH_
 #define EQUATION_SC_2D_I_HH_
 
+// System
 #include <cmath>
 #include <iostream>
 
@@ -43,7 +44,7 @@ inline void Equation_SC_2D::solve(int i,
   double dy = d_mesh->dy(j);
   double alpha = sigma * d_alpha[i];
   double beta = sigma * d_beta[j];
-  double rho = alpha / beta;
+  double rho = alpha / beta; // \todo sigma cancels? precompute alpha/beta?
 
   // Compute outgoing face fluxes.
   if (rho <= 1.0)

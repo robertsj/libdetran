@@ -162,6 +162,22 @@ void Material::set_nu_sigma_f(int m, vec_dbl &v)
   d_nu_sigma_f[m] = v;
 }
 
+void Material::set_sigma_f(int m, vec_dbl &v)
+{
+  Require(m >= 0);
+  Require(m < d_number_materials);
+  Require(v.size() == d_number_groups);
+  d_nu[m] = v;
+}
+
+void Material::set_nu(int m, vec_dbl &v)
+{
+  Require(m >= 0);
+  Require(m < d_number_materials);
+  Require(v.size() == d_number_groups);
+  d_sigma_f[m] = v;
+}
+
 void Material::set_chi(int m, vec_dbl &v)
 {
   Require(m >= 0);

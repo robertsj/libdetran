@@ -3,33 +3,65 @@
  * \file   utilities/SP.hh
  * \author Jeremy Roberts
  * \brief  Smart-Pointer (SP) class definition.
- * \note   Largely unchanged version of Tom Evan's SP class from Denovo.
+ * \note   Modified version of Tom Evan's SP class from Denovo.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef detran_SP_hh
-#define detran_SP_hh
+#ifndef SP_HH_
+#define SP_HH_
 
 #include "DBC.hh"
 
 namespace detran
 {
  
-//===========================================================================//
+//---------------------------------------------------------------------------//
 /*!
- * \struct SPref
- * 
- * \brief Reference holder struct for SP class.
+ *  \class SPref
+ *  \brief Reference counter for SP class.
+ *
+ *  This reference counter is thread safe, and allows SP's to be used
+ *  as pointers to <i>unmutable</i> objects.
  */
-//===========================================================================//
+//---------------------------------------------------------------------------//
 
-struct SPref 
+class SPref
 {
-    //! Number of references.
-    int refs;
 
-    //! Constructor
-    SPref(int r = 1) : refs(r) { }
+public:
+
+  /// Constructor
+  SPref(int r = 1) : b_refs(r) {}
+
+  /// Return the reference count
+  int refs() const
+  {
+    return b_refs;
+  }
+
+  /// Increment the reference count
+  inline void increment()
+  {
+    #pragma omp critical(referencecount)
+    {
+      b_refs++;
+    }
+  }
+
+  /// Decrement the reference count
+  inline void decrement()
+  {
+    #pragma omp critical(referencecount)
+    {
+      b_refs--;
+    }
+  }
+
+private:
+
+  /// Number of references.
+  int b_refs;
+
 };
 
 //===========================================================================//
@@ -76,6 +108,12 @@ struct SPref
  * pointer that you give to a SP.  This is simply something that needs to be
  * watched by the programmer.
  *
+ * Note, SP is minimally thread-safe in that worker threads can make
+ * copies of the SP (which increments the counter) and when out of scope,
+ * the counter is decremented, all safely in the counter.  The objects
+ * to which these SP's point are <b>not</b> thread safe, but there are
+ * few, if any, cases where that behavior would be required.
+ *
  * \example utilities/test/test_SP.cc
  *
  * denovo::SP (smart pointer) usage example.
@@ -85,85 +123,94 @@ struct SPref
 template<class T>
 class SP 
 {
-  private: 
-    // >>> DATA
 
-    //! Raw pointer held by smart pointer.
-    T *p;
+public:
 
-    //! Pointer to reference counter.
-    SPref *r;
+  /// Default constructor.
+  SP() : p(0), r(new SPref) { Ensure (r); Ensure (r->refs() == 1); }
 
-  private:
-    // >>> IMPLEMENTATION
+  /// Explicit constructor for type T *.
+  inline explicit SP(T *p_in);
 
-    // Free the pointer.
-    inline void free();
+  // Explicit constructor for type X *.
+  template<class X>
+  inline explicit SP(X *px_in);
 
-    //! All derivatives of SP are friends. 
-    template<class X> friend class SP;
+  // Copy constructor for SP<T>.
+  inline SP(const SP<T> &sp_in);
 
-  public:
-    //! Default constructor.
-    SP() : p(0), r(new SPref) { Ensure (r); Ensure (r->refs == 1); }
+  // Copy constructor for SP<X>.
+  template<class X>
+  inline SP(const SP<X> &spx_in);
 
-    // Explicit constructor for type T *.
-    inline explicit SP(T *p_in);
+  /// Destructor, memory is released when count goes to zero.
+  ~SP() { free(); }
 
-    // Explicit constructor for type X *.
-    template<class X>
-    inline explicit SP(X *px_in);
+  // Assignment operator for type T *.
+  inline SP<T>& operator=(T *p_in);
 
-    // Copy constructor for SP<T>.
-    inline SP(const SP<T> &sp_in);
+  // Assignment operator for type X *.
+  template<class X>
+  inline SP<T>& operator=(X *px_in);
 
-    // Copy constructor for SP<X>.
-    template<class X>
-    inline SP(const SP<X> &spx_in);
+  // Assignment operator for type SP<T>.
+  inline SP<T>& operator=(const SP<T> sp_in);
 
-    //! Destructor, memory is released when count goes to zero.
-    ~SP() { free(); }
+  // Assignment operator for type SP<X>.
+  template<class X>
+  inline SP<T>& operator=(const SP<X> spx_in);
 
-    // Assignment operator for type T *.
-    inline SP<T>& operator=(T *p_in);
+  /// Access operator.
+  T* operator->() const { Require(p); return p; }
 
-    // Assignment operator for type X *.
-    template<class X>
-    inline SP<T>& operator=(X *px_in);
+  /// Dereference operator.
+  T& operator*() const { Require(p); return *p; }
 
-    // Assignment operator for type SP<T>.
-    inline SP<T>& operator=(const SP<T> sp_in);
+  /// Get the base-class pointer; better know what you are doing.
+  T* bp() const { return p; }
 
-    // Assignment operator for type SP<X>.
-    template<class X>
-    inline SP<T>& operator=(const SP<X> spx_in);
+  /// Boolean conversion operator.
+  operator bool() const { return p != 0; }
 
-    //! Access operator.
-    T* operator->() const { Require(p); return p; }
+  /// Operator not.
+  bool operator!() const { return p == 0; }
 
-    //! Dereference operator.
-    T& operator*() const { Require(p); return *p; }
+  /// Equality operator for T*.
+  bool operator==(const T *p_in) const { return p == p_in; }
 
-    //! Get the base-class pointer; better know what you are doing.
-    T* bp() const { return p; }
+  /// Inequality operator for T*.
+  bool operator!=(const T *p_in) const { return p != p_in; }
 
-    //! Boolean conversion operator.
-    operator bool() const { return p != 0; }
+  /// Equality operator for SP<T>.
+  bool operator==(const SP<T> &sp_in) const { return p == sp_in.p; }
 
-    //! Operator not.
-    bool operator!() const { return p == 0; }
+  /// Inequality operator for SP<T>.
+  bool operator!=(const SP<T> &sp_in) const { return p != sp_in.p; }
 
-    //! Equality operator for T*.
-    bool operator==(const T *p_in) const { return p == p_in; }
+private:
 
-    //! Inequality operator for T*.
-    bool operator!=(const T *p_in) const { return p != p_in; }
+  /// \name Private Data
+  /// \{
 
-    //! Equality operator for SP<T>.
-    bool operator==(const SP<T> &sp_in) const { return p == sp_in.p; }
+  /// Raw pointer held by smart pointer.
+  T *p;
 
-    //! Inequality operator for SP<T>.
-    bool operator!=(const SP<T> &sp_in) const { return p != sp_in.p; }
+  /// Pointer to reference counter.
+  SPref *r;
+
+  /// \}
+
+  /// \name Implementation
+  /// \{
+
+  /// Free the pointer.
+  inline void free();
+
+  /// All derivatives of SP are friends.
+  template<class X> friend class SP;
+
+  /// \}
+
 };
 
 } // end namespace detran
@@ -174,7 +221,7 @@ class SP
 
 #include "SP.i.hh"
 
-#endif // detran_SP_hh
+#endif // SP_HH_
 
 //---------------------------------------------------------------------------//
 //              end of SP.hh

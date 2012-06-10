@@ -20,8 +20,6 @@
 #include "DBC.hh"
 #include "SP.hh"
 
-#include <iostream>
-
 namespace detran
 {
 

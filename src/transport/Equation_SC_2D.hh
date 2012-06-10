@@ -21,7 +21,7 @@ namespace detran
 {
 
 /*!
- *  \class Equation_DD_2D
+ *  \class Equation_SC_2D
  *  \brief Step characteristic discretization in two dimensions.
  *
  *  Reference: Lathrop, K. D. "Spatial differencing of the Transport

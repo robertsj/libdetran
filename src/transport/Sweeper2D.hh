@@ -69,7 +69,6 @@ public:
             SP_sweepsource sweepsource)
   : Base(input,mesh,material,quadrature,
          state,boundary,sweepsource)
-  , d_equation(mesh, material, quadrature, d_update_psi)
   {}
 
   /// Stop Eclipse warnings.
@@ -100,13 +99,7 @@ public:
   void setup_group(int g)
   {
     d_g = g;
-    d_equation.setup_group(g);
   }
-
-private:
-
-  /// Equation
-  EQ d_equation;
 
 };
 

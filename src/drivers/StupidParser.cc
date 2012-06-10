@@ -178,12 +178,19 @@ Material::SP_material StupidParser::parse_material()
           Insist(value.size() == number_groups, "sigma_a wrong length.");
           d_material->set_sigma_a(mat, value);
         }
-        if (val == "nu_sigma_f")
+        if (val == "sigma_f")
         {
           int mat = read_scalar<int>(iss);
           vec_dbl value = read_vector<double>(iss);
-          Insist(value.size() == number_groups, "nu_sigma_f wrong length.");
-          d_material->set_nu_sigma_f(mat, value);
+          Insist(value.size() == number_groups, "sigma_f wrong length.");
+          d_material->set_sigma_f(mat, value);
+        }
+        if (val == "nu")
+        {
+          int mat = read_scalar<int>(iss);
+          vec_dbl value = read_vector<double>(iss);
+          Insist(value.size() == number_groups, "nu wrong length.");
+          d_material->set_nu(mat, value);
         }
         if (val == "chi")
         {

@@ -19,7 +19,6 @@
 #include "Mesh.hh"
 
 // System
-#include <iostream>
 #include <vector>
 
 namespace detran
@@ -169,7 +168,7 @@ public:
    *  \param    a   Angle within octant
    *  \return       Constant reference to group angular flux vector.
    */
-  const angular_flux_type& psi(int g, int o, int a) const   // State::angular_flux_type  psi = psi(o, a, g);
+  const angular_flux_type& psi(int g, int o, int a) const
   {
     Require(d_store_angular_flux);
     Require(d_angular_flux.size() > 0);

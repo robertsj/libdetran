@@ -11,7 +11,9 @@
 #ifndef SWEEPSOURCE_I_HH_
 #define SWEEPSOURCE_I_HH_
 
+// System
 #include <iostream>
+#include <omp.h>
 
 namespace detran
 {
@@ -24,7 +26,6 @@ namespace detran
     {
       d_fixed_group_source[cell] = 0.0;
     }
-    //d_fixed_group_source.assign(d_fixed_group_source.size(), 0.0);
 
     // Add external sources, if present.
     for (int i = 0; i < d_moment_external_sources.size(); i++)
@@ -64,8 +65,6 @@ namespace detran
   inline void SweepSource<D>::build_within_group_scatter(int g, const moments_type &phi)
   {
     // Zero out moments source.
-    //d_scatter_group_source.assign(phi.size(), 0.0);
-
     for (int cell = 0; cell < d_mesh->number_cells(); cell++)
       d_scatter_group_source[cell] = 0.0;
 
@@ -89,7 +88,7 @@ namespace detran
   inline const typename SweepSource<D>::sweep_source_type&
   SweepSource<D>::source(int g, int o, int a)
   {
-    // Zero out.
+
     //d_source.assign(d_source.size(), 0.0);
     for (int cell = 0; cell < d_mesh->number_cells(); cell++)
       d_source[cell] = 0.0;
@@ -97,15 +96,13 @@ namespace detran
     // Add moment contributions.
     for (int cell = 0; cell < d_mesh->number_cells(); cell++)
     {
-      // Add fixed contribution \todo need to use mtod
-      d_source[cell] += d_fixed_group_source[cell] *  //inv_four_pi;
+      // Add fixed contribution
+      d_source[cell] += d_fixed_group_source[cell] *
                         (*d_MtoD)(o, a, 0, 0);
-      //std::cout << " m2d = " << (*d_MtoD)(o, a, 0, 0) << std::endl;
+
       // Add scatter contribution
-      d_source[cell] += d_scatter_group_source[cell] * //inv_four_pi;
+      d_source[cell] += d_scatter_group_source[cell] *
                         (*d_MtoD)(o, a, 0, 0);
-      //std::cout << " m2d2 = " << (*d_MtoD)(o, a, 0, 0) << std::endl;
-      //THROW("fudge.");
     }
 
     // Add discrete contributions if present.
@@ -118,6 +115,38 @@ namespace detran
       }
     }
     return d_source;
+  }
+
+  template <class D>
+  inline void
+  SweepSource<D>::source(int g, int o, int a, sweep_source_type &s)
+  {
+
+    for (int cell = 0; cell < d_mesh->number_cells(); cell++)
+      s[cell] = 0.0;
+
+    // Add moment contributions.
+    for (int cell = 0; cell < d_mesh->number_cells(); cell++)
+    {
+      // Add fixed contribution
+      s[cell] += d_fixed_group_source[cell] *
+                        (*d_MtoD)(o, a, 0, 0);
+
+      // Add scatter contribution
+      s[cell] += d_scatter_group_source[cell] *
+                        (*d_MtoD)(o, a, 0, 0);
+    }
+
+    // Add discrete contributions if present.
+    for (int i = 0; i < d_discrete_external_sources.size(); i++)
+    {
+      for (int cell = 0; cell < d_mesh->number_cells(); cell++)
+      {
+        s[cell] +=
+            d_discrete_external_sources[i]->source(cell, g);
+      }
+    }
+
   }
 
   template class SweepSource<_1D>;

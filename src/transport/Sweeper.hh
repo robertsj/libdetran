@@ -23,7 +23,7 @@
 #include "detran_config.h"
 #include "Equation_DD_2D.hh"
 
-// Other libtran utils headers
+// Detran Utilities
 #include "DBC.hh"
 #include "Definitions.hh"
 #include "InputDB.hh"

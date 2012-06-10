@@ -220,6 +220,7 @@ public:
    *
    */
   const sweep_source_type& source(int g, int o, int a);
+  void source(int g, int o, int a, sweep_source_type& s);
 
 private:
 

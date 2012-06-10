@@ -88,7 +88,7 @@ public:
   vec_dbl assembly_power(double scale = 1.0);
 
   /// Verify state correctness.
-  bool is_valid()
+  bool is_valid() const
   {
     return true;
   }

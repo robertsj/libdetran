@@ -10,7 +10,7 @@
 #ifndef MATERIAL_HH_
 #define MATERIAL_HH_
 
-// Other detran headers
+// Detran
 #include "Definitions.hh"
 #include "DBC.hh"
 #include "SP.hh"
@@ -18,12 +18,12 @@
 namespace detran
 {
 
-//===========================================================================//
+//---------------------------------------------------------------------------//
 /*!
  * \class Material
  * \brief Simple cross section container.
  */
-//===========================================================================//
+//---------------------------------------------------------------------------//
 class Material : public Object
 {
 
@@ -89,6 +89,10 @@ public:
   void set_sigma_a(int m, vec_dbl &v);
 
   void set_nu_sigma_f(int m, vec_dbl &v);
+
+  void set_sigma_f(int m, vec_dbl &v);
+
+  void set_nu(int m, vec_dbl &v);
 
   void set_chi(int m, vec_dbl &v);
 

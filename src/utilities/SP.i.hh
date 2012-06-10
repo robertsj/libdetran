@@ -1,17 +1,17 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   utils/SP.i.hh
- * \author Thomas M. Evans
- * \date   Thu Jan  3 10:28:56 2008
- * \brief  Member definitions of class SP.
- * \note   Copyright (C) 2008 Oak Ridge National Laboratory, UT-Battelle, LLC.
+ * \file   utilities/SP.hh
+ * \author Jeremy Roberts
+ * \brief  SP member definitions.
+ * \note   Modified version of Tom Evan's SP class from Denovo.
  */
 //---------------------------------------------------------------------------//
-// $Id: SP.i.hh,v 1.1 2008/05/19 17:43:34 TMEvans Stab $
-//---------------------------------------------------------------------------//
 
-#ifndef detran_SP_i_hh
-#define detran_SP_i_hh
+#ifndef SP_I_HH_
+#define SP_I_HH_
+
+// System
+#include <iostream>
 
 namespace detran
 {
@@ -61,7 +61,7 @@ SP<T>::SP(T *p_in)
       r(new SPref)
 {
     Ensure (r);
-    Ensure (r->refs == 1);
+    Ensure (r->refs() == 1);
 }
 
 //---------------------------------------------------------------------------//
@@ -107,7 +107,7 @@ SP<T>::SP(X *px_in)
 
     Ensure (p);
     Ensure (r);
-    Ensure (r->refs == 1);
+    Ensure (r->refs() == 1);
 }
 
 //---------------------------------------------------------------------------//
@@ -124,7 +124,7 @@ SP<T>::SP(const SP<T> &sp_in)
     Require (r);
 
     // advance the reference to T
-    r->refs++;
+    r->increment();
 }
 
 //---------------------------------------------------------------------------//
@@ -141,19 +141,19 @@ template<class T>
 template<class X>
 SP<T>::SP(const SP<X> &spx_in)
 {
-    Require (spx_in.r);
+  Require(spx_in.r);
 
-    // make a pointer to T *
-    T *np = dynamic_cast<T *>(spx_in.p);
-    Insist(spx_in.p ? np != 0 : true, 
-	   "Incompatible SP conversion between SP<X> and SP<T>.");
+  // make a pointer to T *
+  T *np = dynamic_cast<T *>(spx_in.p);
+  Insist(spx_in.p ? np != 0 : true,
+    "Incompatible SP conversion between SP<X> and SP<T>.");
 
-    // assign the pointer and reference
-    p = np;
-    r = spx_in.r;
-    
-    // advance the reference to T
-    r->refs++;
+  // assign the pointer and reference
+  p = np;
+  r = spx_in.r;
+
+  // advance the reference to T
+  r->increment();
 }
 
 //---------------------------------------------------------------------------//
@@ -178,19 +178,19 @@ SP<T>::SP(const SP<X> &spx_in)
 template<class T>
 SP<T>& SP<T>::operator=(T *p_in)
 {
-    // check if we already own this pointer
-    if (p == p_in)
-	return *this;
-
-    // next free the existing pointer
-    free();
-    
-    // now make add p_in to this pointer and make a new reference to it
-    p = p_in;
-    r = new SPref;
-
-    Ensure (r->refs == 1);
+  // check if we already own this pointer
+  if (p == p_in)
     return *this;
+
+  // next free the existing pointer
+  free();
+    
+  // now make add p_in to this pointer and make a new reference to it
+  p = p_in;
+  r = new SPref;
+
+  Ensure (r->refs() == 1);
+  return *this;
 }
 
 //---------------------------------------------------------------------------//
@@ -213,17 +213,17 @@ template<class T>
 template<class X>
 SP<T>& SP<T>::operator=(X *px_in)
 {
-    Require (px_in);
+  Require (px_in);
 
-    // do a dynamic cast to Ensure convertiblility between T* and X*
-    T *np = dynamic_cast<T *>(px_in);
-    Require(np);//, "Incompatible dumb pointer conversion between X and SP<T>.");
+  // do a dynamic cast to Ensure convertiblility between T* and X*
+  T *np = dynamic_cast<T *>(px_in);
+  Insist(np, "Incompatible dumb pointer conversion between X and SP<T>.");
 
-    // now assign this to np (using previously defined assignment operator)
-    *this = np;
+  // now assign this to np (using previously defined assignment operator)
+  *this = np;
     
-    Ensure (r->refs == 1);
-    return *this;
+  Ensure (r->refs() == 1);
+  return *this;
 }
 
 //---------------------------------------------------------------------------//
@@ -235,22 +235,22 @@ SP<T>& SP<T>::operator=(X *px_in)
 template<class T>
 SP<T>& SP<T>::operator=(const SP<T> sp_in)
 {
-    Require (sp_in.r);
+  Require (sp_in.r);
 
-    // see if they are equal
-    if (this == &sp_in || p == sp_in.p)
-	return *this;
-
-    // free the existing pointer
-    free();
-
-    // assign p and r to sp_in
-    p = sp_in.p;
-    r = sp_in.r;
-
-    // add the reference count and return
-    r->refs++;
+  // see if they are equal
+  if (this == &sp_in || p == sp_in.p)
     return *this;
+
+  // free the existing pointer
+  free();
+
+  // assign p and r to sp_in
+  p = sp_in.p;
+  r = sp_in.r;
+
+  // add the reference count and return
+  r->increment();
+  return *this;
 }
 
 //---------------------------------------------------------------------------//
@@ -267,39 +267,39 @@ template<class T>
 template<class X>
 SP<T>& SP<T>::operator=(const SP<X> spx_in)
 {
-    Require (spx_in.r);
+  Require (spx_in.r);
 
-    // make a pointer to T *
-    T *np = dynamic_cast<T *>(spx_in.p);
-    Require(spx_in.p ? np != 0 : true);
-	//   "Incompatible SP conversion between SP<X> and SP<T>.");
+  // make a pointer to T *
+  T *np = dynamic_cast<T *>(spx_in.p);
+  Insist(spx_in.p ? np != 0 : true,
+    "Incompatible SP conversion between SP<X> and SP<T>.");
 
-    // check to see if we are holding the same pointer (and np is not NULL);
-    // to NULL pointers to the same type are defined to be equal by the
-    // standard 
-    if (p == np && p)
-    {
-	// if the pointers are the same the reference count better be the
-	// same 
-	Assert (r == spx_in.r);
-	return *this;
-    }
+  // check to see if we are holding the same pointer (and np is not NULL);
+  // to NULL pointers to the same type are defined to be equal by the
+  // standard
+  if (p == np && p)
+  {
+	  // if the pointers are the same the reference count better be the
+	  // same
+	  Assert (r == spx_in.r);
+	  return *this;
+  }
 
-    // we don't need to worry about the case where p == np and np == NULL
-    // because this combination is impossible; if np is NULL then it belongs
-    // to a different smart pointer; in other words, if p == np and np ==
-    // NULL then r != spx_in.r
+  // we don't need to worry about the case where p == np and np == NULL
+  // because this combination is impossible; if np is NULL then it belongs
+  // to a different smart pointer; in other words, if p == np and np ==
+  // NULL then r != spx_in.r
 
-    // free the existing pointer and reference
-    free();
+  // free the existing pointer and reference
+  free();
 
-    // assign new values
-    p = np;
-    r = spx_in.r;
+  // assign new values
+  p = np;
+  r = spx_in.r;
 
-    // advance the counter and return
-    r->refs++;
-    return *this;
+  // advance the counter and return
+  r->increment();
+  return *this;
 }
 
 //---------------------------------------------------------------------------//
@@ -313,19 +313,21 @@ SP<T>& SP<T>::operator=(const SP<X> spx_in)
 template<class T>
 void SP<T>::free()
 {
-    Require (r);
-    
-    // if the count goes to zero then we free the data
-    if (--r->refs == 0)
-    {
-	delete p;
-	delete r;
-    }
+
+  Require (r);
+  r->decrement();
+  // if the count goes to zero then we free the data
+  if (r->refs() == 0)
+  {
+    delete p;
+    delete r;
+  }
+
 }
 
 } // end namespace detran
 
-#endif // detran_SP_i_hh
+#endif // SP_I_HH_
 
 //---------------------------------------------------------------------------//
 //              end of utils/SP.i.hh
