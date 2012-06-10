@@ -20,7 +20,7 @@ str bc_right        reflect
 str bc_bottom       reflect
 str bc_top          reflect
 str quad_type       quadruplerange
-int quad_order      50
+int quad_order      8
 
 # Mesh
 vec_dbl mesh_xcme    0.0 5.0 10.0 15.0 20.0

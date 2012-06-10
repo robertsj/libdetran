@@ -34,6 +34,6 @@ vec_int mesh_mat_map   0
 material number_materials 1
 material sigma_t    0   1.0000
 material sigma_s    0 0 0.5000
-material nu_sigma_f 0   0.5000
+material sigma_f    0   0.5000
 material chi        0   1.0000
 
