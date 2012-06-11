@@ -34,9 +34,10 @@ Quadrature::Quadrature(int order,
   , d_name(name)
   , d_octant_sign(8, vec_dbl(3, 0.0))
 {
-  Require(dim > 0);
-  Insist(dim < 4, "The quadrature dimension MUST be 1, 2, or 3.");
-  Require(order > 0);
+  Insist(order > 0,
+    "The quadrature order MUST be positive.");
+  Insist((dim > 0) and (dim < 4),
+    "The quadrature dimension MUST be 1, 2, or 3.");
   // Define the signs for all eight octants.
   // first
   d_octant_sign[0][0] =  1.0;

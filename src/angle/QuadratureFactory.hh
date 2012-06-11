@@ -11,23 +11,36 @@
 #ifndef QUADRATUREFACTORY_HH_
 #define QUADRATUREFACTORY_HH_
 
+// Detran
 #include "Quadrature.hh"
 
+// System
 #include <string>
 
 namespace detran
 {
 
+/*!
+ *  \class QuadratureFactory
+ *  \brief Constructs quadratures.
+ */
 class QuadratureFactory
 {
 
-  public:
+public:
 
-    //! Quadrature type.
-    typedef Quadrature::SP_quadrature SP_quadrature;
+  /// Quadrature type.
+  typedef Quadrature::SP_quadrature SP_quadrature;
 
-    // Build a quadrature set.
-    void build(SP_quadrature &q, std::string type, int order, int dimension);
+  /*!
+   *  \brief Build a quadrature set.
+   *
+   *  \param q          Smart pointer to quadrature being constructed
+   *  \param type       Quadrature type
+   *  \param order      Quadrature order
+   *  \param dimension  Quadrature dimension
+   */
+  void build(SP_quadrature &q, std::string type, int order, int dimension);
 };
 
 }

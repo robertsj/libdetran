@@ -8,6 +8,7 @@
  */
 //---------------------------------------------------------------------------//
 
+// Detran
 #include "QuadratureFactory.hh"
 // 1D
 #include "GaussLegendre.hh"
@@ -15,7 +16,6 @@
 #include "QuadrupleRange.hh"
 #include "LevelSymmetric.hh"
 #include "UniformEqual.hh"
-
 
 namespace detran
 {
@@ -53,5 +53,5 @@ build(SP_quadrature &q, std::string type, int order, int dimension)
 } // end namespace detran
 
 //---------------------------------------------------------------------------//
-//              end of StupidParser.cc
+//              end of QuadratureFactory.cc
 //---------------------------------------------------------------------------//

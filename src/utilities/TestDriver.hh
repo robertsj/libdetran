@@ -11,9 +11,11 @@
 #ifndef TESTDRIVER_HH_
 #define TESTDRIVER_HH_
 
+// Utilities
 #include "DBC.hh"
 #include "SoftEquivalence.hh"
 
+// System
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -21,20 +23,74 @@
 
 
 /*!
- *  \name Testing Typedefs and Macros
+ *  \page testing Detran Testing Typedefs and Macros
  *
- *  To use these macros, the client must define in the main test file
+ *  \section testcreation Creating a Unit Test Set
+ *
+ *  To produce a set of unit tests,
+ *  the client must define in the main test file
  *  a list of the form
- *  \code{.cpp}
- *  #define TEST_LIST   \
-        FUNC(testOne)   \
-        FUNC(testTwo)
+ *  \code
+    #define TEST_LIST  \
+        FUNC(test_one) \
+        FUNC(test_two)
     #include "TestDriver.hh"
- *  \endcode
+    #include "MyClassBeingTested.hh"
+    #include "AnyNeededHelperClasses.hh"
+    using namespace detran_test;
+    using namespace detran;
+    using namespace std;
+    int main(int argc, char *argv[])
+    {
+      RUN(argc, argv);
+    }
+    int test_one() // and so on
+    \endcode
  *
- *  Note, this header must be included *after* the list is given.  There
+ *  Note, the TestDriver header must be included *after* the
+ *  list is given.  There
  *  are ways around this, but if I'm to spend any more time on this, I'd
  *  be compelled to switch to someone else's unit test framework.
+ *
+ *  Once a set of tests is defined in this way, CTest can be used.  For
+ *  example, in the CMakeLists.txt file associated with the class
+ *  being tested, we would have entries like
+ *
+ *  \code
+    ADD_EXECUTABLE(test_MyClass test_MyClass.cc)
+    TARGET_LINK_LIBRARIES(test_MyClass some_library_myclass_needs)
+    ADD_TEST( test_MyClass_one  test_MyClass 0)
+    ADD_TEST( test_MyClass_two  test_MyClass 1)
+ *  \endcode
+ *
+ *  where each test function in the source file is given its own
+ *  CTest name and an integer index.  From there, various
+ *  approaches to using CTest are possible, from one-off tests
+ *  to dedicated nightly regression tests.  A full test set
+ *  is under development.
+ *
+ *  \section defineunittest Defining a Unit Test
+ *
+ *  Above, we showed how to produce the driver file for one or
+ *  more unit tests.  The actual unit test takes the form
+ *
+ *  \code
+    int test_one()
+    {
+      // Do some setup.
+      TEST(some_boolean_expression);
+      // Do something else.
+      TEST(some_other_boolean_expression);
+      // Make sure to return 0 if all is well.
+      return 0;
+    }
+ *  \endcode
+ *
+ *  Here, the TEST macro returns from the test function
+ *  with a nonzero value, indicating to the driver
+ *  function run that a specific test function has
+ *  failed.  The rest of the functions, if any, will
+ *  still be completed.
  */
 
 /// \{

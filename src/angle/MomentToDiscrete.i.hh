@@ -60,7 +60,6 @@ void MomentToDiscrete<D>::build(SP_quadrature quadrature)
   // order of octants in the quadrature.
   for (int o = 0; o < d_quadrature->number_octants(); o++)
   {
-    std::cout << " o = " << o << std::endl;
     for (int a = 0; a < d_quadrature->number_angles_octant(); a++)
     {
       calc_row(o, a);
