@@ -34,6 +34,7 @@ namespace
 #include "QuadrupleRange.hh"
 #include "SphericalHarmonics.hh"
 #include "UniformEqual.hh"
+#include "QuadratureFactory.hh"
 
 // Geometry
 #include "Mesh.hh"
@@ -57,6 +58,7 @@ namespace
 #include "FissionSource.hh"
 #include "ExternalSource.hh"
 #include "ConstantSource.hh"
+#include "DiscreteSource.hh"
 #include "State.hh"
 #include "SweepSource.hh"
 #include "Traits.hh"
@@ -89,7 +91,7 @@ namespace
 // LEVEL 4 
 //---------------------------------------------------------------------------//  
 
-// TBD (manager, post process, etc.)
+#include "PyExecute.hh"
   
 %}
 
@@ -123,3 +125,10 @@ namespace
 // Transport
 %include "detran_solvers.i"
 
+//------------------------------------//
+// LEVEL 4
+
+%include "PyExecute.hh"
+%template(Execute1D) detran::PyExecute<detran::_1D>;
+%template(Execute2D) detran::PyExecute<detran::_2D>;
+%template(Execute3D) detran::PyExecute<detran::_3D>;

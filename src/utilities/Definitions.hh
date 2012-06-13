@@ -17,11 +17,11 @@ namespace detran
 typedef std::vector<int>      vec_int;
 typedef std::vector<double>   vec_dbl;
 
-typedef std::vector<vec_int>  vec2_int;
-typedef std::vector<vec_dbl>  vec2_dbl;
+typedef std::vector<std::vector<int> >  vec2_int;
+typedef std::vector<std::vector<double> >  vec2_dbl;
 
-typedef std::vector<vec2_int> vec3_int;
-typedef std::vector<vec2_dbl> vec3_dbl;
+typedef std::vector<std::vector<std::vector<int> > > vec3_int;
+typedef std::vector<std::vector<std::vector<double> > > vec3_dbl;
 
 } // end namespace detran
 

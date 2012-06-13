@@ -31,9 +31,29 @@ public:
   // Source types
   typedef SP<DiscreteSource>  SP_source;
 
-  DiscreteSource(SP_mesh mesh,
-                 SP_quadrature quadrature,
-                 int number_groups);
+  DiscreteSource(SP_mesh        mesh,
+                 SP_quadrature  quadrature,
+                 int            number_groups,
+                 vec3_dbl       q)
+    : ExternalSource(mesh, quadrature, number_groups)
+    , d_source(q)
+  {
+    Require(d_source.size()       == number_groups);
+    Require(d_source[0].size()    == quadrature->number_angles());
+    Require(d_source[0][0].size() == mesh->number_cells());
+
+  }
+
+  static SP<ExternalSource>
+  Create(SP<detran::Mesh>       mesh,
+         SP<detran::Quadrature> quadrature,
+         int                    number_groups,
+         vec3_dbl               q)
+  {
+    SP_source p;
+    p = new DiscreteSource(mesh, quadrature, number_groups, q);
+    return p;
+  }
 
   virtual double source(int cell, int group)
   {
@@ -64,13 +84,13 @@ public:
     return d_source[group][angle][cell];
   }
 
-  void set_source(vec3_dbl &source)
-  {
-    Require(source.size() == d_number_groups);
-    Require(source[0].size() == d_number_angles);
-    Require(source[0][0].size() == d_mesh->number_cells());
-    d_source = source;
-  }
+//  void set_source(vec3_dbl &source)
+//  {
+//    Require(source.size() == d_number_groups);
+//    Require(source[0].size() == d_number_angles);
+//    Require(source[0][0].size() == d_mesh->number_cells());
+//    d_source = source;
+//  }
 
 private:
 

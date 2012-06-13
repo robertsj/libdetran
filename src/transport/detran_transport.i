@@ -12,6 +12,7 @@
 %include "Boundary.hh"
 // Sources
 %include "ExternalSource.hh"
+%include "DiscreteSource.hh"
 %include "ConstantSource.hh"
 %include "FissionSource.hh"
 // Acceleration

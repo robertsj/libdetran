@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------#
-# libdetran/src/angle/CMakeLists.txt
+# libdetran/src/python/CMakeLists.txt
 #------------------------------------------------------------------------------#
 
 SET_SOURCE_FILES_PROPERTIES(detran.i PROPERTIES CPLUSPLUS ON)

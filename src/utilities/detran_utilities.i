@@ -18,8 +18,12 @@
 %include "Definitions.hh"
 namespace std
 {
-  %template(vec_int) vector<int>;
-  %template(vec_dbl) vector<double>;
+  %template(Vec_int)  vector<int>;
+  %template(Vec2_int) vector<vector<int> >;
+  %template(Vec3_int) vector<vector<vector<int> > >;
+  %template(Vec_dbl)  vector<double>;
+  %template(Vec2_dbl) vector<vector<double> >;
+  %template(Vec3_dbl) vector<vector<vector<double> > >;
 }
 
 // Dimension
