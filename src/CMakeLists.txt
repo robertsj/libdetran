@@ -5,7 +5,8 @@
 project(detran)
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 set(DETRAN_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-add_definitions(-pg)
+LIST( APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" )
+
 #------------------------------------------------------------------------------#
 # OPTIONS
 #------------------------------------------------------------------------------#
@@ -25,6 +26,11 @@ SET( DETRAN_ENABLE_PYTHON NO CACHE BOOL
 # Options for OpenMP directives. On or Off.
 SET( DETRAN_ENABLE_OPENMC NO CACHE BOOL
   "Enable OpenMP for multithreaded solves."
+)
+
+# Options for PETSC. On or Off.
+SET( DETRAN_ENABLE_PETSC NO CACHE BOOL
+  "Enable PETSc."
 )
 
 # Options for OpenMP directives. On or Off.
@@ -55,6 +61,12 @@ IF( DETRAN_ENABLE_OPENMP )
   find_package(OpenMP REQUIRED)
   set(CMAKE_CXX_FLAGS ${OpenMP_CXX_FLAGS})
 ENDIF()
+
+if( DETRAN_ENABLE_PETSC)
+  find_package(PETSc REQUIRED)
+  include_directories(${PETSC_INCLUDES})
+  add_definitions(${PETSC_DEFINITIONS})
+endif()
 
 # This is a hack for now.  Probably worth generating a CMake finder thing.
 IF( DETRAN_ENABLE_GPERFTOOLS )
@@ -176,6 +188,11 @@ if( DETRAN_ENABLE_OPENMP )
 message("++++ OpenMP:      enabled")
 elseif()
 message("++++ OpenMP:      disabled")
+endif()
+if( DETRAN_ENABLE_PETSC )
+message("++++ PETSc:       enabled")
+elseif()
+message("++++ PETSc:       disabled")
 endif()
 if( DETRAN_ENABLE_GPERFTOOLS )
 message("++++ Profiling:   enabled")
