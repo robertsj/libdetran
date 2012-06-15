@@ -33,8 +33,9 @@ void GaussSeidel<D>::solve()
     d_inner_solver->solve(g);
   }
 
-  // Do upscatter iterations if required.
-  if (!d_downscatter)
+  // Do upscatter iterations if required.  We skip these if
+  // the max_iters = 0.
+  if (!d_downscatter and d_max_iters > 0 and d_number_groups > 1)
   {
     // Upscatter iterations.
     int iteration;

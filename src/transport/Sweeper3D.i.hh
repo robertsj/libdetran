@@ -93,12 +93,12 @@ inline void Sweeper3D<EQ>::sweep(moments_type &phi)
       } // end z loop
 
       // Update boundary
-      (*d_boundary)(d_face_index[o][Mesh::YZ][Boundary_T::OUT], o, a, d_g) =
-          psi_yz;
-      (*d_boundary)(d_face_index[o][Mesh::XZ][Boundary_T::OUT], o, a, d_g) =
-          psi_xz;
-      (*d_boundary)(d_face_index[o][Mesh::XY][Boundary_T::OUT], o, a, d_g) =
-          psi_xy;
+      (*d_boundary)
+        (d_face_index[o][Mesh::YZ][Boundary_T::OUT], o, a, d_g) = psi_yz;
+      (*d_boundary)
+        (d_face_index[o][Mesh::XZ][Boundary_T::OUT], o, a, d_g) = psi_xz;
+      (*d_boundary)
+        (d_face_index[o][Mesh::XY][Boundary_T::OUT], o, a, d_g) = psi_xy;
 
       // Angular flux update
       if (d_update_psi) d_state->psi(d_g, o, a) = psi;
@@ -107,6 +107,10 @@ inline void Sweeper3D<EQ>::sweep(moments_type &phi)
 
   } // end octant loop
 
+  #pragma omp master
+  {
+    d_number_sweeps++;
+  }
   return;
 }
 

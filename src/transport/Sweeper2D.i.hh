@@ -146,6 +146,10 @@ inline void Sweeper2D<EQ>::sweep(moments_type &phi)
 
   } // end omp parallel
 
+  #pragma omp master
+  {
+    d_number_sweeps++;
+  }
   return;
 }
 

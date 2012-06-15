@@ -10,7 +10,9 @@
 
 // Detran
 #include "GaussSeidel.hh"
+//   Inner Solvers
 #include "SourceIteration.hh"
+#include "InnerGMRES.hh"
 
 // System
 #include <iostream>
@@ -74,9 +76,27 @@ GaussSeidel<D>::GaussSeidel(SP_input          input,
     d_downscatter = input->get<int>("outer_downscatter");
   }
 
-  // Create inner iteration.
-  d_inner_solver = new SourceIteration<D>(input, state, mesh, material,
-                                          quadrature, boundary, q_e, q_f);
+  // Get the inner solver type and create.
+  std::string inner_solver = "SI";
+  if (input->check("inner_solver"))
+  {
+    inner_solver = input->get<std::string>("inner_solver");
+  }
+
+  if (inner_solver == "SI")
+  {
+    d_inner_solver = new SourceIteration<D>(input, state, mesh, material,
+                                            quadrature, boundary, q_e, q_f);
+  }
+  else if (inner_solver == "GMRES")
+  {
+    d_inner_solver = new InnerGMRES<D>(input, state, mesh, material,
+                                       quadrature, boundary, q_e, q_f);
+  }
+  else
+  {
+    THROW("Unsupported inner solver type selected: "+inner_solver);
+  }
 
 }
 

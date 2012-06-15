@@ -101,8 +101,8 @@ inline void Sweeper1D<EQ>::sweep(moments_type &phi)
       } // end x loop
 
       // Update boundary.
-      (*d_boundary)(d_face_index[o][Mesh::VERT][Boundary_T::OUT], o, a, d_g) =
-        psi_out;
+      (*d_boundary)
+        (d_face_index[o][Mesh::VERT][Boundary_T::OUT], o, a, d_g) = psi_out;
 
       // Update the angular flux.
       if (d_update_psi) d_state->psi(d_g, o, a) = psi;
@@ -125,6 +125,10 @@ inline void Sweeper1D<EQ>::sweep(moments_type &phi)
 
   } // end omp parallel
 
+  #pragma omp master
+  {
+    d_number_sweeps++;
+  }
   return;
 }
 

@@ -73,9 +73,6 @@ namespace detran
  *
  * A nice overview of approaches for this inner iteration is
  * given by Larsen and Morel in <em> Nuclear Computational Science </em>.
- * We have implement the standard source iteration method, Livolant
- * acceleration (an extrapolation technique), and solvers that use
- * MATLAB's own GMRES (and other Krylov solvers).
  *
  * Input parameters specific to InnerIteration and derived classes:
  * - inner_max_iters        [100]
@@ -83,7 +80,7 @@ namespace detran
  * - inner_print_out        [2], 0=never, 1=final, 2=every interval
  * - inner_print_interval   [10]
  *
- * \sa SourceIteration, Livolant, GMRESIteration
+ * \sa SourceIteration, InnerGMRES
  */
 // ==============================================================================
 
@@ -145,6 +142,9 @@ public:
    */
   virtual void solve(int g) = 0;
 
+  /// \name Setters
+  /// \{
+
   /// Reset the tolerance.
   void set_tolerance(double tol)
   {
@@ -158,6 +158,38 @@ public:
     Require(max_iters > 0);
     d_max_iters = max_iters;
   }
+
+  /// \}
+
+  /// \name Getters
+  /// \{
+
+  SP_mesh get_mesh() const
+  {
+    return d_mesh;
+  }
+
+  SP_state get_state() const
+  {
+    return d_state;
+  }
+
+  SP_sweepsource get_sweepsource() const
+  {
+    return d_sweepsource;
+  }
+
+  SP_sweeper get_sweeper() const
+  {
+    return d_sweeper;
+  }
+
+  int group() const
+  {
+    return d_g;
+  }
+
+  /// \}
 
   /// Unimplemented DBC function.
   virtual bool is_valid() const
@@ -201,8 +233,10 @@ protected:
 
   /// Group we are solving.
   int d_g;
-  /// Numer of sweeps
+  /// Number of sweeps
   int d_number_sweeps;
+
+
 
   /// Low order acceleration
  // SP_acceleration b_acceleration;

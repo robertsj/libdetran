@@ -1,15 +1,15 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   SourceIteration.hh
+ * \file   InnerGMRES.hh
  * \author robertsj
  * \date   Apr 4, 2012
- * \brief  SourceIteration class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+ * \brief  InnerGMRES class definition.
+ * \note   Copyright (C) 2012 Jeremy Roberts.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef SOURCEITERATION_HH_
-#define SOURCEITERATION_HH_
+#ifndef INNERGMRES_HH_
+#define INNERGMRES_HH_
 
 // Detran
 #include "InnerIteration.hh"
@@ -18,23 +18,40 @@
 #include "SP.hh"
 #include "InputDB.hh"
 
+// System
+#include "petsc.h"
+
 namespace detran
 {
 
 //---------------------------------------------------------------------------//
 /*!
- * \class SourceIteration
- * \brief 
+ *  \class InnerGMRES
+ *  \brief Solve the within-group problem with GMRES.
+ *
+ *  The within group equation can be written
+ *  \f[
+ *      (\mathbf{I} - \mathbf{D}\mathbf{L}^{-1}\mathbf{MS})\phi
+ *      = \mathbf{D} \mathbf{L}^{-1} Q \, .
+ *  \f]
+ *  This class couples with PETSc to make available its set of applicable
+ *  solvers, the default being GMRES.  Other solvers are selected
+ *  by command line flags, e.g. -ksp_type bcgs uses a BiCongugate Gradient
+ *  Stabilized algorithm.  Past experience suggests GMRES works best.
+ *
+ *  Note, all iterative solvers do better with preconditioning, which is
+ *  current not implemented.
+ *
  */
 //---------------------------------------------------------------------------//
 
 template <class D>
-class SourceIteration: public InnerIteration<D>
+class InnerGMRES: public InnerIteration<D>
 {
 
 public:
 
-  typedef SP<SourceIteration>                   SP_inner;
+  typedef SP<InnerGMRES>                        SP_inner;
   typedef InnerIteration<D>                     Base;
   typedef typename InnerIteration<D>::SP_inner  SP_base;
   // basic objects
@@ -67,17 +84,17 @@ public:
    *  \param external_source   User-defined external source.
    *  \param fission_source    Fission source.
    */
-  SourceIteration(SP_input           input,
-                  SP_state           state,
-                  SP_mesh            mesh,
-                  SP_material        material,
-                  SP_quadrature      quadrature,
-                  SP_boundary        boundary,
-                  SP_externalsource  q_e,
-                  SP_fissionsource   q_f);
+  InnerGMRES(SP_input           input,
+             SP_state           state,
+             SP_mesh            mesh,
+             SP_material        material,
+             SP_quadrature      quadrature,
+             SP_boundary        boundary,
+             SP_externalsource  q_e,
+             SP_fissionsource   q_f);
 
   /// SP Constructor
-  static SP<SourceIteration<D> >
+  static SP<InnerGMRES<D> >
   Create(SP<detran::InputDB>         input,
          SP<detran::State>           state,
          SP<detran::Mesh>            mesh,
@@ -88,13 +105,20 @@ public:
          SP<detran::FissionSource>   q_f)
   {
     SP_inner p;
-    p = new SourceIteration(input, state, mesh, material,
-                            quadrature, boundary, q_e, q_f);
+    p = new InnerGMRES(input, state, mesh, material,
+                       quadrature, boundary, q_e, q_f);
     return p;
   }
 
   /// Solve the within group equation.
   void solve(int g);
+
+  // Friend functions for applying dimension-specific operator.
+  friend PetscErrorCode apply_WGTO_1D(Mat A, Vec x, Vec y);
+  friend PetscErrorCode apply_WGTO_2D(Mat A, Vec x, Vec y);
+  friend PetscErrorCode apply_WGTO_3D(Mat A, Vec x, Vec y);
+
+private:
 
   // Make inherited data visible
   using Base::d_input;
@@ -109,20 +133,69 @@ public:
   using Base::d_max_iters;
   using Base::d_print_out;
   using Base::d_print_interval;
+  using Base::d_g;
   //using Base::b_acceleration;
+
+  /// \name Private Data
+  /// \{
+
+  KSP d_solver;
+
+  Mat d_operator;
+
+  /// Unknown working vector
+  Vec d_X;
+
+  /// Right hand side
+  Vec d_B;
+
+  int d_moments_size;
+
+  int d_boundary_size;
+
+  /// \}
+
+  /// \name Implementation
+  /// \{
+
+  PetscErrorCode set_operation();
+
+  //---------------------------------------------------------------------------//
+  /*!
+   * \brief A matrix-vector shell for the within-group transport operator.
+   *
+   * This is called by thin wrappers, since PETSc needs the matrix-vector
+   * operation as a function pointer, which precludes a member function.
+   *
+   * \param   A       PETSc shell matrix
+   * \param   x       Incoming PETSc vector
+   * \param   y       Outgoing PETSc vector
+   */
+public:
+  PetscErrorCode apply_WGTO(Mat A, Vec x, Vec y);
+
+  /// \}
 
 };
 
 } // namespace detran
 
 //---------------------------------------------------------------------------//
+// EXTERNAL WRAPPER FUNCTIONS
+//---------------------------------------------------------------------------//
+
+PetscErrorCode apply_WGTO_1D(Mat A, Vec x, Vec y);
+PetscErrorCode apply_WGTO_2D(Mat A, Vec x, Vec y);
+PetscErrorCode apply_WGTO_3D(Mat A, Vec x, Vec y);
+
+//---------------------------------------------------------------------------//
 // INLINE FUNCTIONS
 //---------------------------------------------------------------------------//
 
-#include "SourceIteration.i.hh"
+#include "InnerGMRES.i.hh"
 
-#endif /* SOURCEITERATION_HH_ */
+#endif /* INNERGMRES_HH_ */
 
 //---------------------------------------------------------------------------//
-//              end of SourceIteration.hh
+//              end of InnerGMRES.hh
 //---------------------------------------------------------------------------//

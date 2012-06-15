@@ -149,6 +149,16 @@ namespace detran
 
   }
 
+  template <class D>
+  void SweepSource<D>::reset()
+  {
+    for (int cell = 0; cell < d_mesh->number_cells(); cell++)
+    {
+      d_fixed_group_source[cell] = 0.0;
+      d_scatter_group_source[cell] = 0.0;
+    }
+  }
+
   template class SweepSource<_1D>;
   template class SweepSource<_2D>;
   template class SweepSource<_3D>;

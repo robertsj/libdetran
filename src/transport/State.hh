@@ -220,6 +220,11 @@ public:
     return d_mesh;
   }
 
+  int moments_size() const
+  {
+    return d_moments[0].size();
+  }
+
   SP_quadrature get_quadrature()
   {
     return d_quadrature;

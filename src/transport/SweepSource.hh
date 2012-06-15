@@ -215,6 +215,9 @@ public:
    */
   void build_total_scatter(int g, const State::vec_moments_type &phi);
 
+  /// Reset all the internal source vectors to zero.
+  void reset();
+
   /*!
    *  \brief Get the sweep source vector.
    *

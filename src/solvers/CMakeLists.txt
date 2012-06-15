@@ -11,6 +11,7 @@ SET(SOLVERS_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 SET(SOLVERS_SRC
     InnerIteration.cc
     SourceIteration.cc
+    InnerGMRES.cc
     GaussSeidel.cc
     PowerIteration.cc
 )

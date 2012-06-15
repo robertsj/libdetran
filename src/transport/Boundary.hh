@@ -134,6 +134,9 @@ public:
     return p;
   }
 
+  /// \name Boundary Flux Access
+  /// \{
+
   /*
    *  \brief Const access to a boundary flux using cardinal indices.
    *
@@ -152,27 +155,34 @@ public:
   /*
    *  \brief Mutable access to boundary flux using cardinal indices.
    */
-  boundary_flux_type& operator()(int side, int o, int a, int g);
+  boundary_flux_type&
+  operator()(int side, int o, int a, int g);
 
   /*
    *  \brief Const access to ordered incident flux.
    */
-  const boundary_flux_type& incident(int side, int angle, int g) const;
+  const boundary_flux_type&
+  incident(int side, int angle, int g) const;
 
   /*
    *  \brief Mutable access to incident boundary flux.
    */
-  boundary_flux_type& incident(int side, int angle, int g);
+  boundary_flux_type&
+  incident(int side, int angle, int g);
 
   /*
    *  \brief Const access to ordered outgoing flux.
    */
-  const boundary_flux_type& outgoing(int side, int angle, int g) const;
+  const boundary_flux_type&
+  outgoing(int side, int angle, int g) const;
 
   /*
    *  \brief Mutable access to outgoing boundary flux.
    */
-  boundary_flux_type& outgoing(int side, int angle, int g);
+  boundary_flux_type&
+  outgoing(int side, int angle, int g);
+
+  /// \}
 
   /// Set the boundaries for a within-group solve.
   void set(int g);
@@ -194,6 +204,9 @@ public:
    */
   virtual int ordered_angle(int side, int angle, int inout) const;
 
+  /// \name Getters
+  /// \{
+
   /// Return the input.
   SP_input get_input()
   {
@@ -211,6 +224,8 @@ public:
   {
     return d_quadrature;
   }
+
+  /// \}
 
   bool is_valid() const
   {

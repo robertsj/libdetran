@@ -29,6 +29,7 @@
 // System
 #include <iostream>
 #include <string>
+#include "petsc.h"
 
 namespace detran
 {
@@ -60,14 +61,32 @@ public:
 
   /*
    *  \brief Constructor
+   *
+   *  This initializes PETSc, if applicable.
+   *
+   *  \param argc   Command line argument count
+   *  \param argv   Command line arguments
+   */
+  PyExecute(int argc, char *argv[]);
+
+  /*
+   *  \brief Initialize the manager for a new transport problem.
+   *
+   *  If a new problem is to be solved in the same script, a user
+   *  need only call initialize again, thus resetting all the
+   *  internal pointers.
+   *
    *  \param input    User input database
    *  \param material Cross section library
    *  \param mesh     Problem geometry
    */
-  PyExecute(SP_input input, SP_material material, SP_mesh mesh);
+  void initialize(SP_input input, SP_material material, SP_mesh mesh);
 
   /// Solve the problem.
   void solve();
+
+  /// Finalize.  Closes PETSc, if running, etc.
+  void finalize();
 
   /// \name Setters
   /// \{
@@ -116,6 +135,8 @@ private:
   SP_fissionsource d_fissionsource;
   std::string d_problem_type;
 
+  bool d_initialized;
+
   /// \}
 
   /// \name Implementation
@@ -129,23 +150,42 @@ private:
 };
 
 template <class D>
-PyExecute<D>::PyExecute(SP_input input,
-                        SP_material material,
-                        SP_mesh mesh)
- : d_input(input)
- , d_material(material)
- , d_mesh(mesh)
+PyExecute<D>::PyExecute(int argc, char *argv[])
+  : d_initialized(false)
+{
+#ifdef DETRAN_ENABLE_PETSC
+  // Start PETSc.
+  PetscInitialize(&argc, &argv, PETSC_NULL, PETSC_NULL);
+#endif
+}
+
+template <class D>
+void PyExecute<D>::initialize(SP_input input,
+                              SP_material material,
+                              SP_mesh mesh)
 {
   // Check preconditions.
-  Require(d_input);
-  Require(d_material);
-  Require(d_mesh);
+  Require(input);
+  Require(material);
+  Require(mesh);
+  d_input = input;
+  d_material = material;
+  d_mesh = mesh;
 
   // Setup the problem.
   setup();
+  d_initialized = true;
 
   // Check postconditions.
   Ensure(d_quadrature);
+}
+
+template <class D>
+void PyExecute<D>::finalize()
+{
+#ifdef DETRAN_ENABLE_PETSC
+  PetscFinalize();
+#endif
 }
 
 //---------------------------------------------------------------------------//

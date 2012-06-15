@@ -145,6 +145,11 @@ public:
     d_update_psi = v;
   }
 
+  int number_sweeps()
+  {
+    return d_number_sweeps;
+  }
+
   /// Set an acceleration scheme.
 //  void set_acceleration(SP_acceleration acceleration)
 //  {
@@ -157,6 +162,9 @@ public:
   }
 
 protected:
+
+  /// \name Protected Data
+  /// \{
 
   /// Input database
   SP_input d_input;
@@ -194,11 +202,21 @@ protected:
   /// Adjoint problem?
   bool d_adjoint;
 
+  /// Count the sweeps.
+  int d_number_sweeps;
+
+  /// \}
+
+  /// \name Implementation
+  /// \{
+
   /// Allocate template-specific items.
   void setup();
 
   /// Mesh sweeper indices. \todo Allow adjoint.
   inline int index(int o, int dim, int ijk);
+
+  /// \}
 
 };
 

@@ -21,7 +21,7 @@
 /*#cmakedefine DETRAN_BUILD_SLABTRAN*/
 
 /*// external libraries*/
-/*#cmakedefine DETRAN_ENABLE_PETSC*/
+#cmakedefine DETRAN_ENABLE_PETSC
 /*#cmakedefine DETRAN_ENABLE_SLEPC*/
 /*#cmakedefine DETRAN_ENABLE_SILO*/
 /*#cmakedefine DETRAN_ENABLE_MPI*/
