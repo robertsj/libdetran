@@ -30,6 +30,7 @@ Sweeper<D>::Sweeper(SP_input input,
   , d_update_psi(false)
   , d_adjoint(false)
   , d_number_sweeps(0)
+  , d_update_boundary(false)
 {
   Require(d_input);
   Require(d_mesh);

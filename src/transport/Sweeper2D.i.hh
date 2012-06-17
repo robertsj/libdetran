@@ -74,7 +74,7 @@ inline void Sweeper2D<EQ>::sweep(moments_type &phi)
       if (d_update_psi) psi = d_state->psi(d_g, o, a);
 
       // Update the boundary for this angle.
-      d_boundary->update(d_g, o, a);
+      if (d_update_boundary) d_boundary->update(d_g, o, a);
 
       // Get boundary fluxes.
       boundary_flux_type psi_v = (*d_boundary)

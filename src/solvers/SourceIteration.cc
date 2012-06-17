@@ -36,6 +36,7 @@ SourceIteration<D>::SourceIteration(SP_input          input,
                                        q_f)
 {
   //b_acceleration = new CMR<D>(mesh, material, quadrature);
+  d_sweeper->set_update_boundary(true);
 }
 
 } // end namespace detran

@@ -184,14 +184,57 @@ public:
 
   /// \}
 
-  /// Set the boundaries for a within-group solve.
+  /*!
+   *  \brief Set the boundaries for a within-group solve.
+   *
+   *  This sets any boundaries that must be fixed for
+   *  a solve, such as any fixed boundary source.
+   *
+   *  \param  g   Group of current solve
+   */
   void set(int g);
 
-  /// Update the boundaries for each sweep.
+  /*!
+   *  \brief Update the boundaries for each sweep.
+   *
+   *  This updates all incident boundary fluxes
+   *  using the current outgoing boundary fluxes
+   *  in a group.  What happens in the update is
+   *  a function of the underlying boundary
+   *  condition.
+   *
+   *  \param  g   Group of current solve
+   */
   void update(int g);
 
-  /// Update the boundaries for a single angle. \todo finish the idea
+  /*!
+   *  \brief Update the boundaries for a single angle.
+   *
+   *  This is an alternative update that only updates
+   *  the incident boundary flux for a particular
+   *  angle.  When called within a sweep, this allows
+   *  the most recent boundary fluxes to be used,
+   *  in effect producing a Gauss-Seidel iteration.
+   *
+   *  \note This cannot be used for Krylov solvers.
+   *
+   *  \param  g   Group of current solve
+   *  \param  o   Octant being swept
+   *  \param  a   Angle within octant being swept
+   */
   void update(int g, int o, int a);
+
+  /*!
+   *  \brief Clear the boundary container for a group.
+   *
+   *  In some cases, a client might require homogeneous
+   *  boundaries, perhaps after a fixed boundary has
+   *  been used to construct a right hand side for a
+   *  Krylov solve.
+   *
+   *  \param  g   Group of current solve
+   */
+  void clear(int g);
 
   /*!
    *  \brief  Map the local index to cardinal index.
@@ -208,24 +251,46 @@ public:
   /// \{
 
   /// Return the input.
-  SP_input get_input()
+  SP_input get_input() const
   {
     return d_input;
   }
 
   /// Return the mesh.
-  SP_mesh get_mesh()
+  SP_mesh get_mesh() const
   {
     return d_mesh;
   }
 
   /// Return the quadratur.
-  SP_quadrature get_quadrature()
+  SP_quadrature get_quadrature() const
   {
     return d_quadrature;
   }
 
+  /// Number of boundary flux values in a group on a side
+  int boundary_flux_size(int side) const
+  {
+    return d_boundary_flux_size[side];
+  }
+
   /// \}
+
+  void set_incident(int g, double *v);
+
+  void get_incident(int g, double *v);
+
+  /// Does the boundary have any reflective conditions?
+  bool has_reflective() const
+  {
+    return d_has_reflective;
+  }
+
+  /// Is a side reflective?
+  bool is_reflective(int side) const
+  {
+    return d_is_reflective[side];
+  }
 
   bool is_valid() const
   {
@@ -255,11 +320,20 @@ private:
   /// Vector of boundary conditions.
   std::vector<SP_bc> d_bc;
 
+  /// Do I have any reflective conditions?
+  bool d_has_reflective;
+
+  std::vector<bool> d_is_reflective;
+
+  /// Size of the boundary flux on a side in one group.
+  vec_int d_boundary_flux_size;
+
   /// \}
 
   /// \name Implementation
   /// \{
 
+  /// Sizes the boundary flux containers.
   void initialize();
 
   /// \}

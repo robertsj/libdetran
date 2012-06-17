@@ -139,26 +139,44 @@ private:
   /// \name Private Data
   /// \{
 
+  /// Main linear solver
   KSP d_solver;
 
+  /// Operator "A" in "Ax = b"
   Mat d_operator;
 
-  /// Unknown working vector
+  /// Solution vector
   Vec d_X;
 
   /// Right hand side
   Vec d_B;
 
+  /// Size of the moments portion of d_X
   int d_moments_size;
 
+  /// Size of the boundary portion of d_X
   int d_boundary_size;
+
+  int d_reflective_solve_iterations;
 
   /// \}
 
   /// \name Implementation
   /// \{
 
+  /// Set the templated operator function.
   PetscErrorCode set_operation();
+
+  /// Build the right hand side.
+  void build_rhs(State::moments_type &B);
+
+  /// Solve for reflective boundaries using Gauss-Seidel sweeps.
+  // NOTE, this suggests a switch on sweeper to enable on-the-fly
+  // boundary updates!
+  void solve_reflective(State::moments_type &B)
+  {
+    /* finish me */
+  }
 
   //---------------------------------------------------------------------------//
   /*!
@@ -166,6 +184,9 @@ private:
    *
    * This is called by thin wrappers, since PETSc needs the matrix-vector
    * operation as a function pointer, which precludes a member function.
+   *
+   * \note This is public, since I haven't figured out a way to use friends
+   *       in this way---maybe there is no way.
    *
    * \param   A       PETSc shell matrix
    * \param   x       Incoming PETSc vector

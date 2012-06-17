@@ -74,10 +74,10 @@ inline void Sweeper1D<EQ>::sweep(moments_type &phi)
 
       // Get psi if update requested.
       State::angular_flux_type psi;
-      if (d_update_psi) psi = d_state->psi(o, a, d_g);
+      if (d_update_psi) psi = d_state->psi(d_g, o, a);
 
       // Update the boundary for this angle.
-      d_boundary->update(d_g, o, a);
+      if (d_update_boundary) d_boundary->update(d_g, o, a);
 
       // Get boundary fluxes.
       psi_out =

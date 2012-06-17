@@ -53,6 +53,8 @@ inline void Sweeper3D<EQ>::sweep(moments_type &phi)
       State::angular_flux_type psi;
       if (d_update_psi) psi = d_state->psi(o, a, d_g);
 
+      if (d_update_boundary) d_boundary->update(d_g, o, a);
+
       // Get boundary fluxes.
       psi_yz =
         (*d_boundary)(d_face_index[o][Mesh::YZ][Boundary_T::IN], o, a, d_g);

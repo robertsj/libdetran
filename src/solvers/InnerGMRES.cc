@@ -34,35 +34,48 @@ InnerGMRES<D>::InnerGMRES(SP_input          input,
                                        boundary,
                                        q_e,
                                        q_f)
+  , d_moments_size(0)
+  , d_boundary_size(0)
 {
 
   // Error from PETSc calls.
   PetscErrorCode ierr;
 
   // Determine the sizes of the moments.
-  int d_moments_size = mesh->number_cells();
+  d_moments_size = mesh->number_cells();
 
   // Determine the sizes of any reflected boundary fluxes.
-  int d_boundary_size = 0*quadrature->number_angles()/2;
+  for (int side = 0; side < 2*D::dimension; side++)
+  {
+    if (boundary->is_reflective(side))
+    {
+      // We only need to store only half of the unknowns.
+      d_boundary_size += boundary->boundary_flux_size(side)/2;
+    }
+  }
 
+  // Total number of unknowns in the within-group solve.
   int number_unknowns = d_moments_size + d_boundary_size;
 
   ierr = MatCreateShell(PETSC_COMM_WORLD,
-                        number_unkowns,
-                        number_unkowns,
-                        number_unkowns,
-                        number_unkowns,
+                        number_unknowns,
+                        number_unknowns,
+                        number_unknowns,
+                        number_unknowns,
                         this,
                         &d_operator);
   Insist(!ierr, "Error creating MR shell matrix.");
 
   // Create the corresponding vectors.
   ierr = VecCreateSeq(PETSC_COMM_WORLD,
-                      number_unkowns,
+                      number_unknowns,
                       &d_X);
   ierr = VecCreateSeq(PETSC_COMM_WORLD,
-                      number_unkowns,
+                      number_unknowns,
                       &d_B);
+
+  VecSet(d_X, 0.0);
+  VecSet(d_B, 0.0);
 
   // Set the operator.
   ierr = set_operation();
@@ -85,60 +98,6 @@ InnerGMRES<D>::InnerGMRES(SP_input          input,
   // Allow for command line flags.
   ierr = KSPSetFromOptions(d_solver);
 
-}
-
-template <class D>
-PetscErrorCode InnerGMRES<D>::apply_WGTO(Mat A, Vec x, Vec y)
-{
-
-  PetscErrorCode ierr;
-
-  // Get the array from the Krylov vector x.
-  double *x_a;
-  ierr = VecGetArray(x, &x_a); CHKERRQ(ierr);
-
-  // Assign the array to a std::vector.  Is there a memory-efficient
-  // way to do this?
-  int n = d_state->moments_size();
-  State::moments_type x_v(n);
-  for (int i = 0; i < n; i++)
-  {
-    x_v[i] = x_a[i];
-  }
-
-  // y <-- x
-  State::moments_type y_v(x_v);
-
-  // Build the within group source.  This is equivalent to
-  //   x <-- M*S*x
-  d_sweepsource->reset();
-  d_sweepsource->build_within_group_scatter(d_g, x_v);
-
-  // Set the incident boundary fluxes.
-
-  // Sweep over space and angle.  This is equivalent to
-  //   x <-- D*inv(L)*M*S*x
-  d_sweeper->sweep(x_v);
-
-  // Return the following:
-  //  y <-- x - D*inv(L)*M*S*x = (I-D*inv(L)*M*S)*x <-- A*x
-  for (int i = 0; i < n; i++)
-  {
-    y_v[i] -= x_v[i];
-  }
-  double *y_a;
-  ierr = VecGetArray(y, &y_a); CHKERRQ(ierr);
-  for (int i = 0; i < n; i++)
-  {
-    y_a[i] = y_v[i];
-  }
-
-  // Restore the arrays.
-  ierr = VecRestoreArray(x, &x_a); CHKERRQ(ierr);
-  ierr = VecRestoreArray(y, &y_a); CHKERRQ(ierr);
-
-  // No error.
-  return 0;
 }
 
 template <class D>

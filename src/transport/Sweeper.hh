@@ -145,6 +145,17 @@ public:
     d_update_psi = v;
   }
 
+  /// Switch on-the-fly boundary updates on or off
+  void set_update_boundary(bool v)
+  {
+    d_update_boundary = v;
+  }
+
+  bool update_boundary() const
+  {
+    return d_update_boundary;
+  }
+
   int number_sweeps()
   {
     return d_number_sweeps;
@@ -204,6 +215,9 @@ protected:
 
   /// Count the sweeps.
   int d_number_sweeps;
+
+  /// Update the boundary on the fly?  Can't be used for Krylov.
+  bool d_update_boundary;
 
   /// \}
 

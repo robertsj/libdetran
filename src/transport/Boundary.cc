@@ -31,6 +31,9 @@ Boundary<D>::Boundary(SP_input        input,
   , d_boundary_flux(2*D::dimension, // number of sides
                     vec2_boundary_flux(d_number_groups))
   , d_bc(2*D::dimension)
+  , d_boundary_flux_size(2*D::dimension, 0)
+  , d_has_reflective(false)
+  , d_is_reflective(2*D::dimension, false)
 {
   Require(input);
   Require(mesh);
@@ -61,13 +64,13 @@ Boundary<D>::Boundary(SP_input        input,
     }
     if (type == "vacuum")
     {
-      d_bc[side] =
-          new Vacuum<D>((*this), side, input, mesh, quadrature);
+      d_bc[side] = new Vacuum<D>((*this), side, input, mesh, quadrature);
     }
     else if (type == "reflect")
     {
-      d_bc[side] =
-          new Reflective<D>((*this), side, input, mesh, quadrature);
+      d_bc[side] = new Reflective<D>((*this), side, input, mesh, quadrature);
+      d_is_reflective[side] = true;
+      d_has_reflective = true;
     }
     else
     {
@@ -75,11 +78,13 @@ Boundary<D>::Boundary(SP_input        input,
       THROW(type);
       break;
     }
+
   }
-
-
-
 }
+
+//---------------------------------------------------------------------------//
+// Implementation
+//---------------------------------------------------------------------------//
 
 template <class D>
 void Boundary<D>::initialize()
@@ -109,6 +114,12 @@ void Boundary<D>::initialize()
           boundary_flux_type(ny, vec_dbl(nx, 0.0)));
     }
   }
+  d_boundary_flux_size[Mesh::LEFT]   = na * ny * nz;
+  d_boundary_flux_size[Mesh::RIGHT]  = na * ny * nz;
+  d_boundary_flux_size[Mesh::BOTTOM] = na * nx * nz;
+  d_boundary_flux_size[Mesh::TOP]    = na * nx * nz;
+  d_boundary_flux_size[Mesh::SOUTH]  = na * nx * ny;
+  d_boundary_flux_size[Mesh::NORTH]  = na * nx * ny;
 }
 
 template <>
@@ -133,6 +144,10 @@ void Boundary<_2D>::initialize()
           boundary_flux_type(nx, 0.0));
     }
   }
+  d_boundary_flux_size[Mesh::LEFT]   = na * ny;
+  d_boundary_flux_size[Mesh::RIGHT]  = na * ny;
+  d_boundary_flux_size[Mesh::BOTTOM] = na * nx;
+  d_boundary_flux_size[Mesh::TOP]    = na * nx;
 }
 
 template <>
@@ -148,6 +163,8 @@ void Boundary<_1D>::initialize()
         d_boundary_flux[Mesh::RIGHT][g].resize(na, 0.0);
     }
   }
+  d_boundary_flux_size[Mesh::LEFT]   = na;
+  d_boundary_flux_size[Mesh::RIGHT]  = na;
 }
 
 } // end namespace detran

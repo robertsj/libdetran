@@ -80,11 +80,11 @@ void Reflective<D>::setup_octant()
   }
   else if (d_side == Mesh::RIGHT)
   {
-    // incident octants: 2, 1, 5, 6
+    // incident octants: 2, 1, 6, 5
     d_octants[0][0] = 2;
     d_octants[1][0] = 1;
-    d_octants[2][0] = 5;
-    d_octants[3][0] = 6;
+    d_octants[2][0] = 6;
+    d_octants[3][0] = 5;
     // outgoing octants: 0, 3, 4, 7
     d_octants[0][1] = 0;
     d_octants[1][1] = 3;
@@ -95,9 +95,9 @@ void Reflective<D>::setup_octant()
   {
     // incident octants: 0, 4, 1, 5
     d_octants[0][0] = 0;
-    d_octants[1][0] = 3;
-    d_octants[2][0] = 4;
-    d_octants[3][0] = 7;
+    d_octants[1][0] = 4;
+    d_octants[2][0] = 1;
+    d_octants[3][0] = 5;
     // outgoing octants: 3, 7, 2, 6
     d_octants[0][1] = 1;
     d_octants[1][1] = 2;
@@ -187,12 +187,16 @@ void Reflective<_1D>::setup_octant()
   Require(d_side == Mesh::LEFT || d_side == Mesh::RIGHT);
   if (d_side == Mesh::LEFT)
   {
+    // incident octant: 0
     d_octants[0][0] = 0;
+    // outgoing octant: 1
     d_octants[0][1] = 1;
   }
   else
   {
+    // incident octant: 1
     d_octants[0][0] = 1;
+    // outgoing octant: 0
     d_octants[0][1] = 0;
   }
 }
