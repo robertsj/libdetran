@@ -316,6 +316,9 @@ void Material::display()
   printf("\n");
   printf("Detran Material");
   printf("\n");
+  printf("Number of materials: %5i\n", d_number_materials);
+  printf("   Number of groups: %5i\n", d_number_groups);
+  printf("\n");
   for (int m = 0; m < d_number_materials; m++)
   {
     printf("material      %5i\n", m);

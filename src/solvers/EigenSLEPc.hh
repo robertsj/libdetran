@@ -1,26 +1,29 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   PowerIteration.hh
+ * \file   EigenSLEPc.hh
  * \author robertsj
- * \date   Apr 10, 2012
- * \brief  PowerIteration class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+ * \date   Jun 18, 2012
+ * \brief  EigenSLEPc class definition.
+ * \note   Copyright (C) 2012 Jeremy Roberts.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef POWERITERATION_HH_
-#define POWERITERATION_HH_
+#ifndef EIGENSLEPC_HH_
+#define EIGENSLEPC_HH_
 
 // Detran
 #include "Eigensolver.hh"
+
+// System
+#include "slepceps.h"
 
 namespace detran
 {
 
 //---------------------------------------------------------------------------//
 /*!
- * \class PowerIteration
- * \brief Solves the eigenvalue problem via the power method.
+ * \class EigenSLEPc
+ * \brief Solves the eigenvalue problem using SLEPc.
  *
  * The eigenvalue problem can be cast in the form
  * \f[
@@ -29,32 +32,29 @@ namespace detran
  * where \f$ d \f$ is the fission density and \f$ k \f$ is the
  * eigenvalue.  See Eigensolver for more details on this formulation.
  *
- * The power method solves the eigenproblem using the iteration
- * \f[
- *     d^{l+1} \leftarrow \mathbf{A} d^{l} / k^{l}
- * \f]
- * and
- * \f[
- *     k^{l+1} \leftarrow || d^{l+1} || \, .
- * \f]
- * Traditionally, the norm used to define the updated eigenvalue
- * is a fission-weighted sum of the group fluxes, which is
- * equivalent to an L1 norm of the density if all the fluxes
- * and fission cross sections are positive, true for all
- * physical problems (and barring numerical issues due to
- * discretization).  Here, we use the L1 norm, and begin
- * with \f$ || d^{0} || = 1 \f$.
+ * SLEPc is a package for solving eigenvalue problems and is built on
+ * top of PETSc.  SLEPc offers a number of built in solvers, including
+ * the explicitly-restarted Arnoldi method (ERAM), the Krylov-Schur (KS)
+ * method, and power iteration (PI).  The default is KS, and other
+ * solvers and options are available from the command line.
+ *
+ * Note, as mentioned in Eigensolver, Krylov methods require an
+ * adequately-converged multigroup solve.  The paper by Warsa et al.
+ * talks more about this, and it seems the multigroup
+ * convergence is most
+ * important in the first several iterations.  Thus, it might
+ * be worth implementing a dynamic tolerance at some point.
  *
  */
 //---------------------------------------------------------------------------//
 
 template <class D>
-class PowerIteration: public Eigensolver<D>
+class EigenSLEPc: public Eigensolver<D>
 {
 
 public:
 
-  typedef SP<PowerIteration<D> >                SP_solver;
+  typedef SP<EigenSLEPc<D> >                    SP_solver;
   typedef Eigensolver<D>                        Base;
   typedef typename Base::SP_solver              SP_base;
   typedef typename GaussSeidel<D>::SP_solver    SP_mg_solver;
@@ -78,7 +78,7 @@ public:
    *  \param boundary          Boundary fluxes.
    *  \param fission_source    Fission source.
    */
-  PowerIteration(SP_input           input,
+  EigenSLEPc(SP_input           input,
                  SP_state           state,
                  SP_mesh            mesh,
                  SP_material        material,
@@ -87,7 +87,7 @@ public:
                  SP_fissionsource   q_f);
 
   /// SP Constructor
-  static SP<PowerIteration<D> >
+  static SP<EigenSLEPc<D> >
   Create(SP<detran::InputDB>         input,
          SP<detran::State>           state,
          SP<detran::Mesh>            mesh,
@@ -97,8 +97,8 @@ public:
          SP<detran::FissionSource>   q_f)
   {
     SP_solver p;
-    p = new PowerIteration(input, state, mesh, material,
-                           quadrature, boundary, q_f);
+    p = new EigenSLEPc(input, state, mesh, material,
+                       quadrature, boundary, q_f);
     return p;
   }
 
@@ -130,8 +130,45 @@ protected:
   /// \name Protected Data
   /// \{
 
-  /// Display Aitken extrapolation
-  bool d_aitken;
+  /// SLEPc eigensolver.
+  EPS d_solver;
+
+  /// Operator.
+  Mat d_operator;
+
+  /// PETSc vector for fission density.
+  Vec d_density;
+
+  /// System size
+  int d_size;
+
+  /// Number of multigroup solves.
+  int d_mg_solves;
+
+  /// \}
+
+  /// \name Implementation
+  /// \{
+
+  /// Set the templated operator function.
+  PetscErrorCode set_operation();
+
+  //---------------------------------------------------------------------------//
+  /*!
+   * \brief A matrix-vector shell for the eigenvalue problem.
+   *
+   * This is called by thin wrappers, since PETSc needs the matrix-vector
+   * operation as a function pointer, which precludes a member function.
+   *
+   * \note This is public, since I haven't figured out a way to use friends
+   *       in this way---maybe there is no way.
+   *
+   * \param   A       PETSc shell matrix
+   * \param   x       Incoming PETSc vector
+   * \param   y       Outgoing PETSc vector
+   */
+public:
+  PetscErrorCode apply_eigen(Mat A, Vec x, Vec y);
 
   /// \}
 
@@ -143,6 +180,14 @@ protected:
 // INLINE FUNCTIONS
 //---------------------------------------------------------------------------//
 
-#include "PowerIteration.i.hh"
+#include "EigenSLEPc.i.hh"
 
-#endif /* POWERITERATION_HH_ */
+//---------------------------------------------------------------------------//
+// EXTERNAL WRAPPER FUNCTIONS
+//---------------------------------------------------------------------------//
+
+PetscErrorCode apply_eigen_1D(Mat A, Vec x, Vec y);
+PetscErrorCode apply_eigen_2D(Mat A, Vec x, Vec y);
+PetscErrorCode apply_eigen_3D(Mat A, Vec x, Vec y);
+
+#endif /* EIGENSLEPc_HH_ */

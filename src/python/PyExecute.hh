@@ -14,6 +14,8 @@
 // Detran
 #include "Material.hh"
 #include "Mesh.hh"
+#include "Eigensolver.hh"
+#include "EigenSLEPc.hh"
 #include "ExternalSource.hh"
 #include "FissionSource.hh"
 #include "State.hh"
@@ -157,6 +159,10 @@ PyExecute<D>::PyExecute(int argc, char *argv[])
   // Start PETSc.
   PetscInitialize(&argc, &argv, PETSC_NULL, PETSC_NULL);
 #endif
+#ifdef DETRAN_ENABLE_SLEPC
+  // Start SLEPc.
+  SlepcInitialize(&argc, &argv, PETSC_NULL, PETSC_NULL);
+#endif
 }
 
 template <class D>
@@ -185,6 +191,9 @@ void PyExecute<D>::finalize()
 {
 #ifdef DETRAN_ENABLE_PETSC
   PetscFinalize();
+#endif
+#ifdef DETRAN_ENABLE_SLEPC
+  SlepcFinalize(); // is this safe?
 #endif
 }
 
@@ -266,15 +275,30 @@ void PyExecute<D>::solve()
   if (d_problem_type == "eigenvalue")
   {
     Require(d_fissionsource);
-    PowerIteration<D> solver(d_input,
-                             d_state,
-                             d_mesh,
-                             d_material,
-                             d_quadrature,
-                             boundary,
-                             d_externalsource,
-                             d_fissionsource);
-    solver.solve();
+
+    std::string eigen_solver = "PI";
+    if (d_input->check("eigen_solver"))
+    {
+      eigen_solver = d_input->get<std::string>("eigen_solver");
+    }
+
+    if (eigen_solver == "PI")
+    {
+      PowerIteration<D> solver(d_input, d_state, d_mesh, d_material,
+                               d_quadrature, boundary, d_fissionsource);
+      solver.solve();
+    }
+    else if (eigen_solver == "SLEPc")
+    {
+      EigenSLEPc<D> solver(d_input, d_state, d_mesh, d_material,
+                           d_quadrature, boundary, d_fissionsource);
+      solver.solve();
+    }
+    else
+    {
+      THROW("Unsupported eigen_solver type selected: "+eigen_solver);
+    }
+
   }
   else if (d_problem_type == "fixed" || d_problem_type == "fixed_multiply")
   {

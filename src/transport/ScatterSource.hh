@@ -50,7 +50,7 @@ public:
    *
    *  This constructs
    *  \f[
-   *      q_g = \mathb{S}_{gg} \phi_g \, .
+   *      q_g = \mathbf{S}_{gg} \phi_g \, .
    *  \f]
    *
    *  \param   g        Group for this problem

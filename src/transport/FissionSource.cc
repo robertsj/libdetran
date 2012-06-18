@@ -37,14 +37,24 @@ FissionSource::FissionSource(SP_state state,
   d_source.assign(d_mesh->number_cells(), 0.0);
 }
 
+/*
+ *  Define the density as the normalized sum of
+ *  nu * fission cross section.  Normalized
+ *  using the L1 norm.
+ */
 void FissionSource::initialize()
 {
   vec_int mat_map = d_mesh->mesh_map("MATERIAL");
+  int ng = d_material->number_groups();
   for (int cell = 0; cell < d_mesh->number_cells(); cell++)
   {
-    d_density[cell] = d_material->nu_sigma_f(mat_map[cell], 0);
+    d_density[cell] = 0.0;
+    for (int g = 0; g < ng; g++)
+    {
+      d_density[cell] += d_material->nu_sigma_f(mat_map[cell], g);
+    }
   }
-  double norm_density = norm(d_density, "L2");
+  double norm_density = norm(d_density, "L1");
   Require(norm_density > 0.0);
   vec_scale(d_density, 1.0/norm_density);
 }

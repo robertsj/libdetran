@@ -497,7 +497,4 @@ def get_materials() :
   # Finalize
   mat.finalize()
 
-  # Display
-  mat.display()
-
   return mat

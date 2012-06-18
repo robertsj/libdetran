@@ -135,7 +135,6 @@ void Execute::solve()
                              d_material,
                              d_quadrature,
                              boundary,
-                             d_externalsource,
                              d_fissionsource);
     solver.solve();
   }

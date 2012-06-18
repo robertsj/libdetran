@@ -9,6 +9,8 @@ SET(SOLVERS_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 #-------------------------------------#
 
 SET(SOLVERS_SRC
+	Eigensolver.cc
+	EigenSLEPc.cc
     InnerIteration.cc
     SourceIteration.cc
     InnerGMRES.cc
@@ -30,7 +32,8 @@ TARGET_LINK_LIBRARIES( solvers
                        materials
                        geometry
                        utilities
-                       ${PETSC_LIBRARIES} 
+                       ${PETSC_LIBRARIES}
+                       ${SLEPC_LIBRARIES}  
                        ${GPERFTOOLS_LIBRARIES}
 )
 

@@ -65,14 +65,14 @@ public:
 
 
   /*!
-   *  @brief Setup the equations for a group.
-   *  @param g     Current group.
+   *  \brief Setup the equations for a group.
+   *  \param g     Current group.
    */
   void setup_group(int g);
 
   /*!
-   *  @brief Setup the equations for an octant.
-   *  @param octant    Current octant.
+   *  \brief Setup the equations for an octant.
+   *  \param octant    Current octant.
    */
   void setup_octant(int octant);
 

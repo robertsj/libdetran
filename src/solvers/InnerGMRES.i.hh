@@ -139,7 +139,7 @@ inline void InnerGMRES<D>::build_rhs(State::moments_type &B)
       }
     }
     d_sweeper->set_update_boundary(false);
-    std::cout << " reflective its = " << iteration << " error = " << error << std::endl;
+    //std::cout << " reflective its = " << iteration << " error = " << error << std::endl;
   }
 
   // Fill the PETSc Vec with B. Remember to replace it.

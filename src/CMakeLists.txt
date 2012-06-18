@@ -28,9 +28,14 @@ SET( DETRAN_ENABLE_OPENMC NO CACHE BOOL
   "Enable OpenMP for multithreaded solves."
 )
 
-# Options for PETSC. On or Off.
+# Options for PETSc. On or Off.
 SET( DETRAN_ENABLE_PETSC NO CACHE BOOL
   "Enable PETSc."
+)
+
+# Options for SLEPc. On or Off.
+SET( DETRAN_ENABLE_SLEPC NO CACHE BOOL
+  "Enable SLEPc."
 )
 
 # Options for OpenMP directives. On or Off.
@@ -66,6 +71,11 @@ if( DETRAN_ENABLE_PETSC)
   find_package(PETSc REQUIRED)
   include_directories(${PETSC_INCLUDES})
   add_definitions(${PETSC_DEFINITIONS})
+endif()
+
+if( DETRAN_ENABLE_SLEPC)
+  find_package(SLEPc REQUIRED)
+  include_directories(${SLEPC_INCLUDES})
 endif()
 
 # This is a hack for now.  Probably worth generating a CMake finder thing.
@@ -193,6 +203,11 @@ if( DETRAN_ENABLE_PETSC )
 message("++++ PETSc:       enabled")
 elseif()
 message("++++ PETSc:       disabled")
+endif()
+if( DETRAN_ENABLE_SLEPC )
+message("++++ SLEPc:       enabled")
+elseif()
+message("++++ SLEPc:       disabled")
 endif()
 if( DETRAN_ENABLE_GPERFTOOLS )
 message("++++ Profiling:   enabled")

@@ -287,7 +287,6 @@ inline void Boundary<_1D>::set_incident(int g, double *v)
         {
 
           int angle = d_quadrature->index(io[side][o], a);
-          cout << " *** " << side << " " << io[side][o] << " " << a << " " << angle << " " << d_boundary_flux[side][g][angle] << endl;
           d_boundary_flux[side][g][angle] = *v;
           v++;
         }

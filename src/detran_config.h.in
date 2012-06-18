@@ -9,24 +9,18 @@
 #ifndef DETRAN_CONFIG_H_
 #define DETRAN_CONFIG_H_
 
-// debug on
+// DBC
 #cmakedefine DETRAN_ENABLE_DEBUG
 
-/*// testing*/
-/*#cmakedefine DETRAN_ENABLE_TEST*/
+// Unit Testing
+#cmakedefine DETRAN_ENABLE_TEST
 
-/*// detran packages*/
-/*#cmakedefine DETRAN_BUILD_ERME*/
-/*#cmakedefine DETRAN_BUILD_DIFF2D*/
-/*#cmakedefine DETRAN_BUILD_SLABTRAN*/
-
-/*// external libraries*/
+// External Libraries
 #cmakedefine DETRAN_ENABLE_PETSC
-/*#cmakedefine DETRAN_ENABLE_SLEPC*/
-/*#cmakedefine DETRAN_ENABLE_SILO*/
-/*#cmakedefine DETRAN_ENABLE_MPI*/
+#cmakedefine DETRAN_ENABLE_SLEPC
 #cmakedefine DETRAN_ENABLE_OPENMP
 #cmakedefine DETRAN_ENABLE_GPERFTOOLS
+
 #endif // DETRAN_CONFIG_H_ 
 
 //---------------------------------------------------------------------------//
