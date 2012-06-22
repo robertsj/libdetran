@@ -27,6 +27,9 @@ namespace detran
 template <class EQ>
 inline void Sweeper1D<EQ>::sweep(moments_type &phi)
 {
+  // Preconditions
+  Require(d_g >= 0);
+  Require(d_g < d_material->number_groups());
 
   // Reset the flux moments
   phi.assign(phi.size(), 0.0);

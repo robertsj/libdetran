@@ -12,43 +12,34 @@
 #define GAUSSSEIDEL_HH_
 
 // Detran
-#include "ExternalSource.hh"
-#include "FissionSource.hh"
-#include "Material.hh"
-#include "Mesh.hh"
-#include "InnerIteration.hh"
-#include "Quadrature.hh"
-
-// Utilities
-#include "DBC.hh"
-#include "InputDB.hh"
-#include "SP.hh"
+#include "MultigroupSolver.hh"
 
 namespace detran
 {
 
-//===========================================================================//
+//---------------------------------------------------------------------------//
 /*!
  * \class GaussSeidel
  * \brief Solves the multigroup transport equation via Gauss-Seidel.
  */
-//===========================================================================//
+//---------------------------------------------------------------------------//
+
 template <class D>
-class GaussSeidel: public Object
+class GaussSeidel: public MultigroupSolver<D>
 {
 
 public:
 
   typedef SP<GaussSeidel<D> >                   SP_solver;
+  typedef MultigroupSolver<D>                   Base;
+  typedef typename Base::SP_solver              SP_base;
   typedef typename InnerIteration<D>::SP_inner  SP_inner;
-  // basic objects
   typedef InputDB::SP_input                     SP_input;
   typedef State::SP_state                       SP_state;
   typedef Mesh::SP_mesh                         SP_mesh;
   typedef Material::SP_material                 SP_material;
   typedef Quadrature::SP_quadrature             SP_quadrature;
   typedef typename Boundary<D>::SP_boundary     SP_boundary;
-  // source typedefs
   typedef ExternalSource::SP_source             SP_externalsource;
   typedef FissionSource::SP_source              SP_fissionsource;
 
@@ -102,39 +93,29 @@ public:
 
 private:
 
-  /// User input.
-  SP_input d_input;
-  /// State vectors.
-  SP_state d_state;
-  /// Problem mesh (either Cartesian mesh or MOC tracking)
-  SP_mesh d_mesh;
-  /// Materials definitions.
-  SP_material d_material;
-  /// Angular mesh.
-  SP_quadrature d_quadrature;
-  /// Boundary fluxes.
-  SP_boundary d_boundary;
+  // Expose base members.
+  using Base::d_input;
+  using Base::d_state;
+  using Base::d_mesh;
+  using Base::d_material;
+  using Base::d_quadrature;
+  using Base::d_boundary;
+  using Base::d_external_source;
+  using Base::d_fissionsource;
+  using Base::d_downscatter;
+  using Base::d_number_groups;
+  using Base::d_max_iters;
+  using Base::d_tolerance;
+  using Base::d_print_out;
+  using Base::d_print_interval;
+  using Base::d_inner_solver;
 
-  /// User-defined external source
-  SP_externalsource d_external_source;
-  /// Fission source, if used
-  SP_fissionsource d_fission_source;
+  /// \name Private Data
+  /// \{
 
-  /// Inner solver
-  SP_inner d_inner_solver;
-  /// Downscatter switch.
-  bool d_downscatter;
 
-  /// Number of energy groups.
-  int d_number_groups;
-  /// Maximum outer iterations (only relevant for upscatter)
-  int d_max_iters;
-  /// Outer tolerance
-  double d_tolerance;
-  /// Print out flag
-  int d_print_out;
-  /// Interval for print out
-  int d_print_interval;
+
+  /// \}
 
 };
 

@@ -15,6 +15,7 @@ SET(SOLVERS_SRC
     SourceIteration.cc
     InnerGMRES.cc
     GaussSeidel.cc
+    KrylovMG.cc
     PowerIteration.cc
 )
 

@@ -200,6 +200,18 @@ public:
   void build_fixed_with_scatter(int g);
 
   /*!
+   *  \brief Build fixed with downs-scatter.
+   *
+   *  Creates a fixed group source as \ref build_fixed, but adds
+   *  the in-scatter source.  This is the typical construction
+   *  to be called within source iteration.
+   *
+   *  \param g          Group of current solve
+   *  \param g_cutoff   Last group to include in downscatter source
+   */
+  void build_fixed_with_downscatter(int g, int g_cutoff);
+
+  /*!
    * \brief Build within-group scattering source.
    *
    * Called before each sweep.
@@ -213,7 +225,7 @@ public:
    *  given multigroup flux vector.  This routine would find
    *  use in a multigroup Krylov solver.
    */
-  void build_total_scatter(int g, const State::vec_moments_type &phi);
+  void build_total_scatter(int g, int g_cutoff, const State::vec_moments_type &phi);
 
   /// Reset all the internal source vectors to zero.
   void reset();

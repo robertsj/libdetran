@@ -170,14 +170,6 @@ private:
   /// Build the right hand side.
   void build_rhs(State::moments_type &B);
 
-  /// Solve for reflective boundaries using Gauss-Seidel sweeps.
-  // NOTE, this suggests a switch on sweeper to enable on-the-fly
-  // boundary updates!
-  void solve_reflective(State::moments_type &B)
-  {
-    /* finish me */
-  }
-
   //---------------------------------------------------------------------------//
   /*!
    * \brief A matrix-vector shell for the within-group transport operator.

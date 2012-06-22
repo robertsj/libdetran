@@ -166,7 +166,9 @@ if( NOT CMAKE_INSTALL_PREFIX)
 endif()
 
 # Python things for installation
-add_subdirectory(python)
+if( DETRAN_ENABLE_PYTHON )
+  add_subdirectory(python)
+endif()
 
 #------------------------------------------------------------------------------#
 # SOURCE

@@ -37,7 +37,8 @@ namespace detran
       }
     }
 
-    // Add fission source, if present \todo
+    // Add fission source, if present
+    // \todo Account for multiplicative fixed source problems
     if (d_fissionsource)
     {
       State::moments_type qf = d_fissionsource->source(g);
@@ -62,6 +63,18 @@ namespace detran
   }
 
   template <class D>
+  inline void SweepSource<D>::build_fixed_with_downscatter(int g, int g_cutoff)
+  {
+
+    // Add the external and/or fission source first.
+    build_fixed(g);
+
+    // Add the in-scatter.
+    d_scattersource->build_downscatter_source(g, g_cutoff, d_fixed_group_source);
+
+  }
+
+  template <class D>
   inline void SweepSource<D>::build_within_group_scatter(int g, const moments_type &phi)
   {
     // Zero out moments source.
@@ -74,13 +87,14 @@ namespace detran
   }
 
   template <class D>
-  inline void SweepSource<D>::build_total_scatter(int g, const State::vec_moments_type &phi)
+  inline void
+  SweepSource<D>::build_total_scatter(int g, int g_cutoff, const State::vec_moments_type &phi)
   {
     // Zero out moments source.
-    d_scatter_group_source.assign(phi.size(), 0.0);
+    d_scatter_group_source.assign(phi[g].size(), 0.0);
 
     // Build within-group scattering
-    d_scattersource->build_total_group_source(g, phi, d_scatter_group_source);
+    d_scattersource->build_total_group_source(g, g_cutoff, phi, d_scatter_group_source);
 
   }
 

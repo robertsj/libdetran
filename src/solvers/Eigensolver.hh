@@ -15,14 +15,24 @@
 #include "ExternalSource.hh"
 #include "FissionSource.hh"
 #include "GaussSeidel.hh"
+#include "MultigroupSolver.hh"
 #include "Material.hh"
 #include "Mesh.hh"
 #include "InnerIteration.hh"
+#include "detran_config.h"
+#ifdef DETRAN_ENABLE_PETSC
+#include "KrylovMG.hh"
+#endif
 
 // Utilities
 #include "DBC.hh"
 #include "InputDB.hh"
 #include "SP.hh"
+
+// System
+#ifdef DETRAN_ENABLE_PETSC
+#include "petsc.h"
+#endif
 
 namespace detran
 {
@@ -92,7 +102,7 @@ namespace detran
  *  \f$ (\mathbf{I} - \mathbf{DL}^{-1} )\f$.  This is equivalent
  *  to an \e exact multigroup solve.
  *
- *  For PowerIteration, an
+ *  For the power method (see \ref PowerIteration), an
  *  exact inversion is not really necessary, since the iteration
  *  will eventually converge (though in many more power iterations
  *  than if an exact multigroup solve were used).  In many
@@ -145,7 +155,8 @@ class Eigensolver: public Object
 public:
 
   typedef SP<Eigensolver<D> >                   SP_solver;
-  typedef typename GaussSeidel<D>::SP_solver    SP_mg_solver;
+  typedef typename
+      MultigroupSolver<D>::SP_solver            SP_mg_solver;
   // basic objects
   typedef InputDB::SP_input                     SP_input;
   typedef State::SP_state                       SP_state;
@@ -277,10 +288,33 @@ Eigensolver<D>::Eigensolver(SP_input          input,
   if (input->check("eigen_print_interval"))
     b_print_interval = input->get<int>("eigen_print_interval");
 
-  // Create multigroup solver.
-  b_mg_solver = new GaussSeidel<D>(input, state, mesh, material,
-                                   quadrature, boundary,
-                                   SP_externalsource(), q_f);
+  // Get the multigroup solver type and create.
+  std::string outer_solver = "GS";
+  if (input->check("outer_solver"))
+  {
+    outer_solver = input->get<std::string>("outer_solver");
+  }
+  if (outer_solver == "GS")
+  {
+    b_mg_solver = new GaussSeidel<D>(input, state, mesh, material,
+                                     quadrature, boundary,
+                                     SP_externalsource(), q_f);
+  }
+  else if (outer_solver == "KrylovMG")
+  {
+#ifdef DETRAN_ENABLE_PETSC
+    b_mg_solver = new KrylovMG<D>(input, state, mesh, material,
+                                  quadrature, boundary,
+                                  SP_externalsource(), q_f);
+#else
+    THROW("KrylovMG is not available because PETSc is not enabled.");
+#endif
+  }
+  else
+  {
+    THROW("Unsupported outer solver type selected: "+outer_solver);
+  }
+
 }
 
 } // namespace detran

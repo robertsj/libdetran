@@ -57,7 +57,8 @@ public:
   typedef SP<EigenSLEPc<D> >                    SP_solver;
   typedef Eigensolver<D>                        Base;
   typedef typename Base::SP_solver              SP_base;
-  typedef typename GaussSeidel<D>::SP_solver    SP_mg_solver;
+  typedef typename
+      MultigroupSolver<D>::SP_solver            SP_mg_solver;
   // basic objects
   typedef InputDB::SP_input                     SP_input;
   typedef State::SP_state                       SP_state;

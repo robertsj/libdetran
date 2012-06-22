@@ -23,6 +23,7 @@
 #include "Traits.hh"
 #include "PowerIteration.hh"
 #include "GaussSeidel.hh"
+#include "KrylovMG.hh"
 
 // Utilities
 #include "DBC.hh"
@@ -302,15 +303,27 @@ void PyExecute<D>::solve()
   }
   else if (d_problem_type == "fixed" || d_problem_type == "fixed_multiply")
   {
-    GaussSeidel<D> solver(d_input,
-                          d_state,
-                          d_mesh,
-                          d_material,
-                          d_quadrature,
-                          boundary,
-                          d_externalsource,
-                          d_fissionsource);
-    solver.solve();
+    std::string outer_solver = "GS";
+    if (d_input->check("outer_solver"))
+    {
+      outer_solver = d_input->get<std::string>("outer_solver");
+    }
+    if (outer_solver == "GS")
+    {
+      GaussSeidel<D> solver(d_input, d_state, d_mesh, d_material, d_quadrature,
+                            boundary, d_externalsource, d_fissionsource);
+      solver.solve();
+    }
+    else if (outer_solver == "KrylovMG")
+    {
+      KrylovMG<D> solver(d_input, d_state, d_mesh, d_material, d_quadrature,
+                         boundary, d_externalsource, d_fissionsource);
+      solver.solve();
+    }
+    else
+    {
+      THROW("Unsupported outer_solver type selected: "+outer_solver);
+    }
   }
   else
   {

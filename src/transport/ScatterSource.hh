@@ -20,6 +20,8 @@
 #include "DBC.hh"
 #include "SP.hh"
 
+#include <iostream>
+
 namespace detran
 {
 
@@ -62,6 +64,10 @@ public:
                                  const moments_type &phi,
                                  moments_type &source)
   {
+    // Preconditions
+    Require( (g >= 0) and (g < d_material->number_groups()) );
+    Require( phi.size() == source.size() );
+
     for (int cell = 0; cell < d_mesh->number_cells(); cell++)
     {
       source[cell] += phi[cell] * d_material->sigma_s(d_mat_map[cell], g, g);
@@ -80,13 +86,15 @@ public:
    *
    *  \param   g        Group for this problem
    *  \param   source   Mutable reference to moments source.
+   *  \param   g_down   Highest group to contribute to downscatter
+   *  \param   g_up     Lowest group to contribute to upscatter
    *
    */
   void build_in_scatter_source(int g,
                                moments_type &source)
   {
-    // Ensure source is zero.
-    //source.assign(source.size(), 0.0);
+    // Preconditions.
+    Require( (g >= 0) and (g < d_material->number_groups()) );
 
     // Add downscatter.
     for (int gp = d_material->lower(g); gp < g; gp++) //
@@ -109,6 +117,44 @@ public:
   }
 
   /*!
+   *  \brief Build the downscatter source.
+   *
+   *  This constructs
+   *  \f[
+   *      q_g = \sum^{g_{cutoff}_{g'} \mathbf{S}_{gg'}\phi_{g'} \, .
+   *  \f]
+   *
+   *  This \e assumes the state is up-to-date.
+   *
+   *  This is useful when creating the fixed source for Krylov
+   *  multigroup solves when Gauss-Seidel has been used for the
+   *  downscatter block.
+   *
+   *  \param   g        Group for this problem
+   *  \param   g_down   Highest group to contribute to downscatter
+   *  \param   source   Mutable reference to moments source.
+   */
+  void build_downscatter_source(int g,
+                                int g_cutoff,
+                                moments_type &source)
+  {
+    // Preconditions.
+    Require( (g >= 0) and (g < d_material->number_groups()) );
+    Require( (g_cutoff >= 0) and (g_cutoff <= d_material->number_groups()) );
+
+    // Add downscatter.
+    for (int gp = d_material->lower(g); gp < g_cutoff; gp++) //
+    {
+      moments_type phi = d_state->phi(gp);
+      for (int cell = 0; cell < d_mesh->number_cells(); cell++)
+      {
+        source[cell] += phi[cell] * d_material->sigma_s(d_mat_map[cell], g, gp);
+      }
+    }
+
+  }
+
+  /*!
    *  \brief Build the total scatter source.
    *
    *  In some cases, including all scattering is required, as is the case
@@ -118,16 +164,25 @@ public:
    *      q_g = \sum^G_{g'} \mathbf{S}_{gg'}\phi_{g'} \, .
    *  \f]
    *
+   *  Because Gauss-Seidell can be used to solve downscatter blocks,
+   *  a cutoff group is passed to exclude the solved portion of
+   *  the problem.
+   *
    *  \param   g        Group for this problem.
+   *  \param   g_cutoff Highest group to contribute to downscatter.
    *  \param   phi      Const reference to multigroup flux moments.
    *  \param   source   Mutable reference to moments source.
    *
    */
   void build_total_group_source(int g,
+                                int g_cutoff,
                                 const State::vec_moments_type &phi,
                                 moments_type &source)
   {
-    for (int gp = d_material->lower(g); gp < d_material->upper(g); gp++)
+    Require( (g >= 0) and (g < d_material->number_groups()) );
+
+
+    for (int gp = g_cutoff; gp <= d_material->upper(g); gp++)
     {
       for (int cell = 0; cell < d_mesh->number_cells(); cell++)
       {

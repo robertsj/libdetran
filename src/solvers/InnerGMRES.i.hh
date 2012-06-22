@@ -64,6 +64,13 @@ inline void InnerGMRES<D>::solve(int g)
   Insist(!ierr, "Error getting PETSc array.");
   double *phi_a = &d_state->phi(g)[0];
   memcpy(phi_a, X_a, d_moments_size*sizeof(double));
+
+//  if (d_boundary->has_reflective())
+//  {
+//    // Set the incident boundary flux.
+//    d_boundary->set_incident(g, X_a + d_moments_size);
+//  }
+
   phi_a = NULL;
 
   // Get the PETSc residual norm.
@@ -139,7 +146,6 @@ inline void InnerGMRES<D>::build_rhs(State::moments_type &B)
       }
     }
     d_sweeper->set_update_boundary(false);
-    //std::cout << " reflective its = " << iteration << " error = " << error << std::endl;
   }
 
   // Fill the PETSc Vec with B. Remember to replace it.
@@ -151,9 +157,7 @@ inline void InnerGMRES<D>::build_rhs(State::moments_type &B)
     B_a[i] = B[i];
   }
   VecRestoreArray(d_B, &B_a);
-  //VecView(d_B,  PETSC_VIEWER_STDOUT_SELF);
-  //ierr = VecPlaceArray(d_B, &B[0]);
-  //Insist(!ierr, "Error placing PETSc array");
+
 }
 
 //---------------------------------------------------------------------------//
@@ -233,7 +237,6 @@ inline PetscErrorCode InnerGMRES<D>::apply_WGTO(Mat A, Vec X, Vec Y)
   // No error.
   return 0;
 }
-
 
 template class InnerGMRES<_1D>;
 template class InnerGMRES<_2D>;
