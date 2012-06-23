@@ -169,6 +169,11 @@ void Mesh::setup()
   d_dy.resize(d_number_cells_y, 0.0);
   d_dz.resize(d_number_cells_z, 0.0);
 
+  // Total domain widths
+  d_total_width_x = d_xcme[d_xcme.size()-1] - d_xcme[0];
+  d_total_width_y = d_ycme[d_ycme.size()-1] - d_ycme[0];
+  d_total_width_z = d_ycme[d_zcme.size()-1] - d_zcme[0];
+
   // Discretize.
   int ph = 0; // place holder
   for (int i = 0; i < d_xfm.size(); i++)
@@ -217,6 +222,9 @@ void Mesh::display() const
   cout << "      number x cells: " << d_number_cells_x << endl;
   cout << "      number y cells: " << d_number_cells_y << endl;
   cout << "      number z cells: " << d_number_cells_z << endl;
+  cout << "             x width: " << d_total_width_x << endl;
+  cout << "             y width: " << d_total_width_y << endl;
+  cout << "             z width: " << d_total_width_z << endl;
   cout << " x coarse mesh edges: " << endl << "   ";
   for (int i = 0; i < d_xcme.size(); i++)
   {

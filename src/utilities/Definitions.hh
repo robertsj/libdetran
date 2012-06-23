@@ -23,6 +23,8 @@ typedef std::vector<std::vector<double> >  vec2_dbl;
 typedef std::vector<std::vector<std::vector<int> > > vec3_int;
 typedef std::vector<std::vector<std::vector<double> > > vec3_dbl;
 
+typedef unsigned int u_int;
+
 } // end namespace detran
 
 

@@ -231,13 +231,15 @@ public:
   /*!
    *  \brief Pretty print of the first octant parameters.
    */
-  virtual void display() const = 0;
+  virtual void display() const;
 
   /*!
    *  \brief Unimplemented DBC method.
    */
   bool is_valid() const
-  { return true; }
+  {
+    return true;
+  }
 
 protected:
 

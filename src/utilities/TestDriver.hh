@@ -196,6 +196,7 @@ public:
     }
     catch (std::exception &err)
     {
+      std::cout << std::endl;
       std::cout << "ERROR: While testing " << test_names[d_test]
            << " " << err.what()
            << std::endl;

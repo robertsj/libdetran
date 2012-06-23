@@ -21,9 +21,6 @@
 namespace detran
 {
 
-
-
-
 //---------------------------------------------------------------------------//
 /*!
  *  \class Mesh
@@ -202,6 +199,21 @@ public:
     return d_dz[k];
   }
 
+  double total_width_x() const
+  {
+    return d_total_width_x;
+  }
+
+  double total_width_y() const
+  {
+    return d_total_width_y;
+  }
+
+  double total_width_z() const
+  {
+    return d_total_width_z;
+  }
+
   int dimension()
   {
     return d_dimension;
@@ -278,6 +290,15 @@ protected:
 
   /// z widths
   vec_dbl d_dz;
+
+  /// total x width
+  double d_total_width_x;
+
+  /// total y width
+  double d_total_width_y;
+
+  /// total z width
+  double d_total_width_z;
 
   /// Total number of cells
   int d_number_cells;

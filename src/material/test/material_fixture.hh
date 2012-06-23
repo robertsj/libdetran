@@ -43,7 +43,7 @@ static SP_material material_fixture_1g()
   // Total
   mat->set_sigma_t(0, 0, 1.0);
   // Fission (none)
-  mat->set_nu_sigma_f(0, 0, 0.0);
+  mat->set_sigma_f(0, 0, 0.0);
   mat->set_chi(0, 0, 0.0);
   // Scattering
   mat->set_sigma_s(0, 0, 0, 0.9); // 1 <- 1
@@ -54,7 +54,7 @@ static SP_material material_fixture_1g()
   // Total
   mat->set_sigma_t(1, 0,    1.0);
   // Fission (none)
-  mat->set_nu_sigma_f(1, 0, 0.0);
+  mat->set_sigma_f(1, 0, 0.0);
   mat->set_chi(1, 0,        0.0);
   // Scattering
   mat->set_sigma_s(1, 0, 0, 0.0); // 1 <- 1
@@ -65,7 +65,7 @@ static SP_material material_fixture_1g()
   // Total
   mat->set_sigma_t(2, 0, 1.0);
   // Fission (none)
-  mat->set_nu_sigma_f(2, 0, 0.5);
+  mat->set_sigma_f(2, 0, 0.5);
   mat->set_chi(2, 0, 1.0);
   // Scattering (=0.5 so sigma_a = 0.5, and kinf = 1.0)
   mat->set_sigma_s(2, 0, 0, 0.5); // 1 <- 1
@@ -98,8 +98,8 @@ static SP_material material_fixture_2g()
   mat->set_sigma_t(0, 1, 1.4633);
 
   // Fission
-  mat->set_nu_sigma_f(0, 0, 0.0); // Note, default is zero
-  mat->set_nu_sigma_f(0, 1, 0.0);
+  mat->set_sigma_f(0, 0, 0.0); // Note, default is zero
+  mat->set_sigma_f(0, 1, 0.0);
   mat->set_chi(0, 0, 0.0);
   mat->set_chi(0, 1, 0.0);
 
@@ -118,8 +118,8 @@ static SP_material material_fixture_2g()
   mat->set_sigma_t(1, 1, 1.0119);
 
   // Fission
-  mat->set_nu_sigma_f(1, 0, 0.0067);
-  mat->set_nu_sigma_f(1, 1, 0.1241);
+  mat->set_sigma_f(1, 0, 0.0067);
+  mat->set_sigma_f(1, 1, 0.1241);
   mat->set_chi(1, 0, 1.0);
   mat->set_chi(1, 1, 0.0);
 
@@ -138,8 +138,8 @@ static SP_material material_fixture_2g()
   mat->set_sigma_t(2, 1, 0.9915);
 
   // Fission
-  mat->set_nu_sigma_f(2, 0, 0.0078);
-  mat->set_nu_sigma_f(2, 1, 0.1542);
+  mat->set_sigma_f(2, 0, 0.0078);
+  mat->set_sigma_f(2, 1, 0.1542);
   mat->set_chi(2, 0, 1.0);
   mat->set_chi(2, 1, 0.0);
 
@@ -158,8 +158,8 @@ static SP_material material_fixture_2g()
   mat->set_sigma_t(3, 1, 1.0606);
 
   // Fission
-  mat->set_nu_sigma_f(3, 0, 0.0056);
-  mat->set_nu_sigma_f(3, 1, 0.0187);
+  mat->set_sigma_f(3, 0, 0.0056);
+  mat->set_sigma_f(3, 1, 0.0187);
   mat->set_chi(3, 0, 1.0);
   mat->set_chi(3, 1, 0.0);
 
@@ -217,13 +217,13 @@ static SP_material material_fixture_7g()
   // mat->set_sigma_a(m, 5, 1.11260E-01);
   // mat->set_sigma_a(m, 6, 2.82780E-01);
   // Fission times nu
-  mat->set_nu_sigma_f(m, 0, 7.21206E-03*2.78145E+00);
-  mat->set_nu_sigma_f(m, 1, 8.19301E-04*2.47443E+00);
-  mat->set_nu_sigma_f(m, 2, 6.45320E-03*2.43383E+00);
-  mat->set_nu_sigma_f(m, 3, 1.85648E-02*2.43380E+00);
-  mat->set_nu_sigma_f(m, 4, 1.78084E-02*2.43380E+00);
-  mat->set_nu_sigma_f(m, 5, 8.30348E-02*2.43380E+00);
-  mat->set_nu_sigma_f(m, 6, 2.16004E-01*2.43380E+00);
+  mat->set_sigma_f(m, 0, 7.21206E-03*2.78145E+00);
+  mat->set_sigma_f(m, 1, 8.19301E-04*2.47443E+00);
+  mat->set_sigma_f(m, 2, 6.45320E-03*2.43383E+00);
+  mat->set_sigma_f(m, 3, 1.85648E-02*2.43380E+00);
+  mat->set_sigma_f(m, 4, 1.78084E-02*2.43380E+00);
+  mat->set_sigma_f(m, 5, 8.30348E-02*2.43380E+00);
+  mat->set_sigma_f(m, 6, 2.16004E-01*2.43380E+00);
   // Fission spectrum
   mat->set_chi(m, 0, 5.87819E-01);
   mat->set_chi(m, 1, 4.11760E-01);
@@ -282,13 +282,13 @@ static SP_material material_fixture_7g()
   // mat->set_sigma_a(m, 5, 4.09180E-01);
   // mat->set_sigma_a(m, 6, 4.09350E-01);
   // Fission times nu
-  mat->set_nu_sigma_f(m, 0, 7.62704E-03*2.85209E+00);
-  mat->set_nu_sigma_f(m, 1, 8.76898E-04*2.89099E+00);
-  mat->set_nu_sigma_f(m, 2, 5.69835E-03*2.85486E+00);
-  mat->set_nu_sigma_f(m, 3, 2.28872E-02*2.86073E+00);
-  mat->set_nu_sigma_f(m, 4, 1.07635E-02*2.85447E+00);
-  mat->set_nu_sigma_f(m, 5, 2.32757E-01*2.86415E+00);
-  mat->set_nu_sigma_f(m, 6, 2.48968E-01*2.86780E+00);
+  mat->set_sigma_f(m, 0, 7.62704E-03*2.85209E+00);
+  mat->set_sigma_f(m, 1, 8.76898E-04*2.89099E+00);
+  mat->set_sigma_f(m, 2, 5.69835E-03*2.85486E+00);
+  mat->set_sigma_f(m, 3, 2.28872E-02*2.86073E+00);
+  mat->set_sigma_f(m, 4, 1.07635E-02*2.85447E+00);
+  mat->set_sigma_f(m, 5, 2.32757E-01*2.86415E+00);
+  mat->set_sigma_f(m, 6, 2.48968E-01*2.86780E+00);
   // Fission spectrum
   mat->set_chi(m, 0, 5.87819E-01);
   mat->set_chi(m, 1, 4.11760E-01);
@@ -347,13 +347,13 @@ static SP_material material_fixture_7g()
   // mat->set_sigma_a(m, 5, 5.68460E-01);
   // mat->set_sigma_a(m, 6, 5.85210E-01);
   // Fission times nu
-  mat->set_nu_sigma_f(m, 0, 8.25446E-03*2.88498E+00);
-  mat->set_nu_sigma_f(m, 1, 1.32565E-03*2.91079E+00);
-  mat->set_nu_sigma_f(m, 2, 8.42156E-03*2.86574E+00);
-  mat->set_nu_sigma_f(m, 3, 3.28730E-02*2.87063E+00);
-  mat->set_nu_sigma_f(m, 4, 1.59636E-02*2.86714E+00);
-  mat->set_nu_sigma_f(m, 5, 3.23794E-01*2.86658E+00);
-  mat->set_nu_sigma_f(m, 6, 3.62803E-01*2.87539E+00);
+  mat->set_sigma_f(m, 0, 8.25446E-03*2.88498E+00);
+  mat->set_sigma_f(m, 1, 1.32565E-03*2.91079E+00);
+  mat->set_sigma_f(m, 2, 8.42156E-03*2.86574E+00);
+  mat->set_sigma_f(m, 3, 3.28730E-02*2.87063E+00);
+  mat->set_sigma_f(m, 4, 1.59636E-02*2.86714E+00);
+  mat->set_sigma_f(m, 5, 3.23794E-01*2.86658E+00);
+  mat->set_sigma_f(m, 6, 3.62803E-01*2.87539E+00);
   // Fission spectrum
   mat->set_chi(m, 0, 5.87819E-01);
   mat->set_chi(m, 1, 4.11760E-01);
@@ -412,13 +412,13 @@ static SP_material material_fixture_7g()
   // mat->set_sigma_a(m, 5, 6.58700E-01);
   // mat->set_sigma_a(m, 6, 6.90170E-01);
   // Fission times nu
-  mat->set_nu_sigma_f(m, 0, 8.67209E-03*2.90426E+00);
-  mat->set_nu_sigma_f(m, 1, 1.62426E-03*2.91795E+00);
-  mat->set_nu_sigma_f(m, 2, 1.02716E-02*2.86986E+00);
-  mat->set_nu_sigma_f(m, 3, 3.90447E-02*2.87491E+00);
-  mat->set_nu_sigma_f(m, 4, 1.92576E-02*2.87175E+00);
-  mat->set_nu_sigma_f(m, 5, 3.74888E-01*2.86752E+00);
-  mat->set_nu_sigma_f(m, 6, 4.30599E-01*2.87808E+00);
+  mat->set_sigma_f(m, 0, 8.67209E-03*2.90426E+00);
+  mat->set_sigma_f(m, 1, 1.62426E-03*2.91795E+00);
+  mat->set_sigma_f(m, 2, 1.02716E-02*2.86986E+00);
+  mat->set_sigma_f(m, 3, 3.90447E-02*2.87491E+00);
+  mat->set_sigma_f(m, 4, 1.92576E-02*2.87175E+00);
+  mat->set_sigma_f(m, 5, 3.74888E-01*2.86752E+00);
+  mat->set_sigma_f(m, 6, 4.30599E-01*2.87808E+00);
   // Fission spectrum
   mat->set_chi(m, 0, 5.87819E-01);
   mat->set_chi(m, 1, 4.11760E-01);
@@ -477,13 +477,13 @@ static SP_material material_fixture_7g()
   // mat->set_sigma_a(m, 5, 9.18860E-03);
   // mat->set_sigma_a(m, 6, 2.32440E-02);
   // Fission times nu
-  mat->set_nu_sigma_f(m, 0, 4.79002E-09*2.76283E+00);
-  mat->set_nu_sigma_f(m, 1, 5.82564E-09*2.46239E+00);
-  mat->set_nu_sigma_f(m, 2, 4.63719E-07*2.43380E+00);
-  mat->set_nu_sigma_f(m, 3, 5.24406E-06*2.43380E+00);
-  mat->set_nu_sigma_f(m, 4, 1.45390E-07*2.43380E+00);
-  mat->set_nu_sigma_f(m, 5, 7.14972E-07*2.43380E+00);
-  mat->set_nu_sigma_f(m, 6, 2.08041E-06*2.43380E+00);
+  mat->set_sigma_f(m, 0, 4.79002E-09*2.76283E+00);
+  mat->set_sigma_f(m, 1, 5.82564E-09*2.46239E+00);
+  mat->set_sigma_f(m, 2, 4.63719E-07*2.43380E+00);
+  mat->set_sigma_f(m, 3, 5.24406E-06*2.43380E+00);
+  mat->set_sigma_f(m, 4, 1.45390E-07*2.43380E+00);
+  mat->set_sigma_f(m, 5, 7.14972E-07*2.43380E+00);
+  mat->set_sigma_f(m, 6, 2.08041E-06*2.43380E+00);
   // Fission spectrum
   mat->set_chi(m, 0, 5.87819E-01);
   mat->set_chi(m, 1, 4.11760E-01);
