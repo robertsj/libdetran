@@ -14,12 +14,23 @@
 namespace detran
 {
 
+/*!
+ *  \class TabuchiYamamoto
+ *  \brief Quadrature of Tabuchi and Yamamoto for polar integration
+ */
 class TabuchiYamamoto: public PolarQuadrature
 {
 
 public:
 
-  TabuchiYamamoto(int number_polar);
+  explicit TabuchiYamamoto(int number_polar);
+
+  /// SP Constructor.
+  static SP<PolarQuadrature> Create(int num_polar)
+  {
+    SP<TabuchiYamamoto> p(new TabuchiYamamoto(num_polar));
+    return p;
+  }
 
   ~TabuchiYamamoto(){};
 

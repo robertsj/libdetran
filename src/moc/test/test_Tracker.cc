@@ -48,6 +48,7 @@ int test_Tracker_2x2()
 
   // Create quadrature
   QuadratureMOC::SP_quadrature quad(new Uniform(2, 1, 3, 1, "TY"));
+  quad->display_tracks();
 
   // Create tracker
   Tracker tracker(mesh, quad);
@@ -95,15 +96,16 @@ int test_Tracker_3x3()
   // Create tracker
   Tracker tracker(mesh, quad);
   Tracker::SP_trackdb tracks = tracker.trackdb();
+  tracks->display();
 
   // Number of segments for each track within angle
   int ns[] = {2,5,2};
   // Region map for all segments
-  int region[] = {3,6, 0,1,4,7,8, 2,5,
-                  5,8, 2,1,4,7,6, 0,3};
+  int region[] = {6,7, 0,3,4,5,8, 1,2,
+                  8,7, 2,5,4,3,6, 1,0};
   double len0 = 0.186338998124982;
   double len1 = 0.372677996249965;
-  double length[] = {len0,len1,  len0,len0,len1,len0,len0,  len1,len0};
+  double length[] = {len1,len0,  len0,len0,len1,len0,len0,  len0,len1};
 
   // Region counter
   int r = 0;

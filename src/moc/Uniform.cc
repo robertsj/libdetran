@@ -55,14 +55,14 @@ Uniform::Uniform(int dim,
   for (int a = 0; a < d_number_azimuths_octant; a++)
   {
 
-    // cout << " a = " << a << endl;
+    cout << " a = " << a << endl;
 
     double tan_phi = tan(phi_quadrant[a]);
 
-    // cout << " tan_phi = " << tan_phi << endl;
+    cout << " tan_phi = " << tan_phi << " phi = " << phi_quadrant[a] << endl;
 
     // This keeps the adjusted angles symmetric about pi/4.
-    if (a <= d_number_azimuths_octant / 2)
+    if (a < d_number_azimuths_octant / 2)
     {
         num_x[a] = std::abs(std::ceil(
           double(num_space) * tan_phi / (tan_phi + 1.0)));
@@ -82,7 +82,7 @@ Uniform::Uniform(int dim,
     // Actual azimuth.
     phi[a] = atan(double(num_x[a]) / double(num_y[a]));
 
-    // cout << " phi[a]  = " << phi[a]  << endl;
+    cout << " phi[a]  = " << phi[a]  << endl;
 
     // Loop over polar angles.  Polar is on the inner, since that's
     // where it is in the sweeps.

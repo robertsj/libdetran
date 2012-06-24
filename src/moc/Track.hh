@@ -1,9 +1,11 @@
-/*
- * Track.hh
- *
- *  Created on: Jun 22, 2012
- *      Author: robertsj
+//----------------------------------*-C++-*----------------------------------//
+/*!
+ * \file   Track.hh
+ * \brief  Track class definition.
+ * \author Jeremy Roberts
+ * \date   Jun 22, 2012
  */
+//---------------------------------------------------------------------------//
 
 #ifndef TRACK_HH_
 #define TRACK_HH_
@@ -43,14 +45,24 @@ public:
 
   /*!
    *  \brief Constructor
-   *  \param enter  Entrance point
-   *  \param exit   Exit point
+   *  \param r0  Entrance point
+   *  \param r1   Exit point
    */
-  Track(Point enter, Point exit)
-    : d_enter(enter)
-    , d_exit(exit)
+  Track(Point r0, Point r1)
+    : d_enter(r0)
+    , d_exit(r1)
   {
-    /* ... */
+    double d = distance(r0, r1);
+    Point p = r1 - r0;
+    d_cos_phi = p.x() / d;
+    d_sin_phi = p.y() / d;
+  }
+
+  /// SP_constructor
+  static SP<Track> Create(Point r0, Point r1)
+  {
+    SP<Track> p(new Track(r0, r1));
+    return p;
   }
 
   /// Return my entrance point
@@ -89,6 +101,16 @@ public:
   riterator rbegin()
   {
     return d_segments.rbegin();
+  }
+
+  double cos_phi()
+  {
+    return d_cos_phi;
+  }
+
+  double sin_phi()
+  {
+    return d_sin_phi;
   }
 
   bool is_valid() const

@@ -46,6 +46,18 @@
 // Material
 #include "Material.hh"
   
+// MOC
+#include "MeshMOC.hh"
+#include "Point.hh"
+#include "PolarQuadrature.hh"
+#include "QuadratureMOC.hh"
+#include "Segment.hh"
+#include "TabuchiYamamoto.hh"
+#include "TrackDB.hh"
+#include "Tracker.hh"
+#include "Track.hh"
+#include "Uniform.hh"
+  
 //---------------------------------------------------------------------------//
 // LEVEL 2 
 //---------------------------------------------------------------------------//  
@@ -110,6 +122,9 @@
 
 // Material
 %include "detran_materials.i"
+
+// MOC
+%include "detran_moc.i"
 
 //------------------------------------//
 // LEVEL 2

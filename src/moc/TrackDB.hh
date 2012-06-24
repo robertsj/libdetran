@@ -63,6 +63,11 @@ public:
     return d_tracks[a].size();
   }
 
+  int number_angles() const
+  {
+    return d_tracks.size();
+  }
+
   void display() const;
 
   bool is_valid() const

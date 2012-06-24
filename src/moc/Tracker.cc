@@ -136,9 +136,6 @@ void Tracker::generate_tracks()
       int I = IJ[0];
       int J = IJ[1];
 
-      Assert(I <= d_mesh->number_cells_x());
-      Assert(J <= d_mesh->number_cells_y());
-
       // Get segments
       double d_to_x = 0;
       double d_to_y = 0;
@@ -148,6 +145,12 @@ void Tracker::generate_tracks()
       cout << "           EXIT = " << exit << endl;
       cout << "              I = " << I << endl;
       cout << "              J = " << J << endl;
+
+
+      Assert(I <= d_mesh->number_cells_x());
+      Assert(J <= d_mesh->number_cells_y());
+
+
       int count = 0;
       while (1)
       {
@@ -186,9 +189,9 @@ void Tracker::generate_tracks()
         {
           // I hit the side
           if (tan_phi > 0.0)
-            p = Point(d_x[++I], d_to_x * std::abs(tan_phi) + d_y[J]);
+            p = Point(d_x[++I], d_to_x * std::abs(tan_phi) + p.y());
           else
-            p = Point(d_x[I--], d_to_x * std::abs(tan_phi) + d_y[J]);
+            p = Point(d_x[I--], d_to_x * std::abs(tan_phi) + p.y());
           length = d_to_x / std::abs(cos_phi);
           cout << "                NEW POINT 2 = " << p << endl;
         }
@@ -234,14 +237,23 @@ void Tracker::find_starting_cell(Point enter, double tan_phi, int *IJ)
   int j = 0;
 
   // Going right.
-
   for (i = 1; i < d_x.size(); i++)
   {
+    std::cout << " x = " << d_x[i] << " e.x = " << enter.x() << " diff = " <<  enter.x() - d_x[i] << std::endl;
+    if ( std::abs(d_x[i]-enter.x()) < 1e-10 )
+    {
+      if (tan_phi < 0.0) i--;
+      break;
+    }
     if (d_x[i] >= enter.x())
     {
       i--;
       break;
     }
+  }
+  if (i == d_x.size())
+  {
+    i--; i--;
   }
   //if (tan_phi < 0) i--;
   Assert(i >= 0);
@@ -255,6 +267,11 @@ void Tracker::find_starting_cell(Point enter, double tan_phi, int *IJ)
       break;
     }
   }
+  if (j == d_y.size())
+  {
+    j--; j--;
+  }
+
   IJ[0] = i;
   IJ[1] = j;
 }

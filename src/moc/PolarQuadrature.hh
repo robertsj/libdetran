@@ -11,6 +11,7 @@
 // Utilities
 #include "DBC.hh"
 #include "Definitions.hh"
+#include "SP.hh"
 
 // System
 #include <vector>
@@ -22,6 +23,8 @@ class PolarQuadrature: public Object
 {
 
 public:
+
+  typedef SP<PolarQuadrature>   SP_polar;
 
   /*!
    *  \brief Constructor
@@ -72,6 +75,12 @@ public:
   {
     Require(a < d_number_polar);
     return d_weight[a];
+  }
+
+  /// DBC function
+  bool is_valid() const
+  {
+    return true;
   }
 
 protected:

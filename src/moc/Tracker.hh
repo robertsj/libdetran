@@ -11,7 +11,7 @@
 #define TRACKER_HH_
 
 // Detran
-#include "Mesh.hh"
+#include "MeshMOC.hh"
 #include "QuadratureMOC.hh"
 #include "Track.hh"
 #include "TrackDB.hh"
@@ -43,10 +43,25 @@ public:
 
   Tracker(SP_mesh mesh, SP_quadrature quadrature);
 
+  static SP_tracker Create(SP_mesh mesh,
+                           SP_quadrature quadrature)
+  {
+    SP_tracker p;
+    p = new Tracker(mesh, quadrature);
+    return p;
+  }
+
   SP_trackdb trackdb() const
   {
     Require(d_trackdb);
     return d_trackdb;
+  }
+
+  SP_mesh meshmoc()
+  {
+    // Create the MOC mesh
+    SP_mesh newmesh(new MeshMOC(d_mesh, d_trackdb));
+    return newmesh;
   }
 
 private:
