@@ -12,6 +12,7 @@
 #define MESH_FIXTURE_HH_
 
 // Detran includes
+#include "Mesh1D.hh"
 #include "Mesh2D.hh"
 #include "Mesh3D.hh"
 
@@ -26,14 +27,29 @@ namespace detran_test
 typedef detran::Mesh::SP_mesh SP_mesh;
 
 /*!
- *  \brief Create a common 2D mesh for transport tests.
- *
- *  This is a square mesh with 2x2 coarse meshes of
- *  width 10 cm sides, each with 10x10 fine meshes.
- *  The bottom left coarse mesh has material 0, while
- *  the rest have material 1.
+ *  \brief Create a common 1D mesh for transport tests.
  */
-//static SP_mesh mesh_1d_fixture()
+static SP_mesh mesh_1d_fixture()
+{
+  // Define the mesh coarse and fine meshes, and the
+  // coarse mesh material map.
+  detran::vec_dbl cm(3, 0.0);
+  cm[1] = 5.0;
+  cm[2] = 10.0;
+  detran::vec_int fm(2, 5);
+  detran::vec_int mat_map(2, 1);
+  mat_map[0] = 0;
+
+  // Create the new database.
+  SP_mesh mesh;
+  mesh = new detran::Mesh1D(fm, cm, mat_map);
+
+  // Ensure a valid mesh.
+  Ensure(mesh->is_valid());
+
+  // Return the fixture.
+  return mesh;
+}
 
 
 /*!
@@ -46,6 +62,9 @@ typedef detran::Mesh::SP_mesh SP_mesh;
  */
 static SP_mesh mesh_2d_fixture(int id = 0)
 {
+  // Mesh pointer
+  SP_mesh mesh;
+
   if (id == 0)
   {
     // Define the mesh coarse and fine meshes, and the
@@ -61,8 +80,7 @@ static SP_mesh mesh_2d_fixture(int id = 0)
     detran::vec_int mat_map(4, 1);
     mat_map[0] = 0;
 
-    // Create the new database.
-    SP_mesh mesh;
+    // Construct the mesh.
     mesh = new detran::Mesh2D(fm, fm, cm, cm, mat_map);
 
     // Ensure a valid mesh.
@@ -77,32 +95,28 @@ static SP_mesh mesh_2d_fixture(int id = 0)
     cm[1] = 1.0;
     detran::vec_int fm(1, 3);
     detran::vec_int mat_map(1, 1);
-    // Create the new database.
-    SP_mesh mesh;
+    // Construct the mesh.
     mesh = new detran::Mesh2D(fm, fm, cm, cm, mat_map);
     // Ensure a valid mesh.
     Ensure(mesh->is_valid());
-    // Return the fixture.
-    return mesh;
+
   }
+
+  // Return the fixture.
+  return mesh;
 }
 
 /*!
  *  \brief Create a common 3D mesh for transport tests.
- *
- *  This is a cube mesh with 2x2x2 coarse meshes of
- *  width 4 cm sides, each with 4x4 fine meshes.
- *  The bottom left coarse mesh has material 0, while
- *  the rest have material 1.
  */
 static SP_mesh mesh_3d_fixture()
 {
   // Define the mesh coarse and fine meshes, and the
   // coarse mesh material map.
   detran::vec_dbl cm(3, 0.0);
-  cm[1] = 4.0;
-  cm[2] = 4.0;
-  detran::vec_int fm(2, 4);
+  cm[1] = 5.0;
+  cm[2] = 10.0;
+  detran::vec_int fm(2, 5);
   detran::vec_int mat_map(8, 1);
   mat_map[0] = 0;
 

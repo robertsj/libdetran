@@ -16,7 +16,8 @@
 #include "Warning.hh"
 
 // System headers
-#include  <map>
+#include <cmath>
+#include <map>
 
 namespace detran
 {
@@ -178,25 +179,35 @@ public:
       return dz(ijk);
   }
 
-  double dx(int i)
+  double dx(int i) const
   {
     Require (i >= 0);
     Require (i < d_number_cells_x);
     return d_dx[i];
   }
 
-  double dy(int j)
+  double dy(int j) const
   {
     Require (j >= 0);
     Require (j < d_number_cells_y);
     return d_dy[j];
   }
 
-  double dz(int k)
+  double dz(int k) const
   {
     Require (k >= 0);
     Require (k < d_number_cells_z);
     return d_dz[k];
+  }
+
+  double volume(int cell) const
+  {
+    Require(cell < d_number_cells);
+    double v = dx(cell_to_i(cell)) *
+               dy(cell_to_j(cell)) *
+               dz(cell_to_k(cell));
+    Ensure(v > 0.0);
+    return v;
   }
 
   double total_width_x() const
@@ -237,6 +248,51 @@ public:
     Require(k >= 0);
     Require(k < d_number_cells_z);
     return i + j * d_number_cells_x + k * d_number_cells_x * d_number_cells_y;
+  }
+
+  /*!
+   *  \brief   Returns the x index given cardinal index
+   *  \param   cell  Cardinal index.
+   *  \return        Index along x axis.
+   */
+  int cell_to_i(int cell) const
+  {
+    Require(cell >= 0);
+    Require(cell < d_number_cells);
+    int i = cell % d_number_cells_x;
+    Ensure(i < d_number_cells_x);
+    return i;
+  }
+
+  /*!
+   *  \brief   Returns the y index given cardinal index
+   *  \param   cell  Cardinal index.
+   *  \return        Index along y axis.
+   */
+  int cell_to_j(int cell) const
+  {
+    Require(cell >= 0);
+    Require(cell < d_number_cells);
+    int j = cell % (d_number_cells_x * d_number_cells_y);
+    double tmp = std::floor(double(j)/double(d_number_cells_x));
+    j = int(tmp);
+    Ensure(j < d_number_cells_y);
+    return j;
+  }
+
+  /*!
+   *  \brief   Returns the z index given cardinal index
+   *  \param   cell  Cardinal index.
+   *  \return        Index along z axis.
+   */
+  int cell_to_k(int cell) const
+  {
+    Require(cell >= 0);
+    Require(cell < d_number_cells);
+    double tmp = std::floor(double(cell)/double(d_number_cells_x*d_number_cells_y));
+    int k = int(tmp);
+    Ensure(k < d_number_cells_z);
+    return k;
   }
 
   /// Check if fine mesh map exists.
