@@ -35,20 +35,20 @@ int main(int argc, char *argv[])
 int test_Uniform()
 {
   // Construct quadrature.
-  // Uniform q(2, 9, 20, 3, "TY");
-  Uniform q(2, 1, 3, 1, "TY");
+  Uniform q(2, 5, 13, 3, "TY");
+  TEST(q.number_angles() == 4 * 5 * 3);
+  TEST(q.number_angles_octant() == 5 * 3);
+  TEST(q.number_azimuths_octant() == 5);
+  TEST(q.number_polar_octant() == 3);
+  TEST(q.number_tracks(0) == 13);
+  TEST(q.number_enter(0, 0) == 2);
+  TEST(q.number_enter(0, 1) == 11);
+  double y = 1.0 - 0.5 / 11.0;
+  TEST(soft_equiv(q.enter(0, 0).x(), 0.0));
+  TEST(soft_equiv(q.enter(0, 0).y(), y));
 
-//  TEST(q.number_angles() == 4 * 9 * 3);
-//  TEST(q.number_angles_octant() == 9 * 3);
-//  TEST(q.number_azimuths_octant() == 9);
-//  TEST(q.number_polar() == 3);
-//  TEST(q.number_tracks(0) == 20);
-//  TEST(q.number_enter(0, 0) == 2);
-//  TEST(q.number_enter(0, 1) == 18);
-//  double y = 1.0 - 0.5 / 18.0;
-//  TEST(soft_equiv(q.enter(0, 0).x(), 0.0));
-//  TEST(soft_equiv(q.enter(0, 0).y(), y));
-  q.display();
+  TEST(q.polar(13) == 1);
+  TEST(q.azimuth(13) == 4);
   q.display_tracks();
   return 0;
 }

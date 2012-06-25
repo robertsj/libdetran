@@ -183,16 +183,16 @@ public:
     // use case).
     try
     {
-      std::cout << "...... " << test_names[d_test];
+      std::string m = "......   " + test_names[d_test];
       if (!(*test_table[d_test])())
       {
-        std::cout << " passed ";
+        m += " passed";
       }
       else
       {
-        std::cout << " failed ";
+        m += " failed";
       }
-      std::cout << std::endl;
+      std::cout << m << std::endl;
     }
     catch (std::exception &err)
     {

@@ -36,6 +36,8 @@ Uniform::Uniform(int dim,
   using std::cout;
   using std::endl;
 
+  bool db = false;
+
   // Define evenly-spaced azimuthal angles over [0, pi/2].  These
   // are subject change.
   vec_dbl phi_quadrant(d_number_azimuths_octant, 0.0);
@@ -55,11 +57,11 @@ Uniform::Uniform(int dim,
   for (int a = 0; a < d_number_azimuths_octant; a++)
   {
 
-    cout << " a = " << a << endl;
+    if (db) cout << " a = " << a << endl;
 
     double tan_phi = tan(phi_quadrant[a]);
 
-    cout << " tan_phi = " << tan_phi << " phi = " << phi_quadrant[a] << endl;
+    if (db) cout << " tan_phi = " << tan_phi << " phi = " << phi_quadrant[a] << endl;
 
     // This keeps the adjusted angles symmetric about pi/4.
     if (a < d_number_azimuths_octant / 2)
@@ -82,7 +84,12 @@ Uniform::Uniform(int dim,
     // Actual azimuth.
     phi[a] = atan(double(num_x[a]) / double(num_y[a]));
 
-    cout << " phi[a]  = " << phi[a]  << endl;
+    if (db) cout << " phi[a]  = " << phi[a]  << endl;
+
+    // \todo Weight adjustment
+    d_azimuth_weight[a] = delta;
+
+    if (db) cout << " azimuthal_weight[a]  = " << d_azimuth_weight[a]  << endl;
 
     // Loop over polar angles.  Polar is on the inner, since that's
     // where it is in the sweeps.
@@ -96,9 +103,9 @@ Uniform::Uniform(int dim,
       // angle with respect to the xy plane, which is not
       // the convention for other quadratures.  That's because
       // xi will be used in scaling flight lengths.
-      d_mu[angle]     = cos(phi[a]) * d_polar->cos_theta(p);
-      d_eta[angle]    = sin(phi[a]) * d_polar->cos_theta(p);
-      d_xi[angle]     = d_polar->sin_theta(p);
+      d_mu[angle]     = cos(phi[a]) * d_polar->sin_theta(p);
+      d_eta[angle]    = sin(phi[a]) * d_polar->sin_theta(p);
+      d_xi[angle]     = d_polar->cos_theta(p);
       // Approximation for now.  It would be better to adjust
       // weights based on adjusted azimuths.
       d_weight[angle] = 2.0 * d_polar->weight(p) * delta;
@@ -120,11 +127,16 @@ Uniform::Uniform(int dim,
   d_number_exit.resize(2*d_number_azimuths_octant, vec_int(2, 0));
 
   // First quadrant
-  std::cout << std::endl;
+  if (db) std::cout << std::endl;
   for (int a = 0; a < d_number_azimuths_octant; a++)
   {
     double dx = 1.0 / num_x[a];
     double dy = 1.0 / num_y[a];
+    d_phi[a]  = phi[a];
+    d_cos_phi[a] = cos(phi[a]);
+    d_sin_phi[a] = sin(phi[a]);
+    d_spacing[a] = d_sin_phi[a] * std::min(dx, 0.5);
+    Assert(d_spacing[a] > 0.0);
 
     for (int i = 0; i < num_y[a]; i++)
     {
@@ -148,6 +160,11 @@ Uniform::Uniform(int dim,
 
     double dx = 1.0 / num_x[a];
     double dy = 1.0 / num_y[a];
+    d_phi[a2]     = pi - phi[a];
+    d_cos_phi[a2] = cos(d_phi[a]);
+    d_sin_phi[a2] = sin(d_phi[a]);
+    d_spacing[a2] = sin(phi[a]) * std::min(dx, 0.5);
+    Assert(d_spacing[a2] > 0.0);
 
     for (int i = 0; i < num_y[a]; i++)
     {
@@ -163,10 +180,10 @@ Uniform::Uniform(int dim,
     d_number_enter[a2][1] = num_y[a];
     d_number_exit[a2][0]  = num_y[a];
     d_number_exit[a2][1]  = num_x[a];
+    d_azimuth_weight[a2]  = d_azimuth_weight[a];
   }
 
 }
-
 
 } // end namespace detran
 

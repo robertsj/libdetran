@@ -77,6 +77,7 @@
 #include "Sweeper1D.hh"
 #include "Sweeper2D.hh"
 #include "Sweeper3D.hh"
+#include "Sweeper2DMOC.hh"
 //
 #include "Equation_DD_1D.hh"
 #include "Equation_DD_2D.hh"
@@ -84,6 +85,7 @@
 #include "Equation_SC_2D.hh"
 #include "Equation_SD_1D.hh"
 #include "Equation_SD_2D.hh"
+#include "Equation_SC_MOC.hh"
 //
 #include "ReactionRates.hh"
 

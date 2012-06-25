@@ -137,6 +137,14 @@ inline bool InnerIteration<_2D>::set_sweep(std::string equation)
       d_sweepsource);
     return true;
   }
+  else if (equation == "scmoc")
+  {
+    d_sweeper = new Sweeper2DMOC<Equation_SC_MOC>(
+      d_input, d_mesh, d_material, d_quadrature, d_state, d_boundary,
+      d_sweepsource);
+    return true;
+  }
+
   return false;
 }
 

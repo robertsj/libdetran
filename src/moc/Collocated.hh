@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   Uniform.hh
- * \brief  Uniform class definition.
+ * \file   Collocated.hh
+ * \brief  Collocated 
  * \author Jeremy Roberts
- * \date   Jun 22, 2012
+ * \date   Jun 25, 2012
  */
 //---------------------------------------------------------------------------//
 
-#ifndef UNIFORM_HH_
-#define UNIFORM_HH_
+#ifndef COLLOCATED_HH_
+#define COLLOCATED_HH_
 
 #include "QuadratureMOC.hh"
 
@@ -16,10 +16,10 @@ namespace detran
 {
 
 /*!
- *  \class Uniform
- *  \brief Uniformly-spaced azimuthal quadrature set.
+ *  \class Collocated
+ *  \brief A MOC quadrature with a finite set of origins along a side.
  */
-class Uniform: public QuadratureMOC
+class Collocated: public QuadratureMOC
 {
 
 public:
@@ -32,11 +32,11 @@ public:
    *  \param num_polar            Number of polar angles in half space
    *  \param polar                Polar quadrature string identifier
    */
-  Uniform(int dim,
-          int num_azimuths_octant,
-          int num_space,
-          int num_polar,
-          std::string polar);
+  Collocated(int dim,
+             int num_azimuths_octant,
+             int num_space,
+             int num_polar,
+             std::string polar);
 
   /// SP Constructor.
   static SP<Quadrature> Create(int dim,
@@ -46,11 +46,11 @@ public:
                                std::string polar)
   {
     SP_quadrature p;
-    p = new Uniform(dim, num_azimuths_octant, num_space, num_polar, polar);
+    p = new Collocated(dim, num_azimuths_octant, num_space, num_polar, polar);
     return p;
   }
 
-  ~Uniform(){};
+  ~Collocated(){};
 
 private:
 
@@ -59,8 +59,8 @@ private:
 
 } // end namespace detran
 
-#endif // UNIFORM_HH_ 
+#endif // COLLOCATED_HH_ 
 
 //---------------------------------------------------------------------------//
-//              end of file Uniform.hh
+//              end of file Collocated.hh
 //---------------------------------------------------------------------------//

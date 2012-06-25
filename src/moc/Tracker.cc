@@ -30,12 +30,17 @@ Tracker::Tracker(SP_mesh mesh, SP_quadrature quadrature)
   Require(d_quadrature);
   d_number_azimuths = d_quadrature->number_azimuths_octant();
 
+  using std::cout;
+  using std::endl;
+
   //-------------------------------------------------------------------------//
   // CREATE TRACK DATABASE AND INITIALIZE TRACKS
   //-------------------------------------------------------------------------//
 
   // Doing first two quadrants (eta > 0)
-  d_trackdb = new TrackDB(2 * d_number_azimuths);
+  d_trackdb = new TrackDB(2 * d_number_azimuths,
+                          d_mesh->number_cells(),
+                          d_quadrature);
 
   // Domain width (for x and y)
   double width = d_mesh->total_width_x();
@@ -44,6 +49,12 @@ Tracker::Tracker(SP_mesh mesh, SP_quadrature quadrature)
   for (int a = 0; a < 2 * d_number_azimuths; a++)
   {
 
+    // Add angular information.
+    d_trackdb->setup_angle(a,
+                           d_quadrature->cos_phi(a),
+                           d_quadrature->sin_phi(a),
+                           width*d_quadrature->spacing(a));
+
     for (int t = 0; t < d_quadrature->number_tracks(a); t++)
     {
 
@@ -51,9 +62,6 @@ Tracker::Tracker(SP_mesh mesh, SP_quadrature quadrature)
       // \todo This assumes a square mesh.
       Point enter = width * d_quadrature->enter(a, t);
       Point exit = width * d_quadrature->exit(a, t);
-
-      std::cout << " a = " << a << " t = " << t
-                << " enter = " << enter << " exit = " << exit << std::endl;
 
       // Create new track
       SP_track track(new Track(enter, exit));
@@ -69,6 +77,15 @@ Tracker::Tracker(SP_mesh mesh, SP_quadrature quadrature)
   // Do the actual track generation.
   generate_tracks();
 
+}
+
+void Tracker::normalize()
+{
+  vec_dbl volume(d_mesh->number_cells(), 0.0);
+  for (int i = 0; i < volume.size(); i++)
+    volume[i] = d_mesh->volume(i);
+  // Normalize track lengths by volume.
+  d_trackdb->normalize(volume);
 }
 
 //---------------------------------------------------------------------------//
@@ -88,6 +105,8 @@ void Tracker::generate_tracks()
    *        ray trace the grid
    */
 
+  bool db = false;
+
   // Create the mesh grid.
   d_x.resize(d_mesh->number_cells_x() + 1, 0.0);
   d_y.resize(d_mesh->number_cells_y() + 1, 0.0);
@@ -103,13 +122,13 @@ void Tracker::generate_tracks()
   // Loop through azimuths
   for (int a = 0; a < d_number_azimuths * 2; a++)
   {
-    cout << "AZIMUTH = " << a << endl;
-    cout << "    number tracks = " << d_trackdb->number_tracks_angle(a) << endl;
+    if (db) cout << "AZIMUTH = " << a << endl;
+    if (db) cout << "    number tracks = " << d_trackdb->number_tracks_angle(a) << endl;
 
     // Loop through tracks
     for (int t = 0; t < d_trackdb->number_tracks_angle(a); t++)
     {
-      cout << "    TRACK = " << t << endl;
+      if (db) cout << "    TRACK = " << t << endl;
 
 
       // Get the track
@@ -125,10 +144,10 @@ void Tracker::generate_tracks()
       double tan_phi = p.y() / p.x();
       double sin_phi = (exit.y()-enter.y()) / track_length;
       double cos_phi = (exit.x()-enter.x()) / track_length;
-      cout << "        tan_phi = " << tan_phi << endl;
-      cout << "        sin_phi = " << sin_phi << endl;
-      cout << "        cos_phi = " << cos_phi << endl;
-      cout << "         length = " << track_length << endl;
+      if (db) cout << "        tan_phi = " << tan_phi << endl;
+      if (db) cout << "        sin_phi = " << sin_phi << endl;
+      if (db) cout << "        cos_phi = " << cos_phi << endl;
+      if (db) cout << "         length = " << track_length << endl;
 
       // Find the starting cell
       int IJ[] = {0, 0};
@@ -141,10 +160,10 @@ void Tracker::generate_tracks()
       double d_to_y = 0;
       p = enter;
 
-      cout << "          ENTER = " << enter <<  endl;
-      cout << "           EXIT = " << exit << endl;
-      cout << "              I = " << I << endl;
-      cout << "              J = " << J << endl;
+      if (db) cout << "          ENTER = " << enter <<  endl;
+      if (db) cout << "           EXIT = " << exit << endl;
+      if (db) cout << "              I = " << I << endl;
+      if (db) cout << "              J = " << J << endl;
 
 
       Assert(I <= d_mesh->number_cells_x());
@@ -155,9 +174,9 @@ void Tracker::generate_tracks()
       while (1)
       {
 
-        cout << "        SEGMENT = " << count << endl;
-        cout << "              I = " << I << endl;
-        cout << "              J = " << J << endl;
+        if (db) cout << "        SEGMENT = " << count << endl;
+        if (db) cout << "              I = " << I << endl;
+        if (db) cout << "              J = " << J << endl;
 
         if (tan_phi > 0)
           d_to_x = d_x[I + 1] - p.x();
@@ -168,24 +187,24 @@ void Tracker::generate_tracks()
 
         // Flat source region.
         int region = d_mesh->index(I, J);
-        cout << "            reg = " << region << endl;
-        cout << "            d2x = " << d_to_x << endl;
-        cout << "            d2y = " << d_to_y << endl;
+        if (db) cout << "            reg = " << region << endl;
+        if (db) cout << "            d2x = " << d_to_x << endl;
+        if (db) cout << "            d2y = " << d_to_y << endl;
 
         // Segment length
         double length = 0.0;
 
         double temp = std::abs(d_to_x * tan_phi) - d_to_y;
 
-        cout << "           temp = " << temp << endl;
-        if (std::abs(temp) > 1e-10 and temp > 0.0)
+        if (db) cout << "           temp = " << temp << endl;
+        if (std::abs(temp) > 1e-12 and temp > 0.0)
         {
           // I hit the top
           p = Point(p.x() + d_to_y / tan_phi, d_y[++J]);
           length = d_to_y / sin_phi;
-          cout << "                NEW POINT 1 = " << p << endl;
+          if (db) cout << "                NEW POINT 1 = " << p << endl;
         }
-        else if (std::abs(temp) > 1e-10 and temp < 0.0)
+        else if (std::abs(temp) > 1e-12 and temp < 0.0)
         {
           // I hit the side
           if (tan_phi > 0.0)
@@ -193,7 +212,7 @@ void Tracker::generate_tracks()
           else
             p = Point(d_x[I--], d_to_x * std::abs(tan_phi) + p.y());
           length = d_to_x / std::abs(cos_phi);
-          cout << "                NEW POINT 2 = " << p << endl;
+          if (db) cout << "                NEW POINT 2 = " << p << endl;
         }
         else
         {
@@ -203,10 +222,10 @@ void Tracker::generate_tracks()
           else
             p = Point(d_x[I--], d_y[++J]);
           length = d_to_y / sin_phi;
-          cout << "                NEW POINT 3 = " << p << endl;
+          if (db) cout << "                NEW POINT 3 = " << p << endl;
         }
 
-        cout << "            len = " << length << endl;
+        if (db) cout << "            len = " << length << endl;
         // Add a segment
         track->add_segment(Segment(region, length));
 
@@ -215,7 +234,7 @@ void Tracker::generate_tracks()
         {
           double temp = distance(enter, p);
 
-          cout << " lengths: " << temp <<  " " << track_length << " " << enter << " " << p << endl;
+          if (db) cout << " lengths: " << temp <<  " " << track_length << " " << enter << " " << p << endl;
           Ensure(soft_equiv(temp, track_length));
           break;
         }
@@ -239,7 +258,7 @@ void Tracker::find_starting_cell(Point enter, double tan_phi, int *IJ)
   // Going right.
   for (i = 1; i < d_x.size(); i++)
   {
-    std::cout << " x = " << d_x[i] << " e.x = " << enter.x() << " diff = " <<  enter.x() - d_x[i] << std::endl;
+
     if ( std::abs(d_x[i]-enter.x()) < 1e-10 )
     {
       if (tan_phi < 0.0) i--;

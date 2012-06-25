@@ -18,6 +18,7 @@ SET(TRANSPORT_SRC
     Equation_SC_2D.cc
     Equation_SD_1D.cc
     Equation_SD_2D.cc
+    Equation_SC_MOC.cc
     FissionSource.cc
     ReactionRates.cc
     ScatterSource.cc
@@ -36,6 +37,7 @@ TARGET_LINK_LIBRARIES( transport
                        angle
                        materials
                        geometry
+                       moc
                        utilities
                        ${GPERFTOOLS_LIBRARIES}
 )

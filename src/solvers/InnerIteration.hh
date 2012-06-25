@@ -20,6 +20,7 @@
 #include "Sweeper1D.hh"
 #include "Sweeper2D.hh"
 #include "Sweeper3D.hh"
+#include "Sweeper2DMOC.hh"
 #include "SweepSource.hh"
 
 // Utilities
@@ -235,8 +236,6 @@ protected:
   int d_g;
   /// Number of sweeps
   int d_number_sweeps;
-
-
 
   /// Low order acceleration
  // SP_acceleration b_acceleration;

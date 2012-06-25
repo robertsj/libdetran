@@ -25,6 +25,11 @@ QuadratureMOC::QuadratureMOC(int dim,
                name+"-"+polar)
   , d_number_azimuths_octant(num_azimuths_octant)
   , d_number_polar(num_polar)
+  , d_phi(2*num_azimuths_octant, 0.0)
+  , d_cos_phi(2*num_azimuths_octant, 0.0)
+  , d_sin_phi(2*num_azimuths_octant, 0.0)
+  , d_spacing(2*num_azimuths_octant, 0.0)
+  , d_azimuth_weight(2*num_azimuths_octant, 0.0)
 {
 
   // Support for 2D right now
@@ -53,6 +58,10 @@ void QuadratureMOC::display_tracks() const
   for (int a = 0; a < 2*d_number_azimuths_octant; a++)
   {
     cout << "*** azimuth = " << a << endl;
+    cout << "        phi = " << d_phi[a] << endl;
+    cout << "    cos_phi = " << d_cos_phi[a] << endl;
+    cout << "    sin_phi = " << d_sin_phi[a] << endl;
+    cout << "    spacing = " << d_spacing[a] << endl;
     for (int t = 0; t < d_exit[a].size(); t++)
     {
       cout << "****** track = " << t;

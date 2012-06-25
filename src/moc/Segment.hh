@@ -56,6 +56,12 @@ public:
     return d_length;
   }
 
+  /// Scale a segment.
+  void scale(double v)
+  {
+    d_length *= v;
+  }
+
 private:
 
   /// \name Private Data

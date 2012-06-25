@@ -37,6 +37,12 @@ namespace detran
  *  Also, several quantities of anticipated use in response
  *  generation are recorded.
  *
+ *  \todo It may be useful to define an interface that would
+ *        require the polar and azimith components be
+ *        constructed separately with an inherited method
+ *        to build the product set.  This would enforce a
+ *        well-quantified ordering for future analysis.
+ *
  */
 class QuadratureMOC: public Quadrature
 {
@@ -73,7 +79,7 @@ public:
     return d_number_azimuths_octant;
   }
 
-  int number_polar() const
+  int number_polar_octant() const
   {
     return d_number_polar;
   }
@@ -112,6 +118,71 @@ public:
     return d_exit[a][i];
   }
 
+  /// Return angle within octant given azimuth and polar.
+  int angle(int a, int p) const
+  {
+    Require(a < d_number_azimuths_octant);
+    Require(p < d_number_polar);
+    return p + a * d_number_polar;
+  }
+
+  /// Return azimuth index for angle within octant
+  int azimuth(int angle) const
+  {
+    Require(angle < d_number_angles_octant);
+    double tmp = double(angle % d_number_angles_octant)/double(d_number_polar);
+    return int(std::floor(tmp));
+  }
+
+  /// Return polar index for cardinal index
+  int polar(int angle) const
+  {
+    Require(angle < d_number_angles_octant);
+    return angle % d_number_polar;
+  }
+
+  double sin_theta(u_int p) const
+  {
+    Require(p < d_number_polar);
+    return d_polar->sin_theta(p);
+  }
+
+  double cos_theta(u_int p) const
+  {
+    Require(p < d_number_polar);
+    return d_polar->cos_theta(p);
+  }
+
+  double phi(u_int a) const
+  {
+    Require(a < 2 * d_number_azimuths_octant);
+    return d_phi[a];
+  }
+
+  double sin_phi(u_int a) const
+  {
+    Require(a < 2 * d_number_azimuths_octant);
+    return d_sin_phi[a];
+  }
+
+  double cos_phi(u_int a) const
+  {
+    Require(a < 2 * d_number_azimuths_octant);
+    return d_cos_phi[a];
+  }
+
+  double spacing(u_int a) const
+  {
+    Require(a < 2 * d_number_azimuths_octant);
+    return d_spacing[a];
+  }
+
+  double azimuth_weight(u_int a) const
+  {
+    Require(a < 2 * d_number_azimuths_octant);
+    return d_azimuth_weight[a];
+  }
+
   void display_tracks() const;
 
 protected:
@@ -121,6 +192,12 @@ protected:
 
   /// Polar quadrature
   SP_polar d_polar;
+
+  vec_dbl d_phi;
+  vec_dbl d_cos_phi;
+  vec_dbl d_sin_phi;
+  vec_dbl d_spacing;
+  vec_dbl d_azimuth_weight;
 
   /// Number of azimuths per octant
   int d_number_azimuths_octant;

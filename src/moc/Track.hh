@@ -87,7 +87,13 @@ public:
     d_segments.push_back(s);
   }
 
-  const Segment& segment(int i)
+  Segment& segment(int i)
+  {
+    Require(i < d_segments.size());
+    return d_segments[i];
+  }
+
+  const Segment& segment(int i) const
   {
     Require(i < d_segments.size());
     return d_segments[i];

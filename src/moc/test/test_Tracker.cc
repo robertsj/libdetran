@@ -89,7 +89,7 @@ int test_Tracker_3x3()
   vec_int mat(1, 0);
   Mesh::SP_mesh mesh(new Mesh2D(fm, fm, cm, cm, mat));
   mesh->display();
-  // Create quadrature
+  // Create quadrature 2,1,3,1
   QuadratureMOC::SP_quadrature quad(new Uniform(2, 1, 3, 1, "TY"));
   quad->display_tracks();
 
@@ -125,6 +125,11 @@ int test_Tracker_3x3()
       }
     }
   }
+
+  // Normalize the lengths.
+  tracker.normalize();
+  tracks->display();
+  TEST(soft_equiv(tracks->track(0, 0)->segment(0).length(), 0.662538659999938));
   return 0;
 }
 

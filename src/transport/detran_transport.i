@@ -27,6 +27,7 @@
 %include "Equation_SC_2D.hh"
 %include "Equation_SD_1D.hh"
 %include "Equation_SD_2D.hh"
+%include "Equation_SC_MOC.hh"
 // SweepSource
 %include "SweepSource.hh"
 
@@ -35,6 +36,7 @@
 %include "Sweeper1D.hh"
 %include "Sweeper2D.hh"
 %include "Sweeper3D.hh"
+%include "Sweeper2DMOC.hh"
 
 // Helpers
 %include "ReactionRates.hh"
@@ -61,6 +63,9 @@
 %template(SweepSource1D)    detran::SweepSource<detran::_1D>;
 %template(SweepSource2D)    detran::SweepSource<detran::_2D>;
 %template(SweepSource3D)    detran::SweepSource<detran::_3D>;
+%template(SweepSource1DSP)  detran::SP<detran::SweepSource<detran::_1D> >;
+%template(SweepSource2DSP)  detran::SP<detran::SweepSource<detran::_2D> >;
+%template(SweepSource3DSP)  detran::SP<detran::SweepSource<detran::_3D> >;
 
 //%template(Acceleration1DSP) detran::Acceleration<detran::_1D>;
 //%template(Acceleration2DSP) detran::Acceleration<detran::_2D>;
@@ -80,6 +85,9 @@
 %template(Sweeper2D_SCSP)   detran::SP<detran::Sweeper2D<detran::Equation_SC_2D> >;
 %template(Sweeper1D_SDSP)   detran::SP<detran::Sweeper1D<detran::Equation_SD_1D> >;
 %template(Sweeper2D_SDSP)   detran::SP<detran::Sweeper2D<detran::Equation_SD_2D> >;
+//
+%template(Sweeper2DMOC_SC)    detran::Sweeper2DMOC<detran::Equation_SC_MOC>;
+%template(Sweeper2DMOC_SCSP)  detran::SP<detran::Sweeper2DMOC<detran::Equation_SC_MOC> >;
 
 // Helpers
 %template(ReactionRatesSP)  detran::SP<detran::ReactionRates>;

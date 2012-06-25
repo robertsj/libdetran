@@ -94,7 +94,7 @@ public:
   /*!
    *  \brief Return total number of angles.
    */
-  int number_angles()
+  int number_angles() const
   {
     return d_number_angles;
   }
@@ -102,7 +102,7 @@ public:
   /*!
    *  \brief Return total number of octants.
    */
-  int number_octants()
+  int number_octants() const
   {
     return d_number_octants;
   }
@@ -110,9 +110,29 @@ public:
   /*!
    *  \brief Return number of angles per octant.
    */
-  int number_angles_octant()
+  int number_angles_octant() const
   {
     return d_number_angles_octant;
+  }
+
+  /*!
+   *  \brief Return number of azimuths per octant.
+   *
+   *  This is useful when a product quadrature is defined.
+   */
+  virtual int number_azimuths_octant() const
+  {
+    return 0;
+  }
+
+  /*!
+   *  \brief Return number of polar angles per octant.
+   *
+   *  This is useful when a product quadrature is defined.
+   */
+  virtual int number_polar_octant() const
+  {
+    return 0;
   }
 
   /*!
@@ -128,6 +148,17 @@ public:
     Ensure(angle >= 0);
     Ensure(angle < d_number_angles);
     return angle;
+  }
+
+  /*!
+   *  \brief Angle in octant from azimuth and polar
+   *
+   *  Useful for product quadratures.
+   */
+  virtual int angle(int a, int p) const
+  {
+    THROW("NOT A PRODUCT QUADRATURE");
+    return 0;
   }
 
   /*!
@@ -196,7 +227,7 @@ public:
     Require(a < d_number_angles_octant);
     Require(o >= 0);
     Require(o < d_number_octants);
-    Require(d_dimension == 3); // 1d/2d calcs have no need for xi...
+    //Require(d_dimension == 3); // 1d/2d calcs have no need for xi...
     return d_octant_sign[o][XI]*d_xi[a];
   }
 

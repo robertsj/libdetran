@@ -43,8 +43,8 @@ public:
 
   Tracker(SP_mesh mesh, SP_quadrature quadrature);
 
-  static SP_tracker Create(SP_mesh mesh,
-                           SP_quadrature quadrature)
+  static SP_tracker Create(SP<Mesh>       mesh,
+                           SP<Quadrature> quadrature)
   {
     SP_tracker p;
     p = new Tracker(mesh, quadrature);
@@ -63,6 +63,9 @@ public:
     SP_mesh newmesh(new MeshMOC(d_mesh, d_trackdb));
     return newmesh;
   }
+
+  // Normalize the track segments based on actual volumes.
+  void normalize();
 
 private:
 

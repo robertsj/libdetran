@@ -131,6 +131,14 @@ public:
    */
   explicit MomentToDiscrete(const size_type legendre_order);
 
+  /// SP contructor
+  static SP_MtoD Create(const size_type o, SP_quadrature q)
+  {
+    SP_MtoD m(new MomentToDiscrete(o));
+    m->build(q);
+    return m;
+  }
+
   /*!
    * \brief Build the moments-to-discrete operator.
    *
@@ -143,6 +151,8 @@ public:
    * \param     angularmesh     Angular mesh smart pointer.
    */
   void build(SP_quadrature quadrature);
+
+
 
 
   /// \name Accessors

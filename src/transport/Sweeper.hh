@@ -103,24 +103,6 @@ public:
           SP_sweepsource sweepsource);
 
   /*!
-   *  \brief SP Constructor.
-   */
-  static detran::SP<Sweeper<D> >
-  Create(detran::SP<detran::InputDB>          input,
-         detran::SP<detran::Mesh>             mesh,
-         detran::SP<detran::Material>         material,
-         detran::SP<detran::Quadrature>       quadrature,
-         detran::SP<detran::State>            state,
-         detran::SP<detran::Boundary<D> >     boundary,
-         detran::SP<detran::SweepSource<D> >  sweepsource)
-  {
-    SP_sweeper p;
-    p = new Sweeper(input, mesh, material, quadrature,
-                    state, boundary, sweepsource);
-    return p;
-  }
-
-  /*!
    *  \brief Sweep over all angles and space.
    *
    *  Note, if the angular flux is to be updated,
