@@ -18,6 +18,38 @@ namespace detran
 /*!
  *  \class Collocated
  *  \brief A MOC quadrature with a finite set of origins along a side.
+ *
+ * This quadrature has a number of unique features.  It satisfies cyclic
+ * tracking requirements in a rectangular region.  It also uses a finite
+ * set of points along a surface as track entrance (and exit) points. In
+ * this first implementation, we consider only square regions.
+ *
+ * The user sets the number of spatial points along a side of a unit
+ * cell.  Currently,
+ * this must be a power of 3, and only 9 and 27 are supported.
+ * Additionally, a multiple may be assigned so that the base points
+ * are repeated on adjacent unit cells.  This lets us define the
+ * spacing in terms of a pin cell, which is then repeated on
+ * the assembly level.
+ *
+ * The angles (between \f$ \pi/4 \f$ and \f$ \pi/2 \f$) are uniquely defined
+ * by
+ * \f[
+ *      \tan{\phi_i} = 3^i \, , \,\,\, i = 0, \, \cdots n \, ,
+ * \f]
+ * where
+ * \f[
+ *      n = \mathrm{floor}(\log_3(N)+1) \,
+ * \f]
+ * and  \em N is the number of spatial points. Note that n/N is
+ * maximized when \em N  is a power of three.  Using 9 spatial points
+ * surface yields 5 angles per quadrant.  27 points yields 7 angles per
+ * quadrant.  The other angles are defined by symmetry about \f$ \pi/4 \f$.
+ *
+ * For weights, the user can use an arc length approximation or a
+ * quadrature rule defined for the points that may provide better
+ * accuracy.
+ *
  */
 class Collocated: public QuadratureMOC
 {
@@ -34,19 +66,19 @@ public:
    */
   Collocated(int dim,
              int num_azimuths_octant,
-             int num_space,
+             int multiplier,
              int num_polar,
              std::string polar);
 
   /// SP Constructor.
   static SP<Quadrature> Create(int dim,
                                int num_azimuths_octant,
-                               int num_space,
+                               int multiplier,
                                int num_polar,
                                std::string polar)
   {
     SP_quadrature p;
-    p = new Collocated(dim, num_azimuths_octant, num_space, num_polar, polar);
+    p = new Collocated(dim, num_azimuths_octant, multiplier, num_polar, polar);
     return p;
   }
 

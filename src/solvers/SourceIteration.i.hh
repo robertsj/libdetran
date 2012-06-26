@@ -50,7 +50,7 @@ void SourceIteration<D>::solve(int g)
   {
 
     // Update boundary.  This updates boundaries due to reflection, etc.
-    d_boundary->update(g);
+    //d_boundary->update(g); // sweeper should update this.
 
     // Swap old and new.
     std::swap(phi, phi_old);

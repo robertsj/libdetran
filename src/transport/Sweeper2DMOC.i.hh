@@ -109,6 +109,9 @@ inline void Sweeper2DMOC<EQ>::sweep(moments_type &phi)
       State::angular_flux_type psi;
       if (d_update_psi) psi = d_state->psi(d_g, o, a);
 
+      // Update the boundary for this angle.
+      //if (d_update_boundary) d_boundary->update(d_g, o, a);
+
       // Sweep over all tracks.
       for (int t = 0; t < d_tracks->number_tracks_angle(azimuth); t++)
       {
@@ -121,6 +124,16 @@ inline void Sweeper2DMOC<EQ>::sweep(moments_type &phi)
 
         // *** LOAD THE BOUNDARY FLUX.
         psi_out = 0.0;
+
+        // SN access
+        // boundary_flux_type psi_v = (*d_boundary)
+        //   (d_face_index[o][Mesh::VERT][Boundary_T::IN], o, a, d_g);
+        // MOC access
+        // double psi_v = (*d_boundary)(d_g, o, a, t);
+        // --> the side doesn't matter for this access
+        // --> ergo, the side really needn't be part of the storage
+        // --> create index maps for which track is on a side, etc.
+
 
         //cout << "      PSI_IN: " << psi_out << endl;
 

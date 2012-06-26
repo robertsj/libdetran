@@ -9,7 +9,8 @@ message( "++ Adding detran moc tests." )
 #------------------------------------------------------------------------------#
 
 # Azimuthal Quadratures
-ADD_EXECUTABLE(test_Uniform test_Uniform.cc)
+ADD_EXECUTABLE(test_Collocated 	test_Collocated.cc)
+ADD_EXECUTABLE(test_Uniform 	test_Uniform.cc)
 # Polar Quadratures
 ADD_EXECUTABLE(test_TabuchiYamamoto test_TabuchiYamamoto.cc)
 # Other
@@ -19,6 +20,7 @@ ADD_EXECUTABLE(test_Track   test_Track.cc)
 ADD_EXECUTABLE(test_Tracker test_Tracker.cc)
 
 #
+TARGET_LINK_LIBRARIES(test_Collocated      moc angle utilities)
 TARGET_LINK_LIBRARIES(test_Uniform         moc angle utilities)
 #
 TARGET_LINK_LIBRARIES(test_TabuchiYamamoto moc angle utilities)
@@ -32,7 +34,8 @@ TARGET_LINK_LIBRARIES(test_Tracker         moc angle utilities)
 # Define tests
 #------------------------------------------------------------------------------#
 
-ADD_TEST(test_Uniform         test_Uniform 0)
+ADD_TEST(test_Collocated      test_Collocated 0)
+ADD_TEST(test_Uniform         test_Uniform    0)
 #
 ADD_TEST(test_TabuchiYamamoto test_TabuchiYamamoto 0)
 #

@@ -8,20 +8,30 @@
 
 %include "detran_utilities.i"
 
-%include "MeshMOC.hh"
+// Includes in rough order of hierarchy
 %include "Point.hh"
-%include "PolarQuadrature.hh"
-%include "QuadratureMOC.hh"
+//
 %include "Segment.hh"
-%include "TabuchiYamamoto.hh"
 %include "Track.hh"
-%include "TrackDB.hh"
-%include "Tracker.hh"
+//
+%include "PolarQuadrature.hh"
+%include "TabuchiYamamoto.hh"
+//
+%include "QuadratureMOC.hh"
+%include "Collocated.hh"
 %include "Uniform.hh"
+//
+%include "TrackDB.hh"
+%include "MeshMOC.hh"
+%include "Tracker.hh"
+
+
+
 
 %template(MeshMOCSP)          detran::SP<detran::MeshMOC>;
 //
 %template(QuadratureMOCSP)    detran::SP<detran::QuadratureMOC>;
+%template(CollocatedSP)       detran::SP<detran::Collocated>;
 %template(UniformSP)          detran::SP<detran::Uniform>;
 //
 %template(PolarQuadratureSP)  detran::SP<detran::PolarQuadrature>;

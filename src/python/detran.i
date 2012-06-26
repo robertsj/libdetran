@@ -47,6 +47,7 @@
 #include "Material.hh"
   
 // MOC
+#include "Collocated.hh"
 #include "MeshMOC.hh"
 #include "Point.hh"
 #include "PolarQuadrature.hh"

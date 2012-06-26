@@ -161,8 +161,8 @@ Uniform::Uniform(int dim,
     double dx = 1.0 / num_x[a];
     double dy = 1.0 / num_y[a];
     d_phi[a2]     = pi - phi[a];
-    d_cos_phi[a2] = cos(d_phi[a]);
-    d_sin_phi[a2] = sin(d_phi[a]);
+    d_cos_phi[a2] = cos(d_phi[a2]);
+    d_sin_phi[a2] = sin(d_phi[a2]);
     d_spacing[a2] = sin(phi[a]) * std::min(dx, 0.5);
     Assert(d_spacing[a2] > 0.0);
 

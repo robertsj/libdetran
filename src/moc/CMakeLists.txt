@@ -9,6 +9,7 @@ SET(MOC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 #-------------------------------------#
 
 SET(MOC_SRC
+	Collocated.cc
 	QuadratureMOC.cc
     TabuchiYamamoto.cc
     TrackDB.cc

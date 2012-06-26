@@ -1,20 +1,20 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   test_Uniform.cc
+ * \file   test_Collocated.cc
  * \author Jeremy Roberts
  * \date   Jun 22, 2012
- * \brief  Test of Uniform class
+ * \brief  Test of Collocated class
  * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
 #define TEST_LIST                     \
-        FUNC(test_Uniform)
+        FUNC(test_Collocated)
 
 // Detran headers
 #include "TestDriver.hh"
-#include "Uniform.hh"
+#include "Collocated.hh"
 
 // Setup
 /* ... */
@@ -32,24 +32,24 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------//
 
-int test_Uniform()
+int test_Collocated()
 {
   // Construct quadrature.
-  Uniform q(2, 5, 13, 3, "TY");
-  TEST(q.number_angles() == 4 * 5 * 3);
-  TEST(q.number_angles_octant() == 5 * 3);
+  Collocated q(2, 5, 1, 2, "TY");
+  TEST(q.number_angles()          == 4 * 5 * 2);
+  TEST(q.number_angles_octant()   == 5 * 2);
   TEST(q.number_azimuths_octant() == 5);
-  TEST(q.number_polar_octant() == 3);
-  TEST(q.number_tracks(0) == 13);
-  TEST(q.number_enter(0, 0) == 2);
-  TEST(q.number_enter(0, 1) == 11);
-  double y = 1.0 - 0.5 / 11.0;
+  TEST(q.number_polar_octant()    == 2);
+  TEST(q.number_tracks(0)         == 10);
+  TEST(q.number_enter(0, 0)       == 1);
+  TEST(q.number_enter(0, 1)       == 9);
   TEST(soft_equiv(q.enter(0, 0).x(), 0.0));
-  TEST(soft_equiv(q.enter(0, 0).y(), y));
+  TEST(soft_equiv(q.enter(0, 0).y(), 9.444444444444444e-01));
 
-  TEST(q.polar(13) == 1);
-  TEST(q.azimuth(13) == 4);
-  q.display_tracks();
+//  TEST(q.polar(13) == 1);
+//  TEST(q.azimuth(13) == 4);
+//  q.display();
+  //q.display_tracks();
   return 0;
 }
 
