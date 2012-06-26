@@ -12,7 +12,6 @@
 #define REACTIONRATES_HH_
 
 // Detran
-#include "Boundary.hh"
 #include "FissionSource.hh"
 #include "Material.hh"
 #include "Mesh.hh"

@@ -163,7 +163,7 @@ public:
   typedef Mesh::SP_mesh                         SP_mesh;
   typedef Material::SP_material                 SP_material;
   typedef Quadrature::SP_quadrature             SP_quadrature;
-  typedef typename Boundary<D>::SP_boundary     SP_boundary;
+  typedef typename BoundaryBase<D>::SP_boundary SP_boundary;
   // source typedefs
   typedef ExternalSource::SP_source             SP_externalsource;
   typedef FissionSource::SP_source              SP_fissionsource;
@@ -194,12 +194,11 @@ public:
   /// Solve the eigenvalue problem.
   virtual void solve() = 0;
 
-  /// Unimplemented DBC function.
+  /// DBC function.
   virtual bool is_valid() const
   {
     return true;
   }
-
 
 protected:
 

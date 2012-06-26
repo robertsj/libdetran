@@ -13,7 +13,7 @@
 
 // Detran
 //#include "Acceleration.hh"
-#include "Boundary.hh"
+#include "BoundaryBase.hh"
 #include "MomentToDiscrete.hh"
 #include "State.hh"
 #include "Sweeper.hh"
@@ -98,7 +98,7 @@ public:
   typedef Mesh::SP_mesh                         SP_mesh;
   typedef Material::SP_material                 SP_material;
   typedef Quadrature::SP_quadrature             SP_quadrature;
-  typedef typename Boundary<D>::SP_boundary     SP_boundary;
+  typedef typename BoundaryBase<D>::SP_boundary SP_boundary;
   typedef typename MomentToDiscrete<D>::SP_MtoD SP_MtoD;
   // source typedefs
   typedef ExternalSource::SP_source 		        SP_externalsource;

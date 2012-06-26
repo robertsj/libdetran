@@ -14,10 +14,6 @@
 // Detran
 #include "InnerIteration.hh"
 
-// Utilities
-#include "SP.hh"
-#include "InputDB.hh"
-
 // System
 #include "petsc.h"
 
@@ -60,7 +56,7 @@ public:
   typedef Mesh::SP_mesh                         SP_mesh;
   typedef Material::SP_material                 SP_material;
   typedef Quadrature::SP_quadrature             SP_quadrature;
-  typedef typename Boundary<D>::SP_boundary     SP_boundary;
+  typedef typename BoundaryBase<D>::SP_boundary SP_boundary;
   typedef typename MomentToDiscrete<D>::SP_MtoD SP_MtoD;
   // source typedefs
   typedef ExternalSource::SP_source             SP_externalsource;
@@ -95,18 +91,17 @@ public:
 
   /// SP Constructor
   static SP<InnerGMRES<D> >
-  Create(SP<detran::InputDB>         input,
-         SP<detran::State>           state,
-         SP<detran::Mesh>            mesh,
-         SP<detran::Material>        material,
-         SP<detran::Quadrature>      quadrature,
-         SP<detran::Boundary<D> >    boundary,
-         SP<detran::ExternalSource>  q_e,
-         SP<detran::FissionSource>   q_f)
+  Create(SP<detran::InputDB>          input,
+         SP<detran::State>            state,
+         SP<detran::Mesh>             mesh,
+         SP<detran::Material>         material,
+         SP<detran::Quadrature>       quadrature,
+         SP<detran::BoundaryBase<D> > boundary,
+         SP<detran::ExternalSource>   q_e,
+         SP<detran::FissionSource>    q_f)
   {
-    SP_inner p;
-    p = new InnerGMRES(input, state, mesh, material,
-                       quadrature, boundary, q_e, q_f);
+    SP_inner p(new InnerGMRES(input, state, mesh, material,
+                              quadrature, boundary, q_e, q_f));
     return p;
   }
 

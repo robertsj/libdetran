@@ -9,7 +9,9 @@
 // State
 %include "State.hh"
 // Boundary
+%include "BoundaryBase.hh"
 %include "Boundary.hh"
+%include "BoundaryMOC.hh"
 // Sources
 %include "ExternalSource.hh"
 %include "DiscreteSource.hh"
@@ -45,12 +47,19 @@
 
 %template(StateSP)          detran::SP<detran::State>;
 
+%template(BoundaryBase1DSP) detran::SP<detran::BoundaryBase<detran::_1D> >;
+%template(BoundaryBase2DSP) detran::SP<detran::BoundaryBase<detran::_2D> >;
+%template(BoundaryBase3DSP) detran::SP<detran::BoundaryBase<detran::_3D> >;
+
 %template(Boundary1D)       detran::Boundary<detran::_1D>;
 %template(Boundary1DSP)     detran::SP<detran::Boundary<detran::_1D> >;
 %template(Boundary2D)       detran::Boundary<detran::_2D>;
 %template(Boundary2DSP)     detran::SP<detran::Boundary<detran::_2D> >;
 %template(Boundary3D)       detran::Boundary<detran::_3D>;
 %template(Boundary3DSP)     detran::SP<detran::Boundary<detran::_3D> >;
+
+%template(BoundaryMOC2D)    detran::BoundaryMOC<detran::_2D>;
+%template(BoundaryMOC2DSP)  detran::SP<detran::BoundaryMOC<detran::_2D> >;
 
 %template(ExternalSourceSP) detran::SP<detran::ExternalSource>;
 %template(ConstantSourceSP) detran::SP<detran::ConstantSource>;

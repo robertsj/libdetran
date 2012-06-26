@@ -41,24 +41,24 @@ class SourceIteration: public InnerIteration<D>
 {
 public:
   // Constructor
-  SourceIteration(SP<detran::InputDB>         input,
-                  SP<detran::State>           state,
-                  SP<detran::Mesh>            mesh,
-                  SP<detran::Material>        material,
-                  SP<detran::Quadrature>      quadrature,
-                  SP<detran::Boundary<D> >    boundary,
-                  SP<detran::ExternalSource>  q_e,
-                  SP<detran::FissionSource>   q_f);
+  SourceIteration(SP<detran::InputDB>          input,
+                  SP<detran::State>            state,
+                  SP<detran::Mesh>             mesh,
+                  SP<detran::Material>         material,
+                  SP<detran::Quadrature>       quadrature,
+                  SP<detran::BoundaryBase<D> > boundary,
+                  SP<detran::ExternalSource>   q_e,
+                  SP<detran::FissionSource>    q_f);
   // SP Constructor
   static SP<SourceIteration<D> >
-  Create(SP<detran::InputDB>         input,
-         SP<detran::State>           state,
-         SP<detran::Mesh>            mesh,
-         SP<detran::Material>        material,
-         SP<detran::Quadrature>      quadrature,
-         SP<detran::Boundary<D> >    boundary,
-         SP<detran::ExternalSource>  q_e,
-         SP<detran::FissionSource>   q_f);
+  Create(SP<detran::InputDB>          input,
+         SP<detran::State>            state,
+         SP<detran::Mesh>             mesh,
+         SP<detran::Material>         material,
+         SP<detran::Quadrature>       quadrature,
+         SP<detran::BoundaryBase<D> > boundary,
+         SP<detran::ExternalSource>   q_e,
+         SP<detran::FissionSource>    q_f);
   // Solve the within group equation.
   void solve(int g);
 };

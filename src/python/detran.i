@@ -65,7 +65,9 @@
   
 // Transport
 //#include "Acceleration.hh"
+#include "BoundaryBase.hh"
 #include "Boundary.hh"
+#include "BoundaryMOC.hh"
 #include "FissionSource.hh"
 #include "ExternalSource.hh"
 #include "ConstantSource.hh"

@@ -12,6 +12,7 @@
 #define SWEEPER1D_HH_
 
 // Detran
+#include "Boundary.hh"
 #include "Sweeper.hh"
 
 namespace detran
@@ -19,8 +20,8 @@ namespace detran
 
 //---------------------------------------------------------------------------//
 /*!
- * \class Sweeper1D
- * \brief Sweeper for 1D problems.
+ *  \class Sweeper1D
+ *  \brief Sweeper for 1D discrete ordinates problems.
  */
 //---------------------------------------------------------------------------//
 template <class EQ>
@@ -38,7 +39,6 @@ public:
   typedef Material::SP_material             SP_material;
   typedef Quadrature::SP_quadrature         SP_quadrature;
   //
-  typedef Dimension<EQ::dimension>          D;
   typedef EQ                                Equation_T;
   typedef Boundary<_1D>                     Boundary_T;
   typedef typename Boundary_T::SP_boundary  SP_boundary;
@@ -59,6 +59,8 @@ public:
    *  \param    material    Material database.
    *  \param    quadrature  Angular quadrature.
    *  \param    state       State vectors.
+   *  \param    boundary    Boundary based on mesh.
+   *  \param    sweepsource Sweep source constructor.
    */
   Sweeper1D(SP_input input,
             SP_mesh mesh,
@@ -68,27 +70,27 @@ public:
             SP_boundary boundary,
             SP_sweepsource sweepsource)
   : Base(input,mesh,material,quadrature,
-         state,boundary,sweepsource)
-  {}
+         state,sweepsource)
+  , d_boundary(boundary)
+  {
+    Require(boundary);
+  }
 
-  /// Stop Eclipse warnings.
+  /// Virtual destructor
   virtual ~Sweeper1D(){}
 
-  /*!
-   *  \brief SP Constructor.
-   */
+  /// SP Constructor
   static detran::SP<Sweeper1D<EQ> >
   Create(detran::SP<InputDB>                    input,
          detran::SP<detran::Mesh>               mesh,
          detran::SP<detran::Material>           material,
          detran::SP<detran::Quadrature>         quadrature,
          detran::SP<detran::State>              state,
-         detran::SP<detran::Boundary<_1D> >     boundary,
+         detran::SP<detran::BoundaryBase<_1D> > boundary,
          detran::SP<detran::SweepSource<_1D> >  sweepsource)
   {
-    SP_sweeper p;
-    p = new Sweeper1D(input, mesh, material, quadrature,
-                      state, boundary, sweepsource);
+    SP_sweeper p(new Sweeper1D(input, mesh, material, quadrature,
+                               state, boundary, sweepsource));
     return p;
   }
 
@@ -100,6 +102,10 @@ public:
   {
     d_g = g;
   }
+
+private:
+
+  SP_boundary d_boundary;
 
 };
 

@@ -1,20 +1,19 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   BoundaryCondition.hh
- * \author robertsj
- * \date   Apr 9, 2012
- * \brief  BoundaryCondition class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+ * \file   BoundaryConditionMOC.hh
+ * \brief  BoundaryConditionMOC 
+ * \author Jeremy Roberts
+ * \date   Jun 26, 2012
  */
 //---------------------------------------------------------------------------//
 
-#ifndef BOUNDARYCONDITION_HH_
-#define BOUNDARYCONDITION_HH_
+#ifndef BOUNDARYCONDITIONMOC_HH_
+#define BOUNDARYCONDITIONMOC_HH_
 
 // Detran
-#include "Boundary.hh"
-#include "Quadrature.hh"
-#include "Mesh.hh"
+#include "BoundaryMOC.hh"
+#include "QuadratureMOC.hh"
+#include "MeshMOC.hh"
 #include "Traits.hh"
 
 // Utilities
@@ -27,8 +26,8 @@ namespace detran
 {
 
 // Forward declare boundary and traits.
-template <class D> class Boundary;
-template <class D> class BoundaryTraits;
+template <class D> class BoundaryMOC;
+//template <class D> class BoundaryTraits;
 
 //---------------------------------------------------------------------------//
 /*!
@@ -37,28 +36,26 @@ template <class D> class BoundaryTraits;
  */
 //---------------------------------------------------------------------------//
 
+/// \todo template on the Boundary type!!
+
 template <class D>
-class BoundaryCondition : public Object
+class BoundaryConditionMOC : public Object
 {
 
 public:
 
-  typedef SP<BoundaryCondition>                     SP_bc;
-  typedef typename Boundary<D>::SP_boundary         SP_boundary;
+  typedef SP<BoundaryConditionMOC>                  SP_bc;
+  typedef typename BoundaryMOC<D>::SP_boundary      SP_boundary;
   typedef InputDB::SP_input                         SP_input;
-  typedef Mesh::SP_mesh                             SP_mesh;
-  typedef Quadrature::SP_quadrature                 SP_quadrature;
-  typedef typename BoundaryTraits<D>::value_type    boundary_flux_type;
-  typedef std::vector<boundary_flux_type>           vec_boundary_flux;
-  typedef std::vector<vec_boundary_flux>            vec2_boundary_flux;
-  typedef std::vector<vec2_boundary_flux>           vec3_boundary_flux;
+  typedef MeshMOC::SP_mesh                          SP_mesh;
+  typedef QuadratureMOC::SP_quadrature              SP_quadrature;
+  typedef vec_dbl                                   boundary_flux_type;
 
-
-  BoundaryCondition(Boundary<D>& boundary,
-                    int side,
-                    SP_input input,
-                    SP_mesh mesh,
-                    SP_quadrature quadrature)
+  BoundaryConditionMOC(BoundaryMOC<D>& boundary,
+                       int side,
+                       SP_input input,
+                       SP_mesh mesh,
+                       SP_quadrature quadrature)
     : d_boundary(boundary)
     , d_side(side)
     , d_input(input)
@@ -72,11 +69,8 @@ public:
     Require(d_quadrature);
   }
 
-  /// Virtual destructor so Eclipse stops complaining.
-  virtual ~BoundaryCondition()
-  {
-
-  }
+  /// Virtual destructor
+  virtual ~BoundaryConditionMOC(){}
 
   /// Set initial and/or fixed boundary condition.
   virtual void set(int g) = 0;
@@ -87,13 +81,16 @@ public:
   /// Update a boundary for a given angle following a sweep.
   virtual void update(int g, int o, int a) = 0;
 
+  /// DBC function
   virtual bool is_valid() const
-  {return true;}
+  {
+    return true;
+  }
 
 protected:
 
   /// Boundary flux container. \todo Is there a way around using a reference?
-  Boundary<D>& d_boundary;
+  BoundaryMOC<D>& d_boundary;
 
   /// My surface.
   const int d_side;
@@ -106,8 +103,13 @@ protected:
 
   /// Angular quadrature.
   SP_quadrature d_quadrature;
+
 };
 
 } // end namespace detran
 
-#endif /* BOUNDARYCONDITION_HH_ */
+#endif // BOUNDARYCONDITIONMOC_HH_ 
+
+//---------------------------------------------------------------------------//
+//              end of file BoundaryConditionMOC.hh
+//---------------------------------------------------------------------------//

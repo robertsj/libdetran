@@ -11,17 +11,17 @@
 #ifndef SWEEPER_HH_
 #define SWEEPER_HH_
 
+// Config
+#include "detran_config.h"
+
 // Detran
-//#include "Acceleration.hh"
-#include "Boundary.hh"
+#include "BoundaryBase.hh"
 #include "Equation.hh"
 #include "Material.hh"
 #include "Mesh.hh"
 #include "Quadrature.hh"
 #include "State.hh"
 #include "SweepSource.hh"
-#include "detran_config.h"
-#include "Equation_DD_2D.hh"
 
 // Detran Utilities
 #include "DBC.hh"
@@ -72,12 +72,8 @@ public:
   typedef Mesh::SP_mesh                     SP_mesh;
   typedef Material::SP_material             SP_material;
   typedef Quadrature::SP_quadrature         SP_quadrature;
-  typedef Boundary<D>                       Boundary_T;
-  typedef typename Boundary_T::SP_boundary  SP_boundary;
-  typedef typename
-      BoundaryTraits<D>::value_type         boundary_flux_type;
-//  typedef typename
-//      Acceleration<D>::SP_acceleration      SP_acceleration;
+  //
+  typedef BoundaryBase<D>                   Boundary_T;
   //
   typedef typename
       SweepSource<D>::SP_sweepsource        SP_sweepsource;
@@ -99,7 +95,6 @@ public:
           SP_material material,
           SP_quadrature quadrature,
           SP_state state,
-          SP_boundary boundary,
           SP_sweepsource sweepsource);
 
   /*!
@@ -175,7 +170,7 @@ protected:
   SP_state d_state;
 
   /// Boundary
-  SP_boundary d_boundary;
+  //SP_boundary d_boundary;
 
   /// Sweep source
   SP_sweepsource d_sweepsource;

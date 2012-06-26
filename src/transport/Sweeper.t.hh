@@ -18,14 +18,12 @@ Sweeper<D>::Sweeper(SP_input input,
                     SP_material material,
                     SP_quadrature quadrature,
                     SP_state state,
-                    SP_boundary boundary,
                     SP_sweepsource sweepsource)
   : d_input(input)
   , d_mesh(mesh)
   , d_material(material)
   , d_quadrature(quadrature)
   , d_state(state)
-  , d_boundary(boundary)
   , d_sweepsource(sweepsource)
   , d_update_psi(false)
   , d_adjoint(false)
@@ -37,7 +35,6 @@ Sweeper<D>::Sweeper(SP_input input,
   Require(d_material);
   Require(d_quadrature);
   Require(d_state);
-  Require(d_boundary);
   Require(d_sweepsource);
   setup();
   // Check whether we keep psi.
@@ -130,11 +127,6 @@ inline int Sweeper<D>::index(int o, int dim, int ijk)
       return d_mesh->number_cells_z() - ijk - 1;
   }
 }
-
-// Template specializations
-//#include "Sweeper1D.t.hh"
-//#include "Sweeper2D.t.hh"
-//#include "Sweeper3D.t.hh"
 
 } // end namespace detran
 

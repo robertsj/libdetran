@@ -24,16 +24,10 @@ template<class D>
 Boundary<D>::Boundary(SP_input        input,
                       SP_mesh         mesh,
                       SP_quadrature   quadrature)
-  : d_input(input)
-  , d_mesh(mesh)
-  , d_quadrature(quadrature)
-  , d_number_groups(input->get<int>("number_groups"))
+  : Base(input, mesh, quadrature)
   , d_boundary_flux(2*D::dimension, // number of sides
                     vec2_boundary_flux(d_number_groups))
   , d_bc(2*D::dimension)
-  , d_boundary_flux_size(2*D::dimension, 0)
-  , d_has_reflective(false)
-  , d_is_reflective(2*D::dimension, false)
 {
   Require(input);
   Require(mesh);
@@ -78,8 +72,8 @@ Boundary<D>::Boundary(SP_input        input,
       THROW(type);
       break;
     }
-
   }
+
 }
 
 //---------------------------------------------------------------------------//

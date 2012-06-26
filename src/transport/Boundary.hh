@@ -12,6 +12,7 @@
 #define BOUNDARY_HH_
 
 // Detran
+#include "BoundaryBase.hh"
 #include "BoundaryCondition.hh"
 #include "Quadrature.hh"
 #include "Mesh.hh"
@@ -85,7 +86,7 @@ public:
  */
 //---------------------------------------------------------------------------//
 template <class D>
-class Boundary : public Object
+class Boundary : public BoundaryBase<D>
 {
 
 public:
@@ -106,6 +107,10 @@ public:
   typedef std::vector<vec_boundary_flux>            vec2_boundary_flux;
   typedef std::vector<vec2_boundary_flux>           vec3_boundary_flux;
 
+  typedef BoundaryBase<D>              Base;
+  typedef typename Base::SP_boundary   SP_base;
+
+
   /*!
    *  \brief Constructor.
    *
@@ -117,78 +122,24 @@ public:
            SP_mesh         mesh,
            SP_quadrature   quadrature);
 
-  /*!
-   *  \brief SP Constructor.
-   *
-   *  \param    input       User input database.
-   *  \param    mesh        Cartesian mesh.
-   *  \param    quadrature  Angular quadrature.
-   */
-  static SP<detran::Boundary<D> >
+  /// SP Constructor
+  static SP<detran::BoundaryBase<D> >
   Create(SP<detran::InputDB>       input,
          SP<detran::Mesh>          mesh,
          SP<detran::Quadrature>    quadrature)
   {
-    SP_boundary p;
-    p = new Boundary(input, mesh, quadrature);
+    SP_boundary p(new Boundary(input, mesh, quadrature));
     return p;
   }
 
-  /// \name Boundary Flux Access
+  /// \name Inherited Interface
   /// \{
-
-  /*
-   *  \brief Const access to a boundary flux using cardinal indices.
-   *
-   *  This (and the mutable version) interface is for use
-   *  in sweeping, where octants and angles are cycled. 
-   *
-   *  \param    side  Side index.
-   *  \param    o     Octant index.
-   *  \param    a     Angle index (within octant).
-   *  \param    g     Energy group.
-   *  \return         Constant reference to boundary flux.
-   */
-  const boundary_flux_type& 
-  operator()(int side, int o, int a, int g) const;
-
-  /*
-   *  \brief Mutable access to boundary flux using cardinal indices.
-   */
-  boundary_flux_type&
-  operator()(int side, int o, int a, int g);
-
-  /*
-   *  \brief Const access to ordered incident flux.
-   */
-  const boundary_flux_type&
-  incident(int side, int angle, int g) const;
-
-  /*
-   *  \brief Mutable access to incident boundary flux.
-   */
-  boundary_flux_type&
-  incident(int side, int angle, int g);
-
-  /*
-   *  \brief Const access to ordered outgoing flux.
-   */
-  const boundary_flux_type&
-  outgoing(int side, int angle, int g) const;
-
-  /*
-   *  \brief Mutable access to outgoing boundary flux.
-   */
-  boundary_flux_type&
-  outgoing(int side, int angle, int g);
-
-  /// \}
 
   /*!
    *  \brief Set the boundaries for a within-group solve.
    *
    *  This sets any boundaries that must be fixed for
-   *  a solve, such as any fixed boundary source.
+   *  a solve, such as any external boundary source.
    *
    *  \param  g   Group of current solve
    */
@@ -236,6 +187,59 @@ public:
    */
   void clear(int g);
 
+  /// \}
+
+
+  /// \name Boundary Flux Access
+  /// \{
+
+  /*
+   *  \brief Const access to a boundary flux using cardinal indices.
+   *
+   *  This (and the mutable version) interface is for use
+   *  in sweeping, where octants and angles are cycled.
+   *
+   *  \param    side  Side index.
+   *  \param    o     Octant index.
+   *  \param    a     Angle index (within octant).
+   *  \param    g     Energy group.
+   *  \return         Constant reference to boundary flux.
+   */
+  const boundary_flux_type&
+  operator()(int side, int o, int a, int g) const;
+
+  /*
+   *  \brief Mutable access to boundary flux using cardinal indices.
+   */
+  boundary_flux_type&
+  operator()(int side, int o, int a, int g);
+
+  /*
+   *  \brief Const access to ordered incident flux.
+   */
+  const boundary_flux_type&
+  incident(int side, int angle, int g) const;
+
+  /*
+   *  \brief Mutable access to ordered incident boundary flux.
+   */
+  boundary_flux_type&
+  incident(int side, int angle, int g);
+
+  /*
+   *  \brief Const access to ordered outgoing flux.
+   */
+  const boundary_flux_type&
+  outgoing(int side, int angle, int g) const;
+
+  /*
+   *  \brief Mutable access to ordered outgoing boundary flux.
+   */
+  boundary_flux_type&
+  outgoing(int side, int angle, int g);
+
+  /// \}
+
   /*!
    *  \brief  Map the local index to cardinal index.
    *
@@ -262,7 +266,7 @@ public:
     return d_mesh;
   }
 
-  /// Return the quadratur.
+  /// Return the quadrature.
   SP_quadrature get_quadrature() const
   {
     return d_quadrature;
@@ -276,22 +280,27 @@ public:
 
   /// \}
 
+  /*
+   *  \brief Set the entire group boundary flux for reflecting sides.
+   *
+   *  This is is support of Krylov solvers.
+   *
+   *  \param g  Group of current sweep
+   *  \param v  Pointer to data used in Krylov solve
+   */
   void set_incident(int g, double *v);
 
+  /*
+   *  \brief Get the entire group boundary flux for reflecting sides.
+   *
+   *  This is in support of Krylov solvers.
+   *
+   *  \param g  Group of current sweep
+   *  \param v  Pointer to data used in Krylov solve
+   */
   void get_incident(int g, double *v);
 
-  /// Does the boundary have any reflective conditions?
-  bool has_reflective() const
-  {
-    return d_has_reflective;
-  }
-
-  /// Is a side reflective?
-  bool is_reflective(int side) const
-  {
-    return d_is_reflective[side];
-  }
-
+  /// DBC function
   bool is_valid() const
   {
     return true;
@@ -299,34 +308,24 @@ public:
 
 private:
 
-  /// \name Data
+  // Expose base class members.
+  using Base::d_input;
+  using Base::d_mesh;
+  using Base::d_quadrature;
+  using Base::d_number_groups;
+  using Base::d_has_reflective;
+  using Base::d_is_reflective;
+  using Base::d_boundary_flux_size;
+  using Base::inout;
+
+  /// \name Private Data
   /// \{
 
-  /// Input database
-  SP_input d_input;
-
-  /// Mesh
-  SP_mesh d_mesh;
-
-  /// Angular quadrature
-  SP_quadrature d_quadrature;
-
-  /// Number of energy groups
-  int d_number_groups;
-
-  /// Boundary flux (side, energy, angle, space)
+  /// Boundary flux (side, energy, angle).(space^D)
   vec3_boundary_flux d_boundary_flux;
 
   /// Vector of boundary conditions.
   std::vector<SP_bc> d_bc;
-
-  /// Do I have any reflective conditions?
-  bool d_has_reflective;
-
-  std::vector<bool> d_is_reflective;
-
-  /// Size of the boundary flux on a side in one group.
-  vec_int d_boundary_flux_size;
 
   /// \}
 

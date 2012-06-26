@@ -12,6 +12,7 @@
 #define SWEEPER2DMOC_HH_
 
 // Detran
+#include "BoundaryMOC.hh"
 #include "Sweeper.hh"
 #include "MeshMOC.hh"
 #include "QuadratureMOC.hh"
@@ -40,44 +41,46 @@ public:
   //
   typedef State::SP_state                   SP_state;
   typedef InputDB::SP_input                 SP_input;
+  typedef MeshMOC::SP_mesh                  SP_mesh;
   typedef Material::SP_material             SP_material;
+  typedef QuadratureMOC::SP_quadrature      SP_quadrature;
+  //
+  typedef EQ                                Equation_T;
+  typedef BoundaryMOC<_2D>                  Boundary_T;
+  typedef typename Boundary_T::SP_boundary  SP_boundary;
+  //
   typedef typename
       SweepSource<_2D>::SP_sweepsource      SP_sweepsource;
-  typedef Boundary<_2D>                     Boundary_T;
-  typedef typename Boundary_T::SP_boundary  SP_boundary;
-  typedef typename
-    BoundaryTraits<_2D>::value_type       boundary_flux_type;
-  // MOC Typedefs
-  typedef EQ                                Equation_T;
-  typedef MeshMOC::SP_mesh                  SP_mesh;
-  typedef QuadratureMOC::SP_quadrature      SP_quadrature;
-  typedef TrackDB::SP_trackdb               SP_trackdb;
-  typedef Track::SP_track                   SP_track;
+  //
   typedef State::moments_type               moments_type;
   typedef State::angular_flux_type          angular_flux_type;
+  //
+  typedef TrackDB::SP_trackdb               SP_trackdb;
+  typedef Track::SP_track                   SP_track;
 
   /*!
    *  \brief Constructor.
    *
    *  \param    input       User input database.
-   *  \param    mesh        Cartesian mesh.
+   *  \param    mesh        Tracked mesh.
    *  \param    material    Material database.
-   *  \param    quadrature  Angular quadrature.
+   *  \param    quadrature  Angular quadrature for MOC.
    *  \param    state       State vectors.
+   *  \param    boundary    Boundary based on tracks.
+   *  \param    sweepsource Sweep source constructor.
    */
   Sweeper2DMOC(SP_input input,
-               Mesh::SP_mesh mesh,
+               SP_mesh mesh,
                SP_material material,
                SP_quadrature quadrature,
                SP_state state,
                SP_boundary boundary,
                SP_sweepsource sweepsource)
   : Base(input,mesh,material,quadrature,
-         state,boundary,sweepsource)
+         state,sweepsource)
+  , d_boundary(boundary)
   {
-    MeshMOC::SP_mesh m;
-    m = mesh;
-    d_tracks = m->tracks();
+    d_tracks = mesh->tracks();
   }
 
   /// Virtual destructor
@@ -90,12 +93,11 @@ public:
          detran::SP<detran::Material>           material,
          detran::SP<detran::Quadrature>         quadrature,
          detran::SP<detran::State>              state,
-         detran::SP<detran::Boundary<_2D> >     boundary,
+         detran::SP<detran::BoundaryBase<_2D> > boundary,
          detran::SP<detran::SweepSource<_2D> >  sweepsource)
   {
-    SP_sweeper p;
-    p = new Sweeper2DMOC(input, mesh, material, quadrature,
-                         state, boundary, sweepsource);
+    SP_sweeper p(new Sweeper2DMOC(input, mesh, material, quadrature,
+                                  state, boundary, sweepsource));
     return p;
   }
 
@@ -112,6 +114,8 @@ private:
 
   /// \name Private Data
   /// \{
+
+  SP_boundary d_boundary;
 
   SP_trackdb d_tracks;
 

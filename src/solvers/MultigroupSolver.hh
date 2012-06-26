@@ -50,7 +50,7 @@ public:
   typedef Mesh::SP_mesh                         SP_mesh;
   typedef Material::SP_material                 SP_material;
   typedef Quadrature::SP_quadrature             SP_quadrature;
-  typedef typename Boundary<D>::SP_boundary     SP_boundary;
+  typedef typename BoundaryBase<D>::SP_boundary SP_boundary;
   typedef ExternalSource::SP_source             SP_externalsource;
   typedef FissionSource::SP_source              SP_fissionsource;
   typedef typename InnerIteration<D>::SP_inner  SP_inner;

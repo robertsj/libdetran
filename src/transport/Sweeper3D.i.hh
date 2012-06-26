@@ -32,22 +32,28 @@ inline void Sweeper3D<EQ>::sweep(moments_type &phi)
   boundary_flux_type psi_xz;
   boundary_flux_type psi_xy;
 
+  // Initialize equation and setup for this group.
+  Equation_T equation(d_mesh, d_material, d_quadrature, d_update_psi);
+  equation.setup_group(d_g);
+
+  // Initialize discrete sweep source vector.
+  SweepSource<_3D>::sweep_source_type source(d_mesh->number_cells(), 0.0);
+
   // Sweep over all octants
   for (int o = 0; o < 8; o++)
   {
 
-    d_equation.setup_octant(o);
+    equation.setup_octant(o);
 
     // Sweep over all angles
     for (int a = 0; a < d_quadrature->number_angles_octant(); a++)
     {
 
       // Get sweep source for this angle.
-      SweepSource<_3D>::sweep_source_type source;
-        //source = d_sweepsource->source(d_g, o, a);
+      d_sweepsource->source(d_g, o, a, source);
 
       // Setup equations for this angle.
-      d_equation.setup_angle(a);
+      equation.setup_angle(a);
 
       // Get psi if update requested.
       State::angular_flux_type psi;
@@ -78,7 +84,7 @@ inline void Sweeper3D<EQ>::sweep(moments_type &phi)
             psi_in[Mesh::XY] = psi_xy[j][i];
 
             // Solve.
-            d_equation.solve(i, j, k, source, psi_in, psi_out, phi, psi);
+            equation.solve(i, j, k, source, psi_in, psi_out, phi, psi);
 
             // Save the horizontal flux.
             psi_xz[i][k] = psi_out[Mesh::XZ];

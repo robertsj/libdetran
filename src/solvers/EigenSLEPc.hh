@@ -65,7 +65,7 @@ public:
   typedef Mesh::SP_mesh                         SP_mesh;
   typedef Material::SP_material                 SP_material;
   typedef Quadrature::SP_quadrature             SP_quadrature;
-  typedef typename Boundary<D>::SP_boundary     SP_boundary;
+  typedef typename BoundaryBase<D>::SP_boundary SP_boundary;
   typedef FissionSource::SP_source              SP_fissionsource;
 
   /*!
@@ -80,26 +80,25 @@ public:
    *  \param fission_source    Fission source.
    */
   EigenSLEPc(SP_input           input,
-                 SP_state           state,
-                 SP_mesh            mesh,
-                 SP_material        material,
-                 SP_quadrature      quadrature,
-                 SP_boundary        boundary,
-                 SP_fissionsource   q_f);
+             SP_state           state,
+             SP_mesh            mesh,
+             SP_material        material,
+             SP_quadrature      quadrature,
+             SP_boundary        boundary,
+             SP_fissionsource   q_f);
 
   /// SP Constructor
   static SP<EigenSLEPc<D> >
-  Create(SP<detran::InputDB>         input,
-         SP<detran::State>           state,
-         SP<detran::Mesh>            mesh,
-         SP<detran::Material>        material,
-         SP<detran::Quadrature>      quadrature,
-         SP<detran::Boundary<D> >    boundary,
-         SP<detran::FissionSource>   q_f)
+  Create(SP<detran::InputDB>          input,
+         SP<detran::State>            state,
+         SP<detran::Mesh>             mesh,
+         SP<detran::Material>         material,
+         SP<detran::Quadrature>       quadrature,
+         SP<detran::BoundaryBase<D> > boundary,
+         SP<detran::FissionSource>    q_f)
   {
-    SP_solver p;
-    p = new EigenSLEPc(input, state, mesh, material,
-                       quadrature, boundary, q_f);
+    SP_solver p(new EigenSLEPc(input, state, mesh, material,
+                               quadrature, boundary, q_f));
     return p;
   }
 
