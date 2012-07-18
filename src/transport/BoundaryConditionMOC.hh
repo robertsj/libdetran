@@ -45,7 +45,8 @@ class BoundaryConditionMOC : public Object
 public:
 
   typedef SP<BoundaryConditionMOC>                  SP_bc;
-  typedef typename BoundaryMOC<D>::SP_boundary      SP_boundary;
+  typedef BoundaryMOC<D>                            Boundary_T;
+  typedef typename Boundary_T::SP_boundary          SP_boundary;
   typedef InputDB::SP_input                         SP_input;
   typedef MeshMOC::SP_mesh                          SP_mesh;
   typedef QuadratureMOC::SP_quadrature              SP_quadrature;
@@ -90,7 +91,7 @@ public:
 protected:
 
   /// Boundary flux container. \todo Is there a way around using a reference?
-  BoundaryMOC<D>& d_boundary;
+  Boundary_T& d_boundary;
 
   /// My surface.
   const int d_side;

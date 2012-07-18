@@ -44,7 +44,8 @@ class BoundaryCondition : public Object
 public:
 
   typedef SP<BoundaryCondition>                     SP_bc;
-  typedef typename Boundary<D>::SP_boundary         SP_boundary;
+  typedef Boundary<D>                               Boundary_T;
+  typedef typename Boundary_T::SP_boundary          SP_boundary;
   typedef InputDB::SP_input                         SP_input;
   typedef Mesh::SP_mesh                             SP_mesh;
   typedef Quadrature::SP_quadrature                 SP_quadrature;
@@ -54,7 +55,7 @@ public:
   typedef std::vector<vec2_boundary_flux>           vec3_boundary_flux;
 
 
-  BoundaryCondition(Boundary<D>& boundary,
+  BoundaryCondition(Boundary_T& boundary,
                     int side,
                     SP_input input,
                     SP_mesh mesh,
@@ -93,7 +94,7 @@ public:
 protected:
 
   /// Boundary flux container. \todo Is there a way around using a reference?
-  Boundary<D>& d_boundary;
+  Boundary_T& d_boundary;
 
   /// My surface.
   const int d_side;

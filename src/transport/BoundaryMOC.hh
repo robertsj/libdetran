@@ -47,6 +47,10 @@ public:
   typedef typename BC_T::SP_bc          SP_bc;
   typedef BoundaryBase<D>               Base;
   typedef typename Base::SP_boundary    SP_base;
+  typedef std::vector<vec3_dbl>         boundary_flux_type;
+
+  using Base::IN;
+  using Base::OUT;
 
   /*!
    *  \brief Constructor.
@@ -152,6 +156,74 @@ public:
 
   /// \}
 
+  /// \name Track Boundary Flux Access
+  /// \{
+
+  /*
+   *  \brief Const access to a boundary flux using cardinal indices.
+   *
+   *  This (and the mutable version) interface is for use
+   *  in sweeping, where octants and angles are cycled.
+   *
+   *  \param    g     Energy group.
+   *  \param    o     Octant index.
+   *  \param    a     Angle index (within octant).
+   *  \param    t     Track index for angle.
+   *  \return         Constant reference to boundary flux.
+   */
+  const double&
+  operator()(u_int g, u_int o, u_int a, u_int inout, u_int t) const;
+
+  /*
+   *  \brief Mutable access to boundary flux using cardinal indices.
+   */
+  double&
+  operator()(u_int g, u_int o, u_int a, u_int inout, u_int t);
+
+  /// \}
+
+  /// \name Indexing
+  /// \{
+
+  /*
+   *  \brief Assign the octant, angle, and track fed by an octant,
+   *         angle, and track
+   *
+   *  To make the boundary condition as independent as
+   *  possible, BoundaryMOC knows what to do with the
+   *  cardinal angle within an octant (i.e. with polar implicit)
+   *
+   *  \param o1   Incident octant
+   *  \param a1   Incident angle within octant
+   *  \param t1   Incident track
+   *  \param o2   Outgoing octant
+   *  \param a2   Outgoing angle within octant
+   *  \param t2   Outgoing track
+   */
+  void feed_into(const u_int o1, const u_int a1, const u_int t1,
+                 u_int &o2, u_int &a2, u_int &t2);
+
+  /*
+   *  \brief Assign the octant, angle, and track feeding an octant,
+   *         angle, and track
+   *  \param o1   Outgoing octant
+   *  \param a1   Outgoing angle within octant
+   *  \param t1   Outgoing track
+   *  \param o2   Incident octant
+   *  \param a2   Incident angle within octant
+   *  \param t2   Incident track
+   */
+  void feed_from(const u_int o1, const u_int a1, const u_int t1,
+                 u_int &o2, u_int &a2, u_int &t2);
+
+  /// Return vector of octant, azimuth, track triplets for a side.
+  const vec2_int& side_indices(int side)
+  {
+    return d_side_index[side];
+  }
+
+  /// \}
+
   /// DBC function
   bool is_valid() const
   {
@@ -163,21 +235,31 @@ private:
   // Expose base class members.
   using Base::d_input;
   using Base::d_mesh;
-  using Base::d_quadrature;
   using Base::d_number_groups;
   using Base::d_has_reflective;
   using Base::d_is_reflective;
   using Base::d_boundary_flux_size;
-  using Base::inout;
 
   /// \name Private Data
   /// \{
 
-  /// Boundary flux (energy, angle).(space^D)
-  vec3_dbl d_boundary_flux;
+  /// MOC Quadrature
+  SP_quadrature d_quadrature;
+
+  /// Boundary flux [energy, angle, inout, track]
+  boundary_flux_type d_boundary_flux;
 
   /// Vector of boundary conditions.
   std::vector<SP_bc> d_bc;
+
+  /// d_feed_into[o0][a0][t0][o1 a1 t1] says track a0, t0 feeds into track a1, t1
+  std::vector<vec3_int> d_feed_into;
+
+  /// d_feed_from[a0][t0][a1 t1] says track a0, t0 feeds from track a1, t1
+  std::vector<vec3_int> d_feed_from;
+
+  /// d_side_index[side][o a t]
+  vec3_int d_side_index;
 
   /// \}
 
@@ -186,6 +268,12 @@ private:
 
   /// Size the boundaries, etc.
   void initialize();
+
+  /// Setup reflection indices.
+  void setup_indices();
+
+  /// Setup indices for an incident side.
+  void setup_side_indices();
 
   /// \}
 

@@ -54,11 +54,9 @@ public:
    *  \brief Constructor
    */
   BoundaryBase(SP_input        input,
-               SP_mesh         mesh,
-               SP_quadrature   quadrature)
+               SP_mesh         mesh)
     : d_input(input)
     , d_mesh(mesh)
-    , d_quadrature(quadrature)
     , d_has_reflective(false)
     , d_is_reflective(2*D::dimension, false)
     , d_boundary_flux_size(2*D::dimension, 0)
@@ -174,9 +172,6 @@ protected:
 
   /// Mesh
   SP_mesh d_mesh;
-
-  /// Angular quadrature
-  SP_quadrature d_quadrature;
 
   /// Do I have any reflective conditions?  (Krylov support)
   bool d_has_reflective;

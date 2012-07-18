@@ -43,6 +43,8 @@ int test_Uniform()
   TEST(q.number_tracks(0) == 13);
   TEST(q.number_enter(0, 0) == 2);
   TEST(q.number_enter(0, 1) == 11);
+  TEST(q.number_exit(0, 0)  == 11);
+  TEST(q.number_exit(0, 1)  == 2);
   double y = 1.0 - 0.5 / 11.0;
   TEST(soft_equiv(q.enter(0, 0).x(), 0.0));
   TEST(soft_equiv(q.enter(0, 0).y(), y));
@@ -50,6 +52,14 @@ int test_Uniform()
   TEST(q.polar(13) == 1);
   TEST(q.azimuth(13) == 4);
   q.display_tracks();
+
+  //
+  Uniform q2(2, 1, 3, 1, "TY");
+  TEST(q2.number_enter(0, 0) == 1);
+  TEST(q2.number_enter(0, 1) == 2);
+  TEST(q2.number_exit(0, 0)  == 2);
+  TEST(q2.number_exit(0, 1)  == 1);
+  q2.display_tracks();
   return 0;
 }
 

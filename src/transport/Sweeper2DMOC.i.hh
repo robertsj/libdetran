@@ -6,6 +6,7 @@
  * \brief  Sweeper2DMOC inline member definitions.
  */
 //---------------------------------------------------------------------------//
+
 #ifndef SWEEPER2DMOC_I_HH_
 #define SWEEPER2DMOC_I_HH_
 
@@ -110,7 +111,7 @@ inline void Sweeper2DMOC<EQ>::sweep(moments_type &phi)
       if (d_update_psi) psi = d_state->psi(d_g, o, a);
 
       // Update the boundary for this angle.
-      //if (d_update_boundary) d_boundary->update(d_g, o, a);
+      if (d_update_boundary) d_boundary->update(d_g, o, a);
 
       // Sweep over all tracks.
       for (int t = 0; t < d_tracks->number_tracks_angle(azimuth); t++)
@@ -123,7 +124,15 @@ inline void Sweeper2DMOC<EQ>::sweep(moments_type &phi)
         SP_track track = d_tracks->track(azimuth, t);
 
         // *** LOAD THE BOUNDARY FLUX.
-        psi_out = 0.0;
+//        if (o == 0)
+//          psi_out = 1.0 + 4*o + t;
+//        else
+        psi_out = (*d_boundary)(d_g, o, a, BoundaryMOC<_2D>::IN, t);
+
+//        cout << " OCTANT = " << o << endl;
+//        cout << "   ANGLE = " << a << endl;
+//        cout << "     TRACK = " << t << endl;
+//        cout << "       psi_in = " << psi_out << endl;
 
         // SN access
         // boundary_flux_type psi_v = (*d_boundary)
@@ -162,9 +171,14 @@ inline void Sweeper2DMOC<EQ>::sweep(moments_type &phi)
 
         } // end segment
 
+        // *** UPDATE THE BOUNDARY WITH psi_out
+        (*d_boundary)(d_g, o, a, BoundaryMOC<_2D>::OUT, t) = psi_out;
+
+        //cout << "      psi_out = " << psi_out << endl;
+
       } // end track
 
-      // *** UPDATE THE BOUNDARY WITH psi_out
+
 
     } // end angle loop
     // end omp do

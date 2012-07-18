@@ -91,12 +91,6 @@ class Boundary : public BoundaryBase<D>
 
 public:
 
-  enum inout
-  {
-      IN,
-      OUT
-  };
-
   typedef SP<Boundary>                              SP_boundary;
   typedef InputDB::SP_input                         SP_input;
   typedef Mesh::SP_mesh                             SP_mesh;
@@ -110,6 +104,8 @@ public:
   typedef BoundaryBase<D>              Base;
   typedef typename Base::SP_boundary   SP_base;
 
+  using Base::IN;
+  using Base::OUT;
 
   /*!
    *  \brief Constructor.
@@ -249,7 +245,7 @@ public:
    *  \param    angle
    *
    */
-  virtual int ordered_angle(int side, int angle, int inout) const;
+  int ordered_angle(int side, int angle, int inout) const;
 
   /// \name Getters
   /// \{
@@ -311,15 +307,16 @@ private:
   // Expose base class members.
   using Base::d_input;
   using Base::d_mesh;
-  using Base::d_quadrature;
   using Base::d_number_groups;
   using Base::d_has_reflective;
   using Base::d_is_reflective;
   using Base::d_boundary_flux_size;
-  using Base::inout;
 
   /// \name Private Data
   /// \{
+
+  /// Quadrature
+  SP_quadrature d_quadrature;
 
   /// Boundary flux (side, energy, angle).(space^D)
   vec3_boundary_flux d_boundary_flux;

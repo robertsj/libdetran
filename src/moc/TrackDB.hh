@@ -30,7 +30,17 @@ namespace detran
  *
  *  The track database contains all the information needed
  *  to represent the MOC problem with respect to space
- *  and angle.  Essentially, it contains the following:
+ *  and angle.
+ *
+ *  Currently, this is limited to 2-D tracking.  Tracks
+ *  are only assigned for azimuths over [0, pi], using
+ *  symmetry for [pi, 2*pi].
+ *
+ *  Tracks are stored in order in order of decreasing
+ *  y and increasing x for 0, pi/2 and decreasing
+ *  x for pi/2, pi.  This is how tracks are indexed.
+ *  The track index in the other two octancts keeps
+ *  the index of their reflection.
  *
  */
 class TrackDB: public Object

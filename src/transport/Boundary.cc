@@ -24,15 +24,13 @@ template<class D>
 Boundary<D>::Boundary(SP_input        input,
                       SP_mesh         mesh,
                       SP_quadrature   quadrature)
-  : Base(input, mesh, quadrature)
+  : Base(input, mesh)
+  , d_quadrature(quadrature)
   , d_boundary_flux(2*D::dimension, // number of sides
                     vec2_boundary_flux(d_number_groups))
   , d_bc(2*D::dimension)
 {
-  Require(input);
-  Require(mesh);
-  Require(quadrature);
-  Require(d_number_groups > 0);
+  Require(d_quadrature);
 
   // Allocate the boundary flux container.
   initialize();

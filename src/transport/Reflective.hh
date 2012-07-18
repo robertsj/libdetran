@@ -37,7 +37,8 @@ public:
   typedef SP<Reflective>                            SP_bc;
   typedef BoundaryCondition<D>                      Base;
   typedef typename BoundaryCondition<D>::SP_bc      SP_base;
-  typedef typename Boundary<D>::SP_boundary         SP_boundary;
+  typedef Boundary<D>                               Boundary_T;
+  typedef typename Boundary_T::SP_boundary          SP_boundary;
   typedef InputDB::SP_input                         SP_input;
   typedef Mesh::SP_mesh                             SP_mesh;
   typedef Quadrature::SP_quadrature                 SP_quadrature;
@@ -47,12 +48,12 @@ public:
   typedef std::vector<vec2_boundary_flux>           vec3_boundary_flux;
 
 
-  Reflective(Boundary<D>& boundary,
+  Reflective(Boundary_T& boundary,
              int side,
              SP_input input,
              SP_mesh mesh,
              SP_quadrature quadrature)
-    : BoundaryCondition<D>(boundary, side, input, mesh, quadrature)
+    : Base(boundary, side, input, mesh, quadrature)
     , d_octants(quadrature->number_octants()/2, vec_int(2, 0))
   {
     setup_octant();
