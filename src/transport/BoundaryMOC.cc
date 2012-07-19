@@ -247,8 +247,8 @@ void BoundaryMOC<D>::setup_side_indices()
 
   // Incident octants; left to right from incident perspective.
   int oct[4][2] = {0, 3,
-                   2, 1,
-                   1, 0,
+                   1, 2,
+                   0, 1,
                    3, 2};
 
   d_side_index.resize(4);
@@ -286,8 +286,9 @@ void BoundaryMOC<D>::setup_side_indices()
     for (int a = a_start; a < a_end; a++)
     {
       int azimuth = d_quadrature->azimuth(a);
+      int nx = d_quadrature->number_enter(azimuth, 0);
       int ny = d_quadrature->number_enter(azimuth, 1);
-      for (int t = ny - 1; t >= 0; t--)
+      for (int t = nx + ny - 1; t >= ny - 1; t--)
       {
         triplet[0] = o;
         triplet[1] = a;
@@ -298,7 +299,7 @@ void BoundaryMOC<D>::setup_side_indices()
 
   } // side loop 1
 
-  for (int side = 2; side < 4; side++)
+  for (int side = 2; side < 3; side++)
   {
 
     // Octant 0.
@@ -311,6 +312,8 @@ void BoundaryMOC<D>::setup_side_indices()
       int nx = d_quadrature->number_enter(azimuth, 0);
       int ny = d_quadrature->number_enter(azimuth, 1);
       int n  = nx + ny;
+      int t_start = n - 1;
+      int t_end   = ny;
       for (int t = n - 1; t >= ny; t--)
       {
         triplet[0] = o;
@@ -331,6 +334,52 @@ void BoundaryMOC<D>::setup_side_indices()
       int ny = d_quadrature->number_enter(azimuth, 1);
       int n  = nx + ny;
       for (int t = ny; t < n; t++)
+      {
+        triplet[0] = o;
+        triplet[1] = a;
+        triplet[2] = t;
+        d_side_index[side].push_back(triplet);
+      }
+    }
+
+
+  } // side loop 2
+
+  for (int side = 3; side < 4; side++)
+  {
+
+    // Octant 0.
+    int o       = oct[side][0];
+    int a_start = 0;
+    int a_end   = d_quadrature->number_azimuths_octant();
+    for (int a = a_start; a < a_end; a++)
+    {
+      int azimuth = d_quadrature->azimuth(a);
+      int nx = d_quadrature->number_enter(azimuth, 0);
+      int ny = d_quadrature->number_enter(azimuth, 1);
+      int n  = nx + ny;
+      int t_start = n - 1;
+      int t_end   = ny;
+      for (int t = 0; t < nx; t++)
+      {
+        triplet[0] = o;
+        triplet[1] = a;
+        triplet[2] = t;
+        d_side_index[side].push_back(triplet);
+      }
+    }
+
+    // Octant 1.
+    o       = oct[side][1];
+    a_start = d_quadrature->number_azimuths_octant() - 1;
+    a_end   = 0;
+    for (int a = a_start; a >= a_end; a--)
+    {
+      int azimuth = d_quadrature->azimuth(a);
+      int nx = d_quadrature->number_enter(azimuth, 0);
+      int ny = d_quadrature->number_enter(azimuth, 1);
+      int n  = nx + ny;
+      for (int t = 0; t < nx; t++)
       {
         triplet[0] = o;
         triplet[1] = a;
