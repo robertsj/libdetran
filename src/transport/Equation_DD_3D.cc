@@ -17,7 +17,7 @@ Equation_DD_3D::Equation_DD_3D(SP_mesh mesh,
                                SP_material material,
                                SP_quadrature quadrature,
                                bool update_psi)
-  :  Equation(mesh, material, quadrature, update_psi)
+  :  Equation<_3D>(mesh, material, quadrature, update_psi)
   ,  d_coef_x(mesh->number_cells_x())
   ,  d_coef_y(mesh->number_cells_y())
   ,  d_coef_z(mesh->number_cells_z())

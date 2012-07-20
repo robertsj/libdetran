@@ -18,7 +18,7 @@ Equation_SD_2D::Equation_SD_2D(SP_mesh mesh,
                                SP_material material,
                                SP_quadrature quadrature,
                                bool update_psi)
-  :  Equation(mesh, material, quadrature, update_psi)
+  :  Equation<_2D>(mesh, material, quadrature, update_psi)
   ,  d_coef_x(mesh->number_cells_x())
   ,  d_coef_y(mesh->number_cells_y())
 {

@@ -17,7 +17,7 @@ Equation_SC_2D::Equation_SC_2D(SP_mesh mesh,
                                SP_material material,
                                SP_quadrature quadrature,
                                bool update_psi)
-  :  Equation(mesh, material, quadrature, update_psi)
+  :  Equation<_2D>(mesh, material, quadrature, update_psi)
   ,  d_alpha(mesh->number_cells_x())
   ,  d_beta(mesh->number_cells_y())
 {
