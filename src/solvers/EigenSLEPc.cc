@@ -8,6 +8,10 @@
  */
 //---------------------------------------------------------------------------//
 
+#include "detran_config.h"
+
+#ifdef DETRAN_ENABLE_SLEPC
+
 // Detran
 #include "EigenSLEPc.hh"
 
@@ -90,9 +94,8 @@ PetscErrorCode EigenSLEPc<_1D>::set_operation()
 
 } // end namespace detran
 
+#endif
+
 //---------------------------------------------------------------------------//
 //              end of EigenSLEPc.cc
 //---------------------------------------------------------------------------//
-
-
-

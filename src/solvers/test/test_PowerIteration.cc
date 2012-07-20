@@ -63,14 +63,16 @@ int test_PowerIteration_2D()
   input->put<int>(     "number_groups",     1);
   input->put<int>(     "inner_max_iters",   100);
   input->put<double>(  "inner_tolerance",   1e-12);
-  input->put<int>(     "outer_max_iters",   1);
+  input->put<int>(     "inner_print_out",   0);
+  input->put<int>(     "outer_max_iters",   0);
   input->put<double>(  "outer_tolerance",   1e-12);
+  input->put<int>(     "outer_print_out",   0);
   input->put<int>(     "eigen_max_iters",   100);
-  input->put<double>(  "eigen_tolerance",   1e-12);
-  input->put<string>(  "bc_left",   "reflect");
-  input->put<string>(  "bc_right",  "reflect");
-  input->put<string>(  "bc_bottom", "reflect");
-  input->put<string>(  "bc_top",    "reflect");
+  input->put<double>(  "eigen_tolerance",   1e-14);
+  input->put<string>(  "bc_left",           "reflect");
+  input->put<string>(  "bc_right",          "reflect");
+  input->put<string>(  "bc_bottom",         "reflect");
+  input->put<string>(  "bc_top",            "reflect");
 
   // State
   PowerIteration<_2D>::SP_state state;
@@ -86,21 +88,15 @@ int test_PowerIteration_2D()
 
   // SI
   PowerIteration<_2D> solver(input, state, mesh, mat,
-                              quad, bound, q_e, q_f);
+                             quad, bound, q_f);
 
   // Solve.
   solver.solve();
   TEST(soft_equiv(state->eigenvalue(), 1.0));
-
-//  State::moments_type phi = state->phi(0);
-//  TEST(soft_equiv(phi[0], 3.402625949151646e-01));
-//  TEST(soft_equiv(phi[1], 4.334557647118027e-01));
-//  TEST(soft_equiv(phi[4], 5.486109632367223e-01));
+  TEST(soft_equiv(state->phi(0)[0], state->phi(0)[1]));
 
   return 0;
 }
 //---------------------------------------------------------------------------//
 //              end of test_PowerIteration.cc
 //---------------------------------------------------------------------------//
-
-

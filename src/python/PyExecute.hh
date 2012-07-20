@@ -11,11 +11,16 @@
 #ifndef PYEXECUTE_HH_
 #define PYEXECUTE_HH_
 
+// Config
+#include "detran_config.h"
+
 // Detran
 #include "Material.hh"
 #include "Mesh.hh"
 #include "Eigensolver.hh"
+#ifdef DETRAN_ENABLE_SLEPC
 #include "EigenSLEPc.hh"
+#endif
 #include "ExternalSource.hh"
 #include "FissionSource.hh"
 #include "State.hh"
@@ -23,7 +28,9 @@
 #include "Traits.hh"
 #include "PowerIteration.hh"
 #include "GaussSeidel.hh"
+#ifdef DETRAN_ENABLE_PETSC
 #include "KrylovMG.hh"
+#endif
 
 // Utilities
 #include "DBC.hh"
@@ -32,7 +39,9 @@
 // System
 #include <iostream>
 #include <string>
+#ifdef DETRAN_ENABLE_PETSC
 #include "petsc.h"
+#endif
 
 namespace detran
 {
@@ -291,9 +300,13 @@ void PyExecute<D>::solve()
     }
     else if (eigen_solver == "SLEPc")
     {
+#ifdef DETRAN_ENABLE_SLEPC
       EigenSLEPc<D> solver(d_input, d_state, d_mesh, d_material,
                            d_quadrature, boundary, d_fissionsource);
       solver.solve();
+#else
+      THROW("EigenSLEPc is unavailable since SLEPc is not enabled.");
+#endif
     }
     else
     {
@@ -316,9 +329,13 @@ void PyExecute<D>::solve()
     }
     else if (outer_solver == "KrylovMG")
     {
+#ifdef DETRAN_ENABLE_PETSC
       KrylovMG<D> solver(d_input, d_state, d_mesh, d_material, d_quadrature,
                          boundary, d_externalsource, d_fissionsource);
       solver.solve();
+#else
+      THROW("KrylovMG is unavailable since PETSc is not enabled.");
+#endif
     }
     else
     {

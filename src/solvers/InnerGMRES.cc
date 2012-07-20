@@ -8,6 +8,10 @@
  */
 //---------------------------------------------------------------------------//
 
+#include "detran_config.h"
+
+#ifdef DETRAN_ENABLE_PETSC
+
 // Detran
 #include "InnerGMRES.hh"
 //
@@ -123,6 +127,8 @@ PetscErrorCode InnerGMRES<_1D>::set_operation()
 }
 
 } // end namespace detran
+
+#endif
 
 //---------------------------------------------------------------------------//
 //              end of InnerGMRES.cc

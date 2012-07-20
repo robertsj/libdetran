@@ -8,6 +8,10 @@
  */
 //---------------------------------------------------------------------------//
 
+#include "detran_config.h"
+
+#ifdef DETRAN_ENABLE_PETSC
+
 // Detran
 #include "KrylovMG.hh"
 
@@ -155,7 +159,8 @@ PetscErrorCode KrylovMG<_1D>::set_operation()
 
 } // end namespace detran
 
+#endif
+
 //---------------------------------------------------------------------------//
 //              end of KrylovMG.cc
 //---------------------------------------------------------------------------//
-
