@@ -119,11 +119,12 @@ void BoundaryMOC<D>::setup_indices()
   // Each octant-angle-track is matched individually.  The indexing
   // is used as [angle, track]->(angle, track).
 
-  int no = d_quadrature->number_octants();
-  int na = d_quadrature->number_azimuths_octant();
+  int number_octants        = d_quadrature->number_octants();
+  int number_angles_octant  = d_quadrature->number_angles_octant();
+  int number_azimuth_octant = d_quadrature->number_azimuths_octant();
 
-  d_feed_into.resize(no, vec3_int(na));
-  d_feed_from.resize(no, vec3_int(na));
+  d_feed_into.resize(number_octants, vec3_int(number_angles_octant));
+  d_feed_from.resize(number_octants, vec3_int(number_angles_octant));
 
   // Mirrored octants
   int oct[4][2] = {3, 1,
@@ -132,20 +133,29 @@ void BoundaryMOC<D>::setup_indices()
                    2, 0};
 
   // Loop over all angles
-  for (int o = 0; o < no; o++)
+  for (int o = 0; o < number_octants; o++)
   {
-    for (int a = 0; a < na; a++)
+    for (int a = 0; a < number_angles_octant; a++)
     {
+      //cout << " na = " << number_angles_octant << endl;
+
+      // Get the azimuth index for this angle within octant
+      int az = d_quadrature->azimuth(a);
 
       // Number of exit intercepts on horizontal and vertical surface.
-      int nx = d_quadrature->number_exit(a, 1);
-      int ny = d_quadrature->number_exit(a, 0);
+      int nx = d_quadrature->number_exit(az, 1);
+      int ny = d_quadrature->number_exit(az, 0);
 
       // Size the arrays.
-      d_feed_into[o][a].resize(d_quadrature->number_tracks(a), vec_int(3, 0));
-      d_feed_from[o][a].resize(d_quadrature->number_tracks(a), vec_int(3, 0));
+      d_feed_into[o][a].resize(d_quadrature->number_tracks(az), vec_int(3, 0));
+      d_feed_from[o][a].resize(d_quadrature->number_tracks(az), vec_int(3, 0));
 
-      // Assign the feed into index.
+
+      // FEED INTO HORIZONTAL SURFACE
+      if (0 == 0)
+      {
+
+
       int t_max = nx;
       if (o > 1) t_max = ny;
       for (int t = 0; t < t_max; t++)
@@ -153,12 +163,15 @@ void BoundaryMOC<D>::setup_indices()
         // Example:  octant 0 into the top surface reflects into octant 3,
         //           same angle, but with an offset of ny (where ny is the number
         //           of tracks of the incoming angle that start on the y axis)
-        int t2 = t;
+        int t2 = nx - t - 1;
         if (o > 1) t2 = t + nx;
         d_feed_into[o][a][t][0] = oct[o][0];
         d_feed_into[o][a][t][1] = a;
         d_feed_into[o][a][t][2] = t2;
       }
+
+      // FEED INTO VERTICAL SURFACE
+
       t_max = ny;
       if (o > 1) t_max = nx;
       int offset = nx;
@@ -166,24 +179,30 @@ void BoundaryMOC<D>::setup_indices()
       for (int t = 0; t < t_max; t++)
       {
         int t2 = t;
-        if (o > 1) t2 = t + ny;
+        if (o > 1) t2 = ny + nx - t - 1;
         d_feed_into[o][a][t + offset][0] = oct[o][1];
         d_feed_into[o][a][t + offset][1] = a;
         d_feed_into[o][a][t + offset][2] = t2;
+      }
+
       }
 
     }
   }
 
   // Loop over all angles
-  for (int o = 0; o < no; o++)
+  for (int o = 0; o < number_octants; o++)
   {
-    for (int a = 0; a < na; a++)
+    for (int a = 0; a < number_angles_octant; a++)
     {
 
+      // Get the azimuth index for this angle within octant
+      int az = d_quadrature->azimuth(a);
+
+
       // Number of exit intercepts on horizontal and vertical surface.
-      int nx = d_quadrature->number_enter(a, 0);
-      int ny = d_quadrature->number_enter(a, 1);
+      int nx = d_quadrature->number_enter(az, 0);
+      int ny = d_quadrature->number_enter(az, 1);
 
       // Assign the feed into index.
       for (int t = 0; t < nx + ny; t++)
@@ -198,42 +217,6 @@ void BoundaryMOC<D>::setup_indices()
 
     }
   }
-
-//  // output side indices
-//  for (int o = 0; o < d_feed_from.size(); o++)
-//  {
-//    cout << " OCTANT: " << o << endl;
-//    for (int a = 0; a < d_feed_from[o].size(); a++)
-//    {
-//      cout << "   ANGLE: " << a << endl;
-//      for (int t = 0; t < d_feed_from[o][a].size(); t++)
-//      {
-//        cout << "     TRACK: " << t << endl;
-//        cout << "       FEEDS FROM " << endl;
-//        cout << "           octant =  " << d_feed_from[o][a][t][0] << endl;
-//        cout << "            angle =  " << d_feed_from[o][a][t][1] << endl;
-//        cout << "            track =  " << d_feed_from[o][a][t][2] << endl;
-//      }
-//    }
-//  }
-
-//  // output side indices
-//  for (int o = 0; o < d_feed_into.size(); o++)
-//  {
-//    cout << " OCTANT: " << o << endl;
-//    for (int a = 0; a < d_feed_into[o].size(); a++)
-//    {
-//      cout << "   ANGLE: " << a << endl;
-//      for (int t = 0; t < d_feed_into[o][a].size(); t++)
-//      {
-//        cout << "     TRACK: " << t << endl;
-//        cout << "       FEEDS INTO " << endl;
-//        cout << "           octant =  " << d_feed_into[o][a][t][0] << endl;
-//        cout << "            angle =  " << d_feed_into[o][a][t][1] << endl;
-//        cout << "            track =  " << d_feed_into[o][a][t][2] << endl;
-//      }
-//    }
-//  }
 
 }
 
@@ -255,26 +238,24 @@ void BoundaryMOC<D>::setup_side_indices()
 
   vec_int triplet(3, 0);
 
+  int number_angles_octant = d_quadrature->number_angles_octant();
+
   for (int side = 0; side < 2; side++)
   {
 
     // Octant 0.
     int o       = oct[side][0];
-    int a_start = d_quadrature->number_azimuths_octant() - 1;
-    int a_end   = 0;
-    for (int a = a_start; a >= a_end; a--)
+    int a_start = 0;
+    int a_end   = number_angles_octant;
+    for (int a = a_start; a < a_end; a++)
     {
       int azimuth = d_quadrature->azimuth(a);
-      int ny      = d_quadrature->number_enter(azimuth, 1);
+      int ny = d_quadrature->number_enter(azimuth, 1);
       for (int t = 0; t < ny; t++)
       {
         triplet[0] = o;
         triplet[1] = a;
         triplet[2] = t;
-//        cout << " side = " << side << endl
-//             << "      o = " << o
-//             << "        a = " << a
-//             << "          t = " << t << endl;
         d_side_index[side].push_back(triplet);
       }
     }
@@ -282,17 +263,17 @@ void BoundaryMOC<D>::setup_side_indices()
     // Octant 1.
     o       = oct[side][1];
     a_start = 0;
-    a_end   = d_quadrature->number_azimuths_octant();
+    a_end   = number_angles_octant;
     for (int a = a_start; a < a_end; a++)
     {
       int azimuth = d_quadrature->azimuth(a);
       int nx = d_quadrature->number_enter(azimuth, 0);
       int ny = d_quadrature->number_enter(azimuth, 1);
-      for (int t = nx + ny - 1; t >= ny - 1; t--)
+      for (int t = 0; t < ny; t++)
       {
         triplet[0] = o;
         triplet[1] = a;
-        triplet[2] = t;
+        triplet[2] = t + nx;
         d_side_index[side].push_back(triplet);
       }
     }
@@ -305,7 +286,7 @@ void BoundaryMOC<D>::setup_side_indices()
     // Octant 0.
     int o       = oct[side][0];
     int a_start = 0;
-    int a_end   = d_quadrature->number_azimuths_octant();
+    int a_end   = number_angles_octant;
     for (int a = a_start; a < a_end; a++)
     {
       int azimuth = d_quadrature->azimuth(a);
@@ -325,7 +306,7 @@ void BoundaryMOC<D>::setup_side_indices()
 
     // Octant 1.
     o       = oct[side][1];
-    a_start = d_quadrature->number_azimuths_octant() - 1;
+    a_start = number_angles_octant - 1;
     a_end   = 0;
     for (int a = a_start; a >= a_end; a--)
     {
@@ -351,7 +332,7 @@ void BoundaryMOC<D>::setup_side_indices()
     // Octant 0.
     int o       = oct[side][0];
     int a_start = 0;
-    int a_end   = d_quadrature->number_azimuths_octant();
+    int a_end   = number_angles_octant;
     for (int a = a_start; a < a_end; a++)
     {
       int azimuth = d_quadrature->azimuth(a);
@@ -371,7 +352,7 @@ void BoundaryMOC<D>::setup_side_indices()
 
     // Octant 1.
     o       = oct[side][1];
-    a_start = d_quadrature->number_azimuths_octant() - 1;
+    a_start = number_angles_octant - 1;
     a_end   = 0;
     for (int a = a_start; a >= a_end; a--)
     {
@@ -390,18 +371,6 @@ void BoundaryMOC<D>::setup_side_indices()
 
 
   } // side loop 2
-
-//  // output side indices
-//  for (int s = 0; s < 4; s++)
-//  {
-//    cout << " >>> SIDE = " << s << endl;
-//    for (int i = 0; i < d_side_index[s].size(); i++)
-//    {
-//      cout << "      o = " << d_side_index[s][i][0] << endl
-//           << "        a = " << d_side_index[s][i][1] << endl
-//           << "          t = " << d_side_index[s][i][2] << endl;
-//    }
-//  }
 
 }
 

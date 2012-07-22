@@ -48,18 +48,18 @@ inline void Equation_SC_MOC::solve(int region,
   psi_out = A * psi_in + B * source[region];
 
 
-  if (!(source[region] > 0.0 ? psi_out > 0.0 : true))
-  {
-    cout << "  region = " << region << endl;
-    cout << "  psi_in = " << psi_in << endl;
-    cout << " psi_out = " << psi_out << endl;
-    cout << "   sigma = " << sigma << endl;
-    cout << " L / sin = " << length_over_sin << endl;
-    cout << "       A = " << A << endl;
-    cout << "       B = " << B << endl;
-    cout << "  source = " << source[region] << endl;
-  }
-  Ensure(source[region] > 0.0 ? psi_out > 0.0 : true);
+//  if (!(source[region] > 0.0 ? psi_out > 0.0 : true))
+//  {
+//    cout << "  region = " << region << endl;
+//    cout << "  psi_in = " << psi_in << endl;
+//    cout << " psi_out = " << psi_out << endl;
+//    cout << "   sigma = " << sigma << endl;
+//    cout << " L / sin = " << length_over_sin << endl;
+//    cout << "       A = " << A << endl;
+//    cout << "       B = " << B << endl;
+//    cout << "  source = " << source[region] << endl;
+//  }
+//  Ensure(source[region] > 0.0 ? psi_out > 0.0 : true);
 
   // Segment average angular flux.
   double psi_average = (1.0 / length_over_sin) * (B * psi_in + C * source[region]);

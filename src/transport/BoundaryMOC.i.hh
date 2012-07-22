@@ -95,9 +95,9 @@ BoundaryMOC<D>::feed_into(const u_int o1, const u_int a1, const u_int t1,
   Require(a1 < d_quadrature->number_angles_octant());
   int azimuth = d_quadrature->azimuth(a1);
   Require(t1 < d_quadrature->number_tracks(azimuth));
-  o2 = d_feed_into[o1][azimuth][t1][0];
-  a2 = d_feed_into[o1][azimuth][t1][1];
-  t2 = d_feed_into[o1][azimuth][t1][2];
+  o2 = d_feed_into[o1][a1][t1][0];
+  a2 = d_feed_into[o1][a1][t1][1];
+  t2 = d_feed_into[o1][a1][t1][2];
 }
 
 template <class D>
@@ -109,9 +109,9 @@ BoundaryMOC<D>::feed_from(const u_int o1, const u_int a1, const u_int t1,
   Require(a1 < d_quadrature->number_angles_octant());
   int azimuth = d_quadrature->azimuth(a1);
   Require(t1 < d_quadrature->number_tracks(azimuth));
-  o2 = d_feed_from[o1][azimuth][t1][0];
-  a2 = d_feed_from[o1][azimuth][t1][1];
-  t2 = d_feed_from[o1][azimuth][t1][2];
+  o2 = d_feed_from[o1][a1][t1][0];
+  a2 = d_feed_from[o1][a1][t1][1];
+  t2 = d_feed_from[o1][a1][t1][2];
 }
 
 //---------------------------------------------------------------------------//

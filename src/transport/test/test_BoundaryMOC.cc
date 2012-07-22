@@ -49,7 +49,7 @@ int test_BoundaryMOC()
   Mesh::SP_mesh mesh0(new Mesh2D(fm, fm, cm, cm, mt));
 
   // Create quadrature.  1 azimuth, 3 space, 1 polar.
-  QuadratureMOC::SP_quadrature quad(new Uniform(2, 3, 7, 1, "TY"));
+  QuadratureMOC::SP_quadrature quad(new Uniform(2, 2, 5, 3, "TY"));
 
   // Create tracker
   Tracker tracker(mesh0, quad);
@@ -145,9 +145,28 @@ int test_BoundaryMOC()
     vec2_int left = boundary.side_indices(s);
     for (int i = 0; i < left.size(); i++)
     {
-      cout << "      o = " << left[i][0] << endl
-           << "        a = " << left[i][1] << endl
-           << "          t = " << left[i][2] << endl;
+      cout << left[i][0] << " " << left[i][1] << " " << left[i][2] << " | ";
+
+      detran::u_int o = left[i][0];
+      detran::u_int a = left[i][1];
+      detran::u_int t = left[i][2];
+      detran::u_int oo;
+      detran::u_int aa;
+      detran::u_int tt;
+      boundary.feed_into(o,a,t,oo,aa,tt);
+//      cout << " INTO " << endl;
+//      cout << "      o = " << oo << endl
+//           << "        a = " << aa << endl
+//           << "          t = " << tt << endl;
+      cout << oo << " " << aa << " " << tt << " | ";
+
+      boundary.feed_from(o,a,t,oo,aa,tt);
+//      cout << " FROM " << endl;
+//      cout << "      o = " << oo << endl
+//           << "        a = " << aa << endl
+//           << "          t = " << tt << endl;
+      cout << oo << " " << aa << " " << tt << endl;
+
     }
   }
 

@@ -35,14 +35,12 @@ void ReflectiveMOC<D>::update(int g)
 
     // Incident indices
     u_int o  = side_index[i][0];
-    u_int az = side_index[i][1];
+    u_int a = side_index[i][1];
     u_int t  = side_index[i][2];
 
-    for (int p = 0; p < d_quadrature->number_polar_octant(); p++)
+    //for (int p = 0; p < d_quadrature->number_polar_octant(); p++)
     {
-      u_int a = d_quadrature->angle(az, p);
       d_boundary.feed_from(o, a, t, oo, aa, tt);
-
 //      cout << "*** i = " << i
 //           << " o = " << o
 //           << " a = " << a
