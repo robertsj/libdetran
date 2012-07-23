@@ -268,12 +268,6 @@ public:
     return d_quadrature;
   }
 
-  /// Number of boundary flux values in a group on a side
-  int boundary_flux_size(int side) const
-  {
-    return d_boundary_flux_size[side];
-  }
-
   /// \}
 
   /*
