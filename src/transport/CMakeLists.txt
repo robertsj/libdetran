@@ -38,7 +38,6 @@ TARGET_LINK_LIBRARIES( transport
                        angle
                        materials
                        geometry
-                       moc
                        utilities
                        ${GPERFTOOLS_LIBRARIES}
 )

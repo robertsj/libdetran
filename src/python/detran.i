@@ -18,6 +18,7 @@
 #include "DBC.hh"
 #include "InputDB.hh"
 #include "MathUtilities.hh"
+#include "Point.hh"
 #include "SP.hh"
 
 //---------------------------------------------------------------------------//
@@ -25,40 +26,37 @@
 //---------------------------------------------------------------------------//
   
 // Angle
+#include "Collocated.hh"
 #include "GaussLegendre.hh"
 #include "LevelSymmetric.hh"
 #include "MomentToDiscrete.hh"
-#include "LevelSymmetric.hh"
+#include "PolarQuadrature.hh"
 #include "Quadrature.hh"
+#include "QuadratureFactory.hh"
+#include "QuadratureMOC.hh"
 #include "QuadrupleRange.hh"
 #include "SphericalHarmonics.hh"
+#include "TabuchiYamamoto.hh"
+#include "Uniform.hh"
 #include "UniformEqual.hh"
-#include "QuadratureFactory.hh"
+
 
 // Geometry
+#include "Assembly.hh"
+#include "Core.hh"
 #include "Mesh.hh"
+#include "MeshMOC.hh"
 #include "Mesh1D.hh" 
 #include "Mesh2D.hh" 
 #include "Mesh3D.hh"   
 #include "PinCell.hh"
-#include "Assembly.hh"
-#include "Core.hh"
-  
-// Material
-#include "Material.hh"
-  
-// MOC
-#include "Collocated.hh"
-#include "MeshMOC.hh"
-#include "Point.hh"
-#include "PolarQuadrature.hh"
-#include "QuadratureMOC.hh"
 #include "Segment.hh"
-#include "TabuchiYamamoto.hh"
+#include "Track.hh"
 #include "TrackDB.hh"
 #include "Tracker.hh"
-#include "Track.hh"
-#include "Uniform.hh"
+
+// Material
+#include "Material.hh"
   
 //---------------------------------------------------------------------------//
 // LEVEL 2 
@@ -128,9 +126,6 @@
 
 // Material
 %include "detran_materials.i"
-
-// MOC
-%include "detran_moc.i"
 
 //------------------------------------//
 // LEVEL 2

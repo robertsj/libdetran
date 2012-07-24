@@ -35,6 +35,9 @@ namespace std
 // Math utilities
 %include "MathUtilities.hh"
 
+// 2-D point
+%include "Point.hh"
+
 // SP template of input database
 %template(InputDBSP) detran::SP<detran::InputDB>;
 

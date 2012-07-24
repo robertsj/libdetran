@@ -42,7 +42,7 @@ QuadratureMOC::QuadratureMOC(int dim,
   }
   else
   {
-    THROW("Unsupported polar quadrature specified.");
+    THROW("Unsupported polar quadrature specified:" + polar);
   }
 
 }

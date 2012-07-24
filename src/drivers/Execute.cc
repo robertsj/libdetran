@@ -15,6 +15,9 @@
 #include "GaussLegendre.hh"
 #include "QuadratureFactory.hh"
 
+// MOC
+#include "Tracker.hh"
+
 // Sources
 #include "ConstantSource.hh"
 #include "IsotropicSource.hh"
@@ -47,7 +50,7 @@ Execute::Execute(StupidParser &parser)
   // Setup other things.
   setup();
 
-  Require(d_quadrature);
+  // Postconditions
   Ensure(d_dimension);
 }
 
@@ -69,33 +72,37 @@ void Execute::setup()
   if (d_input->check("problem_type"))
     d_problem_type = d_input->get<std::string>("problem_type");
 
+  // Equation type and MOC flag.
+  string eq = "dd";
+  d_moc = false;
+  if (d_input->check("equation"))
+    eq = d_input->get<std::string>("equation");
+  if (eq == "scmoc" || eq == "ddmoc")
+    d_moc = true;
+
   //--------------------------------------------------------------------------//
   // Quadrature
   //--------------------------------------------------------------------------//
 
-  string quad_type;
-  if (!d_input->check("quad_type"))
-  {
-    if (d_dimension == 1) quad_type = "gausslegendre";
-    if (d_dimension == 2) quad_type = "quadruplerange";
-    if (d_dimension == 3) quad_type = "levelsymmetric";
-  }
-  else
-  {
-    quad_type = d_input->get<string>("quad_type");
-  }
-  int quad_order;
-  if (!d_input->check("quad_order"))
-  {
-    quad_order = 2;
-  }
-  else
-  {
-    quad_order = d_input->get<int>("quad_order");
-  }
   QuadratureFactory quad_factory;
-  quad_factory.build(d_quadrature, quad_type, quad_order, d_dimension);
-  Require(d_quadrature);
+  quad_factory.build(d_quadrature, d_input, d_dimension);
+  Assert(d_quadrature);
+
+  //-------------------------------------------------------------------------//
+  // MOC Mesh
+  //-------------------------------------------------------------------------//
+  if (d_moc)
+  {
+    // Track the mesh
+    Tracker tracker(d_mesh, d_quadrature);
+
+    // Normalize segments to conserve volume.
+    tracker.normalize();
+
+    // Replace the mesh with the tracked one.  This suggests refactoring
+    // to have a (possibly null) trackdb in Mesh.
+    d_mesh = tracker.meshmoc();
+  }
 
   //--------------------------------------------------------------------------//
   // External source
@@ -132,7 +139,7 @@ void Execute::setup()
     }
     else
     {
-      THROW("Unsupported external source requested.")
+      THROW("Unsupported external source requested: " + source_type);
     }
   }
 

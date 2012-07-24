@@ -12,7 +12,6 @@ SWIG_LINK_LIBRARIES(pydetran
                     angle
                     geometry
                     materials
-                    moc
                     #
                     transport
                     #

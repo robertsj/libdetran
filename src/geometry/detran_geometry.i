@@ -15,6 +15,12 @@
 %include "PinCell.hh"
 %include "Assembly.hh"
 %include "Core.hh"
+//
+%include "MeshMOC.hh"
+%include "Segment.hh"
+%include "Track.hh"
+%include "TrackDB.hh"
+%include "Tracker.hh"
 
 %template(MeshSP)     detran::SP<detran::Mesh>;
 %template(Mesh1DSP)   detran::SP<detran::Mesh1D>;
@@ -23,6 +29,10 @@
 %template(PinCellSP)  detran::SP<detran::PinCell>;
 %template(AssemblySP) detran::SP<detran::Assembly>;
 %template(CoreSP)     detran::SP<detran::Core>;
+
+%template(TrackSP)    detran::SP<detran::Track>;
+%template(TrackDBSP)  detran::SP<detran::TrackDB>;
+%template(TrackerSP)  detran::SP<detran::Tracker>;
 
 namespace detran
 {

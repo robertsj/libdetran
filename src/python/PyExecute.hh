@@ -15,8 +15,11 @@
 #include "detran_config.h"
 
 // Detran
+#include "BoundaryBase.hh"
 #include "Material.hh"
 #include "Mesh.hh"
+#include "MeshMOC.hh"
+#include "Tracker.hh"
 #include "Eigensolver.hh"
 #ifdef DETRAN_ENABLE_SLEPC
 #include "EigenSLEPc.hh"
@@ -149,6 +152,8 @@ private:
 
   bool d_initialized;
 
+  bool d_moc;
+
   /// \}
 
   /// \name Implementation
@@ -223,32 +228,37 @@ void PyExecute<D>::setup()
   if (d_input->check("problem_type"))
     d_problem_type = d_input->get<std::string>("problem_type");
 
+  // Equation type and MOC flag.
+  string eq = "dd";
+  d_moc = false;
+  if (d_input->check("equation"))
+    eq = d_input->get<std::string>("equation");
+  if (eq == "scmoc" || eq == "ddmoc")
+    d_moc = true;
+
   //-------------------------------------------------------------------------//
   // Quadrature
   //-------------------------------------------------------------------------//
 
-  string quad_type;
-  if (!d_input->check("quad_type"))
-  {
-    if (D::dimension == 1) quad_type = "gausslegendre";
-    if (D::dimension == 2) quad_type = "quadruplerange";
-    if (D::dimension == 3) quad_type = "levelsymmetric";
-  }
-  else
-  {
-    quad_type = d_input->get<string>("quad_type");
-  }
-  int quad_order;
-  if (!d_input->check("quad_order"))
-  {
-    quad_order = 2;
-  }
-  else
-  {
-    quad_order = d_input->get<int>("quad_order");
-  }
   QuadratureFactory quad_factory;
-  quad_factory.build(d_quadrature, quad_type, quad_order, D::dimension);
+  quad_factory.build(d_quadrature, d_input, D::dimension);
+  Assert(d_quadrature);
+
+  //-------------------------------------------------------------------------//
+  // MOC Mesh
+  //-------------------------------------------------------------------------//
+  if (d_moc)
+  {
+    // Track the mesh
+    Tracker tracker(d_mesh, d_quadrature);
+
+    // Normalize segments to conserve volume.
+    tracker.normalize();
+
+    // Replace the mesh with the tracked one.  This suggests refactoring
+    // to have a (possibly null) trackdb in Mesh.
+    d_mesh = tracker.meshmoc();
+  }
 
   //-------------------------------------------------------------------------//
   // State
@@ -275,8 +285,11 @@ void PyExecute<D>::solve()
   // Boundary
   //--------------------------------------------------------------------------//
 
-  typename Boundary<D>::SP_boundary boundary;
-  boundary = new Boundary<D>(d_input, d_mesh, d_quadrature);
+  typename BoundaryBase<D>::SP_boundary boundary;
+  if (d_moc)
+    boundary = new BoundaryMOC<D>(d_input, d_mesh, d_quadrature);
+  else
+    boundary = new Boundary<D>(d_input, d_mesh, d_quadrature);
 
   //--------------------------------------------------------------------------//
   // Create solver and solve.

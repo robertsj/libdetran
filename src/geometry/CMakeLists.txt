@@ -16,6 +16,8 @@ SET(GEOMETRY_SRC
     PinCell.cc
     Assembly.cc
     Core.cc
+    TrackDB.cc
+    Tracker.cc
 )
 
 #-------------------------------------#
@@ -28,6 +30,7 @@ ADD_LIBRARY(geometry
 )
 TARGET_LINK_LIBRARIES( geometry
                        utilities
+                       angle
                        ${GPERFTOOLS_LIBRARIES}                      
 )
 

@@ -8,6 +8,21 @@
  */
 //---------------------------------------------------------------------------//
 
+//---------------------------------------------------------------------------//
+/*! \mainpage detran: A DEterministic TRANsport package
+ *
+ * \section sec_introduction Introduction
+ *
+ * This is the introduction.
+ *
+ * \section install_sec Installation
+ *
+ * \subsection step1 Step 1: Opening the box
+ *
+ * etc...
+ */
+//---------------------------------------------------------------------------//
+
 #ifndef EXECUTE_HH_
 #define EXECUTE_HH_
 
@@ -115,6 +130,8 @@ private:
   int d_dimension;
   //
   std::string d_problem_type;
+  //
+  bool d_moc;
 
   /// Do nontemplated portion of problem setup.
   void setup();
@@ -129,9 +146,11 @@ void Execute::solve()
   // Boundary
   //--------------------------------------------------------------------------//
 
-  typename Boundary<D>::SP_boundary boundary;
-  Assert(d_quadrature);
-  boundary = new Boundary<D>(d_input, d_mesh, d_quadrature);
+  typename BoundaryBase<D>::SP_boundary boundary;
+  if (d_moc)
+    boundary = new BoundaryMOC<D>(d_input, d_mesh, d_quadrature);
+  else
+    boundary = new Boundary<D>(d_input, d_mesh, d_quadrature);
 
   //--------------------------------------------------------------------------//
   // Create solver and solve.

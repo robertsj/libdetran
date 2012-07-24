@@ -44,41 +44,41 @@ namespace detran
  * following, which is a simple working example
  *
  * \verbatim
- *
- * # General input (the "#" is ignored)
- * int      number_groups           2
- * int      dimension               2
- * dbl      inner_max_tolerance     1e-4
- * str      problem_type            fixed
- *
- * # Mesh (blank lines also ignored)
- * mesh mesh_xcme 0.0 1.0 2.0
- * mesh mesh_ycme 0.0 2.0 4.0
- * mesh mesh_xfm  10
- * mesh mesh_yfm  20
- * # all arrays are read in 1d; logically these ordered by x->y->z
- * mesh mesh_mat  0 0 1 0
- *
- * # Material
- * material number_materials 2
- * # moderator
- * material sigma_t    0   0.1890 1.4633
- * material sigma_s    0 0 0.1507 0.0000
- * material sigma_s    0 1 0.0380 1.4536
- * # fuel
- * material sigma_t    1   0.2263 1.0119
- * material sigma_s    1 0 0.2006 0.0000
- * material sigma_s    1 1 0.0161 0.9355
- * material nu_sigma_f 1   0.0067 0.1241
- * material chi        1   1.0000 0.0000
- *
- * # Fixed source (only isotropic or constant)
- * source type isotropic
- * source number_spectra 2
- * source spectrum 0 1.0 0.0
- * source spectrum 1 0.0 0.0
- * source map      0 0 1 0
- *
+
+   # General input (the "#" is ignored)
+   int      number_groups           2
+   int      dimension               2
+   dbl      inner_max_tolerance     1e-4
+   str      problem_type            fixed
+
+   # Mesh (blank lines also ignored)
+   mesh mesh_xcme 0.0 1.0 2.0
+   mesh mesh_ycme 0.0 2.0 4.0
+   mesh mesh_xfm  10
+   mesh mesh_yfm  20
+   # all arrays are read in 1d; logically these ordered by x->y->z
+   mesh mesh_mat  0 0 1 0
+
+   # Material
+   material number_materials 2
+   # moderator
+   material sigma_t    0   0.1890 1.4633
+   material sigma_s    0 0 0.1507 0.0000
+   material sigma_s    0 1 0.0380 1.4536
+   # fuel
+   material sigma_t    1   0.2263 1.0119
+   material sigma_s    1 0 0.2006 0.0000
+   material sigma_s    1 1 0.0161 0.9355
+   material nu_sigma_f 1   0.0067 0.1241
+   material chi        1   1.0000 0.0000
+
+   # Fixed source (only isotropic or constant)
+   source type isotropic
+   source number_spectra 2
+   source spectrum 0 1.0 0.0
+   source spectrum 1 0.0 0.0
+   source map      0 0 1 0
+
  * \endverbatim
  *
  * \sa InputDB

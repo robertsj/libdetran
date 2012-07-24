@@ -19,7 +19,7 @@ namespace detran
 {
 
 // Constructor.
-template<class D>
+template <class D>
 BoundaryMOC<D>::BoundaryMOC(SP_input        input,
                             SP_mesh         mesh,
                             SP_quadrature   quadrature)
@@ -75,6 +75,24 @@ BoundaryMOC<D>::BoundaryMOC(SP_input        input,
     }
   }
 
+}
+
+template <>
+BoundaryMOC<_1D>::BoundaryMOC(SP_input        input,
+                              SP_mesh         mesh,
+                              SP_quadrature   quadrature)
+  : Base(input, mesh)
+{
+  THROW("MOC unavailable in 1D.");
+}
+
+template <>
+BoundaryMOC<_3D>::BoundaryMOC(SP_input        input,
+                              SP_mesh         mesh,
+                              SP_quadrature   quadrature)
+  : Base(input, mesh)
+{
+  THROW("MOC unavailable in 3D.");
 }
 
 //---------------------------------------------------------------------------//

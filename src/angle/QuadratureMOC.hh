@@ -63,10 +63,11 @@ public:
 
   /*!
    *  \brief Constructor
-   *  \param order                Quadrature order (\todo is this necessary?)
    *  \param dim                  Problem dimension (2 or 3d)
    *  \param num_azimuths_octant  Number azimuths per octant
    *  \param num_polar            Number of polar angles
+   *  \param name                 Name of this azimuthal quadrature
+   *  \param polar                Name of the requested polar quadrature
    */
   QuadratureMOC(int dim,
                 int num_azimuths_octant,
