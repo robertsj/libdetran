@@ -65,7 +65,7 @@ int main(int argc, char **argv)
   // Create problem manager.
   detran::Execute boss(parser);
 
-  // Solve a 1D, 2D. or 3D problem.
+  // Solve a 1D, 2D, or 3D problem.
   if (boss.dimension() == 1)
     boss.solve<detran::_1D>();
   else if (boss.dimension() == 2)

@@ -32,6 +32,9 @@ namespace std
 // Input
 %include "InputDB.hh"
 
+// Math utilities
+%include "MathUtilities.hh"
+
 // SP template of input database
 %template(InputDBSP) detran::SP<detran::InputDB>;
 

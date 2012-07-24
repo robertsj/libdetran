@@ -17,6 +17,7 @@
 #include "Definitions.hh"
 #include "DBC.hh"
 #include "InputDB.hh"
+#include "MathUtilities.hh"
 #include "SP.hh"
 
 //---------------------------------------------------------------------------//
