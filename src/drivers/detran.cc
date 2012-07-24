@@ -8,6 +8,9 @@
  */
 //---------------------------------------------------------------------------//
 
+// Config
+#include "detran_config.h"
+
 // Detran
 #include "StupidParser.hh"
 #include "Execute.hh"
@@ -18,11 +21,26 @@
 // System
 #include <iostream>
 #include <ctime>
+#ifdef DETRAN_ENABLE_PETSC
+#include "petsc.h"
+#endif
+#ifdef DETRAN_ENABLE_SLEPC
+#include "slepc.h"
+#endif
 
 int main(int argc, char **argv)
 {
 
   START_PROFILER();
+
+#ifdef DETRAN_ENABLE_PETSC
+  // Start PETSc.
+  PetscInitialize(&argc, &argv, PETSC_NULL, PETSC_NULL);
+#endif
+#ifdef DETRAN_ENABLE_SLEPC
+  // Start SLEPc.
+  SlepcInitialize(&argc, &argv, PETSC_NULL, PETSC_NULL);
+#endif
 
   std::time_t t;
   std::time(&t);
@@ -56,6 +74,13 @@ int main(int argc, char **argv)
     boss.solve<detran::_3D>();
 
   timer.toc(true);
+
+#ifdef DETRAN_ENABLE_PETSC
+  PetscFinalize();
+#endif
+#ifdef DETRAN_ENABLE_SLEPC
+  SlepcFinalize(); // is this safe?
+#endif
 
   STOP_PROFILER();
 

@@ -11,24 +11,37 @@
 #ifndef EXECUTE_HH_
 #define EXECUTE_HH_
 
+// Config
+#include "detran_config.h"
+
 // Detran
 #include "Material.hh"
 #include "Mesh.hh"
+#include "Eigensolver.hh"
+#ifdef DETRAN_ENABLE_SLEPC
+#include "EigenSLEPc.hh"
+#endif
 #include "ExternalSource.hh"
 #include "FissionSource.hh"
 #include "State.hh"
 #include "StupidParser.hh"
 #include "Traits.hh"
-
 #include "PowerIteration.hh"
 #include "GaussSeidel.hh"
+#ifdef DETRAN_ENABLE_PETSC
+#include "KrylovMG.hh"
+#endif
 
 // Utilities
 #include "DBC.hh"
 #include "InputDB.hh"
 
 // System
+#include <iostream>
 #include <string>
+#ifdef DETRAN_ENABLE_PETSC
+#include "petsc.h"
+#endif
 
 namespace detran
 {
@@ -124,39 +137,74 @@ void Execute::solve()
   // Create solver and solve.
   //--------------------------------------------------------------------------//
 
-  // \todo Perhaps for outers, use a setup with a generic interface.
-
   if (d_problem_type == "eigenvalue")
   {
-    Require(d_fissionsource);
-    PowerIteration<D> solver(d_input,
-                             d_state,
-                             d_mesh,
-                             d_material,
-                             d_quadrature,
-                             boundary,
-                             d_fissionsource);
-    solver.solve();
+    std::string eigen_solver = "PI";
+    if (d_input->check("eigen_solver"))
+    {
+      eigen_solver = d_input->get<std::string>("eigen_solver");
+    }
+
+    if (eigen_solver == "PI")
+    {
+      PowerIteration<D> solver(d_input, d_state, d_mesh, d_material,
+                               d_quadrature, boundary, d_fissionsource);
+      solver.solve();
+    }
+    else if (eigen_solver == "SLEPc")
+    {
+#ifdef DETRAN_ENABLE_SLEPC
+      EigenSLEPc<D> solver(d_input, d_state, d_mesh, d_material,
+                           d_quadrature, boundary, d_fissionsource);
+      solver.solve();
+#else
+      THROW("EigenSLEPc is unavailable since SLEPc is not enabled.");
+#endif
+    }
+    else
+    {
+      THROW("Unsupported eigen_solver type selected: "+eigen_solver);
+    }
+
   }
   else if (d_problem_type == "fixed" || d_problem_type == "fixed_multiply")
   {
-    GaussSeidel<D> solver(d_input,
-                          d_state,
-                          d_mesh,
-                          d_material,
-                          d_quadrature,
-                          boundary,
-                          d_externalsource,
-                          d_fissionsource);
-    solver.solve();
+    std::string outer_solver = "GS";
+    if (d_input->check("outer_solver"))
+    {
+      outer_solver = d_input->get<std::string>("outer_solver");
+    }
+    if (outer_solver == "GS")
+    {
+      GaussSeidel<D> solver(d_input, d_state, d_mesh, d_material, d_quadrature,
+                            boundary, d_externalsource, d_fissionsource);
+      solver.solve();
+    }
+    else if (outer_solver == "KrylovMG")
+    {
+#ifdef DETRAN_ENABLE_PETSC
+      KrylovMG<D> solver(d_input, d_state, d_mesh, d_material, d_quadrature,
+                         boundary, d_externalsource, d_fissionsource);
+      solver.solve();
+#else
+      THROW("KrylovMG is unavailable since PETSc is not enabled.");
+#endif
+    }
+    else
+    {
+      THROW("Unsupported outer_solver type selected: "+outer_solver);
+    }
   }
   else
   {
-    THROW("Unsupported problem type given.");
+    std::cout << "Unsupported problem type given.  Options are:" << std::endl
+              << " -- fixed" << std::endl
+              << " -- eigenvalue" << std::endl
+              << std::endl;
   }
 
+  // INSERT POST PROCESSING HERE
   State::moments_type phi = d_state->phi(0);
-
   std::cout << phi[0] << " " << phi[1] << std::endl;
 
 }

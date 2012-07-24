@@ -96,8 +96,6 @@ void Execute::setup()
   QuadratureFactory quad_factory;
   quad_factory.build(d_quadrature, quad_type, quad_order, d_dimension);
   Require(d_quadrature);
-//  d_quadrature = new QuadrupleRange(2, 2);
-
 
   //--------------------------------------------------------------------------//
   // External source
