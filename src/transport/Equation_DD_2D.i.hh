@@ -40,8 +40,9 @@ inline void Equation_DD_2D::solve(int i,
                                              d_coef_y[j] * psi_in[Mesh::HORZ] );
 
   // Compute outgoing fluxes.
-  psi_out[Mesh::HORZ] = 2.0*psi_center - psi_in[Mesh::HORZ];
-  psi_out[Mesh::VERT] = 2.0*psi_center - psi_in[Mesh::VERT];
+  double two_psi_center = 2.0 * psi_center;
+  psi_out[Mesh::HORZ] = two_psi_center - psi_in[Mesh::HORZ];
+  psi_out[Mesh::VERT] = two_psi_center - psi_in[Mesh::VERT];
 
   // Compute flux moments.
   phi[cell] += d_quadrature->weight(d_angle) * psi_center;
