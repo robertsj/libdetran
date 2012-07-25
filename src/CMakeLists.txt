@@ -132,8 +132,8 @@ if ( SERMENT_ENABLE_TEST )
     include_directories(material/test)
     include_directories(geometry/test)
     include_directories(angle/test)
-    include_directories(moc/test)
     include_directories(transport/test)
+    include_directories(diffusion/test)
     include_directories(solvers/test)
     include_directories(drivers/test)
 endif()
@@ -146,17 +146,19 @@ endif()
 include_directories(${DETRAN_DIR})
 #
 include_directories(python)
-#
+# level 0
 include_directories(utilities)
-#
+# level 1
 include_directories(angle)
 include_directories(geometry)
 include_directories(material)
-#
+# level 2
 include_directories(transport)
-#
+# level 3
+include_directories(diffusion)
+# level 4
 include_directories(solvers)
-#
+# level 5
 include_directories(drivers)
 
 # Set 
@@ -180,6 +182,7 @@ add_subdirectory(material)
 add_subdirectory(geometry)
 add_subdirectory(angle)
 add_subdirectory(transport)
+add_subdirectory(diffusion)
 add_subdirectory(solvers)
 add_subdirectory(drivers)
 
