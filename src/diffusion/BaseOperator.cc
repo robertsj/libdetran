@@ -71,9 +71,9 @@ void BaseOperator::display()
   ierr = MatView(d_operator,  PETSC_VIEWER_STDOUT_SELF);
 }
 
-#endif
-
 } // end namespace detran
+
+#endif
 
 //---------------------------------------------------------------------------//
 //              end of file BaseOperator.cc
