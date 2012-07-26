@@ -1,20 +1,20 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   test_OneGroupLossOperator.cc
+ * \file   test_GainOperator.cc
  * \author Jeremy Roberts
  * \date   Apr 1, 2012
- * \brief  Test of OneGroupLossOperator class.
+ * \brief  Test of GainOperator class.
  * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
 #define TEST_LIST                        \
-        FUNC(test_OneGroupLossOperator)
+        FUNC(test_GainOperator)
 
 // Detran headers
 #include "TestDriver.hh"
-#include "OneGroupLossOperator.hh"
+#include "GainOperator.hh"
 #include "Mesh1D.hh"
 #include "Mesh2D.hh"
 #include "Mesh3D.hh"
@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 //----------------------------------------------//
 
 // Test of basic public interface
-int test_OneGroupLossOperator()
+int test_GainOperator()
 {
 
   // Initialize PETSc
@@ -47,16 +47,28 @@ int test_OneGroupLossOperator()
   PetscInitialize(&argc, &args, PETSC_NULL, PETSC_NULL);
 
   // Create input.
-  OneGroupLossOperator::SP_input inp(new InputDB());
-  inp->put<string>("bc_left",  "vacuum");
-  inp->put<string>("bc_right", "vacuum");
+  GainOperator::SP_input inp(new InputDB());
+  inp->put<string>("bc_left",  "reflect");
+  inp->put<string>("bc_right", "reflect");
 
   // Create material.
-  OneGroupLossOperator::SP_material mat(new Material(1, 1, false));
-  mat->set_sigma_t(0, 0, 1.0);
-  mat->set_sigma_s(0, 0, 0, 0.9);
-  mat->set_diff_coef(0, 0, 1.0/3.0);
+  GainOperator::SP_material mat(new Material(2, 1, false));
+  mat->set_sigma_t(0, 0, 0.2263); // (matid, g, value);
+  mat->set_sigma_t(0, 1, 1.0119);
+  mat->set_sigma_f(0, 0, 0.0067);
+  mat->set_sigma_f(0, 1, 0.1241);
+  mat->set_chi(0, 0, 1.0);
+  mat->set_chi(0, 1, 0.0);
+  mat->set_sigma_s(0, 0, 0, 0.2006); // 1 <- 1
+  mat->set_sigma_s(0, 0, 1, 0.0000); // 1 <- 2
+  mat->set_sigma_s(0, 1, 0, 0.0161); // 2 <- 1
+  mat->set_sigma_s(0, 1, 1, 0.9355); // 2 <- 2
+  mat->set_diff_coef(0, 0, 0.2263/3.0);
+  mat->set_diff_coef(0, 1, 1.0119/3.0);
   mat->finalize();
+
+  // phi0 = 1 / (0.1890-0.1507)
+  // phi1 = (1 + phi0 * 0.0380) / (1.4633-1.4536)
 
   // Create mesh.
   vec_dbl cm(2, 0.0);
@@ -68,30 +80,22 @@ int test_OneGroupLossOperator()
   //Mesh3D::SP_mesh mesh(new Mesh3D(fm, fm, fm, cm, cm, cm, mt));
 
   // Create the operator.
-  OneGroupLossOperator M(inp, mat, mesh, 0);
+  GainOperator M(inp, mat, mesh);
 
   // Create a right hand side.
   Vec x;
   Vec y;
-  int n = mesh->number_cells();
+  int n = mat->number_groups() * mesh->number_cells();
   VecCreateSeq(PETSC_COMM_SELF, n, &x);
   VecDuplicate(x, &y);
   VecSet(x, 1.0);
   VecAssemblyBegin(x);
   VecAssemblyEnd(x);
   M.multiply(x, y);
-  double *y_a;
-  VecGetArray(y, &y_a);
-  TEST(soft_equiv(y_a[0], 0.385714285714286));
-  for (int i = 1; i < 9; i++)
-    TEST(soft_equiv(y_a[i], 0.1000000000000000));
-  TEST(soft_equiv(y_a[9], 0.385714285714286));
-  VecRestoreArray(y, &y_a);
- // PetscFinalize();
+  M.display();
 
-  return 0;
 }
 
 //---------------------------------------------------------------------------//
-//              end of test_OneGroupLossOperator.cc
+//              end of test_GainOperator.cc
 //---------------------------------------------------------------------------//
