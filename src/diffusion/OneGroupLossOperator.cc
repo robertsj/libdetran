@@ -7,6 +7,11 @@
  */
 //---------------------------------------------------------------------------//
 
+// Configuration
+#include "detran_config.h"
+
+#ifdef DETRAN_ENABLE_PETSC
+
 // Detran
 #include "OneGroupLossOperator.hh"
 
@@ -112,11 +117,11 @@ void OneGroupLossOperator::construct()
   // is the same as the cell index.
   for (int row = 0; row < d_size; row++)
   {
-    cout << " row = " << row << endl;
+    //cout << " row = " << row << endl;
 
     // Define the data for this cell.
     int m = mat_map[row];
-    cout << " m = " << m << " g = " << d_group << endl;
+    //cout << " m = " << m << " g = " << d_group << endl;
 
     double cell_dc = d_material->diff_coef(m, d_group);
     Assert(cell_dc > 0.0);
@@ -226,6 +231,8 @@ void OneGroupLossOperator::construct()
 }
 
 } // end namespace detran
+
+#endif
 
 //---------------------------------------------------------------------------//
 //              end of file OneGroupLossOperator.cc

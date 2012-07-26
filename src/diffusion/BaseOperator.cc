@@ -7,6 +7,11 @@
  */
 //---------------------------------------------------------------------------//
 
+// Configuration
+#include "detran_config.h"
+
+#ifdef DETRAN_ENABLE_PETSC
+
 // Detran
 #include "BaseOperator.hh"
 
@@ -65,6 +70,8 @@ void BaseOperator::display()
   // Print to standard out.
   ierr = MatView(d_operator,  PETSC_VIEWER_STDOUT_SELF);
 }
+
+#endif
 
 } // end namespace detran
 

@@ -55,9 +55,9 @@ int test_OneGroupLossOperator()
   OneGroupLossOperator::SP_material mat(new Material(1, 1, false));
   mat->set_sigma_t(0, 0, 1.0);
   mat->set_sigma_s(0, 0, 0, 0.9);
-  mat->set_diff_coef(0, 0, 0.33333333);
+  mat->set_diff_coef(0, 0, 1.0/3.0);
   mat->finalize();
-  mat->display();
+
   // Create mesh.
   vec_dbl cm(2, 0.0);
   cm[1] = 10.0;
@@ -70,28 +70,21 @@ int test_OneGroupLossOperator()
   // Create the operator.
   OneGroupLossOperator M(inp, mat, mesh, 0);
 
-  // Show it
-  M.display();
-//
-//  // Create a right hand side.
-//  Vec x;
-//  Vec y;
-//  int n = mesh->number_cells();
-//  VecCreateSeq(PETSC_COMM_SELF, n, &x);
-//  VecDuplicate(x, &y);
-//  VecSet(x, 1.0);
-//  VecAssemblyBegin(x);
-//  VecAssemblyEnd(x);
-//  M.multiply(x, y);
-//  VecView(x,  PETSC_VIEWER_STDOUT_SELF);
-//  VecView(y,  PETSC_VIEWER_STDOUT_SELF);
-//
-//  KSP ksp;
-//  KSPCreate(PETSC_COMM_SELF, &ksp);
-//  KSPSetOperators(ksp, M.get_operator(), M.get_operator(), SAME_NONZERO_PATTERN);
-//  KSPSolve(ksp,x,y);
-//  VecView(y,  PETSC_VIEWER_STDOUT_SELF);
-
+  // Create a right hand side.
+  Vec x;
+  Vec y;
+  int n = mesh->number_cells();
+  VecCreateSeq(PETSC_COMM_SELF, n, &x);
+  VecDuplicate(x, &y);
+  VecSet(x, 1.0);
+  VecAssemblyBegin(x);
+  VecAssemblyEnd(x);
+  M.multiply(x, y);
+  double *y_a;
+  VecGetArray(y, &y_a);
+  TEST(soft_equiv(y_a[0], 0.385714285714286));
+  TEST(soft_equiv(y_a[1], 0.1000000000000000));
+  VecRestoreArray(y, &y_a);
  // PetscFinalize();
 
   return 0;
