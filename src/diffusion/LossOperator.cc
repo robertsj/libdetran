@@ -117,22 +117,22 @@ void LossOperator::construct()
   for (int g = 0; g < d_number_groups; g++)
   {
 
-    cout << " g = " << g << endl;
+    //cout << " g = " << g << endl;
 
     // Loop over all cells.
     for (int cell = 0; cell < d_group_size; cell++)
     {
-      cout << " cell = " << cell << endl;
+      //cout << " cell = " << cell << endl;
 
       // Compute row index.
       int row = cell + g * d_group_size;
 
-      cout << " row = " << row << endl;
+      //cout << " row = " << row << endl;
 
       // Define the data for this cell.
       int m = mat_map[cell];
 
-      cout << " m = " << m << endl;
+      //cout << " m = " << m << endl;
 
       double cell_dc = d_material->diff_coef(m, g);
       Assert(cell_dc > 0.0);
@@ -250,6 +250,13 @@ void LossOperator::construct()
        int col = cell + gp * d_group_size;
        double val = -d_material->sigma_s(m, g, gp);
        MatSetValue(d_operator, row, col, val, INSERT_VALUES);
+     }
+
+     // Add the fission component, if this is a fixed source
+     // multiplying problem.
+     if (1==0)
+     {
+       // finish me
      }
 
     } // row loop

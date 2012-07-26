@@ -30,6 +30,7 @@ State::State(SP_input        input,
   , d_angular_flux(d_number_groups)
   , d_eigenvalue(0.0)
 {
+  // Preconditions
   Require(input);
   Require(mesh);
   Require(quadrature);
@@ -55,6 +56,23 @@ State::State(SP_input        input,
   }
 
 }
+
+// Constructor.
+State::State(SP_input        input,
+             SP_mesh         mesh)
+  : d_input(input)
+  , d_mesh(mesh)
+  , d_number_groups(input->get<int>("number_groups"))
+  , d_store_angular_flux(false)
+  , d_moments(d_number_groups, vec_dbl(mesh->number_cells(), 0.0))
+  , d_eigenvalue(0.0)
+{
+  // Preconditions
+  Require(input);
+  Require(mesh);
+  Require(d_number_groups > 0);
+}
+
 
 
 }

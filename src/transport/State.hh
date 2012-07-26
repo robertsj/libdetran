@@ -77,18 +77,33 @@ public:
         SP_quadrature   quadrature);
 
   /*!
-   *  \brief SP Constructor.
+   *  \brief Constructor.
+   *
+   *  This variant has no quadrature and can be used in
+   *  diffusion problems.
    *
    *  \param    input       User input database.
    *  \param    mesh        Cartesian mesh.
-   *  \param    quadrature  Angular quadrature.
    */
+  State(SP_input        input,
+        SP_mesh         mesh);
+
+  /// SP constructor.
   static SP_state Create(SP<detran::InputDB>       input,
                          SP<detran::Mesh>          mesh,
                          SP<detran::Quadrature>    quadrature)
   {
     SP_state p;
     p = new State(input, mesh, quadrature);
+    return p;
+  }
+
+  /// SP constructor with no quadrature.
+  static SP_state Create(SP<detran::InputDB>       input,
+                         SP<detran::Mesh>          mesh)
+  {
+    SP_state p;
+    p = new State(input, mesh);
     return p;
   }
 

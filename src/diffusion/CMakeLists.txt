@@ -10,6 +10,7 @@ SET(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 SET(SRC
     BaseOperator.cc
+    DiffusionEigensolver.cc
     GainOperator.cc
     LossOperator.cc
     OneGroupLossOperator.cc
@@ -27,7 +28,9 @@ TARGET_LINK_LIBRARIES( diffusion
                        materials
                        geometry
                        utilities
+                       transport
                        ${PETSC_LIBRARIES}
+                       ${SLEPC_LIBRARIES}
                        ${GPERFTOOLS_LIBRARIES}                       
 )
 

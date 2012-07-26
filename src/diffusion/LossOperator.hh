@@ -33,6 +33,7 @@ class LossOperator: public BaseOperator
 
 public:
 
+  typedef detran::SP<LossOperator>      SP_lossoperator;
   typedef detran::InputDB::SP_input     SP_input;
   typedef detran::Material::SP_material SP_material;
   typedef detran::Mesh::SP_mesh         SP_mesh;
