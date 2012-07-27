@@ -19,6 +19,7 @@
 #include <string>
 #include <cmath>
 #include <iostream>
+#include <cstdio>
 
 namespace detran_diffusion
 {
@@ -76,9 +77,23 @@ DiffusionEigensolver::DiffusionEigensolver(SP_input    input,
   ierr = EPSSetWhichEigenpairs(d_solver, EPS_LARGEST_MAGNITUDE);
   Insist(!ierr, "Error selecting EPS eigenpairs.");
 
-  // Then allow for user choice.
-  ierr = EPSSetFromOptions(d_solver);
-  Insist(!ierr, "Error setting EPS from options.");
+  // Get the underlying KSP and PC contexts.
+  ST  st;
+  KSP ksp;
+  PC  pc;
+  ierr = EPSGetST(d_solver, &st);
+  ierr = STSetType(st, STSHIFT);
+  ierr = STGetKSP(st, &ksp);
+  ierr = KSPGetPC(ksp, &pc);
+
+  // Set KSP to GMRES as default.
+  ierr = KSPSetType(ksp, KSPGMRES);
+  ierr = KSPSetFromOptions(ksp);
+
+  // Set PC to ILU as default.
+  ierr = PCSetType(pc, PCILU);
+  ierr = PCFactorSetLevels(pc, 2);
+  ierr = PCSetFromOptions(pc);
 
   // Set convergence criteria
   if (input->check("diffusion_max_iters"))
@@ -89,6 +104,10 @@ DiffusionEigensolver::DiffusionEigensolver(SP_input    input,
   // Set the convergence criteria
   ierr = EPSSetTolerances(d_solver, d_tolerance, d_max_iters);
   Insist(!ierr, "Error setting EPS tolerances.");
+
+  // Then allow for user choice.
+  ierr = EPSSetFromOptions(d_solver);
+  Insist(!ierr, "Error setting EPS from options.");
 
   // Postconditions
   Ensure(d_M);
@@ -116,7 +135,6 @@ void DiffusionEigensolver::solve()
   int numit = 0;
   ierr = EPSGetIterationNumber(d_solver, &numit);
   Insist(!ierr, "Error getting iteration count.");
-  std::cout << "EIGEN: Number of iterations =" << numit << std::endl;
 
   // Check the number of converged.
   int numconv = 0;
@@ -146,8 +164,9 @@ void DiffusionEigensolver::solve()
   // Free temporary
   VecDestroy(&x_imag);
 
-  //
-  std::cout << "EIGEN done. keff = " << d_keff <<  std::endl;
+  // Message
+  std::cout << "DIFFUSION EIGENSOLVE COMPLETE:" << std::endl;
+  printf("  Iterations: %3i  keff: %12.9f \n", numit, d_keff);
 
 }
 

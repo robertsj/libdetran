@@ -9,6 +9,9 @@
 %module pydetran
 %{
 
+// Configuration
+//#include "config_detran.h"
+  
 //---------------------------------------------------------------------------//
 // LEVEL 0  
 //---------------------------------------------------------------------------//
@@ -95,6 +98,11 @@
 // LEVEL 3 
 //---------------------------------------------------------------------------//  
       
+// Diffusion
+#include "DiffusionEigensolver.hh"
+#include "GainOperator.hh"
+#include "LossOperator.hh"
+  
 // Solvers
 #include "InnerIteration.hh"
 #include "GaussSeidel.hh"
@@ -105,6 +113,7 @@
 // LEVEL 4 
 //---------------------------------------------------------------------------//  
 
+#include "Manager.hh"
 #include "PyExecute.hh"
   
 %} // end module pydetran
@@ -135,6 +144,9 @@
 
 //------------------------------------//
 // LEVEL 3
+
+// Diffusion
+%include "detran_diffusion.i"
 
 // Transport
 %include "detran_solvers.i"
@@ -176,6 +188,7 @@
   free((char *) $2);
 }
 %include "PyExecute.hh"
+%include "Manager.hh"
 %template(Execute1D) detran::PyExecute<detran::_1D>;
 %template(Execute2D) detran::PyExecute<detran::_2D>;
 %template(Execute3D) detran::PyExecute<detran::_3D>;

@@ -10,7 +10,12 @@
 #ifndef LOSSOPERATOR_HH_
 #define LOSSOPERATOR_HH_
 
-// Detran
+// Configuration
+#include "detran_config.h"
+
+#ifdef DETRAN_ENABLE_PETSC
+
+// Diffusion
 #include "BaseOperator.hh"
 
 // Utilities
@@ -74,6 +79,8 @@ private:
 };
 
 } // end namespace detran_diffusion
+
+#endif // DETRAN_ENABLE_PETSC
 
 #endif // LOSSOPERATOR_HH_ 
 

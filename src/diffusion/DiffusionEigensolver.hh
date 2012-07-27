@@ -55,6 +55,17 @@ public:
   /// Solve the system
   void solve();
 
+  /// Get the loss operator
+  detran::SP<detran_diffusion::LossOperator> M()
+  {
+    return d_M;
+  }
+
+  /// Get the gain operator
+  detran::SP<detran_diffusion::GainOperator> F()
+  {
+    return d_F;
+  }
 
 private:
 

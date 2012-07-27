@@ -10,7 +10,12 @@
 #ifndef GAINOPERATOR_HH_
 #define GAINOPERATOR_HH_
 
-// Detran
+// Configuration
+#include "detran_config.h"
+
+#ifdef DETRAN_ENABLE_PETSC
+
+// Diffusion
 #include "BaseOperator.hh"
 
 // Utilities
@@ -71,6 +76,8 @@ private:
 };
 
 } // end namespace detran_diffusion
+
+#endif // DETRAN_ENABLE_PETSC
 
 #endif // GAINOPERATOR_HH_ 
 

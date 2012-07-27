@@ -37,20 +37,36 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------//
 
+int test_DiffusionEigensolver_actual();
+
 // Test of basic public interface
-int test_DiffusionEigensolver()
+int test_DiffusionEigensolver(int argc, char *argv[])
 {
 
-  // Initialize PETSc
-  int argc = 0;
-  char **args;
-  SlepcInitialize(&argc, &args, PETSC_NULL, PETSC_NULL);
+  // Initialize SLEPc
+  SlepcInitialize(&argc, &argv, PETSC_NULL, PETSC_NULL);
+
+  cout << " number args " << argc << endl;
+
+  // Run the actual test.
+  int result = test_DiffusionEigensolver_actual();
+
+  // Finalize SLEPc
+  SlepcFinalize();
+
+  return result;
+
+}
+
+int test_DiffusionEigensolver_actual()
+{
 
   // Create input.
   DiffusionEigensolver::SP_input inp(new InputDB());
-  inp->put<string>("bc_left",       "vacuum");
-  inp->put<string>("bc_right",      "reflect");
-  inp->put<int>("number_groups",    2);
+  inp->put<string>("bc_left",           "vacuum");
+  inp->put<string>("bc_right",          "reflect");
+  inp->put<int>("number_groups",        2);
+  inp->put<int>("diffusion_max_iters",  100);
 
   // Create material.
   DiffusionEigensolver::SP_material mat(new Material(2, 1, false));
@@ -64,8 +80,8 @@ int test_DiffusionEigensolver()
   mat->set_sigma_s(0, 0, 1, 0.0000);
   mat->set_sigma_s(0, 1, 0, 0.0161);
   mat->set_sigma_s(0, 1, 1, 0.9355);
-  mat->set_diff_coef(0, 0, 0.2263/3.0);
-  mat->set_diff_coef(0, 1, 1.0119/3.0);
+  mat->set_diff_coef(0, 0, 0.2263 / 3.0);
+  mat->set_diff_coef(0, 1, 1.0119 / 3.0);
   mat->finalize();
 
   // Create mesh.
@@ -93,7 +109,6 @@ int test_DiffusionEigensolver()
 
   return 0;
 }
-
 //---------------------------------------------------------------------------//
 //              end of test_DiffusionEigensolver.cc
 //---------------------------------------------------------------------------//

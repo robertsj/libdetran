@@ -14,6 +14,8 @@ SWIG_LINK_LIBRARIES(pydetran
                     materials
                     #
                     transport
+                    # 
+                    diffusion
                     #
                     solvers
                     #

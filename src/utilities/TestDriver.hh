@@ -44,7 +44,7 @@
     {
       RUN(argc, argv);
     }
-    int test_one() // and so on
+    int test_one(int argc, char *argv[]) // and so on
     \endcode
  *
  *  Note, the TestDriver header must be included *after* the
@@ -96,11 +96,11 @@
 /// \{
 
 /// Typedefs for test arrays.
-typedef int (*test_pointer)(void);
+typedef int (*test_pointer)(int argc, char *argv[]);
 typedef std::string test_name;
 
 /// Create test list.
-#define FUNC( _name ) int _name(void);
+#define FUNC( _name ) int _name(int argc, char *argv[]);
 TEST_LIST
 #undef FUNC
 
@@ -166,7 +166,7 @@ public:
   {
 
     // Get test number
-    Insist(argc==2, "Tests should have only one argument!");
+    Insist(argc > 1, "Tests should have at least one argument!");
     d_test = std::atoi(argv[1]);
 
     // Check if valid test identifier.
@@ -184,7 +184,7 @@ public:
     try
     {
       std::string m = "......   " + test_names[d_test];
-      if (!(*test_table[d_test])())
+      if (!(*test_table[d_test])(argc, argv))
       {
         m += " passed";
       }

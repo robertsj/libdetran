@@ -37,14 +37,26 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------//
 
-// Test of basic public interface
-int test_GainOperator()
-{
+int test_GainOperator_actual();
 
+// Test of basic public interface
+int test_GainOperator(int argc, char *argv[])
+{
   // Initialize PETSc
-  int argc = 0;
-  char **args;
-  PetscInitialize(&argc, &args, PETSC_NULL, PETSC_NULL);
+  PetscInitialize(&argc, &argv, PETSC_NULL, PETSC_NULL);
+
+  // Call actual test.
+  int result = test_GainOperator_actual();
+
+  // Finalize PETSc
+  PetscFinalize();
+
+  return result;
+}
+
+// Test of basic public interface
+int test_GainOperator_actual()
+{
 
   // Create input.
   GainOperator::SP_input inp(new InputDB());

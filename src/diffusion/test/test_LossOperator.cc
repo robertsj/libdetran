@@ -37,14 +37,27 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------//
 
-// Test of basic public interface
-int test_LossOperator()
-{
+int test_LossOperator_actual();
 
+// Test of basic public interface
+int test_LossOperator(int argc, char *argv[])
+{
   // Initialize PETSc
-  int argc = 0;
-  char **args;
-  PetscInitialize(&argc, &args, PETSC_NULL, PETSC_NULL);
+  PetscInitialize(&argc, &argv, PETSC_NULL, PETSC_NULL);
+
+  // Call actual test.
+  int result = test_LossOperator_actual();
+
+  // Finalize PETSc
+  PetscFinalize();
+
+  return result;
+}
+
+
+// Test of basic public interface
+int test_LossOperator_actual()
+{
 
   // Create input.
   LossOperator::SP_input inp(new InputDB());
@@ -89,15 +102,7 @@ int test_LossOperator()
   VecAssemblyEnd(x);
   M.multiply(x, y);
   M.display();
-//
-//  double *y_a;
-//  VecGetArray(y, &y_a);
-//  TEST(soft_equiv(y_a[0], 0.385714285714286));
-//  for (int i = 1; i < 9; i++)
-//    TEST(soft_equiv(y_a[i], 0.1000000000000000));
-//  TEST(soft_equiv(y_a[9], 0.385714285714286));
-//  VecRestoreArray(y, &y_a);
- // PetscFinalize();
+
 
   KSP ksp;
   KSPCreate(PETSC_COMM_SELF, &ksp);

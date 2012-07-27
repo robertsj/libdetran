@@ -53,9 +53,14 @@ void GainOperator::construct()
   using std::endl;
 
   // Create the matrix.
-  MatCreate(PETSC_COMM_SELF, &d_operator);
-  MatSetType(d_operator, MATAIJ);
-  MatSetSizes(d_operator, PETSC_DECIDE, PETSC_DECIDE, d_size, d_size);
+  int number_nz = d_number_groups;
+
+  //MatCreateSeqAIJ(MPI_Comm comm,PetscInt m,PetscInt n,PetscInt nz,const PetscInt nnz[],Mat *A)
+  MatCreateSeqAIJ(PETSC_COMM_SELF, d_size, d_size,
+                  number_nz, PETSC_NULL, &d_operator);
+//  MatCreate(PETSC_COMM_SELF, &d_operator);
+//  MatSetType(d_operator, MATAIJ);
+//  MatSetSizes(d_operator, PETSC_DECIDE, PETSC_DECIDE, d_size, d_size);
 
   // Get the material map.
   detran::vec_int mat_map = d_mesh->mesh_map("MATERIAL");

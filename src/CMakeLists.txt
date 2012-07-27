@@ -59,6 +59,7 @@ IF( DETRAN_ENABLE_PYTHON )
   INCLUDE(${SWIG_USE_FILE})
   find_package(PythonLibs REQUIRED)
   include_directories(${PYTHON_INCLUDE_PATH})
+  include_directories(${PROJECT_BINARY_DIR}/config)
   set(CMAKE_SWIG_FLAGS "")
 ENDIF()
 

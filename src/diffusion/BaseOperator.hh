@@ -10,6 +10,11 @@
 #ifndef BASEOPERATOR_HH_
 #define BASEOPERATOR_HH_
 
+// Configuration
+#include "detran_config.h"
+
+#ifdef DETRAN_ENABLE_PETSC
+
 // Detran
 #include "Material.hh"
 #include "Mesh.hh"
@@ -100,6 +105,8 @@ private:
 };
 
 } // end namespace detran
+
+#endif // DETRAN_ENABLE_PETSC
 
 #endif // BASEOPERATOR_HH_ 
 
