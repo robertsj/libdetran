@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------//
 
-int test_MomentToDiscrete_1D()
+int test_MomentToDiscrete_1D(int argc, char *argv[])
 {
   typedef MomentToDiscrete<_1D> M2D;
 
@@ -56,7 +56,7 @@ int test_MomentToDiscrete_1D()
   return 0;
 }
 
-int test_MomentToDiscrete_2D()
+int test_MomentToDiscrete_2D(int argc, char *argv[])
 {
   typedef MomentToDiscrete<_2D> M2D;
 

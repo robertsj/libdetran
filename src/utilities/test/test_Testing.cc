@@ -30,13 +30,13 @@ int main(int argc, char *argv[])
 
 // Test definitions.
 
-int test_Testing_pass()
+int test_Testing_pass(int argc, char *argv[])
 {
  TEST(1==1);
  return 0;
 }
 
-int test_Testing_fail()
+int test_Testing_fail(int argc, char *argv[])
 {
  TESTFALSE(1==0);
  return 0;

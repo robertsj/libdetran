@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 
 // Test definitions.
 
-int test_InputDB()
+int test_InputDB(int argc, char *argv[])
 {
  InputDB::SP_input db;
  db = new InputDB();

@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------//
 
-int test_QuadrupleRange_basic()
+int test_QuadrupleRange_basic(int argc, char *argv[])
 {
   // Get quadrature fixture
   SP_quadrature q = quadruplerange_fixture();

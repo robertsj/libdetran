@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------//
 
-int test_BoundaryMOC()
+int test_BoundaryMOC(int argc, char *argv[])
 {
 
   // Create mesh
@@ -174,7 +174,7 @@ int test_BoundaryMOC()
   return 0;
 }
 
-int test_BoundaryMOC_2()
+int test_BoundaryMOC_2(int argc, char *argv[])
 {
 
   // Create mesh

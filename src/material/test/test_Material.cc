@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 //----------------------------------------------//
 
 // Test of basic public interface
-int test_Material_basic()
+int test_Material_basic(int argc, char *argv[])
 {
   // Get the 1g material.
   SP_material mat_1g = material_fixture_1g();
@@ -82,7 +82,7 @@ int test_Material_basic()
 }
 
 // Test of group bounds for upscatter
-int test_Material_bounds()
+int test_Material_bounds(int argc, char *argv[])
 {
 
   // Get the 7g material.

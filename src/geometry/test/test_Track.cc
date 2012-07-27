@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------//
 
-int test_Track()
+int test_Track(int argc, char *argv[])
 {
   // Test track creation.
   Point enter(0.0, 0.5);

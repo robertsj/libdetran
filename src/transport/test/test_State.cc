@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------//
 
-int test_State_basic()
+int test_State_basic(int argc, char *argv[])
 {
 
   // Test fixtures

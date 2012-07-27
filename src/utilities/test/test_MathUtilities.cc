@@ -35,28 +35,28 @@ int main(int argc, char *argv[])
 
 // Test definitions.
 
-int test_norm_L2()
+int test_norm_L2(int argc, char *argv[])
 {
   vec_dbl v(10, 1.1);
   double norm_v = norm(v, "L2");
   TEST(soft_equiv(norm_v, 3.478505426185218));
   return 0;
 }
-int test_norm_L1()
+int test_norm_L1(int argc, char *argv[])
 {
   vec_dbl v(10, 1.1);
   double norm_v = norm(v, "L1");
   TEST(soft_equiv(norm_v, 11.0));
   return 0;
 }
-int test_norm_Linf()
+int test_norm_Linf(int argc, char *argv[])
 {
   vec_dbl v(10, 1.1);
   double norm_v = norm(v, "Linf");
   TEST(soft_equiv(norm_v, 1.1));
   return 0;
 }
-int test_vec_scale()
+int test_vec_scale(int argc, char *argv[])
 {
   vec_dbl v(10, 1.1);
   vec_scale(v, 2.34);
@@ -66,7 +66,7 @@ int test_vec_scale()
   }
   return 0;
 }
-int test_norm_residual_L2()
+int test_norm_residual_L2(int argc, char *argv[])
 {
   vec_dbl v(10, 1.1);
   vec_dbl y(10, 1.0);
@@ -74,7 +74,7 @@ int test_norm_residual_L2()
   TEST(soft_equiv(norm_res, 0.316227766016838));
   return 0;
 }
-int test_norm_residual_L1()
+int test_norm_residual_L1(int argc, char *argv[])
 {
   vec_dbl v(10, 1.1);
   vec_dbl y(10, 1.0);
@@ -82,7 +82,7 @@ int test_norm_residual_L1()
   TEST(soft_equiv(norm_res, 1.0));
   return 0;
 }
-int test_norm_residual_Linf()
+int test_norm_residual_Linf(int argc, char *argv[])
 {
   vec_dbl v(10, 1.1);
   vec_dbl y(10, 1.0);

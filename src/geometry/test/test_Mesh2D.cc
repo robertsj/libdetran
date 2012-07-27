@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------//
 
-int test_Mesh2D_basic()
+int test_Mesh2D_basic(int argc, char *argv[])
 {
   // Get the mesh
   SP_mesh mesh = mesh_2d_fixture();

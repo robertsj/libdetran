@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------//
 
-int test_Tracker_2x2()
+int test_Tracker_2x2(int argc, char *argv[])
 {
 
   // Create mesh
@@ -79,7 +79,7 @@ int test_Tracker_2x2()
   return 0;
 }
 
-int test_Tracker_3x3()
+int test_Tracker_3x3(int argc, char *argv[])
 {
 
   // Create mesh

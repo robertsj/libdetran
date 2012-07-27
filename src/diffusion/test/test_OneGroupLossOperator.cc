@@ -37,14 +37,26 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------//
 
-// Test of basic public interface
-int test_OneGroupLossOperator()
-{
+int test_OneGroupLossOperator_actual();
 
+int test_OneGroupLossOperator(int argc, char *argv[])
+{
   // Initialize PETSc
-  int argc = 0;
-  char **args;
-  PetscInitialize(&argc, &args, PETSC_NULL, PETSC_NULL);
+  PetscInitialize(&argc, &argv, PETSC_NULL, PETSC_NULL);
+
+  // Run actual test.
+  int result = test_OneGroupLossOperator_actual();
+
+  // Finalize PETSc
+  PetscFinalize();
+
+  return result;
+
+}
+
+// Test of basic public interface
+int test_OneGroupLossOperator_actual()
+{
 
   // Create input.
   OneGroupLossOperator::SP_input inp(new InputDB());
@@ -87,10 +99,11 @@ int test_OneGroupLossOperator()
     TEST(soft_equiv(y_a[i], 0.1000000000000000));
   TEST(soft_equiv(y_a[9], 0.385714285714286));
   VecRestoreArray(y, &y_a);
- // PetscFinalize();
 
   return 0;
 }
+
+
 
 //---------------------------------------------------------------------------//
 //              end of test_OneGroupLossOperator.cc

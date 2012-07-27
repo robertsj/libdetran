@@ -31,13 +31,11 @@ int main(int argc, char *argv[])
 
 // Test definitions.
 
-int test_StupidParser()
+int test_StupidParser(int argc, char *tmp_argv[])
 {
   cout << endl;
   char *argv[] = {"n/a", "test.inp"};
   StupidParser parser(2, argv);
-
-
 
   // Parse the input.
   StupidParser::SP_input input = parser.parse_input();
@@ -68,6 +66,10 @@ int test_StupidParser()
   TEST(soft_equiv(mat->sigma_s(1, 0, 1), 0.0000));
   TEST(soft_equiv(mat->sigma_s(1, 1, 0), 0.0161));
   TEST(soft_equiv(mat->sigma_s(1, 1, 1), 0.9355));
+  TEST(soft_equiv(mat->sigma_f(1, 0),    0.0067));
+  TEST(soft_equiv(mat->sigma_f(1, 1),    0.1241));
+  TEST(soft_equiv(mat->nu(1, 0),         1.0000));
+  TEST(soft_equiv(mat->nu(1, 1),         1.0000));
   TEST(soft_equiv(mat->nu_sigma_f(1, 0), 0.0067));
   TEST(soft_equiv(mat->nu_sigma_f(1, 1), 0.1241));
   TEST(soft_equiv(mat->chi(1, 0),        1.0000));

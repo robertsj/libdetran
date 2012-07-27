@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------//
 
-int test_Segment()
+int test_Segment(int argc, char *argv[])
 {
   Segment s(0, 1.0);
   TEST(s.region() == 0);

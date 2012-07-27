@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------//
 
-int test_Collocated()
+int test_Collocated(int argc, char *argv[])
 {
   // Construct quadrature.
   Collocated q(2, 5, 1, 2, "TY");

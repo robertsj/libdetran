@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------//
 
-int test_Uniform()
+int test_Uniform(int argc, char *argv[])
 {
   // Construct quadrature.
   Uniform q(2, 5, 13, 3, "TY");

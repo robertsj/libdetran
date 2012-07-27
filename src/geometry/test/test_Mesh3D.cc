@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------//
 
-int test_Mesh3D()
+int test_Mesh3D(int argc, char *argv[])
 {
   // Get the mesh
   SP_mesh mesh = mesh_3d_fixture();

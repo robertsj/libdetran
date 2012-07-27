@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------//
 
-int test_TabuchiYamamoto()
+int test_TabuchiYamamoto(int argc, char *argv[])
 {
   // Construct quadrature.
   TabuchiYamamoto q(1);

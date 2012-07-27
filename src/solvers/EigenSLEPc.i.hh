@@ -45,7 +45,7 @@ void EigenSLEPc<D>::solve()
   Insist(!ierr, "Error setting EPS tolerances.");
 
   ierr = EPSSolve(d_solver);
-  Insist(!ierr, "Error solving current eigenvalue problem.");
+  Insist(!ierr, "Error solving eigenvalue problem.");
 
   int numit = 0;
   ierr = EPSGetIterationNumber(d_solver, &numit);

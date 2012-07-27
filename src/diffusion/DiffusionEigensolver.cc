@@ -129,7 +129,7 @@ void DiffusionEigensolver::solve()
 
   // Solve the eigenproblem
   ierr = EPSSolve(d_solver);
-  Insist(!ierr, "Error solving current eigenvalue problem.");
+  Insist(!ierr, "Error solving diffusion eigenvalue problem.");
 
   // Get the number of iterations.
   int numit = 0;

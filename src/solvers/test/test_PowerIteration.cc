@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------//
 
-int test_PowerIteration_2D()
+int test_PowerIteration_2D(int argc, char *argv[])
 {
 
   // Test fixtures

@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------//
 
-int test_Equation_DD_2D_basic()
+int test_Equation_DD_2D_basic(int argc, char *argv[])
 {
   // Get mesh, material, and quadrature
 

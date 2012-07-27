@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------//
 
-int test_GaussLegendre_basic()
+int test_GaussLegendre_basic(int argc, char *argv[])
 {
   // Get quadrature fixture
   SP_quadrature q = gausslegendre_fixture();

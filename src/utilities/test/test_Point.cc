@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------//
 
-int test_Point()
+int test_Point(int argc, char *argv[])
 {
   Point p1(1.0, 2.0);
   TEST(soft_equiv(p1.x(), 1.0));
