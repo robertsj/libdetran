@@ -8,8 +8,10 @@
 
 %include "detran_utilities.i"
 
+// Note, only the basic, non-PETSc classes are exposed directly.
+// The others can be accessed from within Execute.
+
 %include "InnerIteration.hh"
-//%include "SourceIteration.hh"
 %include "GaussSeidel.hh"
 %include "PowerIteration.hh"
 
@@ -17,7 +19,6 @@
 %template(InnerIteration1DSP)   detran::SP<detran::InnerIteration<detran::_1D> >;
 %template(InnerIteration2D)     detran::InnerIteration<detran::_2D>;
 %template(InnerIteration2DSP)   detran::SP<detran::InnerIteration<detran::_2D> >;
-
 
 %template(GaussSeidel1D)        detran::GaussSeidel<detran::_1D>;
 %template(GaussSeidel1DSP)      detran::SP<detran::GaussSeidel<detran::_1D> >;
@@ -69,7 +70,6 @@ public:
 %template(SourceIteration1DSP)  detran::SP<detran::SourceIteration<detran::_1D> >;
 %template(SourceIteration2D)    detran::SourceIteration<detran::_2D>;
 %template(SourceIteration2DSP)  detran::SP<detran::SourceIteration<detran::_2D> >;
-
 
 //---------------------------------------------------------------------------//
 //              end of detran_transport.i

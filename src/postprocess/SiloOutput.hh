@@ -15,6 +15,9 @@
 //
 //#ifdef DETRAN_ENABLE_SILO
 
+// Configuration
+#include "detran_config.h"
+
 // Detran
 #include "Material.hh"
 #include "Mesh.hh"

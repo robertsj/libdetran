@@ -9,8 +9,10 @@
 %module pydetran
 %{
 
-// Configuration
-//#include "config_detran.h"
+//---------------------------------------------------------------------------//
+// CONFIGURATION
+//---------------------------------------------------------------------------//
+//#include "detran_config.h"
   
 //---------------------------------------------------------------------------//
 // LEVEL 0  
@@ -99,9 +101,13 @@
 //---------------------------------------------------------------------------//  
       
 // Diffusion
+#ifdef DETRAN_ENABLE_SLEPC
 #include "DiffusionEigensolver.hh"
+#endif
+#ifdef DETRAN_ENABLE_PETSC
 #include "GainOperator.hh"
 #include "LossOperator.hh"
+#endif
   
 // Solvers
 #include "InnerIteration.hh"
@@ -115,9 +121,16 @@
 
 #include "Manager.hh"
 #include "PyExecute.hh"
+#ifdef DETRAN_ENABLE_SILO
 #include "SiloOutput.hh"
+#endif
   
 %} // end module pydetran
+
+//------------------------------------//
+// CONFIGURATION
+
+%include "detran_config.h"
 
 //------------------------------------//
 // LEVEL 0
@@ -147,7 +160,9 @@
 // LEVEL 3
 
 // Diffusion
+#ifdef DETRAN_ENABLE_PETSC
 %include "detran_diffusion.i"
+#endif
 
 // Transport
 %include "detran_solvers.i"
