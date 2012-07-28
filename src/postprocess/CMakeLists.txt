@@ -1,39 +1,41 @@
 #------------------------------------------------------------------------------#
-# libdetran/src/material/CMakeLists.txt
+# libdetran/src/postprocess/CMakeLists.txt
 #------------------------------------------------------------------------------#
 
-SET(MATERIAL_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+SET(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 #-------------------------------------#
 # SOURCE
 #-------------------------------------#
 
-SET(MATERIAL_SRC
-    Material.cc
+SET(SRC
+    SiloOutput.cc
 )
 
 #-------------------------------------#
 # SHARED LIBRARY
 #-------------------------------------#
 
-ADD_LIBRARY(materials
+ADD_LIBRARY(postprocess
             SHARED
-            ${MATERIAL_SRC} 
+            ${SRC} 
 )
-TARGET_LINK_LIBRARIES( materials
+TARGET_LINK_LIBRARIES( postprocess
+                       materials
+                       geometry
                        utilities
-                       ${GPERFTOOLS_LIBRARIES}                       
+                       ${Silo_LIBRARIES}                  
 )
 
 INSTALL_FILES(/include .hh)
-INSTALL_TARGETS(/lib materials)
+INSTALL_TARGETS(/lib postprocess)
 
 #-------------------------------------#
 # TESTING
 #-------------------------------------#
 
 if( DETRAN_ENABLE_TEST )
-    include_directories(${MATERIAL_DIR}/test)
-    add_subdirectory(${MATERIAL_DIR}/test)
+    include_directories(${SRC_DIR}/test)
+    add_subdirectory(${SRC_DIR}/test)
 endif()
 

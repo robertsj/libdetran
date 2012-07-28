@@ -38,9 +38,14 @@ SET( DETRAN_ENABLE_SLEPC NO CACHE BOOL
   "Enable SLEPc."
 )
 
-# Options for OpenMP directives. On or Off.
+# Options for gperftools. On or Off.
 SET( DETRAN_ENABLE_GPERFTOOLS NO CACHE BOOL
   "Enable Google Performance Tools for profiling."
+)
+
+# Options for silo. On or Off.
+SET( DETRAN_ENABLE_SILO NO CACHE BOOL
+  "Enable SILO."
 )
 
 # Write config file, install it, and include that directory for all source
@@ -77,6 +82,16 @@ endif()
 if( DETRAN_ENABLE_SLEPC)
   find_package(SLEPc REQUIRED)
   include_directories(${SLEPC_INCLUDES})
+endif()
+
+if( DETRAN_ENABLE_SILO)
+  find_package(Silo)
+  if(Silo_FOUND)
+    include_directories(${Silo_INCLUDE_DIR})
+  else()
+      set( DETRAN_ENABLE_SILO OFF )
+      MESSAGE( STATUS "Disabling Silo since it was not found." )
+  endif()
 endif()
 
 # This is a hack for now.  Probably worth generating a CMake finder thing.
@@ -137,6 +152,7 @@ if ( SERMENT_ENABLE_TEST )
     include_directories(diffusion/test)
     include_directories(solvers/test)
     include_directories(drivers/test)
+    include_directories(postprocess/test)
 endif()
 
 
@@ -161,6 +177,8 @@ include_directories(diffusion)
 include_directories(solvers)
 # level 5
 include_directories(drivers)
+#
+include_directories(postprocess)
 
 # Set 
 if( NOT CMAKE_INSTALL_PREFIX)
@@ -186,45 +204,58 @@ add_subdirectory(transport)
 add_subdirectory(diffusion)
 add_subdirectory(solvers)
 add_subdirectory(drivers)
-
+add_subdirectory(postprocess)
 
 #------------------------------------------------------------------------------#
 # OUTPUT
 #------------------------------------------------------------------------------#
 
+message("---------------------------------------------------------------")
+message("              SUMMARY OF CMAKE CONFIGURATION")
+
+
+message("---------------------------------------------------------------")
 message("++++ System:      ${CMAKE_SYSTEM} ${CMAKE_SYSTEM_PROCESSOR}")
 message("++++ CXX:         ${CMAKE_CXX_COMPILER}")
 message("++++ Build type:  ${CMAKE_BUILD_TYPE}")
 message("++++ Install:     ${CMAKE_INSTALL_PREFIX}")
+
+message("---------------------------------------------------------------")
 if( DETRAN_ENABLE_PYTHON )
 message("++++ Python:      enabled")
-elseif()
+else()
 message("++++ Python:      disabled")
 endif()
 if( DETRAN_ENABLE_OPENMP )
 message("++++ OpenMP:      enabled")
-elseif()
+else()
 message("++++ OpenMP:      disabled")
 endif()
 if( DETRAN_ENABLE_PETSC )
 message("++++ PETSc:       enabled")
-elseif()
+else()
 message("++++ PETSc:       disabled")
 endif()
 if( DETRAN_ENABLE_SLEPC )
 message("++++ SLEPc:       enabled")
-elseif()
+else()
 message("++++ SLEPc:       disabled")
 endif()
 if( DETRAN_ENABLE_GPERFTOOLS )
 message("++++ Profiling:   enabled")
-elseif()
+else()
 message("++++ Profiling:   disabled")
+endif()
+if( DETRAN_ENABLE_SILO )
+message("++++ Silo:        enabled")
+else()
+message("++++ Silo:        disabled")
 endif()
 if( DETRAN_ENABLE_TEST )
 message("++++ Testing:     enabled")
-elseif()
+else()
 message("++++ Testing:     disabled")
 endif()
+message("---------------------------------------------------------------")
 
 

@@ -115,6 +115,7 @@
 
 #include "Manager.hh"
 #include "PyExecute.hh"
+#include "SiloOutput.hh"
   
 %} // end module pydetran
 
@@ -154,8 +155,10 @@
 //------------------------------------//
 // LEVEL 4
 
-// Anyhere in C/C++ that we need (argc, argv), 
+// Post process
+%include "detran_postprocess.i"
 
+// Anyhere in C/C++ that we need (argc, argv), 
 %typemap(in) (int argc, char *argv[]) 
 {
   /* Check if is a list */

@@ -19,7 +19,10 @@ SWIG_LINK_LIBRARIES(pydetran
                     #
                     solvers
                     #
-                    ${PETSC_LIBRARIES})
+                    postprocess
+                    #
+                    ${PETSC_LIBRARIES}
+                    ${Silo_LIBRARIES})
 
 # Install the module and library
 INSTALL(FILES ${CMAKE_BINARY_DIR}/python/pydetran.py

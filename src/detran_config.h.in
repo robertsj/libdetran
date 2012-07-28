@@ -20,6 +20,7 @@
 #cmakedefine DETRAN_ENABLE_SLEPC
 #cmakedefine DETRAN_ENABLE_OPENMP
 #cmakedefine DETRAN_ENABLE_GPERFTOOLS
+#cmakedefine DETRAN_ENABLE_SILO
 
 #endif // DETRAN_CONFIG_H_ 
 
