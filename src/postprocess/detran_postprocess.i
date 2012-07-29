@@ -6,6 +6,8 @@
  */
 //---------------------------------------------------------------------------//
 
+%include "ReactionRates.hh"
+
 #ifdef DETRAN_ENABLE_SILO
 %include "SiloOutput.hh"
 #endif

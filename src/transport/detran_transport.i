@@ -40,9 +40,6 @@
 %include "Sweeper3D.hh"
 %include "Sweeper2DMOC.hh"
 
-// Helpers
-%include "ReactionRates.hh"
-
 // Templates 
 
 %template(StateSP)          detran::SP<detran::State>;
@@ -98,8 +95,6 @@
 %template(Sweeper2DMOC_SC)    detran::Sweeper2DMOC<detran::Equation_SC_MOC>;
 %template(Sweeper2DMOC_SCSP)  detran::SP<detran::Sweeper2DMOC<detran::Equation_SC_MOC> >;
 
-// Helpers
-%template(ReactionRatesSP)  detran::SP<detran::ReactionRates>;
 
 //---------------------------------------------------------------------------//
 //              end of detran_transport.i
