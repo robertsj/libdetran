@@ -13,7 +13,7 @@
 #include <iostream>
 #include <cmath>
 
-namespace detran
+namespace detran_postprocess
 {
 
 // Constructor.
@@ -27,45 +27,19 @@ ReactionRates::ReactionRates(SP_material material,
   /* ... */
 }
 
-vec_dbl ReactionRates::pin_power(double scale)
+detran::vec_dbl ReactionRates::region_power(std::string key, double scale)
 {
 
   // Make sure the mesh has what we need.
-  Insist(b_mesh->mesh_map_exists("PINS"),
-      "Mesh must have PINS map to compute pin power peaking factors.");
-
-  return power("PINS", scale);
-
-}
-
-vec_dbl ReactionRates::assembly_power(double scale)
-{
-
-  // Make sure the mesh has what we need.
-  Insist(b_mesh->mesh_map_exists("ASSEMBLIES"),
-      "Mesh must have ASSEMBLIES map to compute pin power peaking factors.");
-
-  return power("ASSEMBLIES", scale);
-
-}
-
-//---------------------------------------------------------------------------//
-// Private Implementation
-//---------------------------------------------------------------------------//
-
-vec_dbl ReactionRates::power(std::string key, double scale)
-{
-
-  // We need a fission source.
-  Insist(b_fissionsource,
-      "Fission source is needed to compute powers.");
+  Insist(b_mesh->mesh_map_exists(key),
+      "The mesh map " + key + " does not exist.");
 
   // Compute the fission rate.
   vec_int mat_map = b_mesh->mesh_map("MATERIAL");
-  State::moments_type fission_rate(b_mesh->number_cells(), 0.0);
+  detran::State::moments_type fission_rate(b_mesh->number_cells(), 0.0);
   for(int g = 0; g < b_material->number_groups(); g++)
   {
-    State::moments_type phi = b_state->phi(g);
+    detran::State::moments_type phi = b_state->phi(g);
     for (int cell = 0; cell < b_mesh->number_cells(); cell++)
     {
       fission_rate[cell] += phi[cell] *
@@ -76,9 +50,10 @@ vec_dbl ReactionRates::power(std::string key, double scale)
   // Get the region map of interest.
   vec_int map = b_mesh->mesh_map(key);
 
+  // Get the maximum index, which we take to the be one less
+  // then the number of unique regions.  If there is non-sequential
+  // number, then elements of the power vector are simply zero.
   // Number of unique regions.  This *assumes* sequential numbering,
-  // which is true for the automated generation of pin cell and
-  // assembly zones.
   int number = 1 + *std::max_element(map.begin(), map.end());
 
   // Compute the (unscaled) region powers.
@@ -90,9 +65,14 @@ vec_dbl ReactionRates::power(std::string key, double scale)
     {
       for (int i = 0; i < b_mesh->number_cells_x(); i++)
       {
+        // Define the mesh cell and volume
         int cell = b_mesh->index(i, j, k);
         double volume = b_mesh->dx(i) * b_mesh->dy(j) * b_mesh->dz(k);
+
+        // Add contribution to this region power
         power[map[cell]] += volume * fission_rate[cell];
+
+        // Add contribution to the total power
         total_fission_rate += volume * fission_rate[cell];
       }
     }
@@ -109,6 +89,8 @@ vec_dbl ReactionRates::power(std::string key, double scale)
   return power;
 }
 
-} // end namespace detran
+} // end namespace detran_postprocess
 
-
+//---------------------------------------------------------------------------//
+//              end of ReactionRates.cc
+//---------------------------------------------------------------------------//

@@ -21,7 +21,6 @@ SET(TRANSPORT_SRC
     Equation_SD_2D.cc
     Equation_SC_MOC.cc
     FissionSource.cc
-    ReactionRates.cc
     ScatterSource.cc
     State.cc
 )

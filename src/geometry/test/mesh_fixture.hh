@@ -15,9 +15,13 @@
 #include "Mesh1D.hh"
 #include "Mesh2D.hh"
 #include "Mesh3D.hh"
+#include "PinCell.hh"
+#include "Assembly.hh"
+#include "Core.hh"
 
 // Detran utilities
 #include "DBC.hh"
+#include "Definitions.hh"
 
 // System includes
 
@@ -25,7 +29,9 @@ namespace detran_test
 {
 
 typedef detran::Mesh::SP_mesh SP_mesh;
-
+typedef detran::PinCell::SP_pincell SP_pincell;
+typedef detran::Assembly::SP_assembly SP_assembly;
+typedef detran::Core::SP_core SP_core;
 /*!
  *  \brief Create a common 1D mesh for transport tests.
  */
@@ -129,6 +135,64 @@ static SP_mesh mesh_3d_fixture()
 
   // Return the fixture.
   return mesh;
+}
+
+// Defines a two region pin cell for use with material_fixture_2g
+static SP_pincell pincell_fixture()
+{
+  // PinCell(double pitch, vec_dbl radii,
+  //         vec_int mat_map, bool fuel_flag = true);
+  double pitch = 1.26;
+  detran::vec_dbl radii(1, 0.54);
+  detran::vec_int mat_map(2, 0);
+  mat_map[0] = 1; // pin (fuel I)
+  mat_map[1] = 0; // mod
+  bool fuel_flag = true; // this is a fuel pin (i.e. not a moderator box)
+  SP_pincell pin(new detran::PinCell(pitch, radii, mat_map, fuel_flag));
+  pin->meshify(7, true);
+  return pin;
+}
+
+// Defines a 2x2 assembly for use with material_fixture_2g
+static SP_assembly assembly_fixture()
+{
+  // Define the 2x2 assembly
+  SP_assembly assembly(new detran::Assembly(2));
+
+  // Get the pin fixture
+  SP_pincell pin = pincell_fixture();
+
+  // Add the pin to the assembly
+  assembly->add_pincell(pin);
+
+  // Create a pincell map (all the same pin)
+  detran::vec_int pincell_map(4, 0);
+
+  // Add the map
+  assembly->finalize(pincell_map);
+
+  return assembly;
+}
+
+// Defines a 2x2 core for use with material_fixture_2g
+static SP_core core_fixture()
+{
+  // Define the 3x3 assembly
+  SP_core core(new detran::Core(2));
+
+  // Get the assembly fixture
+  SP_assembly assembly = assembly_fixture();
+
+  // Add the pin to the assembly
+  core->add_assembly(assembly);
+
+  // Create a pincell map (all the same pin)
+  detran::vec_int assembly_map(4, 0);
+
+  // Add the map
+  core->finalize(assembly_map);
+
+  return core;
 }
 
 } // end namespace detran_test

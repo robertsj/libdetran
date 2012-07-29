@@ -9,7 +9,8 @@ SET(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 #-------------------------------------#
 
 SET(SRC
-    SiloOutput.cc
+  ReactionRates.cc
+  SiloOutput.cc
 )
 
 #-------------------------------------#
@@ -24,6 +25,7 @@ TARGET_LINK_LIBRARIES( postprocess
                        materials
                        geometry
                        utilities
+                       transport
                        ${Silo_LIBRARIES}                  
 )
 

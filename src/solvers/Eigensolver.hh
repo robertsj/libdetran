@@ -194,6 +194,45 @@ public:
   /// Solve the eigenvalue problem.
   virtual void solve() = 0;
 
+  /// \name Getters
+  /// \{
+
+  SP_input get_input() const
+  {
+    return b_input;
+  }
+
+  SP_state get_state() const
+  {
+    return b_state;
+  }
+
+  SP_mesh  get_mesh() const
+  {
+    return b_mesh;
+  }
+
+  SP_material get_material() const
+  {
+    return b_material;
+  }
+
+  SP_quadrature get_quadrature() const
+  {
+    return b_quadrature;
+  }
+
+  SP_boundary get_boundary() const
+  {
+    return b_boundary;
+  }
+
+  SP_fissionsource get_fissionsource() const
+  {
+    return b_fissionsource;
+  }
+  /// \}
+
   /// DBC function.
   virtual bool is_valid() const
   {
