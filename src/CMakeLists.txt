@@ -48,6 +48,11 @@ SET( DETRAN_ENABLE_SILO NO CACHE BOOL
   "Enable SILO."
 )
 
+# Options for HDF5. On or Off.
+SET( DETRAN_ENABLE_HDF5 NO CACHE BOOL
+  "Enable HDF5."
+)
+
 # Write config file, install it, and include that directory for all source
 set(DETRAN_CONFIG_IN  "${CMAKE_CURRENT_SOURCE_DIR}/detran_config.h.in")
 set(DETRAN_CONFIG_OUT "${PROJECT_BINARY_DIR}/config/detran_config.h")
@@ -101,6 +106,10 @@ if( DETRAN_ENABLE_HDF5)
   else()
       set( DETRAN_ENABLE_HDF5 OFF )
       MESSAGE( STATUS "Disabling HDF5 since it was not found." )
+      # Need to reset them, since FindHDF5 fills them with "not founds", 
+      # which leads to errors downstream.
+      set(HDF5_LIBRARIES "")
+      set(HDF_INCLUDE_DIRS "")
   endif()
 endif()
 
