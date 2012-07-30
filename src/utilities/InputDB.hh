@@ -48,6 +48,15 @@ class InputDB : public Object
 
 public:
 
+  enum INPUT_TYPES
+  {
+    INT,
+    DBL,
+    STR,
+    VEC_INT,
+    VEC_DBL
+  };
+
   typedef SP<InputDB> SP_input;
 
   /*!
@@ -104,6 +113,9 @@ public:
   }
 
   //\}
+
+  /// Number of entries of a certain type.
+  int size(int type) const;
 
   /// Display all my contents.
   void display() const;

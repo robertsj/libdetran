@@ -22,10 +22,10 @@ ADD_LIBRARY( utilities
              SHARED
              ${UTILITIES_SRC} 
 )
-if( DETRAN_ENABLE_GPERFTOOLS )
-TARGET_LINK_LIBRARIES( ${GPERFTOOLS_LIBRARIES}
-)
-endif()
+
+TARGET_LINK_LIBRARIES( utilities
+                       ${GPERFTOOLS_LIBRARIES}
+                       ${HDF5_LIBRARIES} ) 
 
 #-------------------------------------#
 # INSTALL

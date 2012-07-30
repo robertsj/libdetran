@@ -78,6 +78,23 @@ void InputDB::display() const
   }
 }
 
+int InputDB::size(int type) const
+{
+  int value = 0;
+  if (type == INT)
+    value =  d_data_int.size();
+  else if (type == DBL)
+    value = d_data_dbl.size();
+  else if (type == STR)
+    value = d_data_str.size();
+  else if (type == VEC_INT)
+    value = d_data_vec_int.size();
+  else if (type == VEC_DBL)
+    value = d_data_vec_dbl.size();
+  else
+    THROW("Invalid type specifier.");
+  return value;
+}
 
 } // end namespace detran
 
