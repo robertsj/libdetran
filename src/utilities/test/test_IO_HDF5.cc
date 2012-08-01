@@ -39,28 +39,37 @@ int test_IO_HDF5(int argc, char *argv[])
   InputDB::SP_input input(new InputDB());
 
   // Put some integers
-  input->put<int>("int0", 0);
-  input->put<int>("int1", 1);
+  input->put<int>("dimension", 2);
+  input->put<int>("number_groups", 7);
+
 
   // Put some doubles
   input->put<double>("double0_123", 0.123);
   input->put<double>("double0_234", 0.234);
 
   // Put some strings
-  input->put<string>("string_test", "test");
-  input->put<string>("hdf5_input",  "lala.h5");
+  input->put<string>("bc_left",  "vacuum");
+  input->put<string>("bc_right", "vacuum");
 
-  // Put vectors.
-  vec_int v_int(4, 0);
-  v_int[1] = 1;
-  v_int[2] = 2;
-  v_int[3] = 3;
-  vec_dbl v_dbl(4, 0.0);
-  v_dbl[1] = 2.0;
-  v_dbl[2] = 4.0;
-  v_dbl[3] = 6.0;
-  input->put<vec_int>("vec_int_0123", v_int);
-  input->put<vec_dbl>("vec_dbl_0246", v_dbl);
+  // Put some vectors
+
+  vec_int v_int0(2, 1);
+  v_int0[1] = 2;
+  vec_int v_int1(3, 3);
+  v_int1[1] = 6;
+  v_int1[2] = 9;
+
+  vec_dbl v_dbl0(2, 0.0);
+  v_dbl0[1] = 1.0;
+  vec_dbl v_dbl1(4, 0.0);
+  v_dbl1[1] = 2.0;
+  v_dbl1[2] = 4.0;
+  v_dbl1[3] = 6.0;
+
+  input->put<vec_int>("vec_int_12",   v_int0);
+  input->put<vec_int>("vec_int_369",  v_int1);
+  input->put<vec_dbl>("vec_dbl_01",   v_dbl0);
+  input->put<vec_dbl>("vec_dbl_0246", v_dbl1);
 
   // Create an IO_HDF5
   IO_HDF5 io("test.h5");
@@ -72,11 +81,56 @@ int test_IO_HDF5(int argc, char *argv[])
 
   // Create a new input database and read in from the
   InputDB::SP_input input2(new InputDB());
-  io.read(input2, "lala.h5");
+  io.read(input2);
+  io.close();
 
-  // Verify that the input = input2
-  TEST(input2->get<int>("int0") == 0);
-  TEST(input2->get<int>("int1") == 1);
+  //-------------------------------------------------------------------------//
+  // TEST
+  //-------------------------------------------------------------------------//
+
+  // Integers
+  TEST(input2->check("dimension"));
+  TEST(input2->get<int>("dimension")     == 2);
+  TEST(input2->check("number_groups"));
+  TEST(input2->get<int>("number_groups") == 7);
+
+  // Doubles
+  TEST(input2->check("double0_123"));
+  TEST(soft_equiv(input2->get<double>("double0_123"), 0.123));
+  TEST(input2->check("double0_234"));
+  TEST(soft_equiv(input2->get<double>("double0_234"), 0.234));
+
+  // Strings
+  TEST(input2->check("bc_left"));
+  TEST(input2->get<string>("bc_left") == "vacuum");
+  TEST(input2->check("bc_right"));
+  TEST(input2->get<string>("bc_right") == "vacuum");
+
+  // Integer vectors
+  TEST(input2->check("vec_int_12"));
+  vec_int vitest = input2->get<vec_int>("vec_int_12");
+  TEST(vitest.size() == v_int0.size());
+  for (int i = 0; i < vitest.size(); i++)
+    TEST(vitest[i] == v_int0[i]);
+  //
+  TEST(input2->check("vec_int_369"));
+  vitest = input2->get<vec_int>("vec_int_369");
+  TEST(vitest.size() == v_int1.size());
+  for (int i = 0; i < vitest.size(); i++)
+    TEST(vitest[i] == v_int1[i]);
+
+  // Double vectors
+  TEST(input2->check("vec_dbl_01"));
+  vec_dbl vdtest = input2->get<vec_dbl>("vec_dbl_01");
+  TEST(vdtest.size() == v_dbl0.size());
+  for (int i = 0; i < vdtest.size(); i++)
+    TEST(soft_equiv(vdtest[i], v_dbl0[i]));
+  //
+  TEST(input2->check("vec_dbl_0246"));
+  vdtest = input2->get<vec_dbl>("vec_dbl_0246");
+  TEST(vdtest.size() == v_dbl1.size());
+  for (int i = 0; i < vdtest.size(); i++)
+    TEST(soft_equiv(vdtest[i], v_dbl1[i]));
 
 
   return 0;

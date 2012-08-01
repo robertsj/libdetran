@@ -102,14 +102,14 @@ endif()
 if( DETRAN_ENABLE_HDF5)
   find_package(HDF5)
   if(HDF5_FOUND)
-    include_directories(${HDF5_INCLUDE_DIRS})
+    include_directories(${HDF5_INCLUDE_DIR})
   else()
       set( DETRAN_ENABLE_HDF5 OFF )
       MESSAGE( STATUS "Disabling HDF5 since it was not found." )
       # Need to reset them, since FindHDF5 fills them with "not founds", 
       # which leads to errors downstream.
       set(HDF5_LIBRARIES "")
-      set(HDF_INCLUDE_DIRS "")
+      set(HDF_INCLUDE_DIR "")
   endif()
 endif()
 

@@ -114,6 +114,10 @@ public:
 
   //\}
 
+  /// Return a map
+  template <class T>
+  const std::map<std::string, T>& get_map();
+
   /// Number of entries of a certain type.
   int size(int type) const;
 

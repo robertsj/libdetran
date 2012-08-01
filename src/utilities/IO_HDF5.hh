@@ -13,7 +13,7 @@
 // Utilities
 #include "DBC.hh"
 #include "InputDB.hh"
-
+#include "IO_HDF5_Traits.hh"
 // System
 #include <string>
 #include "hdf5.h"
@@ -67,9 +67,15 @@ public:
    *  \param input    Input database to be filled
    *  \param filename HDF5 filename
    */
-  void read(SP_input input, std::string filename);
+  void read(SP_input input);
+
+  bool is_valid() const
+  {
+    return true;
+  }
 
 private:
+
 
   /// \name Private Data
   /// \{
@@ -80,18 +86,55 @@ private:
   /// HDF5 filename
   std::string d_filename;
 
+  /// Variable string type
+  hid_t d_string_type;
+
+  /// HDF5 is open
+  bool d_open;
 
   /// \}
 
   /// \name Implementation
   /// \{
 
+  /*!
+   *  \brief Fill a temporary compound type container and write to file
+   *  \param input  User input database
+   *  \param data   Pointer to compound type array
+   */
+  template <class T>
+  bool write_data(SP_input input,
+                  hid_t group,
+                  std::string name,
+                  compound_type<T> *data);
+
+  /*!
+   *  \brief Fill a temporary compound type container and write to file
+   *  \param input  User input database
+   *  \param data   Pointer to compound type array
+   */
+  template <class T>
+  bool read_data(SP_input input, hid_t group, std::string name);
+
+  /// Set the data type for storage in memory
+  template <class T>
+  hid_t set_memtype();
+
+  /// Set the data type for storage on disk
+  template <class T>
+  hid_t set_filetype();
 
   /// \}
 
 };
 
 } // end namespace detran
+
+//---------------------------------------------------------------------------//
+// TEMPLATE DEFINITIONS
+//---------------------------------------------------------------------------//
+
+#include "IO_HDF5.t.hh"
 
 #endif // INPUTHDF5_HH_ 
 

@@ -141,6 +141,35 @@ inline void InputDB::put(const std::string &key, const std::string value)
   Ensure(check(key));
 }
 
+// Get map
+
+template <class T>
+inline const std::map<std::string, T>& InputDB::get_map()
+{
+  return d_data_int;
+}
+template <>
+inline const std::map<std::string, double>& InputDB::get_map<double>()
+{
+  return d_data_dbl;
+}
+template <>
+inline const std::map<std::string, std::string>& InputDB::get_map<std::string>()
+{
+  return d_data_str;
+}
+template <>
+inline const std::map<std::string, vec_int>& InputDB::get_map<vec_int>()
+{
+  return d_data_vec_int;
+}
+template <>
+inline const std::map<std::string, vec_dbl>& InputDB::get_map<vec_dbl>()
+{
+  return d_data_vec_dbl;
+}
+
+
 } // end namespace detran
 
 #endif /* INPUTDB_I_HH_ */

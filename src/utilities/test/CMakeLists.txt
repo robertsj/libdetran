@@ -20,6 +20,9 @@ TARGET_LINK_LIBRARIES(test_MathUtilities utilities)
 ADD_EXECUTABLE(test_Point   test_Point.cc)
 TARGET_LINK_LIBRARIES(test_Point utilities)
 
+ADD_EXECUTABLE(test_IO_HDF5   test_IO_HDF5.cc)
+TARGET_LINK_LIBRARIES(test_IO_HDF5 utilities)
+
 #------------------------------------------------------------------------------#
 # Define tests
 #------------------------------------------------------------------------------#
@@ -39,3 +42,5 @@ ADD_TEST( test_MathUtilities test_norm_residual_L1 5)
 ADD_TEST( test_MathUtilities test_norm_residual_Linf 6)
 # Point
 ADD_TEST( test_Point         test_Point   0)
+
+ADD_TEST( test_IO_HDF5       test_IO_HDF5   0)
