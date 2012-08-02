@@ -172,6 +172,7 @@ if ( SERMENT_ENABLE_TEST )
     include_directories(solvers/test)
     include_directories(drivers/test)
     include_directories(postprocess/test)
+    include_directories(ioutils/test)
 endif()
 
 
@@ -197,6 +198,7 @@ include_directories(solvers)
 # level 5
 include_directories(drivers)
 #
+include_directories(ioutils)
 include_directories(postprocess)
 
 # Set 
@@ -223,6 +225,7 @@ add_subdirectory(transport)
 add_subdirectory(diffusion)
 add_subdirectory(solvers)
 add_subdirectory(drivers)
+add_subdirectory(ioutils)
 add_subdirectory(postprocess)
 
 #------------------------------------------------------------------------------#

@@ -10,11 +10,6 @@
 %{
 
 //---------------------------------------------------------------------------//
-// CONFIGURATION
-//---------------------------------------------------------------------------//
-//#include "detran_config.h"
-  
-//---------------------------------------------------------------------------//
 // LEVEL 0  
 //---------------------------------------------------------------------------//
   
@@ -124,6 +119,9 @@
 #ifdef DETRAN_ENABLE_SILO
 #include "SiloOutput.hh"
 #endif
+#ifdef DETRAN_ENABLE_HDF5
+#include "IO_HDF5.hh"
+#endif
   
 %} // end module pydetran
 
@@ -169,6 +167,9 @@
 
 //------------------------------------//
 // LEVEL 4
+
+// IO utilities
+%include "detran_ioutils.i"
 
 // Post process
 %include "detran_postprocess.i"

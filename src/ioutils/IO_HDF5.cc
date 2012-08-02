@@ -7,9 +7,15 @@
  */
 //---------------------------------------------------------------------------//
 
+// Configuration
+#include "detran_config.h"
+
+#ifdef DETRAN_ENABLE_HDF5
+
+// Detran IO Utils
 #include "IO_HDF5.hh"
 
-namespace detran
+namespace detran_ioutils
 {
 
 IO_HDF5::IO_HDF5(std::string filename)
@@ -50,11 +56,11 @@ void IO_HDF5::write(SP_input input)
   //-------------------------------------------------------------------------//
 
   // Get the map sizes for the suppored types.
-  int size_int      = input->size(InputDB::INT);
-  int size_dbl      = input->size(InputDB::DBL);
-  int size_str      = input->size(InputDB::STR);
-  int size_vec_int  = input->size(InputDB::VEC_INT);
-  int size_vec_dbl  = input->size(InputDB::VEC_DBL);
+  int size_int      = input->size(detran::InputDB::INT);
+  int size_dbl      = input->size(detran::InputDB::DBL);
+  int size_str      = input->size(detran::InputDB::STR);
+  int size_vec_int  = input->size(detran::InputDB::VEC_INT);
+  int size_vec_dbl  = input->size(detran::InputDB::VEC_DBL);
 
   // Define the temporary data containers.
   compound_type<int>            data_int[size_int];
@@ -110,7 +116,9 @@ void IO_HDF5::read(SP_input input)
 
 }
 
-} // end namespace detran
+} // end namespace detran_ioutils
+
+#endif // DETRAN_ENABLE_HDF5
 
 //---------------------------------------------------------------------------//
 //              end of file IO_HDF5.cc

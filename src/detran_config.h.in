@@ -21,6 +21,7 @@
 #cmakedefine DETRAN_ENABLE_OPENMP
 #cmakedefine DETRAN_ENABLE_GPERFTOOLS
 #cmakedefine DETRAN_ENABLE_SILO
+#cmakedefine DETRAN_ENABLE_HDF5
 
 #endif // DETRAN_CONFIG_H_ 
 

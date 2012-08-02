@@ -20,6 +20,7 @@
 /* ... */
 
 using namespace detran;
+using namespace detran_ioutils;
 using namespace detran_test;
 using namespace std;
 

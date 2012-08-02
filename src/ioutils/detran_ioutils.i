@@ -1,17 +1,18 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   detran_postprocess.i
+ * \file   detran_ioutils.i
  * \author Jeremy Roberts
- * \brief  Python interface for detran postprocessing.
+ * \brief  Python interface for detran IO utilities.
  */
 //---------------------------------------------------------------------------//
 
-%include "ReactionRates.hh"
 
-#ifdef DETRAN_ENABLE_SILO
-%include "SiloOutput.hh"
+%include "detran_config.h"
+
+#ifdef DETRAN_ENABLE_HDF5
+%include "IO_HDF5.hh"
 #endif
 
 //---------------------------------------------------------------------------//
-//              end of detran_postprocess.i
+//              end of detran_ioutils.i
 //---------------------------------------------------------------------------//

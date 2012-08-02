@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   InputHDF5.hh
- * \brief  InputHDF5 
+ * \file   IO_HDF5.hh
+ * \brief  IO_HDF5
  * \author Jeremy Roberts
  * \date   Jul 29, 2012
  */
 //---------------------------------------------------------------------------//
 
-#ifndef INPUTHDF5_HH_
-#define INPUTHDF5_HH_
+#ifndef IO_HDF5_HH_
+#define IO_HDF5_HH_
 
 // Utilities
 #include "DBC.hh"
@@ -18,7 +18,7 @@
 #include <string>
 #include "hdf5.h"
 
-namespace detran
+namespace detran_ioutils
 {
 
 /*!
@@ -38,12 +38,14 @@ namespace detran
  *  entries will go in that group.  Later, it might be useful
  *  to add ones for the mesh and material specification.
  */
-class IO_HDF5: public Object
+class IO_HDF5: public detran::Object
 {
 
 public:
 
-  typedef InputDB::SP_input SP_input;
+  typedef detran::InputDB::SP_input SP_input;
+  typedef detran::vec_int           vec_int;
+  typedef detran::vec_dbl           vec_dbl;
 
   /*!
    *  \brief Constructor
@@ -128,7 +130,7 @@ private:
 
 };
 
-} // end namespace detran
+} // end namespace detran_ioutils
 
 //---------------------------------------------------------------------------//
 // TEMPLATE DEFINITIONS
@@ -136,8 +138,8 @@ private:
 
 #include "IO_HDF5.t.hh"
 
-#endif // INPUTHDF5_HH_ 
+#endif // IO_HDF5_HH_
 
 //---------------------------------------------------------------------------//
-//              end of file InputHDF5.hh
+//              end of file IO_HDF5.hh
 //---------------------------------------------------------------------------//

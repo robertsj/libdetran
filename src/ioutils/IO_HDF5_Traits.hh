@@ -4,7 +4,7 @@
  * \author robertsj
  * \date   Aug 1, 2012
  * \brief  IO_HDF5_Traits class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+ * \todo   It may be good to extract the classes and such.
  */
 //---------------------------------------------------------------------------//
 
@@ -20,7 +20,7 @@
 #include <vector>
 #include "hdf5.h"
 
-namespace detran
+namespace detran_ioutils
 {
 
 //---------------------------------------------------------------------------//
@@ -256,6 +256,6 @@ hid_t HDF5_FileType::type<std::vector<double> >()
   return d_type;
 }
 
-} // end namespace detran
+} // end namespace detran_ioutils
 
 #endif /* IO_HDF5_TRAITS_HH_ */

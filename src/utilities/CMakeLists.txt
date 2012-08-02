@@ -10,7 +10,6 @@ SET(UTILITIES_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 SET( UTILITIES_SRC 
   InputDB.cc
-  IO_HDF5.cc
   GenException.cc
   Warning.cc
 )
@@ -25,8 +24,7 @@ ADD_LIBRARY( utilities
 )
 
 TARGET_LINK_LIBRARIES( utilities
-                       ${GPERFTOOLS_LIBRARIES}
-                       ${HDF5_LIBRARIES} ) 
+                       ${GPERFTOOLS_LIBRARIES} ) 
 
 #-------------------------------------#
 # INSTALL

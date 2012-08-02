@@ -19,6 +19,7 @@ SWIG_LINK_LIBRARIES(pydetran
                     #
                     solvers
                     #
+                    ioutils
                     postprocess
                     #
                     ${PETSC_LIBRARIES}

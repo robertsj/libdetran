@@ -11,7 +11,7 @@
 #ifndef IO_HDF5_T_HH_
 #define IO_HDF5_T_HH_
 
-namespace detran
+namespace detran_ioutils
 {
 
 template <class T>
@@ -169,6 +169,6 @@ bool IO_HDF5::read_data(SP_input input,
 }
 
 
-} // end namespace detran
+} // end namespace detran_ioutils
 
 #endif /* IO_HDF5_T_HH_ */
