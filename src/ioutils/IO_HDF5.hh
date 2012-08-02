@@ -10,10 +10,15 @@
 #ifndef IO_HDF5_HH_
 #define IO_HDF5_HH_
 
+// Detran
+#include "Material.hh"
+#include "Mesh.hh"
+
 // Utilities
 #include "DBC.hh"
 #include "InputDB.hh"
 #include "IO_HDF5_Traits.hh"
+
 // System
 #include <string>
 #include "hdf5.h"
@@ -43,15 +48,19 @@ class IO_HDF5: public detran::Object
 
 public:
 
-  typedef detran::InputDB::SP_input SP_input;
-  typedef detran::vec_int           vec_int;
-  typedef detran::vec_dbl           vec_dbl;
+  typedef detran::InputDB::SP_input       SP_input;
+  typedef detran::Material::SP_material   SP_material;
+  typedef detran::vec_int                 vec_int;
+  typedef detran::vec_dbl                 vec_dbl;
 
   /*!
    *  \brief Constructor
    *  \param filename HDF5 filename
    */
   IO_HDF5(std::string filename);
+
+  /// Open HDF5 file for writing.  This replaces old content.
+  void open();
 
   /*!
    *  \brief Write the input database into an HDF5 file.
@@ -60,8 +69,12 @@ public:
   void write(SP_input input);
 
   /*!
-   *  \brief Close any open HDF5 file
+   *  \brief Write the input database into an HDF5 file.
+   *  \param input    Input database to be written
    */
+  void write(SP_material material);
+
+  /// Close an HDF5 file if open.
   void close();
 
   /*!

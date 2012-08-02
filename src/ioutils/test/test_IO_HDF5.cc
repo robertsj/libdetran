@@ -10,7 +10,8 @@
 
 // LIST OF TEST FUNCTIONS
 #define TEST_LIST                     \
-        FUNC(test_IO_HDF5)
+        FUNC(test_IO_HDF5_input)      \
+        FUNC(test_IO_HDF5_material)
 
 // Detran headers
 #include "TestDriver.hh"
@@ -33,7 +34,7 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------//
 
-int test_IO_HDF5(int argc, char *argv[])
+int test_IO_HDF5_input(int argc, char *argv[])
 {
 
   // Create the input.
@@ -133,6 +134,41 @@ int test_IO_HDF5(int argc, char *argv[])
   for (int i = 0; i < vdtest.size(); i++)
     TEST(soft_equiv(vdtest[i], v_dbl1[i]));
 
+
+  return 0;
+}
+
+int test_IO_HDF5_material(int argc, char *argv[])
+{
+
+  // Create test material
+  Material::SP_material mat(new Material(2, 2));
+  // material 0
+  mat->set_sigma_t(0, 0, 1.0);
+  mat->set_sigma_t(0, 1, 2.0);
+  mat->set_sigma_s(0, 0, 0, 1.1);
+  mat->set_sigma_s(0, 1, 0, 2.1);
+  mat->set_sigma_s(0, 0, 1, 3.1);
+  mat->set_sigma_s(0, 1, 1, 4.1);
+  // material 1
+  mat->set_sigma_t(1, 0, 1.0);
+  mat->set_sigma_t(1, 1, 2.0);
+  mat->set_sigma_s(1, 0, 0, 1.1);
+  mat->set_sigma_s(1, 1, 0, 2.1);
+  mat->set_sigma_s(1, 0, 1, 3.1);
+  mat->set_sigma_s(1, 1, 1, 4.1);
+  mat->set_sigma_f(1, 0, 1.2);
+  mat->set_sigma_f(1, 1, 2.2);
+  mat->set_chi(1, 0, 1.0);
+  mat->finalize();
+
+  // Create an IO_HDF5
+  IO_HDF5 io("test.h5");
+
+  // Write to the HDF5 file.  The input has the filename
+  // to write out, or a default is used.
+  io.write(mat);
+  io.close();
 
   return 0;
 }

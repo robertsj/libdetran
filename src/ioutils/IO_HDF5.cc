@@ -15,6 +15,9 @@
 // Detran IO Utils
 #include "IO_HDF5.hh"
 
+// System
+#include <sstream>
+
 namespace detran_ioutils
 {
 
@@ -25,27 +28,29 @@ IO_HDF5::IO_HDF5(std::string filename)
   /* ... */
 }
 
-void IO_HDF5::write(SP_input input)
+void IO_HDF5::open()
 {
-  // Preconditions
-  Require(input);
-
   // Open the HDF5 file
   d_file_id = H5Fcreate(d_filename.c_str(), // filename
                         H5F_ACC_TRUNC,      // overwrite existing file
                         H5P_DEFAULT,        // file create property list
                         H5P_DEFAULT);       // file access property list
   d_open = true;
+}
+
+void IO_HDF5::write(SP_input input)
+{
+  // Preconditions
+  Require(input);
+
+  if (!d_open) open();
 
   // Create the input group
   hid_t group = H5Gcreate(d_file_id, "/input",
                           H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 
+  // HDF5 error return value
   herr_t  status;
-  hid_t memtype;
-  hid_t filetype;
-  hid_t dset;
-  hid_t space;
 
   // Create variable string type
   d_string_type = H5Tcopy (H5T_C_S1);
@@ -78,6 +83,127 @@ void IO_HDF5::write(SP_input input)
   write_data(input, group, "str_data", data_str);
   write_data(input, group, "vec_int_data", data_vec_int);
   write_data(input, group, "vec_dbl_data", data_vec_dbl);
+
+  // Close the group.
+  status = H5Gclose(group);
+
+}
+
+void IO_HDF5::write(SP_material mat)
+{
+  // Preconditions
+  Require(mat);
+
+  if (!d_open) open();
+
+  // Create the material group
+  hid_t group = H5Gcreate(d_file_id, "/material",
+                          H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+
+  herr_t status;
+
+  //-------------------------------------------------------------------------//
+  // ATTRIBUTES
+  //-------------------------------------------------------------------------//
+
+  hid_t att_space;
+  hid_t att;
+
+  // Create scalar attribute.
+  att_space = H5Screate(H5S_SCALAR);
+  att = H5Acreate(group, "number_groups", H5T_NATIVE_INT, att_space, H5P_DEFAULT, H5P_DEFAULT);
+  // Write scalar attribute.
+  int ng = mat->number_groups();
+  status = H5Awrite(att, H5T_NATIVE_INT, (void *) &ng);
+  // Close dataspace and attribute
+  status = H5Sclose(att_space);
+  status = H5Aclose(att);
+
+  // Create scalar attribute.
+  att_space = H5Screate(H5S_SCALAR);
+  att = H5Acreate(group, "number_materials", H5T_NATIVE_INT, att_space, H5P_DEFAULT, H5P_DEFAULT);
+  // Write scalar attribute.
+  int nm = mat->number_materials();
+  status = H5Awrite(att, H5T_NATIVE_INT, (void *) &nm);
+  // Close dataspace and attribute
+  status = H5Sclose(att_space);
+  status = H5Aclose(att);
+
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
+
+  hid_t dset;
+  hid_t space;
+
+  for (int m = 0; m < nm; m++)
+  {
+    // Create material name
+    std::string name = "material";
+    std::ostringstream convert;
+    convert << m;
+    name += convert.str();
+
+    // Create the material group
+    hid_t group_m = H5Gcreate(group, name.c_str(),
+                              H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+
+
+    // All data is ng long, except scatter, which is ng * ng
+    hsize_t dims1[1] = {ng};
+    hsize_t dims2[2] = {ng, ng};
+
+    // TOTAL, FISSION, NU, CHI, DIFFUSION
+    space  = H5Screate_simple(1, dims1, NULL);
+
+    dset   = H5Dcreate(group_m, "sigma_t", H5T_NATIVE_DOUBLE, space,
+                       H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+    status = H5Dwrite(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL,
+                      H5P_DEFAULT, &mat->sigma_t(m)[0]);
+    status = H5Dclose(dset);
+
+    dset   = H5Dcreate(group_m, "sigma_f", H5T_NATIVE_DOUBLE, space,
+                       H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+    status = H5Dwrite(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL,
+                      H5P_DEFAULT, &mat->sigma_f(m)[0]);
+    status = H5Dclose(dset);
+
+    dset   = H5Dcreate(group_m, "nu", H5T_NATIVE_DOUBLE, space,
+                       H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+    status = H5Dwrite(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL,
+                      H5P_DEFAULT, &mat->nu(m)[0]);
+    status = H5Dclose(dset);
+
+    dset   = H5Dcreate(group_m, "chi", H5T_NATIVE_DOUBLE, space,
+                       H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+    status = H5Dwrite(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL,
+                      H5P_DEFAULT, &mat->chi(m)[0]);
+    status = H5Dclose(dset);
+
+    dset   = H5Dcreate(group_m, "diff_coef", H5T_NATIVE_DOUBLE, space,
+                       H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+    status = H5Dwrite(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL,
+                      H5P_DEFAULT, &mat->diff_coef(m)[0]);
+    status = H5Dclose(dset);
+
+    // SCATTER
+    space  = H5Screate_simple(2, dims2, NULL);
+
+    // There may be a better way to avoid so much copying.  Even so, this
+    // is *not* intended to be an interface for large data.
+    double ss[ng][ng];
+    for (int g = 0; g < ng; g++)
+      for (int gp = 0; gp < ng; gp++)
+        ss[g][gp] = mat->sigma_s(m, g, gp);
+
+    dset   = H5Dcreate(group_m, "sigma_s", H5T_NATIVE_DOUBLE, space,
+                       H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+    status = H5Dwrite(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL,
+                      H5P_DEFAULT, ss);
+    status = H5Dclose(dset);
+
+    status = H5Sclose(space);
+  }
 
   // Close the group.
   status = H5Gclose(group);

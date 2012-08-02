@@ -256,6 +256,10 @@ hid_t HDF5_FileType::type<std::vector<double> >()
   return d_type;
 }
 
+//
+
+
+
 } // end namespace detran_ioutils
 
 #endif /* IO_HDF5_TRAITS_HH_ */

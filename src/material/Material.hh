@@ -120,6 +120,28 @@ public:
 
   inline double diff_coef(int m, int g) const;
 
+  // Vectorized getters
+
+  inline vec_dbl sigma_t(int m) const;
+
+  inline vec_dbl sigma_a(int m) const;
+
+  inline vec_dbl nu_sigma_f(int m) const;
+
+  inline vec_dbl sigma_f(int m) const;
+
+  inline vec_dbl nu(int m) const;
+
+  inline vec_dbl chi(int m) const;
+
+  inline vec2_dbl sigma_s(int m) const;
+
+  inline vec_dbl diff_coef(int m) const;
+
+  //------------------------------------------------------------------------//
+  // OTHER ACCESSORS
+  //------------------------------------------------------------------------//
+
   int number_groups()
   {
     return d_number_groups;
@@ -157,6 +179,26 @@ public:
   {
     return d_upscatter_cutoff;
   }
+
+  /*!
+   *  \brief Compute the absorption cross section from total and scattering.
+   *
+   *  \note this overwrites any data for \f$ \Sigma_a \f$ already stored.
+   */
+  void compute_sigma_a();
+
+  /*!
+   *  \brief Compute the diffusion coefficient from \f$ \Sigma_t \f$.
+   *
+   *  Assuming isotropic scattering in the LAB, the diffusion
+   *  coefficient is simply \f$ D = 1/3\Sigma_t \f$.
+   *
+   *  \todo Update diffusion definition if anisotropic scattering
+   *        is added.
+   *
+   *  \note This overwrites any data for \f$ D \f$ already stored.
+   */
+  void compute_diff_coef();
 
   /// Computes scattering bounds and absorption cross section.
   void finalize();

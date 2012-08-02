@@ -224,6 +224,33 @@ int Material::upper(int g)
   return d_scatter_bounds[g][1];
 }
 
+void Material::compute_sigma_a()
+{
+  for (int m = 0; m < d_number_materials; m++)
+  {
+    for (int g = 0; g < d_number_groups; g++)
+    {
+      double sa = d_sigma_t[m][g];
+      for (int gp = 0; gp < d_number_groups; gp++)
+        sa -= d_sigma_s[m][g][gp];
+      d_sigma_a[m][g] = sa;
+    }
+  }
+}
+
+void Material::compute_diff_coef()
+{
+  double coef = 1.0 / 3.0;
+  for (int m = 0; m < d_number_materials; m++)
+  {
+    for (int g = 0; g < d_number_groups; g++)
+    {
+      d_diff_coef[m][g] =  coef * d_sigma_t[m][g];
+    }
+  }
+}
+
+
 void Material::finalize()
 {
 

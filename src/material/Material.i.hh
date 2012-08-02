@@ -85,6 +85,64 @@ double Material::diff_coef(int m, int g) const
   return d_diff_coef[m][g];
 }
 
+// Vectorized
+
+vec_dbl Material::sigma_t(int m) const
+{
+  Require(m >= 0);
+  Require(m < d_number_materials);
+  return d_sigma_t[m];
+}
+
+vec_dbl Material::sigma_a(int m) const
+{
+  Require(m >= 0);
+  Require(m < d_number_materials);
+  return d_sigma_a[m];
+}
+
+vec_dbl Material::nu_sigma_f(int m) const
+{
+  Require(m >= 0);
+  Require(m < d_number_materials);
+  return d_nu_sigma_f[m];
+}
+
+vec_dbl Material::sigma_f(int m) const
+{
+  Require(m >= 0);
+  Require(m < d_number_materials);
+  return d_sigma_f[m];
+}
+
+vec_dbl Material::nu(int m) const
+{
+  Require(m >= 0);
+  Require(m < d_number_materials);
+  return d_nu[m];
+}
+
+vec_dbl Material::chi(int m) const
+{
+  Require(m >= 0);
+  Require(m < d_number_materials);
+  return d_chi[m];
+}
+
+vec2_dbl Material::sigma_s(int m) const
+{
+  Require(m >= 0);
+  Require(m < d_number_materials);
+  return d_sigma_s[m];
+}
+
+vec_dbl Material::diff_coef(int m) const
+{
+  Require(m >= 0);
+  Require(m < d_number_materials);
+  return d_diff_coef[m];
+}
+
 } // end namespace detran
 
 #endif /* MATERIAL_I_HH_ */
