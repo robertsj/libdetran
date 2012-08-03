@@ -14,8 +14,19 @@
 namespace detran
 {
 
-std::string itoa(int i)    { std::stringstream out; out << i; return out.str(); };
-std::string dtoa(double d) { std::stringstream out; out << d; return out.str(); };
+std::string itoa(int i)
+{
+  std::stringstream out;
+  out << i;
+  return out.str();
+}
+
+std::string dtoa(double d)
+{
+  std::stringstream out;
+ out << d;
+ return out.str();
+}
 
 std::string GenException::prepend = "detran exception";
 

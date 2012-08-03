@@ -43,8 +43,7 @@ UniformEqual::UniformEqual(int order, int dim)
   double two_num_xi = 2.0 / num_xi;  //
 
   // temporary arrays to hold the positive octant values
-  double tmp_xi[num_xi_2 + 1]; // +1 to handle order=2 case
-
+  vec_dbl tmp_xi(num_xi_2 + 1, 0.0); // +1 to handle order=2 case
   // uniform xi density
   if (1)
   {

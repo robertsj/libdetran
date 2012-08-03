@@ -210,7 +210,8 @@ public:
            << std::endl;
       return 2;
     }
-    return 1;
+    // A zero indicates success to CTest
+    return 0;
   }
 
   static int number_fails()

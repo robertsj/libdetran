@@ -90,7 +90,7 @@ bool IO_HDF5::read_data(SP_input input,
   }
 
   // Create buffer for reading.
-  compound_type<T> data[dims[0]];
+  compound_type<T>* data(new compound_type<T>[dims[0]]);
 
   // Create the compound datatype for memory.
   hid_t memtype = set_memtype<T>();
@@ -110,6 +110,7 @@ bool IO_HDF5::read_data(SP_input input,
   // Close and release resources.  H5Dvlen_reclaim will automatically
   // traverse the structure and free any vlen data.
   status = H5Dvlen_reclaim (memtype, space, H5P_DEFAULT, data);
+  delete [] data;
   status = H5Dclose(dset);
   status = H5Sclose(space);
 
@@ -130,7 +131,7 @@ bool IO_HDF5::write_map(hid_t group,
   int size = map.size();
 
   // Create a buffer for writing out.
-  compound_type<T> data[size];
+  compound_type<T>* data(new compound_type<T>[size]);
 
   // Loop and add
   typename std::map<std::string, T>::const_iterator it = map.begin();
@@ -164,6 +165,7 @@ bool IO_HDF5::write_map(hid_t group,
   }
 
   // Close out everything
+  delete [] data;
   status = H5Dclose(dset);
   status = H5Sclose(space);
   status = H5Tclose(filetype);
@@ -195,7 +197,7 @@ bool IO_HDF5::read_map(hid_t group,
   if (!dims[0]) return false;
 
   // Create buffer for reading.
-  compound_type<T> data[dims[0]];
+  compound_type<T>* data(new compound_type<T>[dims[0]]);
 
   // Create the compound datatype for memory.
   hid_t memtype = set_memtype<T>();
@@ -215,6 +217,7 @@ bool IO_HDF5::read_map(hid_t group,
   // Close and release resources.  H5Dvlen_reclaim will automatically
   // traverse the structure and free any vlen data.
   status = H5Dvlen_reclaim (memtype, space, H5P_DEFAULT, data);
+  delete [] data;
   status = H5Dclose(dset);
   status = H5Sclose(space);
 
@@ -253,7 +256,7 @@ bool IO_HDF5::read_vec(hid_t group, const char* name, std::vector<T> &target)
   Require(target.size());
 
   // Create buffer for reading.
-  T buffer[target.size()];
+  T* buffer(new T[target.size()]);
 
   // Ensure dataset is present.
   if (!exists(group, name)) return false;
@@ -267,6 +270,9 @@ bool IO_HDF5::read_vec(hid_t group, const char* name, std::vector<T> &target)
   // Copy buffer to target vector.
   for (int i = 0; i < target.size(); i++)
     target[i] = buffer[i];
+
+  // Delete buffer
+  delete [] buffer;
 
   return true;
 }

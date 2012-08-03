@@ -57,7 +57,7 @@ private:
    *  \param mu     Absissca
    *  \param wt     Weights
    */
-  void generate_parameters(int order, double *mu, double *wt);
+  void generate_parameters(int order, vec_dbl &mu, vec_dbl &wt);
 
   ///\}
 };

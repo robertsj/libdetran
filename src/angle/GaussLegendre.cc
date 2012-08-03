@@ -206,8 +206,8 @@ GaussLegendre::GaussLegendre(int order)
   default:
   {
     // generate the parameters on-the-fly
-    double tmp_mu[d_number_angles_octant];
-    double tmp_wt[d_number_angles_octant];
+    vec_dbl tmp_mu(d_number_angles_octant, 0.0);
+    vec_dbl tmp_wt(d_number_angles_octant, 0.0);
     generate_parameters(order, tmp_mu, tmp_wt);
     for (int i = 0; i < d_number_angles_octant; i++)
     {
@@ -232,7 +232,7 @@ GaussLegendre::GaussLegendre(int order)
  * \param wt        temporary array for weights
  *
  */
-void GaussLegendre::generate_parameters(int order, double *mu, double *wt)
+void GaussLegendre::generate_parameters(int order, vec_dbl &mu, vec_dbl &wt)
 {
   int m, j, i;
   double z1, z, xm, xl, pp, p3, p2, p1;

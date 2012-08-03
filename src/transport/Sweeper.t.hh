@@ -53,9 +53,11 @@ inline void Sweeper<D>::setup()
   d_face_index.resize(8, vec2_int(3, vec_int(2, 0)));
 
   int inc[8][3] =
-  { 0, 2, 4, 1, 2, 4, 1, 3, 4, 0, 3, 4, 0, 2, 5, 1, 2, 5, 1, 3, 5, 0, 3, 5 };
+  {{0, 2, 4}, {1, 2, 4}, {1, 3, 4}, {0, 3, 4},
+   {0, 2, 5}, {1, 2, 5}, {1, 3, 5}, {0, 3, 5}};
   int out[8][3] =
-  { 1, 3, 5, 0, 3, 5, 0, 2, 5, 1, 2, 5, 1, 3, 4, 0, 3, 4, 0, 2, 4, 1, 2, 4 };
+  {{1, 3, 5}, {0, 3, 5}, {0, 2, 5}, {1, 2, 5},
+   {1, 3, 4}, {0, 3, 4}, {0, 2, 4}, {1, 2, 4}};
   for (int i = 0; i < 8; i++)
   {
     // octant     surface type    inout
@@ -76,8 +78,8 @@ inline void Sweeper<_2D>::setup()
   d_face_index.resize(4, vec2_int(2, vec_int(2, 0)));
   // Example:  octant 1 is incident on faces 0 and 2
   //           and leaves faces 1 and 3.
-  int inc[4][2] = {0, 2, 1, 2, 1, 3, 0, 3};
-  int out[4][2] = {1, 3, 0, 3, 0, 2, 1, 2};
+  int inc[4][2] = {{0, 2}, {1, 2}, {1, 3}, {0, 3}};
+  int out[4][2] = {{1, 3}, {0, 3}, {0, 2}, {1, 2}};
   for (int i = 0; i < 4; i++)
   {
     //      octant   surface type   inout

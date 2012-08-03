@@ -345,6 +345,9 @@ public:
 
 protected:
 
+  /// Mesh spatial dimension
+  int d_dimension;
+
   /// x fine meshes in each x coarse mesh
   vec_int d_xfm;
 
@@ -400,8 +403,6 @@ protected:
    *  moderator, etc.), and anything else the user wants to edit.
    */
   mesh_map_type d_mesh_map;
-
-  int d_dimension;
 
 private:
 

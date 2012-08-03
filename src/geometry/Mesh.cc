@@ -34,7 +34,7 @@ Mesh::Mesh(int dim,
   // Set the coarse mesh material map.
   std::string s = "MATERIAL";
   add_coarse_mesh_map(s, mat_map);
-};
+}
 
 Mesh::Mesh(int dim,
            vec_dbl xfme, vec_dbl yfme, vec_dbl zfme,
@@ -53,7 +53,7 @@ Mesh::Mesh(int dim,
   Assert(mat_map.size() == d_number_cells);
   std::string s = "MATERIAL";
   add_mesh_map(s, mat_map);
-};
+}
 
 
 

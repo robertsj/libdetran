@@ -60,7 +60,7 @@ void InputDB::display() const
     {
       cout << "    " << (*it).first << "  ";
       vec_int v = (*it).second;
-      for (int i = 0; i < v.size(); i++) cout << v[i] << " ";
+      for (u_int i = 0; i < v.size(); i++) cout << v[i] << " ";
       cout << endl;
     }
   }
@@ -72,7 +72,7 @@ void InputDB::display() const
     {
       cout << "    " << (*it).first << "  ";
       vec_dbl v = (*it).second;
-      for (int i = 0; i < v.size(); i++) cout << v[i] << " ";
+      for (u_int i = 0; i < v.size(); i++) cout << v[i] << " ";
       cout << endl;
     }
   }

@@ -125,7 +125,7 @@ ENDIF()
 #------------------------------------------------------------------------------#
 
 OPTION ( USE_TESTING "Build testing" ON )
-if ( SERMENT_ENABLE_TEST )
+if ( DETRAN_ENABLE_TEST )
     SET ( CTEST_INITIAL_CACHE "
       COVERAGE_COMMAND:FILEPATH=/usr/bin/gcov
     " )
@@ -151,7 +151,7 @@ if ( SERMENT_ENABLE_TEST )
          FORCE
     )
     SET( CTEST_MEMORYCHECK_COMMAND 
-       /home/robertsj/opt/valgrind/3.6.1/bin/valgrind CACHE STRING 
+       /usr/bin/valgrind CACHE STRING 
        "Set the memory checking command."
        FORCE
     )

@@ -157,11 +157,11 @@ protected:
   /// Input database
   SP_input d_input;
 
-  /// Material
-  SP_material d_material;
-
   /// Mesh
   SP_mesh d_mesh;
+
+  /// Material
+  SP_material d_material;
 
   /// Angular quadrature
   SP_quadrature d_quadrature;

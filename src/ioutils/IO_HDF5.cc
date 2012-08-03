@@ -171,16 +171,18 @@ void IO_HDF5::write(SP_material mat)
 
     // There may be a better way to avoid so much copying.  Even so, this
     // is *not* intended to be an interface for large data.
-    double ss[ng][ng];
+    double *ss;
+    ss = new double[ng * ng];
     for (int g = 0; g < ng; g++)
       for (int gp = 0; gp < ng; gp++)
-        ss[g][gp] = mat->sigma_s(m, g, gp);
+        ss[gp + g * ng] = mat->sigma_s(m, g, gp);
 
     dset   = H5Dcreate(group_m, "sigma_s", H5T_NATIVE_DOUBLE, space,
                        H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
     status = H5Dwrite(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL,
                       H5P_DEFAULT, ss);
     status = H5Dclose(dset);
+    delete [] ss;
 
     status = H5Sclose(space);
 
@@ -347,8 +349,8 @@ detran::Material::SP_material IO_HDF5::read_material()
     // SCATTER
 
     // Read buffer
-    double ss[ng][ng];
-
+    double *ss;
+    ss = new double[ng * ng];
     dset   = H5Dopen(group_m, "sigma_s", H5P_DEFAULT);
     status = H5Dread(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL,
                      H5P_DEFAULT, ss);
@@ -356,7 +358,8 @@ detran::Material::SP_material IO_HDF5::read_material()
 
     for (int g = 0; g < ng; g++)
       for (int gp = 0; gp < ng; gp++)
-        mat->set_sigma_s(m, g, gp, ss[g][gp]);
+        mat->set_sigma_s(m, g, gp, ss[gp + g * ng]);
+    delete [] ss;
 
     // Close the this material's group.
     status = H5Gclose(group_m);
