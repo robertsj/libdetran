@@ -28,6 +28,7 @@ TARGET_LINK_LIBRARIES( detran
                        angle
                        geometry
                        utilities
+                       ioutils
                        ${GPERFTOOLS_LIBRARIES}                        
 )
 INSTALL_TARGETS(/bin detran)

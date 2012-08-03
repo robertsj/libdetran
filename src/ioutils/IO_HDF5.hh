@@ -10,6 +10,9 @@
 #ifndef IO_HDF5_HH_
 #define IO_HDF5_HH_
 
+// Configuration
+#include "detran_config.h"
+
 // Detran
 #include "Material.hh"
 #include "Mesh.hh"
@@ -17,11 +20,15 @@
 // Utilities
 #include "DBC.hh"
 #include "InputDB.hh"
-#include "IO_HDF5_Traits.hh"
+#include "SP.hh"
 
 // System
 #include <string>
+
+#ifdef DETRAN_ENABLE_HDF5
 #include "hdf5.h"
+#include "IO_HDF5_Traits.hh"
+#endif
 
 namespace detran_ioutils
 {
@@ -48,6 +55,7 @@ class IO_HDF5: public detran::Object
 
 public:
 
+  typedef detran::SP<IO_HDF5>             SP_io_hdf5;
   typedef detran::InputDB::SP_input       SP_input;
   typedef detran::Material::SP_material   SP_material;
   typedef detran::Mesh::SP_mesh           SP_mesh;
@@ -100,6 +108,8 @@ public:
 
 private:
 
+#ifdef DETRAN_ENABLE_HDF5
+
   /// \name Private Data
   /// \{
 
@@ -111,6 +121,10 @@ private:
 
   /// HDF5 is open
   bool d_open;
+
+  SP_input d_input;
+  SP_material d_material;
+  SP_mesh d_mesh;
 
   /// \}
 
@@ -171,6 +185,8 @@ private:
 
   /// \}
 
+#endif
+
 };
 
 } // end namespace detran_ioutils
@@ -179,7 +195,11 @@ private:
 // TEMPLATE DEFINITIONS
 //---------------------------------------------------------------------------//
 
+#ifdef DETRAN_ENABLE_HDF5
 #include "IO_HDF5.t.hh"
+#endif
+
+
 
 #endif // IO_HDF5_HH_
 

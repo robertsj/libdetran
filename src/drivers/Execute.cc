@@ -37,20 +37,20 @@ Execute::Execute(StupidParser &parser)
 {
   // Parse the input.
   d_input = parser.parse_input();
-  Ensure(d_input);
 
   // Parse the material.
   d_material = parser.parse_material();
-  Ensure(d_material);
 
   // Parse the mesh.
   d_mesh = parser.parse_mesh();
-  Ensure(d_mesh);
 
   // Setup other things.
   setup();
 
   // Postconditions
+  Ensure(d_input);
+  Ensure(d_material);
+  Ensure(d_mesh);
   Ensure(d_dimension);
 }
 

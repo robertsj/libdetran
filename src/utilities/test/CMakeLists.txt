@@ -30,13 +30,13 @@ ADD_TEST( test_Testing_fail  test_Testing 1)
 # InputDB
 ADD_TEST( test_InputDB_basic test_InputDB 0)
 # MathUtilities
-ADD_TEST( test_MathUtilities test_norm_L2 0)
-ADD_TEST( test_MathUtilities test_norm_L1 1)
-ADD_TEST( test_MathUtilities test_norm_Linf 2)
-ADD_TEST( test_MathUtilities test_vec_scale 3)
-ADD_TEST( test_MathUtilities test_norm_residual_L2 4)
-ADD_TEST( test_MathUtilities test_norm_residual_L1 5)
-ADD_TEST( test_MathUtilities test_norm_residual_Linf 6)
+ADD_TEST( test_norm_L2              test_MathUtilities 0)
+ADD_TEST( test_norm_L1              test_MathUtilities 1)
+ADD_TEST( test_norm_Linf            test_MathUtilities 2)
+ADD_TEST( test_vec_scale            test_MathUtilities 3)
+ADD_TEST( test_norm_residual_L2     test_MathUtilities 4)
+ADD_TEST( test_norm_residual_L1     test_MathUtilities 5)
+ADD_TEST( test_norm_residual_Linf   test_MathUtilities 6)
 # Point
 ADD_TEST( test_Point         test_Point   0)
 

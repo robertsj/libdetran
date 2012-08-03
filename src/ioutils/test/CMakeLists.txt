@@ -21,3 +21,4 @@ endif (DETRAN_ENABLE_HDF5)
 
 ADD_TEST( test_IO_HDF5_input       test_IO_HDF5   0)
 ADD_TEST( test_IO_HDF5_material    test_IO_HDF5   1)
+ADD_TEST( test_IO_HDF5_mesh        test_IO_HDF5   2)

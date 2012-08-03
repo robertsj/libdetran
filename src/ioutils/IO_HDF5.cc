@@ -213,14 +213,19 @@ void IO_HDF5::write(SP_mesh mesh)
   write_scalar_attribute(group, "number_cells_z", mesh->number_cells_z());
 
   // Write the dx, dy, and dz vectors.
-  Assert(write_vec(group, "dx", mesh->dx()));
-  Assert(write_vec(group, "dy", mesh->dy()));
-  Assert(write_vec(group, "dz", mesh->dz()));
+  bool status;
+  status = write_vec(group, "dx", mesh->dx());
+  Assert(status);
+  status = write_vec(group, "dy", mesh->dy());
+  Assert(status);
+  status = write_vec(group, "dz", mesh->dz());
+  Assert(status);
 
   // Write all mesh maps.  Note, at *least* MATERIAL must be present.
   detran::Mesh::mesh_map_type map = mesh->get_mesh_map();
 
-  Assert(write_map(group, "mesh_map", map));
+  status = write_map(group, "mesh_map", map);
+  Assert(status);
 }
 
 void IO_HDF5::close()

@@ -9,8 +9,9 @@
 //---------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
-#define TEST_LIST           \
-        FUNC(test_StupidParser)
+#define TEST_LIST                     \
+        FUNC(test_StupidParser)       \
+        FUNC(test_StupidParser_hdf5)
 
 // Detran headers
 #include "TestDriver.hh"
@@ -82,7 +83,15 @@ int test_StupidParser(int argc, char *tmp_argv[])
   return 0;
 }
 
-
+int test_StupidParser_hdf5(int argc, char *tmp_argv[])
+{
+  cout << endl;
+  char *argv[] = {"n/a", "test.h5"};
+  StupidParser parser(2, argv);
+  StupidParser::SP_input input = parser.parse_input();
+  input->display();
+  return 0;
+}
 //---------------------------------------------------------------------------//
 //              end of test_StupidParser.cc
 //---------------------------------------------------------------------------//

@@ -28,13 +28,75 @@ namespace detran
 StupidParser::StupidParser(int argc,  char **argv)
 {
   Insist(argc > 1, "Not enough command line arguments!");
-  // Open the file.
-  d_file.open(argv[1]);
-  if (!d_file) THROW("The file could not be opened!");
+
+  std::string filename(argv[1]);
+  std::string ext = get_file_extension(filename);
+
+  if (ext == "h5")
+  {
+#ifdef DETRAN_ENABLE_HDF5
+    // Open the HDF5 file.
+    d_hdf5 = new detran_ioutils::IO_HDF5(filename);
+#else
+    THROW("User specified HDF5 input but HDF5 is not enabled!");
+#endif
+  }
+  else
+  {
+    // Open the file.
+    d_file.open(argv[1]);
+    if (!d_file) THROW("The file could not be opened!");
+  }
+
 }
 
-/// Parse input. \todo maybe template some of this?
 StupidParser::SP_input StupidParser::parse_input()
+{
+  // Get the input
+  if (!d_hdf5)
+    d_input = parse_input_text();
+  else
+    d_input = d_hdf5->read_input();
+
+  // Postconditions
+  Insist(d_input, "Error parsing input.")
+  return d_input;
+}
+
+StupidParser::SP_material StupidParser::parse_material()
+{
+  // Get the material
+  SP_material mat;
+  if (!d_hdf5)
+    mat = parse_material_text();
+  else
+    mat = d_hdf5->read_material();
+
+  // Postconditions
+  Insist(mat, "Error parsing material.")
+  return mat;
+}
+
+StupidParser::SP_mesh StupidParser::parse_mesh()
+{
+  // Get the mesh
+  SP_mesh mesh;
+  if (!d_hdf5)
+    mesh = parse_mesh_text();
+  else
+    mesh = d_hdf5->read_mesh();
+
+  // Postconditions
+  Insist(mesh, "Error parsing material.")
+  return mesh;
+}
+
+//---------------------------------------------------------------------------//
+// IMPLEMENTATION
+//---------------------------------------------------------------------------//
+
+/// Parse input. \todo maybe template some of this?
+StupidParser::SP_input StupidParser::parse_input_text()
 {
   using std::cout;
   using std::endl;
@@ -101,7 +163,7 @@ StupidParser::SP_input StupidParser::parse_input()
 }
 
 /// Parse material.
-Material::SP_material StupidParser::parse_material()
+Material::SP_material StupidParser::parse_material_text()
 {
   using std::cout;
   using std::endl;
@@ -221,8 +283,7 @@ Material::SP_material StupidParser::parse_material()
   return d_material;
 }
 
-
-Mesh::SP_mesh StupidParser::parse_mesh()
+Mesh::SP_mesh StupidParser::parse_mesh_text()
 {
   Insist(d_input, "Input must be parsed before mesh!");
 

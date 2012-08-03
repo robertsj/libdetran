@@ -11,7 +11,6 @@
 #ifndef STUPIDPARSER_HH_
 #define STUPIDPARSER_HH_
 
-
 // Detran
 #include "Material.hh"
 #include "Mesh.hh"
@@ -20,6 +19,11 @@
 // Utilities
 #include "DBC.hh"
 #include "InputDB.hh"
+
+// IO Utilities
+#ifdef DETRAN_ENABLE_HDF5
+#include "IO_HDF5.hh"
+#endif
 
 // System
 #include <fstream>
@@ -93,6 +97,7 @@ public:
   typedef InputDB::SP_input                     SP_input;
   typedef Mesh::SP_mesh                         SP_mesh;
   typedef Material::SP_material                 SP_material;
+  typedef detran_ioutils::IO_HDF5::SP_io_hdf5   SP_io_hdf5;
 
   /*!
    *  \brief Constructor
@@ -125,6 +130,22 @@ private:
   /// File handle.
   std::ifstream d_file;
 
+  /// HDF5 file handler.
+  SP_io_hdf5 d_hdf5;
+
+
+  /// \name Implemenation
+  /// \{
+
+  /// Get input from text file
+  SP_input parse_input_text();
+
+  /// Get material from text file
+  SP_material parse_material_text();
+
+  /// Get mesh from text file
+  SP_mesh parse_mesh_text();
+
   /// Remove double spaces
   void remove_white_space(std::string &s);
 
@@ -133,6 +154,16 @@ private:
 
   template <class T>
   std::vector<T> read_vector(std::istringstream &iss);
+
+  /// Get the file extension
+  std::string get_file_extension(const std::string& filename)
+  {
+      if(filename.find_last_of(".") != std::string::npos)
+        return filename.substr(filename.find_last_of(".") + 1);
+      return "";
+  }
+
+  /// \}
 
 };
 

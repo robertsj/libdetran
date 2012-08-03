@@ -27,6 +27,15 @@ void GaussSeidel<D>::solve()
 
   if (d_print_out > 0) std::cout << "  Starting GS." << std::endl;
 
+  // Save current group flux.
+  State::group_moments_type phi_old = d_state->all_phi();
+
+  // Norm of the residual.
+  double nres = 0.0;
+
+  // Upscatter iterations.
+  int iteration = 0;
+
   // Initial downscatter.
   for (int g = 0; g < d_number_groups; g++)
   {
@@ -37,12 +46,10 @@ void GaussSeidel<D>::solve()
   if (!d_downscatter and d_max_iters > 0 and d_number_groups > 1)
   {
     // Upscatter iterations.
-    int iteration;
-    double error;
     for (iteration = 1; iteration <= d_max_iters; iteration++)
     {
-      // Reset the error.
-      error = 0.0;
+      // Reset the residual norm.
+      nres = 0.0;
 
       // Save current group flux.
       State::group_moments_type phi_old = d_state->all_phi();
@@ -53,30 +60,35 @@ void GaussSeidel<D>::solve()
       {
         d_inner_solver->solve(g);
         // Constructing the L-inf norm piecewise.
-        error = std::max(error,
-                         norm_residual(d_state->phi(g), phi_old[g], "Linf"));
+        nres = std::max(nres,
+                        norm_residual(d_state->phi(g), phi_old[g], "Linf"));
       }
 
       if (d_print_out > 1  and iteration % d_print_interval == 0)
       {
-        printf("  GS Iter: %3i  Error: %12.9f \n", iteration, error);
+        printf("  GS Iter: %3i  Error: %12.9f \n", iteration, nres);
       }
-      if (error < d_tolerance) break;
+      if (nres < d_tolerance) break;
 
-    } // upscatter loop
+    } // end upscatter iterations
 
-    if (d_print_out > 0)
+    if (nres > d_tolerance)
     {
-      printf("  GS Final: Number Iter: %3i  Error: %12.9f \n",
-             iteration, error);
+      warning(SOLVER_CONVERGENCE,
+              "Gauss-Seidel upscatter solved did not converge.");
     }
 
-    if (error > d_tolerance)
-      warning(SOLVER_CONVERGENCE, "Gauss-Seidel did not converge.");
+  } // end upscatter block
 
+  // Diagnostic output
+  if (d_print_out > 0)
+  {
+    int number_sweeps = d_inner_solver->get_sweeper()->number_sweeps();
+    printf("  GS Final: Number Iters: %3i  Error: %12.9f  Sweeps: %6i \n",
+           iteration, nres, number_sweeps);
+    std::cout << "  GS done!" << std::endl;
   }
 
- if (d_print_out > 0) std::cout << "  GS done." << std::endl;
 
 }
 

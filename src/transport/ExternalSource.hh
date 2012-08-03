@@ -49,6 +49,9 @@ public:
     , d_number_angles(quadrature->number_angles())
   {}
 
+  /// Virtual destructor
+  virtual ~ExternalSource(){}
+
   /*!
    *  \brief Get moments source for cell.
    *
