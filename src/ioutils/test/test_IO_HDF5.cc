@@ -82,8 +82,8 @@ int test_IO_HDF5_input(int argc, char *argv[])
   io.close();
 
   // Create a new input database and read in from the
-  InputDB::SP_input input2(new InputDB());
-  io.read(input2);
+  InputDB::SP_input input2;
+  input2 = io.read_input();
   io.close();
 
   //-------------------------------------------------------------------------//
@@ -134,7 +134,6 @@ int test_IO_HDF5_input(int argc, char *argv[])
   for (int i = 0; i < vdtest.size(); i++)
     TEST(soft_equiv(vdtest[i], v_dbl1[i]));
 
-
   return 0;
 }
 
@@ -151,14 +150,14 @@ int test_IO_HDF5_material(int argc, char *argv[])
   mat->set_sigma_s(0, 0, 1, 3.1);
   mat->set_sigma_s(0, 1, 1, 4.1);
   // material 1
-  mat->set_sigma_t(1, 0, 1.0);
-  mat->set_sigma_t(1, 1, 2.0);
-  mat->set_sigma_s(1, 0, 0, 1.1);
-  mat->set_sigma_s(1, 1, 0, 2.1);
-  mat->set_sigma_s(1, 0, 1, 3.1);
-  mat->set_sigma_s(1, 1, 1, 4.1);
-  mat->set_sigma_f(1, 0, 1.2);
-  mat->set_sigma_f(1, 1, 2.2);
+  mat->set_sigma_t(1, 0, 1.2);
+  mat->set_sigma_t(1, 1, 2.2);
+  mat->set_sigma_s(1, 0, 0, 1.3);
+  mat->set_sigma_s(1, 1, 0, 2.3);
+  mat->set_sigma_s(1, 0, 1, 3.3);
+  mat->set_sigma_s(1, 1, 1, 4.3);
+  mat->set_sigma_f(1, 0, 5.2);
+  mat->set_sigma_f(1, 1, 6.2);
   mat->set_chi(1, 0, 1.0);
   mat->finalize();
 
@@ -169,6 +168,36 @@ int test_IO_HDF5_material(int argc, char *argv[])
   // to write out, or a default is used.
   io.write(mat);
   io.close();
+
+  // Create a new material object.  This must be empty.
+  Material::SP_material mat2;
+  mat2 = io.read_material();
+  io.close();
+
+  // Tests
+  TEST(mat2);
+  TEST(mat2->number_groups()    == 2);
+  TEST(mat2->number_materials() == 2);
+  //
+  TEST(soft_equiv(mat2->sigma_t(0, 0),    1.0));
+  TEST(soft_equiv(mat2->sigma_t(0, 1),    2.0));
+  TEST(soft_equiv(mat2->sigma_s(0, 0, 0), 1.1));
+  TEST(soft_equiv(mat2->sigma_s(0, 1, 0), 2.1));
+  TEST(soft_equiv(mat2->sigma_s(0, 0, 1), 3.1));
+  TEST(soft_equiv(mat2->sigma_s(0, 1, 1), 4.1));
+  //
+  TEST(soft_equiv(mat2->sigma_t(1, 0),    1.2));
+  TEST(soft_equiv(mat2->sigma_t(1, 1),    2.2));
+  TEST(soft_equiv(mat2->sigma_s(1, 0, 0), 1.3));
+  TEST(soft_equiv(mat2->sigma_s(1, 1, 0), 2.3));
+  TEST(soft_equiv(mat2->sigma_s(1, 0, 1), 3.3));
+  TEST(soft_equiv(mat2->sigma_s(1, 1, 1), 4.3));
+  TEST(soft_equiv(mat2->sigma_f(1, 0),    5.2));
+  TEST(soft_equiv(mat2->sigma_f(1, 1),    6.2));
+  TEST(soft_equiv(mat2->nu(1, 0),         1.0));
+  TEST(soft_equiv(mat2->nu(1, 1),         1.0));
+  TEST(soft_equiv(mat2->chi(1, 0),        1.0));
+  TEST(soft_equiv(mat2->chi(1, 1),        0.0));
 
   return 0;
 }

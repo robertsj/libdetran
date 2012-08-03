@@ -168,6 +168,30 @@ bool IO_HDF5::read_data(SP_input input,
   return true;
 }
 
+template <class T>
+bool IO_HDF5::read_vec(hid_t group, const char* name, std::vector<T> &target)
+{
+  // Preconditions
+  Require(target.size());
+
+  // Create buffer for reading.
+  T buffer[target.size()];
+
+  // Ensure dataset is present.
+  if (!exists(group, name)) return false;
+
+  HDF5_MemoryType mem;
+  hid_t dset = H5Dopen(group, name, H5P_DEFAULT);
+  herr_t status = H5Dread(dset, mem.type<T>(), H5S_ALL, H5S_ALL,
+                          H5P_DEFAULT, buffer);
+  status = H5Dclose(dset);
+
+  // Copy buffer to target vector.
+  for (int i = 0; i < target.size(); i++)
+    target[i] = buffer[i];
+
+  return true;
+}
 
 } // end namespace detran_ioutils
 

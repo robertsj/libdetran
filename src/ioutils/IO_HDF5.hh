@@ -69,10 +69,10 @@ public:
   void write(SP_input input);
 
   /*!
-   *  \brief Write the input database into an HDF5 file.
-   *  \param input    Input database to be written
+   *  \brief Write the material database into an HDF5 file.
+   *  \param mat    Material database to be written
    */
-  void write(SP_material material);
+  void write(SP_material mat);
 
   /// Close an HDF5 file if open.
   void close();
@@ -80,9 +80,15 @@ public:
   /*!
    *  \brief Fill an input database from an HDF5 file.
    *  \param input    Input database to be filled
+   */
+  SP_input read_input();
+
+  /*!
+   *  \brief Fill a material database from an HDF5 file.
+   *  \param mat      Material database to be filled
    *  \param filename HDF5 filename
    */
-  void read(SP_input input);
+  SP_material read_material();
 
   bool is_valid() const
   {
@@ -138,6 +144,18 @@ private:
   /// Set the data type for storage on disk
   template <class T>
   hid_t set_filetype();
+
+  /// Read into a vector (int or double)
+  template <class T>
+  bool read_vec(hid_t group, const char* name, std::vector<T> &target);
+
+  /// Check if a location (group, dataset, etc.) "name" exists
+  bool exists(hid_t location, const char* name)
+  {
+    htri_t flag = H5Lexists(location, name, H5P_DEFAULT);
+    if (flag <= 0) return false;
+    return true;
+  }
 
   /// \}
 

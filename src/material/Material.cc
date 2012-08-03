@@ -361,10 +361,22 @@ void Material::display()
       printf("%13.10f ", sigma_t(m, g));
     }
     printf("\n  nufis  ");
-    // Fission
+    // nu*Fission
     for (int g = 0; g < d_number_groups; g++)
     {
       printf("%13.10f ", nu_sigma_f(m, g));
+    }
+    printf("\n  fiss   ");
+    // Fission
+    for (int g = 0; g < d_number_groups; g++)
+    {
+      printf("%13.10f ", sigma_f(m, g));
+    }
+    printf("\n  nu     ");
+    // nu
+    for (int g = 0; g < d_number_groups; g++)
+    {
+      printf("%13.10f ", nu(m, g));
     }
     printf("\n  chi    ");
     // Chi

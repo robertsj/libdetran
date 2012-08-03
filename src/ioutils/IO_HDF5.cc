@@ -4,6 +4,8 @@
  * \brief  IO_HDF5 
  * \author Jeremy Roberts
  * \date   Jul 29, 2012
+ * \todo   There is a lot of error checking that could be done more smoothly
+ * \todo   There is a lot of refactoring to do to reduce bulk
  */
 //---------------------------------------------------------------------------//
 
@@ -111,7 +113,8 @@ void IO_HDF5::write(SP_material mat)
 
   // Create scalar attribute.
   att_space = H5Screate(H5S_SCALAR);
-  att = H5Acreate(group, "number_groups", H5T_NATIVE_INT, att_space, H5P_DEFAULT, H5P_DEFAULT);
+  att = H5Acreate(group, "number_groups", H5T_NATIVE_INT, att_space,
+                  H5P_DEFAULT, H5P_DEFAULT);
   // Write scalar attribute.
   int ng = mat->number_groups();
   status = H5Awrite(att, H5T_NATIVE_INT, (void *) &ng);
@@ -121,7 +124,8 @@ void IO_HDF5::write(SP_material mat)
 
   // Create scalar attribute.
   att_space = H5Screate(H5S_SCALAR);
-  att = H5Acreate(group, "number_materials", H5T_NATIVE_INT, att_space, H5P_DEFAULT, H5P_DEFAULT);
+  att = H5Acreate(group, "number_materials", H5T_NATIVE_INT, att_space,
+                  H5P_DEFAULT, H5P_DEFAULT);
   // Write scalar attribute.
   int nm = mat->number_materials();
   status = H5Awrite(att, H5T_NATIVE_INT, (void *) &nm);
@@ -203,6 +207,9 @@ void IO_HDF5::write(SP_material mat)
     status = H5Dclose(dset);
 
     status = H5Sclose(space);
+
+    // Close the group.
+    status = H5Gclose(group_m);
   }
 
   // Close the group.
@@ -220,14 +227,21 @@ void IO_HDF5::close()
   d_open = false;
 }
 
-void IO_HDF5::read(SP_input input)
+detran::InputDB::SP_input IO_HDF5::read_input()
 {
+  // Preconditions
+  /* ... */
+
+  // Create the input object.
+  SP_input input(new detran::InputDB());
 
   // Open the file if necessary.
   if (!d_open)
     d_file_id = H5Fopen(d_filename.c_str(), H5F_ACC_RDONLY, H5P_DEFAULT);
 
   // Open the input group
+  htri_t flag = H5Lexists(d_file_id, "input", H5P_DEFAULT);
+  Insist(flag > 0, "Input group does not exist; can't read data.");
   hid_t group = H5Gopen(d_file_id, "input", H5P_DEFAULT);
 
   // Read data
@@ -240,6 +254,126 @@ void IO_HDF5::read(SP_input input)
   // Close the group.
   herr_t status = H5Gclose(group);
 
+  // Postconditions
+  Ensure(input);
+  Ensure(input.is_valid());
+
+  return input;
+}
+
+detran::Material::SP_material IO_HDF5::read_material()
+{
+  // Preconditions
+  /* ... */
+
+  // Material to be filled.
+  SP_material mat;
+
+  // Open the file if necessary.
+  if (!d_open)
+    d_file_id = H5Fopen(d_filename.c_str(), H5F_ACC_RDONLY, H5P_DEFAULT);
+
+  // HDF5 bool
+  htri_t flag;
+  herr_t status;
+
+  // Check if the material group exists.
+  flag = H5Lexists(d_file_id, "material", H5P_DEFAULT);
+  Insist(flag > 0, "Material group does not exist; can't read data.");
+  hid_t group = H5Gopen(d_file_id, "material", H5P_DEFAULT);
+
+  //-------------------------------------------------------------------------//
+  // ATTRIBUTES
+  //-------------------------------------------------------------------------//
+
+  // Make sure they exist.
+  flag = H5Aexists(group, "number_groups");
+  Insist(flag, "Material group must contain the number_groups attribute.");
+  flag = H5Aexists(group, "number_materials");
+  Insist(flag, "Material group must contain the number_materials attribute.");
+
+  // Read them.
+  int ng;
+  int nm;
+  hid_t att;
+  att = H5Aopen_name(group, "number_groups");
+  status = H5Aread(att, H5T_NATIVE_INT, &ng);
+  status = H5Aclose(att);
+  att = H5Aopen_name(group, "number_materials");
+  status = H5Aread(att, H5T_NATIVE_INT, &nm);
+  status = H5Aclose(att);
+
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
+
+  // Create the material object.
+  mat = new detran::Material(ng, nm, false);
+
+  hid_t dset;
+  hid_t space;
+
+  // All data is ng long, except scatter, which is ng * ng
+  hsize_t dims1[1] = {ng};
+  hsize_t dims2[2] = {ng, ng};
+
+  for (int m = 0; m < nm; m++)
+  {
+    // Create material name
+    std::string name = "material";
+    std::ostringstream convert;
+    convert << m;
+    name += convert.str();
+
+    // Switch to this material's group
+    hid_t group_m = H5Gopen(group, name.c_str(), H5P_DEFAULT);
+
+
+    // TOTAL, FISSION, NU, CHI, DIFFUSION
+
+    // Read buffer.
+    vec_dbl v(ng, 0.0);
+
+    Insist(read_vec(group_m, "sigma_t", v),
+      "Error reading SigmaT from HDF5.  SigmaT is *required*");
+    mat->set_sigma_t(m, v);
+
+    if (read_vec(group_m, "sigma_f", v))
+      mat->set_sigma_f(m, v);
+    if (read_vec(group_m, "nu", v))
+      mat->set_nu(m, v);
+    if (read_vec(group_m, "chi", v))
+      mat->set_chi(m, v);
+    if (read_vec(group_m, "diff_coef", v))
+      mat->set_diff_coef(m, v);
+
+    // SCATTER
+
+    // Read buffer
+    double ss[ng][ng];
+
+    dset   = H5Dopen(group_m, "sigma_s", H5P_DEFAULT);
+    status = H5Dread(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL,
+                     H5P_DEFAULT, ss);
+    status = H5Dclose(dset);
+
+    for (int g = 0; g < ng; g++)
+      for (int gp = 0; gp < ng; gp++)
+        mat->set_sigma_s(m, g, gp, ss[g][gp]);
+
+    // Close the this material's group.
+    status = H5Gclose(group_m);
+  }
+
+  mat->finalize();
+
+  // Close the group.
+  status = H5Gclose(group);
+
+  // Postconditions
+  /* ... */
+
+  return mat;
 }
 
 } // end namespace detran_ioutils
