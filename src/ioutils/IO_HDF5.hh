@@ -50,6 +50,7 @@ public:
 
   typedef detran::InputDB::SP_input       SP_input;
   typedef detran::Material::SP_material   SP_material;
+  typedef detran::Mesh::SP_mesh           SP_mesh;
   typedef detran::vec_int                 vec_int;
   typedef detran::vec_dbl                 vec_dbl;
 
@@ -74,21 +75,23 @@ public:
    */
   void write(SP_material mat);
 
+  /*!
+   *  \brief Write the material database into an HDF5 file.
+   *  \param mat    Material database to be written
+   */
+  void write(SP_mesh mesh);
+
   /// Close an HDF5 file if open.
   void close();
 
-  /*!
-   *  \brief Fill an input database from an HDF5 file.
-   *  \param input    Input database to be filled
-   */
+  // Get an input database from file.
   SP_input read_input();
 
-  /*!
-   *  \brief Fill a material database from an HDF5 file.
-   *  \param mat      Material database to be filled
-   *  \param filename HDF5 filename
-   */
+  /// Get a material database from file.
   SP_material read_material();
+
+  /// Get a mesh from file.
+  SP_mesh read_mesh();
 
   bool is_valid() const
   {
@@ -97,18 +100,14 @@ public:
 
 private:
 
-
   /// \name Private Data
   /// \{
 
   /// HDF5 file id
-  hid_t   d_file_id;
+  hid_t d_file_id;
 
   /// HDF5 filename
   std::string d_filename;
-
-  /// Variable string type
-  hid_t d_string_type;
 
   /// HDF5 is open
   bool d_open;
@@ -117,17 +116,6 @@ private:
 
   /// \name Implementation
   /// \{
-
-  /*!
-   *  \brief Fill a temporary compound type container and write to file
-   *  \param input  User input database
-   *  \param data   Pointer to compound type array
-   */
-  template <class T>
-  bool write_data(SP_input input,
-                  hid_t group,
-                  std::string name,
-                  compound_type<T> *data);
 
   /*!
    *  \brief Fill a temporary compound type container and write to file
@@ -145,9 +133,33 @@ private:
   template <class T>
   hid_t set_filetype();
 
+  /// Write a map to HDF5.
+  template <class T>
+  bool write_map(hid_t group,
+                 const char* name,
+                 const std::map<std::string, T> &map);
+
+  /// Read a map from HDF5.
+  template <class T>
+  bool read_map(hid_t group,
+                const char* name,
+                std::map<std::string, T> &map);
+
+  /// Write into a vector (int or double) to HDF5.
+  template <class T>
+  bool write_vec(hid_t group, const char* name, const std::vector<T> &source);
+
   /// Read into a vector (int or double)
   template <class T>
   bool read_vec(hid_t group, const char* name, std::vector<T> &target);
+
+  /// Write a scalar (int or double) attribute
+  template <class T>
+  bool write_scalar_attribute(hid_t group, const char* name, const T &value);
+
+  /// Read a scalar (int or double) attribute
+  template <class T>
+  bool read_scalar_attribute(hid_t group, const char* name, T &value);
 
   /// Check if a location (group, dataset, etc.) "name" exists
   bool exists(hid_t location, const char* name)

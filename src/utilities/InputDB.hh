@@ -135,7 +135,7 @@ public:
    *
    *  \return Whether or not verification was successful.
    */
-  bool is_valid() const {};
+  bool is_valid() const {return true;};
 
 private:
 

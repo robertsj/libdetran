@@ -15,64 +15,6 @@ namespace detran_ioutils
 {
 
 template <class T>
-bool IO_HDF5::write_data(SP_input input,
-                         hid_t group,
-                         std::string name,
-                         compound_type<T> *data)
-{
-  // Preconditions
-  Require(input);
-  Require(data);
-
-  // Get the map from the input.
-  std::map<std::string, T> map = input->get_map<T>();
-
-  // Get the size of this data set
-  int size = map.size();
-
-  // Loop and add
-  typename std::map<std::string, T>::iterator it = map.begin();
-  int i = 0;
-  for (; it != map.end(); it++, i++)
-  {
-    set_value(it->first,  data[i].key);
-    set_value(it->second, data[i].value);
-  }
-  Assert(i = size);
-
-  // Set dimension
-  hsize_t dims[1] = {size};
-
-  // Create the compound datatype for memory.
-  hid_t memtype = set_memtype<T>();
-
-  // Create the compound datatype for file.
-  hid_t filetype = set_filetype<T>();
-
-  // Create the dataspace, the dataset, and write to file.
-  hid_t space   = H5Screate_simple(1, dims, NULL);
-  hid_t dset    = H5Dcreate(group, name.c_str(), filetype, space,
-                            H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
-
-  // Only write data if there is some.  This lets an empty data set remain.
-  herr_t status;
-  if (size > 0)
-  {
-    status = H5Dwrite(dset, memtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
-  }
-
-  // Close out everything
-  status = H5Dclose(dset);
-  status = H5Sclose(space);
-  status = H5Tclose(filetype);
-  status = H5Tclose(memtype);
-
-  // Postconditions
-
-  return true;
-}
-
-template <class T>
 hid_t IO_HDF5::set_memtype()
 {
   // Define the compound data type.
@@ -82,12 +24,16 @@ hid_t IO_HDF5::set_memtype()
   HDF5_MemoryType mem;
   hid_t value_memtype = mem.type<T>();
 
+  // Define the memory type for the compound type's key.
+  HDF5_MemoryType stringmem;
+  hid_t string_memtype = stringmem.type<std::string>();
+
   // Define the compound type's memory type
   hid_t memtype;
   herr_t status;
   memtype = H5Tcreate(H5T_COMPOUND, sizeof(data_type));
   status  = H5Tinsert(memtype, "KEY",
-                      HOFFSET(data_type, key),   d_string_type);
+                      HOFFSET(data_type, key),   string_memtype);
   status  = H5Tinsert(memtype, "VALUE",
                       HOFFSET(data_type, value), value_memtype);
   return memtype;
@@ -103,6 +49,10 @@ hid_t IO_HDF5::set_filetype()
   HDF5_FileType mem;
   hid_t value_memtype = mem.type<T>();
 
+  // Define the memory type for the compound type's key.
+  HDF5_FileType stringmem;
+  hid_t string_memtype = stringmem.type<std::string>();
+
   // Compound type size
   size_t size = sizeof (hvl_t) +
                 H5Tget_size(value_memtype);
@@ -111,7 +61,7 @@ hid_t IO_HDF5::set_filetype()
   hid_t filetype;
   herr_t status;
   filetype = H5Tcreate (H5T_COMPOUND, size);
-  status = H5Tinsert (filetype, "KEY",   0,              d_string_type);
+  status = H5Tinsert (filetype, "KEY",   0,              string_memtype);
   status = H5Tinsert (filetype, "VALUE", sizeof (hvl_t), value_memtype);
   return filetype;
 }
@@ -169,6 +119,134 @@ bool IO_HDF5::read_data(SP_input input,
 }
 
 template <class T>
+bool IO_HDF5::write_map(hid_t group,
+                        const char *name,
+                        const std::map<std::string, T> &map)
+{
+  // Preconditions
+  /* ... */
+
+  // Get the size of this data set
+  int size = map.size();
+
+  // Create a buffer for writing out.
+  compound_type<T> data[size];
+
+  // Loop and add
+  typename std::map<std::string, T>::const_iterator it = map.begin();
+  int i = 0;
+  for (; it != map.end(); it++, i++)
+  {
+    set_value(it->first,  data[i].key);
+    set_value(it->second, data[i].value);
+  }
+  Assert(i = size);
+
+  // Set dimension
+  hsize_t dims[1] = {size};
+
+  // Create the compound datatype for memory.
+  hid_t memtype = set_memtype<T>();
+
+  // Create the compound datatype for file.
+  hid_t filetype = set_filetype<T>();
+
+  // Create the dataspace, the dataset, and write to file.
+  hid_t space   = H5Screate_simple(1, dims, NULL);
+  hid_t dset    = H5Dcreate(group, name, filetype, space,
+                            H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+
+  // Only write data if there is some.  This lets an empty data set remain.
+  herr_t status;
+  if (size > 0)
+  {
+    status = H5Dwrite(dset, memtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
+  }
+
+  // Close out everything
+  status = H5Dclose(dset);
+  status = H5Sclose(space);
+  status = H5Tclose(filetype);
+  status = H5Tclose(memtype);
+
+  // Postconditions
+
+  return true;
+}
+
+template <class T>
+bool IO_HDF5::read_map(hid_t group,
+                       const char *name,
+                       std::map<std::string, T> &map)
+{
+
+  // Ensure dataset is present.
+  if (!exists(group, name)) return false;
+
+  // Open the dataset
+  hid_t dset = H5Dopen(group, name, H5P_DEFAULT);
+
+  // Get dataspace and allocate memory for read buffer.
+  hsize_t dims[1];
+  hid_t space = H5Dget_space (dset);
+  int ndims   = H5Sget_simple_extent_dims(space, dims, NULL);
+
+  // Return if there is no data.
+  if (!dims[0]) return false;
+
+  // Create buffer for reading.
+  compound_type<T> data[dims[0]];
+
+  // Create the compound datatype for memory.
+  hid_t memtype = set_memtype<T>();
+
+  // Read the data.
+  herr_t status = H5Dread(dset, memtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
+
+  // Loop and insert into input
+  for (int i = 0; i < dims[0]; i++)
+  {
+    std::string key(data[i].key);
+    T value;
+    get_value(value, data[i].value);
+    map[key] = value;
+  }
+
+  // Close and release resources.  H5Dvlen_reclaim will automatically
+  // traverse the structure and free any vlen data.
+  status = H5Dvlen_reclaim (memtype, space, H5P_DEFAULT, data);
+  status = H5Dclose(dset);
+  status = H5Sclose(space);
+
+  // Postconditions
+
+  return true;
+}
+
+template <class T>
+bool IO_HDF5::write_vec(hid_t group, const char* name, const std::vector<T> &source)
+{
+  // Preconditions
+  Require(source.size());
+
+  // Datasource dimension.  This is only for 1D data.
+  hsize_t dims[1] = {source.size()};
+
+  // Create the dataspace.
+  hid_t space = H5Screate_simple(1, dims, NULL);
+
+  // Create the dataset, write to it, and close it.
+  HDF5_MemoryType mem;
+  hid_t dset = H5Dcreate(group, name, mem.type<T>(), space,
+                         H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+  herr_t status = H5Dwrite(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL,
+                           H5P_DEFAULT, &source[0]);
+  status = H5Dclose(dset);
+
+  return true;
+}
+
+template <class T>
 bool IO_HDF5::read_vec(hid_t group, const char* name, std::vector<T> &target)
 {
   // Preconditions
@@ -190,6 +268,36 @@ bool IO_HDF5::read_vec(hid_t group, const char* name, std::vector<T> &target)
   for (int i = 0; i < target.size(); i++)
     target[i] = buffer[i];
 
+  return true;
+}
+
+/// Write a scalar (int or double) attribute
+template <class T>
+bool IO_HDF5::write_scalar_attribute
+(hid_t group, const char* name, const T &value)
+{
+  // Create scalar attribute.
+  HDF5_MemoryType mem;
+  hid_t att_space = H5Screate(H5S_SCALAR);
+  hid_t att = H5Acreate(group, name, mem.type<T>(), att_space,
+                        H5P_DEFAULT, H5P_DEFAULT);
+
+  // Write scalar attribute and close everything.
+  herr_t status = H5Awrite(att, H5T_NATIVE_INT, &value);
+  status = H5Sclose(att_space);
+  status = H5Aclose(att);
+
+  return true;
+}
+
+/// Read a scalar (int or double) attribute
+template <class T>
+bool  IO_HDF5::read_scalar_attribute
+(hid_t group, const char* name, T &value)
+{
+  hid_t att = H5Aopen_name(group, name);
+  herr_t status = H5Aread(att, H5T_NATIVE_INT, &value);
+  status = H5Aclose(att);
   return true;
 }
 

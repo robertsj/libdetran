@@ -11,11 +11,13 @@
 // LIST OF TEST FUNCTIONS
 #define TEST_LIST                     \
         FUNC(test_IO_HDF5_input)      \
-        FUNC(test_IO_HDF5_material)
+        FUNC(test_IO_HDF5_material)   \
+        FUNC(test_IO_HDF5_mesh)
 
 // Detran headers
 #include "TestDriver.hh"
 #include "IO_HDF5.hh"
+#include "Mesh3D.hh"
 
 // Setup
 /* ... */
@@ -84,6 +86,7 @@ int test_IO_HDF5_input(int argc, char *argv[])
   // Create a new input database and read in from the
   InputDB::SP_input input2;
   input2 = io.read_input();
+  return 0;
   io.close();
 
   //-------------------------------------------------------------------------//
@@ -198,6 +201,53 @@ int test_IO_HDF5_material(int argc, char *argv[])
   TEST(soft_equiv(mat2->nu(1, 1),         1.0));
   TEST(soft_equiv(mat2->chi(1, 0),        1.0));
   TEST(soft_equiv(mat2->chi(1, 1),        0.0));
+
+  return 0;
+}
+
+int test_IO_HDF5_mesh(int argc, char *argv[])
+{
+
+  vec_dbl cm(3, 0.0);
+  cm[1] = 1.0;
+  cm[2] = 2.0;
+  vec_int fm(2, 2);
+  vec_int mt(8, 0);
+  mt[7] = 1; // Right-Top-North corner is different.
+
+  Mesh::SP_mesh mesh(new Mesh3D(fm, fm, fm, cm, cm, cm, mt));
+
+  // Create an IO_HDF5
+  IO_HDF5 io("test.h5");
+
+  // Write to the HDF5 file.  The input has the filename
+  // to write out, or a default is used.
+  io.write(mesh);
+  io.close();
+
+  // Create a new mesh.
+  Mesh::SP_mesh mesh2;
+  mesh2 = io.read_mesh();
+  io.close();
+  TEST(mesh2);
+
+  // Tests.
+  TEST(mesh2->dimension()      == 3);
+  TEST(mesh2->number_cells()   == 64);
+  TEST(mesh2->number_cells_x() == 4);
+  TEST(soft_equiv(mesh2->dx(0),   0.5));
+  TEST(soft_equiv(mesh2->dy(1),   0.5));
+  TEST(soft_equiv(mesh2->dz(0),   0.5));
+  TEST(mesh->mesh_map_exists("MATERIAL"));
+  vec_int map = mesh->mesh_map("MATERIAL");
+  int ref[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+               0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+               0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1,
+               0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1};
+  for (int i = 0; i < 64; i++)
+  {
+    TEST(map[i] == ref[i]);
+  }
 
   return 0;
 }

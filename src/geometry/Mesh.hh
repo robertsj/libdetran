@@ -204,6 +204,21 @@ public:
     return d_dz[k];
   }
 
+  const vec_dbl& dx() const
+  {
+    return d_dx;
+  }
+
+  const vec_dbl& dy() const
+  {
+    return d_dy;
+  }
+
+  const vec_dbl& dz() const
+  {
+    return d_dz;
+  }
+
   double volume(int cell) const
   {
     Require(cell < d_number_cells);
@@ -312,6 +327,12 @@ public:
    * \param   m  Logically multi-dimensional map as 1-d vector.
    */
   const vec_int& mesh_map(std::string map_key);
+
+  /// Return a const reference to the full map (useful for IO)
+  const mesh_map_type& get_mesh_map() const
+  {
+    return d_mesh_map;
+  }
 
   /// Display some key features
   void display() const;

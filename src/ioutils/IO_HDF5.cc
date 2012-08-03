@@ -14,6 +14,11 @@
 
 #ifdef DETRAN_ENABLE_HDF5
 
+// Detran
+#include "Mesh1D.hh"
+#include "Mesh2D.hh"
+#include "Mesh3D.hh"
+
 // Detran IO Utils
 #include "IO_HDF5.hh"
 
@@ -48,47 +53,18 @@ void IO_HDF5::write(SP_input input)
   if (!d_open) open();
 
   // Create the input group
-  hid_t group = H5Gcreate(d_file_id, "/input",
+  hid_t group = H5Gcreate(d_file_id, "input",
                           H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 
-  // HDF5 error return value
-  herr_t  status;
-
-  // Create variable string type
-  d_string_type = H5Tcopy (H5T_C_S1);
-  status = H5Tset_size (d_string_type, H5T_VARIABLE);
-
-  //-------------------------------------------------------------------------//
-  // PREPARE DATA
-  //-------------------------------------------------------------------------//
-
-  // Get the map sizes for the suppored types.
-  int size_int      = input->size(detran::InputDB::INT);
-  int size_dbl      = input->size(detran::InputDB::DBL);
-  int size_str      = input->size(detran::InputDB::STR);
-  int size_vec_int  = input->size(detran::InputDB::VEC_INT);
-  int size_vec_dbl  = input->size(detran::InputDB::VEC_DBL);
-
-  // Define the temporary data containers.
-  compound_type<int>            data_int[size_int];
-  compound_type<double>         data_dbl[size_dbl];
-  compound_type<std::string>    data_str[size_str];
-  compound_type<vec_int>        data_vec_int[size_vec_int];
-  compound_type<vec_dbl>        data_vec_dbl[size_vec_dbl];
-
-  //-------------------------------------------------------------------------//
-  // WRITE DATA
-  //-------------------------------------------------------------------------//
-
-  write_data(input, group, "int_data", data_int);
-  write_data(input, group, "dbl_data", data_dbl);
-  write_data(input, group, "str_data", data_str);
-  write_data(input, group, "vec_int_data", data_vec_int);
-  write_data(input, group, "vec_dbl_data", data_vec_dbl);
+  // Write the data.
+  write_map(group, "int_data", input->get_map<int>());
+  write_map(group, "dbl_data", input->get_map<double>());
+  write_map(group, "str_data", input->get_map<std::string>());
+  write_map(group, "vec_int_data", input->get_map<vec_int>());
+  write_map(group, "vec_dbl_data", input->get_map<vec_dbl>());
 
   // Close the group.
-  status = H5Gclose(group);
-
+  herr_t status = H5Gclose(group);
 }
 
 void IO_HDF5::write(SP_material mat)
@@ -99,7 +75,7 @@ void IO_HDF5::write(SP_material mat)
   if (!d_open) open();
 
   // Create the material group
-  hid_t group = H5Gcreate(d_file_id, "/material",
+  hid_t group = H5Gcreate(d_file_id, "material",
                           H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 
   herr_t status;
@@ -217,6 +193,34 @@ void IO_HDF5::write(SP_material mat)
 
 }
 
+void IO_HDF5::write(SP_mesh mesh)
+{
+  // Preconditions
+  Require(mesh);
+
+  if (!d_open) open();
+
+  // Create the mesh group
+  hid_t group = H5Gcreate(d_file_id, "mesh",
+                          H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+
+  // Write the required attributes.
+  write_scalar_attribute(group, "dimension", mesh->dimension());
+  write_scalar_attribute(group, "number_cells_x", mesh->number_cells_x());
+  write_scalar_attribute(group, "number_cells_y", mesh->number_cells_y());
+  write_scalar_attribute(group, "number_cells_z", mesh->number_cells_z());
+
+  // Write the dx, dy, and dz vectors.
+  Assert(write_vec(group, "dx", mesh->dx()));
+  Assert(write_vec(group, "dy", mesh->dy()));
+  Assert(write_vec(group, "dz", mesh->dz()));
+
+  // Write all mesh maps.  Note, at *least* MATERIAL must be present.
+  detran::Mesh::mesh_map_type map = mesh->get_mesh_map();
+
+  Assert(write_map(group, "mesh_map", map));
+}
+
 void IO_HDF5::close()
 {
   // If not open, ignore.
@@ -256,7 +260,7 @@ detran::InputDB::SP_input IO_HDF5::read_input()
 
   // Postconditions
   Ensure(input);
-  Ensure(input.is_valid());
+  Ensure(input->is_valid());
 
   return input;
 }
@@ -286,22 +290,15 @@ detran::Material::SP_material IO_HDF5::read_material()
   // ATTRIBUTES
   //-------------------------------------------------------------------------//
 
-  // Make sure they exist.
-  flag = H5Aexists(group, "number_groups");
-  Insist(flag, "Material group must contain the number_groups attribute.");
-  flag = H5Aexists(group, "number_materials");
-  Insist(flag, "Material group must contain the number_materials attribute.");
-
   // Read them.
   int ng;
   int nm;
-  hid_t att;
-  att = H5Aopen_name(group, "number_groups");
-  status = H5Aread(att, H5T_NATIVE_INT, &ng);
-  status = H5Aclose(att);
-  att = H5Aopen_name(group, "number_materials");
-  status = H5Aread(att, H5T_NATIVE_INT, &nm);
-  status = H5Aclose(att);
+
+  Insist(read_scalar_attribute(group, "number_groups", ng),
+    "Number of groups missing from HDF5 file.");
+
+  Insist(read_scalar_attribute(group, "number_materials", nm),
+    "Number of materials missing from HDF5 file.");
 
   //-------------------------------------------------------------------------//
   // DATA
@@ -375,6 +372,88 @@ detran::Material::SP_material IO_HDF5::read_material()
 
   return mat;
 }
+
+detran::Mesh::SP_mesh IO_HDF5::read_mesh()
+{
+  // Preconditions
+  /* ... */
+
+  SP_mesh mesh;
+
+  // Open the file if necessary.
+  if (!d_open)
+    d_file_id = H5Fopen(d_filename.c_str(), H5F_ACC_RDONLY, H5P_DEFAULT);
+  d_open = true;
+
+  // Open the input group
+  Insist(exists(d_file_id, "mesh") > 0,
+    "Mesh group does not exist; can't read data.");
+  hid_t group = H5Gopen(d_file_id, "mesh", H5P_DEFAULT);
+
+  // Read required attributes.
+  int dim, nx, ny, nz;
+  Insist(read_scalar_attribute(group, "dimension", dim),
+    "Mesh dimension attribute missing from HDF5 file.");
+  Insist(read_scalar_attribute(group, "number_cells_x", nx),
+    "Number of x cells attribute missing from HDF5 file.");
+  Insist(read_scalar_attribute(group, "number_cells_y", ny),
+    "Number of y cells attribute missing from HDF5 file.");
+  Insist(read_scalar_attribute(group, "number_cells_z", nz),
+    "Number of z cells attribute missing from HDF5 file.");
+  Insist(nx > 0 and ny > 0 and nz > 0,
+    "The number of cells per direction must be positive");
+  Insist(dim == 1 or dim == 2 or dim == 3,
+    "The mesh dimension attribute must be 1, 2, or 3");
+
+  // Read the discretization data.
+  vec_dbl dx(nx, 0.0);
+  vec_dbl ex(nx + 1, 0.0);
+  Assert(read_vec(group, "dx", dx));
+  for (int i = 0; i < nx; i++)
+    ex[i + 1] = ex[i] + dx[i];
+  vec_dbl dy(ny, 0.0);
+  vec_dbl ey(ny + 1, 0.0);
+  Assert(read_vec(group, "dy", dy));
+  for (int i = 0; i < ny; i++)
+    ey[i + 1] = ey[i] + dy[i];
+  vec_dbl dz(nz, 0.0);
+  vec_dbl ez(nz + 1, 0.0);
+  Assert(read_vec(group, "dz", dz));
+  for (int i = 0; i < nz; i++)
+    ez[i + 1] = ez[i] + dz[i];
+
+  // Fill the mesh maps, and extract the material map.
+  detran::Mesh::mesh_map_type map;
+  Insist(read_map(group, "mesh_map", map),
+    "Problem reading mesh map.  It is missing or empty.");
+  vec_int mt = map["MATERIAL"];
+
+  // Create the mesh.
+  if (dim == 1)
+    mesh = new detran::Mesh1D(ex, mt);
+  else if (dim == 2)
+    mesh = new detran::Mesh2D(ex, ey, mt);
+  else
+    mesh = new detran::Mesh3D(ex, ey, ez, mt);
+
+  // Add the rest of the maps.
+  detran::Mesh::mesh_map_type::iterator it = map.begin();
+  for (; it != map.end(); it++)
+  {
+    if (it->first != "MATERIAL")
+      mesh->add_mesh_map(it->first, it->second);
+  }
+
+  // Close the group.
+  herr_t status = H5Gclose(group);
+
+  // Postconditions
+  Ensure(mesh);
+  Ensure(mesh->is_valid());
+
+  return mesh;
+}
+
 
 } // end namespace detran_ioutils
 

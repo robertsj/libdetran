@@ -24,9 +24,14 @@ def test_IO_HDF5() :
   mat.set_sigma_f(1, 0, 0.0067); 
   mat.set_sigma_s(1, 1, 1, 0.9355);  
 
+  # Create the test mesh to be written.
+  mesh = Mesh1D.Create([10],[0, 1.0], [0])
+
+
   # Write out and close.
   io.write(inp)
   io.write(mat)
+  io.write(mesh)
   io.close()
 
   # Fill a new input 
@@ -37,6 +42,12 @@ def test_IO_HDF5() :
   # Fill a new material 
   mat2 = io.read_material()
   assert(mat2.sigma_t(0, 0) == 0.1890)
+
+  # Fill a new mesh.
+  mesh2 = io.read_mesh()
+  assert(mesh2.dx(0) == 0.1)
+  matmap = mesh2.mesh_map("MATERIAL")
+  assert(matmap[0] == 0)
 
   return True
 
