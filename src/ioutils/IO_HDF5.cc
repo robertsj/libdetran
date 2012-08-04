@@ -262,6 +262,12 @@ detran::InputDB::SP_input IO_HDF5::read_input()
   read_data<vec_int>(input, group, "vec_int_data");
   read_data<vec_dbl>(input, group, "vec_dbl_data");
 
+//  read_map(group, "int_data", input->get_map<int>());
+//  read_map(group, "dbl_data", input->get_map<double>());
+//  read_map(group, "str_data", input->get_map<std::string>());
+//  read_map(group, "vec_int_data", input->get_map<vec_int>());
+//  read_map(group, "vec_dbl_data", input->get_map<vec_dbl>());
+
   // Close the group.
   herr_t status = H5Gclose(group);
 
@@ -416,17 +422,17 @@ detran::Mesh::SP_mesh IO_HDF5::read_mesh()
   // Read the discretization data.
   vec_dbl dx(nx, 0.0);
   vec_dbl ex(nx + 1, 0.0);
-  Assert(read_vec(group, "dx", dx));
+  Insist(read_vec(group, "dx", dx), "Failed to read dx from HDF5 file.");
   for (int i = 0; i < nx; i++)
     ex[i + 1] = ex[i] + dx[i];
   vec_dbl dy(ny, 0.0);
   vec_dbl ey(ny + 1, 0.0);
-  Assert(read_vec(group, "dy", dy));
+  Insist(read_vec(group, "dy", dy), "Failed to read dx from HDF5 file.");
   for (int i = 0; i < ny; i++)
     ey[i + 1] = ey[i] + dy[i];
   vec_dbl dz(nz, 0.0);
   vec_dbl ez(nz + 1, 0.0);
-  Assert(read_vec(group, "dz", dz));
+  Insist(read_vec(group, "dz", dz), "Failed to read dx from HDF5 file.");
   for (int i = 0; i < nz; i++)
     ez[i + 1] = ez[i] + dz[i];
 

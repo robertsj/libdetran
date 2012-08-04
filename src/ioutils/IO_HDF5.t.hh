@@ -81,11 +81,12 @@ bool IO_HDF5::read_data(SP_input input,
   hsize_t dims[1];
   hid_t space = H5Dget_space (dset);
   int ndims   = H5Sget_simple_extent_dims(space, dims, NULL);
+  herr_t status;
 
   // Return if there is no data.
   if (!dims[0])
   {
-    std::cout << "THERE IS NO DATA" << std::endl;
+    status = H5Sclose(space);
     return false;
   }
 
@@ -96,7 +97,7 @@ bool IO_HDF5::read_data(SP_input input,
   hid_t memtype = set_memtype<T>();
 
   // Read the data.
-  herr_t status = H5Dread(dset, memtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
+  status = H5Dread(dset, memtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
 
   // Loop and insert into input
   for (int i = 0; i < dims[0]; i++)
@@ -113,6 +114,7 @@ bool IO_HDF5::read_data(SP_input input,
   delete [] data;
   status = H5Dclose(dset);
   status = H5Sclose(space);
+
 
   // Postconditions
 
@@ -141,7 +143,7 @@ bool IO_HDF5::write_map(hid_t group,
     set_value(it->first,  data[i].key);
     set_value(it->second, data[i].value);
   }
-  Assert(i = size);
+  Assert(i == size);
 
   // Set dimension
   hsize_t dims[1] = {size};

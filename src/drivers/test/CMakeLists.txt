@@ -29,4 +29,6 @@ INSTALL(FILES ${CMAKE_SOURCE_DIR}/drivers/test/test.h5
 
 # StupidParser
 ADD_TEST(test_StupidParser       test_StupidParser 0)
+if (DETRAN_ENABLE_HDF5)
 ADD_TEST(test_StupidParser_hdf5  test_StupidParser 1)
+endif (DETRAN_ENABLE_HDF5)

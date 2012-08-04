@@ -37,13 +37,13 @@ Execute::Execute(StupidParser &parser)
 {
   // Parse the input.
   d_input = parser.parse_input();
-
+  d_input->display();
   // Parse the material.
   d_material = parser.parse_material();
-
+  d_material->display();
   // Parse the mesh.
   d_mesh = parser.parse_mesh();
-
+  d_mesh->display();
   // Setup other things.
   setup();
 

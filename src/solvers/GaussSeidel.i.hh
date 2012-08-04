@@ -75,7 +75,7 @@ void GaussSeidel<D>::solve()
     if (nres > d_tolerance)
     {
       warning(SOLVER_CONVERGENCE,
-              "Gauss-Seidel upscatter solved did not converge.");
+              "Gauss-Seidel upscatter did not converge.");
     }
 
   } // end upscatter block

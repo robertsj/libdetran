@@ -97,7 +97,9 @@ public:
   typedef InputDB::SP_input                     SP_input;
   typedef Mesh::SP_mesh                         SP_mesh;
   typedef Material::SP_material                 SP_material;
+#ifdef DETRAN_ENABLE_HDF5
   typedef detran_ioutils::IO_HDF5::SP_io_hdf5   SP_io_hdf5;
+#endif
 
   /*!
    *  \brief Constructor
@@ -131,7 +133,12 @@ private:
   std::ifstream d_file;
 
   /// HDF5 file handler.
+#ifdef DETRAN_ENABLE_HDF5
   SP_io_hdf5 d_hdf5;
+#endif
+
+  /// HDF5 enabled flag
+  bool d_is_hdf5;
 
 
   /// \name Implemenation

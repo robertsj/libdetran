@@ -26,6 +26,7 @@ namespace detran
 {
 
 StupidParser::StupidParser(int argc,  char **argv)
+  : d_is_hdf5(false)
 {
   Insist(argc > 1, "Not enough command line arguments!");
 
@@ -37,6 +38,7 @@ StupidParser::StupidParser(int argc,  char **argv)
 #ifdef DETRAN_ENABLE_HDF5
     // Open the HDF5 file.
     d_hdf5 = new detran_ioutils::IO_HDF5(filename);
+    d_is_hdf5 = true;
 #else
     THROW("User specified HDF5 input but HDF5 is not enabled!");
 #endif
@@ -52,26 +54,33 @@ StupidParser::StupidParser(int argc,  char **argv)
 
 StupidParser::SP_input StupidParser::parse_input()
 {
+  SP_input input;
   // Get the input
-  if (!d_hdf5)
-    d_input = parse_input_text();
+  if (!d_is_hdf5)
+    input = parse_input_text();
   else
-    d_input = d_hdf5->read_input();
-
+  {
+#ifdef DETRAN_ENABLE_HDF5
+    input = d_hdf5->read_input();
+#endif
+  }
   // Postconditions
-  Insist(d_input, "Error parsing input.")
-  return d_input;
+  Insist(input, "Error parsing input.")
+  return input;
 }
 
 StupidParser::SP_material StupidParser::parse_material()
 {
   // Get the material
   SP_material mat;
-  if (!d_hdf5)
+  if (!d_is_hdf5)
     mat = parse_material_text();
   else
+  {
+#ifdef DETRAN_ENABLE_HDF5
     mat = d_hdf5->read_material();
-
+#endif
+  }
   // Postconditions
   Insist(mat, "Error parsing material.")
   return mat;
@@ -81,13 +90,16 @@ StupidParser::SP_mesh StupidParser::parse_mesh()
 {
   // Get the mesh
   SP_mesh mesh;
-  if (!d_hdf5)
+  if (!d_is_hdf5)
     mesh = parse_mesh_text();
   else
+  {
+#ifdef DETRAN_ENABLE_HDF5
     mesh = d_hdf5->read_mesh();
-
+#endif
+  }
   // Postconditions
-  Insist(mesh, "Error parsing material.")
+  Insist(mesh, "Error parsing mesh.")
   return mesh;
 }
 
