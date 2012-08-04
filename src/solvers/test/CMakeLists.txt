@@ -24,6 +24,14 @@ TARGET_LINK_LIBRARIES(test_PowerIteration
                       materials 
                       utilities)
 
+if (DETRAN_ENABLE_PETSC)
+
+ADD_EXECUTABLE(test_InnerGMRES test_InnerGMRES.cc)
+TARGET_LINK_LIBRARIES(test_InnerGMRES 
+                      solvers)
+
+endif ()
+
 #------------------------------------------------------------------------------#
 # Define tests
 #------------------------------------------------------------------------------#
@@ -32,3 +40,7 @@ TARGET_LINK_LIBRARIES(test_PowerIteration
 ADD_TEST(test_SourceIteration_2D  test_SourceIteration 0)
 #ADD_TEST(test_SourceIteration_3D  test_SourceIteration 3)
 ADD_TEST(test_PowerIteration_2D test_PowerIteration 0)
+
+if (DETRAN_ENABLE_PETSC)
+ADD_TEST(test_InnerGMRES_1D test_InnerGMRES 0)
+endif ()
