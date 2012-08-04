@@ -11,16 +11,12 @@
 #define SILOOUTPUT_HH_
 
 // Configuration
-//#include "detran_config.h"
-//
-//#ifdef DETRAN_ENABLE_SILO
-
-// Configuration
 #include "detran_config.h"
 
 // Detran
 #include "Material.hh"
 #include "Mesh.hh"
+#include "Quadrature.hh"
 #include "State.hh"
 
 // Utilities
@@ -29,35 +25,57 @@
 // System
 #include "silo.h"
 
-namespace detran_postprocess
+namespace detran_ioutils
 {
 
 /*!
  *  \class SiloOutput
- *  \brief Write flux data to a silo file.
+ *  \brief Write mesh data to a Silo file.
  */
 class SiloOutput
 {
 
 public:
 
-  typedef detran::InputDB::SP_input     SP_input;
-  typedef detran::Material::SP_material SP_material;
-  typedef detran::Mesh::SP_mesh         SP_mesh;
-  typedef detran::State::SP_state       SP_state;
+  typedef detran::InputDB::SP_input         SP_input;
+  typedef detran::Material::SP_material     SP_material;
+  typedef detran::Mesh::SP_mesh             SP_mesh;
+  typedef detran::State::SP_state           SP_state;
+  typedef detran::Quadrature::SP_quadrature SP_quadrature;
 
   /*!
    *  \brief Constructor
    *  \param input    Input database
    *  \param mesh     Cartesian mesh
    */
-  SiloOutput(SP_input input, SP_mesh mesh);
+  SiloOutput(SP_mesh mesh);
 
   /// Destructor
   ~SiloOutput();
 
   /// Initialize file
-  void initialize();
+  bool initialize(const std::string filename);
+
+  /*!
+   *  \brief Write a mesh map to file.
+   *  \param key  Key of the map to write
+   *  \return     True for successful write
+   */
+  bool write_mesh_map(const std::string &key);
+
+  /*!
+   *  \brief Write the multigroup scalar flux moments to file.
+   *  \param state  State vector container
+   *  \return     True for successful write
+   */
+  bool write_scalar_flux(SP_state state);
+
+  /*!
+   *  \brief Write the angular flux to file.
+   *  \param state  State vector container
+   *  \return       True for successful write
+   */
+  bool write_angular_flux(SP_state state, SP_quadrature quad);
 
   /// Close file
   void finalize();
@@ -76,16 +94,7 @@ public:
     d_material = material;
   }
 
-  /*!
-   *  \brief Write the multigroup scalar flux to file.
-   *  \param state  State vector container
-   */
-  void write_flux(SP_state state);
-
 private:
-
-  /// Input database
-  SP_input d_input;
 
   /// Problem mesh
   SP_mesh d_mesh;
@@ -99,11 +108,15 @@ private:
   /// The Silo file is created
   bool d_initialized;
 
+  /// Problem dimension
+  int d_dimension;
+
+  /// Direction dimensions
+  int d_dims[3];
+
 };
 
-} // end namespace detran_postprocess
-
-//#endif // DETRAN_ENABLE_SILO
+} // end namespace detran_ioutils
 
 #endif // SILOOUTPUT_HH_ 
 

@@ -10,6 +10,7 @@ SET(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 SET(SRC
   IO_HDF5.cc
+  SiloOutput.cc
 )
 
 #-------------------------------------#
@@ -24,7 +25,9 @@ TARGET_LINK_LIBRARIES( ioutils
                        materials
                        geometry
                        utilities
-                       ${HDF5_LIBRARIES}                
+                       transport
+                       ${HDF5_LIBRARIES}       
+                       ${Silo_LIBRARIES}          
 )
 
 INSTALL_FILES(/include .hh)

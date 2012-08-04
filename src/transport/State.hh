@@ -48,6 +48,10 @@ namespace detran
  *
  * \todo Test whether referencing a Moments_Field object at [0] actually
  *       yields the array underneath.
+ *
+ * Relevant input entries:
+ * - number_groups (int)
+ * - store_angular_flux (int)
  */
 //---------------------------------------------------------------------------//
 class State : public Object
@@ -250,9 +254,14 @@ public:
     return d_number_groups;
   }
 
+  bool store_angular_flux() const
+  {
+    return d_store_angular_flux;
+  }
+
   bool is_valid() const
   {
-    /* ... */
+    return true;
   }
 
 private:
