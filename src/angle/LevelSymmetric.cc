@@ -42,6 +42,10 @@ LevelSymmetric::LevelSymmetric(int order, int dim)
   // Fill the temporaries
   set_quad_values(att, wtt);
 
+  // Scaling for weight.
+  double scale = pi;
+  if (dim == 3) scale = 0.5 * pi;
+
   // Evaluate mu and eta for octant 1
   int m = 0;
   for (int i = 0; i <= d_order / 2 - 1; ++i)
@@ -51,7 +55,7 @@ LevelSymmetric::LevelSymmetric(int order, int dim)
       d_mu[m] = att[i];
       d_eta[m] = att[j];
       d_xi[m] = std::sqrt(1.0 - d_mu[m] * d_mu[m] - d_eta[m] * d_eta[m]);
-      d_weight[m] *= pi; // pre-computed weights sum to 1.0 per octant
+      d_weight[m] *= scale; // pre-computed weights sum to 1.0 per octant
       ++m;
     }
   }

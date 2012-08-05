@@ -36,11 +36,13 @@ QuadrupleRange::QuadrupleRange(int order, int dim)
   double cosphi = 0;
   double wphi = 0;
   int k = 0;
+  double scale = 1.0;
+  if (dim == 3) scale = 0.5;
   for (int i = 0; i < number_phi; i++)
   {
     cosphi = get_phi(number_phi, 0, i);
     sinphi = std::sqrt(1.0 - cosphi * cosphi);
-    wphi   = get_phi(number_phi, 1, i);
+    wphi   = scale * get_phi(number_phi, 1, i);
     for (int j = 0; j < number_theta; j++)
     {
       sintheta     = get_theta(number_theta, 0, j);

@@ -31,6 +31,10 @@ TARGET_LINK_LIBRARIES(test_State            transport geometry materials utiliti
 ADD_EXECUTABLE(test_Sweeper2D               test_Sweeper2D.cc)
 TARGET_LINK_LIBRARIES(test_Sweeper2D        transport geometry materials utilities)
 
+ADD_EXECUTABLE(test_Sweeper3D               test_Sweeper3D.cc)
+TARGET_LINK_LIBRARIES(test_Sweeper3D        transport ioutils)
+
+
 #------------------------------------------------------------------------------#
 # Define tests
 #------------------------------------------------------------------------------#
@@ -39,4 +43,5 @@ ADD_TEST(test_Equation_DD_2D_basic test_Equation_DD_2D  0)
 ADD_TEST(test_Equation_SC_MOC      test_Equation_SC_MOC 0)
 ADD_TEST(test_State_basic          test_State           0)
 ADD_TEST(test_Sweeper2D_basic      test_Sweeper2D       0)
+ADD_TEST(test_Sweeper3D_basic      test_Sweeper3D       0)
 ADD_TEST(test_BoundaryMOC          test_BoundaryMOC     0)

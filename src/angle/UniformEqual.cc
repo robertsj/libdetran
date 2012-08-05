@@ -66,6 +66,7 @@ UniformEqual::UniformEqual(int order, int dim)
 
   // Uniform weight
   double wt = four_pi / d_number_angles;
+  if (dim == 3) wt *= 0.5;
 
   // compute mu and eta
   int k = 0;

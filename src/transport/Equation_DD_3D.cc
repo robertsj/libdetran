@@ -35,7 +35,7 @@ void Equation_DD_3D::setup_group(int g)
 void Equation_DD_3D::setup_octant(int octant)
 {
   Require(octant >= 0);
-  Require(octant < 4);
+  Require(octant < 8);
   d_octant = octant;
 }
 
