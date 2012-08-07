@@ -136,6 +136,15 @@ public:
            SP_externalsource  q_e,
            SP_fissionsource   q_f);
 
+  /// Destructor
+  ~KrylovMG()
+  {
+    KSPDestroy(&d_solver);
+    MatDestroy(&d_operator);
+    VecDestroy(&d_X);
+    VecDestroy(&d_B);
+  }
+
   /*!
    *  \brief SP Constructor.
    */

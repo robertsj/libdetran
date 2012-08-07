@@ -102,6 +102,15 @@ public:
              SP_externalsource  q_e,
              SP_fissionsource   q_f);
 
+  // Destructor
+  ~InnerGMRES()
+  {
+    KSPDestroy(&d_solver);
+    MatDestroy(&d_operator);
+    VecDestroy(&d_X);
+    VecDestroy(&d_B);
+  }
+
   /// SP Constructor
   static SP<InnerGMRES<D> >
   Create(SP<detran::InputDB>          input,

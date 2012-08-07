@@ -95,7 +95,7 @@ public:
                    SP_scattersource source,
                    int moments_size_group,
                    int boundary_size_group,
-                   int group_cutoff,
+                   int upscatter_cutoff,
                    PC mg_pc);
 
   /// Destructor
@@ -147,8 +147,8 @@ private:
   /// Size of the boundary in a group
   u_int d_boundary_size_group;
 
-  /// Group cutoff for upscatter block
-  u_int d_group_cutoff;
+  /// Upscatter cutoff (groups below and including don't get upscatter)
+  u_int d_upscatter_cutoff;
 
   /// Tolerance for the preconditioner solve
   double d_tolerance;

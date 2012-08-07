@@ -24,10 +24,14 @@ inline PetscErrorCode PreconditionerMG::apply(Vec x, Vec y)
   // x and y might have extra unknowns for boundaries.  By simply swapping
   // arrays, we can operate on only the part of x and y needed.  Any remaining
   // part of x (for boundaries) is simply copied to y.
+  Vec z;
+  VecDuplicate(x, &z);
   double *x_a;
   double *y_a;
+  double *z_a;
   ierr = VecGetArray(x, &x_a);
   ierr = VecGetArray(y, &y_a);
+  ierr = VecGetArray(z, &z_a);
 
   // build_total_group_source(int g, int g_cutoff,
   // const State::vec_moments_type &phi,
@@ -36,24 +40,24 @@ inline PetscErrorCode PreconditionerMG::apply(Vec x, Vec y)
   int ng = d_material->number_groups();
 
   // Copy x_a to the vec_moments_type.  Only the upscatter block is used.
-  State::vec_moments_type phi(ng,
-                              State::moments_type(d_moments_size_group, 0.0));
-  for (int g = d_group_cutoff; g < ng; g++)
+  State::vec_moments_type
+    phi(ng, State::moments_type(d_moments_size_group, 0.0));
+  for (int g = d_upscatter_cutoff; g < ng; g++)
   {
     for (int i = 0; i < d_moments_size_group; i++)
     {
-      phi[g][i] = x_a[ (g-d_group_cutoff)*d_moments_size_group + i];
+      phi[g][i] = x_a[(g - d_upscatter_cutoff) * d_moments_size_group + i];
     }
   }
 
   // Create the total group source, and copy into x_a.
   State::moments_type source(d_moments_size_group, 0.0);
-  for (int g = d_group_cutoff; g < ng; g++)
+  for (int g = d_upscatter_cutoff; g < ng; g++)
   {
-    d_scattersource->build_total_group_source(g, d_group_cutoff, phi, source);
+    d_scattersource->build_total_group_source(g, d_upscatter_cutoff, phi, source);
     for (int i = 0; i < d_moments_size_group; i++)
     {
-      x_a[ (g-d_group_cutoff)*d_moments_size_group + i] = source[i];
+      z_a[(g - d_upscatter_cutoff) * d_moments_size_group + i] = source[i];
     }
   }
   // x_a now has S_times_x
@@ -63,7 +67,7 @@ inline PetscErrorCode PreconditionerMG::apply(Vec x, Vec y)
   //-------------------------------------------------------------------------//
 
   // Solve(ksp, B, X)
-  ierr = KSPSolve(d_solver, x, y);
+  ierr = KSPSolve(d_solver, z, y);
   Insist(!ierr, "Error in KSPSolve.");
 
   //-------------------------------------------------------------------------//
@@ -74,9 +78,11 @@ inline PetscErrorCode PreconditionerMG::apply(Vec x, Vec y)
   ierr = VecAXPY(y, 1.0, x);
 
   // Reset the Vec's
+  VecRestoreArray(z, &z_a);
   VecRestoreArray(y, &y_a);
   VecRestoreArray(x, &x_a);
 
+  VecDestroy(&z);
   return ierr;
 }
 

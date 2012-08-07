@@ -36,6 +36,7 @@ KrylovMG<D>::KrylovMG(SP_input          input,
   , d_moments_size_group(0)
   , d_boundary_size(0)
   , d_boundary_size_group(0)
+  , d_use_pc(false)
 {
 
   //-------------------------------------------------------------------------//
@@ -147,7 +148,15 @@ KrylovMG<D>::KrylovMG(SP_input          input,
                                 d_upscatter_cutoff,
                                 pc);
 
-    ierr = KSPSetPCSide(d_solver, PC_LEFT);
+    int side = 0;
+    if (d_input->check("outer_pc_side"))
+    {
+      side = input->get<int>("outer_pc_side");
+    }
+    if (side)
+      ierr = KSPSetPCSide(d_solver, PC_RIGHT);
+    else
+      ierr = KSPSetPCSide(d_solver, PC_LEFT);
   }
 
   // Set tolerances.

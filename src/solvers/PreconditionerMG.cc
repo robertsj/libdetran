@@ -18,7 +18,7 @@ PreconditionerMG::PreconditionerMG(SP_input input,
                                    SP_scattersource source,
                                    int moments_size_group,
                                    int boundary_size_group,
-                                   int group_cutoff,
+                                   int upscatter_cutoff,
                                    PC mg_pc)
   : d_input(input)
   , d_material(material)
@@ -26,7 +26,7 @@ PreconditionerMG::PreconditionerMG(SP_input input,
   , d_scattersource(source)
   , d_moments_size_group(moments_size_group)
   , d_boundary_size_group(boundary_size_group)
-  , d_group_cutoff(group_cutoff)
+  , d_upscatter_cutoff(upscatter_cutoff)
   , d_tolerance(1.0e-5)
 {
   // Preconditions
@@ -77,7 +77,7 @@ PreconditionerMG::PreconditionerMG(SP_input input,
                           PETSC_DEFAULT,
                           PETSC_DEFAULT);
 
-  // Set the default precondition, ILU with a factor level of 2.
+  // Set the default preconditioner, ILU with a factor level of 2.
   // This has been in my experience a fair setting.
   PC diffusion_pc;
   KSPGetPC(d_solver, &diffusion_pc);
