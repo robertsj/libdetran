@@ -15,6 +15,7 @@
 #include "InnerIteration.hh"
 #include "MultigroupSolver.hh"
 #include "Sweeper.hh"
+#include "PreconditionerMG.hh"
 
 // System
 #include "petsc.h"
@@ -111,6 +112,8 @@ public:
   typedef typename Sweeper<D>::SP_sweeper       SP_sweeper;
   typedef typename
         SweepSource<D>::SP_sweepsource          SP_sweepsource;
+  // Preconditioner
+  typedef PreconditionerMG::SP_pc               SP_pc;
 
   /*!
    *  \brief Constructor
@@ -237,6 +240,12 @@ private:
 
   /// Sweep source
   SP_sweepsource d_sweepsource;
+
+  /// Preconditioner
+  SP_pc d_pc;
+
+  /// Preconditioner flag
+  bool d_use_pc;
 
   /// \}
 

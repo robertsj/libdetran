@@ -13,6 +13,7 @@
 
 // Detran
 #include "InnerIteration.hh"
+#include "PreconditionerWG.hh"
 
 // System
 #include "petsc.h"
@@ -25,18 +26,28 @@ namespace detran
  *  \class InnerGMRES
  *  \brief Solve the within-group problem with GMRES.
  *
- *  The within group equation can be written
+ *  From \ref InnerIteration, we know the within-group problem can be
+ *  written in operator notation as
  *  \f[
  *      (\mathbf{I} - \mathbf{D}\mathbf{L}^{-1}\mathbf{MS})\phi
- *      = \mathbf{D} \mathbf{L}^{-1} Q \, .
+ *      = \mathbf{D} \mathbf{L}^{-1} Q \, ,
  *  \f]
+ *  or
+ *  \f[
+ *      \mathbf{A}x = b \, .
+ *  \f]
+ *
  *  This class couples with PETSc to make available its set of applicable
  *  solvers, the default being GMRES.  Other solvers are selected
  *  by command line flags, e.g. -ksp_type bcgs uses a BiCongugate Gradient
  *  Stabilized algorithm.  Past experience suggests GMRES works best.
  *
- *  Note, all iterative solvers do better with preconditioning, which is
- *  current not implemented.
+ *  For Krylov iterations to perform successfully, preconditioning
+ *  is often required.  A good preconditioner $\f \mathbf{M} \f$
+ *  is in some way "similar" to the operator $\f \mathbf{A} \f$, and
+ *  applying its inverse $\f \mathbf{M}^{-1} $\f can be done cheaply.
+ *  Currently, a diffusion preconditioner is available for within-group
+ *  solvers; see \ref PreconditionerWG for a detailed description.
  *
  */
 //---------------------------------------------------------------------------//
@@ -67,6 +78,8 @@ public:
       SweepSource<D>::SP_sweepsource            SP_sweepsource;
   //
   typedef State::moments_type                   moments_type;
+  // Preconditioner
+  typedef PreconditionerWG::SP_pc               SP_pc;
 
   /*!
    *  \brief Constructor
@@ -154,6 +167,12 @@ private:
 
   int d_reflective_solve_iterations;
 
+  /// Preconditioner flag
+  bool d_use_pc;
+
+  /// Diffusion preconditioner
+  SP_pc d_pc;
+
   /// \}
 
   /// \name Implementation
@@ -168,6 +187,12 @@ private:
   //---------------------------------------------------------------------------//
   /*!
    * \brief A matrix-vector shell for the within-group transport operator.
+   *
+   * Given a Krylov vector \f$ x \f$, this returns
+   * \f[
+   *    x' \leftarrow
+   *       (\mathbf{I} - \mathbf{DL}^{-1}\mathbf{MS})x \, .
+   * \f]
    *
    * This is called by thin wrappers, since PETSc needs the matrix-vector
    * operation as a function pointer, which precludes a member function.

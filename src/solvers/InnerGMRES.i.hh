@@ -34,6 +34,9 @@ inline void InnerGMRES<D>::solve(int g)
 
   if (d_print_out > 0) std::cout << "    Starting GMRES." << std::endl;
 
+  // Set the preconditioner, if used.
+  if (d_use_pc) d_pc->set_group(g);
+
   // Set the equations.
   d_sweeper->setup_group(g);
 
@@ -172,7 +175,7 @@ inline PetscErrorCode InnerGMRES<D>::apply_WGTO(Mat A, Vec X, Vec Y)
   using std::endl;
   PetscErrorCode ierr;
 
-  // Get the array from the Krylov vector x.
+  // Get the array from the Krylov vector X.
   double *X_a;
   ierr = VecGetArray(X, &X_a); CHKERRQ(ierr);
 
@@ -198,7 +201,7 @@ inline PetscErrorCode InnerGMRES<D>::apply_WGTO(Mat A, Vec X, Vec Y)
   // Reset the source to zero.
   d_sweepsource->reset();
   d_sweepsource->build_within_group_scatter(d_g, phi_original);
-  // Sweep.
+  // Sweep.  This gives X <-- D*inv(L)*M*S*X
   d_sweeper->sweep(phi_update);
 
   // ******** BUILD THE OUTGOING VECTOR
@@ -207,7 +210,7 @@ inline PetscErrorCode InnerGMRES<D>::apply_WGTO(Mat A, Vec X, Vec Y)
   double *Y_a;
   ierr = VecGetArray(Y, &Y_a); CHKERRQ(ierr);
 
-  // Assign the moment values.
+  // Assign the moment values.  This gives X <- (I-D*inv(L)*M*S)*X
   for (int i = 0; i < d_moments_size; i++)
   {
     Y_a[i] = phi_original[i] - phi_update[i];

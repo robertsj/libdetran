@@ -40,6 +40,7 @@ InnerGMRES<D>::InnerGMRES(SP_input          input,
                                        q_f)
   , d_moments_size(0)
   , d_boundary_size(0)
+  , d_use_pc(false)
 {
 
   // Error from PETSc calls.
@@ -68,7 +69,7 @@ InnerGMRES<D>::InnerGMRES(SP_input          input,
                         number_unknowns,
                         this,
                         &d_operator);
-  Insist(!ierr, "Error creating MR shell matrix.");
+  Insist(!ierr, "Error creating transport operator shell matrix.");
 
   // Create the corresponding vectors.
   ierr = VecCreateSeq(PETSC_COMM_WORLD,
@@ -81,7 +82,7 @@ InnerGMRES<D>::InnerGMRES(SP_input          input,
   VecSet(d_X, 0.0);
   VecSet(d_B, 0.0);
 
-  // Set the operator.
+  // Set the matrix-vector operator.
   ierr = set_operation();
   Insist(!ierr, "Error setting matrix-vector operation.");
 
@@ -91,6 +92,30 @@ InnerGMRES<D>::InnerGMRES(SP_input          input,
 
   // Set the operator.
   KSPSetOperators(d_solver, d_operator, d_operator, SAME_NONZERO_PATTERN);
+
+  // Preconditioner
+  if (d_input->check("inner_use_pc"))
+  {
+    // \todo Why do I get a compile error if I use d_input instead?
+    if (input->get<int>("inner_use_pc"))
+    {
+      std::cout << "Using preconditioned GMRES." << std::endl;
+      d_use_pc = true;
+    }
+  }
+  if (d_use_pc)
+  {
+    // Set up the shell preconditioner
+    PC pc;
+    KSPGetPC(d_solver, &pc);
+    PCSetType(pc, PCSHELL);
+
+    // Create the preconditioner.
+    d_pc = new PreconditionerWG(d_input,
+        d_material, d_mesh, d_sweepsource->get_scatter_source(), pc);
+
+    ierr = KSPSetPCSide(d_solver, PC_LEFT);
+  }
 
   // Set tolerances.
   ierr = KSPSetTolerances(d_solver,

@@ -74,11 +74,17 @@ KrylovMG<D>::KrylovMG(SP_input          input,
   d_boundary_size = d_upscatter_size * d_boundary_size_group;
 
   //-------------------------------------------------------------------------//
+  // SETUP SWEEPER FOR MULTIGROUP OPERATOR
+  //-------------------------------------------------------------------------//
+
+  d_sweeper = d_inner_solver->get_sweeper();
+  d_sweepsource = d_inner_solver->get_sweepsource();
+
+  //-------------------------------------------------------------------------//
   // SETUP PETSC SOLVER
   //-------------------------------------------------------------------------//
 
   // Total number of unknowns in block to be solved via Krylov
-
   int number_unknowns = d_moments_size + d_boundary_size;
 
   PetscErrorCode ierr;
@@ -114,6 +120,36 @@ KrylovMG<D>::KrylovMG(SP_input          input,
   // Set the operator.
   KSPSetOperators(d_solver, d_operator, d_operator, SAME_NONZERO_PATTERN);
 
+  // Preconditioner
+  if (d_input->check("outer_use_pc"))
+  {
+    // \todo Why do I get a compile error if I use d_input instead?
+    if (input->get<int>("outer_use_pc"))
+    {
+      std::cout << "Using preconditioned multigroup Krylov." << std::endl;
+      d_use_pc = true;
+    }
+  }
+  if (d_use_pc)
+  {
+    // Set up the shell preconditioner
+    PC pc;
+    KSPGetPC(d_solver, &pc);
+    PCSetType(pc, PCSHELL);
+
+    // Create the preconditioner.
+    d_pc = new PreconditionerMG(d_input,
+                                d_material,
+                                d_mesh,
+                                d_sweepsource->get_scatter_source(),
+                                d_moments_size_group,
+                                d_boundary_size_group,
+                                d_upscatter_cutoff,
+                                pc);
+
+    ierr = KSPSetPCSide(d_solver, PC_LEFT);
+  }
+
   // Set tolerances.
   ierr = KSPSetTolerances(d_solver,
                           d_tolerance,
@@ -123,13 +159,6 @@ KrylovMG<D>::KrylovMG(SP_input          input,
 
   // Allow for command line flags.
   ierr = KSPSetFromOptions(d_solver);
-
-  //-------------------------------------------------------------------------//
-  // SETUP SWEEPER FOR MULTIGROUP OPERATOR
-  //-------------------------------------------------------------------------//
-
-  d_sweeper = d_inner_solver->get_sweeper();
-  d_sweepsource = d_inner_solver->get_sweepsource();
 
 }
 
