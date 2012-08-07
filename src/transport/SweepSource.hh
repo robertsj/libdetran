@@ -188,6 +188,11 @@ public:
     d_fissionsource = source;
   }
 
+  SP_scattersource get_scatter_source()
+  {
+    return d_scattersource;
+  }
+
   // The following source construction routines aim to
   // satisfy the needs of all solvers.
 
