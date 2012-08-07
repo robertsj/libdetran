@@ -42,10 +42,9 @@ KrylovMG<D>::KrylovMG(SP_input          input,
   // DETERMINE ENERGY GROUP BOUNDS
   //-------------------------------------------------------------------------//
 
-  // Set the bounds for the downscatter GS portion
-  // and upscatter Krylov portion.  The default is to use GS on
-  // the downscatter block and Krylov on the upscatter block.  This
-  // can be modified by setting outer_upscatter_cutoff.
+  // Set the bounds for the downscatter GS portion and upscatter Krylov
+  // portion.  The default is to use GS on the downscatter block and Krylov
+  // on the upscatter block.
   d_upscatter_cutoff = material->upscatter_cutoff();
   if (input->check("outer_upscatter_cutoff"))
   {

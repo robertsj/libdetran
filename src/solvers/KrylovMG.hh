@@ -27,12 +27,14 @@ namespace detran
  *  \class KrylovMG
  *  \brief Solves the multigroup transport equation via Krylov methods.
  *
- * Traditionally, the Gauss-Seidel method has been used for multigroup problems.
- * For each group, the within-group equation is solved, and the the fluxes are
- * updated for use in the next group.  However, for problems with significant
- * upscatter, Gauss-Seidel can be quite expensive, even when GMRES (or some
- * better-than-source-iteration) is used for the within group solve.  As an
- * alternativel, we can apply GMRES (or other Krylov solvers) to the multigroup
+ * Traditionally, the Gauss-Seidel method has been used for multigroup
+ * problems. For each group, the within-group equation is solved, and
+ * the the fluxes are updated for use in the next group.  However, for
+ * problems with significant upscatter, Gauss-Seidel can be quite
+ * expensive, even when GMRES (or some better-than-source-iteration
+ * scheme) is used for the within group solve.  As an
+ * alternative, we can apply GMRES (or other Krylov solvers) to
+ * the multigroup
  * problem directly.  The linear system is then
  * \f[
  *     \left( ( \mathbf{I} -
@@ -63,7 +65,7 @@ namespace detran
  *          \mathbf{T}_G q_G
  *     \end{array} \right] \, .
  * \f]
- * Of course, this can be written succinctly the same way we did the within-
+ * Of course, this can be written succinctly in the same way as the within-
  * group equation:
  * \f[
  *     (\mathbf{I}-\mathbf{TMS})\phi = \mathbf{T}q \, ,
@@ -72,10 +74,10 @@ namespace detran
  * moment contributions added implicitly, and where the Krylov vectors are
  * energy-dependent.
  *
- * Note, by default only the energy block in which upscatter occurs is
+ * By default, only the energy block in which upscatter occurs is
  * solved via Krylov methods.  Because Gauss-Seidel is exact for
  * downscatter, it is used for the downscatter-only block.  The user can
- * switch this, though.
+ * switch this using "outer_upscatter_cutoff".
  *
  * Reference:
  *   Evans, T., Davidson, G. and Mosher, S. "Parallel Algorithms for
@@ -205,7 +207,23 @@ private:
   /// Size of the boundary portion of d_X in a group
   int d_boundary_size_group;
 
-  /// Upscatter cutoff (groups below get no upscatter)
+  /*!
+   *  \brief Only groups equal to or above this cutoff are
+   *         subject to upscatter iterations.
+   *
+   *  While \ref Material has an upscatter cutoff that it computes
+   *  internally based on the data, the user can set this cutoff
+   *  to a different value for solving.  By default, the solver
+   *  cutoff is equal to the \ref Material cutoff, and so those
+   *  groups into which no upscatter occurs are solved by
+   *  Gauss-Seidel, and the remaining groups are solved by the
+   *  PETSc solver selected.  The user can set the cutoff to
+   *  zero to use the PETSc solver for the entire energy spectrum,
+   *  or any value in between zero through the actual cutoff.
+   *  The user \e cannot set the cutoff any higher than the \ref
+   *  Material cutoff, since that would be a different problem.
+   *
+   */
   int d_upscatter_cutoff;
 
   /// Upscatter block size (number of groups in Krylov solve)

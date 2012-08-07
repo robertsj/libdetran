@@ -24,7 +24,7 @@ void InputDB::display() const
   using std::cout;
   using std::endl;
   using std::string;
-  cout << "InputDB contents" << endl;
+  cout << "Detran Input" << endl;
   {
     // Integers
     cout << "  Integer data: " << endl;
