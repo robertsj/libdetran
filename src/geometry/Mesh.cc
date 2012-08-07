@@ -99,7 +99,7 @@ void Mesh::add_coarse_mesh_map(std::string map_key, vec_int m_map)
         i_save = std::accumulate(d_xfm.begin(), d_xfm.begin() + i + 1, 0);
       }
       i_save = 0;
-      j_save = std::accumulate(d_xfm.begin(), d_xfm.begin() + j + 1, 0);
+      j_save = std::accumulate(d_yfm.begin(), d_yfm.begin() + j + 1, 0);
     }
     j_save = 0;
     k_save = std::accumulate(d_zfm.begin(), d_zfm.begin() + k + 1, 0);
