@@ -9,10 +9,12 @@ SET(TRANSPORT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 #-------------------------------------#
 
 SET(TRANSPORT_SRC
-    Acceleration.cc
+    #Acceleration.cc
     Boundary.cc
     BoundaryMOC.cc
     #CMR.cc
+    CoarseMesh.cc
+    CurrentTally.cc
     Equation_DD_1D.cc
     Equation_DD_2D.cc
     Equation_DD_3D.cc
