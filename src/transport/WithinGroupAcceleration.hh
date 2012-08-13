@@ -9,8 +9,18 @@
 #define WITHINGROUPACCELERATION_HH_
 
 // Detran
-#include "Acceleration.hh"
+#include "CoarseMesh.hh"
+#include "CurrentTally.hh"
+#include "Material.hh"
 #include "SweepSource.hh"
+
+// Utilities
+#include "DBC.hh"
+#include "InputDB.hh"
+#include "SP.hh"
+
+// System
+#include "petsc.h"
 
 namespace detran
 {
@@ -22,7 +32,7 @@ namespace detran
  *
  */
 template <class D>
-class WithinGroupAcceleration : public Acceleration<D>
+class WithinGroupAcceleration
 {
 
 public:
@@ -30,47 +40,89 @@ public:
   /// \name Useful Typedefs
   // \{
 
-  typedef SP<WithinGroupAcceleration>                 SP_acceleration;
-  typedef Acceleration<D>                             Base;
-  typedef typename Base::SP_acceleration              SP_base;
-  typedef typename Base::SP_mesh                      SP_mesh;
-  typedef typename Base::SP_material                  SP_material;
-  typedef typename Base::SP_quadrature                SP_quadrature;
-  typedef typename Base::SP_state                     SP_state;
-  typedef typename Base::face_flux_type               face_flux_type;
-  typedef typename SweepSource<D>::SP_sweepsource     SP_sweepsource;
+  typedef SP<WithinGroupAcceleration>     SP_acceleration;
+  typedef InputDB::SP_input               SP_input;
+  typedef Material::SP_material           SP_material;
+  typedef CoarseMesh::SP_coarsemesh       SP_coarsemesh;
+  typedef CurrentTally::SP_currenttally   SP_currenttally;
+  typedef typename
+          SweepSource<D>::SP_sweepsource  SP_sweepsource;
 
   // \}
 
   /*!
    *  \brief Constructor
    *
-   *  \param mesh       Mesh smart pointer
-   *  \param material   Material smart pointer
-   *  \param quadrature Quadrature smart pointer
+   *  \param input          Input database
+   *  \param material       Material database
+   *  \param coarsemesh     Coarse mesh
+   *  \param currenttally   Current tally
    */
-  WithinGroupAcceleration(SP_mesh mesh, SP_material material, SP_quadrature quadrature);
+  WithinGroupAcceleration(SP_input input,
+                          SP_material material,
+                          SP_coarsemesh coarsemesh,
+                          SP_currenttally currenttally)
+  :  d_input(input)
+  ,  d_material(material)
+  ,  d_coarsemesh(coarsemesh)
+  ,  d_currenttally(currenttally)
+  {
+    /* ... */
+  }
 
   /// Virtual destructor.
-  virtual ~WithinGroupAcceleration(){};
+  virtual ~WithinGroupAcceleration()
+  {
+    VecDestroy(&d_x);
+    VecDestroy(&d_b);
+    KSPDestroy(&d_solver);
+  };
 
-  // \name Public Interface
-  // \{
+  /// \name Public Interface
+  /// \{
 
   /*!
    *  \brief Solve the low order equation to update the scalar flux moments
    *
-   *  Each acceleration scheme has tallied the coarse mesh edge flux
-   *  functions needed to perform the low order update.  The update
-   *  function implements that update.  The fine mesh flux moments are
-   *  passed, and the sweep source is passed to compute coarse mesh
-   *  quantities.
-   *
+   *  \param  group   Energy group for this solve
    *  \param  phi     Reference to the group flux to be updated.
    *  \param  source  Smart pointer to up-to-date sweep source.
    *
    */
-  virtual void update(State::moments_type &phi, SP_sweepsource source) = 0;
+  virtual void accelerate(u_int group,
+                          State::moments_type &phi,
+                          SP_sweepsource source) = 0;
+
+  /// \}
+
+protected:
+
+  /// \name Protected Data
+  /// \{
+
+  /// Input database
+  SP_input d_input;
+
+  /// Material database
+  SP_material d_material;
+
+  /// Coarse mesh
+  SP_coarsemesh d_coarsemesh;
+
+  /// Current tally
+  SP_currenttally d_currenttally;
+
+  /// Unknowns
+  Vec d_x;
+
+  /// Right hand side
+  Vec d_b;
+
+  /// Linear Solver
+  KSP d_solver;
+
+  /// \}
+
 
 };
 

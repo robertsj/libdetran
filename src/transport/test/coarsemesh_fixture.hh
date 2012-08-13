@@ -75,6 +75,34 @@ detran::CoarseMesh::SP_coarsemesh coarsemesh_2d()
 
 }
 
+
+detran::CoarseMesh::SP_coarsemesh coarsemesh_2d_b()
+{
+  using detran::CoarseMesh;
+  using detran::Mesh2D;
+  using detran::vec_dbl;
+  using detran::vec_int;
+
+  // Coarse mesh edges
+  detran::vec_dbl cm(3, 0.0);
+  cm[1] = 5.0;
+  cm[2] = 5.0;
+
+  // Fine mesh counts
+  detran::vec_int fm(2, 2);
+
+  // Material (homogeneous)
+  vec_int mt(4, 0);
+
+  // Create the fine mesh
+  Mesh2D::SP_mesh mesh(new Mesh2D(fm, fm, cm, cm, mt));
+
+  // Create the coarse mesh and return
+  CoarseMesh::SP_coarsemesh coarse(new CoarseMesh(mesh, 2));
+  return coarse;
+
+}
+
 detran::CoarseMesh::SP_coarsemesh coarsemesh_3d()
 {
   using detran::CoarseMesh;

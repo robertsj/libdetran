@@ -68,7 +68,7 @@ public:
    */
   int fine_to_coarse(u_int ijk, u_int dim) const
   {
-    Require(dim < d_fine_mesh->dimension());
+    //Require(dim < d_fine_mesh->dimension());
     Require(ijk < d_fine_mesh->number_cells(dim));
     return d_fine_to_coarse[dim][ijk];
   }

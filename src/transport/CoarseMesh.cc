@@ -42,6 +42,10 @@ CoarseMesh::CoarseMesh(SP_mesh fine_mesh, u_int level)
   d_coarse_edge_flag[1].resize(d_fine_mesh->number_cells_y() + 1, -1);
   d_coarse_edge_flag[2].resize(d_fine_mesh->number_cells_z() + 1, -1);
 
+  d_fine_to_coarse[0].resize(1, 0);
+  d_fine_to_coarse[1].resize(1, 0);
+  d_fine_to_coarse[2].resize(1, 0);
+
   for (int d = 0; d < dim; d++)
   {
 

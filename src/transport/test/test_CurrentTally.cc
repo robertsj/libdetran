@@ -10,12 +10,14 @@
 
 // LIST OF TEST FUNCTIONS
 #define TEST_LIST                     \
-        FUNC(test_CurrentTally_1D)
+        FUNC(test_CurrentTally_1D)    \
+        FUNC(test_CurrentTally_2D)
 
 // Detran headers
 #include "TestDriver.hh"
 #include "CurrentTally.hh"
 #include "GaussLegendre.hh"
+#include "LevelSymmetric.hh"
 #include "Definitions.hh"
 
 // Setup
@@ -113,8 +115,7 @@ int test_CurrentTally_1D(int argc, char *argv[])
       u_int io = 0;
       u_int zero = 0;
       if (o == 1) io = 14;
-
-      tally->tally(io, zero, zero, zero, o, a, psi_out, true);
+      tally->tally(io, zero, zero, zero, o, a, 0, psi_out);
 
       // Loop over cells.
       for (u_int ii = 0; ii < 15; ii++)
@@ -126,7 +127,7 @@ int test_CurrentTally_1D(int argc, char *argv[])
         psi_out = psi_in * finemesh->dx(i);
 
         // TALLY THE OUTGOING CELL FLUX
-        tally->tally(i, 0, 0, 0, o, a, psi_out, false);
+        tally->tally(i, 0, 0, 0, o, a, psi_out);
       }
     }
   }
@@ -141,6 +142,150 @@ int test_CurrentTally_1D(int argc, char *argv[])
   return 0;
 }
 
+
+int test_CurrentTally_2D(int argc, char *argv[])
+{
+  using detran::u_int;
+  typedef CurrentTally<_2D> CurrentTally_T;
+
+  /*
+   *  The 2D sample problem uses the same coarse mesh on each axis:
+   *    0         1      2   3   4   5   6   7
+   *    |    3    |   2  | 1 | 1 | 1 | 1 | 1 |
+   *
+   *  which is the same as the 1D problem.
+   *
+   *  For the 2D problem, we will simplify compared to the 1D
+   *  problem.  We'll use an S2 quadrature.  We'll assume
+   *  no attenuation of the flux, and all fluxes are
+   *  unit at the boundary. The result should be that the
+   *  partial current at any location is the width of the
+   *  face times the cosine times the weight.
+   *
+   *  mu = eta = 0.577350269189625764509149
+   *  wt = 1.0
+   */
+
+  const double cos_times_weight = 2.0 * 0.577350269189625764509149 * pi;
+
+  // Get the coarse mesh
+  CurrentTally_T::SP_coarsemesh mesh = coarsemesh_2d();
+  TEST(mesh);
+
+  int ceflag[] = {0, -1, 1, -1, 2};
+
+  // Get the fine mesh.
+  CoarseMesh::SP_mesh finemesh = mesh->get_fine_mesh();
+  TEST(finemesh->dimension()    == 2);
+  TEST(finemesh->number_cells() == 15*15);
+
+  // Get the coarse mesh.
+  CoarseMesh::SP_mesh coarsemesh = mesh->get_coarse_mesh();
+  TEST(coarsemesh->dimension()    == 2);
+  TEST(coarsemesh->number_cells() == 7*7);
+
+  // Create an S2 quadrature.
+  CurrentTally_T::SP_quadrature quad(new LevelSymmetric(2, 2));
+
+  // Create the tally.
+  CurrentTally_T::SP_currenttally tally(new CurrentTally_T(mesh, quad, 1));
+
+  // Create the face flux.
+  CurrentTally_T::face_flux_type psi_in, psi_out;
+
+  // Now, fake a sweep.
+
+  // Loop through all octants.
+  for (u_int o = 0; o < 4; o++)
+  {
+    // Loop through azimuths in an octant.
+    for (u_int a = 0; a < 1; a++)
+    {
+      // Start with a psi of unity at boundaries.
+      psi_out[0] = 1.0;
+      psi_out[1] = 1.0;
+
+      // Tally x-directed face
+      {
+        // Pick left or right side
+        u_int i = 0;
+        if (o == 1 or o == 2) i = finemesh->number_cells_x() - 1;
+        // Loop over vertical
+        for (u_int jj = 0; jj < finemesh->number_cells_y(); jj++)
+        {
+          u_int j = jj;
+          if (o > 1) j = finemesh->number_cells_y() - j - 1;
+          tally->tally(i, j, 0, 0, o, a, 0, 1.0);
+        }
+      }
+
+      // Tally y-directed face
+      {
+        u_int j = 0;
+        if (o > 1) j = finemesh->number_cells_y() - 1;
+        for (u_int ii = 0; ii < finemesh->number_cells_x(); ii++)
+        {
+          u_int i = ii;
+          if (o == 1 or o == 2) i = finemesh->number_cells_x() - i - 1;
+          tally->tally(i, j, 0, 0, o, a, 1, 1.0);
+        }
+      }
+
+      // Loop over y.
+      for (u_int jj = 0; jj < finemesh->number_cells_y(); jj++)
+      {
+        u_int j = jj;
+        if (o > 1) j = finemesh->number_cells_y() - j - 1;
+
+        // Loop over x.
+        for (u_int ii = 0; ii < finemesh->number_cells_x(); ii++)
+        {
+          u_int i = ii;
+          if (o == 1 or o == 2) i = finemesh->number_cells_x() - i - 1;
+
+          // TALLY THE OUTGOING CELL FLUX
+          //cout << "i = " << i << " j = " << j << endl;
+          tally->tally(i, j, 0, 0, o, a, psi_out);
+        } // end x loop
+
+      } // end y loop
+
+    } // end angle loop
+
+  } // end octant loop
+
+  // Test x-directed.
+  for (int j = 0; j < coarsemesh->number_cells_y(); j++)
+  {
+    for (int i = 0; i < coarsemesh->number_cells_x() + 1; i++)
+    {
+      double tmp = cos_times_weight * coarsemesh->dy(j);
+      TEST(soft_equiv(
+           tally->partial_current(i, j, 0, 0,
+           CurrentTally_T::X_DIRECTED, CurrentTally_T::NEGATIVE), tmp));
+      TEST(soft_equiv(
+           tally->partial_current(i, j, 0, 0,
+           CurrentTally_T::X_DIRECTED, CurrentTally_T::POSITIVE), tmp));
+    }
+  }
+  // Test y-directed.
+  for (int i = 0; i < coarsemesh->number_cells_x(); i++)
+  {
+    for (int j = 0; j < coarsemesh->number_cells_y() + 1; j++)
+    {
+      double tmp = cos_times_weight * coarsemesh->dx(i);
+      TEST(soft_equiv(
+           tally->partial_current(i, j, 0, 0,
+           CurrentTally_T::Y_DIRECTED, CurrentTally_T::NEGATIVE), tmp));
+      TEST(soft_equiv(
+           tally->partial_current(i, j, 0, 0,
+           CurrentTally_T::Y_DIRECTED, CurrentTally_T::POSITIVE), tmp));
+    }
+  }
+
+  return 0;
+}
+
 //---------------------------------------------------------------------------//
-//              end of test_CoarseMesh.cc
+//              end of test_CurrentTally.cc
 //---------------------------------------------------------------------------//

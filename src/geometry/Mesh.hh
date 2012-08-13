@@ -147,7 +147,7 @@ public:
   int number_cells(int dim)
   {
     Require(dim >= 0);
-    Require(dim < d_dimension);
+    //Require(dim < d_dimension);
     if (dim == 0)
       return d_number_cells_x;
     else if (dim == 1)
@@ -174,7 +174,7 @@ public:
   double width(int dim, int ijk)
   {
     Require(dim >= 0);
-    Require(dim < d_dimension);
+    Require(dim <  3);
     if (dim == 0)
       return dx(ijk);
     else if (dim == 1)

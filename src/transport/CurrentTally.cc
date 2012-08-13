@@ -29,13 +29,18 @@ CurrentTally<D>::CurrentTally(SP_coarsemesh coarsemesh,
 
   SP_mesh mesh = d_coarsemesh->get_coarse_mesh();
 
+  u_int nx = d_coarsemesh->get_coarse_mesh()->number_cells_x();
+  u_int ny = d_coarsemesh->get_coarse_mesh()->number_cells_y();
+  u_int nz = d_coarsemesh->get_coarse_mesh()->number_cells_z();
+  u_int n[] = { (nx+1)*ny*nz, nx*(ny+1)*nz, nx*ny*(nz+1) };
+
   for (int g = 0; g < d_number_groups; g++)
   {
     for (int s = 0; s < 2; s++)
     {
       for (int d = 0; d < D::dimension; d++)
       {
-        d_partial_current[d][g][s].resize(mesh->number_cells(d) + 1, 0.0);
+        d_partial_current[d][g][s].resize(n[d], 0.0);
       }
     }
   }
