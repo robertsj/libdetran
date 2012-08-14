@@ -160,13 +160,18 @@ public:
                                 const u_int axis,
                                 const u_int sense);
 
-  void dump()
+  /// Print all the partial currents (for debugging)
+  void display()
   {
     for (int d = 0; d < d_partial_current.size(); d++)
       for (int g = 0; g < d_partial_current[d].size(); g++)
         for (int s = 0; s < 2; s++)
           for (int i = 0; i < d_partial_current[d][g][s].size(); i++)
-            std::cout << " J(d=" << d << ",g=" << g << ",s=" << s << ",i=" << i << ") = " << d_partial_current[d][g][s][i] << std::endl;
+          {
+            std::cout << " J(d=" << d << ",g=" << g << ",s=" << s << ",i="
+                      << i << ") = " << d_partial_current[d][g][s][i]
+                      << std::endl;
+          }
   }
 
 private:
@@ -188,6 +193,9 @@ private:
 
   /// Shifts the spatial index depending on direction
   vec2_int d_octant_shift;
+
+  /// Index of axes perpendicular to partial current \note Why does initializing require new standard?
+  u_int d_perpendicular_index[3][2];
 
   inline int index(const u_int i,
                    const u_int j,

@@ -50,50 +50,37 @@ CurrentTally<D>::tally(const u_int i,
   // Make direction triplet
   const u_int dim[] = {i, j, k};
 
-  // Area
-  const int area_index[3][2] = { {1, 2}, {0, 2}, {0, 1} };
-
-  // Loop over directions
-  for (int d = 0; d < D::dimension; d++)
+  // Loop over directions of current flow
+  for (int d0 = 0; d0 < D::dimension; d0++)
   {
-    // Check if on a coarse edge.
-    int coarse_edge =
-      d_coarsemesh->coarse_edge_flag(dim[d] + d_octant_shift[d][o], d);
 
-    // this coarse index is for the axis of interest.  However, we
-    // still need to index into a 2d or 3d map.  We need the IJK of
-    // the coarse cell
+    // Get the coarse edge index along the direction; if not on
+    // a coarse edge, -1 is returned.
+    int coarse_edge =
+      d_coarsemesh->coarse_edge_flag(dim[d0] + d_octant_shift[d0][o], d0);
 
     if (coarse_edge >= 0)
     {
+      // Define directions perpendicular to current
+      int d1 = d_perpendicular_index[d0][0];
+      int d2 = d_perpendicular_index[d0][1];
 
-      // other indices
-      int cidx1 = d_coarsemesh->fine_to_coarse(dim[area_index[d][0]], area_index[d][0]);
-      int cidx2 = d_coarsemesh->fine_to_coarse(dim[area_index[d][1]], area_index[d][1]);
+      // Coarse mesh triplet
+      int cdim[3];
+      cdim[d0] = coarse_edge;
+      cdim[d1] = d_coarsemesh->fine_to_coarse(dim[d1], d1);
+      cdim[d2] = d_coarsemesh->fine_to_coarse(dim[d2], d2);
 
-      int nx = d_coarsemesh->get_coarse_mesh()->number_cells_x();
-      int ny = d_coarsemesh->get_coarse_mesh()->number_cells_y();
-      int nz = d_coarsemesh->get_coarse_mesh()->number_cells_z();
-      int n [] = {nx, ny, nz};
+      // Cardinal coarse edge index
+      int idx = index(cdim[0], cdim[1], cdim[2], d0);
 
       // Area
-      double area = d_coarsemesh->get_fine_mesh()->
-                    width(area_index[d][0], dim[area_index[d][0]]) *
-                    d_coarsemesh->get_fine_mesh()->
-                    width(area_index[d][1], dim[area_index[d][1]]);
-      //area = 1.0;
+      double area = d_coarsemesh->get_fine_mesh()->width(d1, dim[d1]) *
+                    d_coarsemesh->get_fine_mesh()->width(d2, dim[d2]);
 
-      int idx = 0;
-      if (d == 0)
-        idx = coarse_edge + (nx + 1) * cidx1 + (nx + 1)*ny * cidx2;
-      else if (d == 1)
-        idx = cidx1 + coarse_edge * (nx) + (nx)*(ny+1) * cidx2;
-      else
-        idx = cidx1 + cidx2*(nx) + (nx*ny) * coarse_edge;
-
-      // Tally.
-      d_partial_current[d][g][d_octant_shift[d][o]][idx] +=
-        psi[d] * d_quadrature->cosines(d)[a] * d_quadrature->weight(a) * area;
+      // Tally
+      d_partial_current[d0][g][d_octant_shift[d0][o]][idx] +=
+        psi[d0] * d_quadrature->cosines(d0)[a] * d_quadrature->weight(a) * area;
 
     }
   }
@@ -110,6 +97,9 @@ CurrentTally<_1D>::tally(const u_int i,
                          const u_int a,
                          const face_flux_type psi)
 {
+  Require(j == 0);
+  Require(k == 0);
+
   // Get the coarse edge index.
   int coarse_edge =
     d_coarsemesh->coarse_edge_flag(i + d_octant_shift[0][o], 0);
@@ -132,86 +122,45 @@ CurrentTally<D>::tally(const u_int i,
                        const u_int g,
                        const u_int o,
                        const u_int a,
-                       const u_int d,
+                       const u_int d0,
                        const double psi)
 {
-  using std::cout;
-  using std::endl;
+
   // Make direction triplet
   const u_int dim[] = {i, j, k};
-  Require( (dim[d] == 0) or
-           (dim[d] == d_coarsemesh->get_fine_mesh()->number_cells(d) - 1) );
-
-  // Area
-  const int area_index[3][2] = { {1, 2}, {0, 2}, {0, 1} };
+  Require( (dim[d0] == 0) or
+           (dim[d0] == d_coarsemesh->get_fine_mesh()->number_cells(d0) - 1) );
 
   // Increment for incident direction
   int inc = 0;
-  dim[d] ? inc = 1 : inc = -1;
+  dim[d0] ? inc = 1 : inc = -1;
 
   // Get coarse edge
   int coarse_edge =
-    d_coarsemesh->coarse_edge_flag(dim[d] + d_octant_shift[d][o] + inc, d);
+    d_coarsemesh->coarse_edge_flag(dim[d0] + d_octant_shift[d0][o] + inc, d0);
   Assert(coarse_edge >= 0);
 
+  // Define directions perpendicular to current
+  int d1 = d_perpendicular_index[d0][0];
+  int d2 = d_perpendicular_index[d0][1];
+
+  // Coarse mesh triplet
+  int cdim[3];
+  cdim[d0] = coarse_edge;
+  cdim[d1] = d_coarsemesh->fine_to_coarse(dim[d1], d1);
+  cdim[d2] = d_coarsemesh->fine_to_coarse(dim[d2], d2);
+
+  // Cardinal coarse edge index
+  int idx = index(cdim[0], cdim[1], cdim[2], d0);
+
   // Area
-  double area = d_coarsemesh->get_fine_mesh()->
-                width(area_index[d][0], dim[area_index[d][0]]) *
-                d_coarsemesh->get_fine_mesh()->
-                width(area_index[d][1], dim[area_index[d][1]]);
-  //area = 1.0;
-
-  // other indices
-  int cidx1 = d_coarsemesh->fine_to_coarse(dim[area_index[d][0]], area_index[d][0]);
-  int cidx2 = d_coarsemesh->fine_to_coarse(dim[area_index[d][1]], area_index[d][1]);
-
-  int nx = d_coarsemesh->get_coarse_mesh()->number_cells_x();
-  int ny = d_coarsemesh->get_coarse_mesh()->number_cells_y();
-  int nz = d_coarsemesh->get_coarse_mesh()->number_cells_z();
-  int n [] = {nx, ny, nz};
-
-  int idx = 0;
-  if (d == 0)
-    idx = coarse_edge + (nx + 1) * cidx1 + (nx + 1)*ny * cidx2;
-  else if (d == 1)
-    idx = cidx1 + coarse_edge * (nx) + (nx)*(ny+1) * cidx2;
-  else
-    idx = cidx1 + cidx2*(nx) + (nx*ny) * coarse_edge;
+  double area = d_coarsemesh->get_fine_mesh()->width(d1, dim[d1]) *
+                d_coarsemesh->get_fine_mesh()->width(d2, dim[d2]);
 
   // Tally.
-  //cout << " tally ---> d=" << d << " ijk=" << i << j << k << " g="  << g << " sense=" << d_octant_shift[d][o] << " index=" << idx << endl;
-  d_partial_current[d][g][d_octant_shift[d][o]][idx] +=
-    psi * d_quadrature->cosines(d)[a] * d_quadrature->weight(a) * area;
+  d_partial_current[d0][g][d_octant_shift[d0][o]][idx] +=
+    psi * d_quadrature->cosines(d0)[a] * d_quadrature->weight(a) * area;
 }
-
-//template <>
-//inline void
-//CurrentTally<_1D>::tally(const u_int i,
-//                         const u_int j,
-//                         const u_int k,
-//                         const u_int g,
-//                         const u_int o,
-//                         const u_int a,
-//                         const u_int d,
-//                         const double psi)
-//{
-//  // Make direction triplet
-//  Require( (i == 0) or
-//           (i == d_coarsemesh->get_fine_mesh()->number_cells_x() - 1) );
-//
-//  // Increment for incident direction
-//  int inc = 0;
-//  i ? inc = 1 : inc = -1;
-//
-//  // Get coarse edge
-//  int coarse_edge =
-//    d_coarsemesh->coarse_edge_flag(i + d_octant_shift[0][o] + inc, 0);
-//  Assert(coarse_edge >= 0);
-//
-//  // Tally.
-//  d_partial_current[0][g][d_octant_shift[0][o]][coarse_edge] +=
-//    psi * d_quadrature->cosines(0)[a] * d_quadrature->weight(a);
-//}
 
 } // end namespace detran
 

@@ -75,6 +75,14 @@ CurrentTally<D>::CurrentTally(SP_coarsemesh coarsemesh,
   d_octant_shift[2][6] =  0;
   d_octant_shift[2][7] =  0;
 
+  // Perpendicular indices
+  d_perpendicular_index[0][0] = 1;
+  d_perpendicular_index[0][1] = 2;
+  d_perpendicular_index[1][0] = 0;
+  d_perpendicular_index[1][1] = 2;
+  d_perpendicular_index[2][0] = 0;
+  d_perpendicular_index[2][1] = 1;
+
 }
 
 //---------------------------------------------------------------------------//
