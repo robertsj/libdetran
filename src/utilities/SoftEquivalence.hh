@@ -6,16 +6,13 @@
  * \brief  Soft_Equivalence functions for floating point comparisons.
  * \note   Copyright (C) 2008 Oak Ridge National Laboratory, UT-Battelle, LLC.
  */
-//---------------------------------------------------------------------------//
-// $Id: Soft_Equivalence.hh,v 1.1 2008/01/02 17:41:36 9te Exp $
-//---------------------------------------------------------------------------//
 
 #ifndef harness_Soft_Equivalence_hh
 #define harness_Soft_Equivalence_hh
 
 #include <cmath>
 #include <iterator>
-#include "../utilities/DBC.hh"
+#include "DBC.hh"
 
 namespace detran
 {

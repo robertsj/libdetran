@@ -14,6 +14,7 @@
 namespace detran
 {
 
+// Get the partial current on a coarse mesh edge.
 template <class D>
 inline double
 CurrentTally<D>::partial_current(const u_int i,
@@ -36,6 +37,7 @@ CurrentTally<D>::partial_current(const u_int i,
   return d_partial_current[axis][g][sense][index(i, j, k, axis)];
 }
 
+// Tallying for main body
 template <class D>
 inline void
 CurrentTally<D>::tally(const u_int i,
@@ -86,7 +88,8 @@ CurrentTally<D>::tally(const u_int i,
   }
 }
 
-// Things simplify a lot for 1D, e.g. the current has no area.
+// Tallying for main body, 1D specialization. Things simplify a lot,
+// e.g. the current has no area.
 template <>
 inline void
 CurrentTally<_1D>::tally(const u_int i,

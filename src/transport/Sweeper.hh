@@ -16,6 +16,7 @@
 
 // Detran
 #include "BoundaryBase.hh"
+#include "CurrentTally.hh"
 #include "Equation.hh"
 #include "Material.hh"
 #include "Mesh.hh"
@@ -80,6 +81,10 @@ public:
   //
   typedef State::moments_type               moments_type;
   typedef State::angular_flux_type          angular_flux_type;
+  //
+  typedef CurrentTally<D>                   CurrentTally_T;
+  typedef typename
+          CurrentTally_T::SP_currenttally   SP_currenttally;
 
   /*!
    *  \brief Constructor.
@@ -96,6 +101,9 @@ public:
           SP_quadrature quadrature,
           SP_state state,
           SP_sweepsource sweepsource);
+
+  /// Virtual destructor
+  virtual ~Sweeper(){}
 
   /*!
    *  \brief Sweep over all angles and space.
@@ -133,16 +141,17 @@ public:
     return d_update_boundary;
   }
 
-  int number_sweeps()
+  int number_sweeps() const
   {
     return d_number_sweeps;
   }
 
-  /// Set an acceleration scheme.
-//  void set_acceleration(SP_acceleration acceleration)
-//  {
-//    d_acceleration = acceleration;
-//  }
+  /// Set a current tally.
+  void set_current(SP_currenttally current)
+  {
+    Require(current);
+    d_current = current;
+  }
 
   bool is_valid() const
   {
@@ -195,6 +204,9 @@ protected:
 
   /// Update the boundary on the fly?  Can't be used for Krylov.
   bool d_update_boundary;
+
+  /// Current tally
+  SP_currenttally d_current;
 
   /// \}
 

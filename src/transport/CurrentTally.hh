@@ -45,9 +45,9 @@ namespace detran
  *
  *  \f[
  *  \begin{split}
- *      & \int^{\Delta_y}_{0} \int^{\Delta_z}_{0} dy dz
- *        \mu \Bigg ( \frac{\partial \psi}{\partial x} \Big |_{x=\Delta_x}
- *                   -\frac{\partial \psi}{\partial x} \Big |_{x=0} \Bigg ) =
+ *      & \mu \int^{\Delta_y}_{0} \int^{\Delta_z}_{0} dy dz
+ *         \Bigg ( \frac{\partial \psi}{\partial x} \Big |_{x=\Delta_x}
+ *                -\frac{\partial \psi}{\partial x} \Big |_{x=0} \Bigg ) =
  *      \int^{\Delta_y}_{0} \int^{\Delta_z}_{0} dy dz
  *        \Big ( J_x(\Delta_x, y, z) - J_x(0, y, z) \Big ) \, ,
  *  \end{split}
@@ -56,8 +56,15 @@ namespace detran
  *  where \f$ J_x \f$ is the \f$x\f$-directed partial current.  Similar
  *  terms can be found for the other directions.
  *
- *  In 2D and 3D cases, the current must be integrated in space, we is
- *  done using a simple mid-point rule.
+ *  In 2D and 3D cases, the current must be integrated in space, which
+ *  is done using a simple mid-point rule consistent with the underlying
+ *  spatial discretizations.
+ *
+ *  \todo It would be useful to abstract out a general tally for
+ *        arbitrary nonlinear schemes.  While we do partial currents,
+ *        applicable to CMR, CMFD, and pCMFD, one can image various
+ *        schemes that restrict the angular dependence to a coarser
+ *        angular mesh for use in low order transport.
  */
 /*!
  * \example /transport/test/test_CurrentTally.cc
@@ -174,6 +181,18 @@ public:
           }
   }
 
+  /// Reset a group
+  void reset(const u_int group)
+  {
+    Require(group < d_number_groups);
+    for (int d = 0; d < d_partial_current.size(); d++)
+      for (int s = 0; s < 2; s++)
+        for (int i = 0; i < d_partial_current[d][group][s].size(); i++)
+        {
+          d_partial_current[d][group][s][i] = 0.0;
+        }
+  }
+
 private:
 
   /// Coarse mesh
@@ -194,7 +213,8 @@ private:
   /// Shifts the spatial index depending on direction
   vec2_int d_octant_shift;
 
-  /// Index of axes perpendicular to partial current \note Why does initializing require new standard?
+  /// Index of axes perpendicular to partial current
+  /// \note Why does initializing require new standard?
   u_int d_perpendicular_index[3][2];
 
   inline int index(const u_int i,

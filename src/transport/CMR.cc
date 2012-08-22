@@ -15,28 +15,12 @@ namespace detran
 {
 
 template <class D>
-CMR<D>::CMR(SP_mesh mesh, SP_material material, SP_quadrature quadrature)
-  : Base(mesh, material, quadrature)
-  , d_J_pos(D::dimension)
-  , d_J_neg(D::dimension)
+CMR<D>::CMR(SP_input input,
+            SP_material material,
+            SP_coarsemesh coarsemesh,
+            SP_currenttally currenttally)
+  : Base(input, material, coarsemesh, currenttally)
 {
-
-}
-
-template <class D>
-void CMR<D>::initialize(int level)
-{
-  // Create the coarse mesh.
-  Base::coarsen(level);
-
-  // Allocate the current, reaction rate, and source vectors.
-  for (int d = 0; d < D::dimension; d++)
-  {
-    d_J_pos[d].resize(b_coarse_mesh->number_cells(d), 0.0);
-    d_J_neg[d].resize(b_coarse_mesh->number_cells(d), 0.0);
-  }
-  d_R.resize(b_coarse_mesh->number_cells(), 0.0);
-  d_Q.resize(b_coarse_mesh->number_cells(), 0.0);
 
 }
 

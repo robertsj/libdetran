@@ -86,6 +86,13 @@ inline void Sweeper1D<EQ>::sweep(moments_type &phi)
       psi_out =
         (*d_boundary)(d_face_index[o][Mesh::VERT][Boundary_T::IN], o, a, d_g);
 
+      // Tally the incident flux.
+      if (d_current)
+      {
+        d_current->tally(index(o, 1, 0), 0, 0, d_g, o, a,
+                         CurrentTally_T::X_DIRECTED, psi_out);
+      }
+
       // Sweep over all cells.
       for (int ii = 0; ii < d_mesh->number_cells_x(); ii++)
       {
