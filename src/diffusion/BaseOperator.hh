@@ -22,6 +22,7 @@
 // Utilities
 #include "InputDB.hh"
 #include "Timer.hh"
+#include "SP.hh"
 
 // System
 #include "petsc.h"
@@ -39,6 +40,7 @@ class BaseOperator
 
 public:
 
+  typedef detran::SP<BaseOperator>      SP_operator;
   typedef detran::InputDB::SP_input     SP_input;
   typedef detran::Material::SP_material SP_material;
   typedef detran::Mesh::SP_mesh         SP_mesh;

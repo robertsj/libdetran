@@ -17,6 +17,8 @@ SET(SOLVERS_SRC
     GaussSeidel.cc
     KrylovMG.cc
     PowerIteration.cc
+    PreconditionerWG.cc
+    PreconditionerMG.cc
 )
 
 #-------------------------------------#
@@ -28,6 +30,7 @@ ADD_LIBRARY(solvers
             ${SOLVERS_SRC} 
 )
 TARGET_LINK_LIBRARIES( solvers
+                       diffusion
                        transport
                        angle
                        materials

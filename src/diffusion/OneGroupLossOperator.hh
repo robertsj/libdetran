@@ -45,10 +45,11 @@ class OneGroupLossOperator: public BaseOperator
 
 public:
 
-  typedef detran::InputDB::SP_input     SP_input;
-  typedef detran::Material::SP_material SP_material;
-  typedef detran::Mesh::SP_mesh         SP_mesh;
-  typedef detran::vec_dbl               vec_dbl;
+  typedef detran::SP<OneGroupLossOperator>  SP_operator;
+  typedef detran::InputDB::SP_input         SP_input;
+  typedef detran::Material::SP_material     SP_material;
+  typedef detran::Mesh::SP_mesh             SP_mesh;
+  typedef detran::vec_dbl                   vec_dbl;
 
   /*!
    *  \brief Constructor

@@ -57,17 +57,17 @@ int test_InnerGMRES_1D_actual()
 
   // Test fixtures.  Material 0 has sigma = 1, c = 0.9.
   SP_material mat = material_fixture_1g();
-
+  mat->set_sigma_s(0, 0, 0, 0.99999);
   // Mesh
   detran::vec_dbl cm(2, 0.0);
-  cm[1] = 5.0;
-  detran::vec_int fm(1, 10);
+  cm[1] = 10.0;
+  detran::vec_int fm(1, 100);
   detran::vec_int mat_map(1, 0);
   SP_mesh mesh;
   mesh = new detran::Mesh1D(fm, cm, mat_map);
 
   // Quadrature
-  SP_quadrature quad = quadruplerange_fixture();
+  SP_quadrature quad = gausslegendre_fixture();
 
   // Constant unit source.
   ConstantSource::SP_source
@@ -79,7 +79,9 @@ int test_InnerGMRES_1D_actual()
   input->put<string>(  "equation",          "dd");
   input->put<int>(     "number_groups",     1);
   input->put<int>(     "inner_max_iters",   100);
-  input->put<double>(  "inner_tolerance",   1e-14);
+  input->put<double>(  "inner_tolerance",   1e-8);
+  input->put<int>(     "inner_use_pc",      1);
+  input->put<string>(     "bc_left",      "reflect");
 
   // State
   InnerGMRES<_1D>::SP_state state(new State(input, mesh, quad));
@@ -95,6 +97,9 @@ int test_InnerGMRES_1D_actual()
 
   // Solve.
   solver.solve(0);
+
+  for (int i = 0; i < 10; i++)
+    cout << " i = " << i << " phi = " << state->phi(0)[i] << endl;
 
   return 0;
 }
