@@ -17,11 +17,11 @@ SET( DRIVERS_SRC
 # EXECUTABLE 
 #-------------------------------------#
 
-ADD_EXECUTABLE( detran 
+ADD_EXECUTABLE( xdetran 
                 detran.cc 
 )
-TARGET_LINK_LIBRARIES( detran
-                       drivers 
+TARGET_LINK_LIBRARIES( xdetran
+                       detran 
                        solvers
                        transport
                        materials
@@ -31,17 +31,18 @@ TARGET_LINK_LIBRARIES( detran
                        ioutils
                        ${GPERFTOOLS_LIBRARIES}                        
 )
-INSTALL_TARGETS(/bin detran)
+INSTALL_TARGETS(/bin xdetran)
 
 #-------------------------------------#
 # SHARED LIBRARY
 #-------------------------------------#
 
-ADD_LIBRARY( drivers 
+# This is the detran library to be linked against.
+ADD_LIBRARY( detran 
              SHARED
              ${DRIVERS_SRC} 
 )
-TARGET_LINK_LIBRARIES( drivers 
+TARGET_LINK_LIBRARIES( detran 
                        solvers
                        transport
                        materials
@@ -49,29 +50,9 @@ TARGET_LINK_LIBRARIES( drivers
                        geometry
                        utilities
 )
+
 INSTALL_FILES(/include .hh)
-INSTALL_TARGETS(/lib drivers)
-
-
-
-#-------------------------------------#
-# PYTHON INTERFACE
-#-------------------------------------#
-
-IF( DETRAN_ENABLE_PYTHON )
-
-#INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
-#SET_SOURCE_FILES_PROPERTIES(detran_utilities.i PROPERTIES CPLUSPLUS ON)
-#SWIG_ADD_MODULE(detran_utilities python detran_utilities.i )
-
-#SWIG_LINK_LIBRARIES(detran_utilities ${PYTHON_LIBRARIES} utilities)
-
-#INSTALL(FILES ${CMAKE_BINARY_DIR}/utilities/detran_utilities.py
-#        DESTINATION ${CMAKE_INSTALL_PREFIX}/python/detran)
-#INSTALL(FILES ${CMAKE_BINARY_DIR}/utilities/_detran_utilities.so
-#        DESTINATION ${CMAKE_INSTALL_PREFIX}/python/detran)
-
-ENDIF()
+INSTALL_TARGETS(/lib detran)
 
 #-------------------------------------#
 # TESTING

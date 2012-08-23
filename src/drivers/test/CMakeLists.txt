@@ -10,12 +10,7 @@ message( "++ Adding detran drivers tests." )
 
 ADD_EXECUTABLE(test_StupidParser test_StupidParser.cc)
 TARGET_LINK_LIBRARIES(test_StupidParser 
-                      drivers 
-                      utilities 
-                      geometry 
-                      materials 
-                      transport
-                      ioutils)
+                      detran)
 
 INSTALL(FILES ${CMAKE_SOURCE_DIR}/drivers/test/test.inp
         DESTINATION ${CMAKE_BINARY_DIR}/drivers/test/)

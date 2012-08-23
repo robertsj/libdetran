@@ -54,11 +54,13 @@ SET( DETRAN_ENABLE_HDF5 NO CACHE BOOL
 )
 
 # Write config file, install it, and include that directory for all source
-set(DETRAN_CONFIG_IN  "${CMAKE_CURRENT_SOURCE_DIR}/detran_config.h.in")
+set(DETRAN_CONFIG_IN  "${CMAKE_CURRENT_SOURCE_DIR}/config/detran_config.h.in")
 set(DETRAN_CONFIG_OUT "${PROJECT_BINARY_DIR}/config/detran_config.h")
 message("DETRAN_CONFIG_IN = ${DETRAN_CONFIG_IN}")
 configure_file(${DETRAN_CONFIG_IN} ${DETRAN_CONFIG_OUT})
 include_directories("${PROJECT_BINARY_DIR}/config")
+install(FILES ${PROJECT_BINARY_DIR}/config/detran_config.h
+        DESTINATION include)
 
 #------------------------------------------------------------------------------#
 # EXTERNAL LIBRARIES
