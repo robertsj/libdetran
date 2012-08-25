@@ -22,6 +22,7 @@
 #cmakedefine DETRAN_ENABLE_GPERFTOOLS
 #cmakedefine DETRAN_ENABLE_SILO
 #cmakedefine DETRAN_ENABLE_HDF5
+#cmakedefine DETRAN_ENABLE_BOOST
 
 #endif // DETRAN_CONFIG_H_ 
 

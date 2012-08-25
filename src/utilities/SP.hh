@@ -12,6 +12,11 @@
 
 #include "DBC.hh"
 
+#ifdef DETRAN_ENABLE_BOOST
+#include <boost/archive/binary_iarchive.hpp>
+#include <boost/archive/binary_oarchive.hpp>
+#endif
+
 namespace detran
 {
  

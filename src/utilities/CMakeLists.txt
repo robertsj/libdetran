@@ -24,7 +24,9 @@ ADD_LIBRARY( utilities
 )
 
 TARGET_LINK_LIBRARIES( utilities
-                       ${GPERFTOOLS_LIBRARIES} ) 
+                       ${GPERFTOOLS_LIBRARIES}
+                       ${Boost_LIBRARIES} 
+) 
 
 #-------------------------------------#
 # INSTALL

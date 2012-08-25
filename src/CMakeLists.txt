@@ -53,6 +53,11 @@ SET( DETRAN_ENABLE_HDF5 NO CACHE BOOL
   "Enable HDF5."
 )
 
+# Options for Boost. On or Off.
+SET( DETRAN_ENABLE_BOOST NO CACHE BOOL
+  "Enable BOOST."
+)
+
 # Write config file, install it, and include that directory for all source
 set(DETRAN_CONFIG_IN  "${CMAKE_CURRENT_SOURCE_DIR}/config/detran_config.h.in")
 set(DETRAN_CONFIG_OUT "${PROJECT_BINARY_DIR}/config/detran_config.h")
@@ -121,6 +126,24 @@ IF( DETRAN_ENABLE_GPERFTOOLS )
   set(GPERFTOOLS_INCLUDE   "/home/robertsj/opt/gperftools/include")
   include_directories(${GPERFTOOLS_INCLUDE})
 ENDIF()
+
+if( DETRAN_ENABLE_BOOST)
+  set(Boost_USE_STATIC_LIBS OFF)
+  set(Boost_USE_MULTITHREAD OFF)
+  set(Boost_ADDITIONAL_VERSIONS "1.50" "1.50.0")
+  find_package(Boost 1.50 COMPONENTS serialization)
+  if(Boost_FOUND)
+    include_directories(${Boost_INCLUDE_DIRS})
+  else(Boost_FOUND)
+    set( DETRAN_ENABLE_BOOST OFF )
+    MESSAGE( STATUS "Disabling BOOST since it was not found." )
+    # Need to reset them, since FindHDF5 fills them with "not founds", 
+    # which leads to errors downstream.
+    set(Boost_LIBRARIES "")
+    set(Boost_INCLUDE_DIRS "")
+  endif(Boost_FOUND)
+endif()
+
 
 #------------------------------------------------------------------------------#
 # TESTING
@@ -279,6 +302,11 @@ if( DETRAN_ENABLE_HDF5 )
 message("++++ HDF5:        enabled")
 else()
 message("++++ HDF5:        disabled")
+endif()
+if( DETRAN_ENABLE_BOOST )
+message("++++ BOOST:       enabled")
+else()
+message("++++ BOOST:       disabled")
 endif()
 if( DETRAN_ENABLE_TEST )
 message("++++ Testing:     enabled")
