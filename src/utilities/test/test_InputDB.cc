@@ -9,8 +9,9 @@
 //---------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
-#define TEST_LIST           \
-        FUNC(test_InputDB)
+#define TEST_LIST                    \
+        FUNC(test_InputDB)           \
+        FUNC(test_InputDB_serialize)
 
 // Detran headers
 #include "TestDriver.hh"
@@ -19,6 +20,7 @@
 // System headers
 #include <iostream>
 #include <cstdlib>
+#include <fstream>
 
 using namespace detran_test;
 using namespace detran;
@@ -88,6 +90,63 @@ int test_InputDB(int argc, char *argv[])
  return 0;
 }
 
+int test_InputDB_serialize(int argc, char *argv[])
+{
+
+  // Create and pack an input
+  {
+
+    // Create Input
+    InputDB::SP_input db(new InputDB());
+    db->put<int>("number_groups", 2);
+    db->put<double>("inner_tolerance", 0.0001);
+    vec_int vint(10, 1);
+    db->put<vec_int>("vector_of_ints", vint);
+    vec_dbl vdbl(10, 1.0);
+    db->put<vec_dbl>("vector_of_dbls", vdbl);
+    db->put<string>("equation", "dd");
+
+    // Output
+    std::ofstream ofs("test.inp");
+    boost::archive::binary_oarchive oa(ofs);
+    oa << db;
+    ofs.close();
+  }
+
+  // Unpack and test an input
+  {
+    // Empty database
+    InputDB::SP_input db;
+
+    // Load
+    std::ifstream ifs("test.inp");
+    boost::archive::binary_iarchive ia(ifs);
+    ia >> db;
+    ifs.close();
+
+    // Test
+    TEST(db->check("number_groups"));
+    TEST(db->get<int>("number_groups") == 2);
+    TEST(db->check("inner_tolerance"));
+    TEST(soft_equiv(db->get<double>("inner_tolerance"), 0.0001));
+    TEST(db->check("vector_of_ints"));
+    vec_int vi = db->get<vec_int>("vector_of_ints");
+    TEST(vi.size() == 10);
+    for (int i = 0; i < 10; i++)
+      TEST(vi[i] == 1);
+    TEST(db->check("vector_of_dbls"));
+    vec_dbl vd = db->get<vec_dbl>("vector_of_dbls");
+    TEST(vd.size() == 10);
+    for (int i = 0; i < 10; i++)
+      TEST(soft_equiv(vd[i], 1.0));
+    TEST(db->check("equation"));
+    string eq = db->get<string>("equation");
+    TEST(eq == db->get<string>("equation"));
+    TEST(!db->check("i_am_not_here"));
+  }
+
+ return 0;
+}
 
 //---------------------------------------------------------------------------//
 //              end of test_InputDB.cc

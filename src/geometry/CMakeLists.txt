@@ -31,7 +31,7 @@ ADD_LIBRARY(geometry
 TARGET_LINK_LIBRARIES( geometry
                        utilities
                        angle
-                       ${GPERFTOOLS_LIBRARIES}                      
+                       ${Boost_LIBRARIES}        
 )
 
 INSTALL_FILES(/include .hh)

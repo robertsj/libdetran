@@ -18,6 +18,15 @@
 // System headers
 #include <cmath>
 #include <map>
+#ifdef DETRAN_ENABLE_BOOST
+#include <boost/archive/binary_iarchive.hpp>
+#include <boost/archive/binary_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/serialization/map.hpp>
+#include <boost/serialization/vector.hpp>
+#include <boost/serialization/string.hpp>
+#endif
 
 namespace detran
 {
@@ -138,116 +147,45 @@ public:
   //------------------------------------------------------------------------//
 
   /// Return total number of cells.
-  int number_cells()
-  {
-    return d_number_cells;
-  }
+  int number_cells() const;
 
   /// Return number of cells in specified dimension.
-  int number_cells(int dim)
-  {
-    Require(dim >= 0);
-    //Require(dim < d_dimension);
-    if (dim == 0)
-      return d_number_cells_x;
-    else if (dim == 1)
-      return d_number_cells_y;
-    else
-      return d_number_cells_z;
-  }
+  int number_cells(int dim) const;
+  /// Return number of cells along x axis
+  int number_cells_x() const;
+  /// Return number of cells along y axis
+  int number_cells_y() const;
+  /// Return number of cells along z axis
+  int number_cells_z() const;
 
-  int number_cells_x()
-  {
-    return d_number_cells_x;
-  }
+  /// Get cell width in a specified dimension
+  double width(int dim, int ijk) const;
+  /// Get cell width along x axis
+  double dx(int i) const;
+  /// Get cell width along y axis
+  double dy(int j) const;
+  /// Get cell width along z axis
+  double dz(int k) const;
 
-  int number_cells_y()
-  {
-    return d_number_cells_y;
-  }
+  /// Get vector of widths along x axis
+  const vec_dbl& dx() const;
+  /// Get vector of widths along y axis
+  const vec_dbl& dy() const;
+  /// Get vector of widths along z axis
+  const vec_dbl& dz() const;
 
-  int number_cells_z()
-  {
-    return d_number_cells_z;
-  }
+  /// Get the cell volume
+  double volume(int cell) const;
 
-  double width(int dim, int ijk)
-  {
-    Require(dim >= 0);
-    Require(dim <  3);
-    if (dim == 0)
-      return dx(ijk);
-    else if (dim == 1)
-      return dy(ijk);
-    else
-      return dz(ijk);
-  }
+  /// Get domain width along x axis
+  double total_width_x() const;
+  /// Get domain width along y axis
+  double total_width_y() const;
+  /// Get domain width along z axis
+  double total_width_z() const;
 
-  double dx(int i) const
-  {
-    Require (i >= 0);
-    Require (i < d_number_cells_x);
-    return d_dx[i];
-  }
-
-  double dy(int j) const
-  {
-    Require (j >= 0);
-    Require (j < d_number_cells_y);
-    return d_dy[j];
-  }
-
-  double dz(int k) const
-  {
-    Require (k >= 0);
-    Require (k < d_number_cells_z);
-    return d_dz[k];
-  }
-
-  const vec_dbl& dx() const
-  {
-    return d_dx;
-  }
-
-  const vec_dbl& dy() const
-  {
-    return d_dy;
-  }
-
-  const vec_dbl& dz() const
-  {
-    return d_dz;
-  }
-
-  double volume(int cell) const
-  {
-    Require(cell < d_number_cells);
-    double v = dx(cell_to_i(cell)) *
-               dy(cell_to_j(cell)) *
-               dz(cell_to_k(cell));
-    Ensure(v > 0.0);
-    return v;
-  }
-
-  double total_width_x() const
-  {
-    return d_total_width_x;
-  }
-
-  double total_width_y() const
-  {
-    return d_total_width_y;
-  }
-
-  double total_width_z() const
-  {
-    return d_total_width_z;
-  }
-
-  int dimension()
-  {
-    return d_dimension;
-  }
+  /// Get the mesh dimension
+  int dimension() const;
 
   /*!
    *
@@ -258,61 +196,28 @@ public:
    * \param   k  Index along z axis.
    * \return     Cardinal index.
    */
-  int index(int i, int j = 0, int k = 0)
-  {
-    Require(i >= 0);
-    Require(i < d_number_cells_x);
-    Require(j >= 0);
-    Require(j < d_number_cells_y);
-    Require(k >= 0);
-    Require(k < d_number_cells_z);
-    return i + j * d_number_cells_x + k * d_number_cells_x * d_number_cells_y;
-  }
+  int index(int i, int j = 0, int k = 0);
 
   /*!
    *  \brief   Returns the x index given cardinal index
    *  \param   cell  Cardinal index.
    *  \return        Index along x axis.
    */
-  int cell_to_i(int cell) const
-  {
-    Require(cell >= 0);
-    Require(cell < d_number_cells);
-    int i = cell % d_number_cells_x;
-    Ensure(i < d_number_cells_x);
-    return i;
-  }
+  int cell_to_i(int cell) const;
 
   /*!
    *  \brief   Returns the y index given cardinal index
    *  \param   cell  Cardinal index.
    *  \return        Index along y axis.
    */
-  int cell_to_j(int cell) const
-  {
-    Require(cell >= 0);
-    Require(cell < d_number_cells);
-    int j = cell % (d_number_cells_x * d_number_cells_y);
-    double tmp = std::floor(double(j)/double(d_number_cells_x));
-    j = int(tmp);
-    Ensure(j < d_number_cells_y);
-    return j;
-  }
+  int cell_to_j(int cell) const;
 
   /*!
    *  \brief   Returns the z index given cardinal index
    *  \param   cell  Cardinal index.
    *  \return        Index along z axis.
    */
-  int cell_to_k(int cell) const
-  {
-    Require(cell >= 0);
-    Require(cell < d_number_cells);
-    double tmp = std::floor(double(cell)/double(d_number_cells_x*d_number_cells_y));
-    int k = int(tmp);
-    Ensure(k < d_number_cells_z);
-    return k;
-  }
+  int cell_to_k(int cell) const;
 
   /// Check if fine mesh map exists.
   bool mesh_map_exists(std::string map_key);
@@ -329,19 +234,13 @@ public:
   const vec_int& mesh_map(std::string map_key);
 
   /// Return a const reference to the full map (useful for IO)
-  const mesh_map_type& get_mesh_map() const
-  {
-    return d_mesh_map;
-  }
+  const mesh_map_type& get_mesh_map() const;
 
   /// Display some key features
   void display() const;
 
   /// Unimplemented DBC function.
-  bool is_valid() const
-  {
-    return true;
-  }
+  bool is_valid() const;
 
 protected:
 
@@ -411,6 +310,38 @@ private:
    */
   void setup();
 
+#ifdef DETRAN_ENABLE_BOOST
+
+  /// Default constructor.  This is required for serialization and
+  /// is of no use otherwise.
+  Mesh(){}
+
+  friend class boost::serialization::access;
+  template <class Archive>
+  void serialize(Archive & ar, const unsigned int version)
+  {
+    ar & d_dimension;
+    ar & d_xfm;
+    ar & d_yfm;
+    ar & d_zfm;
+    ar & d_xcme;
+    ar & d_ycme;
+    ar & d_zcme;
+    ar & d_dx;
+    ar & d_dy;
+    ar & d_dz;
+    ar & d_total_width_x;
+    ar & d_total_width_y;
+    ar & d_total_width_z;
+    ar & d_number_cells;
+    ar & d_number_cells_x;
+    ar & d_number_cells_y;
+    ar & d_number_cells_z;
+    ar & d_mesh_map;
+  }
+
+#endif
+
 };
 
 } // end namespace detran
@@ -419,7 +350,7 @@ private:
 // INLINE FUNCTIONS
 //---------------------------------------------------------------------------//
 
-//#include "Mesh.i.hh"
+#include "Mesh.i.hh"
 
 #endif /* MESH_HH_ */
 

@@ -39,6 +39,10 @@ Mesh3D::Mesh3D(vec_dbl xfme, vec_dbl yfme, vec_dbl zfme, vec_int mat_map)
 
 } // end namespace detran
 
+#ifdef DETRAN_ENABLE_BOOST
+BOOST_CLASS_EXPORT_IMPLEMENT(detran::Mesh3D)
+#endif
+
 //---------------------------------------------------------------------------//
 //              end of Mesh3D.cc
 //---------------------------------------------------------------------------//

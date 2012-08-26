@@ -15,6 +15,8 @@
 #ifdef DETRAN_ENABLE_BOOST
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/archive/binary_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
 #endif
 
 namespace detran
@@ -66,6 +68,18 @@ private:
 
   /// Number of references.
   int b_refs;
+
+#ifdef DETRAN_ENABLE_BOOST
+
+  /// Serialize
+  friend class boost::serialization::access;
+  template<class Archive>
+  void serialize(Archive & ar, const unsigned int version)
+  {
+    ar & b_refs;
+  }
+
+#endif
 
 };
 
@@ -216,6 +230,23 @@ private:
 
   /// \}
 
+  /// \name Serialize
+  /// \{
+
+#ifdef DETRAN_ENABLE_BOOST
+
+  friend class boost::serialization::access;
+  template<class Archive>
+
+  void serialize(Archive & ar, const unsigned int version)
+  {
+    ar & p;
+    ar & r;
+  }
+
+#endif
+
+  /// \}
 };
 
 } // end namespace detran

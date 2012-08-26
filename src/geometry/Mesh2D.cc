@@ -41,6 +41,10 @@ Mesh2D::Mesh2D(vec_dbl xfme, vec_dbl yfme, vec_int mat_map)
 
 } // end namespace detran
 
+#ifdef DETRAN_ENABLE_BOOST
+BOOST_CLASS_EXPORT_IMPLEMENT(detran::Mesh2D)
+#endif
+
 //---------------------------------------------------------------------------//
 //              end of Mesh2D.cc
 //---------------------------------------------------------------------------//

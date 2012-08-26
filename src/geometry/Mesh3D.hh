@@ -12,6 +12,13 @@
 // Geometry headers
 #include "Mesh.hh"
 
+// System
+#ifdef DETRAN_ENABLE_BOOST
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/base_object.hpp>
+#include <boost/serialization/export.hpp>
+#endif
+
 namespace detran
 {
 
@@ -28,8 +35,8 @@ class Mesh3D : public Mesh
 
 public:
 
-  typedef SP<Mesh3D>    SP_mesh;
-  typedef Mesh          Base;
+  typedef Mesh            Base;
+  typedef Base::SP_mesh   SP_mesh;
 
   /*!
    *  \brief Constructor.
@@ -101,10 +108,24 @@ protected:
    */
   Mesh3D() : Mesh(3) {}
 
+private:
+
+#ifdef DETRAN_ENABLE_BOOST
+  friend class boost::serialization::access;
+  template<class Archive>
+  void serialize(Archive & ar, const unsigned int version)
+  {
+    ar & boost::serialization::base_object<Base>(*this);
+  }
+#endif
+
 };
 
 } // end namespace detran
 
+#ifdef DETRAN_ENABLE_BOOST
+BOOST_CLASS_EXPORT_KEY(detran::Mesh3D)
+#endif
 
 #endif /* MESH3D_HH_ */
 

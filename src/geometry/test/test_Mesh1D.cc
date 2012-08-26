@@ -10,11 +10,15 @@
 
 // LIST OF TEST FUNCTIONS
 #define TEST_LIST                  \
-        FUNC(test_Mesh1D)
+        FUNC(test_Mesh1D)          \
+        FUNC(test_Mesh1D_serialize)
 
 // Detran headers
 #include "TestDriver.hh"
 #include "Mesh1D.hh"
+
+// System headers
+#include <fstream>
 
 // Setup
 #include "mesh_fixture.hh"
@@ -62,6 +66,55 @@ int test_Mesh1D(int argc, char *argv[])
   TEST(mat_map[0]               == 0);
   TEST(mat_map[5]               == 1);
   TESTFALSE(mesh->mesh_map_exists("SHOULDNOTEXIST"));
+
+  return 0;
+}
+
+int test_Mesh1D_serialize(int argc, char *argv[])
+{
+
+  {
+    // Get the mesh and pack it
+
+    SP_mesh mesh = mesh_1d_fixture();
+    mesh->display();
+    std::ofstream ofs("mesh1d.archive");
+    boost::archive::binary_oarchive oa(ofs);
+    oa << mesh;
+    ofs.close();
+  }
+
+  {
+    // Unpack
+
+    SP_mesh mesh;
+    std::ifstream ifs("mesh1d.archive");
+    boost::archive::binary_iarchive ia(ifs);
+    ia >> mesh;
+    ifs.close();
+    mesh->display();
+
+    // Test
+
+    TEST(mesh->number_cells()     == 10);
+    TEST(mesh->number_cells_x()   == 10);
+    TEST(mesh->number_cells_y()   == 1);
+    TEST(mesh->number_cells_z()   == 1);
+    TEST(mesh->dx(0)              == 1.0);
+    TEST(mesh->dy(0)              == 1.0);
+    TEST(mesh->dz(0)              == 1.0);
+    TEST(mesh->dimension()        == 1);
+    int cell = 5;
+    TEST(mesh->index(5)           == cell);
+    TEST(mesh->cell_to_i(cell)    == 5);
+    TEST(mesh->cell_to_j(cell)    == 0);
+    TEST(mesh->cell_to_k(cell)    == 0);
+    TEST(mesh->volume(cell)       == 1.0);
+    vec_int mat_map = mesh->mesh_map("MATERIAL");
+    TEST(mat_map[0]               == 0);
+    TEST(mat_map[5]               == 1);
+    TESTFALSE(mesh->mesh_map_exists("SHOULDNOTEXIST"));
+  }
 
   return 0;
 }

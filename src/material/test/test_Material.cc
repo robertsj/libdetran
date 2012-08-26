@@ -9,20 +9,25 @@
 //---------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
-#define TEST_LIST                  \
-        FUNC(test_Material_basic)  \
-        FUNC(test_Material_bounds)
+#define TEST_LIST                     \
+        FUNC(test_Material_basic)     \
+        FUNC(test_Material_bounds)    \
+        FUNC(test_Material_serialize)
 
 // Detran headers
 #include "TestDriver.hh"
 #include "Material.hh"
+#include "SoftEquivalence.hh"
 
+// System
 #include <iostream>
+#include <fstream>
 
 // Setup
 #include "material_fixture.hh"
 
 using namespace detran_test;
+using namespace detran;
 using namespace std;
 
 int main(int argc, char *argv[])
@@ -115,6 +120,43 @@ int test_Material_bounds(int argc, char *argv[])
 
   return 0;
 }
+
+// Test of basic public interface
+int test_Material_serialize(int argc, char *argv[])
+{
+#ifdef DETRAN_ENABLE_BOOST
+  // Create and pack
+  {
+    SP_material mat_1g = material_fixture_1g();
+    std::ofstream ofs("material.archive");
+    boost::archive::binary_oarchive oa(ofs);
+    oa << mat_1g;
+    ofs.close();
+  }
+
+  // Unpack and test
+  {
+
+    SP_material mat_1g;
+    std::ifstream ifs("material.archive");
+    boost::archive::binary_iarchive ia(ifs);
+    ia >> mat_1g;
+    ifs.close();
+
+    TEST(mat_1g);
+    TEST(soft_equiv(mat_1g->sigma_t(0, 0),    1.0));
+    TEST(soft_equiv(mat_1g->sigma_s(0, 0, 0), 0.9));
+    TEST(soft_equiv(mat_1g->nu_sigma_f(0, 0), 0.0));
+    TEST(soft_equiv(mat_1g->chi(0, 0),        0.0));
+    TEST(mat_1g->number_groups()           == 1);
+    TEST(mat_1g->number_materials()        == 3);
+    TEST(mat_1g->is_valid()                == true);
+
+  }
+#endif
+  return 0;
+}
+
 
 //---------------------------------------------------------------------------//
 //              end of test_Material.cc

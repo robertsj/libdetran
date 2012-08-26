@@ -15,6 +15,15 @@
 #include "DBC.hh"
 #include "SP.hh"
 
+// System
+#ifdef DETRAN_ENABLE_BOOST
+#include <boost/archive/binary_iarchive.hpp>
+#include <boost/archive/binary_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/serialization/vector.hpp>
+#endif
+
 namespace detran
 {
 
@@ -44,6 +53,7 @@ public:
   Material(int  number_groups,
            int  number_materials,
            bool downscatter = false);
+
 
   /*!
    *  \brief SP Constructor.
@@ -260,6 +270,32 @@ private:
 
   /// Are we ready to be used?
   bool d_finalized;
+
+#ifdef DETRAN_ENABLE_BOOST
+
+  Material(){}
+
+  friend class boost::serialization::access;
+  template<class Archive>
+
+  void serialize(Archive & ar, const unsigned int version)
+  {
+    ar & d_number_groups;
+    ar & d_number_materials;
+    ar & d_downscatter;
+    ar & d_sigma_t;
+    ar & d_nu_sigma_f;
+    ar & d_sigma_f;
+    ar & d_nu;
+    ar & d_chi;
+    ar & d_sigma_s;
+    ar & d_diff_coef;
+    ar & d_scatter_bounds;
+    ar & d_upscatter_cutoff;
+    ar & d_finalized;
+  }
+
+#endif
 
 };
 

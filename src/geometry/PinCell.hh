@@ -86,12 +86,6 @@ public:
     return d_mesh;
   }
 
-  /// Get const reference to my mesh.
-  const Mesh2D& mesh_ref() const
-  {
-    return *d_mesh;
-  }
-
   /*!
    *  \brief Mesh the pin cell.
    *  \param number_meshes  Number of meshes per direction.

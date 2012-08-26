@@ -17,6 +17,15 @@
 // System headers
 #include <string>
 #include <map>
+#ifdef DETRAN_ENABLE_BOOST
+#include <boost/archive/binary_iarchive.hpp>
+#include <boost/archive/binary_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/serialization/map.hpp>
+#include <boost/serialization/vector.hpp>
+#include <boost/serialization/string.hpp>
+#endif
 
 namespace detran
 {
@@ -159,10 +168,26 @@ private:
 
   //\}
 
-  /// \name Implementation
-  //\{
+  /// \name Serialize
+  /// \{
 
-  //\}
+#ifdef DETRAN_ENABLE_BOOST
+
+  friend class boost::serialization::access;
+  template<class Archive>
+
+  void serialize(Archive & ar, const unsigned int version)
+  {
+    ar & d_data_int;
+    ar & d_data_dbl;
+    ar & d_data_vec_int;
+    ar & d_data_vec_dbl;
+    ar & d_data_str;
+  }
+
+#endif
+
+  /// \}
 
 };
 

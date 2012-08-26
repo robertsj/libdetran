@@ -59,12 +59,6 @@ public:
     return d_mesh;
   }
 
-  /// Get const reference to my mesh.
-  const Mesh2D& mesh_ref() const
-  {
-    return *d_mesh;
-  }
-
   /// Add an assembly.
   void add_assembly(SP_assembly assembly);
 

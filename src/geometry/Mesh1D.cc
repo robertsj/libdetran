@@ -47,6 +47,10 @@ Mesh1D::Mesh1D(vec_dbl xfme, vec_int mat_map)
 
 } // end namespace detran
 
+#ifdef DETRAN_ENABLE_BOOST
+BOOST_CLASS_EXPORT_IMPLEMENT(detran::Mesh1D)
+#endif
+
 //---------------------------------------------------------------------------//
 //              end of Mesh1D.cc
 //---------------------------------------------------------------------------//

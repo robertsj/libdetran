@@ -65,12 +65,6 @@ public:
     return d_mesh;
   }
 
-  /// Get const reference to my mesh.
-  const Mesh2D& mesh_ref() const
-  {
-    return *d_mesh;
-  }
-
   /// Add a pincell
   void add_pincell(SP_pincell pin);
 
