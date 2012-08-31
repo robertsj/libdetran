@@ -7,6 +7,10 @@
  */
 //---------------------------------------------------------------------------//
 
+#include "detran_config.h"
+
+#ifdef DETRAN_ENABLE_PETSC
+
 #include "PreconditionerWG.hh"
 
 #include "OneGroupLossOperator.hh"
@@ -120,6 +124,8 @@ PreconditionerWG::PreconditionerWG(SP_input input,
 
 
 } // end namespace detran
+
+#endif
 
 //---------------------------------------------------------------------------//
 //              end of file PreconditionerWG.cc

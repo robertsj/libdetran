@@ -21,6 +21,9 @@ namespace detran
 /*!
  * \class GaussSeidel
  * \brief Solves the multigroup transport equation via Gauss-Seidel.
+ *
+ * Relevant db entries:
+ * - outer_norm_type (str) [default = "Linf"]
  */
 //---------------------------------------------------------------------------//
 
@@ -113,7 +116,8 @@ private:
   /// \name Private Data
   /// \{
 
-
+  /// Determines which norm to use (default is Linf)
+  std::string d_norm_type;
 
   /// \}
 

@@ -7,6 +7,10 @@
  */
 //---------------------------------------------------------------------------//
 
+#include "detran_config.h"
+
+#ifdef DETRAN_ENABLE_PETSC
+
 #include "PreconditionerMG.hh"
 
 namespace detran
@@ -116,8 +120,9 @@ PreconditionerMG::PreconditionerMG(SP_input input,
 
 }
 
-
 } // end namespace detran
+
+#endif
 
 //---------------------------------------------------------------------------//
 //              end of file PreconditionerMG.cc

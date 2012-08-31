@@ -59,10 +59,18 @@ void GaussSeidel<D>::solve()
       for (int g = d_material->upscatter_cutoff(); g < d_number_groups; g++)
       {
         d_inner_solver->solve(g);
-        // Constructing the L-inf norm piecewise.
-        nres = std::max(nres,
-                        norm_residual(d_state->phi(g), phi_old[g], "Linf"));
+
+        // Constructing the norm piecewise.
+        double nres_g = norm_residual(d_state->phi(g), phi_old[g], d_norm_type);
+        if (d_norm_type == "Linf")
+          nres = std::max(nres, nres_g);
+        else if (d_norm_type == "L1")
+          nres += nres_g;
+        else
+          nres += nres_g * nres_g;
       }
+      if (d_norm_type == "L2")
+        nres = std::sqrt(nres);
 
       if (d_print_out > 1  and iteration % d_print_interval == 0)
       {
