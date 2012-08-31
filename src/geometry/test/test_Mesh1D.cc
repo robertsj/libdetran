@@ -72,7 +72,7 @@ int test_Mesh1D(int argc, char *argv[])
 
 int test_Mesh1D_serialize(int argc, char *argv[])
 {
-
+#ifdef DETRAN_ENABLE_BOOST
   {
     // Get the mesh and pack it
 
@@ -115,7 +115,7 @@ int test_Mesh1D_serialize(int argc, char *argv[])
     TEST(mat_map[5]               == 1);
     TESTFALSE(mesh->mesh_map_exists("SHOULDNOTEXIST"));
   }
-
+#endif
   return 0;
 }
 

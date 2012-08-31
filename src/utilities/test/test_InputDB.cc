@@ -93,6 +93,7 @@ int test_InputDB(int argc, char *argv[])
 int test_InputDB_serialize(int argc, char *argv[])
 {
 
+#ifdef DETRAN_ENABLE_BOOST
   // Create and pack an input
   {
 
@@ -144,7 +145,7 @@ int test_InputDB_serialize(int argc, char *argv[])
     TEST(eq == db->get<string>("equation"));
     TEST(!db->check("i_am_not_here"));
   }
-
+#endif
  return 0;
 }
 

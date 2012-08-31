@@ -49,6 +49,7 @@ TARGET_LINK_LIBRARIES( detran
                        angle
                        geometry
                        utilities
+                       ioutils
 )
 
 INSTALL_FILES(/include .hh)
