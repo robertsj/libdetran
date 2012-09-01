@@ -41,7 +41,7 @@ namespace detran
     // \todo Account for multiplicative fixed source problems
     if (d_fissionsource)
     {
-      State::moments_type qf = d_fissionsource->source(g);
+      const State::moments_type &qf = d_fissionsource->source(g);
       for (int cell = 0; cell < d_mesh->number_cells(); cell++)
       {
         d_fixed_group_source[cell] += qf[cell];

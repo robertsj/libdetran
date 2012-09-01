@@ -38,19 +38,6 @@ void Equation_SD_1D::setup_octant(int octant)
   d_octant = octant;
 }
 
-void Equation_SD_1D::setup_angle(int angle)
-{
-  // Currently, only the 1st octant values should be in use.
-  Require(angle >= 0);
-  Require(angle < d_quadrature->number_angles_octant());
-  double mu  = d_quadrature->mu(0, angle);
-  for (int i = 0; i < d_mesh->number_cells_x(); i++)
-  {
-    d_coef_x[i] = mu / d_mesh->dx(i);
-  }
-  d_angle = angle;
-}
-
 } // end namespace detran
 
 //---------------------------------------------------------------------------//
