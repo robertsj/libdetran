@@ -30,14 +30,14 @@ Material::Material(int number_groups,
  : d_number_groups(number_groups)
  , d_number_materials(number_materials)
  , d_downscatter(downscatter)
- , d_sigma_t(number_materials, vec_dbl(number_groups, 0.0))
- , d_sigma_a(number_materials, vec_dbl(number_groups, 0.0))
- , d_nu_sigma_f(number_materials, vec_dbl(number_groups, 0.0))
- , d_sigma_f(number_materials, vec_dbl(number_groups, 0.0))
- , d_nu(number_materials, vec_dbl(number_groups, 1.0))
- , d_chi(number_materials, vec_dbl(number_groups, 0.0))
- , d_diff_coef(number_materials, vec_dbl(number_groups, 0.0))
- , d_sigma_s(number_materials, vec2_dbl(number_groups, vec_dbl(number_groups, 0.0)))
+ , d_sigma_t(number_groups, vec_dbl(number_materials, 0.0))
+ , d_sigma_a(number_groups, vec_dbl(number_materials, 0.0))
+ , d_nu_sigma_f(number_groups, vec_dbl(number_materials, 0.0))
+ , d_sigma_f(number_groups, vec_dbl(number_materials, 0.0))
+ , d_nu(number_groups, vec_dbl(number_materials, 1.0))
+ , d_chi(number_groups, vec_dbl(number_materials, 0.0))
+ , d_diff_coef(number_groups, vec_dbl(number_materials, 0.0))
+ , d_sigma_s(number_groups, vec2_dbl(number_groups, vec_dbl(number_materials, 0.0)))
  , d_scatter_bounds(number_groups, vec_int(2, 0))
 {
   // Preconditions
@@ -45,8 +45,8 @@ Material::Material(int number_groups,
   Require(number_materials >= 0);
 
   // Postconditions
-  Ensure(d_sigma_t.size() == number_materials);
-  Ensure(d_sigma_t[0].size() == number_groups);
+  Ensure(d_sigma_t.size() == number_groups);
+  Ensure(d_sigma_t[0].size() == number_materials);
 }
 
 //----------------------------------------------------------------------------//
@@ -60,7 +60,7 @@ void Material::set_sigma_t(int m, int g, double v)
   Require(g >= 0);
   Require(g < d_number_groups);
   Require(v >= 0.0);
-  d_sigma_t[m][g] = v;
+  d_sigma_t[g][m] = v;
 }
 
 void Material::set_sigma_a(int m, int g, double v)
@@ -70,7 +70,7 @@ void Material::set_sigma_a(int m, int g, double v)
   Require(g >= 0);
   Require(g < d_number_groups);
   Require(v >= 0.0);
-  d_sigma_a[m][g] = v;
+  d_sigma_a[g][m] = v;
 }
 
 
@@ -81,7 +81,7 @@ void Material::set_nu_sigma_f(int m, int g, double v)
   Require(g >= 0);
   Require(g < d_number_groups);
   Require(v >= 0.0);
-  d_nu_sigma_f[m][g] = v;
+  d_nu_sigma_f[g][m] = v;
 }
 
 void Material::set_sigma_f(int m, int g, double v)
@@ -91,7 +91,7 @@ void Material::set_sigma_f(int m, int g, double v)
   Require(g >= 0);
   Require(g < d_number_groups);
   Require(v >= 0.0);
-  d_sigma_f[m][g] = v;
+  d_sigma_f[g][m] = v;
 }
 
 void Material::set_nu(int m, int g, double v)
@@ -101,7 +101,7 @@ void Material::set_nu(int m, int g, double v)
   Require(g >= 0);
   Require(g < d_number_groups);
   Require(v >= 0.0);
-  d_nu[m][g] = v;
+  d_nu[g][m] = v;
 }
 
 void Material::set_chi(int m, int g, double v)
@@ -111,7 +111,7 @@ void Material::set_chi(int m, int g, double v)
   Require(g >= 0);
   Require(g < d_number_groups);
   Require(v >= 0.0);
-  d_chi[m][g] = v;
+  d_chi[g][m] = v;
 }
 
 // Note, not including anisotropic for now...
@@ -124,7 +124,7 @@ void Material::set_sigma_s(int m, int g, int gp, double v)
   Require(gp >= 0);
   Require(gp < d_number_groups);
   Require(v >= 0.0);
-  d_sigma_s[m][g][gp] = v;
+  d_sigma_s[g][gp][m] = v;
 }
 
 void Material::set_diff_coef(int m, int g, double v)
@@ -134,7 +134,7 @@ void Material::set_diff_coef(int m, int g, double v)
   Require(g >= 0);
   Require(g < d_number_groups);
   Require(v >= 0.0);
-  d_diff_coef[m][g] = v;
+  d_diff_coef[g][m] = v;
 }
 
 void Material::set_sigma_t(int m, vec_dbl &v)
@@ -142,7 +142,8 @@ void Material::set_sigma_t(int m, vec_dbl &v)
   Require(m >= 0);
   Require(m < d_number_materials);
   Require(v.size() == d_number_groups);
-  d_sigma_t[m] = v;
+  for (int g = 0; g < d_number_groups; g++)
+    d_sigma_t[g][m] = v[g];
 }
 
 void Material::set_sigma_a(int m, vec_dbl &v)
@@ -150,7 +151,8 @@ void Material::set_sigma_a(int m, vec_dbl &v)
   Require(m >= 0);
   Require(m < d_number_materials);
   Require(v.size() == d_number_groups);
-  d_sigma_a[m] = v;
+  for (int g = 0; g < d_number_groups; g++)
+    d_sigma_a[g][m] = v[g];
 }
 
 
@@ -159,7 +161,8 @@ void Material::set_nu_sigma_f(int m, vec_dbl &v)
   Require(m >= 0);
   Require(m < d_number_materials);
   Require(v.size() == d_number_groups);
-  d_nu_sigma_f[m] = v;
+  for (int g = 0; g < d_number_groups; g++)
+    d_nu_sigma_f[g][m] = v[g];
 }
 
 void Material::set_sigma_f(int m, vec_dbl &v)
@@ -167,7 +170,8 @@ void Material::set_sigma_f(int m, vec_dbl &v)
   Require(m >= 0);
   Require(m < d_number_materials);
   Require(v.size() == d_number_groups);
-  d_sigma_f[m] = v;
+  for (int g = 0; g < d_number_groups; g++)
+    d_sigma_f[g][m] = v[g];
 }
 
 void Material::set_nu(int m, vec_dbl &v)
@@ -175,7 +179,8 @@ void Material::set_nu(int m, vec_dbl &v)
   Require(m >= 0);
   Require(m < d_number_materials);
   Require(v.size() == d_number_groups);
-  d_nu[m] = v;
+  for (int g = 0; g < d_number_groups; g++)
+    d_nu[g][m] = v[g];
 }
 
 void Material::set_chi(int m, vec_dbl &v)
@@ -183,7 +188,8 @@ void Material::set_chi(int m, vec_dbl &v)
   Require(m >= 0);
   Require(m < d_number_materials);
   Require(v.size() == d_number_groups);
-  d_chi[m] = v;
+  for (int g = 0; g < d_number_groups; g++)
+    d_chi[g][m] = v[g];
 }
 
 void Material::set_sigma_s(int m, int g, vec_dbl &v)
@@ -194,6 +200,8 @@ void Material::set_sigma_s(int m, int g, vec_dbl &v)
   Require(g < d_number_groups);
   Require(v.size() == d_number_groups);
   d_sigma_s[m][g] = v;
+  for (int gp = 0; gp < d_number_groups; gp++)
+    d_sigma_s[g][gp][m] = v[gp];
 }
 
 void Material::set_diff_coef(int m, vec_dbl &v)
@@ -201,7 +209,8 @@ void Material::set_diff_coef(int m, vec_dbl &v)
   Require(m >= 0);
   Require(m < d_number_materials);
   Require(v.size() == d_number_groups);
-  d_diff_coef[m] = v;
+  for (int g = 0; g < d_number_groups; g++)
+    d_diff_coef[g][m] = v[g];
 }
 
 //----------------------------------------------------------------------------//
@@ -230,10 +239,10 @@ void Material::compute_sigma_a()
   {
     for (int g = 0; g < d_number_groups; g++)
     {
-      double sa = d_sigma_t[m][g];
+      double sa = d_sigma_t[g][m];
       for (int gp = 0; gp < d_number_groups; gp++)
-        sa -= d_sigma_s[m][g][gp];
-      d_sigma_a[m][g] = sa;
+        sa -= d_sigma_s[g][gp][m];
+      d_sigma_a[g][m] = sa;
     }
   }
 }
@@ -245,7 +254,7 @@ void Material::compute_diff_coef()
   {
     for (int g = 0; g < d_number_groups; g++)
     {
-      d_diff_coef[m][g] =  coef * d_sigma_t[m][g];
+      d_diff_coef[g][m] =  coef * d_sigma_t[g][m];
     }
   }
 }
@@ -272,17 +281,17 @@ void Material::finalize()
       // Downscatter from gp to g
       for (int gp = 0; gp < g; gp++)
       {
-        if (d_sigma_s[m][g][gp] > 0.0) lower = std::min(gp, lower);
+        if (d_sigma_s[g][gp][m] > 0.0) lower = std::min(gp, lower);
       }
 
       // Upscatter from gp to g
       for (int gp = 0; gp < d_number_groups; gp++)
       {
-        if (d_sigma_s[m][g][gp] > 0.0) upper = std::max(gp, upper);
+        if (d_sigma_s[g][gp][m] > 0.0) upper = std::max(gp, upper);
       }
 
       // Compute nu*sigma_f
-      d_nu_sigma_f[m][g] = d_nu[m][g] * d_sigma_f[m][g];
+      d_nu_sigma_f[g][m] = d_nu[g][m] * d_sigma_f[g][m];
 
     }
     d_scatter_bounds[g][0] = lower;
