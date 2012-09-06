@@ -10,18 +10,12 @@
 #ifndef QUADRATUREMOC_HH_
 #define QUADRATUREMOC_HH_
 
-// Detran
 #include "Quadrature.hh"
 #include "PolarQuadrature.hh"
-#include "Point.hh"
-
-// Utilities
-#include "Definitions.hh"
-
-// System
+#include "utilities/Point.hh"
 #include <cmath>
 
-namespace detran
+namespace detran_angle
 {
 
 /*!
@@ -49,17 +43,23 @@ class QuadratureMOC: public Quadrature
 
 public:
 
-  /// \name Useful Typedefs
-  /// \{
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
 
-  typedef SP<QuadratureMOC>       SP_quadrature;
-  typedef Quadrature              Base;
-  typedef Base::SP_quadrature     SP_base;
-  typedef SP<PolarQuadrature>     SP_polar;
-  typedef std::vector<Point>      vec_point;
-  typedef std::vector<vec_point>  vec2_point;
+  typedef detran_utilities::SP<QuadratureMOC>           SP_quadrature;
+  typedef Quadrature                                    Base;
+  typedef Base::SP_quadrature                           SP_base;
+  typedef detran_utilities::SP<PolarQuadrature>         SP_polar;
+  typedef detran_utilities::Point                       Point;
+  typedef std::vector<Point>                            vec_point;
+  typedef std::vector<vec_point>                        vec2_point;
+  typedef detran_utilities::vec_int                     vec_int;
+  typedef detran_utilities::vec2_int                    vec2_int;
 
-  /// \}
+  //-------------------------------------------------------------------------//
+  // PUBLIC INTERFACE
+  //-------------------------------------------------------------------------//
 
   /*!
    *  \brief Constructor
@@ -69,50 +69,50 @@ public:
    *  \param name                 Name of this azimuthal quadrature
    *  \param polar                Name of the requested polar quadrature
    */
-  QuadratureMOC(int dim,
-                int num_azimuths_octant,
-                int num_polar,
+  QuadratureMOC(size_t dim,
+                size_t num_azimuths_octant,
+                size_t num_polar,
                 std::string name,
                 std::string polar);
 
-  int number_azimuths_octant() const
+  size_t number_azimuths_octant() const
   {
     return d_number_azimuths_octant;
   }
 
-  int number_polar_octant() const
+  size_t number_polar_octant() const
   {
     return d_number_polar;
   }
 
-  int number_tracks(u_int a)
+  size_t number_tracks(size_t a)
   {
     Require(a < 2*d_number_azimuths_octant);
     return d_exit[a].size();
   }
 
-  int number_enter(u_int a, u_int xy) const
+  size_t number_enter(size_t a, size_t xy) const
   {
     Require(a < 2*d_number_azimuths_octant);
     Require(xy == 0 or xy == 1);
     return d_number_enter[a][xy];
   }
 
-  int number_exit(u_int a, u_int xy) const
+  int number_exit(size_t a, size_t xy) const
   {
     Require(a < 2*d_number_azimuths_octant);
     Require(xy == 0 or xy == 1);
     return d_number_exit[a][xy];
   }
 
-  Point enter(u_int a, u_int i) const
+  Point enter(size_t a, size_t i) const
   {
     Require(a < 2*d_number_azimuths_octant);
     Require(i < d_exit[a].size());
     return d_enter[a][i];
   }
 
-  Point exit(u_int a, u_int i) const
+  Point exit(size_t a, size_t i) const
   {
     Require(a < 2*d_number_azimuths_octant);
     Require(i < d_exit[a].size());
@@ -120,7 +120,7 @@ public:
   }
 
   /// Return angle within octant given azimuth and polar.
-  int angle(int a, int p) const
+  size_t angle(size_t a, size_t p) const
   {
     Require(a < d_number_azimuths_octant);
     Require(p < d_number_polar);
@@ -128,7 +128,7 @@ public:
   }
 
   /// Return azimuth index for angle within octant
-  int azimuth(int angle) const
+  size_t azimuth(size_t angle) const
   {
     Require(angle < d_number_angles_octant);
     double tmp = double(angle % d_number_angles_octant)/double(d_number_polar);
@@ -136,49 +136,49 @@ public:
   }
 
   /// Return polar index for cardinal index
-  int polar(int angle) const
+  size_t polar(size_t angle) const
   {
     Require(angle < d_number_angles_octant);
     return angle % d_number_polar;
   }
 
-  double sin_theta(u_int p) const
+  double sin_theta(size_t p) const
   {
     Require(p < d_number_polar);
     return d_polar->sin_theta(p);
   }
 
-  double cos_theta(u_int p) const
+  double cos_theta(size_t p) const
   {
     Require(p < d_number_polar);
     return d_polar->cos_theta(p);
   }
 
-  double phi(u_int a) const
+  double phi(size_t a) const
   {
     Require(a < 2 * d_number_azimuths_octant);
     return d_phi[a];
   }
 
-  double sin_phi(u_int a) const
+  double sin_phi(size_t a) const
   {
     Require(a < 2 * d_number_azimuths_octant);
     return d_sin_phi[a];
   }
 
-  double cos_phi(u_int a) const
+  double cos_phi(size_t a) const
   {
     Require(a < 2 * d_number_azimuths_octant);
     return d_cos_phi[a];
   }
 
-  double spacing(u_int a) const
+  double spacing(size_t a) const
   {
     Require(a < 2 * d_number_azimuths_octant);
     return d_spacing[a];
   }
 
-  double azimuth_weight(u_int a) const
+  double azimuth_weight(size_t a) const
   {
     Require(a < 2 * d_number_azimuths_octant);
     return d_azimuth_weight[a];
@@ -188,16 +188,26 @@ public:
 
 protected:
 
-  /// \name Private Data
-  /// \{
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   /// Polar quadrature
   SP_polar d_polar;
 
+  /// Azimuth angles
   vec_dbl d_phi;
+
+  /// Azimuth cosines
   vec_dbl d_cos_phi;
+
+  /// Azimuth sines
   vec_dbl d_sin_phi;
+
+  /// Normalized spacing (one 1x1 box)
   vec_dbl d_spacing;
+
+  /// Azimuth weights
   vec_dbl d_azimuth_weight;
 
   /// Number of azimuths per octant

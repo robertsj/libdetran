@@ -39,19 +39,19 @@ namespace std
 %include "Point.hh"
 
 // SP template of input database
-%template(InputDBSP) detran::SP<detran::InputDB>;
+%template(InputDBSP) detran_utilities::SP<detran_utilities::InputDB>;
 
 // Template getters and setters
-%template(get_int)      detran::InputDB::get<int>;
-%template(get_dbl)      detran::InputDB::get<double>;
-%template(get_vec_int)  detran::InputDB::get<detran::vec_int>;
-%template(get_vec_dbl)  detran::InputDB::get<detran::vec_dbl>;
-%template(get_str)      detran::InputDB::get<std::string>;
-%template(put_int)      detran::InputDB::put<int>;
-%template(put_dbl)      detran::InputDB::put<double>;
-%template(put_vec_int)  detran::InputDB::put<detran::vec_int>;
-%template(put_vec_dbl)  detran::InputDB::put<detran::vec_dbl>;
-%template(put_str)      detran::InputDB::put<std::string>;
+%template(get_int)      detran_utilities::InputDB::get<int>;
+%template(get_dbl)      detran_utilities::InputDB::get<double>;
+%template(get_vec_int)  detran_utilities::InputDB::get<detran_utilities::vec_int>;
+%template(get_vec_dbl)  detran_utilities::InputDB::get<detran_utilities::vec_dbl>;
+%template(get_str)      detran_utilities::InputDB::get<std::string>;
+%template(put_int)      detran_utilities::InputDB::put<int>;
+%template(put_dbl)      detran_utilities::InputDB::put<double>;
+%template(put_vec_int)  detran_utilities::InputDB::put<detran_utilities::vec_int>;
+%template(put_vec_dbl)  detran_utilities::InputDB::put<detran_utilities::vec_dbl>;
+%template(put_str)      detran_utilities::InputDB::put<std::string>;
 
 //---------------------------------------------------------------------------//
 //              end of detran_utilities.i

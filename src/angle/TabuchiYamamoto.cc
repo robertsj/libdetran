@@ -1,17 +1,18 @@
-/*
- * TabuchiYamamoto.cc
- *
- *  Created on: Jun 22, 2012
- *      Author: robertsj
+//----------------------------------*-C++-*----------------------------------//
+/*!
+ * \file   TabuchiYamamoto.cc
+ * \brief  TabuchiYamamoto class definition.
+ * \author Jeremy Roberts
+ * \date   Jun 22, 2012
  */
+//---------------------------------------------------------------------------//
 
-// Detran
 #include "TabuchiYamamoto.hh"
 
-namespace detran
+namespace detran_angle
 {
 
-TabuchiYamamoto::TabuchiYamamoto(int number_polar)
+TabuchiYamamoto::TabuchiYamamoto(size_t number_polar)
   : PolarQuadrature(number_polar)
 {
   if (number_polar == 1)
@@ -48,8 +49,7 @@ TabuchiYamamoto::TabuchiYamamoto(int number_polar)
 
 }
 
-
-} // end namespace detran
+} // end namespace detran_angle
 
 //---------------------------------------------------------------------------//
 //              end of file TabuchiYamamoto.cc

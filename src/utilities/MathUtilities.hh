@@ -3,7 +3,7 @@
  * \file   MathUtilities.hh
  * \author robertsj
  * \date   Apr 4, 2012
- * \brief  MathUtilities class definition.
+ * \brief  Provides several useful math functions
  * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
@@ -20,7 +20,7 @@
 #include <cmath>
 #include <string>
 
-namespace detran
+namespace detran_utilities
 {
 
 /*!
@@ -128,7 +128,7 @@ inline double norm_relative_residual(vec_dbl &x, vec_dbl &y, std::string flag = 
   return v;
 }
 
-} // namespace
+} // namespace detran_utilities
 
 #endif /* MATHUTILITIES_HH_ */
 

@@ -20,7 +20,7 @@
 // System
 #include <cmath>
 
-namespace detran
+namespace detran_angles
 {
 
 

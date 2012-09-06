@@ -1,36 +1,48 @@
-/*
- * PolarQuadrature.hh
- *
- *  Created on: Jun 22, 2012
- *      Author: robertsj
+//----------------------------------*-C++-*----------------------------------//
+/*!
+ * \file   PolarQuadrature.hh
+ * \brief  PolarQuadrature class definition.
+ * \author Jeremy Roberts
+ * \date   Jun 22, 2012
  */
+//---------------------------------------------------------------------------//
 
 #ifndef POLARQUADRATURE_HH_
 #define POLARQUADRATURE_HH_
 
-// Utilities
-#include "DBC.hh"
-#include "Definitions.hh"
-#include "SP.hh"
-
-// System
+#include "utilities/DBC.hh"
+#include "utilities/Definitions.hh"
+#include "utilities/SP.hh"
 #include <vector>
 
-namespace detran
+namespace detran_angle
 {
 
-class PolarQuadrature: public Object
+/*!
+ *  \class PolarQuadrature
+ *  \brief Polar quadrature definition, nominally for MOC
+ */
+class PolarQuadrature
 {
 
 public:
 
-  typedef SP<PolarQuadrature>   SP_polar;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
+
+  typedef detran_utilities::SP<PolarQuadrature>       SP_polar;
+  typedef detran_utilities::size_t                    size_t;
+
+  //-------------------------------------------------------------------------//
+  // PUBLIC INTERFACE
+  //-------------------------------------------------------------------------//
 
   /*!
    *  \brief Constructor
    *  \param number_polar   Number of angles in positive half space
    */
-  PolarQuadrature(int number_polar)
+  PolarQuadrature(size_t number_polar)
     : d_number_polar(number_polar)
     , d_sin(number_polar, 0.0)
     , d_cos(number_polar, 0.0)
@@ -42,54 +54,49 @@ public:
   /// Virtual destructor.
   virtual ~PolarQuadrature(){};
 
-  int number_polar() const
+  size_t number_polar() const
   {
     return d_number_polar;
   }
 
   /*!
    *  \brief Return a polar sine
-   *  \param a
+   *  \param p  Polar index in octant
    */
-  double sin_theta(int a) const
+  double sin_theta(size_t p) const
   {
-    Require(a < d_number_polar);
-    return d_sin[a];
+    Require(p < d_number_polar);
+    return d_sin[p];
   }
 
   /*!
    *  \brief Return a polar cosine
-   *  \param a
+   *  \param p  Polar index in octant
    */
-  double cos_theta(int a) const
+  double cos_theta(size_t p) const
   {
-    Require(a < d_number_polar);
-    return d_cos[a];
+    Require(p < d_number_polar);
+    return d_cos[p];
   }
 
   /*!
    *  \brief Return a polar weight
-   *  \param a
+   *  \param p  Polar index in octant
    */
-  double weight(int a) const
+  double weight(int p) const
   {
-    Require(a < d_number_polar);
-    return d_weight[a];
-  }
-
-  /// DBC function
-  bool is_valid() const
-  {
-    return true;
+    Require(p < d_number_polar);
+    return d_weight[p];
   }
 
 protected:
 
-  /// \name Protected Data
-  /// \{
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   /// Number of polar angles for a single half space.
-  int d_number_polar;
+  size_t d_number_polar;
 
   /// Vector of sines
   std::vector<double> d_sin;
@@ -100,11 +107,8 @@ protected:
   /// Vector of weights (sums to 1).
   std::vector<double> d_weight;
 
-  /// \}
-
 };
 
-}
-
+} // end namespace detran_angle
 
 #endif /* POLARQUADRATURE_HH_ */

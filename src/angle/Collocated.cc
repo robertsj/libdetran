@@ -7,20 +7,17 @@
  */
 //---------------------------------------------------------------------------//
 
-// Detran
 #include "Collocated.hh"
-
-// System
 #include <cmath>
 #include <iostream>
 
-namespace detran
+namespace detran_angle
 {
 
-Collocated::Collocated(int dim,
-                       int num_azimuths_octant,
-                       int multiplier,
-                       int num_polar,
+Collocated::Collocated(size_t dim,
+                       size_t num_azimuths_octant,
+                       size_t multiplier,
+                       size_t num_polar,
                        std::string polar)
   : QuadratureMOC(dim,
                   num_azimuths_octant,
@@ -103,7 +100,7 @@ Collocated::Collocated(int dim,
   for (int a = 0; a < d_number_azimuths_octant; a++)
   {
     d_phi[a] = points[start + a];
-    d_phi[2*d_number_azimuths_octant - a - 1] = pi - d_phi[a];
+    d_phi[2*d_number_azimuths_octant - a - 1] = detran_utilities::pi - d_phi[a];
   }
 
   //-------------------------------------------------------------------------//
@@ -205,8 +202,8 @@ Collocated::Collocated(int dim,
     {
       // Cardinal Index
       int angle = a * d_number_polar + p;
-      d_mu[angle]     = cos(phi[a]) * d_polar->sin_theta(p);
-      d_eta[angle]    = sin(phi[a]) * d_polar->sin_theta(p);
+      d_mu[angle]     = std::cos(phi[a]) * d_polar->sin_theta(p);
+      d_eta[angle]    = std::sin(phi[a]) * d_polar->sin_theta(p);
       d_xi[angle]     = d_polar->cos_theta(p);
       d_weight[angle] = 2.0 * d_polar->weight(p) * d_azimuth_weight[a];
 
@@ -259,8 +256,8 @@ Collocated::Collocated(int dim,
     double dy = 1.0 / ny;
 
     // Fill cos and sin
-    d_cos_phi[a] = cos(d_phi[a]);
-    d_sin_phi[a] = sin(d_phi[a]);
+    d_cos_phi[a] = std::cos(d_phi[a]);
+    d_sin_phi[a] = std::sin(d_phi[a]);
 
     // Perpendicular distance between tracks
     d_spacing[a] = d_sin_phi[a] * dx;
@@ -299,8 +296,8 @@ Collocated::Collocated(int dim,
     double dx = 1.0 / nx;
     double dy = 1.0 / ny;
 
-    d_cos_phi[a2] = cos(d_phi[a2]);
-    d_sin_phi[a2] = sin(d_phi[a2]);
+    d_cos_phi[a2] = std::cos(d_phi[a2]);
+    d_sin_phi[a2] = std::sin(d_phi[a2]);
     d_spacing[a2] = d_spacing[a];
     Assert(d_spacing[a2] > 0.0);
 
@@ -324,7 +321,7 @@ Collocated::Collocated(int dim,
 
 }
 
-} // end namespace detran
+} // end namespace detran_angle
 
 //---------------------------------------------------------------------------//
 //              end of file Collocated.cc

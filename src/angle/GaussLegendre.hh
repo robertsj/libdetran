@@ -13,7 +13,7 @@
 // Angle headers
 #include "Quadrature.hh"
 
-namespace detran
+namespace detran_angle
 {
 
 class GaussLegendre : public Quadrature
@@ -21,35 +21,35 @@ class GaussLegendre : public Quadrature
 
 public:
 
-  typedef SP<GaussLegendre> SP_quadrature;
-  typedef SP<Quadrature>    SP_base;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
+
+  typedef detran_utilities::SP<GaussLegendre> SP_quadrature;
+  typedef detran_utilities::SP<Quadrature>    SP_base;
+
+  //-------------------------------------------------------------------------//
+  // PUBLIC INTERFACE
+  //-------------------------------------------------------------------------//
 
   /*!
-   *  \brief Constructor.
-   *
+   *  \brief Constructor
    *  \param    order       Quadrature order.
    */
-  GaussLegendre(int order);
+  GaussLegendre(size_t order);
 
-  /*!
-   *  \brief SP Constructor.
-   *
-   *  \param    order       Quadrature order.
-   */
-  static SP<Quadrature> Create(int order)
+  /// SP constructor
+  static detran_utilities::SP<Quadrature> Create(size_t order)
   {
-    SP_quadrature p;
-    p = new GaussLegendre(order);
+    SP_quadrature p(new GaussLegendre(order));
     return p;
   }
 
-  void display() const;
-
 private:
 
-
-  /// \name Implementation
-  /// \{
+  //-------------------------------------------------------------------------//
+  // IMPLEMENTATION
+  //-------------------------------------------------------------------------//
 
   /*!
    *  \brief Compute GL parameters for arbitrary order.
@@ -57,12 +57,11 @@ private:
    *  \param mu     Absissca
    *  \param wt     Weights
    */
-  void generate_parameters(int order, vec_dbl &mu, vec_dbl &wt);
+  void generate_parameters(size_t order, vec_dbl &mu, vec_dbl &wt);
 
-  ///\}
 };
 
-} // end namespace detran
+} // end namespace detran_angle
 
 #endif /* GAUSSLEGENDRE_HH_ */
 

@@ -16,10 +16,10 @@
 #include <cstdio>
 #include <cmath>
 
-namespace detran
+namespace detran_angle
 {
 
-GaussLegendre::GaussLegendre(int order)
+GaussLegendre::GaussLegendre(size_t order)
   : Quadrature(order,
                1,
                order,
@@ -232,7 +232,7 @@ GaussLegendre::GaussLegendre(int order)
  * \param wt        temporary array for weights
  *
  */
-void GaussLegendre::generate_parameters(int order, vec_dbl &mu, vec_dbl &wt)
+void GaussLegendre::generate_parameters(size_t order, vec_dbl &mu, vec_dbl &wt)
 {
   int m, j, i;
   double z1, z, xm, xl, pp, p3, p2, p1;
@@ -240,7 +240,7 @@ void GaussLegendre::generate_parameters(int order, vec_dbl &mu, vec_dbl &wt)
   m = (order + 1) / 2;
   for (i = 1; i <= m; i++)
   { /* Loop over the desired roots. */
-    z = cos(pi * (i - 0.25) / (order + 0.5));
+    z = std::cos(detran_utilities::pi * (i - 0.25) / (order + 0.5));
     // Starting with the above approximation to the ith root, we enter
     // the main loop of refinement by Newton's method.
     int count = 0;
@@ -266,35 +266,6 @@ void GaussLegendre::generate_parameters(int order, vec_dbl &mu, vec_dbl &wt)
     mu[i - 1] = z;
     wt[i - 1] = 2.0 / ((1.0 - z * z) * pp * pp);
   }
-}
-
-//---------------------------------------------------------------------------//
-// PUBLIC FUNCTIONS
-//---------------------------------------------------------------------------//
-/*!
- * \brief Display the quadrature.
- */
-void GaussLegendre::display() const
-{
-
-  using std::cout;
-  using std::endl;
-  using std::printf;
-
-
-  cout << endl;
-  cout << d_name << " abscissa and weights: " << endl << endl;
-  cout << "   m         mu              wt       " << endl;
-  cout << "  ---   --------------  --------------" << endl;
-
-  double weight_sum = 0;
-  for (int i = 0; i < d_number_angles_octant; ++i)
-  {
-    printf("%4i    %13.10f   %13.10f \n", i, d_mu[i], d_weight[i]);
-    weight_sum += d_weight[i];
-  }
-  cout << endl << "  The sum of the weights is " << weight_sum << endl;
-  cout << endl;
 }
 
 } // end namespace detran

@@ -13,7 +13,7 @@
 
 #include <iostream>
 
-namespace detran
+namespace detran_utilities
 {
 
 // Object class is the base class for all
@@ -73,7 +73,7 @@ public:
 
 #ifdef DETRAN_ENABLE_DEBUG
 
-#define Assert(c)     if (!(c)) throw detran::GenException( __LINE__, __FILE__,#c)
+#define Assert(c)     if (!(c)) throw detran_utilities::GenException( __LINE__, __FILE__,#c)
 #define IsValid(obj)  Assert((obj) != NULL && (obj)->is_valid())
 #define Require(c)    Assert(c)
 #define Ensure(c)     Assert(c)
@@ -87,9 +87,9 @@ public:
 
 #endif
 
-#define Insist(c,m)   if (!(c)) {std::cerr << m << std::endl; throw detran::GenException( __LINE__, __FILE__,#c);}
+#define Insist(c,m)   if (!(c)) {std::cerr << m << std::endl; throw detran_utilities::GenException( __LINE__, __FILE__,#c);}
 
-} // end namespace detran
+} // end namespace detran_utilities
 
 #endif // DBC_HH
 

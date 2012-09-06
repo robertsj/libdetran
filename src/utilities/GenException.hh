@@ -15,7 +15,7 @@
 #include <exception>
 #include <string>
 
-namespace detran
+namespace detran_utilities
 {
 
 /**
@@ -60,8 +60,9 @@ public:
     
 };
 
-#define THROW(m) throw detran::GenException(__LINE__,__FILE__,m);
+/// Easy macro for throwing exceptions.
+#define THROW(m) throw detran_utilities::GenException(__LINE__,__FILE__,m);
 
-} // end namespace detran
+} // end namespace detran_utilities
 
 #endif // GENEXCEPTION_HH

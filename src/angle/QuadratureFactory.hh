@@ -4,24 +4,17 @@
  * \author robertsj
  * \date   Apr 11, 2012
  * \brief  QuadratureFactory class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 
 #ifndef QUADRATUREFACTORY_HH_
 #define QUADRATUREFACTORY_HH_
 
-// Detran
 #include "Quadrature.hh"
-
-// Utilities
-#include "DBC.hh"
-#include "InputDB.hh"
-
-// System
+#include "utilities/InputDB.hh"
 #include <string>
 
-namespace detran
+namespace detran_angle
 {
 
 /*!
@@ -33,8 +26,8 @@ class QuadratureFactory
 
 public:
 
-  typedef Quadrature::SP_quadrature SP_quadrature;
-  typedef InputDB::SP_input         SP_input;
+  typedef Quadrature::SP_quadrature             SP_quadrature;
+  typedef detran_utilities::InputDB::SP_input   SP_input;
 
   /*!
    *  \brief Build a quadrature set.
@@ -73,6 +66,6 @@ public:
 
 };
 
-}
+} // end namespace detran_angle
 
 #endif /* QUADRATUREFACTORY_HH_ */

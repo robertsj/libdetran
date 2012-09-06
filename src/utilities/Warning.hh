@@ -1,19 +1,21 @@
-/*
- * warning.hh
- *
- *  Created on: Mar 20, 2012
- *      Author: robertsj
+//----------------------------------*-C++-*----------------------------------//
+/*!
+ * \file   Warning.hh
+ * \author Jeremy Roberts
+ * \date   Mar 20, 2012
+ * \brief  Warning macros
  */
+//---------------------------------------------------------------------------//
 
 #ifndef WARNING_HH_
 #define WARNING_HH_
 
+#include "detran_config.h"
 #include <iostream>
 #include <exception>
 #include <string>
-#include "detran_config.h"
 
-namespace detran
+namespace detran_utilities
 {
 
 enum WARNING
@@ -25,7 +27,10 @@ enum WARNING
 
 #ifdef DETRAN_ENABLE_DEBUG
 
-void warning(int type, std::string message);
+inline void warning(int type, std::string message)
+{
+  std::cout << "WARNING::" << type << " " << message << std::endl;
+}
 
 #else
 
@@ -33,6 +38,6 @@ inline void warning(int type, std::string message){}
 
 #endif
 
-} // end namespace detran
+} // end namespace detran_utilities
 
 #endif /* WARNING_HH_ */

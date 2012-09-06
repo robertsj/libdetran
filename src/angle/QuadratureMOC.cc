@@ -7,16 +7,15 @@
  */
 //---------------------------------------------------------------------------//
 
-// Detran
 #include "QuadratureMOC.hh"
 #include "TabuchiYamamoto.hh"
 
-namespace detran
+namespace detran_angle
 {
 
-QuadratureMOC::QuadratureMOC(int dim,
-                             int num_azimuths_octant,
-                             int num_polar,
+QuadratureMOC::QuadratureMOC(size_t dim,
+                             size_t num_azimuths_octant,
+                             size_t num_polar,
                              std::string name,
                              std::string polar)
   : Quadrature(dim,
@@ -73,7 +72,7 @@ void QuadratureMOC::display_tracks() const
 
 }
 
-} // end namespace detran
+} // end namespace detran_angle
 
 //---------------------------------------------------------------------------//
 //              end of file QuadratureMOC.cc

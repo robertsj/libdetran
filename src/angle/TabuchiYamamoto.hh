@@ -1,17 +1,18 @@
-/*
- * TabuchiYamamoto.hh
- *
- *  Created on: Jun 22, 2012
- *      Author: robertsj
+//----------------------------------*-C++-*----------------------------------//
+/*!
+ * \file   TabuchiYamamoto.hh
+ * \brief  TabuchiYamamoto class definition.
+ * \author Jeremy Roberts
+ * \date   Jun 22, 2012
  */
+//---------------------------------------------------------------------------//
 
 #ifndef TABUCHIYAMAMOTO_HH_
 #define TABUCHIYAMAMOTO_HH_
 
-// Detran
 #include "PolarQuadrature.hh"
 
-namespace detran
+namespace detran_angle
 {
 
 /*!
@@ -23,23 +24,18 @@ class TabuchiYamamoto: public PolarQuadrature
 
 public:
 
-  explicit TabuchiYamamoto(int number_polar);
+  explicit TabuchiYamamoto(size_t number_polar);
 
   /// SP Constructor.
-  static SP<PolarQuadrature> Create(int num_polar)
+  static detran_utilities::SP<PolarQuadrature>
+  Create(size_t num_polar)
   {
-    SP<TabuchiYamamoto> p(new TabuchiYamamoto(num_polar));
+    detran_utilities::SP<TabuchiYamamoto>
+      p(new TabuchiYamamoto(num_polar));
     return p;
   }
 
   ~TabuchiYamamoto(){};
-
-  bool is_valid() const
-  {
-    Require(d_number_polar > 0.0);
-    Require(d_sin.size() == d_number_polar);
-    return true;
-  }
 
 private:
 

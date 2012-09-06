@@ -13,12 +13,13 @@
 // System
 #include <iostream>
 
-namespace detran
+namespace detran_utilities
 {
 
 //---------------------------------------------------------------------------//
 // OVERLOADED OPERATORS
 //---------------------------------------------------------------------------//
+
 /*!
  * \brief Do equality check with a free pointer.
  */
@@ -28,7 +29,6 @@ bool operator==(const T *pt, const SP<T> &sp)
     return sp == pt;
 }
 
-//---------------------------------------------------------------------------//
 /*!
  * \brief Do inequality check with a free pointer.
  */
@@ -40,6 +40,8 @@ bool operator!=(const T *pt, const SP<T> &sp)
 
 //---------------------------------------------------------------------------//
 // INLINE FUNCTIONS
+//---------------------------------------------------------------------------//
+
 //---------------------------------------------------------------------------//
 /*!
  * \brief Explicit constructor for type T *.
@@ -325,7 +327,7 @@ void SP<T>::free()
 
 }
 
-} // end namespace detran
+} // end namespace detran_utilities
 
 #endif // SP_I_HH_
 

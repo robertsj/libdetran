@@ -10,17 +10,18 @@
 #ifndef QUADRATURE_HH_
 #define QUADRATURE_HH_
 
-// Other libtran headers
-#include "Constants.hh"
-#include "Definitions.hh"
-#include "DBC.hh"
-#include "SP.hh"
-#include "Warning.hh"
-
-// System headers
+#include "utilities/Constants.hh"
+#include "utilities/Definitions.hh"
+#include "utilities/DBC.hh"
+#include "utilities/SP.hh"
+#include "utilities/Warning.hh"
 #include <string>
 
-namespace detran
+/*!
+ *  \namespace detran_angle
+ *  \brief Contains all angular quadrature and related items for detran
+ */
+namespace detran_angle
 {
 
 //---------------------------------------------------------------------------//
@@ -60,7 +61,7 @@ namespace detran
  *
  */
 //---------------------------------------------------------------------------//
-class Quadrature : public Object
+class Quadrature
 {
 
 public:
@@ -73,221 +74,145 @@ public:
     END_COSINES
   };
 
-  typedef SP<Quadrature>      SP_quadrature;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
+
+  typedef detran_utilities::SP<Quadrature>      SP_quadrature;
+  typedef detran_utilities::vec_dbl             vec_dbl;
+  typedef detran_utilities::vec2_dbl            vec2_dbl;
+  typedef detran_utilities::size_t              size_t;
+
+  //-------------------------------------------------------------------------//
+  // PUBLIC INTERFACE
+  //-------------------------------------------------------------------------//
 
   /*!
    *  \brief Constructor.
    *
-   *  \param    order       Quadrature order
-   *  \param    dim         Spatial dimension
+   *  \param    order           Quadrature order
+   *  \param    dim             Spatial dimension
+   *  \param    number_angles   Total number of angles
+   *  \param    name            Descriptive name
    */
-  Quadrature(int order,
-             int dim,
-             int number_angles,
-             std::string name);
+  Quadrature(const size_t order,
+             const size_t dim,
+             const size_t number_angles,
+             const std::string name);
 
-  /*!
-   *  \brief Pure virtual destructor.
-   */
+  /// Pure virtual destructor
   virtual ~Quadrature() = 0;
 
-  /*!
-   *  \brief Return total number of angles.
-   */
-  int number_angles() const
-  {
-    return d_number_angles;
-  }
+  /// Return total number of angles.
+  size_t number_angles() const;
 
-  /*!
-   *  \brief Return total number of octants.
-   */
-  int number_octants() const
-  {
-    return d_number_octants;
-  }
+  /// Return total number of octants.
+  size_t number_octants() const;
 
-  /*!
-   *  \brief Return number of angles per octant.
-   */
-  int number_angles_octant() const
-  {
-    return d_number_angles_octant;
-  }
+  /// Return number of angles per octant.
+  size_t number_angles_octant() const;
 
   /*!
    *  \brief Return number of azimuths per octant.
    *
    *  This is useful when a product quadrature is defined.
    */
-  virtual int number_azimuths_octant() const
-  {
-    return 0;
-  }
+  virtual size_t number_azimuths_octant() const;
 
   /*!
    *  \brief Return number of polar angles per octant.
    *
    *  This is useful when a product quadrature is defined.
    */
-  virtual int number_polar_octant() const
-  {
-    return 0;
-  }
+  virtual size_t number_polar_octant() const;
 
   /*!
    *  \brief Return cardinal angle index.
+   *  \param o    Octant index
+   *  \param a    Angle within octant
    */
-  int index(int o, int a)
-  {
-    Require(o >= 0);
-    Require(o < d_number_octants);
-    Require(a >= 0);
-    Require(a < d_number_angles_octant);
-    int angle = a + o * d_number_angles_octant;
-    Ensure(angle >= 0);
-    Ensure(angle < d_number_angles);
-    return angle;
-  }
+  size_t index(size_t o, size_t a);
 
   /*!
    *  \brief Angle in octant from azimuth and polar
    *
    *  Useful for product quadratures.
+   *
+   *  \param a  Azimith within octant
+   *  \param p  Polar within octant
    */
-  virtual int angle(int a, int p) const
-  {
-    THROW("NOT A PRODUCT QUADRATURE");
-    return 0;
-  }
+  virtual size_t angle(size_t a, size_t p) const;
+
+  /// Return const reference to weights.
+  const vec_dbl& weights() const;
 
   /*!
-   *  \brief Return const reference to weights.
+   *  \brief Return const reference to a cosine vector
+   *  \param dir    Direction of cosine
    */
-  const vec_dbl& weights()
-  {
-    return d_weight;
-  }
-
-  /*!
-   *  \brief Return const reference a cosine vector.
-   */
-  const vec_dbl& cosines(int dir)
-  {
-    Require (dir >= 0 and dir < d_dimension);
-    if (dir == MU)
-      return d_mu;
-    else if (dir == ETA)
-      return d_eta;
-    else
-      return d_xi;
-  }
+  const vec_dbl& cosines(size_t dir) const;
 
   /*!
    *  \brief Return single weight.
+   *  \param a  Angle within octant
    */
-  double weight(int a)
-  {
-    Require(a >= 0);
-    Require(a < d_number_angles_octant);
-    return d_weight[a];
-  }
+  double weight(size_t a) const;
 
   /*!
    *  \brief Return single \f$ \mu \f$.
+   *  \param o    Octant index
+   *  \param a    Angle within octant
    */
-  double mu(int o, int a)
-  {
-    Require(a >= 0);
-    Require(a < d_number_angles_octant);
-    Require(o >= 0);
-    Require(o < d_number_octants);
-    return d_octant_sign[o][MU]*d_mu[a];
-  }
+  double mu(size_t o, size_t a) const;
 
   /*!
    *  \brief Return single \f$ \eta \f$.
+   *  \param o    Octant index
+   *  \param a    Angle within octant
    */
-  double eta(int o, int a)
-  {
-    Require(a >= 0);
-    Require(a < d_number_angles_octant);
-    Require(o >= 0);
-    Require(o < d_number_octants);
-    Require(d_dimension > 1); // 1d calcs have no business with eta...
-    return d_octant_sign[o][ETA]*d_eta[a];
-  }
+  double eta(size_t o, size_t a) const;
 
   /*!
    *  \brief Return single \f$ \xi \f$.
+   *  \param o    Octant index
+   *  \param a    Angle within octant
    */
-  double xi(int o, int a)
-  {
-    Require(a >= 0);
-    Require(a < d_number_angles_octant);
-    Require(o >= 0);
-    Require(o < d_number_octants);
-    //Require(d_dimension == 3); // 1d/2d calcs have no need for xi...
-    return d_octant_sign[o][XI]*d_xi[a];
-  }
+  double xi(size_t o, size_t a) const;
 
   /*!
    *  \brief Return one over the integral of unity over all angles.
+   *  \param d    Problem dimension
    */
-  static double angular_norm(int d)
-  {
-    Require(d > 0 and d < 4);
-    if (d == 1)
-      return 0.5;
-    else
-      return inv_four_pi;
-  }
+  static double angular_norm(size_t d);
 
   /*!
    *  \brief Are the indices valid?
+   *  \param o    Octant index
+   *  \param a    Angle within octant
    */
-  bool valid_index(int o, int a) const
-  {
-    if (o >= 0 and o < d_number_octants and
-        a >= 0 and a < d_number_angles_octant)
-    {
-      return true;
-    }
-    else
-    {
-      return false;
-    }
-  }
+  bool valid_index(size_t o, size_t a) const;
 
   /*!
    *  \brief Pretty print of the first octant parameters.
    */
   virtual void display() const;
 
-  /*!
-   *  \brief Unimplemented DBC method.
-   */
-  bool is_valid() const
-  {
-    return true;
-  }
-
 protected:
 
   /// problem dimension
-  int d_dimension;
+  size_t d_dimension;
 
   /// Quadrature order (means different things for each type!)
-  int d_order;
+  size_t d_order;
 
   /// number of angles
-  int d_number_angles;
+  size_t d_number_angles;
 
   /// number of octants
-  int d_number_octants;
+  size_t d_number_octants;
 
   /// number of angle per octant
-  int d_number_angles_octant;
+  size_t d_number_angles_octant;
 
   /// Quadrature weight
   vec_dbl d_weight;
@@ -309,7 +234,12 @@ protected:
 
 };
 
-} // end namespace detran
+} // end namespace detran_angle
+
+//---------------------------------------------------------------------------//
+// INLINE MEMBER DEFINITIONS
+//---------------------------------------------------------------------------//
+#include "Quadrature.i.hh"
 
 #endif /* QUADRATURE_HH_ */
 

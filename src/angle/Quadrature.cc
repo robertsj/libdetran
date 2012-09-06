@@ -16,18 +16,18 @@
 #include <cstdio>
 #include <cmath>
 
-namespace detran
+namespace detran_angle
 {
 
 // Constructor
-Quadrature::Quadrature(int order,
-                       int dim,
-                       int number_angles,
-                       std::string name)
+Quadrature::Quadrature(const size_t order,
+                       const size_t dim,
+                       const size_t number_angles,
+                       const std::string name)
   : d_dimension(dim)
   , d_order(order)
   , d_number_angles(number_angles)
-  , d_number_octants(std::pow(2, dim))
+  , d_number_octants(std::pow(2.0, dim))
   , d_number_angles_octant(number_angles/d_number_octants)
   , d_weight(d_number_angles_octant, 0.0)
   , d_mu(d_number_angles_octant, 0.0)
@@ -121,7 +121,7 @@ void Quadrature::display() const
 
 }
 
-}
+} // end namespace detran_angle
 
 //---------------------------------------------------------------------------//
 //              end of Quadrature.cc

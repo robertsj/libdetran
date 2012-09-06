@@ -2,16 +2,15 @@
 /*!
  * \file   InputDB.c
  * \author Jeremy Roberts
- * \brief  InputDB class definition.
+ * \brief  InputDB class member definitions
  */
 //---------------------------------------------------------------------------//
-
 
 #include "InputDB.hh"
 
 #include <iostream>
 
-namespace detran
+namespace detran_utilities
 {
 
 InputDB::InputDB()
@@ -96,7 +95,7 @@ int InputDB::size(int type) const
   return value;
 }
 
-} // end namespace detran
+} // end namespace detran_utilities
 
 //---------------------------------------------------------------------------//
 //              end of InputDB.cc

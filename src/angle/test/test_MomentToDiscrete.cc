@@ -19,7 +19,8 @@
 #include "GaussLegendre.hh"
 #include "QuadrupleRange.hh"
 
-using namespace detran;
+using namespace detran_angle;
+using namespace detran_utilities;
 using namespace detran_test;
 using namespace std;
 
@@ -34,7 +35,7 @@ int main(int argc, char *argv[])
 
 int test_MomentToDiscrete_1D(int argc, char *argv[])
 {
-  typedef MomentToDiscrete<_1D> M2D;
+  typedef MomentToDiscrete<detran::_1D> M2D;
 
   // Get quadrature.
   M2D::SP_quadrature q;
@@ -58,7 +59,7 @@ int test_MomentToDiscrete_1D(int argc, char *argv[])
 
 int test_MomentToDiscrete_2D(int argc, char *argv[])
 {
-  typedef MomentToDiscrete<_2D> M2D;
+  typedef MomentToDiscrete<detran::_2D> M2D;
 
   // Get quadrature.
   M2D::SP_quadrature q;

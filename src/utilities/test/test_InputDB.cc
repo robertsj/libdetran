@@ -4,7 +4,6 @@
  * \author Jeremy Roberts
  * \date   Jul 14, 2011
  * \brief  Test of InputDB
- * \note   Copyright (C) 2011 Jeremy Roberts.
  */
 //---------------------------------------------------------------------------//
 
@@ -23,7 +22,7 @@
 #include <fstream>
 
 using namespace detran_test;
-using namespace detran;
+using namespace detran_utilities;
 using namespace std;
 
 int main(int argc, char *argv[])
@@ -79,10 +78,6 @@ int test_InputDB(int argc, char *argv[])
  TEST(db->check("equation"));
  string eq = db->get<string>("equation");
  TEST(eq=="dd");
-
- //
- TEST(!db->check("i_am_not_here"));
-
 
  // Test that something is not there.
  TEST(!db->check("i_am_not_here"));
@@ -146,6 +141,7 @@ int test_InputDB_serialize(int argc, char *argv[])
     TEST(!db->check("i_am_not_here"));
   }
 #endif
+
  return 0;
 }
 

@@ -24,7 +24,7 @@
 namespace detran_test
 {
 
-typedef detran::QuadratureMOC::SP_quadrature SP_quadrature;
+typedef detran_angle::QuadratureMOC::SP_quadrature SP_quadrature;
 
 
 /*!
@@ -38,7 +38,7 @@ static SP_quadrature uniform_fixture()
 {
   // Define quadrature.
   SP_quadrature q;
-  q = new detran::QuadrupleRange(2, 2);
+  q = new detran_angle::QuadrupleRange(2, 2);
 
   // Return the fixture.
   return q;
@@ -55,7 +55,7 @@ static SP_quadrature gausslegendre_fixture()
 {
   // Define quadrature.
   SP_quadrature q;
-  q = new detran::GaussLegendre(8);
+  q = new detran_angle::GaussLegendre(8);
 
   // Return the fixture.
   return q;

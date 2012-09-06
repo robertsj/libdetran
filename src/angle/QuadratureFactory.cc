@@ -4,7 +4,6 @@
  * \author robertsj
  * \date   Apr 11, 2012
  * \brief  QuadratureFactory member definitions.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 
@@ -20,7 +19,7 @@
 #include "Collocated.hh"
 #include "Uniform.hh"
 
-namespace detran
+namespace detran_angle
 {
 
 // Build a quadrature
@@ -153,9 +152,7 @@ build(SP_quadrature &q, std::string type, int order, int dimension)
   }
 }
 
-
-
-} // end namespace detran
+} // end namespace detran_angle
 
 //---------------------------------------------------------------------------//
 //              end of QuadratureFactory.cc

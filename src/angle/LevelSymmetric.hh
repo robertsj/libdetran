@@ -4,19 +4,16 @@
  * \author robertsj
  * \date   May 22, 2012
  * \brief  LevelSymmetric class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 #ifndef LEVELSYMMETRIC_HH_
 #define LEVELSYMMETRIC_HH_
 
-// Detran
 #include "Quadrature.hh"
 
-namespace detran
+namespace detran_angle
 {
 
-//===========================================================================//
 /*!
  * \class LevelSymmetric
  * \brief 2D/3D Level-symmetric (LQn) quadrature class.
@@ -33,41 +30,34 @@ namespace detran
  *
  * An unfortunate aspect of LQn is that negative weights appear for
  * \f$ N = 20 \f$.  As an alternative, see the uniform and equal
- * weight quadrature set (UEn) \ref Uniform_Equal_3D, which yields positive
+ * weight quadrature set (UEn) \ref UniformEqual, which yields positive
  * weights for arbitrarily high \f$ N \f$.
  *
- * \param order   quadrature order
- * \param N       spatial dimension (default 3)
- *
  */
-//===========================================================================//
 class LevelSymmetric : public Quadrature
 {
 
 public:
 
-  typedef SP<LevelSymmetric>  SP_quadrature;
-  typedef SP<Quadrature>      SP_base;
+  typedef detran_utilities::SP<LevelSymmetric>  SP_quadrature;
+  typedef detran_utilities::SP<Quadrature>      SP_base;
 
   /*!
    *  \brief Constructor.
-   *
    *  \param    order       Quadrature order.
    *  \param    dim         Problem dimension
    */
-  LevelSymmetric(int order, int dim);
+  LevelSymmetric(size_t order, size_t dim);
 
   /*!
    *  \brief SP Constructor.
    */
-  static SP<Quadrature> Create(int order, int dim)
+  static detran_utilities::SP<Quadrature> Create(size_t order, size_t dim)
   {
     SP_quadrature p;
     p = new LevelSymmetric(order, dim);
     return p;
   }
-
-  void display() const;
 
 private:
 
@@ -77,7 +67,7 @@ private:
 
 };
 
-} // end namespace detran
+} // end namespace detran_angle
 
 #endif /* LEVELSYMMETRIC_HH_ */
 

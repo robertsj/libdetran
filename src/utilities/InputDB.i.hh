@@ -3,13 +3,8 @@
  * \file   InputDB.i.hh
  * \author Jeremy Roberts
  * \date   Mar 25, 2012
- * \brief  
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+ * \brief  InputDB inline member definitions
  */
-//---------------------------------------------------------------------------//
-// $Rev::                                               $:Rev of last commit
-// $Author:: j.alyn.roberts@gmail.com                   $:Author of last commit
-// $Date::                                              $:Date of last commit
 //---------------------------------------------------------------------------//
 
 
@@ -18,9 +13,8 @@
 
 #include <iostream>
 
-namespace detran
+namespace detran_utilities
 {
-
 
 inline bool InputDB::check(const std::string &key) const
 {
@@ -169,8 +163,7 @@ inline const std::map<std::string, vec_dbl>& InputDB::get_map<vec_dbl>()
   return d_data_vec_dbl;
 }
 
-
-} // end namespace detran
+} // end namespace detran_utilities
 
 #endif /* INPUTDB_I_HH_ */
 

@@ -19,7 +19,7 @@
 // Setup
 /* ... */
 
-using namespace detran;
+using namespace detran_utilities;
 using namespace detran_test;
 using namespace std;
 
@@ -46,13 +46,12 @@ int test_Point(int argc, char *argv[])
   Point p4 = p1 - p2;
   TEST(soft_equiv(p4.x(), -1.0));
   TEST(soft_equiv(p4.y(), -2.0));
-  TEST(soft_equiv(detran::distance(p1, p2), 2.23606797749979));
+  TEST(soft_equiv(distance(p1, p2), 2.23606797749979));
   //
   p1 = Point(0.75, 0.00);
   p2 = Point(0.50, 0.50);
-  TEST(soft_equiv(detran::distance(p2, p1), 0.559016994374947));
-  TEST(soft_equiv(detran::distance(p1, p2), 0.559016994374947));
-
+  TEST(soft_equiv(distance(p2, p1), 0.559016994374947));
+  TEST(soft_equiv(distance(p1, p2), 0.559016994374947));
 
   return 0;
 }

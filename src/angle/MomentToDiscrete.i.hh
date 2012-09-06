@@ -23,7 +23,7 @@
 #include <cmath>
 #include <iostream>
 
-namespace detran
+namespace detran_angle
 {
 
 // Constructor.
@@ -81,7 +81,7 @@ inline void MomentToDiscrete<D>::calc_row(int o, int a)
   // calculate the moments and add them to the row
   for (int l = 0; l <= d_legendre_order; l++)
   {
-    double norm = (2.0 * l + 1.0) * inv_four_pi;
+    double norm = (2.0 * l + 1.0) * detran_utilities::inv_four_pi;
     ;
     for (int m = -l; m <= l; m++)
     {
@@ -99,7 +99,7 @@ inline void MomentToDiscrete<D>::calc_row(int o, int a)
 
 // 2-d
 template <>
-inline void MomentToDiscrete<_2D>::calc_row(const int o, const int a)
+inline void MomentToDiscrete<detran::_2D>::calc_row(const int o, const int a)
 {
   int angle = d_quadrature->index(o, a);
 
@@ -109,12 +109,12 @@ inline void MomentToDiscrete<_2D>::calc_row(const int o, const int a)
   // compute the direction cosine w/r to polar axis
   double mu = d_quadrature->mu(o, a);
   double eta = d_quadrature->eta(o, a);
-  double xi = sqrt(1.0 - mu * mu - eta * eta);
+  double xi = std::sqrt(1.0 - mu * mu - eta * eta);
 
   // loop through l>0 moments and add
   for (int l = 0; l <= d_legendre_order; l++)
   {
-    double norm = (2.0 * l + 1.0) * inv_four_pi;
+    double norm = (2.0 * l + 1.0) * detran_utilities::inv_four_pi;
     for (int m = -l; m <= l; m += 2)
     {
       int i = 0; // Moments<_2D>::index(l, m);
@@ -125,7 +125,7 @@ inline void MomentToDiscrete<_2D>::calc_row(const int o, const int a)
 
 // 1-d
 template <>
-inline void MomentToDiscrete<_1D>::calc_row(const int o, const int a)
+inline void MomentToDiscrete<detran::_1D>::calc_row(const int o, const int a)
 {
   int angle = d_quadrature->index(o, a);
 
@@ -180,10 +180,10 @@ operator()(const int o, const int a,
 }
 
 // explicit instantiations
-template class MomentToDiscrete<_1D>;
-template class MomentToDiscrete<_2D>;
-template class MomentToDiscrete<_3D>;
+template class MomentToDiscrete<detran::_1D>;
+template class MomentToDiscrete<detran::_2D>;
+template class MomentToDiscrete<detran::_3D>;
 
-} // end namespace detran
+} // end namespace detran_angle
 
 #endif /* MOMENT_TO_DISCRETE_I_HH_ */

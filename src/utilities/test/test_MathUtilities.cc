@@ -25,7 +25,7 @@
 #include <iostream>
 
 using namespace detran_test;
-using namespace detran;
+using namespace detran_utilities;
 using namespace std;
 
 int main(int argc, char *argv[])

@@ -22,7 +22,7 @@
 // System
 #include <vector>
 
-namespace detran
+namespace detran_angle
 {
 
 //===========================================================================//
@@ -114,11 +114,11 @@ public:
 
   /// \name Useful Typedefs
   //\{
-  typedef SP<MomentToDiscrete>              SP_MtoD;
-  typedef unsigned int                      size_type;
-  typedef vec_dbl                           M_Row;
-  typedef std::vector<M_Row>                Operator_M;
-  typedef Quadrature::SP_quadrature         SP_quadrature;
+  typedef detran_utilities::SP<MomentToDiscrete>  SP_MtoD;
+  typedef unsigned int                            size_type;
+  typedef detran_utilities::vec_dbl               M_Row;
+  typedef std::vector<M_Row>                      Operator_M;
+  typedef Quadrature::SP_quadrature               SP_quadrature;
   //\}
 
   /*!
@@ -258,7 +258,7 @@ private:
 
 };
 
-} // end namespace detran
+} // end namespace detran_angle
 
 //---------------------------------------------------------------------------//
 // INLINE FUNCTIONS

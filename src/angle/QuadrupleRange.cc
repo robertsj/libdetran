@@ -3,31 +3,29 @@
  * \file   QuadrupleRange.cc
  * \author Jeremy Roberts
  * \date   Mar 23, 2012
- * \brief  
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+ * \brief  QuadrupleRange member definitions
  */
+//---------------------------------------------------------------------------//
 
-// Detran
 #include "QuadrupleRange.hh"
-
-// System
 #include <iostream>
 #include <cstdio>
 #include <cmath>
 
-namespace detran
+namespace detran_angle
 {
 
-QuadrupleRange::QuadrupleRange(int order, int dim)
+QuadrupleRange::QuadrupleRange(size_t order, size_t dim)
   : Quadrature(order,
                dim,
-               order*std::pow(2, dim),
+               order*std::pow(2.0, dim),
                "QuadrupleRange")
 {
+  // Preconditions
   Require(order % 2 == 0); // need an even order
 
-  int number_phi   = std::sqrt(2*order); // n*n/2
-  int number_theta = number_phi / 2;
+  size_t number_phi   = std::sqrt(2*order); // n*n/2
+  size_t number_theta = number_phi / 2;
 
   // compute mu and eta for the first quadrant
   double sintheta = 0;
@@ -38,18 +36,18 @@ QuadrupleRange::QuadrupleRange(int order, int dim)
   int k = 0;
   double scale = 1.0;
   if (dim == 3) scale = 0.5;
-  for (int i = 0; i < number_phi; i++)
+  for (size_t i = 0; i < number_phi; i++)
   {
     cosphi = get_phi(number_phi, 0, i);
     sinphi = std::sqrt(1.0 - cosphi * cosphi);
     wphi   = scale * get_phi(number_phi, 1, i);
-    for (int j = 0; j < number_theta; j++)
+    for (size_t j = 0; j < number_theta; j++)
     {
       sintheta     = get_theta(number_theta, 0, j);
       wtheta       = get_theta(number_theta, 1, j);
       d_mu[k]      = cosphi * sintheta;
       d_eta[k]     = sinphi * sintheta;
-      d_xi[k]      = sqrt(1.0 - d_mu[k]*d_mu[k] - d_eta[k]*d_eta[k]);
+      d_xi[k]      = std::sqrt(1.0 - d_mu[k]*d_mu[k] - d_eta[k]*d_eta[k]);
       d_weight[k]  = wphi * wtheta;
       ++k;
     }
@@ -59,39 +57,7 @@ QuadrupleRange::QuadrupleRange(int order, int dim)
   Ensure(k == d_number_angles_octant);
 }
 
-void QuadrupleRange::display() const
-{
-
-    using std::cout;
-    using std::endl;
-    using std::printf;
-
-    cout << endl;
-    cout << d_name << " abscissa and weights: " << endl << endl;
-    cout << "   m            mu                 eta                wt       " << endl;
-    cout << "  ---   -----------------  -----------------  -----------------" << endl;
-    double weight_sum = 0.0;
-    for ( int ix = 0; ix < d_number_angles_octant; ++ix )
-    {
-        printf ("%4i    %16.13f   %16.13f   %16.13f   \n",
-                ix, d_mu[ix], d_eta[ix], d_weight[ix] );
-        weight_sum += d_weight[ix];
-    }
-    cout << endl << "  The sum of the weights is " << weight_sum << endl;
-    cout << endl;
-
-}
-
-
-/*
- * \brief return cos(phi) or weight
- *
- * \param N  number of azimuthal angles per quadrant
- * \param i  0 for angle and 1 for weight
- * \param j  index of requested point
- *
- */
-double QuadrupleRange::get_phi(int N, int i, int j)
+double QuadrupleRange::get_phi(size_t N, size_t i, size_t j)
 {
     double a[30];
     double b[30];
@@ -635,15 +601,7 @@ double QuadrupleRange::get_phi(int N, int i, int j)
 
 }
 
-/*
- * \brief return sin(theta) or weight
- *
- * \param N  number of polar angles per quadrant
- * \param i  0 for angle and 1 for weight
- * \param j  index of requested point
- *
- */
-double QuadrupleRange::get_theta(int N, int i, int j)
+double QuadrupleRange::get_theta(size_t N, size_t i, size_t j)
 {
   double a[15];
   double b[15];
@@ -948,7 +906,6 @@ double QuadrupleRange::get_theta(int N, int i, int j)
 }
 
 } // end namespace detran
-
 
 //---------------------------------------------------------------------------//
 //              end of QuadrupleRange.cc

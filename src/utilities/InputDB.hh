@@ -27,7 +27,7 @@
 #include <boost/serialization/string.hpp>
 #endif
 
-namespace detran
+namespace detran_utilities
 {
 
 //===========================================================================//
@@ -191,7 +191,7 @@ private:
 
 };
 
-} // end namespace detran
+} // end namespace detran_utilities
 
 //---------------------------------------------------------------------------//
 // INLINE FUNCTIONS

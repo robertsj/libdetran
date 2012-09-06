@@ -4,14 +4,13 @@
  * \author Jeremy Roberts
  * \date   Jun 29, 2011
  * \brief  SphericalHarmonics class definition.
- * \note   Copyright (C) 2011 Jeremy Roberts.
  */
 //---------------------------------------------------------------------------//
 
 #ifndef SPHERICAL_HARMONICS_HH_
 #define SPHERICAL_HARMONICS_HH_
 
-namespace detran
+namespace detran_angle
 {
 
 //===========================================================================//
@@ -258,7 +257,7 @@ private:
 
 };
 
-} // end namespace detran
+} // end namespace detran_angle
 
 #endif /* SPHERICAL_HARMONICS_HH_ */
 

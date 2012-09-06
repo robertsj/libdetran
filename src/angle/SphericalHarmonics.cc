@@ -20,7 +20,7 @@
 // System
 #include <cmath>
 
-namespace detran
+namespace detran_angle
 {
 
 // Calculate the spherical harmonic of degree l, order m
@@ -36,7 +36,7 @@ double SphericalHarmonics::Y_lm(int l,
     Require (xi >= -1.0);
     Require (xi <= 1.0);
     Require (varphi >= 0.0);
-    Require (varphi <= two_pi);
+    Require (varphi <= detran_utilities::two_pi);
 
     double sintheta = sqrt(1.0 - xi*xi);
     double mu     = sintheta*cos(varphi);
@@ -82,10 +82,10 @@ double  SphericalHarmonics::get_Y_lm(int l,
   Require ( (eta >= -1.0) && (eta <= 1.0) );
   Require ( (xi >= -1.0) && (xi <= 1.0) );
   double unity = mu * mu + eta * eta + xi * xi;
-  if (!soft_equiv(1.0, unity, 1.0e-5))
+  if (!detran_utilities::soft_equiv(1.0, unity, 1.0e-5))
   {
-    Require( soft_equiv( fabs(mu), 0.0 ) &&
-             soft_equiv( fabs(eta), 0.0 ) );
+    Require( detran_utilities::soft_equiv( fabs(mu), 0.0 ) &&
+             detran_utilities::soft_equiv( fabs(eta), 0.0 ) );
   }
 
   if ( l == 0 )
@@ -135,7 +135,7 @@ double  SphericalHarmonics::get_Y_lm(int l,
 
 }
 
-} // end namespace detran
+} // end namespace detran_angle
 
 //---------------------------------------------------------------------------//
 //              end of SphericalHarmonics.cc
