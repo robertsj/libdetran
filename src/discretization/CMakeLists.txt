@@ -2,7 +2,7 @@
 # src/transport/CMakeLists.txt
 #------------------------------------------------------------------------------#
 
-SET(LIB_NAME "transport")
+SET(LIB_NAME "external_source")
 
 SET(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -11,13 +11,13 @@ SET(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 #-----------------------------------------------------------------------------#
 
 SET(SRC
-    Boundary.cc
-    BoundaryMOC.cc
-    CoarseMesh.cc
-    CurrentTally.cc
-    FissionSource.cc
-    ScatterSource.cc
-    State.cc
+    Equation_DD_1D.cc
+    Equation_DD_2D.cc
+    Equation_DD_3D.cc
+    Equation_SC_2D.cc
+    Equation_SD_1D.cc
+    Equation_SD_2D.cc
+    Equation_SC_MOC.cc
 )
 
 #-----------------------------------------------------------------------------#
@@ -31,7 +31,6 @@ ADD_LIBRARY(${LIB_NAME}
 TARGET_LINK_LIBRARIES(${LIB_NAME}
                       angle
                       geometry
-                      materials
                       utilities
 )
 

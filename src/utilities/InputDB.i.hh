@@ -72,31 +72,31 @@ inline bool InputDB::check(const std::string &key) const
 // Get
 
 template <>
-inline int InputDB::get(const std::string &key) const
+inline int InputDB::get<int>(const std::string &key) const
 {
   Require(check(key));
   return d_data_int.find(key)->second;
 }
 template <>
-inline double InputDB::get(const std::string &key) const
+inline double InputDB::get<double>(const std::string &key) const
 {
   Require(check(key));
   return d_data_dbl.find(key)->second;
 }
 template <>
-inline vec_int InputDB::get(const std::string &key) const
+inline vec_int InputDB::get<vec_int>(const std::string &key) const
 {
   Require(check(key));
   return d_data_vec_int.find(key)->second;
 }
 template <>
-inline vec_dbl InputDB::get(const std::string &key) const
+inline vec_dbl InputDB::get<vec_dbl>(const std::string &key) const
 {
   Require(check(key));
   return d_data_vec_dbl.find(key)->second;
 }
 template <>
-inline std::string InputDB::get(const std::string &key) const
+inline std::string InputDB::get<std::string>(const std::string &key) const
 {
   Require(check(key));
   return d_data_str.find(key)->second;
