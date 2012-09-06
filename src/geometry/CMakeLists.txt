@@ -1,14 +1,14 @@
 #------------------------------------------------------------------------------#
-# libdetran/src/geometry/CMakeLists.txt
+# src/geometry/CMakeLists.txt
 #------------------------------------------------------------------------------#
 
-SET(GEOMETRY_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+SET(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 #-------------------------------------#
 # SOURCE
 #-------------------------------------#
 
-SET(GEOMETRY_SRC
+SET(SRC
     Mesh.cc
     Mesh1D.cc
     Mesh2D.cc
@@ -26,7 +26,7 @@ SET(GEOMETRY_SRC
 
 ADD_LIBRARY(geometry
             SHARED
-            ${GEOMETRY_SRC} 
+            ${SRC} 
 )
 TARGET_LINK_LIBRARIES( geometry
                        utilities
@@ -42,6 +42,6 @@ INSTALL_TARGETS(/lib geometry)
 #-------------------------------------#
 
 if( DETRAN_ENABLE_TEST )
-    include_directories(${GEOMETRY_DIR}/test)
-    add_subdirectory(${GEOMETRY_DIR}/test)
+    include_directories(${SRC_DIR}/test)
+    add_subdirectory(${SRC_DIR}/test)
 endif()

@@ -23,7 +23,9 @@
 // Setup
 /* ... */
 
-using namespace detran;
+using namespace detran_geometry;
+using namespace detran_angle;
+using namespace detran_utilities;
 using namespace detran_test;
 using namespace std;
 

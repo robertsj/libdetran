@@ -23,7 +23,8 @@
 // Setup
 #include "mesh_fixture.hh"
 
-using namespace detran;
+using namespace detran_geometry;
+using namespace detran_utilities;
 using namespace detran_test;
 using namespace std;
 

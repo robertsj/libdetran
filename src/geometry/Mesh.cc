@@ -6,17 +6,14 @@
  */
 //---------------------------------------------------------------------------//
 
-// Geometry headers
 #include "Mesh.hh"
-
-// System headers
 #include <numeric>
 #include <iostream>
 
-namespace detran
+namespace detran_geometry
 {
 
-Mesh::Mesh(int dim,
+Mesh::Mesh(size_t dim,
            vec_int xfm,  vec_int yfm,  vec_int zfm,
            vec_dbl xcme, vec_dbl ycme, vec_dbl zcme,
            vec_int mat_map)
@@ -36,7 +33,7 @@ Mesh::Mesh(int dim,
   add_coarse_mesh_map(s, mat_map);
 }
 
-Mesh::Mesh(int dim,
+Mesh::Mesh(size_t dim,
            vec_dbl xfme, vec_dbl yfme, vec_dbl zfme,
            vec_int mat_map)
   : d_dimension(dim)
@@ -142,7 +139,7 @@ bool Mesh::mesh_map_exists(std::string map_key)
 /*!
  *
  */
-const vec_int& Mesh::mesh_map(std::string map_key)
+const Mesh::vec_int& Mesh::mesh_map(std::string map_key)
 {
   // Add the new value.
   return d_mesh_map[map_key];

@@ -9,17 +9,14 @@
 #ifndef MESH1D_HH_
 #define MESH1D_HH_
 
-// Geometry headers
 #include "Mesh.hh"
-
-// System
 #ifdef DETRAN_ENABLE_BOOST
 #include <boost/serialization/access.hpp>
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/export.hpp>
 #endif
 
-namespace detran
+namespace detran_geometry
 {
 
 //---------------------------------------------------------------------------//
@@ -35,8 +32,8 @@ class Mesh1D : public Mesh
 
 public:
 
-  typedef Mesh            Base;
-  typedef Base::SP_mesh   SP_mesh;
+  typedef Mesh Base;
+  typedef Base::SP_mesh SP_mesh;
 
   /*!
    *  \brief Constructor.
@@ -46,7 +43,7 @@ public:
 
    *  \param    mat_map     Coarse mesh material map.
    */
-  Mesh1D(vec_int xfm,  vec_dbl xcme,  vec_int mat_map);
+  Mesh1D(vec_int xfm, vec_dbl xcme, vec_int mat_map);
 
   /*!
    *  \brief Constructor.
@@ -54,43 +51,23 @@ public:
    *  \param    xfme        Fine mesh edges x dimension.
    *  \param    mat_map     Fine mesh material map.
    */
-   Mesh1D(vec_dbl xfme, vec_int mat_map);
+  Mesh1D(vec_dbl xfme, vec_int mat_map);
 
-   /*!
-    *  \brief SP Constructor.
-    *
-    *  \param    xfm         Fine meshes per coarse mesh in x dimension.
-    *  \param    xcme        Coarse mesh edges x dimension.
-    *  \param    mat_map     Coarse mesh material map.
-    */
-   static SP<Mesh> Create(vec_int xfm,
-                          vec_dbl xcme,
-                          vec_int mat_map)
-   {
-     SP_mesh p;
-     p = new Mesh1D(xfm, xcme, mat_map);
-     return p;
-   }
+  /// SP constructor
+  static detran_utilities::SP<Mesh>
+  Create(vec_int xfm, vec_dbl xcme, vec_int mat_map)
+  {
+    SP_mesh p(new Mesh1D(xfm, xcme, mat_map));
+    return p;
+  }
 
-   /*!
-    *  \brief SP Constructor.
-    *
-    *  \param    xfme        Fine mesh edges x dimension.
-    *  \param    mat_map     Fine mesh material map.
-    */
-    static SP<Mesh> Create(vec_dbl xfme,  vec_int mat_map)
-    {
-      SP_mesh p;
-      p = new Mesh1D(xfme, mat_map);
-      return p;
-    }
-
-    bool is_valid() const
-    {
-      Ensure(d_number_cells_y == 1);
-      Ensure(d_number_cells_z == 1);
-      return true;
-    }
+  /// SP constructor
+  static detran_utilities::SP<Mesh>
+  Create(vec_dbl xfme, vec_int mat_map)
+  {
+    SP_mesh p(new Mesh1D(xfme, mat_map));
+    return p;
+  }
 
 protected:
 
@@ -113,10 +90,10 @@ private:
 
 };
 
-} // end namespace detran
+} // end namespace detran_geometry
 
 #ifdef DETRAN_ENABLE_BOOST
-BOOST_CLASS_EXPORT_KEY(detran::Mesh1D)
+BOOST_CLASS_EXPORT_KEY(detran_geometry::Mesh1D)
 #endif
 
 #endif /* MESH1D_HH_ */

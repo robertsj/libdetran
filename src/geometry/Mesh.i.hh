@@ -10,7 +10,7 @@
 #ifndef MESH_I_HH_
 #define MESH_I_HH_
 
-namespace detran
+namespace detran_geometry
 {
 
 //------------------------------------------------------------------------//
@@ -18,16 +18,14 @@ namespace detran
 //------------------------------------------------------------------------//
 
 /// Return total number of cells.
-inline int Mesh::number_cells() const
+inline Mesh::size_t Mesh::number_cells() const
 {
   return d_number_cells;
 }
 
 /// Return number of cells in specified dimension.
-inline int Mesh::number_cells(int dim) const
+inline Mesh::size_t Mesh::number_cells(size_t dim) const
 {
-  Require(dim >= 0);
-  //Require(dim < d_dimension);
   if (dim == 0)
     return d_number_cells_x;
   else if (dim == 1)
@@ -36,24 +34,23 @@ inline int Mesh::number_cells(int dim) const
     return d_number_cells_z;
 }
 
-inline int Mesh::number_cells_x() const
+inline Mesh::size_t Mesh::number_cells_x() const
 {
   return d_number_cells_x;
 }
 
-inline int Mesh::number_cells_y() const
+inline Mesh::size_t Mesh::number_cells_y() const
 {
   return d_number_cells_y;
 }
 
-inline int Mesh::number_cells_z() const
+inline Mesh::size_t Mesh::number_cells_z() const
 {
   return d_number_cells_z;
 }
 
-inline double Mesh::width(int dim, int ijk) const
+inline double Mesh::width(size_t dim, size_t ijk) const
 {
-  Require(dim >= 0);
   Require(dim <  3);
   if (dim == 0)
     return dx(ijk);
@@ -63,43 +60,40 @@ inline double Mesh::width(int dim, int ijk) const
     return dz(ijk);
 }
 
-inline double Mesh::dx(int i) const
+inline double Mesh::dx(size_t i) const
 {
-  Require (i >= 0);
   Require (i < d_number_cells_x);
   return d_dx[i];
 }
 
-inline double Mesh::dy(int j) const
+inline double Mesh::dy(size_t j) const
 {
-  Require (j >= 0);
   Require (j < d_number_cells_y);
   return d_dy[j];
 }
 
-inline double Mesh::dz(int k) const
+inline double Mesh::dz(size_t k) const
 {
-  Require (k >= 0);
   Require (k < d_number_cells_z);
   return d_dz[k];
 }
 
-inline const vec_dbl& Mesh::dx() const
+inline const Mesh::vec_dbl& Mesh::dx() const
 {
   return d_dx;
 }
 
-inline const vec_dbl& Mesh::dy() const
+inline const Mesh::vec_dbl& Mesh::dy() const
 {
   return d_dy;
 }
 
-inline const vec_dbl& Mesh::dz() const
+inline const Mesh::vec_dbl& Mesh::dz() const
 {
   return d_dz;
 }
 
-inline double Mesh::volume(int cell) const
+inline double Mesh::volume(size_t cell) const
 {
   Require(cell < d_number_cells);
   double v = dx(cell_to_i(cell)) *
@@ -124,13 +118,13 @@ inline double Mesh::total_width_z() const
   return d_total_width_z;
 }
 
-inline int Mesh::dimension() const
+inline Mesh::size_t Mesh::dimension() const
 {
   return d_dimension;
 }
 
 
-inline int Mesh::index(int i, int j, int k)
+inline Mesh::size_t Mesh::index(size_t i, size_t j, size_t k)
 {
   Require(i >= 0);
   Require(i < d_number_cells_x);
@@ -141,7 +135,7 @@ inline int Mesh::index(int i, int j, int k)
   return i + j * d_number_cells_x + k * d_number_cells_x * d_number_cells_y;
 }
 
-inline int Mesh::cell_to_i(int cell) const
+inline Mesh::size_t Mesh::cell_to_i(size_t cell) const
 {
   Require(cell >= 0);
   Require(cell < d_number_cells);
@@ -150,7 +144,7 @@ inline int Mesh::cell_to_i(int cell) const
   return i;
 }
 
-inline int Mesh::cell_to_j(int cell) const
+inline Mesh::size_t Mesh::cell_to_j(size_t cell) const
 {
   Require(cell >= 0);
   Require(cell < d_number_cells);
@@ -161,7 +155,7 @@ inline int Mesh::cell_to_j(int cell) const
   return j;
 }
 
-inline int Mesh::cell_to_k(int cell) const
+inline Mesh::size_t Mesh::cell_to_k(size_t cell) const
 {
   Require(cell >= 0);
   Require(cell < d_number_cells);
@@ -176,13 +170,6 @@ inline const Mesh::mesh_map_type& Mesh::get_mesh_map() const
 {
   return d_mesh_map;
 }
-
-/// Unimplemented DBC function.
-inline bool Mesh::is_valid() const
-{
-  return true;
-}
-
 
 } // end namespace detran
 

@@ -19,7 +19,8 @@
 // Setup
 #include "geometry/test/mesh_fixture.hh"
 
-using namespace detran;
+using namespace detran_geometry;
+using namespace detran_utilities;
 using namespace detran_test;
 using namespace std;
 
@@ -51,7 +52,7 @@ int test_PinCell(int argc, char *argv[])
   TEST(soft_equiv(mesh->dx(0),  mod_width));
   TEST(soft_equiv(mesh->dy(0),  mod_width));
   TEST(soft_equiv(mesh->dz(0),  1.0));
-  detran::vec_int map = mesh->mesh_map("MATERIAL");
+  vec_int map = mesh->mesh_map("MATERIAL");
   TEST(map[0] == 0);
   TEST(map[22] == 1);
   return 0;

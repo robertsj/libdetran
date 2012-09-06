@@ -1,21 +1,18 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   PinCell.hh
- * \author Jeremy Roberts
- * \date   Mar 23, 2012
+ *  \file   PinCell.hh
+ *  \author Jeremy Roberts
+ *  \brief  PinCell class definition
+ *  \date   Mar 23, 2012
  */
 //---------------------------------------------------------------------------//
 
 #ifndef PinCell_HH_
 #define PinCell_HH_
 
-// Detran
 #include "Mesh2D.hh"
 
-// Utilities
-//#include "Definitions.hh"
-
-namespace detran
+namespace detran_geometry
 {
 
 //---------------------------------------------------------------------------//
@@ -54,13 +51,23 @@ namespace detran
  *  width was arbitrary.
  */
 //---------------------------------------------------------------------------//
-class PinCell : public Object
+class PinCell
 {
 
 public:
 
-  typedef SP<PinCell>    SP_pincell;
-  typedef Mesh::SP_mesh  SP_mesh;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
+
+  typedef detran_utilities::SP<PinCell>   SP_pincell;
+  typedef Mesh::SP_mesh                   SP_mesh;
+  typedef Mesh::vec_dbl                   vec_dbl;
+  typedef Mesh::vec_int                   vec_int;
+
+  //-------------------------------------------------------------------------//
+  // PUBLIC INTERFACE
+  //-------------------------------------------------------------------------//
 
   /*!
    *  \brief Constructor.
@@ -73,10 +80,10 @@ public:
   PinCell(double pitch, vec_dbl radii, vec_int mat_map, bool fuel_flag = true);
 
   /// SP Constructor
-  static SP<PinCell> Create(double pitch, vec_dbl radii, vec_int mat_map)
+  static SP_pincell
+  Create(double pitch, vec_dbl radii, vec_int mat_map)
   {
-    SP_pincell p;
-    p = new PinCell(pitch, radii, mat_map);
+    SP_pincell p(new PinCell(pitch, radii, mat_map));
     return p;
   }
 
@@ -98,16 +105,11 @@ public:
     return d_fuel_flag;
   }
 
-  /// DBC method.
-  bool is_valid() const
-  {
-    return true;
-  }
-
 private:
 
-  /// \name Data
-  /// \{
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   /// Underlying meshed object
   Mesh2D::SP_mesh d_mesh;
@@ -124,11 +126,9 @@ private:
   /// Fuel flag (true if fuel).
   bool d_fuel_flag;
 
-  /// \}
-
-
-  /// \name Implementation
-  /// \{
+  //-------------------------------------------------------------------------//
+  // IMPLEMENTATION
+  //-------------------------------------------------------------------------//
 
   /*!
    * \brief Determine in what region a mesh center resides.
@@ -140,10 +140,9 @@ private:
    */
   int find_region(int i, int j, double width);
 
-  /// \}
 };
 
-} // end namespace detran
+} // end namespace detran_geometry
 
 #endif /* PinCell_HH_ */
 

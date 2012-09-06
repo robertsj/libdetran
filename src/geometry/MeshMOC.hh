@@ -10,23 +10,35 @@
 #ifndef MESHMOC_HH_
 #define MESHMOC_HH_
 
-// Detran
 #include "Mesh.hh"
 #include "TrackDB.hh"
 
-
-namespace detran
+namespace detran_geometry
 {
 
+/*!
+ *  \class MeshMOC
+ *  \brief Mesh with tracking information.
+ *  \todo  This is bloat.  There should be one mesh object, or
+ *         perhaps one geometry object that contains a mesh and tracking
+ */
 class MeshMOC: public Mesh
 {
 
 public:
 
-  typedef SP<MeshMOC>           SP_mesh;
-  typedef Mesh                  Base;
-  typedef Base::SP_mesh         SP_base;
-  typedef TrackDB::SP_trackdb   SP_trackdb;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
+
+  typedef detran_utilities::SP<MeshMOC>     SP_mesh;
+  typedef Mesh                              Base;
+  typedef Base::SP_mesh                     SP_base;
+  typedef TrackDB::SP_trackdb               SP_trackdb;
+
+  //-------------------------------------------------------------------------//
+  // PUBLIC INTERFACE
+  //-------------------------------------------------------------------------//
 
   MeshMOC(SP_base mesh, SP_trackdb tracks)
     : Mesh(*mesh)
@@ -42,17 +54,16 @@ public:
 
 private:
 
-  /// \name Private Data
-  /// \{
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   /// Track database
   SP_trackdb d_tracks;
 
-  /// \}
-
 };
 
-} // end namespace detran
+} // end namespace detran_geometry
 
 #endif // MESHMOC_HH_ 
 

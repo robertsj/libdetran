@@ -9,13 +9,10 @@
 #ifndef MESH_HH_
 #define MESH_HH_
 
-// Other libtran headers
-#include "Definitions.hh"
-#include "DBC.hh"
-#include "SP.hh"
-#include "Warning.hh"
-
-// System headers
+#include "utilities/Definitions.hh"
+#include "utilities/DBC.hh"
+#include "utilities/SP.hh"
+#include "utilities/Warning.hh"
 #include <cmath>
 #include <map>
 #ifdef DETRAN_ENABLE_BOOST
@@ -28,7 +25,7 @@
 #include <boost/serialization/string.hpp>
 #endif
 
-namespace detran
+namespace detran_geometry
 {
 
 //---------------------------------------------------------------------------//
@@ -42,12 +39,15 @@ namespace detran
  *
  */
 //---------------------------------------------------------------------------//
-class Mesh : public Object
+class Mesh
 {
 
 public:
 
-  /// Useful enumerations
+  //-------------------------------------------------------------------------//
+  // ENUMERATIONS
+  //-------------------------------------------------------------------------//
+
   enum SIDES
   {
     LEFT,
@@ -69,8 +69,16 @@ public:
     YZ, XZ, XY
   };
 
-  typedef SP<Mesh>                          SP_mesh;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
+
+  typedef detran_utilities::SP<Mesh>        SP_mesh;
+  typedef detran_utilities::vec_int         vec_int;
+  typedef detran_utilities::vec_dbl         vec_dbl;
   typedef std::map<std::string, vec_int>    mesh_map_type;
+  typedef detran_utilities::size_t          size_t;
+
 
   // Note, these constructors are protected to hide them from the
   // user.  These are to be called by inherited classes.  I keep
@@ -88,7 +96,7 @@ protected:
    *  \param    ycme        Coarse mesh edges y dimension.
    *  \param    zcme        Coarse mesh edges z dimension.
    */
-  Mesh(int dim,
+  Mesh(size_t dim,
        vec_int xfm,  vec_int yfm,  vec_int zfm,
        vec_dbl xcme, vec_dbl ycme, vec_dbl zcme,
        vec_int mat_map);
@@ -101,11 +109,11 @@ protected:
    *  \param    yfme        Fine mesh edges y dimension.
    *  \param    zfme        Fine mesh edges z dimension.
    */
-  Mesh(int dim,
+  Mesh(size_t dim,
        vec_dbl xfme, vec_dbl yfme, vec_dbl zfme,
        vec_int mat_map);
 
-  Mesh(int dim) : d_dimension(dim) {}
+  Mesh(size_t dim) : d_dimension(dim) {}
 
 public:
 
@@ -147,25 +155,25 @@ public:
   //------------------------------------------------------------------------//
 
   /// Return total number of cells.
-  int number_cells() const;
+  size_t number_cells() const;
 
   /// Return number of cells in specified dimension.
-  int number_cells(int dim) const;
+  size_t number_cells(size_t dim) const;
   /// Return number of cells along x axis
-  int number_cells_x() const;
+  size_t number_cells_x() const;
   /// Return number of cells along y axis
-  int number_cells_y() const;
+  size_t number_cells_y() const;
   /// Return number of cells along z axis
-  int number_cells_z() const;
+  size_t number_cells_z() const;
 
   /// Get cell width in a specified dimension
-  double width(int dim, int ijk) const;
+  double width(size_t dim, size_t ijk) const;
   /// Get cell width along x axis
-  double dx(int i) const;
+  double dx(size_t i) const;
   /// Get cell width along y axis
-  double dy(int j) const;
+  double dy(size_t j) const;
   /// Get cell width along z axis
-  double dz(int k) const;
+  double dz(size_t k) const;
 
   /// Get vector of widths along x axis
   const vec_dbl& dx() const;
@@ -175,7 +183,7 @@ public:
   const vec_dbl& dz() const;
 
   /// Get the cell volume
-  double volume(int cell) const;
+  double volume(size_t cell) const;
 
   /// Get domain width along x axis
   double total_width_x() const;
@@ -185,7 +193,7 @@ public:
   double total_width_z() const;
 
   /// Get the mesh dimension
-  int dimension() const;
+  size_t dimension() const;
 
   /*!
    *
@@ -196,28 +204,28 @@ public:
    * \param   k  Index along z axis.
    * \return     Cardinal index.
    */
-  int index(int i, int j = 0, int k = 0);
+  size_t index(size_t i, size_t j = 0, size_t k = 0);
 
   /*!
    *  \brief   Returns the x index given cardinal index
    *  \param   cell  Cardinal index.
    *  \return        Index along x axis.
    */
-  int cell_to_i(int cell) const;
+  size_t cell_to_i(size_t cell) const;
 
   /*!
    *  \brief   Returns the y index given cardinal index
    *  \param   cell  Cardinal index.
    *  \return        Index along y axis.
    */
-  int cell_to_j(int cell) const;
+  size_t cell_to_j(size_t cell) const;
 
   /*!
    *  \brief   Returns the z index given cardinal index
    *  \param   cell  Cardinal index.
    *  \return        Index along z axis.
    */
-  int cell_to_k(int cell) const;
+  size_t cell_to_k(size_t cell) const;
 
   /// Check if fine mesh map exists.
   bool mesh_map_exists(std::string map_key);
@@ -239,13 +247,10 @@ public:
   /// Display some key features
   void display() const;
 
-  /// Unimplemented DBC function.
-  bool is_valid() const;
-
 protected:
 
   /// Mesh spatial dimension
-  int d_dimension;
+  size_t d_dimension;
 
   /// x fine meshes in each x coarse mesh
   vec_int d_xfm;
@@ -284,16 +289,16 @@ protected:
   double d_total_width_z;
 
   /// Total number of cells
-  int d_number_cells;
+  size_t d_number_cells;
 
   /// Number of cells in x direction
-  int d_number_cells_x;
+  size_t d_number_cells_x;
 
   /// Number of cells in y direction
-  int d_number_cells_y;
+  size_t d_number_cells_y;
 
   /// Number of cells in y direction
-  int d_number_cells_z;
+  size_t d_number_cells_z;
 
   /*!
    *  Map container containing a key describing a mesh property and a fine
@@ -344,7 +349,7 @@ private:
 
 };
 
-} // end namespace detran
+} // end namespace detran_geometry
 
 //---------------------------------------------------------------------------//
 // INLINE FUNCTIONS

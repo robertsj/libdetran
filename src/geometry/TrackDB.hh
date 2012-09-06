@@ -10,18 +10,14 @@
 #ifndef TRACKDB_HH_
 #define TRACKDB_HH_
 
-// Detran
 #include "Track.hh"
-#include "QuadratureMOC.hh"
-
-// Utilities
-#include "DBC.hh"
-#include "Definitions.hh"
-#include "SP.hh"
-
+#include "angle/QuadratureMOC.hh"
+#include "utilities/DBC.hh"
+#include "utilities/Definitions.hh"
+#include "utilities/SP.hh"
 #include <vector>
 
-namespace detran
+namespace detran_geometry
 {
 
 /*!
@@ -43,16 +39,32 @@ namespace detran
  *  the index of their reflection.
  *
  */
-class TrackDB: public Object
+/*!
+ *  \example geometry/test/test_TrackDB.cc
+ *
+ *  Test of TrackDB class
+ */
+class TrackDB
 {
 
 public:
 
-  typedef SP<TrackDB>                   SP_trackdb;
-  typedef QuadratureMOC::SP_quadrature  SP_quadrature;
-  typedef Track::SP_track               SP_track;
-  typedef std::vector<SP_track>         vec_track;
-  typedef std::vector<vec_track>        vec2_track;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
+
+  typedef detran_utilities::SP<TrackDB>               SP_trackdb;
+  typedef detran_angle::QuadratureMOC::SP_quadrature  SP_quadrature;
+  typedef Track::SP_track                             SP_track;
+  typedef std::vector<SP_track>                       vec_track;
+  typedef std::vector<vec_track>                      vec2_track;
+  typedef detran_utilities::size_t                    size_t;
+  typedef detran_utilities::vec_int                   vec_int;
+  typedef detran_utilities::vec_dbl                   vec_dbl;
+
+  //-------------------------------------------------------------------------//
+  // PUBLIC INTERFACE
+  //-------------------------------------------------------------------------//
 
   /*!
    *  \brief Constructor
@@ -76,14 +88,14 @@ public:
   /// \name Getters
   /// \{
 
-  SP_track track(u_int a, u_int t)
+  SP_track track(size_t a, size_t t)
   {
     Require(a < d_tracks.size());
     Require(t < d_tracks[a].size());
     return d_tracks[a][t];
   }
 
-  int number_tracks_angle(u_int a) const
+  int number_tracks_angle(size_t a) const
   {
     Require(a < d_tracks.size());
     return d_tracks[a].size();
@@ -94,7 +106,7 @@ public:
     return d_tracks.size();
   }
 
-  double spacing(u_int a) const
+  double spacing(size_t a) const
   {
     Require(a < d_spacing.size());
     return d_spacing[a];
@@ -102,13 +114,13 @@ public:
 
   /// \}
 
-  void add_track(u_int a, SP_track t)
+  void add_track(size_t a, SP_track t)
   {
     Require(a < d_tracks.size());
     d_tracks[a].push_back(t);
   }
 
-  void setup_angle(u_int a, double c_phi, double s_phi, double space)
+  void setup_angle(size_t a, double c_phi, double s_phi, double space)
   {
     Require(a < d_tracks.size());
     Require(space > 0.0);
@@ -120,18 +132,16 @@ public:
   /// Normalize the tracks given a vector of true volumes.
   void normalize(vec_dbl &volume);
 
+  /// Pretty display of all track
   void display() const;
-
-  bool is_valid() const
-  {
-    return true;
-  }
 
 private:
 
-  /// \name Private Data
-  /// \{
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
+  /// Quadrature
   SP_quadrature d_quadrature;
 
   /// Number of azimuths in first two octants
@@ -152,13 +162,9 @@ private:
   /// Constant track spacing for each angle.
   vec_dbl d_spacing;
 
-  /// \}
-
-
 };
 
-
-} // end namespace detran
+} // end namespace detran_geometry
 
 #endif // TRACKDB_HH_ 
 

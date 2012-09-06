@@ -22,19 +22,19 @@
 %include "TrackDB.hh"
 %include "Tracker.hh"
 
-%template(MeshSP)     detran::SP<detran::Mesh>;
-%template(Mesh1DSP)   detran::SP<detran::Mesh1D>;
-%template(Mesh2DSP)   detran::SP<detran::Mesh2D>;
-%template(Mesh3DSP)   detran::SP<detran::Mesh3D>;
-%template(PinCellSP)  detran::SP<detran::PinCell>;
-%template(AssemblySP) detran::SP<detran::Assembly>;
-%template(CoreSP)     detran::SP<detran::Core>;
+%template(MeshSP)     detran_utilities::SP<detran_geometry::Mesh>;
+%template(Mesh1DSP)   detran_utilities::SP<detran_geometry::Mesh1D>;
+%template(Mesh2DSP)   detran_utilities::SP<detran_geometry::Mesh2D>;
+%template(Mesh3DSP)   detran_utilities::SP<detran_geometry::Mesh3D>;
+%template(PinCellSP)  detran_utilities::SP<detran_geometry::PinCell>;
+%template(AssemblySP) detran_utilities::SP<detran_geometry::Assembly>;
+%template(CoreSP)     detran_utilities::SP<detran_geometry::Core>;
 
-%template(TrackSP)    detran::SP<detran::Track>;
-%template(TrackDBSP)  detran::SP<detran::TrackDB>;
-%template(TrackerSP)  detran::SP<detran::Tracker>;
+%template(TrackSP)    detran_utilities::SP<detran_geometry::Track>;
+%template(TrackDBSP)  detran_utilities::SP<detran_geometry::TrackDB>;
+%template(TrackerSP)  detran_utilities::SP<detran_geometry::Tracker>;
 
-namespace detran
+namespace detran_geometry
 {
 // Save old versions for later post process (plot) use
 //----------------------------------------------------------------------------//

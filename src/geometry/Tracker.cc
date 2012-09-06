@@ -7,16 +7,11 @@
  */
 //---------------------------------------------------------------------------//
 
-// Detran
 #include "Tracker.hh"
-
-// Utilities
-#include "SoftEquivalence.hh"
-
-// System
+#include "utilities/SoftEquivalence.hh"
 #include <iostream>
 
-namespace detran
+namespace detran_geometry
 {
 
 Tracker::Tracker(SP_mesh mesh, SP_quadrature quadrature)
@@ -25,7 +20,8 @@ Tracker::Tracker(SP_mesh mesh, SP_quadrature quadrature)
 {
   Require(d_mesh);
   Insist(d_mesh->dimension() == 2, "Only 2D MOC is currently supported.");
-  Insist(soft_equiv(d_mesh->total_width_x(), d_mesh->total_width_y()),
+  Insist(detran_utilities::soft_equiv(d_mesh->total_width_x(),
+                                      d_mesh->total_width_y()),
     "MOC is currently supported only on square domains");
   Require(d_quadrature);
   d_number_azimuths = d_quadrature->number_azimuths_octant();
@@ -235,7 +231,7 @@ void Tracker::generate_tracks()
           double temp = distance(enter, p);
 
           if (db) cout << " lengths: " << temp <<  " " << track_length << " " << enter << " " << p << endl;
-          Ensure(soft_equiv(temp, track_length));
+          Ensure(detran_utilities::soft_equiv(temp, track_length));
           break;
         }
         count++;
@@ -295,7 +291,7 @@ void Tracker::find_starting_cell(Point enter, double tan_phi, int *IJ)
   IJ[1] = j;
 }
 
-} // end namespace detran
+} // end namespace detran_geometry
 
 //---------------------------------------------------------------------------//
 //              end of file Tracker.cc

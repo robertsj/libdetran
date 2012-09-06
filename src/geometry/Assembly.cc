@@ -1,18 +1,17 @@
-/*
- * Assembly.cc
- *
- *  Created on: Apr 14, 2012
- *      Author: robertsj
+//----------------------------------*-C++-*----------------------------------//
+/*!
+ *  \file   Assembly.cc
+ *  \author Jeremy Roberts
+ *  \brief  Assembly class member definitions
+ *  \date   Mar 23, 2012
  */
+//---------------------------------------------------------------------------//
 
-// Detran
 #include "Assembly.hh"
-
-// System
 #include <cmath>
 #include <iostream>
 
-namespace detran
+namespace detran_geometry
 {
 
 Assembly::Assembly(int dimension, vec_pincell pincells, vec_int pincell_map)
@@ -150,7 +149,7 @@ void Assembly::finalize(vec_int pincell_map)
 
 }
 
-} // end namespace detran
+} // end namespace detran_geometry
 
 
 
