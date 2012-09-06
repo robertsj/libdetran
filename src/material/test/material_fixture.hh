@@ -22,7 +22,7 @@
 namespace detran_test
 {
 
-typedef detran::Material::SP_material SP_material;
+typedef detran_material::Material::SP_material SP_material;
 
 /*!
  *  \brief Two group material database for transport tests.
@@ -34,7 +34,7 @@ static SP_material material_fixture_1g()
   // Create the new database.
   SP_material mat;
   // 1 group, 3 materials.
-  mat = new detran::Material(1, 3, false);
+  mat = new detran_material::Material(3, 1, false);
 
   // ---------------------------
   // Material 0: strong scatter
@@ -87,7 +87,7 @@ static SP_material material_fixture_2g()
   SP_material mat;
   // 2 groups, 4 materials, and we don't turn off upscatter explicitly
   // (though there happens to be no upscatter in this data)
-  mat = new detran::Material(2, 4, false);
+  mat = new detran_material::Material(4, 2, false);
 
   // ---------------------------
   // Material 0: Water
@@ -176,9 +176,6 @@ static SP_material material_fixture_2g()
   // This mat->sets the scattering bounds, which can eliminate a few operations.
   mat->finalize();
 
-  // Ensure a valid input.
-  Ensure(mat->is_valid());
-
   // Return the fixture.
   return mat;
 
@@ -194,7 +191,7 @@ static SP_material material_fixture_7g()
   // Create the new database.
   SP_material mat;
   // 7 groups, 4 materials, and we don't turn off upscatter.
-  mat = new detran::Material(7, 7, false);
+  mat = new detran_material::Material(7, 7, false);
 
   // --------------------------------------------
   // Material 0: UO2 fuel-clad

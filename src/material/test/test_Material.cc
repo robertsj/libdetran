@@ -27,7 +27,8 @@
 #include "material_fixture.hh"
 
 using namespace detran_test;
-using namespace detran;
+using namespace detran_material;
+using namespace detran_utilities;
 using namespace std;
 
 int main(int argc, char *argv[])
@@ -56,8 +57,6 @@ int test_Material_basic(int argc, char *argv[])
   TEST(mat_1g->number_groups()      == 1);
   TEST(mat_1g->number_materials()   == 3);
 
-  TEST(mat_1g->is_valid()           == true);
-
   // Get the 2g material
   SP_material mat_2g = material_fixture_2g();
   TEST(mat_2g);
@@ -70,7 +69,6 @@ int test_Material_basic(int argc, char *argv[])
   TEST(mat_2g->number_groups()      == 2);
   TEST(mat_2g->number_materials()   == 4);
   //TEST(mat_2g->downscatter()        == false);
-  TEST(mat_2g->is_valid()           == true);
 
   // Get the 7g material
   SP_material mat_7g = material_fixture_7g();
@@ -150,7 +148,6 @@ int test_Material_serialize(int argc, char *argv[])
     TEST(soft_equiv(mat_1g->chi(0, 0),        0.0));
     TEST(mat_1g->number_groups()           == 1);
     TEST(mat_1g->number_materials()        == 3);
-    TEST(mat_1g->is_valid()                == true);
 
   }
 #endif

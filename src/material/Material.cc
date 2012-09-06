@@ -1,22 +1,18 @@
-/*
- * Material.cc
- *
- *  Created on: Mar 20, 2012
- *      Author: robertsj
+//----------------------------------*-C++-*----------------------------------//
+/*!
+ * \file   Material.cc
+ * \author Jeremy Roberts
+ * \brief  Material class member definitions.
  */
+//---------------------------------------------------------------------------//
 
-// Detran
 #include "Material.hh"
-
-// Utilities
-#include "Warning.hh"
-
-// System headers
+#include "utilities/Warning.hh"
 #include <iostream>
 #include <cstdio>
 #include <cmath>
 
-namespace detran
+namespace detran_material
 {
 
 /*
@@ -24,11 +20,11 @@ namespace detran
  * at once.  For some problems, everything (e.g. fission or diffusion)
  * might be unused, but if it's an issue, write another constructor.
  */
-Material::Material(int number_groups,
-                   int number_materials,
-                   bool downscatter)
- : d_number_groups(number_groups)
- , d_number_materials(number_materials)
+Material::Material(const size_t number_materials,
+                   const size_t number_groups,
+                   const bool downscatter)
+ : d_number_materials(number_materials)
+ , d_number_groups(number_groups)
  , d_downscatter(downscatter)
  , d_sigma_t(number_groups, vec_dbl(number_materials, 0.0))
  , d_sigma_a(number_groups, vec_dbl(number_materials, 0.0))
@@ -53,7 +49,7 @@ Material::Material(int number_groups,
 // Setters
 //----------------------------------------------------------------------------//
 
-void Material::set_sigma_t(int m, int g, double v)
+void Material::set_sigma_t(size_t m, size_t g, double v)
 {
   Require(m >= 0);
   Require(m < d_number_materials);
@@ -63,7 +59,7 @@ void Material::set_sigma_t(int m, int g, double v)
   d_sigma_t[g][m] = v;
 }
 
-void Material::set_sigma_a(int m, int g, double v)
+void Material::set_sigma_a(size_t m, size_t g, double v)
 {
   Require(m >= 0);
   Require(m < d_number_materials);
@@ -74,7 +70,7 @@ void Material::set_sigma_a(int m, int g, double v)
 }
 
 
-void Material::set_nu_sigma_f(int m, int g, double v)
+void Material::set_nu_sigma_f(size_t m, size_t g, double v)
 {
   Require(m >= 0);
   Require(m < d_number_materials);
@@ -84,7 +80,7 @@ void Material::set_nu_sigma_f(int m, int g, double v)
   d_nu_sigma_f[g][m] = v;
 }
 
-void Material::set_sigma_f(int m, int g, double v)
+void Material::set_sigma_f(size_t m, size_t g, double v)
 {
   Require(m >= 0);
   Require(m < d_number_materials);
@@ -94,7 +90,7 @@ void Material::set_sigma_f(int m, int g, double v)
   d_sigma_f[g][m] = v;
 }
 
-void Material::set_nu(int m, int g, double v)
+void Material::set_nu(size_t m, size_t g, double v)
 {
   Require(m >= 0);
   Require(m < d_number_materials);
@@ -104,7 +100,7 @@ void Material::set_nu(int m, int g, double v)
   d_nu[g][m] = v;
 }
 
-void Material::set_chi(int m, int g, double v)
+void Material::set_chi(size_t m, size_t g, double v)
 {
   Require(m >= 0);
   Require(m < d_number_materials);
@@ -115,7 +111,7 @@ void Material::set_chi(int m, int g, double v)
 }
 
 // Note, not including anisotropic for now...
-void Material::set_sigma_s(int m, int g, int gp, double v)
+void Material::set_sigma_s(size_t m, size_t g, size_t gp, double v)
 {
   Require(m >= 0);
   Require(m < d_number_materials);
@@ -127,7 +123,7 @@ void Material::set_sigma_s(int m, int g, int gp, double v)
   d_sigma_s[g][gp][m] = v;
 }
 
-void Material::set_diff_coef(int m, int g, double v)
+void Material::set_diff_coef(size_t m, size_t g, double v)
 {
   Require(m >= 0);
   Require(m < d_number_materials);
@@ -137,62 +133,62 @@ void Material::set_diff_coef(int m, int g, double v)
   d_diff_coef[g][m] = v;
 }
 
-void Material::set_sigma_t(int m, vec_dbl &v)
+void Material::set_sigma_t(size_t m, vec_dbl &v)
 {
   Require(m >= 0);
   Require(m < d_number_materials);
   Require(v.size() == d_number_groups);
-  for (int g = 0; g < d_number_groups; g++)
+  for (size_t g = 0; g < d_number_groups; g++)
     d_sigma_t[g][m] = v[g];
 }
 
-void Material::set_sigma_a(int m, vec_dbl &v)
+void Material::set_sigma_a(size_t m, vec_dbl &v)
 {
   Require(m >= 0);
   Require(m < d_number_materials);
   Require(v.size() == d_number_groups);
-  for (int g = 0; g < d_number_groups; g++)
+  for (size_t g = 0; g < d_number_groups; g++)
     d_sigma_a[g][m] = v[g];
 }
 
 
-void Material::set_nu_sigma_f(int m, vec_dbl &v)
+void Material::set_nu_sigma_f(size_t m, vec_dbl &v)
 {
   Require(m >= 0);
   Require(m < d_number_materials);
   Require(v.size() == d_number_groups);
-  for (int g = 0; g < d_number_groups; g++)
+  for (size_t g = 0; g < d_number_groups; g++)
     d_nu_sigma_f[g][m] = v[g];
 }
 
-void Material::set_sigma_f(int m, vec_dbl &v)
+void Material::set_sigma_f(size_t m, vec_dbl &v)
 {
   Require(m >= 0);
   Require(m < d_number_materials);
   Require(v.size() == d_number_groups);
-  for (int g = 0; g < d_number_groups; g++)
+  for (size_t g = 0; g < d_number_groups; g++)
     d_sigma_f[g][m] = v[g];
 }
 
-void Material::set_nu(int m, vec_dbl &v)
+void Material::set_nu(size_t m, vec_dbl &v)
 {
   Require(m >= 0);
   Require(m < d_number_materials);
   Require(v.size() == d_number_groups);
-  for (int g = 0; g < d_number_groups; g++)
+  for (size_t g = 0; g < d_number_groups; g++)
     d_nu[g][m] = v[g];
 }
 
-void Material::set_chi(int m, vec_dbl &v)
+void Material::set_chi(size_t m, vec_dbl &v)
 {
   Require(m >= 0);
   Require(m < d_number_materials);
   Require(v.size() == d_number_groups);
-  for (int g = 0; g < d_number_groups; g++)
+  for (size_t g = 0; g < d_number_groups; g++)
     d_chi[g][m] = v[g];
 }
 
-void Material::set_sigma_s(int m, int g, vec_dbl &v)
+void Material::set_sigma_s(size_t m, size_t g, vec_dbl &v)
 {
   Require(m >= 0);
   Require(m < d_number_materials);
@@ -200,16 +196,16 @@ void Material::set_sigma_s(int m, int g, vec_dbl &v)
   Require(g < d_number_groups);
   Require(v.size() == d_number_groups);
   d_sigma_s[m][g] = v;
-  for (int gp = 0; gp < d_number_groups; gp++)
+  for (size_t gp = 0; gp < d_number_groups; gp++)
     d_sigma_s[g][gp][m] = v[gp];
 }
 
-void Material::set_diff_coef(int m, vec_dbl &v)
+void Material::set_diff_coef(size_t m, vec_dbl &v)
 {
   Require(m >= 0);
   Require(m < d_number_materials);
   Require(v.size() == d_number_groups);
-  for (int g = 0; g < d_number_groups; g++)
+  for (size_t g = 0; g < d_number_groups; g++)
     d_diff_coef[g][m] = v[g];
 }
 
@@ -217,30 +213,28 @@ void Material::set_diff_coef(int m, vec_dbl &v)
 // Getters
 //----------------------------------------------------------------------------//
 
-int Material::lower(int g)
+Material::size_t Material::lower(size_t g) const
 {
   Require(d_finalized);
-  Require(g >= 0);
   Require(g < d_number_groups);
   return d_scatter_bounds[g][0];
 }
 
-int Material::upper(int g)
+Material::size_t Material::upper(size_t g) const
 {
   Require(d_finalized);
-  Require(g >= 0);
   Require(g < d_number_groups);
   return d_scatter_bounds[g][1];
 }
 
 void Material::compute_sigma_a()
 {
-  for (int m = 0; m < d_number_materials; m++)
+  for (size_t m = 0; m < d_number_materials; m++)
   {
-    for (int g = 0; g < d_number_groups; g++)
+    for (size_t g = 0; g < d_number_groups; g++)
     {
       double sa = d_sigma_t[g][m];
-      for (int gp = 0; gp < d_number_groups; gp++)
+      for (size_t gp = 0; gp < d_number_groups; gp++)
         sa -= d_sigma_s[g][gp][m];
       d_sigma_a[g][m] = sa;
     }
@@ -250,9 +244,9 @@ void Material::compute_sigma_a()
 void Material::compute_diff_coef()
 {
   double coef = 1.0 / 3.0;
-  for (int m = 0; m < d_number_materials; m++)
+  for (size_t m = 0; m < d_number_materials; m++)
   {
-    for (int g = 0; g < d_number_groups; g++)
+    for (size_t g = 0; g < d_number_groups; g++)
     {
       d_diff_coef[g][m] =  coef * d_sigma_t[g][m];
     }
@@ -266,26 +260,26 @@ void Material::finalize()
   /*
    * Set the scatter group bounds.  For each group, we compute the
    * lowest index (highest energy) that leads to downscatter.  We also
-   * compute the highest index (lowest energy) that upscatters into the
+   * compute the highest index (lowest energy) that upscatters size_to the
    * group.  Knowing these bounds eliminates a bit of computation in
    * computing the scattering source.
    *
    */
-  for (int g = 0; g < d_number_groups; g++)
+  for (size_t g = 0; g < d_number_groups; g++)
   {
-    int lower = g;
-    int upper = g;
+    size_t lower = g;
+    size_t upper = g;
 
-    for (int m = 0; m < d_number_materials; m++)
+    for (size_t m = 0; m < d_number_materials; m++)
     {
       // Downscatter from gp to g
-      for (int gp = 0; gp < g; gp++)
+      for (size_t gp = 0; gp < g; gp++)
       {
         if (d_sigma_s[g][gp][m] > 0.0) lower = std::min(gp, lower);
       }
 
       // Upscatter from gp to g
-      for (int gp = 0; gp < d_number_groups; gp++)
+      for (size_t gp = 0; gp < d_number_groups; gp++)
       {
         if (d_sigma_s[g][gp][m] > 0.0) upper = std::max(gp, upper);
       }
@@ -306,7 +300,7 @@ void Material::finalize()
    *
    */
   d_upscatter_cutoff = d_number_groups;
-  for (int g = 0; g < d_number_groups; g++)
+  for (size_t g = 0; g < d_number_groups; g++)
   {
     if (d_scatter_bounds[g][1] > g)
     {
@@ -321,7 +315,7 @@ void Material::finalize()
   {
     if (d_downscatter == false)
     {
-      warning(USER_INPUT,
+      detran_utilities::warning(detran_utilities::USER_INPUT,
         "Upscatter is being turned off since no upscatter exists in the data.");
     }
     d_downscatter = true;
@@ -355,50 +349,50 @@ void Material::display()
   printf("Number of materials: %5i\n", d_number_materials);
   printf("   Number of groups: %5i\n", d_number_groups);
   printf("\n");
-  for (int m = 0; m < d_number_materials; m++)
+  for (size_t m = 0; m < d_number_materials; m++)
   {
     printf("material      %5i\n", m);
     printf("     gp: ");
-    for (int g = 0; g < d_number_groups; g++)
+    for (size_t g = 0; g < d_number_groups; g++)
     {
       printf("%13i ", g);
     }
     printf("\n  total  ");
     // Total
-    for (int g = 0; g < d_number_groups; g++)
+    for (size_t g = 0; g < d_number_groups; g++)
     {
       printf("%13.10f ", sigma_t(m, g));
     }
     printf("\n  nufis  ");
     // nu*Fission
-    for (int g = 0; g < d_number_groups; g++)
+    for (size_t g = 0; g < d_number_groups; g++)
     {
       printf("%13.10f ", nu_sigma_f(m, g));
     }
     printf("\n  fiss   ");
     // Fission
-    for (int g = 0; g < d_number_groups; g++)
+    for (size_t g = 0; g < d_number_groups; g++)
     {
       printf("%13.10f ", sigma_f(m, g));
     }
     printf("\n  nu     ");
     // nu
-    for (int g = 0; g < d_number_groups; g++)
+    for (size_t g = 0; g < d_number_groups; g++)
     {
       printf("%13.10f ", nu(m, g));
     }
     printf("\n  chi    ");
     // Chi
-    for (int g = 0; g < d_number_groups; g++)
+    for (size_t g = 0; g < d_number_groups; g++)
     {
       printf("%13.10f ", chi(m, g));
     }
     printf("\n");
     // Scatter
-    for (int gp = 0; gp < d_number_groups; gp++)
+    for (size_t gp = 0; gp < d_number_groups; gp++)
     {
       printf("%3i<-gp  ", gp);
-      for (int g = 0; g < d_number_groups; g++)
+      for (size_t g = 0; g < d_number_groups; g++)
       {
         printf("%13.10f ", sigma_s(m, gp, g));
       }
@@ -409,7 +403,7 @@ void Material::display()
 
   // Other info
   printf("scattering bounds: \n");
-  for (int g = 0; g < d_number_groups; g++)
+  for (size_t g = 0; g < d_number_groups; g++)
   {
     printf("  group %3i  lower = %3i  upper %3i \n", g, lower(g), upper(g));
   }
