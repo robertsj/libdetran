@@ -1,20 +1,21 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   test_MomentToDiscrete.cc
+ * \file   test_BoundarySN.cc
  * \author Jeremy Roberts
  * \date   Apr 1, 2012
- * \brief  Test of MomentToDiscrete class
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+ * \brief  Test of BoundarySN class
  */
 //---------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
-#define TEST_LIST                   \
-        FUNC(test_MomentToDiscrete)
+#define TEST_LIST                    \
+        FUNC(test_BoundarySN)
 
 // Detran headers
 #include "TestDriver.hh"
-#include "MomentToDiscrete.hh"
+#include "boundary/BoundarySN.hh"
+#include "angle/GaussLegendre.hh"
+#include "angle/QuadrupleRangle.hh"
 
 // Setup
 #include "quadrature_fixture.hh"
@@ -33,36 +34,21 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------//
 
-int test_MomentToDiscrete(int argc, char *argv[])
+int test_BoundarySN_basic(int argc, char *argv[])
 {
-  // 1d test
-  {
-    // MtoD
-    MomentToDiscrete MtoD(0);
-    // Quadrature
-    SP_quadrature q = GaussLegendre::Create(2);
-    TEST(q);
-    // Build
-    MtoD.build(q);
-    // TEST
-    TEST(MtoD(0, 0, 0) == 0.5);
-  }
-  // 2d test
-  {
-    // MtoD
-    MomentToDiscrete MtoD(0);
-    // Quadrature
-    SP_quadrature q = QuadrupleRange::Create(2);
-    TEST(q);
-    // Build
-    MtoD.build(q);
-    // TEST
-    TEST(MtoD(0, 0, 0) == inv_four_pi);
-  }
+  // Get quadrature fixture
+  SP_quadrature q = gausslegendre_fixture();
+  TEST(q);
+  TEST(q->number_angles()  == 8);
+  TEST(q->number_octants() == 2);
+  TEST(q->number_angles_octant() == 4);
+  TEST(soft_equiv(q->mu(0, 0),  0.9602898564975));
+  TEST(soft_equiv(q->mu(1, 0), -0.9602898564975));
+  TEST(soft_equiv(q->weight(0), 0.1012285362904));
   return 0;
 }
 
 
 //---------------------------------------------------------------------------//
-//              end of test_MomentToDiscrete.cc
+//              end of test_BoundarySN.cc
 //---------------------------------------------------------------------------//

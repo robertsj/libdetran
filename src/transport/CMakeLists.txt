@@ -11,8 +11,6 @@ SET(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 #-----------------------------------------------------------------------------#
 
 SET(SRC
-    Boundary.cc
-    BoundaryMOC.cc
     CoarseMesh.cc
     CurrentTally.cc
     FissionSource.cc

@@ -1,16 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   Boundary.i.hh
+ * \file   BoundarySN.i.hh
  * \author Jeremy Roberts
  * \date   Mar 24, 2012
  * \brief  Boundary inline member definitions.
- * \note   Copyright (C) 2012 Jeremy Roberts.
  */
 //---------------------------------------------------------------------------//
-#ifndef BOUNDARY_I_HH_
-#define BOUNDARY_I_HH_
+#ifndef BOUNDARYSN_I_HH_
+#define BOUNDARYSN_I_HH_
 
-// System
 #include <iostream>
 
 namespace detran
@@ -21,27 +19,31 @@ namespace detran
 //---------------------------------------------------------------------------//
 
 template <class D>
-inline const typename Boundary<D>::boundary_flux_type&
-Boundary<D>::operator()(int side, int o, int a, int g) const
+inline const typename BoundarySN<D>::boundary_flux_type&
+BoundarySN<D>::operator()(const size_t side,
+                          const size_t o,
+                          const size_t a,
+                          const size_t g) const
 {
-  Require(side >= 0);
   Require(side < D::dimension*2);
   Require(d_quadrature->valid_index(o, a));
-  Require(g >= 0);
   Require(g < d_number_groups);
-  int angle = d_quadrature->index(o, a);
+  size_t angle = d_quadrature->index(o, a);
   return d_boundary_flux[side][g][angle];
 }
 
 template <class D>
-inline typename Boundary<D>::boundary_flux_type&
-Boundary<D>::operator()(int side, int o, int a, int g)
+inline typename BoundarySN<D>::boundary_flux_type&
+BoundarySN<D>::operator()(const size_t side,
+                          const size_t o,
+                          const size_t a,
+                          const size_t g)
 {
   // Cast away return type
-  return const_cast<typename Boundary<D>::boundary_flux_type&>
+  return const_cast<typename BoundarySN<D>::boundary_flux_type&>
   (
     // Add const to *this's type and call const version
-    static_cast<const Boundary<D>&>(*this)(side, o, a, g)
+    static_cast<const BoundarySN<D>&>(*this)(side, o, a, g)
   );
 }
 
@@ -50,8 +52,10 @@ Boundary<D>::operator()(int side, int o, int a, int g)
 //---------------------------------------------------------------------------//
 
 template <class D>
-inline const typename Boundary<D>::boundary_flux_type&
-Boundary<D>::incident(int side, int angle, int g) const
+inline const typename BoundarySN<D>::boundary_flux_type&
+BoundarySN<D>::incident(const size_t side,
+                        const size_t angle,
+                        const size_t g) const
 {
   Require(side >= 0);
   Require(side < D::dimension*2);
@@ -65,38 +69,40 @@ Boundary<D>::incident(int side, int angle, int g) const
 }
 
 template <class D>
-inline typename Boundary<D>::boundary_flux_type&
-Boundary<D>::incident(int side, int angle, int g)
+inline typename BoundarySN<D>::boundary_flux_type&
+BoundarySN<D>::incident(const size_t side,
+                        const size_t angle,
+                        const size_t g)
 {
   // Cast away return type
-  return const_cast<typename Boundary<D>::boundary_flux_type&>
+  return const_cast<typename BoundarySN<D>::boundary_flux_type&>
   (
     // Add const to *this's type and call const version
-    static_cast<const Boundary<D>&>(*this).incident(side, angle, g)
+    static_cast<const BoundarySN<D>&>(*this).incident(side, angle, g)
   );
 }
 
 template <class D>
-inline const typename Boundary<D>::boundary_flux_type&
-Boundary<D>::outgoing(int side, int angle, int g) const
+inline const typename BoundarySN<D>::boundary_flux_type&
+BoundarySN<D>::outgoing(const size_t side, const size_t angle, const size_t g) const
 {
   int index = ordered_angle(side, angle, OUT);
 }
 
 template <class D>
-inline typename Boundary<D>::boundary_flux_type&
-Boundary<D>::outgoing(int side, int angle, int g)
+inline typename BoundarySN<D>::boundary_flux_type&
+BoundarySN<D>::outgoing(const size_t side, const size_t angle, const size_t g)
 {
   // Cast away return type
   return const_cast<boundary_flux_type&>
   (
     // Add const to *this's type and call const version
-    static_cast<const Boundary<D>&>(*this).outgoing(side, angle, g)
+    static_cast<const BoundarySN<D>&>(*this).outgoing(side, angle, g)
   );
 }
 
 template <class D>
-inline void Boundary<D>::set(int g)
+inline void BoundarySN<D>::set(const size_t g)
 {
   // Set boundary conditions.
   for(int side = 0; side < 2*D::dimension; side++)
@@ -106,7 +112,7 @@ inline void Boundary<D>::set(int g)
 }
 
 template <class D>
-inline void Boundary<D>::update(int g)
+inline void BoundarySN<D>::update(const size_t g)
 {
   // Set boundary conditions.
   for(int side = 0; side < 2*D::dimension; side++)
@@ -116,7 +122,9 @@ inline void Boundary<D>::update(int g)
 }
 
 template <class D>
-inline void Boundary<D>::update(int g, int o, int a)
+inline void BoundarySN<D>::update(const size_t g,
+                                  const size_t o,
+                                  const size_t a)
 {
   // Set boundary conditions.
   for(int side = 0; side < 2*D::dimension; side++)
@@ -126,7 +134,7 @@ inline void Boundary<D>::update(int g, int o, int a)
 }
 
 template <class D>
-inline void Boundary<D>::clear(int g)
+inline void BoundarySN<D>::clear(const size_t g)
 {
   // Clear the boundary flux.
   for(int side = 0; side < 2*D::dimension; side++)
@@ -145,7 +153,7 @@ inline void Boundary<D>::clear(int g)
 }
 
 template <>
-inline void Boundary<_2D>::clear(int g)
+inline void BoundarySN<_2D>::clear(const size_t g)
 {
   // Clear the boundary flux.
   for(int side = 0; side < 4; side++)
@@ -161,7 +169,7 @@ inline void Boundary<_2D>::clear(int g)
 }
 
 template <>
-inline void Boundary<_1D>::clear(int g)
+inline void BoundarySN<_1D>::clear(const size_t g)
 {
   // Clear the boundary flux.
   for(int side = 0; side < 2; side++)
@@ -172,26 +180,35 @@ inline void Boundary<_1D>::clear(int g)
     }
   }
 }
+
 //---------------------------------------------------------------------------//
 // Local ordering index.
 //---------------------------------------------------------------------------//
 
 template <class D>
-inline int Boundary<D>::ordered_angle(int side, int angle, int inout) const
+inline detran_utilities::size_t
+BoundarySN<D>::ordered_angle(const size_t side,
+                             const size_t angle,
+                             const size_t inout) const
 {
   return 0;
 }
 
 template <>
-inline int Boundary<_2D>::ordered_angle(int side, int angle, int inout) const
+inline detran_utilities::size_t
+BoundarySN<_2D>::ordered_angle(const size_t side,
+                               const size_t angle,
+                               const size_t inout) const
 {
   return 0;
 }
 
 template <>
-inline int Boundary<_1D>::ordered_angle(int side, int angle, int inout) const
+inline detran_utilities::size_t
+BoundarySN<_1D>::ordered_angle(const size_t side,
+                               const size_t angle,
+                               const size_t inout) const
 {
-  //
   if (inout == IN)
   {
 
@@ -201,13 +218,13 @@ inline int Boundary<_1D>::ordered_angle(int side, int angle, int inout) const
 // Incident condition setter and getter for Krylov solvers.
 
 template<class D>
-inline void Boundary<D>::set_incident(int g, double *v)
+inline void BoundarySN<D>::set_incident(const size_t g, double *v)
 {
   /* ... */
 }
 
 template<>
-inline void Boundary<_3D>::set_incident(int g, double *v)
+inline void BoundarySN<_3D>::set_incident(const size_t g, double *v)
 {
   // Incident octants for each side.
   int io[6][4] = {0,3,4,7,  2,1,5,6,  0,4,1,5,  7,3,6,2,  1,0,2,3,  4,5,7,6};
@@ -240,7 +257,7 @@ inline void Boundary<_3D>::set_incident(int g, double *v)
 }
 
 template<>
-inline void Boundary<_2D>::set_incident(int g, double *v)
+inline void BoundarySN<_2D>::set_incident(const size_t g, double *v)
 {
   // Incident octants for each side.
   int io[4][2] = {0,3,  2,1,  1,0,  3,2};
@@ -269,7 +286,7 @@ inline void Boundary<_2D>::set_incident(int g, double *v)
 }
 
 template<>
-inline void Boundary<_1D>::set_incident(int g, double *v)
+inline void BoundarySN<_1D>::set_incident(const size_t g, double *v)
 {
   using std::cout;
   using std::endl;
@@ -297,13 +314,19 @@ inline void Boundary<_1D>::set_incident(int g, double *v)
 }
 
 template<class D>
-inline void Boundary<D>::get_incident(int g, double *v)
+inline void BoundarySN<D>::get_incident(const size_t g, double *v)
 {
-  /* ... */
+  THROW("NOT IMPLEMENTED");
 }
 
+/*
+ *  Note, the following are not exactly optimal, and I think passing
+ *  around a dumb pointer is, well, dumb.
+ *
+ */
+
 template<>
-inline void Boundary<_3D>::get_incident(int g, double *v)
+inline void BoundarySN<_3D>::get_incident(const size_t g, double *v)
 {
   // Incident octants for each side.
   int io[6][4] = {0,3,4,7,  2,1,5,6,  0,4,1,5,  7,3,6,2,  1,0,2,3,  4,5,7,6};
@@ -336,7 +359,7 @@ inline void Boundary<_3D>::get_incident(int g, double *v)
 }
 
 template<>
-inline void Boundary<_2D>::get_incident(int g, double *v)
+inline void BoundarySN<_2D>::get_incident(const size_t g, double *v)
 {
   // Incident octants for each side.
   int io[4][2] = {0,3,  2,1,  1,0,  3,2};
@@ -365,7 +388,7 @@ inline void Boundary<_2D>::get_incident(int g, double *v)
 }
 
 template<>
-inline void Boundary<_1D>::get_incident(int g, double *v)
+inline void BoundarySN<_1D>::get_incident(const size_t g, double *v)
 {
   // Incident octants for each side.
   int io[2][1] = {0, 1};
@@ -388,9 +411,6 @@ inline void Boundary<_1D>::get_incident(int g, double *v)
   }
 }
 
-
-
-
 //---------------------------------------------------------------------------//
 // Instantiations
 //---------------------------------------------------------------------------//
@@ -399,10 +419,10 @@ template class BoundaryTraits<_1D>;
 template class BoundaryTraits<_2D>;
 template class BoundaryTraits<_3D>;
 
-template class Boundary<_1D>;
-template class Boundary<_2D>;
-template class Boundary<_3D>;
+template class BoundarySN<_1D>;
+template class BoundarySN<_2D>;
+template class BoundarySN<_3D>;
 
 } // end namespace detran
 
-#endif /* BOUNDARY_I_HH_ */
+#endif /* BOUNDARYSN_I_HH_ */

@@ -20,7 +20,7 @@ namespace detran
 //---------------------------------------------------------------------------//
 
 template <class D>
-inline void BoundaryMOC<D>::set(int g)
+inline void BoundaryMOC<D>::set(const size_t g)
 {
   for(int side = 0; side < 2*D::dimension; side++)
   {
@@ -29,7 +29,7 @@ inline void BoundaryMOC<D>::set(int g)
 }
 
 template <class D>
-inline void BoundaryMOC<D>::update(int g)
+inline void BoundaryMOC<D>::update(const size_t g)
 {
   for(int side = 0; side < 2*D::dimension; side++)
   {
@@ -38,7 +38,7 @@ inline void BoundaryMOC<D>::update(int g)
 }
 
 template <class D>
-inline void BoundaryMOC<D>::update(int g, int o, int a)
+inline void BoundaryMOC<D>::update(const size_t g, const size_t o, const size_t a)
 {
   for(int side = 0; side < 2*D::dimension; side++)
   {
@@ -47,7 +47,7 @@ inline void BoundaryMOC<D>::update(int g, int o, int a)
 }
 
 template <class D>
-inline void BoundaryMOC<D>::clear(int g)
+inline void BoundaryMOC<D>::clear(const size_t g)
 {
   /* ... */
 }
@@ -58,7 +58,8 @@ inline void BoundaryMOC<D>::clear(int g)
 
 template <class D>
 inline const double&
-BoundaryMOC<D>::operator()(u_int g, u_int o, u_int a, u_int inout, u_int t) const
+BoundaryMOC<D>::operator()(const size_t g, const size_t o, const size_t a,
+                           const size_t inout, const size_t t) const
 {
   Require(d_quadrature->valid_index(o, a));
   Require(g < d_number_groups);
@@ -72,7 +73,8 @@ BoundaryMOC<D>::operator()(u_int g, u_int o, u_int a, u_int inout, u_int t) cons
 
 template <class D>
 inline double&
-BoundaryMOC<D>::operator()(u_int g, u_int o, u_int a, u_int inout, u_int t)
+BoundaryMOC<D>::operator()(const size_t g, const size_t o, const size_t a,
+                           const size_t inout, const size_t t)
 {
   // Cast away return type
   return const_cast<double&>
@@ -88,8 +90,8 @@ BoundaryMOC<D>::operator()(u_int g, u_int o, u_int a, u_int inout, u_int t)
 
 template <class D>
 inline void
-BoundaryMOC<D>::feed_into(const u_int o1, const u_int a1, const u_int t1,
-                          u_int      &o2, u_int      &a2,      u_int &t2)
+BoundaryMOC<D>::feed_into(const size_t  o1, const size_t  a1, const size_t  t1,
+                                size_t &o2,       size_t &a2,       size_t &t2)
 {
   Require(o1 < d_quadrature->number_octants());
   Require(a1 < d_quadrature->number_angles_octant());
@@ -102,8 +104,8 @@ BoundaryMOC<D>::feed_into(const u_int o1, const u_int a1, const u_int t1,
 
 template <class D>
 inline void
-BoundaryMOC<D>::feed_from(const u_int o1, const u_int a1, const u_int t1,
-                          u_int      &o2, u_int      &a2,      u_int &t2)
+BoundaryMOC<D>::feed_from(const size_t  o1, const size_t  a1, const size_t  t1,
+                                size_t &o2,       size_t &a2,       size_t &t2)
 {
   Require(o1 < d_quadrature->number_octants());
   Require(a1 < d_quadrature->number_angles_octant());

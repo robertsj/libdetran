@@ -4,18 +4,13 @@
  * \author robertsj
  * \date   Jun 9, 2012
  * \brief  Equation_SD_1D class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 
 #ifndef EQUATION_SD_1D_HH_
 #define EQUATION_SD_1D_HH_
 
-// Detran headers
 #include "Equation.hh"
-
-// Detran utilities
-#include "Definitions.hh"
 
 namespace detran
 {
@@ -43,13 +38,21 @@ class Equation_SD_1D : public Equation<_1D>
 
 public:
 
-  typedef SP<Equation<_1D> >                SP_equation;
-  typedef Equation<_1D>::SP_material        SP_material;
-  typedef Equation<_1D>::SP_mesh            SP_mesh;
-  typedef Equation<_1D>::SP_quadrature      SP_quadrature;
-  typedef Equation<_1D>::moments_type       moments_type;
-  typedef Equation<_1D>::angular_flux_type  angular_flux_type;
-  typedef Equation<_1D>::face_flux_type     face_flux_type;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
+
+  typedef detran_utilities::SP<Equation<_1D> >  SP_equation;
+  typedef Equation<_1D>::SP_material            SP_material;
+  typedef Equation<_1D>::SP_mesh                SP_mesh;
+  typedef Equation<_1D>::SP_quadrature          SP_quadrature;
+  typedef Equation<_1D>::moments_type           moments_type;
+  typedef Equation<_1D>::angular_flux_type      angular_flux_type;
+  typedef Equation<_1D>::face_flux_type         face_flux_type;
+
+  //-------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //-------------------------------------------------------------------------//
 
   /*!
    *  \brief Constructor
@@ -59,17 +62,19 @@ public:
                  SP_quadrature quadrature,
                  bool update_psi);
 
-  /// \name Public Interface
-  /// \{
+
+  //-------------------------------------------------------------------------//
+  // ABSTRACT INTERFACE -- ALL EQUATION TYPES MUST IMPLEMENT THESE
+  //-------------------------------------------------------------------------//
 
   /*!
    *   \brief Solve for the cell-center and outgoing edge fluxes.
    *
    *   See \ref Equation for full description.
    */
-  inline void solve(int i,
-                    int j,
-                    int k,
+  inline void solve(const size_t i,
+                    const size_t j,
+                    const size_t k,
                     moments_type &source,
                     face_flux_type &psi_in,
                     face_flux_type &psi_out,
@@ -81,26 +86,24 @@ public:
    *  \brief Setup the equations for a group.
    *  \param g     Current group.
    */
-  void setup_group(int g);
+  void setup_group(const size_t g);
 
   /*!
    *  \brief Setup the equations for an octant.
    *  \param octant    Current octant.
    */
-  void setup_octant(int octant);
+  void setup_octant(const size_t octant);
 
   /*!
    *  \brief Setup the equations for an angle.
    *  \param angle  Angle index within octant.
    */
-  void setup_angle(int angle);
-
-  /// \}
+  void setup_angle(const size_t angle);
 
 private:
 
   /// X-directed coefficient, \f$ 2|\mu|/\Delta_x \f$.
-  vec_dbl d_coef_x;
+  detran_utilities::vec_dbl d_coef_x;
 
 };
 

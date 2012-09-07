@@ -16,9 +16,9 @@
 namespace detran
 {
 
-inline void Equation_SD_2D::solve(int i,
-                                  int j,
-                                  int k,
+inline void Equation_SD_2D::solve(const size_t i,
+                                  const size_t j,
+                                  const size_t k,
                                   moments_type &source,
                                   face_flux_type &psi_in,
                                   face_flux_type &psi_out,
@@ -26,10 +26,9 @@ inline void Equation_SD_2D::solve(int i,
                                   angular_flux_type &psi)
 {
   // Preconditions.  (The client *must* set group and angles.)
-  Require(d_g >= 0);
-  Require(d_angle >= 0);
-  Require(d_octant >= 0);
   Require(k == 0);
+
+  typedef detran_geometry::Mesh Mesh;
 
   // Compute cell-center angular flux.
   int cell = d_mesh->index(i, j);

@@ -3,21 +3,15 @@
  * \file   SphericalHarmonics.cc
  * \author Jeremy Roberts
  * \date   Jun 30, 2011
- * \brief
- * \note   Copyright (C) 2011 Jeremy Roberts.
+ * \brief  SphericalHarmonics member definitions
  */
 //---------------------------------------------------------------------------//
 
-// Detran
 #include "SphericalHarmonics.hh"
-
-// Utilities
-#include "Constants.hh"
-#include "DBC.hh"
-#include "GenException.hh"
-#include "SoftEquivalence.hh"
-
-// System
+#include "utilities/Constants.hh"
+#include "utilities/DBC.hh"
+#include "utilities/GenException.hh"
+#include "utilities/SoftEquivalence.hh"
 #include <cmath>
 
 namespace detran_angle
@@ -25,54 +19,47 @@ namespace detran_angle
 
 // Calculate the spherical harmonic of degree l, order m
 // given  cos(polar) and azimuthal angle
-double SphericalHarmonics::Y_lm(int l,
-                                int m,
-                                double xi,
-                                double varphi )
+double SphericalHarmonics::Y_lm(const int    l,
+                                const int    m,
+                                const double xi,
+                                const double varphi )
 {
-
-    using std::sqrt;
-
     Require (xi >= -1.0);
     Require (xi <= 1.0);
     Require (varphi >= 0.0);
     Require (varphi <= detran_utilities::two_pi);
 
-    double sintheta = sqrt(1.0 - xi*xi);
-    double mu     = sintheta*cos(varphi);
-    double eta    = sintheta*sin(varphi);
-    return get_Y_lm(l,m,mu,eta,xi);
+    double sintheta = std::sqrt(1.0 - xi*xi);
+    double mu  = sintheta*std::cos(varphi);
+    double eta = sintheta*std::sin(varphi);
+    return get_Y_lm(l, m, mu, eta, xi);
 
 }
 
 // Calculate the spherical harmonic of degree l, order m
 // given the triplet of directional cosines
-double SphericalHarmonics::Y_lm( int l,
-                              int m,
-                              double mu,
-                              double eta,
-                              double xi )
+double SphericalHarmonics::Y_lm(const int    l,
+                                const int    m,
+                                const double mu,
+                                const double eta,
+                                const double xi )
 {
-
-    return get_Y_lm(l,m,mu,eta,xi);
-
+    return get_Y_lm(l, m, mu, eta, xi);
 }
 
 // Calculate the Legendre polynomial of degree l
 // given the polar angle cosine
-double SphericalHarmonics::Y_lm( int l,
-                              double xi )
+double SphericalHarmonics::Y_lm(const int    l,
+                                const double xi )
 {
-
-    return get_Y_lm(l,0,0,0,xi);
-
+    return get_Y_lm(l, 0, 0, 0, xi);
 }
 
-double  SphericalHarmonics::get_Y_lm(int l,
-                                     int m,
-                                     double mu,
-                                     double eta,
-                                     double xi )
+double SphericalHarmonics::get_Y_lm(const int    l,
+                                    const int    m,
+                                    const double mu,
+                                    const double eta,
+                                    const double xi )
 {
   using std::fabs;
   Require (l >= 0);

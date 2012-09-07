@@ -10,19 +10,15 @@
 #ifndef REFLECTIVEMOC_HH_
 #define REFLECTIVEMOC_HH_
 
-// Detran
 #include "BoundaryConditionMOC.hh"
 
 namespace detran
 {
 
-// Forward declare boundary and traits.
-template <class D> class BoundaryMOC;
-
 //---------------------------------------------------------------------------//
 /*!
  * \class ReflectiveMOC
- * \brief Vacuum boundary condition for MOC
+ * \brief Reflective boundary condition for MOC
  */
 //---------------------------------------------------------------------------//
 
@@ -32,33 +28,52 @@ class ReflectiveMOC : public BoundaryConditionMOC<D>
 
 public:
 
-  typedef BoundaryConditionMOC<D>         Base;
-  typedef typename Base::SP_bc            SP_base;
-  typedef InputDB::SP_input               SP_input;
-  typedef SP<MeshMOC>                     SP_mesh;
-  typedef SP<QuadratureMOC>               SP_quadrature;
-  typedef BoundaryMOC<D>                  Boundary_T;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
+
+  typedef BoundaryConditionMOC<D>             Base;
+  typedef typename Base::SP_bc                SP_bc;
+  typedef typename Base::Boundary_T           Boundary_T;
+  typedef typename Base::SP_input             SP_input;
+  typedef typename Base::SP_mesh              SP_mesh;
+  typedef typename Base::SP_quadrature        SP_quadrature;
+  typedef detran_utilities::vec_int           vec_int;
+  typedef detran_utilities::vec2_int          vec2_int;
+  typedef typename Base::size_t               size_t;
+
+  //-------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //-------------------------------------------------------------------------//
 
   ReflectiveMOC(Boundary_T& boundary,
-         int side,
-         SP_input input,
-         SP_mesh mesh,
-         SP_quadrature quadrature)
+                const size_t side,
+                SP_input input,
+                SP_mesh mesh,
+                SP_quadrature quadrature)
     : Base(boundary, side, input, mesh, quadrature)
   {
     /* ... */
   }
 
+  //-------------------------------------------------------------------------//
+  // ABSTRACT INTERFACE -- ALL MOC BOUNDARY CONDITIONS MUST IMPLEMENT THESE
+  //-------------------------------------------------------------------------//
+
   /// Set initial and/or fixed boundary condition.  Reflective does nothing.
-  void set(int g){};
+  void set(const size_t g){};
 
   /// Update a boundary following a sweep.
-  void update(int g);
+  void update(const size_t g);
 
   /// Update a boundary for a given angle following a sweep.
-  void update(int g, int o, int a);
+  void update(const size_t g, const size_t o, const size_t a);
 
 private:
+
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   // Make inherited data visible
   using Base::d_boundary;

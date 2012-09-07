@@ -4,7 +4,6 @@
  * \author robertsj
  * \date   Apr 10, 2012
  * \brief  Equation_SC_2D inline member definitions.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 
@@ -18,9 +17,9 @@
 namespace detran
 {
 
-inline void Equation_SC_2D::solve(int i,
-                                  int j,
-                                  int k,
+inline void Equation_SC_2D::solve(const size_t i,
+                                  const size_t j,
+                                  const size_t k,
                                   moments_type &source,
                                   face_flux_type &psi_in,
                                   face_flux_type &psi_out,
@@ -28,14 +27,11 @@ inline void Equation_SC_2D::solve(int i,
                                   angular_flux_type &psi)
 {
   // Preconditions.  (The client *must* set group and angles.)
-  Require(d_g >= 0);
-  Require(d_angle >= 0);
-  Require(d_octant >= 0);
-  Require(i >= 0);
   Require(i < d_mesh->number_cells_x());
-  Require(j >= 0);
   Require(j < d_mesh->number_cells_y());
   Require(k == 0);
+
+  typedef detran_geometry::Mesh Mesh;
 
   int cell = d_mesh->index(i, j);
   double sigma = d_material->sigma_t(d_mat_map[cell], d_g);

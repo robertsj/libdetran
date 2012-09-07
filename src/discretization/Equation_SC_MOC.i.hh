@@ -17,8 +17,8 @@
 namespace detran
 {
 
-inline void Equation_SC_MOC::solve(int region,
-                                   double length,
+inline void Equation_SC_MOC::solve(const size_t region,
+                                   const double length,
                                    moments_type &source,
                                    double &psi_in,
                                    double &psi_out,
@@ -29,9 +29,6 @@ inline void Equation_SC_MOC::solve(int region,
   using std::endl;
 
   // Preconditions.
-  Require(d_g >= 0);
-  Require(d_angle >= 0);
-  Require(d_octant >= 0);
   Require(region < d_mesh->number_cells());
 
   double sigma = d_material->sigma_t(d_mat_map[region], d_g);

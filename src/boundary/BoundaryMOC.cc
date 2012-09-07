@@ -7,12 +7,9 @@
  */
 //---------------------------------------------------------------------------//
 
-// Detran
 #include "BoundaryMOC.hh"
 #include "VacuumMOC.hh"
 #include "ReflectiveMOC.hh"
-
-// System
 #include <iostream>
 
 namespace detran
@@ -53,17 +50,17 @@ BoundaryMOC<D>::BoundaryMOC(SP_input        input,
   {
     // Vacuum is default.
     std::string type = "vacuum";
-    if (input->check(names[side]))
+    if (d_input->check(names[side]))
     {
-      type = input->get<std::string>(names[side]);
+      type = d_input->template get<std::string>(names[side]);
     }
     if (type == "vacuum")
     {
-      d_bc[side] = new VacuumMOC<D>((*this), side, input, mesh, quadrature);
+      d_bc[side] = new VacuumMOC<D>((*this), side, d_input, d_mesh, d_quadrature);
     }
     else if (type == "reflect")
     {
-      d_bc[side] = new ReflectiveMOC<D>((*this), side, input, mesh, quadrature);
+      d_bc[side] = new ReflectiveMOC<D>((*this), side, d_input, d_mesh, d_quadrature);
       d_is_reflective[side] = true;
       d_has_reflective = true;
     }

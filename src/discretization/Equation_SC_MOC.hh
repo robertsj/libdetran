@@ -4,18 +4,13 @@
  * \author Jeremy Roberts
  * \date   Mar 31, 2012
  * \brief  Equation_SC_MOC class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts.
  */
 //---------------------------------------------------------------------------//
 
 #ifndef EQUATION_SC_MOC_HH_
 #define EQUATION_SC_MOC_HH_
 
-// Detran headers
 #include "Equation_MOC.hh"
-
-// Detran utilities
-#include "Definitions.hh"
 
 namespace detran
 {
@@ -64,12 +59,15 @@ class Equation_SC_MOC: public Equation_MOC
 
 public:
 
-  typedef Material::SP_material             SP_material;
-  typedef MeshMOC::SP_mesh                  SP_mesh;
-  typedef TrackDB::SP_trackdb               SP_trackdb;
-  typedef QuadratureMOC::SP_quadrature      SP_quadrature;
-  typedef State::moments_type               moments_type;
-  typedef State::angular_flux_type          angular_flux_type;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
+
+  typedef Equation_MOC                      Base;
+
+  //-------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //-------------------------------------------------------------------------//
 
   /*!
    *  \brief Constructor
@@ -77,18 +75,19 @@ public:
   Equation_SC_MOC(SP_mesh mesh,
                   SP_material material,
                   SP_quadrature quadrature,
-                  bool update_psi);
+                  const bool update_psi);
 
-  /// \name Public Interface
-  /// \{
+  //-------------------------------------------------------------------------//
+  // ABSTRACT INTERFACE -- ALL MOC EQUATION TYPES MUST IMPLEMENT THESE
+  //-------------------------------------------------------------------------//
 
   /*!
    *   \brief Solve for the cell-center and outgoing edge fluxes.
    *
    *   See \ref Equation for full description.
    */
-  inline void solve(int region,
-                    double length,
+  inline void solve(const size_t region,
+                    const double length,
                     moments_type &source,
                     double &psi_in,
                     double &psi_out,
@@ -100,40 +99,37 @@ public:
    *  \brief Setup the equations for a group.
    *  \param g     Current group.
    */
-  void setup_group(int g);
+  void setup_group(const size_t g);
 
   /*!
    *  \brief Setup the equations for an octant.
    *  \param o    Current octant index.
    */
-  void setup_octant(int o);
+  void setup_octant(const size_t o);
 
   /*!
    *  \brief Setup the equations for an azimuth.
    *  \param a    Azimuth within octant.
    */
-  void setup_azimuth(int a);
+  void setup_azimuth(const size_t a);
 
   /*!
    *  \brief Setup the equations for a polar angle.
    *  \param p    Polar index.
    */
-  void setup_polar(int p);
-
-  /// \}
+  void setup_polar(const size_t p);
 
 private:
 
-  /// \name Private Data
-  /// \{
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   /// Angular quadrature weights for an azimuth and all polar angles.
-  vec_dbl d_weights;
+  detran_utilities::vec_dbl d_weights;
 
   /// Inverse polar sines
-  vec_dbl d_inv_sin;
-
-  /// \}
+  detran_utilities::vec_dbl d_inv_sin;
 
 };
 

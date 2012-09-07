@@ -192,6 +192,11 @@ public:
    */
   bool valid_index(size_t o, size_t a) const;
 
+  size_t dimension() const
+  {
+    return d_dimension;
+  }
+
   /*!
    *  \brief Pretty print of the first octant parameters.
    */

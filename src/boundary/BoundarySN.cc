@@ -1,19 +1,15 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   Boundary.cc
+ * \file   BoundarySN.cc
  * \author Jeremy Roberts
  * \date   Mar 25, 2012
  * \brief  Boundary member definitions.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 
-// Detran
-#include "Boundary.hh"
+#include "BoundarySN.hh"
 #include "Reflective.hh"
 #include "Vacuum.hh"
-
-// System
 #include <string>
 
 namespace detran
@@ -21,9 +17,9 @@ namespace detran
 
 // Constructor.
 template<class D>
-Boundary<D>::Boundary(SP_input        input,
-                      SP_mesh         mesh,
-                      SP_quadrature   quadrature)
+BoundarySN<D>::BoundarySN(SP_input        input,
+                          SP_mesh         mesh,
+                          SP_quadrature   quadrature)
   : Base(input, mesh)
   , d_quadrature(quadrature)
   , d_boundary_flux(2*D::dimension, // number of sides
@@ -43,8 +39,6 @@ Boundary<D>::Boundary(SP_input        input,
   names[Mesh::SOUTH]  = "bc_south";
   names[Mesh::NORTH]  = "bc_north";
 
-  // Create SP of me.
-
   // Assign boundary conditions.
   for(int side = 0; side < 2*D::dimension; side++)
   {
@@ -52,15 +46,16 @@ Boundary<D>::Boundary(SP_input        input,
     std::string type = "vacuum";
     if (input->check(names[side]))
     {
-      type = input->get<std::string>(names[side]);
+      // Ugh, this "template" addition is a sneaky thing!
+      type = d_input->template get<std::string>(names[side]);
     }
     if (type == "vacuum")
     {
-      d_bc[side] = new Vacuum<D>((*this), side, input, mesh, quadrature);
+      d_bc[side] = new Vacuum<D>((*this), side, d_input, d_mesh, d_quadrature);
     }
     else if (type == "reflect")
     {
-      d_bc[side] = new Reflective<D>((*this), side, input, mesh, quadrature);
+      d_bc[side] = new Reflective<D>((*this), side, d_input, d_mesh, d_quadrature);
       d_is_reflective[side] = true;
       d_has_reflective = true;
     }
@@ -79,7 +74,7 @@ Boundary<D>::Boundary(SP_input        input,
 //---------------------------------------------------------------------------//
 
 template <class D>
-void Boundary<D>::initialize()
+void BoundarySN<D>::initialize()
 {
   int nx = d_mesh->number_cells_x();
   int ny = d_mesh->number_cells_y();
@@ -115,7 +110,7 @@ void Boundary<D>::initialize()
 }
 
 template <>
-void Boundary<_2D>::initialize()
+void BoundarySN<_2D>::initialize()
 {
   int nx = d_mesh->number_cells_x();
   int ny = d_mesh->number_cells_y();
@@ -143,7 +138,7 @@ void Boundary<_2D>::initialize()
 }
 
 template <>
-void Boundary<_1D>::initialize()
+void BoundarySN<_1D>::initialize()
 {
   int na = d_quadrature->number_angles();
   for (int g = 0; g < d_number_groups; g++)

@@ -4,31 +4,24 @@
  * \author Jeremy Roberts
  * \date   Jul 1, 2011
  * \brief  MomentToDiscrete class definition.
- * \note   Copyright (C) 2011 Jeremy Roberts.
  */
 //---------------------------------------------------------------------------//
 
 #ifndef MOMENT_TO_DISCRETE_HH_
 #define MOMENT_TO_DISCRETE_HH_
 
-// Detran
 #include "Quadrature.hh"
-
-// Utilities
-#include "Definitions.hh"
-#include "SP.hh"
-#include "Traits.hh"
-
-// System
+#include "utilities/Definitions.hh"
+#include "utilities/SP.hh"
 #include <vector>
 
 namespace detran_angle
 {
 
-//===========================================================================//
+//---------------------------------------------------------------------------//
 /*!
  * \class MomentToDiscrete
- * \brief The discrete ordinates moment-to-discrete operator.
+ * \brief Converts moment-valued unknowns to discrete angle values
  *
  * This class defines the operator
  * \f[
@@ -80,6 +73,7 @@ namespace detran_angle
  * For anisotropic scattering  of order \f$L\f$ in 3-d problems,
  * the number of columns in \f$\mathbf{M}\f$ is \f$ N_L =(L+1)^2\f$.  In
  * 2-d problems, there is no variation in the \f$z\f$ direction, and hence
+ * all values with odd polar order vanish.
  *
  * For 1-d problems and scattering order \f$L\f$, this reduces to
  * \f$ N_L = (L+1) \f$ and a subsequent simplification of \f$\mathbf{M}\f$
@@ -94,32 +88,33 @@ namespace detran_angle
  * that array for a given \f$l\f$ and \f$m\f$ using the
  * \ref Moments::index of appropriated dimension.
  *
- * \tparam D dimension
- *
- * \sa Spherical_Harmonics, Moments
+ * \sa Spherical_Harmonics
  *
  */
 /*!
- * \example test/testMomentToDiscrete.cc
+ * \example test/test_MomentToDiscrete.cc
  *
  * Test of MomentToDiscrete.
  */
-//===========================================================================//
-
-template <class D>
+//---------------------------------------------------------------------------//
 class MomentToDiscrete
 {
 
 public:
 
-  /// \name Useful Typedefs
-  //\{
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
+
   typedef detran_utilities::SP<MomentToDiscrete>  SP_MtoD;
-  typedef unsigned int                            size_type;
+  typedef Quadrature::SP_quadrature               SP_quadrature;
+  typedef detran_utilities::size_t                size_t;
   typedef detran_utilities::vec_dbl               M_Row;
   typedef std::vector<M_Row>                      Operator_M;
-  typedef Quadrature::SP_quadrature               SP_quadrature;
-  //\}
+
+  //-------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //-------------------------------------------------------------------------//
 
   /*!
    * \brief Constructor.
@@ -129,34 +124,32 @@ public:
    * Note, this will be greater than or equal to the flux moments
    * order, since we can optionally keep higher order moments.
    */
-  explicit MomentToDiscrete(const size_type legendre_order);
+  explicit MomentToDiscrete(const size_t legendre_order);
 
   /// SP contructor
-  static SP_MtoD Create(const size_type o, SP_quadrature q)
+  static SP_MtoD Create(const size_t o, SP_quadrature q)
   {
     SP_MtoD m(new MomentToDiscrete(o));
     m->build(q);
     return m;
   }
 
+  //-------------------------------------------------------------------------//
+  // PUBLIC INTERFACE
+  //-------------------------------------------------------------------------//
+
   /*!
-   * \brief Build the moments-to-discrete operator.
+   *  \brief Build the moments-to-discrete operator.
    *
-   * Keeping the actual construction outside the constructor allows
-   * us to rebuild the operator for different angular solves using
-   * the same spatial grid. This is useful for coupled forward and
-   * adjoint solves, compact testing of quadrature sets, and potential
-   * angular multigrid schemes.
+   *  Keeping the actual construction outside the constructor allows
+   *  us to rebuild the operator for different angular solves using
+   *  the same spatial grid. This is useful for coupled forward and
+   *  adjoint solves, compact testing of quadrature sets, and potential
+   *  angular multigrid schemes.
    *
-   * \param     angularmesh     Angular mesh smart pointer.
+   *  \param     q     Pointer to quadrature
    */
-  void build(SP_quadrature quadrature);
-
-
-
-
-  /// \name Accessors
-  //\{
+  void build(SP_quadrature q);
 
   /*!
    * \brief Return an element from \f$ M\f$.
@@ -165,7 +158,7 @@ public:
    * \param     moment      Moment cardinal index, i.e. column.
    * \return                Element of operator.
    */
-  const double& operator()(const int angle, const int moment) const;
+  const double& operator()(const size_t angle, const size_t moment) const;
 
   /*!
    * \brief Return an element from \f$ M\f$.
@@ -175,8 +168,9 @@ public:
    * \param     m           Legendre order.
    * \return                Element of operator.
    */
-  const double& operator()(const int angle, const int l, const int m) const;
-
+  const double& operator()(const size_t angle,
+                           const size_t l,
+                           const size_t m) const;
 
   /*!
    * \brief Return an element from \f$ M\f$.
@@ -187,8 +181,8 @@ public:
    * \param     m           Legendre order.
    * \return                Element of operator.
    */
-  const double& operator()(const int o, const int a,
-                           const int l, const int m) const;
+  const double& operator()(const size_t o, const size_t a,
+                           const size_t l, const size_t m) const;
 
   /*!
    * \brief Return a row of the operator.
@@ -196,7 +190,7 @@ public:
    * \param     angle       Angle i.e. row index.
    * \return                A row.
    */
-  const M_Row& get_row(const int angle) const
+  const M_Row& get_row(const size_t angle) const
   {
     Require(angle > 0);
     Require(angle < d_number_angles);
@@ -204,47 +198,48 @@ public:
   }
 
   /// Return number of moments (length of row in \f$\mathbf{M}\f$).
-  size_type row_size() const
+  size_t row_size() const
   {
     return d_number_moments;
   }
 
   /// Return number of angles (length of column in \f$\mathbf{M}\f$).
-  size_type column_size() const
+  size_t column_size() const
   {
     return d_number_angles;
   }
 
   /// Return Legendre expansion order.
-  size_type legendre_order() const
+  size_t legendre_order() const
   {
     return d_legendre_order;
   }
 
 
-  // \}
-
 private:
 
-  // >>> DATA
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   /// Legendre order of anisotropic scattering.
-  const size_type d_legendre_order;
+  const size_t d_legendre_order;
 
   /// Number of angular moments.
-  const size_type d_number_moments;
+  const size_t d_number_moments;
 
   /// Angular mesh.
   SP_quadrature d_quadrature;
 
   /// Number of angles (not const so that we can change angular meshes)
-  size_type d_number_angles;
+  size_t d_number_angles;
 
   /// Moments-to-discrete operator \f$\mathbf{M}\f$.
   Operator_M d_M;
 
-  /// \name Implementation
-  //\{
+  //-------------------------------------------------------------------------//
+  // IMPLEMENTATION
+  //-------------------------------------------------------------------------//
 
   /*!
    * \brief Calculate one row of \f$\mathbf{M}\f$.
@@ -252,9 +247,9 @@ private:
    * \param o   Octant index.
    * \param a   Angle index.
    */
-  void calc_row(const int o, const int a);
-
-  //\}
+  void calc_row_1d(const size_t o, const size_t a);
+  void calc_row_2d(const size_t o, const size_t a);
+  void calc_row_3d(const size_t o, const size_t a);
 
 };
 

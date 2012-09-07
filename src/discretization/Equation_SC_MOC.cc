@@ -16,7 +16,7 @@ namespace detran
 Equation_SC_MOC::Equation_SC_MOC(SP_mesh mesh,
                                  SP_material material,
                                  SP_quadrature quadrature,
-                                 bool update_psi)
+                                 const bool update_psi)
   : Equation_MOC(mesh, material, quadrature, update_psi)
   , d_weights(quadrature->number_polar_octant(), 0.0)
   , d_inv_sin(quadrature->number_polar_octant(), 0.0)
@@ -27,24 +27,21 @@ Equation_SC_MOC::Equation_SC_MOC(SP_mesh mesh,
   }
 }
 
-void Equation_SC_MOC::setup_group(int g)
+void Equation_SC_MOC::setup_group(const size_t g)
 {
-  Require(g >= 0);
   Require(g < d_material->number_groups());
   d_g = g;
 }
 
-void Equation_SC_MOC::setup_octant(int octant)
+void Equation_SC_MOC::setup_octant(const size_t octant)
 {
-  Require(octant >= 0);
   Require(octant < 4);
   d_octant = octant;
 }
 
-void Equation_SC_MOC::setup_azimuth(int a)
+void Equation_SC_MOC::setup_azimuth(const size_t a)
 {
   // Currently, only the 1st octant values should be in use.
-  Require(a >= 0);
   Require(a < d_quadrature->number_azimuths_octant());
   d_azimuth = a;
   d_spacing = d_tracks->spacing(d_azimuth);
@@ -55,10 +52,9 @@ void Equation_SC_MOC::setup_azimuth(int a)
   }
 }
 
-void Equation_SC_MOC::setup_polar(int p)
+void Equation_SC_MOC::setup_polar(const size_t p)
 {
   // Currently, only the 1st octant values should be in use.
-  Require(p >= 0);
   Require(p < d_quadrature->number_polar_octant());
   d_polar = p;
   d_angle = d_quadrature->angle(d_azimuth, d_polar);

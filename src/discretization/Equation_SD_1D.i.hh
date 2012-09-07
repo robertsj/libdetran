@@ -16,10 +16,9 @@
 namespace detran
 {
 
-inline void Equation_SD_1D::setup_angle(int angle)
+inline void Equation_SD_1D::setup_angle(const size_t angle)
 {
   // Currently, only the 1st octant values should be in use.
-  Require(angle >= 0);
   Require(angle < d_quadrature->number_angles_octant());
   double mu  = d_quadrature->mu(0, angle);
   for (int i = 0; i < d_mesh->number_cells_x(); i++)
@@ -29,9 +28,9 @@ inline void Equation_SD_1D::setup_angle(int angle)
   d_angle = angle;
 }
 
-inline void Equation_SD_1D::solve(int i,
-                                  int j,
-                                  int k,
+inline void Equation_SD_1D::solve(const size_t i,
+                                  const size_t j,
+                                  const size_t k,
                                   moments_type &source,
                                   face_flux_type &psi_in,
                                   face_flux_type &psi_out,
@@ -39,16 +38,13 @@ inline void Equation_SD_1D::solve(int i,
                                   angular_flux_type &psi)
 {
   // Preconditions.  (The client *must* set group and angles.)
-  Require(d_g >= 0);
-  Require(d_angle >= 0);
-  Require(d_octant >= 0);
   Require(j == 0);
   Require(k == 0);
 
   // Compute cell-center angular flux.
   int cell = d_mesh->index(i);
-  double coef = 1.0 / (d_material->sigma_t(d_mat_map[cell], d_g) +
-                       d_coef_x[i]);
+  double coef = 1.0 /
+                (d_material->sigma_t(d_mat_map[cell], d_g) + d_coef_x[i]);
   double psi_center = coef * (source[cell] + d_coef_x[i] * psi_in);
 
   // Compute outgoing fluxes.

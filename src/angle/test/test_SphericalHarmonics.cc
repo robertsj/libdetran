@@ -1,23 +1,23 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   test_MomentToDiscrete.cc
+ * \file   test_SphericalHarmonics.cc
  * \author Jeremy Roberts
  * \date   Apr 1, 2012
- * \brief  Test of MomentToDiscrete class
+ * \brief  Test of SphericalHarmonics class
  * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
-#define TEST_LIST                   \
-        FUNC(test_MomentToDiscrete)
+#define TEST_LIST                     \
+        FUNC(test_SphericalHarmonics)
 
 // Detran headers
 #include "TestDriver.hh"
-#include "MomentToDiscrete.hh"
+#include "SphericalHarmonics.hh"
 
 // Setup
-#include "quadrature_fixture.hh"
+/* ... */
 
 using namespace detran_angle;
 using namespace detran_utilities;
@@ -33,36 +33,19 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------//
 
-int test_MomentToDiscrete(int argc, char *argv[])
+int test_SphericalHarmonics(int argc, char *argv[])
 {
-  // 1d test
-  {
-    // MtoD
-    MomentToDiscrete MtoD(0);
-    // Quadrature
-    SP_quadrature q = GaussLegendre::Create(2);
-    TEST(q);
-    // Build
-    MtoD.build(q);
-    // TEST
-    TEST(MtoD(0, 0, 0) == 0.5);
-  }
-  // 2d test
-  {
-    // MtoD
-    MomentToDiscrete MtoD(0);
-    // Quadrature
-    SP_quadrature q = QuadrupleRange::Create(2);
-    TEST(q);
-    // Build
-    MtoD.build(q);
-    // TEST
-    TEST(MtoD(0, 0, 0) == inv_four_pi);
-  }
+  double val;
+  double mu  = 0.350021174581540677777041;
+  double eta = 0.350021174581540677777041;
+  double xi  = 0.868890300722201205229788;
+  TEST(soft_equiv(SphericalHarmonics::Y_lm(0, 0, mu, eta, xi), 1.0));
+  TEST(soft_equiv(SphericalHarmonics::Y_lm(1,-1, mu, eta, xi), eta));
+  TEST(soft_equiv(SphericalHarmonics::Y_lm(1, 0, mu, eta, xi), xi));
+  TEST(soft_equiv(SphericalHarmonics::Y_lm(1, 1, mu, eta, xi), mu));
   return 0;
 }
 
-
 //---------------------------------------------------------------------------//
-//              end of test_MomentToDiscrete.cc
+//              end of test_SphericalHarmonics.cc
 //---------------------------------------------------------------------------//

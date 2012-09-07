@@ -24,16 +24,14 @@ Equation_SD_1D::Equation_SD_1D(SP_mesh mesh,
   /* ... */
 }
 
-void Equation_SD_1D::setup_group(int g)
+void Equation_SD_1D::setup_group(const size_t g)
 {
-  Require(g >= 0);
   Require(g < d_material->number_groups());
   d_g = g;
 }
 
-void Equation_SD_1D::setup_octant(int octant)
+void Equation_SD_1D::setup_octant(const size_t octant)
 {
-  Require(octant >= 0);
   Require(octant < 2);
   d_octant = octant;
 }

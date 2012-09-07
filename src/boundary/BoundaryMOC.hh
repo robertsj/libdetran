@@ -10,14 +10,10 @@
 #ifndef BOUNDARYMOC_HH_
 #define BOUNDARYMOC_HH_
 
-// Detran
 #include "BoundaryBase.hh"
 #include "BoundaryConditionMOC.hh"
-#include "MeshMOC.hh"
-#include "QuadratureMOC.hh"
-
-// Utilities
-#include "DBC.hh"
+#include "geometry/MeshMOC.hh"
+#include "angle/QuadratureMOC.hh"
 
 namespace detran
 {
@@ -39,18 +35,34 @@ class BoundaryMOC : public BoundaryBase<D>
 
 public:
 
-  typedef SP<BoundaryMOC>               SP_boundary;
-  typedef InputDB::SP_input             SP_input;
-  typedef SP<MeshMOC>                   SP_mesh;
-  typedef SP<QuadratureMOC>             SP_quadrature;
-  typedef BoundaryConditionMOC<D>       BC_T;
-  typedef typename BC_T::SP_bc          SP_bc;
-  typedef BoundaryBase<D>               Base;
-  typedef typename Base::SP_boundary    SP_base;
-  typedef std::vector<vec3_dbl>         boundary_flux_type;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
+
+  typedef BoundaryBase<D>                     Base;
+  typedef typename Base::SP_boundary          SP_boundary;
+  typedef typename Base::SP_input             SP_input;
+  typedef detran_geometry::Mesh               Mesh;
+  typedef detran_geometry::MeshMOC            MeshMOC;
+  typedef detran_utilities::SP<MeshMOC>       SP_mesh;
+  typedef detran_angle::QuadratureMOC         QuadratureMOC;
+  typedef detran_utilities::SP<QuadratureMOC> SP_quadrature;
+  typedef BoundaryConditionMOC<D>             BC_T;
+  typedef typename BC_T::SP_bc                SP_bc;
+  typedef detran_utilities::size_t            size_t;
+  typedef detran_utilities::vec_int           vec_int;
+  typedef detran_utilities::vec2_int          vec2_int;
+  typedef detran_utilities::vec3_int          vec3_int;
+  typedef detran_utilities::vec2_dbl          vec2_dbl;
+  typedef detran_utilities::vec3_dbl          vec3_dbl;
+  typedef std::vector<vec3_dbl>               boundary_flux_type;
 
   using Base::IN;
   using Base::OUT;
+
+  //-------------------------------------------------------------------------//
+  // CONSTRUCTORS & DESTRUCTORS
+  //-------------------------------------------------------------------------//
 
   /*!
    *  \brief Constructor.
@@ -64,17 +76,18 @@ public:
               SP_quadrature   quadrature);
 
   /// SP Constructor.
-  static SP<detran::BoundaryBase<D> >
-  Create(SP<detran::InputDB>       input,
-         SP<detran::Mesh>          mesh,
-         SP<detran::Quadrature>    quadrature)
+  static SP_boundary
+  Create(SP_input       input,
+         SP_mesh        mesh,
+         SP_quadrature  quadrature)
   {
     SP_boundary p(new BoundaryMOC(input, mesh, quadrature));
     return p;
   }
 
-  /// \name Inherited Interface
-  /// \{
+  //-------------------------------------------------------------------------//
+  // ABSTRACT INTERFACE -- ALL BOUNDARY TYPES MUST IMPLEMENT THESE
+  //-------------------------------------------------------------------------//
 
   /*!
    *  \brief Set the boundaries for a within-group solve.
@@ -84,7 +97,7 @@ public:
    *
    *  \param  g   Group of current solve
    */
-  void set(int g);
+  void set(const size_t g);
 
   /*!
    *  \brief Update the boundaries for each sweep.
@@ -97,7 +110,7 @@ public:
    *
    *  \param  g   Group of current solve
    */
-  void update(int g);
+  void update(const size_t g);
 
   /*!
    *  \brief Update the boundaries for a single angle.
@@ -114,7 +127,7 @@ public:
    *  \param  o   Octant being swept
    *  \param  a   Angle within octant being swept
    */
-  void update(int g, int o, int a);
+  void update(const size_t g, const size_t o, const size_t a);
 
   /*!
    *  \brief Clear the boundary container for a group.
@@ -126,7 +139,7 @@ public:
    *
    *  \param  g   Group of current solve
    */
-  void clear(int g);
+  void clear(const size_t g);
 
   /*
    *  \brief Set the entire group boundary flux for reflecting sides.
@@ -136,7 +149,7 @@ public:
    *  \param g  Group of current sweep
    *  \param v  Pointer to data used in Krylov solve
    */
-  void set_incident(int g, double *v)
+  void set_incident(const size_t g, double *v)
   {
     THROW("IMPLEMENT ME");
   }
@@ -149,15 +162,14 @@ public:
    *  \param g  Group of current sweep
    *  \param v  Pointer to data used in Krylov solve
    */
-  void get_incident(int g, double *v)
+  void get_incident(const size_t g, double *v)
   {
     THROW("IMPLEMENT ME");
   }
 
-  /// \}
-
-  /// \name Track Boundary Flux Access
-  /// \{
+  //-------------------------------------------------------------------------//
+  // BOUNDARY FLUX ACCESS
+  //-------------------------------------------------------------------------//
 
   /*
    *  \brief Const access to a boundary flux using cardinal indices.
@@ -172,18 +184,15 @@ public:
    *  \return         Constant reference to boundary flux.
    */
   const double&
-  operator()(u_int g, u_int o, u_int a, u_int inout, u_int t) const;
+  operator()(const size_t g, const size_t o, const size_t a,
+             const size_t inout, const size_t t) const;
 
   /*
    *  \brief Mutable access to boundary flux using cardinal indices.
    */
   double&
-  operator()(u_int g, u_int o, u_int a, u_int inout, u_int t);
-
-  /// \}
-
-  /// \name Indexing
-  /// \{
+  operator()(const size_t g, const size_t o, const size_t a,
+             const size_t inout, const size_t t);
 
   /*
    *  \brief Assign the octant, angle, and track fed by an octant,
@@ -200,8 +209,8 @@ public:
    *  \param a2   Outgoing angle within octant
    *  \param t2   Outgoing track
    */
-  void feed_into(const u_int o1, const u_int a1, const u_int t1,
-                 u_int &o2, u_int &a2, u_int &t2);
+  void feed_into(const size_t o1, const size_t a1, const size_t t1,
+                 size_t &o2, size_t &a2, size_t &t2);
 
   /*
    *  \brief Assign the octant, angle, and track feeding an octant,
@@ -213,24 +222,20 @@ public:
    *  \param a2   Incident angle within octant
    *  \param t2   Incident track
    */
-  void feed_from(const u_int o1, const u_int a1, const u_int t1,
-                 u_int &o2, u_int &a2, u_int &t2);
+  void feed_from(const size_t o1, const size_t a1, const size_t t1,
+                 size_t &o2, size_t &a2, size_t &t2);
 
   /// Return vector of octant, azimuth, track triplets for a side.
-  const vec2_int& side_indices(int side)
+  const vec2_int& side_indices(const size_t side) const
   {
     return d_side_index[side];
   }
 
-  /// \}
-
-  /// DBC function
-  bool is_valid() const
-  {
-    return true;
-  }
-
 private:
+
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   // Expose base class members.
   using Base::d_input;
@@ -239,9 +244,6 @@ private:
   using Base::d_has_reflective;
   using Base::d_is_reflective;
   using Base::d_boundary_flux_size;
-
-  /// \name Private Data
-  /// \{
 
   /// MOC Quadrature
   SP_quadrature d_quadrature;
@@ -261,10 +263,9 @@ private:
   /// d_side_index[side][o a t]
   vec3_int d_side_index;
 
-  /// \}
-
-  /// \name Implementation
-  /// \{
+  //-------------------------------------------------------------------------//
+  // IMPLEMENTATION
+  //-------------------------------------------------------------------------//
 
   /// Size the boundaries, etc.
   void initialize();
@@ -274,8 +275,6 @@ private:
 
   /// Setup indices for an incident side.
   void setup_side_indices();
-
-  /// \}
 
 };
 

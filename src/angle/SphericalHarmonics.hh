@@ -10,10 +10,12 @@
 #ifndef SPHERICAL_HARMONICS_HH_
 #define SPHERICAL_HARMONICS_HH_
 
+#include "utilities/Definitions.hh"
+
 namespace detran_angle
 {
 
-//===========================================================================//
+//---------------------------------------------------------------------------//
 /*!
  * \class SphericalHarmonics
  * \brief Spherical harmonics generation for anisotropic scattering.
@@ -191,19 +193,26 @@ namespace detran_angle
  * - Alain Hébert, <em>Applied Reactor Physics</em>, Presses Internationales
  *   Polytechnique, Montréal, 2009.
  *
- * \example test/testSphericalHarmonics.cc
+ * \example angle/test/test_SphericalHarmonics.cc
  *
  * Test of SphericalHarmonics.
  *
 */
-//===========================================================================//
+//---------------------------------------------------------------------------//
 class SphericalHarmonics
 {
 
 public:
 
-  // a variety of interfaces are provided that may be
-  // helpful in future modifications
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
+
+  typedef detran_utilities::size_t size_t;
+
+  //-------------------------------------------------------------------------//
+  // SPHERICAL HARMONICS -- a variety of interfaces provided for future work
+  //-------------------------------------------------------------------------//
 
   /*!
    * \brief Calculate \f$ Y^m_l \f$ given \f$\xi\f$ and \f$\varphi\f$.
@@ -214,7 +223,8 @@ public:
    * \param varphi azimutal angle (as defined from x axis)
    * \return       \f$ Y^m_l(\Omega) \f$
    */
-  static double Y_lm(int l, int m, double xi, double varphi);
+  static double Y_lm(const int l, const int m,
+                     const double xi, const double varphi);
 
   /*!
    * \brief Calculate \f$ Y^m_l \f$ given \f$\mathbf{\Omega}\f$.
@@ -226,7 +236,8 @@ public:
    * \param xi  direction cosine w/r to z axis
    * \return    \f$ Y^m_l(\Omega) \f$
    */
-  static double Y_lm(int l, int m, double mu, double eta, double xi);
+  static double Y_lm(const int l, const int m,
+                     const double mu, const double eta, const double xi);
 
   /*!
    * \brief Calculate \f$ Y^m_l \f$ given \f$\xi\f$.
@@ -235,7 +246,7 @@ public:
    * \param xi  direction cosine w/r to the polar axis
    * \return    \f$ Y^0_l(\Omega) = P_l(\xi)\f$
    */
-  static double Y_lm(int l, double xi);
+  static double Y_lm(const int l, const double xi);
 
 private:
 
@@ -253,7 +264,8 @@ private:
     * \param xi  direction cosine w/r to z axis
     * \return    \f$ Y^m_l(\Omega) \f$
     */
-  static double get_Y_lm(int l, int m, double mu, double eta, double xi);
+  static double get_Y_lm(const int l, const int m,
+                         const double mu, const double eta, const double xi);
 
 };
 

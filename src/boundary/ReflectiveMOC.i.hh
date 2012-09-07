@@ -16,14 +16,14 @@ namespace detran
 {
 
 template <class D>
-void ReflectiveMOC<D>::update(int g)
+void ReflectiveMOC<D>::update(const size_t g)
 {
   using std::cout;
   using std::endl;
 
-  u_int oo = 0;
-  u_int aa = 0;
-  u_int tt = 0;
+  size_t oo = 0;
+  size_t aa = 0;
+  size_t tt = 0;
 
   // List of (o, az, t) indices incident on my side
   const vec2_int &side_index = d_boundary.side_indices(d_side);
@@ -34,9 +34,9 @@ void ReflectiveMOC<D>::update(int g)
   {
 
     // Incident indices
-    u_int o  = side_index[i][0];
-    u_int a = side_index[i][1];
-    u_int t  = side_index[i][2];
+    size_t o = side_index[i][0];
+    size_t a = side_index[i][1];
+    size_t t = side_index[i][2];
 
     //for (int p = 0; p < d_quadrature->number_polar_octant(); p++)
     {
@@ -62,7 +62,7 @@ void ReflectiveMOC<D>::update(int g)
 }
 
 template <class D>
-void ReflectiveMOC<D>::update(int g, int o, int a)
+void ReflectiveMOC<D>::update(const size_t g, const size_t o, const size_t a)
 {
 
   // Cheating for now.

@@ -10,7 +10,6 @@
 #ifndef BOUNDARYBASE_I_HH_
 #define BOUNDARYBASE_I_HH_
 
-
 namespace detran
 {
 

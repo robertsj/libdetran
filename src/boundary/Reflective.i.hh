@@ -4,7 +4,6 @@
  * \author robertsj
  * \date   Apr 10, 2012
  * \brief  Reflective inline member definitions.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 
@@ -18,7 +17,7 @@ namespace detran
 {
 
 template <class D>
-void Reflective<D>::update(int g)
+void Reflective<D>::update(const size_t g)
 {
   for (int o = 0; o < d_quadrature->number_octants()/2; o++)
   {
@@ -31,8 +30,9 @@ void Reflective<D>::update(int g)
   }
 }
 
+// \todo This is not the most elegant solution
 template <class D>
-void Reflective<D>::update(int g, int o, int a)
+void Reflective<D>::update(const size_t g, const size_t o, const size_t a)
 {
   int o_out = -1;
   for (int i = 0; i < d_octants.size(); i++)
@@ -42,7 +42,7 @@ void Reflective<D>::update(int g, int o, int a)
       o_out = d_octants[i][Boundary_T::OUT];
     }
   }
-  // Only reroute fluxes if I am an outgoing side
+  // Only reroute fluxes if I am an outgoing side.
   if (o_out >= 0)
   {
     // Reroute reflecting fluxes.

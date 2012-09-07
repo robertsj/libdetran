@@ -25,24 +25,21 @@ Equation_DD_3D::Equation_DD_3D(SP_mesh mesh,
   /* ... */
 }
 
-void Equation_DD_3D::setup_group(int g)
+void Equation_DD_3D::setup_group(const size_t g)
 {
-  Require(g >= 0);
   Require(g < d_material->number_groups());
   d_g = g;
 }
 
-void Equation_DD_3D::setup_octant(int octant)
+void Equation_DD_3D::setup_octant(const size_t octant)
 {
-  Require(octant >= 0);
   Require(octant < 8);
   d_octant = octant;
 }
 
-void Equation_DD_3D::setup_angle(int angle)
+void Equation_DD_3D::setup_angle(const size_t angle)
 {
   // Currently, only the 1st octant values should be in use.
-  Require(angle >= 0);
   Require(angle < d_quadrature->number_angles_octant());
   double mu  = d_quadrature->mu(0, angle);
   double eta = d_quadrature->eta(0, angle);

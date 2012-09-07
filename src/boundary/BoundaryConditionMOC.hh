@@ -10,24 +10,13 @@
 #ifndef BOUNDARYCONDITIONMOC_HH_
 #define BOUNDARYCONDITIONMOC_HH_
 
-// Detran
 #include "BoundaryMOC.hh"
-#include "QuadratureMOC.hh"
-#include "MeshMOC.hh"
-#include "Traits.hh"
-
-// Utilities
-#include "DBC.hh"
-#include "Definitions.hh"
-#include "InputDB.hh"
-#include "SP.hh"
 
 namespace detran
 {
 
 // Forward declare boundary and traits.
 template <class D> class BoundaryMOC;
-//template <class D> class BoundaryTraits;
 
 //---------------------------------------------------------------------------//
 /*!
@@ -39,21 +28,30 @@ template <class D> class BoundaryMOC;
 /// \todo template on the Boundary type!!
 
 template <class D>
-class BoundaryConditionMOC : public Object
+class BoundaryConditionMOC
 {
 
 public:
 
-  typedef SP<BoundaryConditionMOC>                  SP_bc;
-  typedef BoundaryMOC<D>                            Boundary_T;
-  typedef typename Boundary_T::SP_boundary          SP_boundary;
-  typedef InputDB::SP_input                         SP_input;
-  typedef MeshMOC::SP_mesh                          SP_mesh;
-  typedef QuadratureMOC::SP_quadrature              SP_quadrature;
-  typedef vec_dbl                                   boundary_flux_type;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
+
+  typedef detran_utilities::SP<BoundaryConditionMOC>    SP_bc;
+  typedef BoundaryMOC<D>                                Boundary_T;
+  typedef typename Boundary_T::SP_boundary              SP_boundary;
+  typedef typename Boundary_T::SP_input                 SP_input;
+  typedef typename Boundary_T::SP_mesh                  SP_mesh;
+  typedef typename Boundary_T::SP_quadrature            SP_quadrature;
+  typedef detran_utilities::vec_dbl                     boundary_flux_type;
+  typedef typename Boundary_T::size_t                   size_t;
+
+  //-------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //-------------------------------------------------------------------------//
 
   BoundaryConditionMOC(BoundaryMOC<D>& boundary,
-                       int side,
+                       const size_t side,
                        SP_input input,
                        SP_mesh mesh,
                        SP_quadrature quadrature)
@@ -63,8 +61,6 @@ public:
     , d_mesh(mesh)
     , d_quadrature(quadrature)
   {
-    //Require(d_boundary);
-    Require(d_side >= 0);
     Require(d_side <= D::dimension*2);
     Require(d_mesh);
     Require(d_quadrature);
@@ -73,28 +69,30 @@ public:
   /// Virtual destructor
   virtual ~BoundaryConditionMOC(){}
 
+  //-------------------------------------------------------------------------//
+  // ABSTRACT INTERFACE -- ALL MOC BOUNDARY CONDITIONS MUST IMPLEMENT THESE
+  //-------------------------------------------------------------------------//
+
   /// Set initial and/or fixed boundary condition.
-  virtual void set(int g) = 0;
+  virtual void set(const size_t g) = 0;
 
   /// Update a boundary following a sweep.
-  virtual void update(int g) = 0;
+  virtual void update(const size_t g) = 0;
 
   /// Update a boundary for a given angle following a sweep.
-  virtual void update(int g, int o, int a) = 0;
-
-  /// DBC function
-  virtual bool is_valid() const
-  {
-    return true;
-  }
+  virtual void update(const size_t g, const size_t o, const size_t a) = 0;
 
 protected:
+
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   /// Boundary flux container. \todo Is there a way around using a reference?
   Boundary_T& d_boundary;
 
   /// My surface.
-  const int d_side;
+  const size_t d_side;
 
   /// Input
   SP_input d_input;

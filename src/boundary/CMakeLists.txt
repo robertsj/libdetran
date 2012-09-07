@@ -1,8 +1,8 @@
 #------------------------------------------------------------------------------#
-# src/discretization/CMakeLists.txt
+# src/transport/CMakeLists.txt
 #------------------------------------------------------------------------------#
 
-SET(LIB_NAME "discretization")
+SET(LIB_NAME "boundary")
 
 SET(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -11,13 +11,8 @@ SET(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 #-----------------------------------------------------------------------------#
 
 SET(SRC
-    Equation_DD_1D.cc
-    Equation_DD_2D.cc
-    Equation_DD_3D.cc
-    Equation_SC_2D.cc
-    Equation_SD_1D.cc
-    Equation_SD_2D.cc
-    Equation_SC_MOC.cc
+    BoundarySN.cc
+    BoundaryMOC.cc
 )
 
 #-----------------------------------------------------------------------------#
@@ -31,7 +26,6 @@ ADD_LIBRARY(${LIB_NAME}
 TARGET_LINK_LIBRARIES(${LIB_NAME}
                       angle
                       geometry
-                      material
                       utilities
 )
 

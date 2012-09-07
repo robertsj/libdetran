@@ -4,27 +4,24 @@
  * \author robertsj
  * \date   Apr 9, 2012
  * \brief  Reflective class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 
 #ifndef REFLECTIVE_HH_
 #define REFLECTIVE_HH_
 
-// Detran
 #include "BoundaryCondition.hh"
 
 namespace detran
 {
 
-// Forward declare boundary and traits.
-template <class D> class Boundary;
-template <class D> class BoundaryTraits;
-
 //---------------------------------------------------------------------------//
 /*!
- * \class Reflective
- * \brief Reflective boundary condition.
+ *  \class Reflective
+ *  \brief Reflective boundary condition so SN problems.
+ *
+ *  Because the quadratures used in Detran are symmetric, implementing
+ *  reflection is straightforward.
  */
 //---------------------------------------------------------------------------//
 
@@ -34,22 +31,30 @@ class Reflective : public BoundaryCondition<D>
 
 public:
 
-  typedef SP<Reflective>                            SP_bc;
-  typedef BoundaryCondition<D>                      Base;
-  typedef typename BoundaryCondition<D>::SP_bc      SP_base;
-  typedef Boundary<D>                               Boundary_T;
-  typedef typename Boundary_T::SP_boundary          SP_boundary;
-  typedef InputDB::SP_input                         SP_input;
-  typedef Mesh::SP_mesh                             SP_mesh;
-  typedef Quadrature::SP_quadrature                 SP_quadrature;
-  typedef typename BoundaryTraits<D>::value_type    boundary_flux_type;
-  typedef std::vector<boundary_flux_type>           vec_boundary_flux;
-  typedef std::vector<vec_boundary_flux>            vec2_boundary_flux;
-  typedef std::vector<vec2_boundary_flux>           vec3_boundary_flux;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
 
+  typedef BoundaryCondition<D>                Base;
+  typedef typename Base::SP_bc                SP_bc;
+  typedef typename Base::Boundary_T           Boundary_T;
+  typedef typename Base::SP_input             SP_input;
+  typedef typename Base::SP_mesh              SP_mesh;
+  typedef typename Base::SP_quadrature        SP_quadrature;
+  typedef typename Base::vec_boundary_flux    vec_boundary_flux;
+  typedef typename Base::vec2_boundary_flux   vec2_boundary_flux;
+  typedef typename Base::vec3_boundary_flux   vec3_boundary_flux;
+  typedef typename Base::size_t               size_t;
+  typedef detran_utilities::vec_int           vec_int;
+  typedef detran_utilities::vec2_int          vec2_int;
+  typedef detran_geometry::Mesh               Mesh;
+
+  //-------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //-------------------------------------------------------------------------//
 
   Reflective(Boundary_T& boundary,
-             int side,
+             const size_t side,
              SP_input input,
              SP_mesh mesh,
              SP_quadrature quadrature)
@@ -60,15 +65,19 @@ public:
   }
 
   /// Set initial and/or fixed boundary condition.  Reflective does nothing.
-  void set(int g){};
+  void set(const size_t g){};
 
   /// Update a boundary following a sweep.
-  void update(int g);
+  void update(const size_t g);
 
   /// Update a boundary for a given angle following a sweep.
-  void update(int g, int o, int a);
+  void update(const size_t g, const size_t o, const size_t a);
 
 private:
+
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   // Index of octant reflection pairs.
   vec2_int d_octants;
