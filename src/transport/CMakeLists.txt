@@ -28,8 +28,11 @@ ADD_LIBRARY(${LIB_NAME}
 )
 TARGET_LINK_LIBRARIES(${LIB_NAME}
                       angle
+                      boundary
+                      discretization
+                      external_source
                       geometry
-                      materials
+                      material
                       utilities
 )
 

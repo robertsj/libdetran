@@ -4,17 +4,13 @@
  * \author Jeremy Roberts
  * \date   Mar 24, 2012
  * \brief  Sweeper1D inline member definitions.
- * \note   Copyright (C) 2012 Jeremy Roberts.
  */
 //---------------------------------------------------------------------------//
 #ifndef SWEEPER1D_I_HH_
 #define SWEEPER1D_I_HH_
 
-// Detran
-#include "Equation_DD_1D.hh"
-#include "Equation_SD_1D.hh"
-
-// System
+#include "discretization/Equation_DD_1D.hh"
+#include "discretization/Equation_SD_1D.hh"
 #include <iostream>
 #ifdef DETRAN_ENABLE_OPENMP
 #include <omp.h>
@@ -28,7 +24,6 @@ template <class EQ>
 inline void Sweeper1D<EQ>::sweep(moments_type &phi)
 {
   // Preconditions
-  Require(d_g >= 0);
   Require(d_g < d_material->number_groups());
 
   // Reset the flux moments
@@ -54,8 +49,8 @@ inline void Sweeper1D<EQ>::sweep(moments_type &phi)
   SweepSource<_1D>::sweep_source_type source(d_mesh->number_cells(), 0.0);
 
   // Temporary edge fluxes
-  Equation<_1D>::face_flux_type psi_in = 0.0;
-  Equation<_1D>::face_flux_type psi_out = 0.0;
+  Equation_T::face_flux_type psi_in = 0.0;
+  Equation_T::face_flux_type psi_out = 0.0;
 
   // Sweep over all octants
   for (int o = 0; o < 2; o++)

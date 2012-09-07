@@ -4,14 +4,10 @@
  * \author Jeremy Roberts
  * \date   Mar 25, 2012
  * \brief  State member definitions.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 
-// Detran
 #include "State.hh"
-
-// System
 #include <iostream>
 
 namespace detran

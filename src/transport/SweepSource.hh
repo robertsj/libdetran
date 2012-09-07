@@ -4,40 +4,35 @@
  * \author robertsj
  * \date   Apr 4, 2012
  * \brief  SweepSource class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 
 #ifndef SWEEPSOURCE_HH_
 #define SWEEPSOURCE_HH_
 
-// Detran
-#include "ExternalSource.hh"
 #include "FissionSource.hh"
-#include "Material.hh"
-#include "Mesh.hh"
-#include "MomentToDiscrete.hh"
-#include "Quadrature.hh"
 #include "ScatterSource.hh"
 #include "State.hh"
-#include "Traits.hh"
-
-// Utilities
-#include "DBC.hh"
-#include "Definitions.hh"
-#include "SP.hh"
-
-// System
+#include "angle/MomentToDiscrete.hh"
+#include "angle/Quadrature.hh"
+#include "discretization/DimensionTraits.hh"
+#include "external_source/ExternalSource.hh"
+#include "geometry/Mesh.hh"
+#include "material/Material.hh"
+#include "utilities/DBC.hh"
+#include "utilities/Definitions.hh"
+#include "utilities/SP.hh"
 #include <vector>
 
 namespace detran
 {
 
-//===========================================================================//
+//---------------------------------------------------------------------------//
 /*!
  * \class SweepSource
  * \brief Construct the source for sweeping
-* This class defines a general right-hand-side construct for sweeps (which
+ *
+ * This class defines a general right-hand-side construct for sweeps (which
  * are the basis for all solvers).  That is, the SweepSource is a source
  * for a sweep along a particular angle.
  *
@@ -87,7 +82,7 @@ namespace detran
  *
  * \sa ScatterSource, FissionSource, ExternalSource
  */
-//===========================================================================//
+//---------------------------------------------------------------------------//
 
 template<class D>
 class SweepSource
@@ -95,21 +90,27 @@ class SweepSource
 
 public:
 
-  typedef SP<SweepSource>                   SP_sweepsource;
-  typedef State::SP_state                   SP_state;
-  typedef InputDB::SP_input                 SP_input;
-  typedef Mesh::SP_mesh                     SP_mesh;
-  typedef Material::SP_material             SP_material;
-  typedef Quadrature::SP_quadrature         SP_quadrature;
-  typedef typename
-      MomentToDiscrete<D>::SP_MtoD          SP_MtoD;
-  //
-  typedef ExternalSource::SP_source         SP_externalsource;
-  typedef ScatterSource::SP_source          SP_scattersource;
-  typedef FissionSource::SP_source          SP_fissionsource;
-  //
-  typedef vec_dbl                           sweep_source_type;
-  typedef State::moments_type               moments_type;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
+
+  typedef detran_utilities::SP<SweepSource>                     SP_sweepsource;
+  typedef State::SP_state                                       SP_state;
+  typedef detran_utilities::InputDB::SP_input                   SP_input;
+  typedef detran_geometry::Mesh::SP_mesh                        SP_mesh;
+  typedef detran_material::Material::SP_material                SP_material;
+  typedef detran_angle::Quadrature::SP_quadrature               SP_quadrature;
+  typedef typename detran_angle::MomentToDiscrete<D>::SP_MtoD   SP_MtoD;
+  typedef detran_external_source::ExternalSource::SP_source     SP_externalsource;
+  typedef ScatterSource::SP_scattersource                       SP_scattersource;
+  typedef FissionSource::SP_fissionsource                       SP_fissionsource;
+  typedef detran_utilities::vec_dbl                             sweep_source_type;
+  typedef detran_utilities::size_t                              size_t;
+  typedef State::moments_type                                   moments_type;
+
+  //-------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //-------------------------------------------------------------------------//
 
   /*!
    * \brief Constructor.
@@ -154,6 +155,10 @@ public:
     SP_sweepsource p(new SweepSource(state, mesh, quadrature, material, MtoD));
     return p;
   }
+
+  //-------------------------------------------------------------------------//
+  // PUBLIC INTERFACE
+  //-------------------------------------------------------------------------//
 
   /*!
    * \brief Set an external moment source.
@@ -203,7 +208,7 @@ public:
    *  and, if applicable, fission sources.  Note, fission is
    *  only fixed within an eigenproblem.
    */
-  void build_fixed(int g);
+  void build_fixed(const size_t g);
 
   /*!
    * \brief Build fixed with in-scatter.
@@ -213,7 +218,7 @@ public:
    * to be called within source iteration.
    *
    */
-  void build_fixed_with_scatter(int g);
+  void build_fixed_with_scatter(const size_t g);
 
   /*!
    *  \brief Build fixed with downs-scatter.
@@ -225,14 +230,14 @@ public:
    *  \param g          Group of current solve
    *  \param g_cutoff   Last group to include in downscatter source
    */
-  void build_fixed_with_downscatter(int g, int g_cutoff);
+  void build_fixed_with_downscatter(const size_t g, const size_t g_cutoff);
 
   /*!
    * \brief Build within-group scattering source.
    *
    * Called before each sweep.
    */
-  void build_within_group_scatter(int g, const moments_type &phi);
+  void build_within_group_scatter(const size_t g, const moments_type &phi);
 
   /*!
    *  \brief Build total scattering source.
@@ -241,7 +246,7 @@ public:
    *  given multigroup flux vector.  This routine would find
    *  use in a multigroup Krylov solver.
    */
-  void build_total_scatter(int g, int g_cutoff, const State::vec_moments_type &phi);
+  void build_total_scatter(const size_t g, const size_t g_cutoff, const State::vec_moments_type &phi);
 
   /// Reset all the internal source vectors to zero.
   void reset();
@@ -250,8 +255,14 @@ public:
    *  \brief Get the sweep source vector.
    *
    */
-  const sweep_source_type& source(int g, int o, int a);
-  void source(int g, int o, int a, sweep_source_type& s);
+  const sweep_source_type& source(const size_t g,
+                                  const size_t o,
+                                  const size_t a);
+  /// Fill a source vector
+  void source(const size_t g,
+              const size_t o,
+              const size_t a,
+              sweep_source_type& s);
 
 private:
 

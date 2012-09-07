@@ -4,22 +4,17 @@
  * \author robertsj
  * \date   Apr 4, 2012
  * \brief  ScatterSource class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 
 #ifndef SCATTERSOURCE_HH_
 #define SCATTERSOURCE_HH_
 
-// Detran
-#include "Material.hh"
-#include "Mesh.hh"
 #include "State.hh"
-
-// Utilities
-#include "DBC.hh"
-#include "SP.hh"
-
+#include "material/Material.hh"
+#include "geometry/Mesh.hh"
+#include "utilities/DBC.hh"
+#include "utilities/SP.hh"
 #include <iostream>
 
 namespace detran
@@ -29,23 +24,42 @@ namespace detran
 /*!
  *  \class ScatterSource
  *  \brief Methods for constructing various scattering sources.
+ *  \todo  Implement something in group bounds for adjoint
  */
 //---------------------------------------------------------------------------//
 
-class ScatterSource: public Object
+class ScatterSource
 {
 
 public:
 
-  typedef SP<ScatterSource>         SP_source;
-  //
-  typedef Mesh::SP_mesh             SP_mesh;
-  typedef Material::SP_material     SP_material;
-  typedef State::SP_state           SP_state;
-  //
-  typedef State::moments_type       moments_type;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
 
+  typedef detran_utilities::SP<ScatterSource>       SP_scattersource;
+  typedef detran_geometry::Mesh::SP_mesh            SP_mesh;
+  typedef detran_material::Material::SP_material    SP_material;
+  typedef State::SP_state                           SP_state;
+  typedef State::moments_type                       moments_type;
+  typedef detran_utilities::vec_int                 vec_int;
+  typedef detran_utilities::size_t                  size_t;
+
+  //-------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //-------------------------------------------------------------------------//
+
+  /*!
+   *  \brief Constructor
+   *  \param mesh           Pointer to mesh
+   *  \param material       Pointer to material
+   *  \param state          Pointer to state vector
+   */
   ScatterSource(SP_mesh mesh, SP_material material, SP_state state);
+
+  //-------------------------------------------------------------------------//
+  // PUBLIC INTERFACE
+  //-------------------------------------------------------------------------//
 
   /*!
    *  \brief Build the within group scattering source.
@@ -60,19 +74,9 @@ public:
    *  \param   source   Mutable reference to moments source.
    *
    */
-  void build_within_group_source(int g,
+  void build_within_group_source(const size_t g,
                                  const moments_type &phi,
-                                 moments_type &source)
-  {
-    // Preconditions
-    Require( (g >= 0) and (g < d_material->number_groups()) );
-    Require( phi.size() == source.size() );
-
-    for (int cell = 0; cell < d_mesh->number_cells(); cell++)
-    {
-      source[cell] += phi[cell] * d_material->sigma_s(d_mat_map[cell], g, g);
-    }
-  }
+                                 moments_type &source);
 
   /*!
    *  \brief Build the in-scatter source.
@@ -90,32 +94,8 @@ public:
    *  \param   g_up     Lowest group to contribute to upscatter
    *
    */
-  void build_in_scatter_source(int g,
-                               moments_type &source)
-  {
-    // Preconditions.
-    Require( (g >= 0) and (g < d_material->number_groups()) );
-
-    // Add downscatter.
-    for (int gp = d_material->lower(g); gp < g; gp++) //
-    {
-      const moments_type &phi = d_state->phi(gp);
-      for (int cell = 0; cell < d_mesh->number_cells(); cell++)
-      {
-        source[cell] += phi[cell] * d_material->sigma_s(d_mat_map[cell], g, gp);
-      }
-    }
-    // Add upscatter.
-    for (int gp = g + 1; gp <= d_material->upper(g); gp++)
-    {
-      const moments_type &phi = d_state->phi(gp);
-      for (int cell = 0; cell < d_mesh->number_cells(); cell++)
-      {
-        source[cell] += phi[cell] * d_material->sigma_s(d_mat_map[cell], g, gp);
-      }
-    }
-  }
-
+  void build_in_scatter_source(const size_t g,
+                               moments_type &source);
   /*!
    *  \brief Build the downscatter source.
    *
@@ -134,25 +114,9 @@ public:
    *  \param   g_down   Highest group to contribute to downscatter
    *  \param   source   Mutable reference to moments source.
    */
-  void build_downscatter_source(int g,
-                                int g_cutoff,
-                                moments_type &source)
-  {
-    // Preconditions.
-    Require( (g >= 0) and (g < d_material->number_groups()) );
-    Require( (g_cutoff >= 0) and (g_cutoff <= d_material->number_groups()) );
-
-    // Add downscatter.
-    for (int gp = d_material->lower(g); gp < g_cutoff; gp++) //
-    {
-      moments_type phi = d_state->phi(gp);
-      for (int cell = 0; cell < d_mesh->number_cells(); cell++)
-      {
-        source[cell] += phi[cell] * d_material->sigma_s(d_mat_map[cell], g, gp);
-      }
-    }
-
-  }
+  void build_downscatter_source(const size_t g,
+                                const size_t g_cutoff,
+                                moments_type &source);
 
   /*!
    *  \brief Build the total scatter source.
@@ -174,30 +138,16 @@ public:
    *  \param   source   Mutable reference to moments source.
    *
    */
-  void build_total_group_source(int g,
-                                int g_cutoff,
+  void build_total_group_source(const size_t g,
+                                const size_t g_cutoff,
                                 const State::vec_moments_type &phi,
-                                moments_type &source)
-  {
-    Require( (g >= 0) and (g < d_material->number_groups()) );
-
-
-    for (int gp = g_cutoff; gp <= d_material->upper(g); gp++)
-    {
-      for (int cell = 0; cell < d_mesh->number_cells(); cell++)
-      {
-        source[cell] += phi[gp][cell] *
-            d_material->sigma_s(d_mat_map[cell], g, gp);
-      }
-    }
-  }
-
-  bool is_valid() const
-  {
-    return true;
-  }
+                                moments_type &source);
 
 protected:
+
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   /// Mesh
   SP_mesh d_mesh;
@@ -213,7 +163,13 @@ protected:
 
 };
 
-} // namespace detran
+} // end namespace detran
+
+//---------------------------------------------------------------------------//
+// INLINE MEMBER DEFINITIONS
+//---------------------------------------------------------------------------//
+
+#include "ScatterSource.i.hh"
 
 #endif /* SCATTERSOURCE_HH_ */
 

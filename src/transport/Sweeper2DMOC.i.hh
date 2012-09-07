@@ -10,10 +10,7 @@
 #ifndef SWEEPER2DMOC_I_HH_
 #define SWEEPER2DMOC_I_HH_
 
-// Detran
-#include "Equation_SC_MOC.hh"
-
-// System
+#include "discretization/Equation_SC_MOC.hh"
 #include <iostream>
 #ifdef DETRAN_ENABLE_OPENMP
 #include <omp.h>
@@ -55,7 +52,7 @@ inline void Sweeper2DMOC<EQ>::sweep(moments_type &phi)
   double psi_in  = 0;
   double psi_out = 0;
 
-  QuadratureMOC::SP_quadrature q = d_quadrature;
+  SP_quadrature q = d_quadrature;
 
   // Sweep over all octants.
   for (int o = 0; o < 4; o++)
@@ -82,6 +79,7 @@ inline void Sweeper2DMOC<EQ>::sweep(moments_type &phi)
       equation.setup_polar(polar);
 
       // Switch the azimuth index to correct one for track access.
+      // \todo Adjoint sweeps should probably be controlled here
       bool track_reverse = false;
       switch (o)
       {

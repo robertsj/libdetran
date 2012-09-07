@@ -11,13 +11,12 @@
 #ifndef SWEEPER2DMOC_HH_
 #define SWEEPER2DMOC_HH_
 
-// Detran
-#include "BoundaryMOC.hh"
 #include "Sweeper.hh"
-#include "MeshMOC.hh"
-#include "QuadratureMOC.hh"
-#include "TrackDB.hh"
-#include "Track.hh"
+#include "angle/QuadratureMOC.hh"
+#include "boundary/BoundaryMOC.hh"
+#include "geometry/MeshMOC.hh"
+#include "geometry/TrackDB.hh"
+#include "geometry/Track.hh"
 
 namespace detran
 {
@@ -35,28 +34,35 @@ class Sweeper2DMOC: public Sweeper<_2D>
 {
 
 public:
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
 
-  typedef SP<Sweeper2DMOC>                  SP_sweeper;
-  typedef Sweeper<_2D>                      Base;
-  //
-  typedef State::SP_state                   SP_state;
-  typedef InputDB::SP_input                 SP_input;
-  typedef MeshMOC::SP_mesh                  SP_mesh;
-  typedef Material::SP_material             SP_material;
-  typedef QuadratureMOC::SP_quadrature      SP_quadrature;
-  //
-  typedef EQ                                Equation_T;
-  typedef BoundaryMOC<_2D>                  Boundary_T;
-  typedef typename Boundary_T::SP_boundary  SP_boundary;
-  //
-  typedef typename
-      SweepSource<_2D>::SP_sweepsource      SP_sweepsource;
-  //
-  typedef State::moments_type               moments_type;
-  typedef State::angular_flux_type          angular_flux_type;
-  //
-  typedef TrackDB::SP_trackdb               SP_trackdb;
-  typedef Track::SP_track                   SP_track;
+  typedef detran_utilities::SP<Sweeper2DMOC>            SP_sweeper;
+  typedef Sweeper<_2D>                                  Base;
+  typedef typename Base::SP_state                       SP_state;
+  typedef typename Base::SP_input                       SP_input;
+  typedef typename Base::SP_material                    SP_material;
+  typedef typename Base::Mesh                           Mesh
+  typedef typename Base::SP_sweepsource                 SP_sweepsource;
+  typedef typename Base::moments_type                   moments_type;
+  typedef typename Base::angular_flux_type              angular_flux_type;
+  typedef typename Base::SP_currenttally                SP_currenttally;
+  typedef typename Base::vec_int                        vec_int;
+  typedef typename Base::vec2_int                       vec2_int;
+  typedef typename Base::vec3_int                       vec3_int;
+  typedef typename Base::size_t                         size_t;
+  typedef EQ                                            Equation_T;
+  typedef BoundaryMOC<_2D>                              Boundary_T;
+  typedef typename Boundary_T::SP_boundary              SP_boundary;
+  typedef detran_geometry::MeshMOC::SP_mesh             SP_mesh;
+  typedef detran_angle::QuadratureMOC::SP_quadrature    SP_quadrature;
+  typedef detran_geometry::TrackDB::SP_trackdb          SP_trackdb;
+  typedef detran_geometry::Track::SP_track              SP_track;
+
+  //-------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //-------------------------------------------------------------------------//
 
   /*!
    *  \brief Constructor.
@@ -87,43 +93,50 @@ public:
   virtual ~Sweeper2DMOC(){}
 
   /// SP Constructor
-  static detran::SP<Sweeper2DMOC<EQ> >
-  Create(detran::SP<InputDB>                    input,
-         detran::SP<detran::Mesh>               mesh,
-         detran::SP<detran::Material>           material,
-         detran::SP<detran::Quadrature>         quadrature,
-         detran::SP<detran::State>              state,
-         detran::SP<detran::BoundaryBase<_2D> > boundary,
-         detran::SP<detran::SweepSource<_2D> >  sweepsource)
+  static SP_sweeper
+  Create(SP_input       input,
+         SP_mesh        mesh,
+         SP_material    material,
+         SP_quadrature  quadrature,
+         SP_state       state,
+         SP_boundary    boundary,
+         SP_sweepsource sweepsource))
   {
     SP_sweeper p(new Sweeper2DMOC(input, mesh, material, quadrature,
                                   state, boundary, sweepsource));
     return p;
   }
 
+  //-------------------------------------------------------------------------//
+  // ABSTRACT INTERFACE -- ALL SWEEPERS MUST IMPLEMENT THESE
+  //-------------------------------------------------------------------------//
+
   /// Sweep.
   inline void sweep(moments_type &phi);
 
   /// Setup the equations for the group
-  void setup_group(int g)
+  void setup_group(const size_t g)
   {
     d_g = g;
   }
 
 private:
 
-  /// \name Private Data
-  /// \{
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   SP_boundary d_boundary;
 
   SP_trackdb d_tracks;
 
-  /// \}
-
 };
 
 } // end namespace detran
+
+//---------------------------------------------------------------------------//
+// INLINE MEMBER DEFINITIONS
+//---------------------------------------------------------------------------//
 
 #include "Sweeper2DMOC.i.hh"
 

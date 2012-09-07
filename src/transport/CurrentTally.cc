@@ -17,7 +17,7 @@ namespace detran
 template <class D>
 CurrentTally<D>::CurrentTally(SP_coarsemesh coarsemesh,
                               SP_quadrature quadrature,
-                              const u_int number_groups)
+                              const size_t number_groups)
   : d_coarsemesh(coarsemesh)
   , d_quadrature(quadrature)
   , d_number_groups(number_groups)
@@ -29,10 +29,10 @@ CurrentTally<D>::CurrentTally(SP_coarsemesh coarsemesh,
 
   SP_mesh mesh = d_coarsemesh->get_coarse_mesh();
 
-  u_int nx = d_coarsemesh->get_coarse_mesh()->number_cells_x();
-  u_int ny = d_coarsemesh->get_coarse_mesh()->number_cells_y();
-  u_int nz = d_coarsemesh->get_coarse_mesh()->number_cells_z();
-  u_int n[] = { (nx+1)*ny*nz, nx*(ny+1)*nz, nx*ny*(nz+1) };
+  size_t nx = d_coarsemesh->get_coarse_mesh()->number_cells_x();
+  size_t ny = d_coarsemesh->get_coarse_mesh()->number_cells_y();
+  size_t nz = d_coarsemesh->get_coarse_mesh()->number_cells_z();
+  size_t n[] = { (nx+1)*ny*nz, nx*(ny+1)*nz, nx*ny*(nz+1) };
 
   for (int g = 0; g < d_number_groups; g++)
   {

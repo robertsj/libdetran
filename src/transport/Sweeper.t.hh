@@ -1,9 +1,11 @@
-/*
- * Sweeper.t.hh
- *
- *  Created on: Apr 22, 2012
- *      Author: robertsj
+//----------------------------------*-C++-*----------------------------------//
+/*!
+ * \file   Sweeper.t.hh
+ * \author Jeremy Roberts
+ * \date   Apr 22, 2012
+ * \brief  Sweeper inline member definitions
  */
+//---------------------------------------------------------------------------//
 
 #ifndef SWEEPER_T_HH_
 #define SWEEPER_T_HH_
@@ -97,15 +99,17 @@ inline void Sweeper<_1D>::setup()
   // Set up face/octant map.
   d_face_index.resize(2, vec2_int(1, vec_int(2, 0)));
   // octant / surface type / inout
-  d_face_index[0][Mesh::VERT][Boundary_T::IN] = Mesh::LEFT;
-  d_face_index[1][Mesh::VERT][Boundary_T::IN] = Mesh::RIGHT;
-  d_face_index[0][Mesh::VERT][Boundary_T::OUT] = Mesh::RIGHT;
-  d_face_index[1][Mesh::VERT][Boundary_T::OUT] = Mesh::LEFT;
+  d_face_index[0][Mesh::VERT][Boundary_T::IN]  = Mesh::WEST;
+  d_face_index[1][Mesh::VERT][Boundary_T::IN]  = Mesh::EAST;
+  d_face_index[0][Mesh::VERT][Boundary_T::OUT] = Mesh::EAST;
+  d_face_index[1][Mesh::VERT][Boundary_T::OUT] = Mesh::WEST;
 }
 
 // Mesh sweeper indices
 template <class D>
-inline int Sweeper<D>::index(int o, int dim, int ijk)
+inline detran_utilities::size_t Sweeper<D>::index(const size_t o,
+                                                  const size_t dim,
+                                                  const size_t ijk)
 {
   if (dim == 1)
   {

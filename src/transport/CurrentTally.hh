@@ -10,17 +10,12 @@
 #ifndef CURRENTTALLY_HH_
 #define CURRENTTALLY_HH_
 
-// Detran
 #include "CoarseMesh.hh"
-#include "Equation.hh"
-#include "Quadrature.hh"
-#include "Traits.hh"
-
-// Utilities
-#include "Definitions.hh"
-#include "SP.hh"
-
-// System
+#include "discretization/Equation.hh"
+#include "angle/Quadrature.hh"
+#include "discretization/DimensionTraits.hh"
+#include "utilities/Definitions.hh"
+#include "utilities/SP.hh"
 #include <vector>
 
 namespace detran
@@ -78,6 +73,10 @@ class CurrentTally
 
 public:
 
+  //-------------------------------------------------------------------------//
+  // ENUMERATIONS
+  //-------------------------------------------------------------------------//
+
   enum DIRECTED
   {
     X_DIRECTED,
@@ -91,12 +90,25 @@ public:
     POSITIVE
   };
 
-  typedef SP<CurrentTally>                  SP_currenttally;
-  typedef CoarseMesh::SP_coarsemesh         SP_coarsemesh;
-  typedef Quadrature::SP_quadrature         SP_quadrature;
-  typedef CoarseMesh::SP_mesh               SP_mesh;
-  typedef typename
-    EquationTraits<D>::face_flux_type       face_flux_type;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
+
+  typedef detran_utilities::SP<CurrentTally>            SP_currenttally;
+  typedef CoarseMesh::SP_coarsemesh                     SP_coarsemesh;
+  typedef detran_angle::Quadrature::SP_quadrature       SP_quadrature;
+  typedef CoarseMesh::SP_mesh                           SP_mesh;
+  typedef typename EquationTraits<D>::face_flux_type    face_flux_type;
+  typedef detran_utilities::size_t                      size_t;
+  typedef detran_utilities::vec_int                     vec_int;
+  typedef detran_utilities::vec2_int                    vec2_int;
+  typedef detran_utilities::vec_dbl                     vec_dbl;
+  typedef detran_utilities::vec2_dbl                    vec2_dbl;
+  typedef detran_utilities::vec3_dbl                    vec3_dbl;
+
+  //-------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //-------------------------------------------------------------------------//
 
   /*!
    *  \brief Constructor
@@ -106,7 +118,11 @@ public:
    */
   CurrentTally(SP_coarsemesh mesh,
                SP_quadrature quadrature,
-               const u_int number_groups);
+               const size_t number_groups);
+
+  //-------------------------------------------------------------------------//
+  // PUBLIC INTERFACE
+  //-------------------------------------------------------------------------//
 
   /*!
    *  \brief Add angular flux to the current tally
@@ -119,12 +135,12 @@ public:
    *  \param  a           angle within octant
    *  \param  psi         edge angular flux
    */
-  inline void tally(const u_int i,
-                    const u_int j,
-                    const u_int k,
-                    const u_int g,
-                    const u_int o,
-                    const u_int a,
+  inline void tally(const size_t i,
+                    const size_t j,
+                    const size_t k,
+                    const size_t g,
+                    const size_t o,
+                    const size_t a,
                     const face_flux_type psi);
 
   /*!
@@ -142,13 +158,13 @@ public:
    *  \param  d           axis index for the incident flux
    *  \param  psi         edge angular flux
    */
-  inline void tally(const u_int i,
-                    const u_int j,
-                    const u_int k,
-                    const u_int g,
-                    const u_int o,
-                    const u_int a,
-                    const u_int d,
+  inline void tally(const size_t i,
+                    const size_t j,
+                    const size_t k,
+                    const size_t g,
+                    const size_t o,
+                    const size_t a,
+                    const size_t d,
                     const double psi);
 
   /*!
@@ -160,12 +176,12 @@ public:
    *  \param  axis    0, 1, or 2 for x, y, or z
    *  \param  sense   true for positive (e.g. +x)
    */
-  inline double partial_current(const u_int i,
-                                const u_int j,
-                                const u_int k,
-                                const u_int g,
-                                const u_int axis,
-                                const u_int sense);
+  inline double partial_current(const size_t i,
+                                const size_t j,
+                                const size_t k,
+                                const size_t g,
+                                const size_t axis,
+                                const size_t sense);
 
   /// Print all the partial currents (for debugging)
   void display()
@@ -182,7 +198,7 @@ public:
   }
 
   /// Reset a group
-  void reset(const u_int group)
+  void reset(const size_t group)
   {
     Require(group < d_number_groups);
     for (int d = 0; d < d_partial_current.size(); d++)
@@ -202,7 +218,7 @@ private:
   SP_quadrature d_quadrature;
 
   /// Number of groups
-  const u_int d_number_groups;
+  const size_t d_number_groups;
 
   /// Partial currents [dimension][group][sense][index]
   std::vector<vec3_dbl> d_partial_current;
@@ -215,12 +231,12 @@ private:
 
   /// Index of axes perpendicular to partial current
   /// \note Why does initializing require new standard?
-  u_int d_perpendicular_index[3][2];
+  size_t d_perpendicular_index[3][2];
 
-  inline int index(const u_int i,
-                   const u_int j,
-                   const u_int k,
-                   const u_int axis)
+  inline size_t index(const size_t i,
+                      const size_t j,
+                      const size_t k,
+                      const size_t axis)
   {
     // Precondition
     Require(axis < D::dimension);
@@ -228,9 +244,9 @@ private:
     Require(j <= d_coarsemesh->get_coarse_mesh()->number_cells_y());
     Require(k <= d_coarsemesh->get_coarse_mesh()->number_cells_z());
 
-    u_int nx = d_coarsemesh->get_coarse_mesh()->number_cells_x();
-    u_int ny = d_coarsemesh->get_coarse_mesh()->number_cells_y();
-    u_int nz = d_coarsemesh->get_coarse_mesh()->number_cells_z();
+    size_t nx = d_coarsemesh->get_coarse_mesh()->number_cells_x();
+    size_t ny = d_coarsemesh->get_coarse_mesh()->number_cells_y();
+    size_t nz = d_coarsemesh->get_coarse_mesh()->number_cells_z();
     if (axis == 0)
       return i + j * (nx + 1) + k * (nx + 1) * ny;
     else if (axis == 1)

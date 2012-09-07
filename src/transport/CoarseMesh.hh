@@ -10,14 +10,9 @@
 #ifndef COARSEMESH_HH_
 #define COARSEMESH_HH_
 
-// Detran
-#include "Mesh.hh"
-
-// Utilities
-#include "DBC.hh"
-#include "SP.hh"
-
-// System
+#include "geometry/Mesh.hh"
+#include "utilities/DBC.hh"
+#include "utilities/SP.hh"
 #include <iostream>
 
 namespace detran
@@ -28,8 +23,21 @@ class CoarseMesh
 
 public:
 
-  typedef SP<CoarseMesh>    SP_coarsemesh;
-  typedef Mesh::SP_mesh     SP_mesh;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
+
+  typedef detran_utilities::SP<CoarseMesh>  SP_coarsemesh;
+  typedef detran_geometry::Mesh::SP_mesh    SP_mesh;
+  typedef detran_utilities::size_t          size_t;
+  typedef detran_utilities::vec_int         vec_int;
+  typedef detran_utilities::vec2_int        vec2_int;
+  typedef detran_utilities::vec_dbl         vec_dbl;
+  typedef detran_utilities::vec2_dbl        vec2_dbl;
+
+  //-------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //-------------------------------------------------------------------------//
 
   /*!
    *  \class CoarseMesh
@@ -44,7 +52,7 @@ public:
    *  a coarse mesh map (independent of the coarse mesh
    *  used for material assignment)
    */
-  CoarseMesh(SP_mesh fine_mesh, u_int level);
+  CoarseMesh(SP_mesh fine_mesh, const size_t level);
 
   /// Get the original fine mesh
   SP_mesh get_fine_mesh() const
@@ -66,7 +74,7 @@ public:
    *  \param  dim dimension of index
    *  \return     coarse mesh index
    */
-  int fine_to_coarse(u_int ijk, u_int dim) const
+  size_t fine_to_coarse(const size_t ijk, const size_t dim) const
   {
     //Require(dim < d_fine_mesh->dimension());
     Require(ijk < d_fine_mesh->number_cells(dim));
@@ -79,7 +87,7 @@ public:
    *  \param  dim dimension of index
    *  \return     nonnegative index of coarse edge (otherwise -1)
    */
-  int coarse_edge_flag(u_int ijk, u_int dim) const
+  size_t coarse_edge_flag(const size_t ijk, const size_t dim) const
   {
     Require(dim < d_fine_mesh->dimension());
     Require(ijk < d_fine_mesh->number_cells(dim) + 1);
@@ -95,7 +103,7 @@ private:
   SP_mesh d_coarse_mesh;
 
   /// Level
-  const u_int d_level;
+  const size_t d_level;
 
   /// Fine to coarse map
   vec2_int d_fine_to_coarse;

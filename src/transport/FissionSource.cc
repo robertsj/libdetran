@@ -4,7 +4,6 @@
  * \author robertsj
  * \date   Apr 10, 2012
  * \brief  FissionSource class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 
@@ -54,9 +53,9 @@ void FissionSource::initialize()
       d_density[cell] += d_material->nu_sigma_f(mat_map[cell], g);
     }
   }
-  double norm_density = norm(d_density, "L1");
+  double norm_density = detran_utilities::norm(d_density, "L1");
   Require(norm_density > 0.0);
-  vec_scale(d_density, 1.0/norm_density);
+  detran_utilities::vec_scale(d_density, 1.0/norm_density);
 }
 
 void FissionSource::update()
@@ -74,12 +73,12 @@ void FissionSource::update()
   }
 }
 
-void FissionSource::setup_outer(double scale)
+void FissionSource::setup_outer(const double scale)
 {
   d_scale = scale;
 }
 
-const State::moments_type& FissionSource::source(int g)
+const State::moments_type& FissionSource::source(const size_t g)
 {
   Require(g >= 0);
   Require(g < d_number_groups);

@@ -4,16 +4,12 @@
  * \author Jeremy Roberts
  * \date   Mar 24, 2012
  * \brief  Sweeper3D inline member definitions.
- * \note   Copyright (C) 2012 Jeremy Roberts.
  */
 //---------------------------------------------------------------------------//
 #ifndef SWEEPER3D_I_HH_
 #define SWEEPER3D_I_HH_
 
-// Detran
-#include "Equation_DD_3D.hh"
-
-// System
+#include "discretization/Equation_DD_3D.hh"
 #include <iostream>
 #ifdef DETRAN_ENABLE_OPENMP
 #include <omp.h>

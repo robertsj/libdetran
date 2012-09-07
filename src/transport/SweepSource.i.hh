@@ -4,21 +4,19 @@
  * \author robertsj
  * \date   Apr 4, 2012
  * \brief  SweepSource inline member definitions.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 
 #ifndef SWEEPSOURCE_I_HH_
 #define SWEEPSOURCE_I_HH_
 
-// System
 #include <iostream>
 #include <omp.h>
 
 namespace detran
 {
   template <class D>
-  inline void SweepSource<D>::build_fixed(int g)
+  inline void SweepSource<D>::build_fixed(const size_t g)
   {
 
     // Zero out moments source.
@@ -51,7 +49,7 @@ namespace detran
   }
 
   template <class D>
-  inline void SweepSource<D>::build_fixed_with_scatter(int g)
+  inline void SweepSource<D>::build_fixed_with_scatter(const size_t g)
   {
 
     // Add the external and/or fission source first.
@@ -63,7 +61,7 @@ namespace detran
   }
 
   template <class D>
-  inline void SweepSource<D>::build_fixed_with_downscatter(int g, int g_cutoff)
+  inline void SweepSource<D>::build_fixed_with_downscatter(const size_t g, const size_t g_cutoff)
   {
 
     // Add the external and/or fission source first.
@@ -75,7 +73,7 @@ namespace detran
   }
 
   template <class D>
-  inline void SweepSource<D>::build_within_group_scatter(int g, const moments_type &phi)
+  inline void SweepSource<D>::build_within_group_scatter(const size_t g, const moments_type &phi)
   {
     // Zero out moments source.
     for (int cell = 0; cell < d_mesh->number_cells(); cell++)
@@ -88,7 +86,7 @@ namespace detran
 
   template <class D>
   inline void
-  SweepSource<D>::build_total_scatter(int g, int g_cutoff, const State::vec_moments_type &phi)
+  SweepSource<D>::build_total_scatter(const size_t g, const size_t g_cutoff, const State::vec_moments_type &phi)
   {
     // Zero out moments source.
     d_scatter_group_source.assign(phi[g].size(), 0.0);
@@ -100,7 +98,7 @@ namespace detran
 
   template <class D>
   inline const typename SweepSource<D>::sweep_source_type&
-  SweepSource<D>::source(int g, int o, int a)
+  SweepSource<D>::source(const size_t g, const size_t o, const size_t a)
   {
 
     //d_source.assign(d_source.size(), 0.0);
@@ -133,7 +131,7 @@ namespace detran
 
   template <class D>
   inline void
-  SweepSource<D>::source(int g, int o, int a, sweep_source_type &s)
+  SweepSource<D>::source(const size_t g, const size_t o, const size_t a, sweep_source_type &s)
   {
 
     for (int cell = 0; cell < d_mesh->number_cells(); cell++)

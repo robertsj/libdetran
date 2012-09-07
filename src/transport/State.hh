@@ -4,21 +4,17 @@
  * \author Jeremy Roberts
  * \date   Mar 24, 2012
  * \brief  State class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 
 #ifndef STATE_HH_
 #define STATE_HH_
 
-// Other libtran headers
-#include "Definitions.hh"
-#include "SP.hh"
-#include "InputDB.hh"
-#include "Quadrature.hh"
-#include "Mesh.hh"
-
-// System
+#include "angle/Quadrature.hh"
+#include "geometry/Mesh.hh"
+#include "utilities/Definitions.hh"
+#include "utilities/InputDB.hh"
+#include "utilities/SP.hh"
 #include <vector>
 
 namespace detran
@@ -54,20 +50,30 @@ namespace detran
  * - store_angular_flux (int)
  */
 //---------------------------------------------------------------------------//
-class State : public Object
+class State
 {
 
 public:
 
-  typedef SP<State>                                     SP_state;
-  typedef InputDB::SP_input                             SP_input;
-  typedef Mesh::SP_mesh                                 SP_mesh;
-  typedef Quadrature::SP_quadrature                     SP_quadrature;
-  typedef vec_dbl                                       moments_type;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
+
+  typedef detran_utilities::SP<State>                   SP_state;
+  typedef detran_utilities::InputDB::SP_input           SP_input;
+  typedef detran_geometry::Mesh::SP_mesh                SP_mesh;
+  typedef detran_angle::Quadrature::SP_quadrature       SP_quadrature;
+  typedef detran_utilities::vec_dbl                     moments_type;
   typedef std::vector<moments_type>                     vec_moments_type;
   typedef std::vector<moments_type>                     group_moments_type;
-  typedef vec_dbl                                       angular_flux_type;
+  typedef detran_utilities::vec_dbl                     angular_flux_type;
   typedef std::vector<std::vector<angular_flux_type> >  vec_angular_flux_type;
+  typedef detran_utilities::vec_dbl                     vec_dbl;
+  typedef detran_utilities::size_t                      size_t;
+
+  //-------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //-------------------------------------------------------------------------//
 
   /*!
    *  \brief Constructor.
@@ -93,23 +99,25 @@ public:
         SP_mesh         mesh);
 
   /// SP constructor.
-  static SP_state Create(SP<detran::InputDB>       input,
-                         SP<detran::Mesh>          mesh,
-                         SP<detran::Quadrature>    quadrature)
+  static SP_state Create(SP_input      input,
+                         SP_mesh       mesh,
+                         SP_quadrature quadrature)
   {
-    SP_state p;
-    p = new State(input, mesh, quadrature);
+    SP_state p(new State(input, mesh, quadrature));
     return p;
   }
 
   /// SP constructor with no quadrature.
-  static SP_state Create(SP<detran::InputDB>       input,
-                         SP<detran::Mesh>          mesh)
+  static SP_state Create(SP_input input,
+                         SP_mesh  mesh)
   {
-    SP_state p;
-    p = new State(input, mesh);
+    SP_state p(new State(input, mesh));
     return p;
   }
+
+  //-------------------------------------------------------------------------//
+  // PUBLIC INTERFACE
+  //-------------------------------------------------------------------------//
 
   /*
    *  \brief Const accessor to a group moments field.
@@ -117,12 +125,7 @@ public:
    *  \param    g   Group of field requested.
    *  \return       Constant reference to group moment vector.
    */
-  const moments_type& phi(int g) const
-  {
-    Require(g >= 0);
-    Require(g < d_number_groups);
-    return d_moments[g];
-  }
+  const moments_type& phi(const size_t g) const;
 
   /*
    *  \brief Mutable accessor to a group moments field.
@@ -137,48 +140,23 @@ public:
    *  \param    g   Group of field requested.
    *  \return       Mutable reference to group moment vector.
    */
-  moments_type& phi(int g)
-  {
-    // Cast away return type
-    return const_cast<moments_type&>
-    (
-      // Add const to *this's type and call const version
-      static_cast<const State*>(this)->phi(g)
-    );
-
-  }
+  moments_type& phi(const size_t g);
 
   /*
    *  \brief Const accessor to all group moments.
    */
-  const group_moments_type& all_phi() const
-  {
-    return d_moments;
-  }
+  const group_moments_type& all_phi() const;
 
   /*
    *  \brief Mutable accessor to all group moments.
    */
-  group_moments_type& all_phi()
-  {
-    // Cast away return type
-    return const_cast<group_moments_type&>
-    (
-      // Add const to *this's type and call const version
-      static_cast<const State*>(this)->all_phi()
-    );
-
-  }
+  group_moments_type& all_phi();
 
   /*!
    *   \brief Set a group moment vector.
    *   \param   f   User-defined moment vector.
    */
-  void set_moments(int g, std::vector<double> f)
-  {
-    d_moments[g] = f;
-  }
-
+  void set_moments(const size_t g, std::vector<double>& f);
   /*
    *  \brief Const accessor to a group angular flux.
    *
@@ -187,20 +165,9 @@ public:
    *  \param    a   Angle within octant
    *  \return       Constant reference to group angular flux vector.
    */
-  const angular_flux_type& psi(int g, int o, int a) const
-  {
-    Require(d_store_angular_flux);
-    Require(d_angular_flux.size() > 0);
-    Require(o >= 0);
-    Require(o < d_quadrature->number_octants());
-    Require(a >= 0);
-    Require(a < d_quadrature->number_angles_octant());
-    Require(g >= 0);
-    Require(g < d_number_groups);
-    int angle = d_quadrature->index(o, a);
-    return d_angular_flux[g][angle];
-  }
-
+  const angular_flux_type& psi(const size_t g,
+                               const size_t o,
+                               const size_t a) const;
   /*
    *  \brief Mutable accessor to a group angular flux.
    *
@@ -209,22 +176,14 @@ public:
    *  \param    a   Angle within octant
    *  \return       Mutable reference to group angular flux vector.
    */
-  angular_flux_type& psi(int g, int o, int a)
-  {
-    // Cast away return type
-    return const_cast<angular_flux_type&>
-    (
-      // Add const to *this's type and call const version
-      static_cast<const State*>(this)->psi(g, o, a)
-    );
-  }
+  angular_flux_type& psi(const size_t g, const size_t o, const size_t a);
 
   double eigenvalue() const
   {
     return d_eigenvalue;
   }
 
-  void set_eigenvalue(double v)
+  void set_eigenvalue(const double v)
   {
     d_eigenvalue = v;
   }
@@ -239,7 +198,7 @@ public:
     return d_mesh;
   }
 
-  int moments_size() const
+  size_t moments_size() const
   {
     return d_moments[0].size();
   }
@@ -249,7 +208,7 @@ public:
     return d_quadrature;
   }
 
-  int number_groups() const
+  size_t number_groups() const
   {
     return d_number_groups;
   }
@@ -259,12 +218,11 @@ public:
     return d_store_angular_flux;
   }
 
-  bool is_valid() const
-  {
-    return true;
-  }
-
 private:
+
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   /// Input database
   SP_input d_input;
@@ -296,6 +254,12 @@ private:
 };
 
 } // end namespace detran
+
+//---------------------------------------------------------------------------//
+// INLINE MEMBER DEFINITINS
+//---------------------------------------------------------------------------/
+
+#include "State.i.hh"
 
 #endif /* STATE_HH_ */
 

@@ -4,22 +4,18 @@
  * \author robertsj
  * \date   Apr 4, 2012
  * \brief  FissionSource class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 
 #ifndef FISSIONSOURCE_HH_
 #define FISSIONSOURCE_HH_
 
-// Detran
-#include "Material.hh"
-#include "Mesh.hh"
 #include "State.hh"
-
-// Utilities
-#include "DBC.hh"
-#include "Definitions.hh"
-#include "SP.hh"
+#include "geometry/Mesh.hh"
+#include "material/Material.hh"
+#include "utilities/DBC.hh"
+#include "utilities/Definitions.hh"
+#include "utilities/SP.hh"
 
 namespace detran
 {
@@ -31,15 +27,25 @@ namespace detran
  */
 //---------------------------------------------------------------------------//
 
-class FissionSource: public Object
+class FissionSource
 {
 
 public:
 
-  typedef SP<FissionSource>                 SP_source;
-  typedef State::SP_state                   SP_state;
-  typedef Mesh::SP_mesh                     SP_mesh;
-  typedef Material::SP_material             SP_material;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
+
+  typedef detran_utilities::SP<FissionSource>       SP_fissionsource;
+  typedef State::SP_state                           SP_state;
+  typedef detran_geometry::Mesh::SP_mesh            SP_mesh;
+  typedef detran_material::Material::SP_material    SP_material;
+  typedef detran_utilities::vec_int                 vec_int;
+  typedef detran_utilities::size_t                  size_t;
+
+  //-------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //-------------------------------------------------------------------------//
 
   /*!
    *  \brief Constructor
@@ -52,13 +58,17 @@ public:
   FissionSource(SP_state state, SP_mesh mesh, SP_material material);
 
   /// SP Constructor
-  static SP<FissionSource>
-  Create(SP<State> state, SP<Mesh> mesh, SP<Material> material)
+  static SP_fissionsource
+  Create(SP_state state, SP_mesh mesh, SP_material material)
   {
-    SP_source p;
+    SP_fissionsource p;
     p = new FissionSource(state, mesh, material);
     return p;
   }
+
+  //-------------------------------------------------------------------------//
+  // PUBLIC INTERFACE
+  //-------------------------------------------------------------------------//
 
   /// Initialize to thermal fission cross-section, normalized.
   void initialize();
@@ -74,7 +84,7 @@ public:
    *
    *   \param scale     Scaling factor (typically 1/keff)
    */
-  void setup_outer(double scale);
+  void setup_outer(const double scale);
 
   /*!
    *   \brief Return the fission source in a group.
@@ -93,10 +103,10 @@ public:
    *   Note also that this returns a moments source, so the client must
    *   apply the moments-to-discrete operator.
    *
-   *   @param   g   Group of the source.
-   *   @return      Source vector.
+   *   \param   g   Group of the source.
+   *   \return      Source vector.
    */
-  const State::moments_type& source(int g);
+  const State::moments_type& source(const size_t g);
 
   /*!
    *   \brief Return the fission density.
@@ -105,7 +115,7 @@ public:
    *     fd = \sum_g \nu\Sigma_{f,g} \phi_g \, .
    *   \f]
    *
-   *   @return      Fission density vector.
+   *   \return      Fission density vector.
    */
   const State::moments_type& density();
 
@@ -113,34 +123,37 @@ public:
    *   \brief Set the fission density.
    *   \param   f   User-defined density.
    */
-  void set_density(std::vector<double> f)
+  void set_density(std::vector<double> &f)
   {
     d_density = f;
   }
 
-  /// Unimplemented DBC function
-  bool is_valid() const
-  {
-    return true;
-  }
-
 private:
+
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   /// State vector
   SP_state d_state;
+
   /// Mesh
   SP_mesh d_mesh;
+
   /// Materials
   SP_material d_material;
 
   /// \f$ q_{fg} = norm \times \chi_g \sum_g \nu \Sigma_{fg} \phi_g \f$ .
   State::moments_type d_source;
+
   /// \f$ d = \sum_g \nu \Sigma_{fg} \phi_g \f$ .
   State::moments_type d_density;
+
   /// Scaling factor
   double d_scale;
+
   /// Number of groups.
-  int d_number_groups;
+  size_t d_number_groups;
 
 };
 

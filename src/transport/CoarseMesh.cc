@@ -7,16 +7,15 @@
  */
 //---------------------------------------------------------------------------//
 
-// Detran
 #include "CoarseMesh.hh"
-#include "Mesh1D.hh"
-#include "Mesh2D.hh"
-#include "Mesh3D.hh"
+#include "geometry/Mesh1D.hh"
+#include "geometry/Mesh2D.hh"
+#include "geometry/Mesh3D.hh"
 
 namespace detran
 {
 
-CoarseMesh::CoarseMesh(SP_mesh fine_mesh, u_int level)
+CoarseMesh::CoarseMesh(SP_mesh fine_mesh, const size_t level)
   : d_fine_mesh(fine_mesh)
   , d_level(level)
   , d_fine_to_coarse(3)
@@ -104,21 +103,20 @@ CoarseMesh::CoarseMesh(SP_mesh fine_mesh, u_int level)
   // Create the coarse mesh.
   if (dim == 1)
   {
-    d_coarse_mesh = new Mesh1D(coarse_edges[0],
-                               coarse_material_map);
+    d_coarse_mesh =
+      new detran_geometry::Mesh1D(coarse_edges[0], coarse_material_map);
   }
   else if (dim == 2)
   {
-    d_coarse_mesh = new Mesh2D(coarse_edges[0],
-                               coarse_edges[1],
-                               coarse_material_map);
+    d_coarse_mesh =
+      new detran_geometry::Mesh2D(coarse_edges[0], coarse_edges[1],
+                                  coarse_material_map);
   }
   else
   {
-    d_coarse_mesh = new Mesh3D(coarse_edges[0],
-                               coarse_edges[1],
-                               coarse_edges[2],
-                               coarse_material_map);
+    d_coarse_mesh =
+      new detran_geometry::Mesh3D(coarse_edges[0], coarse_edges[1],
+                                  coarse_edges[2], coarse_material_map);
   }
 
 }

@@ -17,12 +17,12 @@ namespace detran
 // Get the partial current on a coarse mesh edge.
 template <class D>
 inline double
-CurrentTally<D>::partial_current(const u_int i,
-                                 const u_int j,
-                                 const u_int k,
-                                 const u_int g,
-                                 const u_int axis,
-                                 const u_int sense)
+CurrentTally<D>::partial_current(const size_t i,
+                                 const size_t j,
+                                 const size_t k,
+                                 const size_t g,
+                                 const size_t axis,
+                                 const size_t sense)
 {
   // Precondition
   Require(axis < D::dimension);
@@ -40,17 +40,17 @@ CurrentTally<D>::partial_current(const u_int i,
 // Tallying for main body
 template <class D>
 inline void
-CurrentTally<D>::tally(const u_int i,
-                       const u_int j,
-                       const u_int k,
-                       const u_int g,
-                       const u_int o,
-                       const u_int a,
+CurrentTally<D>::tally(const size_t i,
+                       const size_t j,
+                       const size_t k,
+                       const size_t g,
+                       const size_t o,
+                       const size_t a,
                        const face_flux_type psi)
 {
 
   // Make direction triplet
-  const u_int dim[] = {i, j, k};
+  const size_t dim[] = {i, j, k};
 
   // Loop over directions of current flow
   for (int d0 = 0; d0 < D::dimension; d0++)
@@ -92,12 +92,12 @@ CurrentTally<D>::tally(const u_int i,
 // e.g. the current has no area.
 template <>
 inline void
-CurrentTally<_1D>::tally(const u_int i,
-                         const u_int j,
-                         const u_int k,
-                         const u_int g,
-                         const u_int o,
-                         const u_int a,
+CurrentTally<_1D>::tally(const size_t i,
+                         const size_t j,
+                         const size_t k,
+                         const size_t g,
+                         const size_t o,
+                         const size_t a,
                          const face_flux_type psi)
 {
   Require(j == 0);
@@ -119,18 +119,18 @@ CurrentTally<_1D>::tally(const u_int i,
 // Tallying for incident boundary.
 template <class D>
 inline void
-CurrentTally<D>::tally(const u_int i,
-                       const u_int j,
-                       const u_int k,
-                       const u_int g,
-                       const u_int o,
-                       const u_int a,
-                       const u_int d0,
+CurrentTally<D>::tally(const size_t i,
+                       const size_t j,
+                       const size_t k,
+                       const size_t g,
+                       const size_t o,
+                       const size_t a,
+                       const size_t d0,
                        const double psi)
 {
 
   // Make direction triplet
-  const u_int dim[] = {i, j, k};
+  const size_t dim[] = {i, j, k};
   Require( (dim[d0] == 0) or
            (dim[d0] == d_coarsemesh->get_fine_mesh()->number_cells(d0) - 1) );
 

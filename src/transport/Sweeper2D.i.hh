@@ -4,18 +4,14 @@
  * \author Jeremy Roberts
  * \date   Mar 24, 2012
  * \brief  Sweeper2D inline member definitions.
- * \note   Copyright (C) 2012 Jeremy Roberts.
  */
 //---------------------------------------------------------------------------//
 #ifndef SWEEPER2D_I_HH_
 #define SWEEPER2D_I_HH_
 
-// Detran
-#include "Equation_SD_2D.hh"
-#include "Equation_DD_2D.hh"
-#include "Equation_SC_2D.hh"
-
-// System
+#include "discretization/Equation_SD_2D.hh"
+#include "discretization/Equation_DD_2D.hh"
+#include "discretization/Equation_SC_2D.hh"
 #include <iostream>
 #ifdef DETRAN_ENABLE_OPENMP
 #include <omp.h>

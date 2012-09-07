@@ -4,34 +4,25 @@
  * \author Jeremy Roberts
  * \date   Mar 24, 2012
  * \brief  Sweeper class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts.
  */
 //---------------------------------------------------------------------------//
 
 #ifndef SWEEPER_HH_
 #define SWEEPER_HH_
 
-// Config
 #include "detran_config.h"
-
-// Detran
-#include "BoundaryBase.hh"
 #include "CurrentTally.hh"
-#include "Equation.hh"
-#include "Material.hh"
-#include "Mesh.hh"
-#include "Quadrature.hh"
 #include "State.hh"
 #include "SweepSource.hh"
-
-// Detran Utilities
-#include "DBC.hh"
-#include "Definitions.hh"
-#include "InputDB.hh"
-#include "Profiler.hh"
-#include "SP.hh"
-
-// System
+#include "angle/Quadrature.hh"
+#include "boundary/BoundaryBase.hh"
+#include "discretization/Equation.hh"
+#include "geometry/Mesh.hh"
+#include "material/Material.hh"
+#include "utilities/DBC.hh"
+#include "utilities/Definitions.hh"
+#include "utilities/InputDB.hh"
+#include "utilities/SP.hh"
 #include <iostream>
 
 namespace detran
@@ -67,24 +58,31 @@ class Sweeper
 
 public:
 
-  typedef SP<Sweeper>                       SP_sweeper;
-  typedef State::SP_state                   SP_state;
-  typedef InputDB::SP_input                 SP_input;
-  typedef Mesh::SP_mesh                     SP_mesh;
-  typedef Material::SP_material             SP_material;
-  typedef Quadrature::SP_quadrature         SP_quadrature;
-  //
-  typedef BoundaryBase<D>                   Boundary_T;
-  //
-  typedef typename
-      SweepSource<D>::SP_sweepsource        SP_sweepsource;
-  //
-  typedef State::moments_type               moments_type;
-  typedef State::angular_flux_type          angular_flux_type;
-  //
-  typedef CurrentTally<D>                   CurrentTally_T;
-  typedef typename
-          CurrentTally_T::SP_currenttally   SP_currenttally;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
+
+  typedef detran_utilities::SP<Sweeper>             SP_sweeper;
+  typedef State::SP_state                           SP_state;
+  typedef detran_utilities::InputDB::SP_input       SP_input;
+  typedef detran_material::Material::SP_material    SP_material;
+  typedef detran_geometry::Mesh                     Mesh
+  typedef detran_geometry::Mesh::SP_mesh            SP_mesh;
+  typedef detran_angle::Quadrature::SP_quadrature   SP_quadrature;
+  typedef BoundaryBase<D>                           Boundary_T;
+  typedef typename SweepSource<D>::SP_sweepsource   SP_sweepsource;
+  typedef State::moments_type                       moments_type;
+  typedef State::angular_flux_type                  angular_flux_type;
+  typedef CurrentTally<D>                           CurrentTally_T;
+  typedef typename CurrentTally_T::SP_currenttally  SP_currenttally;
+  typedef detran_utilities::vec_int                 vec_int;
+  typedef detran_utilities::vec2_int                vec2_int;
+  typedef detran_utilities::vec3_int                vec3_int;
+  typedef detran_utilities::size_t                  size_t;
+
+  //-------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //-------------------------------------------------------------------------//
 
   /*!
    *  \brief Constructor.
@@ -105,6 +103,10 @@ public:
   /// Virtual destructor
   virtual ~Sweeper(){}
 
+  //-------------------------------------------------------------------------//
+  // ABSTRACT INTERFACE -- ALL SWEEPERS MUST IMPLEMENT THESE
+  //-------------------------------------------------------------------------//
+
   /*!
    *  \brief Sweep over all angles and space.
    *
@@ -122,16 +124,20 @@ public:
   virtual void sweep(moments_type &phi) = 0;
 
   /// Setup the equations for the group
-  virtual void setup_group(int g) = 0;
+  virtual void setup_group(const size_t g) = 0;
+
+  //-------------------------------------------------------------------------//
+  // PUBLIC INTERFACE
+  //-------------------------------------------------------------------------//
 
   /// Allows the psi update to occur whenever needed
-  void set_update_psi(bool v)
+  void set_update_psi(const bool v)
   {
     d_update_psi = v;
   }
 
   /// Switch on-the-fly boundary updates on or off
-  void set_update_boundary(bool v)
+  void set_update_boundary(const bool v)
   {
     d_update_boundary = v;
   }
@@ -141,7 +147,7 @@ public:
     return d_update_boundary;
   }
 
-  int number_sweeps() const
+  size_t number_sweeps() const
   {
     return d_number_sweeps;
   }
@@ -153,15 +159,11 @@ public:
     d_current = current;
   }
 
-  bool is_valid() const
-  {
-    return true;
-  }
-
 protected:
 
-  /// \name Protected Data
-  /// \{
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   /// Input database
   SP_input d_input;
@@ -188,7 +190,7 @@ protected:
   //SP_acceleration d_acceleration;
 
   /// Current group
-  int d_g;
+  size_t d_g;
 
   /// Update the angular flux?
   bool d_update_psi;
@@ -200,7 +202,7 @@ protected:
   bool d_adjoint;
 
   /// Count the sweeps.
-  int d_number_sweeps;
+  size_t d_number_sweeps;
 
   /// Update the boundary on the fly?  Can't be used for Krylov.
   bool d_update_boundary;
@@ -208,22 +210,23 @@ protected:
   /// Current tally
   SP_currenttally d_current;
 
-  /// \}
-
-  /// \name Implementation
-  /// \{
+  //-------------------------------------------------------------------------//
+  // IMPLEMENTATION
+  //-------------------------------------------------------------------------//
 
   /// Allocate template-specific items.
   void setup();
 
   /// Mesh sweeper indices. \todo Allow adjoint.
-  inline int index(int o, int dim, int ijk);
-
-  /// \}
+  inline size_t index(const size_t o, const size_t dim, const size_t ijk);
 
 };
 
 } // end namespace detran
+
+//---------------------------------------------------------------------------//
+// INLINE MEMBER DEFINITIONS
+//---------------------------------------------------------------------------//
 
 #include "Sweeper.t.hh"
 

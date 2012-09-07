@@ -1,39 +1,41 @@
 #------------------------------------------------------------------------------#
-# libdetran/src/material/CMakeLists.txt
+# src/material/CMakeLists.txt
 #------------------------------------------------------------------------------#
 
-SET(MATERIAL_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+SET(LIB_NAME "material")
 
-#-------------------------------------#
+SET(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+
+#-----------------------------------------------------------------------------#
 # SOURCE
-#-------------------------------------#
+#-----------------------------------------------------------------------------#
 
-SET(MATERIAL_SRC
+SET(SRC
     Material.cc
 )
 
-#-------------------------------------#
+#-----------------------------------------------------------------------------#
 # SHARED LIBRARY
-#-------------------------------------#
+#-----------------------------------------------------------------------------#
 
-ADD_LIBRARY(materials
+ADD_LIBRARY(${LIB_NAME}
             SHARED
-            ${MATERIAL_SRC} 
+            ${SRC} 
 )
-TARGET_LINK_LIBRARIES( materials
-                       utilities
-                       ${Boost_LIBRARIES}                     
+TARGET_LINK_LIBRARIES(${LIB_NAME}
+                      angle
+                      geometry
+                      utilities
 )
 
-INSTALL_FILES(/include .hh)
-INSTALL_TARGETS(/lib materials)
+INSTALL_FILES(/include/${LIB_NAME} .hh)
+INSTALL_TARGETS(/lib ${LIB_NAME})
 
-#-------------------------------------#
+#-----------------------------------------------------------------------------#
 # TESTING
-#-------------------------------------#
+#-----------------------------------------------------------------------------#
 
 if( DETRAN_ENABLE_TEST )
-    include_directories(${MATERIAL_DIR}/test)
-    add_subdirectory(${MATERIAL_DIR}/test)
+    include_directories(${SRC_DIR}/test)
+    add_subdirectory(${SRC_DIR}/test)
 endif()
-
