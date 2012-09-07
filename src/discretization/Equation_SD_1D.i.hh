@@ -18,14 +18,14 @@ namespace detran
 
 inline void Equation_SD_1D::setup_angle(const size_t angle)
 {
-  // Currently, only the 1st octant values should be in use.
   Require(angle < d_quadrature->number_angles_octant());
-  double mu  = d_quadrature->mu(0, angle);
+  d_angle = angle;
+  double mu  = d_quadrature->mu(d_octant, d_angle);
   for (int i = 0; i < d_mesh->number_cells_x(); i++)
   {
     d_coef_x[i] = mu / d_mesh->dx(i);
   }
-  d_angle = angle;
+
 }
 
 inline void Equation_SD_1D::solve(const size_t i,

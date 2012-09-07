@@ -38,10 +38,10 @@ void Equation_DD_2D::setup_octant(const size_t octant)
 
 void Equation_DD_2D::setup_angle(const size_t angle)
 {
-  // Currently, only the 1st octant values should be in use.
   Require(angle < d_quadrature->number_angles_octant());
-  double mu  = d_quadrature->mu(0, angle);
-  double eta = d_quadrature->eta(0, angle);
+  d_angle = angle;
+  double mu  = d_quadrature->mu(d_octant, d_angle);
+  double eta = d_quadrature->eta(d_octant, d_angle);
   for (int i = 0; i < d_mesh->number_cells_x(); i++)
   {
     d_coef_x[i] = 2.0 * mu / d_mesh->dx(i);
@@ -50,7 +50,6 @@ void Equation_DD_2D::setup_angle(const size_t angle)
   {
     d_coef_y[j] = 2.0 * eta / d_mesh->dy(j);
   }
-  d_angle = angle;
 }
 
 } // end namespace detran

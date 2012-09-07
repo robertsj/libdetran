@@ -41,7 +41,6 @@ void Equation_SC_MOC::setup_octant(const size_t octant)
 
 void Equation_SC_MOC::setup_azimuth(const size_t a)
 {
-  // Currently, only the 1st octant values should be in use.
   Require(a < d_quadrature->number_azimuths_octant());
   d_azimuth = a;
   d_spacing = d_tracks->spacing(d_azimuth);
@@ -54,7 +53,6 @@ void Equation_SC_MOC::setup_azimuth(const size_t a)
 
 void Equation_SC_MOC::setup_polar(const size_t p)
 {
-  // Currently, only the 1st octant values should be in use.
   Require(p < d_quadrature->number_polar_octant());
   d_polar = p;
   d_angle = d_quadrature->angle(d_azimuth, d_polar);
