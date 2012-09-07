@@ -30,15 +30,17 @@ inline Quadrature::size_t Quadrature::number_angles_octant() const
 
 inline Quadrature::size_t Quadrature::number_azimuths_octant() const
 {
+  THROW("A PRODUCT QUADRATURE MUST IMPLEMENT THIS");
   return 0;
 }
 
 inline Quadrature::size_t Quadrature::number_polar_octant() const
 {
+  THROW("A PRODUCT QUADRATURE MUST IMPLEMENT THIS");
   return 0;
 }
 
-inline Quadrature::size_t Quadrature::index(size_t o, size_t a)
+inline Quadrature::size_t Quadrature::index(const size_t o, const size_t a)
 {
   Require(o < d_number_octants);
   Require(a < d_number_angles_octant);
@@ -47,7 +49,7 @@ inline Quadrature::size_t Quadrature::index(size_t o, size_t a)
   return angle;
 }
 
-inline Quadrature::size_t Quadrature::angle(size_t a, size_t p) const
+inline Quadrature::size_t Quadrature::angle(const size_t a, const size_t p) const
 {
   THROW("NOT A PRODUCT QUADRATURE");
   return 0;
@@ -58,7 +60,7 @@ inline const Quadrature::vec_dbl& Quadrature::weights() const
   return d_weight;
 }
 
-inline const Quadrature::vec_dbl& Quadrature::cosines(size_t dir) const
+inline const Quadrature::vec_dbl& Quadrature::cosines(const size_t dir) const
 {
   Require (dir < d_dimension);
   if (dir == MU)
@@ -69,36 +71,36 @@ inline const Quadrature::vec_dbl& Quadrature::cosines(size_t dir) const
     return d_xi;
 }
 
-inline double Quadrature::weight(size_t a) const
+inline double Quadrature::weight(const size_t a) const
 {
   Require(a < d_number_angles_octant);
   return d_weight[a];
 }
 
-inline double Quadrature::mu(size_t o, size_t a) const
+inline double Quadrature::mu(const size_t o, const size_t a) const
 {
   Require(a < d_number_angles_octant);
   Require(o < d_number_octants);
-  return d_octant_sign[o][MU]*d_mu[a];
+  return d_octant_sign[o][MU] * d_mu[a];
 }
 
-inline double Quadrature::eta(size_t o, size_t a) const
+inline double Quadrature::eta(const size_t o, const size_t a) const
 {
   Require(a < d_number_angles_octant);
   Require(o < d_number_octants);
   Require(d_dimension > 1); // 1d calcs have no business with eta...
-  return d_octant_sign[o][ETA]*d_eta[a];
+  return d_octant_sign[o][ETA] * d_eta[a];
 }
 
-inline double Quadrature::xi(size_t o, size_t a) const
+inline double Quadrature::xi(const size_t o, const size_t a) const
 {
   Require(a < d_number_angles_octant);
   Require(o < d_number_octants);
   //Require(d_dimension == 3); // 1d/2d calcs have no need for xi...
-  return d_octant_sign[o][XI]*d_xi[a];
+  return d_octant_sign[o][XI] * d_xi[a];
 }
 
-inline double Quadrature::angular_norm(size_t d)
+inline double Quadrature::angular_norm(const size_t d)
 {
   Require(d < 4);
   if (d == 1)
@@ -107,7 +109,7 @@ inline double Quadrature::angular_norm(size_t d)
     return detran_utilities::inv_four_pi;
 }
 
-inline bool Quadrature::valid_index(size_t o, size_t a) const
+inline bool Quadrature::valid_index(const size_t o, const size_t a) const
 {
   if (o < d_number_octants and a < d_number_angles_octant)
   {

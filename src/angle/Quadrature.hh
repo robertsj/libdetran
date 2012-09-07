@@ -131,7 +131,7 @@ public:
    *  \param o    Octant index
    *  \param a    Angle within octant
    */
-  size_t index(size_t o, size_t a);
+  size_t index(const size_t o, const size_t a);
 
   /*!
    *  \brief Angle in octant from azimuth and polar
@@ -141,7 +141,7 @@ public:
    *  \param a  Azimith within octant
    *  \param p  Polar within octant
    */
-  virtual size_t angle(size_t a, size_t p) const;
+  virtual size_t angle(const size_t a, const size_t p) const;
 
   /// Return const reference to weights.
   const vec_dbl& weights() const;
@@ -150,51 +150,60 @@ public:
    *  \brief Return const reference to a cosine vector
    *  \param dir    Direction of cosine
    */
-  const vec_dbl& cosines(size_t dir) const;
+  const vec_dbl& cosines(const size_t dir) const;
 
   /*!
    *  \brief Return single weight.
    *  \param a  Angle within octant
    */
-  double weight(size_t a) const;
+  double weight(const size_t a) const;
 
   /*!
    *  \brief Return single \f$ \mu \f$.
    *  \param o    Octant index
    *  \param a    Angle within octant
    */
-  double mu(size_t o, size_t a) const;
+  double mu(const size_t o, const size_t a) const;
 
   /*!
    *  \brief Return single \f$ \eta \f$.
    *  \param o    Octant index
    *  \param a    Angle within octant
    */
-  double eta(size_t o, size_t a) const;
+  double eta(const size_t o, const size_t a) const;
 
   /*!
    *  \brief Return single \f$ \xi \f$.
    *  \param o    Octant index
    *  \param a    Angle within octant
    */
-  double xi(size_t o, size_t a) const;
+  double xi(const size_t o, const size_t a) const;
 
   /*!
    *  \brief Return one over the integral of unity over all angles.
    *  \param d    Problem dimension
    */
-  static double angular_norm(size_t d);
+  static double angular_norm(const size_t d);
 
   /*!
    *  \brief Are the indices valid?
    *  \param o    Octant index
    *  \param a    Angle within octant
    */
-  bool valid_index(size_t o, size_t a) const;
+  bool valid_index(const size_t o, const size_t a) const;
 
   size_t dimension() const
   {
     return d_dimension;
+  }
+
+  /// Set adjoint.  This changes the octant multipliers.
+  void set_adjoint(const bool v = true);
+
+  /// Is adjoint?
+  bool is_adjoint() const
+  {
+    return d_adjoint;
   }
 
   /*!
@@ -236,6 +245,9 @@ protected:
 
   /// octant cosign signs (e.g [1 1 1] for octant 1)
   vec2_dbl d_octant_sign;
+
+  /// Is this an adjoint problem?
+  bool d_adjoint;
 
 };
 

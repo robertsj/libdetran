@@ -35,6 +35,7 @@ Quadrature::Quadrature(const size_t order,
   , d_xi(d_number_angles_octant, 0.0)
   , d_name(name)
   , d_octant_sign(8, vec_dbl(3, 0.0))
+  , d_adjoint(false)
 {
   Insist(order > 0,
     "The quadrature order MUST be positive.");
@@ -79,6 +80,23 @@ Quadrature::Quadrature(const size_t order,
 Quadrature::~Quadrature()
 {
   /* ... */
+}
+
+// Set adjoint
+void Quadrature::set_adjoint(const bool v)
+{
+
+  // If our adjoint flag is unchanged, return. Otherwise reset flag
+  // and reset the octant multipliers by multiplying by -1.
+  if (v == d_adjoint)
+    return;
+  else
+    d_adjoint = v;
+
+  for (int o = 0; o < 8; o++)
+    for (int d = 0; d < 3; d++)
+      d_octant_sign[o][d] *= -1.0;
+
 }
 
 // Display
