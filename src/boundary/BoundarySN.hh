@@ -18,7 +18,7 @@ namespace detran
 {
 
 /*!
- *  \brief Boundary traits for simplify type access.
+ *  \brief Boundary traits to simplify type access.
  */
 template <class D>
 class BoundaryTraits

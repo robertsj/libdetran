@@ -2,32 +2,34 @@
 /*!
  * \file   test_BoundaryMOC.cc
  * \author Jeremy Roberts
- * \date   Jul 17, 2012
- * \brief  Test of BoundaryMOC.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+ * \date   Apr 1, 2012
+ * \brief  Test of BoundaryMOC class
  */
 //---------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
-#define TEST_LIST                     \
-        FUNC(test_BoundaryMOC)        \
+#define TEST_LIST                \
+        FUNC(test_BoundaryMOC)   \
         FUNC(test_BoundaryMOC_2)
 
 // Detran headers
 #include "TestDriver.hh"
-#include "BoundaryMOC.hh"
-#include "Mesh2D.hh"
-#include "Collocated.hh"
-#include "Uniform.hh"
-#include "Tracker.hh"
+#include "boundary/BoundaryMOC.hh"
+#include "angle/Uniform.hh"
+#include "geometry/Mesh2D.hh"
+#include "geometry/Tracker.hh"
 
 // Setup
-#include "geometry/test/mesh_fixture.hh"
-#include "angle/test/quadrature_fixture.hh"
+/* ... */
 
 using namespace detran;
+using namespace detran_geometry;
+using namespace detran_angle;
+using namespace detran_utilities;
 using namespace detran_test;
-using namespace std;
+using std::cout;
+using std::endl;
+using std::string;
 
 int main(int argc, char *argv[])
 {
@@ -40,6 +42,7 @@ int main(int argc, char *argv[])
 
 int test_BoundaryMOC(int argc, char *argv[])
 {
+  typedef detran_utilities::size_t size_t;
 
   // Create mesh
   vec_dbl cm(2, 0.0);
@@ -85,9 +88,9 @@ int test_BoundaryMOC(int argc, char *argv[])
   // (3,0,2) -> (0,0,2)
   //
 
-  detran::u_int o;
-  detran::u_int a;
-  detran::u_int t;
+  size_t o;
+  size_t a;
+  size_t t;
 
   if (1==0)
   {
@@ -147,12 +150,12 @@ int test_BoundaryMOC(int argc, char *argv[])
     {
       cout << left[i][0] << " " << left[i][1] << " " << left[i][2] << " | ";
 
-      detran::u_int o = left[i][0];
-      detran::u_int a = left[i][1];
-      detran::u_int t = left[i][2];
-      detran::u_int oo;
-      detran::u_int aa;
-      detran::u_int tt;
+      size_t o = left[i][0];
+      size_t a = left[i][1];
+      size_t t = left[i][2];
+      size_t oo;
+      size_t aa;
+      size_t tt;
       boundary.feed_into(o,a,t,oo,aa,tt);
 //      cout << " INTO " << endl;
 //      cout << "      o = " << oo << endl
@@ -176,6 +179,7 @@ int test_BoundaryMOC(int argc, char *argv[])
 
 int test_BoundaryMOC_2(int argc, char *argv[])
 {
+  typedef detran_utilities::size_t size_t;
 
   // Create mesh
   vec_dbl cm(2, 0.0);
@@ -234,9 +238,9 @@ int test_BoundaryMOC_2(int argc, char *argv[])
   // (2,0,12) -> (3,0,0)
   // (2,0,13) -> (1,0,0)
   //
-  detran::u_int o;
-  detran::u_int a;
-  detran::u_int t;
+  size_t o;
+  size_t a;
+  size_t t;
 
   // Octant 0
   boundary.feed_into(0, 0, 0, o, a, t);
@@ -285,6 +289,7 @@ int test_BoundaryMOC_2(int argc, char *argv[])
   return 0;
 }
 
+
 //---------------------------------------------------------------------------//
-//              end of test_State.cc
+//              end of test_BoundaryMOC.cc
 //---------------------------------------------------------------------------//

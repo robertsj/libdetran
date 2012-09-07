@@ -15,15 +15,22 @@
 #include "TestDriver.hh"
 #include "boundary/BoundarySN.hh"
 #include "angle/GaussLegendre.hh"
-#include "angle/QuadrupleRangle.hh"
+#include "angle/QuadrupleRange.hh"
+#include "geometry/Mesh1D.hh"
+#include "geometry/Mesh2D.hh"
+#include "geometry/Mesh3D.hh"
 
 // Setup
-#include "quadrature_fixture.hh"
+/* ... */
 
+using namespace detran;
+using namespace detran_geometry;
 using namespace detran_angle;
 using namespace detran_utilities;
 using namespace detran_test;
-using namespace std;
+using std::cout;
+using std::endl;
+using std::string;
 
 int main(int argc, char *argv[])
 {
@@ -34,17 +41,76 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------//
 
-int test_BoundarySN_basic(int argc, char *argv[])
+int test_BoundarySN(int argc, char *argv[])
 {
-  // Get quadrature fixture
-  SP_quadrature q = gausslegendre_fixture();
-  TEST(q);
-  TEST(q->number_angles()  == 8);
-  TEST(q->number_octants() == 2);
-  TEST(q->number_angles_octant() == 4);
-  TEST(soft_equiv(q->mu(0, 0),  0.9602898564975));
-  TEST(soft_equiv(q->mu(1, 0), -0.9602898564975));
-  TEST(soft_equiv(q->weight(0), 0.1012285362904));
+
+  // 1-D test
+  {
+    typedef BoundarySN<_1D> Boundary_T;
+    // Input
+    Boundary_T::SP_input inp(new InputDB());
+    inp->put<int>("number_groups", 2);
+    inp->put<string>("bc_west",  "reflect");
+    inp->put<string>("bc_left",  "vacuum");
+    // Quadrature
+    Boundary_T::SP_quadrature q(new GaussLegendre(2));
+    // Mesh
+    vec_dbl cm(2, 0.0); cm[1] = 1.0;
+    vec_int fm(1, 10);
+    vec_int mt(1, 0);
+    Boundary_T::SP_mesh mesh(new Mesh1D(fm, cm, mt));
+    // Boundary
+    Boundary_T::SP_boundary b(new Boundary_T(inp, mesh, q));
+
+  }
+
+  // 2-D test
+  {
+    typedef BoundarySN<_2D> Boundary_T;
+    // Input
+    Boundary_T::SP_input inp(new InputDB());
+    inp->put<int>("number_groups", 2);
+    inp->put<string>("bc_west",  "reflect");
+    inp->put<string>("bc_left",  "vacuum");
+    inp->put<string>("bc_south", "reflect");
+    inp->put<string>("bc_north", "vacuum");
+    // Quadrature
+    Boundary_T::SP_quadrature q(new QuadrupleRange(2, 2));
+    // Mesh
+    vec_dbl cm(2, 0.0); cm[1] = 1.0;
+    vec_int fm(1, 10);
+    vec_int mt(1, 0);
+    Boundary_T::SP_mesh mesh(new Mesh2D(fm, fm, cm, cm, mt));
+    // Boundary
+    Boundary_T::SP_boundary b(new Boundary_T(inp, mesh, q));
+
+  }
+
+  // 3-D test
+  {
+    typedef BoundarySN<_3D> Boundary_T;
+    // Input
+    Boundary_T::SP_input inp(new InputDB());
+    inp->put<int>("number_groups", 2);
+    inp->put<string>("bc_west",   "reflect");
+    inp->put<string>("bc_left",   "vacuum");
+    inp->put<string>("bc_south",  "reflect");
+    inp->put<string>("bc_north",  "vacuum");
+    inp->put<string>("bc_bottom", "reflect");
+    inp->put<string>("bc_top",    "vacuum");
+    // Quadrature
+    Boundary_T::SP_quadrature q(new QuadrupleRange(2, 3));
+    // Mesh
+    vec_dbl cm(2, 0.0); cm[1] = 1.0;
+    vec_int fm(1, 10);
+    vec_int mt(1, 0);
+    Boundary_T::SP_mesh mesh(new Mesh3D(fm, fm, fm, cm, cm, cm, mt));
+    // Boundary
+    Boundary_T::SP_boundary b(new Boundary_T(inp, mesh, q));
+
+  }
+
+
   return 0;
 }
 

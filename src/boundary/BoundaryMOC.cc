@@ -38,12 +38,12 @@ BoundaryMOC<D>::BoundaryMOC(SP_input        input,
 
   // Create boundary conditions.
   std::vector<std::string> names(6);
-  names[Mesh::LEFT]   = "bc_left";
-  names[Mesh::RIGHT]  = "bc_right";
-  names[Mesh::BOTTOM] = "bc_bottom";
-  names[Mesh::TOP]    = "bc_top";
+  names[Mesh::WEST]   = "bc_west";
+  names[Mesh::EAST]   = "bc_east";
   names[Mesh::SOUTH]  = "bc_south";
   names[Mesh::NORTH]  = "bc_north";
+  names[Mesh::BOTTOM] = "bc_bottom";
+  names[Mesh::TOP]    = "bc_top";
 
   // Assign boundary conditions.
   for(int side = 0; side < 2*D::dimension; side++)

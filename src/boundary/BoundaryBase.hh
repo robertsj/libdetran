@@ -27,6 +27,10 @@ namespace detran
  *  For fine mesh problems, indexing is relatively straightforward given a
  *  regular grid.  For MOC problems, however, the indexing is less
  *  straightforward.
+ *
+ *  Ultimately, I would like a relatively compact interface applicable to
+ *  SN, MOC, and any future approximations.  My guess is this would entail
+ *  some form of iterator, or perhaps use of a Visitor class.
  */
 
 template <class D>

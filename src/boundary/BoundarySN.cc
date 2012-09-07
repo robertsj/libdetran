@@ -32,12 +32,12 @@ BoundarySN<D>::BoundarySN(SP_input        input,
   initialize();
 
   std::vector<std::string> names(6);
-  names[Mesh::LEFT]   = "bc_left";
-  names[Mesh::RIGHT]  = "bc_right";
-  names[Mesh::BOTTOM] = "bc_bottom";
-  names[Mesh::TOP]    = "bc_top";
+  names[Mesh::WEST]   = "bc_west";
+  names[Mesh::EAST]   = "bc_east";
   names[Mesh::SOUTH]  = "bc_south";
   names[Mesh::NORTH]  = "bc_north";
+  names[Mesh::BOTTOM] = "bc_bottom";
+  names[Mesh::TOP]    = "bc_top";
 
   // Assign boundary conditions.
   for(int side = 0; side < 2*D::dimension; side++)
@@ -76,6 +76,12 @@ BoundarySN<D>::BoundarySN(SP_input        input,
 template <class D>
 void BoundarySN<D>::initialize()
 {
+  THROW("NOT IMPLEMENTED");
+}
+
+template <>
+void BoundarySN<_3D>::initialize()
+{
   int nx = d_mesh->number_cells_x();
   int ny = d_mesh->number_cells_y();
   int nz = d_mesh->number_cells_z();
@@ -85,29 +91,30 @@ void BoundarySN<D>::initialize()
     for (int a = 0; a < d_quadrature->number_angles(); a++)
     {
         // yz planes
-        d_boundary_flux[Mesh::LEFT][g].resize(na,
+        d_boundary_flux[Mesh::WEST][g].resize(na,
           boundary_flux_type(nz, vec_dbl(ny, 0.0)));
-        d_boundary_flux[Mesh::RIGHT][g].resize(na,
+        d_boundary_flux[Mesh::EAST][g].resize(na,
           boundary_flux_type(nz, vec_dbl(ny, 0.0)));
         // xz planes
-        d_boundary_flux[Mesh::BOTTOM][g].resize(na,
+        d_boundary_flux[Mesh::SOUTH][g].resize(na,
           boundary_flux_type(nz, vec_dbl(nx, 0.0)));
-        d_boundary_flux[Mesh::TOP][g].resize(na,
+        d_boundary_flux[Mesh::NORTH][g].resize(na,
           boundary_flux_type(nz, vec_dbl(nx, 0.0)));
         // xy planes
-        d_boundary_flux[Mesh::SOUTH][g].resize(na,
+        d_boundary_flux[Mesh::BOTTOM][g].resize(na,
           boundary_flux_type(ny, vec_dbl(nx, 0.0)));
-        d_boundary_flux[Mesh::NORTH][g].resize(na,
+        d_boundary_flux[Mesh::TOP][g].resize(na,
           boundary_flux_type(ny, vec_dbl(nx, 0.0)));
     }
   }
-  d_boundary_flux_size[Mesh::LEFT]   = na * ny * nz;
-  d_boundary_flux_size[Mesh::RIGHT]  = na * ny * nz;
-  d_boundary_flux_size[Mesh::BOTTOM] = na * nx * nz;
-  d_boundary_flux_size[Mesh::TOP]    = na * nx * nz;
-  d_boundary_flux_size[Mesh::SOUTH]  = na * nx * ny;
-  d_boundary_flux_size[Mesh::NORTH]  = na * nx * ny;
+  d_boundary_flux_size[Mesh::WEST]   = na * ny * nz;
+  d_boundary_flux_size[Mesh::EAST]   = na * ny * nz;
+  d_boundary_flux_size[Mesh::SOUTH]  = na * nx * nz;
+  d_boundary_flux_size[Mesh::NORTH]  = na * nx * nz;
+  d_boundary_flux_size[Mesh::BOTTOM] = na * nx * ny;
+  d_boundary_flux_size[Mesh::TOP]    = na * nx * ny;
 }
+
 
 template <>
 void BoundarySN<_2D>::initialize()
@@ -120,21 +127,21 @@ void BoundarySN<_2D>::initialize()
     for (int a = 0; a < d_quadrature->number_angles(); a++)
     {
         // vertical sides
-        d_boundary_flux[Mesh::LEFT][g].resize(na,
+        d_boundary_flux[Mesh::WEST][g].resize(na,
           boundary_flux_type(ny, 0.0));
-        d_boundary_flux[Mesh::RIGHT][g].resize(na,
+        d_boundary_flux[Mesh::EAST][g].resize(na,
           boundary_flux_type(ny, 0.0));
         // horizontal sides
-        d_boundary_flux[Mesh::BOTTOM][g].resize(na,
+        d_boundary_flux[Mesh::SOUTH][g].resize(na,
           boundary_flux_type(nx, 0.0));
-        d_boundary_flux[Mesh::TOP][g].resize(na,
+        d_boundary_flux[Mesh::NORTH][g].resize(na,
           boundary_flux_type(nx, 0.0));
     }
   }
-  d_boundary_flux_size[Mesh::LEFT]   = na * ny;
-  d_boundary_flux_size[Mesh::RIGHT]  = na * ny;
-  d_boundary_flux_size[Mesh::BOTTOM] = na * nx;
-  d_boundary_flux_size[Mesh::TOP]    = na * nx;
+  d_boundary_flux_size[Mesh::WEST]  = na * ny;
+  d_boundary_flux_size[Mesh::EAST]  = na * ny;
+  d_boundary_flux_size[Mesh::SOUTH] = na * nx;
+  d_boundary_flux_size[Mesh::NORTH] = na * nx;
 }
 
 template <>
@@ -146,12 +153,12 @@ void BoundarySN<_1D>::initialize()
     for (int a = 0; a < d_quadrature->number_angles(); a++)
     {
         // vertical sides
-        d_boundary_flux[Mesh::LEFT][g].resize(na, 0.0);
-        d_boundary_flux[Mesh::RIGHT][g].resize(na, 0.0);
+        d_boundary_flux[Mesh::WEST][g].resize(na, 0.0);
+        d_boundary_flux[Mesh::EAST][g].resize(na, 0.0);
     }
   }
-  d_boundary_flux_size[Mesh::LEFT]   = na;
-  d_boundary_flux_size[Mesh::RIGHT]  = na;
+  d_boundary_flux_size[Mesh::WEST]   = na;
+  d_boundary_flux_size[Mesh::EAST]  = na;
 }
 
 } // end namespace detran

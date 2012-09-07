@@ -64,7 +64,7 @@ BoundaryMOC<D>::operator()(const size_t g, const size_t o, const size_t a,
   Require(d_quadrature->valid_index(o, a));
   Require(g < d_number_groups);
   Require(inout < 2);
-  u_int angle = d_quadrature->index(o, a);
+  size_t angle = d_quadrature->index(o, a);
   //std::cout << " t = " << t << " size = "
   //          << d_boundary_flux[g][angle][inout].size() << std::endl;
   Require(t < d_boundary_flux[g][angle][inout].size());

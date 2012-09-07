@@ -75,7 +75,7 @@ void Reflective<D>::update(const size_t g, const size_t o, const size_t a)
 template <class D>
 void Reflective<D>::setup_octant()
 {
-  if (d_side == Mesh::LEFT)
+  if (d_side == Mesh::WEST)
   {
     // incident octants: 7, 4, 3, 0
     d_octants[0][0] = 7;
@@ -88,7 +88,7 @@ void Reflective<D>::setup_octant()
     d_octants[2][1] = 2;
     d_octants[3][1] = 1;
   }
-  else if (d_side == Mesh::RIGHT)
+  else if (d_side == Mesh::EAST)
   {
     // incident octants: 5, 6, 1, 2
     d_octants[0][0] = 5;
@@ -101,7 +101,7 @@ void Reflective<D>::setup_octant()
     d_octants[2][1] = 0;
     d_octants[3][1] = 3;
   }
-  else if (d_side == Mesh::BOTTOM)
+  else if (d_side == Mesh::SOUTH)
   {
     // incident octants: 5, 1, 4, 0
     d_octants[0][0] = 5;
@@ -114,7 +114,7 @@ void Reflective<D>::setup_octant()
     d_octants[2][1] = 7;
     d_octants[3][1] = 3;
   }
-  else if (d_side == Mesh::TOP)
+  else if (d_side == Mesh::NORTH)
   {
     // incident octants: 6, 7, 2, 3
     d_octants[0][0] = 6;
@@ -127,7 +127,7 @@ void Reflective<D>::setup_octant()
     d_octants[2][1] = 1;
     d_octants[3][1] = 0;
   }
-  else if (d_side == Mesh::SOUTH)
+  else if (d_side == Mesh::BOTTOM)
   {
     // incident octants: 2, 3, 1, 0
     d_octants[0][0] = 2;
@@ -158,30 +158,30 @@ void Reflective<D>::setup_octant()
 template <>
 void Reflective<_2D>::setup_octant()
 {
-  Require(d_side == Mesh::LEFT   || d_side == Mesh::RIGHT ||
-          d_side == Mesh::BOTTOM || d_side == Mesh::TOP   );
-  if (d_side == Mesh::LEFT)
+  Require(d_side == Mesh::WEST  || d_side == Mesh::EAST  ||
+          d_side == Mesh::SOUTH || d_side == Mesh::NORTH );
+  if (d_side == Mesh::WEST)
   {
     d_octants[0][0] = 0; // [left/right oct][in/out]
     d_octants[1][0] = 3;
     d_octants[0][1] = 1;
     d_octants[1][1] = 2;
   }
-  else if (d_side == Mesh::RIGHT)
+  else if (d_side == Mesh::EAST)
   {
     d_octants[0][0] = 2;
     d_octants[1][0] = 1;
     d_octants[0][1] = 3;
     d_octants[1][1] = 0;
   }
-  else if (d_side == Mesh::BOTTOM)
+  else if (d_side == Mesh::SOUTH)
   {
     d_octants[0][0] = 1;
     d_octants[1][0] = 0;
     d_octants[0][1] = 2;
     d_octants[1][1] = 3;
   }
-  else // TOP
+  else // NORTH
   {
     d_octants[0][0] = 3;
     d_octants[1][0] = 2;
@@ -194,8 +194,8 @@ void Reflective<_2D>::setup_octant()
 template <>
 void Reflective<_1D>::setup_octant()
 {
-  Require(d_side == Mesh::LEFT || d_side == Mesh::RIGHT);
-  if (d_side == Mesh::LEFT)
+  Require(d_side == Mesh::WEST || d_side == Mesh::EAST);
+  if (d_side == Mesh::WEST)
   {
     // incident octant: 0
     d_octants[0][0] = 0;

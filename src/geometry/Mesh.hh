@@ -50,12 +50,12 @@ public:
 
   enum SIDES
   {
-    LEFT,
-    RIGHT,
-    BOTTOM,
-    TOP,
+    WEST,
+    EAST,
     SOUTH,
     NORTH,
+    BOTTOM,
+    TOP,
     END_SIDES
   };
 
