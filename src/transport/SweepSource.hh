@@ -100,7 +100,7 @@ public:
   typedef detran_geometry::Mesh::SP_mesh                        SP_mesh;
   typedef detran_material::Material::SP_material                SP_material;
   typedef detran_angle::Quadrature::SP_quadrature               SP_quadrature;
-  typedef typename detran_angle::MomentToDiscrete<D>::SP_MtoD   SP_MtoD;
+  typedef detran_angle::MomentToDiscrete::SP_MtoD               SP_MtoD;
   typedef detran_external_source::ExternalSource::SP_source     SP_externalsource;
   typedef ScatterSource::SP_scattersource                       SP_scattersource;
   typedef FissionSource::SP_fissionsource                       SP_fissionsource;

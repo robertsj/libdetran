@@ -4,7 +4,6 @@
  * \author Jeremy Roberts
  * \date   Apr 1, 2012
  * \brief  Test of test_Sweeper2D
- * \note   Copyright (C) 2012 Jeremy Roberts.
  */
 //---------------------------------------------------------------------------//
 
@@ -13,7 +12,7 @@
         FUNC(test_Sweeper2D_basic)
 
 // Detran headers
-#include "TestDriver.hh"
+#include "utilities/TestDriver.hh"
 #include "Sweeper2D.hh"
 
 // Setup
@@ -22,8 +21,10 @@
 #include "angle/test/quadrature_fixture.hh"
 
 using namespace detran;
+using namespace detran_angle;
+using namespace detran_geometry;
+using namespace detran_utilities;
 using namespace detran_test;
-using namespace std;
 
 int main(int argc, char *argv[])
 {
@@ -46,7 +47,7 @@ int test_Sweeper2D_basic(int argc, char *argv[])
   // Input
   Sweeper_T::SP_input input;
   input = new InputDB();
-  input->put<string>("equation", "dd");
+  input->put<std::string>("equation", "dd");
   input->put<int>("number_groups", 2);
 
   // State

@@ -52,7 +52,7 @@ inline void Sweeper<D>::setup()
 {
 
   // Set up face/octant map.
-  d_face_index.resize(8, vec2_int(3, vec_int(2, 0)));
+  d_face_index.resize(8, vec2_size_t(3, vec_size_t(2, 0)));
 
   int inc[8][3] =
   {{0, 2, 4}, {1, 2, 4}, {1, 3, 4}, {0, 3, 4},
@@ -77,7 +77,7 @@ template<>
 inline void Sweeper<_2D>::setup()
 {
   // Set up face/octant map.
-  d_face_index.resize(4, vec2_int(2, vec_int(2, 0)));
+  d_face_index.resize(4, vec2_size_t(2, vec_size_t(2, 0)));
   // Example:  octant 1 is incident on faces 0 and 2
   //           and leaves faces 1 and 3.
   int inc[4][2] = {{0, 2}, {1, 2}, {1, 3}, {0, 3}};
@@ -97,7 +97,7 @@ template <>
 inline void Sweeper<_1D>::setup()
 {
   // Set up face/octant map.
-  d_face_index.resize(2, vec2_int(1, vec_int(2, 0)));
+  d_face_index.resize(2, vec2_size_t(1, vec_size_t(2, 0)));
   // octant / surface type / inout
   d_face_index[0][Mesh::VERT][Boundary_T::IN]  = Mesh::WEST;
   d_face_index[1][Mesh::VERT][Boundary_T::IN]  = Mesh::EAST;

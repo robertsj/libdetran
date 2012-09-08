@@ -37,7 +37,7 @@ public:
   typedef typename Base::SP_state                   SP_state;
   typedef typename Base::SP_input                   SP_input;
   typedef typename Base::SP_material                SP_material;
-  typedef typename Base::Mesh                       Mesh
+  typedef typename Base::Mesh                       Mesh;
   typedef typename Base::SP_mesh                    SP_mesh;
   typedef typename Base::SP_quadrature              SP_quadrature;
   typedef typename Base::SP_sweepsource             SP_sweepsource;

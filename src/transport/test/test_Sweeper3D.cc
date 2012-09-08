@@ -12,22 +12,24 @@
 #define TEST_LIST                     \
         FUNC(test_Sweeper3D_basic)
 
-// Detran headers
-#include "TestDriver.hh"
+#include "utilities/TestDriver.hh"
 #include "Sweeper3D.hh"
-#include "ConstantSource.hh"
-#include "LevelSymmetric.hh"
-#include "Mesh3D.hh"
-//#include "SiloOutput.hh"
+#include "angle/LevelSymmetric.hh"
+#include "external_source/ConstantSource.hh"
+#include "geometry/Mesh3D.hh"
 
 // Setup
 #include "geometry/test/mesh_fixture.hh"
 #include "material/test/material_fixture.hh"
 
 using namespace detran;
-//using namespace detran_ioutils;
+using namespace detran_angle;
+using namespace detran_external_source;
+using namespace detran_geometry;
+using namespace detran_utilities;
 using namespace detran_test;
-using namespace std;
+using std::cout;
+using std::endl;
 
 int main(int argc, char *argv[])
 {
@@ -65,11 +67,11 @@ int test_Sweeper3D_basic(int argc, char *argv[])
     bound(new Sweeper_T::Boundary_T(input, mesh, quad));
 
   // Moment to Discrete
-  MomentToDiscrete<_3D>::SP_MtoD m2d(new MomentToDiscrete<_3D>(0));
+  MomentToDiscrete::SP_MtoD m2d(new MomentToDiscrete(0));
   m2d->build(quad);
 
   // External
-  ConstantSource::SP_source q_e(new ConstantSource(mesh, quad, 1, 1.0));
+  ConstantSource::SP_source q_e(new ConstantSource(1, mesh, 1.0, quad));
 
   // Sweep source
   Sweeper_T::SP_sweepsource

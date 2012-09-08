@@ -66,7 +66,7 @@ public:
   typedef State::SP_state                           SP_state;
   typedef detran_utilities::InputDB::SP_input       SP_input;
   typedef detran_material::Material::SP_material    SP_material;
-  typedef detran_geometry::Mesh                     Mesh
+  typedef detran_geometry::Mesh                     Mesh;
   typedef detran_geometry::Mesh::SP_mesh            SP_mesh;
   typedef detran_angle::Quadrature::SP_quadrature   SP_quadrature;
   typedef BoundaryBase<D>                           Boundary_T;
@@ -78,6 +78,9 @@ public:
   typedef detran_utilities::vec_int                 vec_int;
   typedef detran_utilities::vec2_int                vec2_int;
   typedef detran_utilities::vec3_int                vec3_int;
+  typedef detran_utilities::vec_size_t              vec_size_t;
+  typedef detran_utilities::vec2_size_t             vec2_size_t;
+  typedef detran_utilities::vec3_size_t             vec3_size_t;
   typedef detran_utilities::size_t                  size_t;
 
   //-------------------------------------------------------------------------//
@@ -196,7 +199,7 @@ protected:
   bool d_update_psi;
 
   /// Match incident/outgoing side with octant
-  vec3_int d_face_index;
+  vec3_size_t d_face_index;
 
   /// Adjoint problem?
   bool d_adjoint;

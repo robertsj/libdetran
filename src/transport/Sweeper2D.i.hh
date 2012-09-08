@@ -48,7 +48,7 @@ inline void Sweeper2D<EQ>::sweep(moments_type &phi)
   SweepSource<_2D>::sweep_source_type source(d_mesh->number_cells(), 0.0);
 
   // Sweep over all octants
-  for (int o = 0; o < 4; o++)
+  for (size_t o = 0; o < 4; o++)
   {
 
     // Setup equation for this octant.
@@ -56,7 +56,7 @@ inline void Sweeper2D<EQ>::sweep(moments_type &phi)
 
     // Sweep over all angles.
     #pragma omp for
-    for (int a = 0; a < d_quadrature->number_angles_octant(); a++)
+    for (size_t a = 0; a < d_quadrature->number_angles_octant(); a++)
     {
 
       // Get sweep source for this angle.

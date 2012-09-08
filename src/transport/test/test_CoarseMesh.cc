@@ -3,8 +3,7 @@
  * \file   test_CoarseMesh.cc
  * \author Jeremy Roberts
  * \date   Apr 1, 2012
- * \brief  Test of Equation_DD_2D
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+ * \brief  Test of CoarseMesh
  */
 //---------------------------------------------------------------------------//
 
@@ -12,19 +11,19 @@
 #define TEST_LIST                     \
         FUNC(test_CoarseMesh)
 
-// Detran headers
-#include "TestDriver.hh"
+#include "utilities/TestDriver.hh"
 #include "CoarseMesh.hh"
-#include "Mesh1D.hh"
-#include "Mesh2D.hh"
-#include "Mesh3D.hh"
+#include "geometry/Mesh1D.hh"
+#include "geometry/Mesh2D.hh"
+#include "geometry/Mesh3D.hh"
 
 // Setup
 #include "coarsemesh_fixture.hh"
 
 using namespace detran;
+using namespace detran_geometry;
+using namespace detran_utilities;
 using namespace detran_test;
-using namespace std;
 
 int main(int argc, char *argv[])
 {

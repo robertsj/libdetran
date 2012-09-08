@@ -3,8 +3,7 @@
  * \file   test_CurrentTally.cc
  * \author Jeremy Roberts
  * \date   Apr 1, 2012
- * \brief  Test of Equation_DD_2D
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+ * \brief  Test of CurrentTally
  */
 //---------------------------------------------------------------------------//
 
@@ -14,19 +13,20 @@
         FUNC(test_CurrentTally_2D)    \
         FUNC(test_CurrentTally_3D)
 
-// Detran headers
-#include "TestDriver.hh"
+#include "utilities/TestDriver.hh"
 #include "CurrentTally.hh"
-#include "GaussLegendre.hh"
-#include "LevelSymmetric.hh"
-#include "Definitions.hh"
+#include "angle/GaussLegendre.hh"
+#include "angle/LevelSymmetric.hh"
+#include "utilities/Definitions.hh"
 
 // Setup
 #include "coarsemesh_fixture.hh"
 
 using namespace detran;
+using namespace detran_angle;
+using namespace detran_geometry;
+using namespace detran_utilities;
 using namespace detran_test;
-using namespace std;
 
 int main(int argc, char *argv[])
 {
@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
 
 int test_CurrentTally_1D(int argc, char *argv[])
 {
-  using detran::u_int;
+  using detran_utilities::size_t;
   typedef CurrentTally<_1D> CurrentTally_T;
   /*
    *  The 1D sample problem has a coarse mesh like
@@ -102,26 +102,26 @@ int test_CurrentTally_1D(int argc, char *argv[])
   // Now, fake a sweep.
 
   // Loop through all octants.
-  for (u_int o = 0; o < 2; o++)
+  for (size_t o = 0; o < 2; o++)
   {
 
     // Loop through azimuths in an octant.
-    for (u_int a = 0; a < 2; a++)
+    for (size_t a = 0; a < 2; a++)
     {
 
       // Start with a fixed psi at the boundary.
       psi_out = 100.0 * (double) o + 10.0 * (double) a + 1.0;
 
       // TALLY THE INCIDENT BOUNDARY
-      u_int io = 0;
-      u_int zero = 0;
+      size_t io = 0;
+      size_t zero = 0;
       if (o == 1) io = 14;
       tally->tally(io, zero, zero, zero, o, a, 0, psi_out);
 
       // Loop over cells.
-      for (u_int ii = 0; ii < 15; ii++)
+      for (size_t ii = 0; ii < 15; ii++)
       {
-        u_int i = ii;
+        size_t i = ii;
         if (o == 1) i = 15 - i - 1;
 
         psi_in = psi_out;
@@ -145,7 +145,7 @@ int test_CurrentTally_1D(int argc, char *argv[])
 
 int test_CurrentTally_2D(int argc, char *argv[])
 {
-  using detran::u_int;
+  using detran_utilities::size_t;
   typedef CurrentTally<_2D> CurrentTally_T;
 
   /*
@@ -197,10 +197,10 @@ int test_CurrentTally_2D(int argc, char *argv[])
   // Now, fake a sweep.
 
   // Loop through all octants.
-  for (u_int o = 0; o < 4; o++)
+  for (size_t o = 0; o < 4; o++)
   {
     // Loop through azimuths in an octant.
-    for (u_int a = 0; a < 1; a++)
+    for (size_t a = 0; a < 1; a++)
     {
       // Start with a psi of unity at boundaries.
       psi_out[0] = 1.0;
@@ -209,12 +209,12 @@ int test_CurrentTally_2D(int argc, char *argv[])
       // Tally x-directed face
       {
         // Pick left or right side
-        u_int i = 0;
+        size_t i = 0;
         if (o == 1 or o == 2) i = finemesh->number_cells_x() - 1;
         // Loop over vertical
-        for (u_int jj = 0; jj < finemesh->number_cells_y(); jj++)
+        for (size_t jj = 0; jj < finemesh->number_cells_y(); jj++)
         {
-          u_int j = jj;
+          size_t j = jj;
           if (o > 1) j = finemesh->number_cells_y() - j - 1;
           tally->tally(i, j, 0, 0, o, a, 0, 1.0);
         }
@@ -222,26 +222,26 @@ int test_CurrentTally_2D(int argc, char *argv[])
 
       // Tally y-directed face
       {
-        u_int j = 0;
+        size_t j = 0;
         if (o > 1) j = finemesh->number_cells_y() - 1;
-        for (u_int ii = 0; ii < finemesh->number_cells_x(); ii++)
+        for (size_t ii = 0; ii < finemesh->number_cells_x(); ii++)
         {
-          u_int i = ii;
+          size_t i = ii;
           if (o == 1 or o == 2) i = finemesh->number_cells_x() - i - 1;
           tally->tally(i, j, 0, 0, o, a, 1, 1.0);
         }
       }
 
       // Loop over y.
-      for (u_int jj = 0; jj < finemesh->number_cells_y(); jj++)
+      for (size_t jj = 0; jj < finemesh->number_cells_y(); jj++)
       {
-        u_int j = jj;
+        size_t j = jj;
         if (o > 1) j = finemesh->number_cells_y() - j - 1;
 
         // Loop over x.
-        for (u_int ii = 0; ii < finemesh->number_cells_x(); ii++)
+        for (size_t ii = 0; ii < finemesh->number_cells_x(); ii++)
         {
-          u_int i = ii;
+          size_t i = ii;
           if (o == 1 or o == 2) i = finemesh->number_cells_x() - i - 1;
 
           // TALLY THE OUTGOING CELL FLUX
@@ -289,7 +289,7 @@ int test_CurrentTally_2D(int argc, char *argv[])
 
 int test_CurrentTally_3D(int argc, char *argv[])
 {
-  using detran::u_int;
+  using detran_utilities::size_t;
   typedef CurrentTally<_3D> CurrentTally_T;
 
   /*
@@ -338,10 +338,10 @@ int test_CurrentTally_3D(int argc, char *argv[])
   // Now, fake a sweep.
 
   // Loop through all octants.
-  for (u_int o = 0; o < 8; o++)
+  for (size_t o = 0; o < 8; o++)
   {
     // Loop through azimuths in an octant.
-    for (u_int a = 0; a < 1; a++)
+    for (size_t a = 0; a < 1; a++)
     {
       // Start with a psi of unity at boundaries.
       psi_out[0] = 1.0;
@@ -351,18 +351,18 @@ int test_CurrentTally_3D(int argc, char *argv[])
       // Tally x-directed face
       {
         // Pick left or right side
-        u_int i = 0;
+        size_t i = 0;
         if (o == 1 or o == 2 or o == 5 or o == 6)
           i = finemesh->number_cells_x() - 1;
         // Loop over vertical
-        for (u_int jj = 0; jj < finemesh->number_cells_y(); jj++)
+        for (size_t jj = 0; jj < finemesh->number_cells_y(); jj++)
         {
-          u_int j = jj;
+          size_t j = jj;
           if (o == 2 or o == 3 or o == 6 or o == 7)
             j = finemesh->number_cells_y() - j - 1;
-          for (u_int kk = 0; kk < finemesh->number_cells_z(); kk++)
+          for (size_t kk = 0; kk < finemesh->number_cells_z(); kk++)
           {
-            u_int k = kk;
+            size_t k = kk;
             if (o > 3) k = finemesh->number_cells_z() - k - 1;
             tally->tally(i, j, k, 0, o, a, CurrentTally_T::X_DIRECTED, 1.0);
           }
@@ -372,18 +372,18 @@ int test_CurrentTally_3D(int argc, char *argv[])
       // Tally y-directed face
       {
         // Pick left or right side
-        u_int j = 0;
+        size_t j = 0;
         if (o == 2 or o == 3 or o == 6 or o == 7)
           j = finemesh->number_cells_y() - 1;
         // Loop over vertical
-        for (u_int ii = 0; ii < finemesh->number_cells_x(); ii++)
+        for (size_t ii = 0; ii < finemesh->number_cells_x(); ii++)
         {
-          u_int i = ii;
+          size_t i = ii;
           if (o == 1 or o == 2 or o == 5 or o == 6)
             i = finemesh->number_cells_x() - i - 1;
-          for (u_int kk = 0; kk < finemesh->number_cells_z(); kk++)
+          for (size_t kk = 0; kk < finemesh->number_cells_z(); kk++)
           {
-            u_int k = kk;
+            size_t k = kk;
             if (o > 3) k = finemesh->number_cells_z() - k - 1;
             tally->tally(i, j, k, 0, o, a, CurrentTally_T::Y_DIRECTED, 1.0);
           }
@@ -393,18 +393,18 @@ int test_CurrentTally_3D(int argc, char *argv[])
       // Tally z-directed face
       {
         // Pick left or right side
-        u_int k = 0;
+        size_t k = 0;
         if (o > 3)
           k = finemesh->number_cells_z() - 1;
         // Loop over vertical
-        for (u_int ii = 0; ii < finemesh->number_cells_x(); ii++)
+        for (size_t ii = 0; ii < finemesh->number_cells_x(); ii++)
         {
-          u_int i = ii;
+          size_t i = ii;
           if (o == 1 or o == 2 or o == 5 or o == 6)
             i = finemesh->number_cells_x() - i - 1;
-          for (u_int jj = 0; jj < finemesh->number_cells_y(); jj++)
+          for (size_t jj = 0; jj < finemesh->number_cells_y(); jj++)
           {
-            u_int j = jj;
+            size_t j = jj;
             if (o == 2 or o == 3 or o == 6 or o == 7)
               j = finemesh->number_cells_y() - j - 1;
             tally->tally(i, j, k, 0, o, a, CurrentTally_T::Z_DIRECTED, 1.0);
@@ -413,22 +413,22 @@ int test_CurrentTally_3D(int argc, char *argv[])
       }
 
       // Loop over z.
-      for (u_int kk = 0; kk < finemesh->number_cells_z(); kk++)
+      for (size_t kk = 0; kk < finemesh->number_cells_z(); kk++)
       {
-        u_int k = kk;
+        size_t k = kk;
         if (o > 3) k = finemesh->number_cells_z() - k - 1;
 
         // Loop over y.
-        for (u_int jj = 0; jj < finemesh->number_cells_y(); jj++)
+        for (size_t jj = 0; jj < finemesh->number_cells_y(); jj++)
         {
-          u_int j = jj;
+          size_t j = jj;
           if (o == 2 or o == 3 or o == 6 or o == 7)
             j = finemesh->number_cells_y() - j - 1;
 
           // Loop over x.
-          for (u_int ii = 0; ii < finemesh->number_cells_x(); ii++)
+          for (size_t ii = 0; ii < finemesh->number_cells_x(); ii++)
           {
-            u_int i = ii;
+            size_t i = ii;
             if (o == 1 or o == 2 or o == 5 or o == 6)
               i = finemesh->number_cells_x() - i - 1;
 

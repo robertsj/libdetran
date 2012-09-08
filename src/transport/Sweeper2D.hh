@@ -37,7 +37,7 @@ public:
   typedef typename Base::SP_state                   SP_state;
   typedef typename Base::SP_input                   SP_input;
   typedef typename Base::SP_material                SP_material;
-  typedef typename Base::Mesh                       Mesh
+  typedef typename Base::Mesh                       Mesh;
   typedef typename Base::SP_mesh                    SP_mesh;
   typedef typename Base::SP_quadrature              SP_quadrature;
   typedef typename Base::SP_sweepsource             SP_sweepsource;
@@ -51,7 +51,7 @@ public:
   typedef EQ                                        Equation_T;
   typedef BoundarySN<_2D>                           Boundary_T;
   typedef typename Boundary_T::SP_boundary          SP_boundary;
-  typedef typename BoundaryTraits<_1D>::value_type  boundary_flux_type;
+  typedef typename BoundaryTraits<_2D>::value_type  boundary_flux_type;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -91,7 +91,7 @@ public:
          SP_quadrature  quadrature,
          SP_state       state,
          SP_boundary    boundary,
-         SP_sweepsource sweepsource))
+         SP_sweepsource sweepsource)
   {
     SP_sweeper p(new Sweeper2D(input, mesh, material, quadrature,
                                state, boundary, sweepsource));

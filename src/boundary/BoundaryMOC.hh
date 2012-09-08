@@ -39,23 +39,24 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef BoundaryBase<D>                     Base;
-  typedef typename Base::SP_boundary          SP_boundary;
-  typedef typename Base::SP_input             SP_input;
-  typedef detran_geometry::Mesh               Mesh;
-  typedef detran_geometry::MeshMOC            MeshMOC;
-  typedef detran_utilities::SP<MeshMOC>       SP_mesh;
-  typedef detran_angle::QuadratureMOC         QuadratureMOC;
-  typedef detran_utilities::SP<QuadratureMOC> SP_quadrature;
-  typedef BoundaryConditionMOC<D>             BC_T;
-  typedef typename BC_T::SP_bc                SP_bc;
-  typedef detran_utilities::size_t            size_t;
-  typedef detran_utilities::vec_int           vec_int;
-  typedef detran_utilities::vec2_int          vec2_int;
-  typedef detran_utilities::vec3_int          vec3_int;
-  typedef detran_utilities::vec2_dbl          vec2_dbl;
-  typedef detran_utilities::vec3_dbl          vec3_dbl;
-  typedef std::vector<vec3_dbl>               boundary_flux_type;
+  typedef BoundaryBase<D>                       Base;
+  typedef typename Base::SP_boundary            SP_base;
+  typedef detran_utilities::SP<BoundaryMOC<D> > SP_boundary;
+  typedef typename Base::SP_input               SP_input;
+  typedef detran_geometry::Mesh                 Mesh;
+  typedef detran_geometry::MeshMOC              MeshMOC;
+  typedef detran_utilities::SP<MeshMOC>         SP_mesh;
+  typedef detran_angle::QuadratureMOC           QuadratureMOC;
+  typedef detran_utilities::SP<QuadratureMOC>   SP_quadrature;
+  typedef BoundaryConditionMOC<D>               BC_T;
+  typedef typename BC_T::SP_bc                  SP_bc;
+  typedef detran_utilities::size_t              size_t;
+  typedef detran_utilities::vec_int             vec_int;
+  typedef detran_utilities::vec2_int            vec2_int;
+  typedef detran_utilities::vec3_int            vec3_int;
+  typedef detran_utilities::vec2_dbl            vec2_dbl;
+  typedef detran_utilities::vec3_dbl            vec3_dbl;
+  typedef std::vector<vec3_dbl>                 boundary_flux_type;
 
   using Base::IN;
   using Base::OUT;
