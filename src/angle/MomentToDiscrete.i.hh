@@ -4,39 +4,24 @@
  * \author Jeremy Roberts
  * \date   Sep 6, 2011
  * \brief  MomentToDiscrete inline member definitions.
- * \note   Copyright (C) 2011 Jeremy Roberts.
  */
 //---------------------------------------------------------------------------//
 
 #ifndef MOMENT_TO_DISCRETE_I_HH_
 #define MOMENT_TO_DISCRETE_I_HH_
 
-// Detran
 #include "SphericalHarmonics.hh"
-
-// Utilities
-#include "Constants.hh"
-#include "DBC.hh"
-#include "SoftEquivalence.hh"
-
-// System
+#include "utilities/Constants.hh"
+#include "utilities/DBC.hh"
+#include "utilities/SoftEquivalence.hh"
 #include <cmath>
 #include <iostream>
 
 namespace detran_angle
 {
 
-// Constructor
-MomentToDiscrete::MomentToDiscrete(const size_t legendre_order)
-  : d_legendre_order(legendre_order)
-  , d_number_moments(1) // \todo save for later use
-{
-  Require(d_legendre_order >= 0);
-  Require(d_number_moments > 0);
-}
-
 // Build the operator.
-void MomentToDiscrete::build(SP_quadrature q)
+inline void MomentToDiscrete::build(SP_quadrature q)
 {
   Require(q);
   Require(q->dimension() >= 1 and q->dimension() <= 3);

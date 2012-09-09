@@ -58,29 +58,18 @@
 // Material
 #include "Material.hh"
   
+// External source
+#include "ExternalSource.hh"
+#include "ConstantSource.hh"
+#include "DiscreteSource.hh"
+#include "IsotropicSource.hh"
+  
 //---------------------------------------------------------------------------//
 // LEVEL 2 
 //---------------------------------------------------------------------------//  
   
-// Transport
-//#include "Acceleration.hh"
-#include "BoundaryBase.hh"
-#include "Boundary.hh"
-#include "BoundaryMOC.hh"
-#include "FissionSource.hh"
-#include "ExternalSource.hh"
-#include "ConstantSource.hh"
-#include "DiscreteSource.hh"
-#include "State.hh"
-#include "SweepSource.hh"
-#include "Traits.hh"
-//#include "WithinGroupAcceleration.hh"
-#include "Sweeper.hh"
-#include "Sweeper1D.hh"
-#include "Sweeper2D.hh"
-#include "Sweeper3D.hh"
-#include "Sweeper2DMOC.hh"
-//
+// Discretization
+#include "DimensionTraits.hh"
 #include "Equation_DD_1D.hh"
 #include "Equation_DD_2D.hh"
 #include "Equation_DD_3D.hh"
@@ -88,8 +77,20 @@
 #include "Equation_SD_1D.hh"
 #include "Equation_SD_2D.hh"
 #include "Equation_SC_MOC.hh"
-//
-#include "ReactionRates.hh"
+  
+// Boundary
+#include "BoundarySN.hh"
+#include "BoundaryMOC.hh"
+  
+// Transport
+#include "FissionSource.hh"
+#include "State.hh"
+#include "SweepSource.hh"
+#include "Sweeper.hh"
+#include "Sweeper1D.hh"
+#include "Sweeper2D.hh"
+#include "Sweeper3D.hh"
+#include "Sweeper2DMOC.hh"
 
 //---------------------------------------------------------------------------//
 // LEVEL 3 

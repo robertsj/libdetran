@@ -4,25 +4,19 @@
  * \author robertsj
  * \date   May 24, 2012
  * \brief  ReactionRates class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 
 #ifndef REACTIONRATES_HH_
 #define REACTIONRATES_HH_
 
-// Detran
-#include "FissionSource.hh"
-#include "Material.hh"
-#include "Mesh.hh"
-#include "State.hh"
-
-// Utilities
-#include "DBC.hh"
-#include "Definitions.hh"
-#include "SP.hh"
-
-// System
+#include "geometry/Mesh.hh"
+#include "material/Material.hh"
+#include "transport/FissionSource.hh"
+#include "transport/State.hh"
+#include "utilities/DBC.hh"
+#include "utilities/Definitions.hh"
+#include "utilities/SP.hh"
 #include <string>
 
 namespace detran_postprocess
@@ -38,21 +32,25 @@ namespace detran_postprocess
  * assemblies, and so on.
  *
  */
-class ReactionRates : public detran::Object
+class ReactionRates
 {
 
 public:
 
-  /// \name Useful Typedefs
-  /// \{
-  typedef detran::SP<ReactionRates>         SP_reactionrates;
-  typedef detran::Material::SP_material     SP_material;
-  typedef detran::Mesh::SP_mesh             SP_mesh;
-  typedef detran::State::SP_state           SP_state;
-  typedef detran::vec_dbl                   vec_dbl;
-  typedef detran::vec_int                   vec_int;
-  /// \}
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
 
+  typedef detran_utilities::SP<ReactionRates>       SP_reactionrates;
+  typedef detran_material::Material::SP_material    SP_material;
+  typedef detran_geometry::Mesh::SP_mesh            SP_mesh;
+  typedef detran::State::SP_state                   SP_state;
+  typedef detran_utilities::vec_dbl                 vec_dbl;
+  typedef detran_utilities::vec_int                 vec_int;
+
+  //-------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //-------------------------------------------------------------------------//
 
   /*!
    *  \brief Constructor.
@@ -67,13 +65,17 @@ public:
   virtual ~ReactionRates(){}
 
   /// SP Constructor
-  static detran::SP<ReactionRates>
+  static SP_reactionrates
   Create(SP_material material, SP_mesh mesh, SP_state state)
   {
     SP_reactionrates p;
     p = new ReactionRates(material, mesh, state);
     return p;
   }
+
+  //-------------------------------------------------------------------------//
+  // PUBLIC FUNCTIONS
+  //-------------------------------------------------------------------------//
 
   /*!
    *  \brief Relative power of an edit region.
@@ -92,29 +94,19 @@ public:
    */
   vec_dbl region_power(std::string key, double scale = 1.0);
 
-  /// Verify state correctness.
-  bool is_valid() const
-  {
-    return true;
-  }
-
 private:
 
-  /// \name Data
-  /// \{
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   SP_material b_material;
   SP_mesh     b_mesh;
   SP_state    b_state;
 
-  /// \}
-
-
-  /// \name Implementation
-  /// \{
-
-
-  /// \}
+  //-------------------------------------------------------------------------//
+  // IMPLEMENTATION
+  //-------------------------------------------------------------------------//
 
 };
 

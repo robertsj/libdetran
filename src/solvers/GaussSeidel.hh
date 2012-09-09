@@ -33,18 +33,26 @@ class GaussSeidel: public MultigroupSolver<D>
 
 public:
 
-  typedef SP<GaussSeidel<D> >                   SP_solver;
-  typedef MultigroupSolver<D>                   Base;
-  typedef typename Base::SP_solver              SP_base;
-  typedef typename InnerIteration<D>::SP_inner  SP_inner;
-  typedef InputDB::SP_input                     SP_input;
-  typedef State::SP_state                       SP_state;
-  typedef Mesh::SP_mesh                         SP_mesh;
-  typedef Material::SP_material                 SP_material;
-  typedef Quadrature::SP_quadrature             SP_quadrature;
-  typedef typename BoundaryBase<D>::SP_boundary SP_boundary;
-  typedef ExternalSource::SP_source             SP_externalsource;
-  typedef FissionSource::SP_source              SP_fissionsource;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
+
+  typedef detran_utilities::SP<GaussSeidel<D> >     SP_solver;
+  typedef MultigroupSolver<D>                       Base;
+  typedef typename Base::SP_solver                  SP_base;
+  typedef typename Base::SP_inner                   SP_inner;
+  typedef typename Base::SP_input                   SP_input;
+  typedef typename Base::SP_state                   SP_state;
+  typedef typename Base::SP_mesh                    SP_mesh;
+  typedef typename Base::SP_material                SP_material;
+  typedef typename Base::SP_quadrature              SP_quadrature;
+  typedef typename Base::SP_boundary                SP_boundary;
+  typedef typename Base::SP_externalsource          SP_externalsource;
+  typedef typename Base::SP_fissionsource           SP_fissionsource;
+
+  //-------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //-------------------------------------------------------------------------//
 
   /*!
    *  \brief Constructor
@@ -67,18 +75,16 @@ public:
               SP_externalsource  q_e,
               SP_fissionsource   q_f);
 
-  /*!
-   *  \brief SP Constructor.
-   */
-  static SP<GaussSeidel<D> >
-  Create(SP<detran::InputDB>          input,
-         SP<detran::State>            state,
-         SP<detran::Mesh>             mesh,
-         SP<detran::Material>         material,
-         SP<detran::Quadrature>       quadrature,
-         SP<detran::BoundaryBase<D> > boundary,
-         SP<detran::ExternalSource>   q_e,
-         SP<detran::FissionSource>    q_f)
+  /// SP constructor
+  static SP_solver
+  Create(SP_input             input,
+         SP_state             state,
+         SP_mesh              mesh,
+         SP_material          material,
+         SP_quadrature        quadrature,
+         SP_boundary          boundary,
+         SP_externalsource    q_e,
+         SP_fissionsource     q_f)
   {
     SP_solver p;
     p = new GaussSeidel(input, state, mesh, material,
@@ -86,15 +92,18 @@ public:
     return p;
   }
 
+  //-------------------------------------------------------------------------//
+  // ABSTRACT INTERFACE -- ALL MULTIGROUP SOLVERS MUST IMPLEMENT
+  //-------------------------------------------------------------------------//
+
   /// Solve the multigroup equations.
   void solve();
 
-  /// Unimplemented DBC function.
-  bool is_valid() const
-  {return true;}
-
-
 private:
+
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   // Expose base members.
   using Base::d_input;
@@ -113,13 +122,8 @@ private:
   using Base::d_print_interval;
   using Base::d_inner_solver;
 
-  /// \name Private Data
-  /// \{
-
   /// Determines which norm to use (default is Linf)
   std::string d_norm_type;
-
-  /// \}
 
 };
 

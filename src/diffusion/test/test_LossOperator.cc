@@ -12,20 +12,21 @@
 #define TEST_LIST                        \
         FUNC(test_LossOperator)
 
-// Detran headers
-#include "TestDriver.hh"
-#include "LossOperator.hh"
-#include "Mesh1D.hh"
-#include "Mesh2D.hh"
-#include "Mesh3D.hh"
-
+#include "utilities/TestDriver.hh"
+#include "diffusion/LossOperator.hh"
+#include "geometry/Mesh1D.hh"
+#include "geometry/Mesh2D.hh"
+#include "geometry/Mesh3D.hh"
 #include <iostream>
 
 // Setup
 //#include "material_fixture.hh"
-using namespace detran;
-using namespace detran_diffusion;
+
 using namespace detran_test;
+using namespace detran_diffusion;
+using namespace detran_geometry;
+using namespace detran_material;
+using namespace detran_utilities;
 using namespace std;
 
 int main(int argc, char *argv[])
@@ -65,7 +66,7 @@ int test_LossOperator_actual()
   inp->put<string>("bc_right", "reflect");
 
   // Create material.
-  LossOperator::SP_material mat(new Material(2, 1, false));
+  LossOperator::SP_material mat(new Material(1, 2, false));
   mat->set_sigma_t(0, 0, 0.1890);
   mat->set_sigma_t(0, 1, 1.4633);
   mat->set_sigma_s(0, 0, 0, 0.1507);

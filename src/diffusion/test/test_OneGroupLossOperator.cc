@@ -12,20 +12,21 @@
 #define TEST_LIST                        \
         FUNC(test_OneGroupLossOperator)
 
-// Detran headers
-#include "TestDriver.hh"
-#include "OneGroupLossOperator.hh"
-#include "Mesh1D.hh"
-#include "Mesh2D.hh"
-#include "Mesh3D.hh"
-
+#include "utilities/TestDriver.hh"
+#include "diffusion/OneGroupLossOperator.hh"
+#include "geometry/Mesh1D.hh"
+#include "geometry/Mesh2D.hh"
+#include "geometry/Mesh3D.hh"
 #include <iostream>
 
 // Setup
 //#include "material_fixture.hh"
-using namespace detran;
-using namespace detran_diffusion;
+
 using namespace detran_test;
+using namespace detran_diffusion;
+using namespace detran_geometry;
+using namespace detran_material;
+using namespace detran_utilities;
 using namespace std;
 
 int main(int argc, char *argv[])

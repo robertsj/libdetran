@@ -50,13 +50,14 @@ public:
                  SP_quadrature quadrature = SP_quadrature(0));
 
   /// SP constructor
-  static SP_source
+  static SP_externalsource
   Create(size_t number_groups,
          SP_mesh mesh,
          double source,
          SP_quadrature quadrature)
   {
-    SP_source p(new ConstantSource(number_groups, mesh, source, quadrature));
+    SP_externalsource
+      p(new ConstantSource(number_groups, mesh, source, quadrature));
     return p;
   }
 

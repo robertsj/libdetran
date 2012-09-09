@@ -21,11 +21,10 @@ namespace detran
 {
 
 template <class D>
-inline void InnerGMRES<D>::solve(int g)
+inline void InnerGMRES<D>::solve(const size_t g)
 {
   using std::cout;
   using std::endl;
-
 
   PetscErrorCode ierr;
 
@@ -93,8 +92,10 @@ inline void InnerGMRES<D>::solve(int g)
   }
 
   if (norm_residal > d_tolerance)
-    warning(SOLVER_CONVERGENCE, "    InnerGMRES did not converge.");
-
+  {
+    detran_utilities::warning(detran_utilities::SOLVER_CONVERGENCE,
+      "    InnerGMRES did not converge.");
+  }
   // Replace the storage for B and X.
   //ierr = VecResetArray(d_B);
   //Insist(!ierr, "Error resetting array.");
@@ -106,6 +107,7 @@ inline void InnerGMRES<D>::solve(int g)
 template <class D>
 inline void InnerGMRES<D>::build_rhs(State::moments_type &B)
 {
+  using detran_utilities::norm_residual;
 
   // Clear the group boundary.  This is because the right hand side should
   // be based only on fixed boundaries.

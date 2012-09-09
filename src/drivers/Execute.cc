@@ -4,30 +4,18 @@
  * \author robertsj
  * \date   Apr 11, 2012
  * \brief  Execute class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 
 #include "Execute.hh"
-
-// Quadratures.
-#include "QuadrupleRange.hh"
-#include "GaussLegendre.hh"
-#include "QuadratureFactory.hh"
-
-// MOC
-#include "Tracker.hh"
-
-// Sources
-#include "ConstantSource.hh"
-#include "IsotropicSource.hh"
-
-// Solvers
-#include "PowerIteration.hh"
-#include "GaussSeidel.hh"
-
-// Utilities
-#include "Definitions.hh"
+#include "angle/QuadratureFactory.hh"
+#include "external_source/ConstantSource.hh"
+#include "external_source/DiscreteSource.hh"
+#include "external_source/IsotropicSource.hh"
+#include "geometry/Tracker.hh"
+#include "solvers/PowerIteration.hh"
+#include "solvers/GaussSeidel.hh"
+#include "utilities/Definitions.hh"
 
 namespace detran
 {
@@ -60,6 +48,8 @@ Execute::Execute(StupidParser &parser)
 
 void Execute::setup()
 {
+  using detran_utilities::vec_int;
+  using detran_utilities::vec_dbl;
   using std::string;
 
   // Get the dimension of the problem.
@@ -84,7 +74,7 @@ void Execute::setup()
   // Quadrature
   //--------------------------------------------------------------------------//
 
-  QuadratureFactory quad_factory;
+  detran_angle::QuadratureFactory quad_factory;
   quad_factory.build(d_quadrature, d_input, d_dimension);
   Assert(d_quadrature);
 
@@ -94,7 +84,7 @@ void Execute::setup()
   if (d_moc)
   {
     // Track the mesh
-    Tracker tracker(d_mesh, d_quadrature);
+    detran_geometry::Tracker tracker(d_mesh, d_quadrature);
 
     // Normalize segments to conserve volume.
     tracker.normalize();
@@ -117,7 +107,8 @@ void Execute::setup()
       if (d_input->check("source_type"))
         strength = d_input->get<double>("source_strength");
       d_externalsource =
-          new ConstantSource(d_mesh, d_quadrature, number_groups, strength);
+          new detran_external_source::
+            ConstantSource(number_groups, d_mesh, strength, d_quadrature);
     }
     else if (source_type == "isotropic")
     {
@@ -125,7 +116,8 @@ void Execute::setup()
              "Isotropic source requested, but no source spectra provided!");
       vec_dbl spectrav = d_input->get<vec_dbl>("source_spectra");
       int number_spectra = spectrav.size() / number_groups;
-      IsotropicSource::spectra_type spectra(number_spectra, vec_dbl(number_groups));
+      detran_external_source::IsotropicSource::spectra_type
+        spectra(number_spectra, vec_dbl(number_groups));
       int count = 0;
       for (int n = 0; n < number_spectra; n++)
         for (int g = 0; g < number_groups; g++)
@@ -133,9 +125,10 @@ void Execute::setup()
       Insist(d_input->check("source_spectra_map"),
              "Isotropic source requested, but no source map provided!");
       vec_int spectra_map =  d_input->get<vec_int>("source_spectra_map");
-      d_externalsource = new IsotropicSource(d_mesh, d_quadrature,
-                                             number_groups, spectra,
-                                             spectra_map);
+      d_externalsource =
+        new detran_external_source::
+          IsotropicSource(number_groups, d_mesh, spectra,
+                          spectra_map, d_quadrature);
     }
     else
     {

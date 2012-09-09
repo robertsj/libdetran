@@ -4,20 +4,16 @@
  * \author robertsj
  * \date   Apr 9, 2012
  * \brief  KrylovMG class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts.
  */
 //---------------------------------------------------------------------------//
 
 #ifndef KRYLOVMG_HH_
 #define KRYLOVMG_HH_
 
-// Detran
 #include "InnerIteration.hh"
 #include "MultigroupSolver.hh"
 #include "Sweeper.hh"
 #include "PreconditionerMG.hh"
-
-// System
 #include "petsc.h"
 
 namespace detran
@@ -97,23 +93,30 @@ class KrylovMG: public MultigroupSolver<D>
 
 public:
 
-  typedef SP<KrylovMG<D> >                      SP_solver;
-  typedef MultigroupSolver<D>                   Base;
-  typedef typename Base::SP_solver              SP_base;
-  typedef typename InnerIteration<D>::SP_inner  SP_inner;
-  typedef InputDB::SP_input                     SP_input;
-  typedef State::SP_state                       SP_state;
-  typedef Mesh::SP_mesh                         SP_mesh;
-  typedef Material::SP_material                 SP_material;
-  typedef Quadrature::SP_quadrature             SP_quadrature;
-  typedef typename BoundaryBase<D>::SP_boundary SP_boundary;
-  typedef ExternalSource::SP_source             SP_externalsource;
-  typedef FissionSource::SP_source              SP_fissionsource;
-  typedef typename Sweeper<D>::SP_sweeper       SP_sweeper;
-  typedef typename
-        SweepSource<D>::SP_sweepsource          SP_sweepsource;
-  // Preconditioner
-  typedef PreconditionerMG::SP_pc               SP_pc;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
+
+  typedef detran_utilities::SP<KrylovMG<D> >        SP_solver;
+  typedef MultigroupSolver<D>                       Base;
+  typedef typename Base::SP_solver                  SP_base;
+  typedef typename Base::SP_inner                   SP_inner;
+  typedef typename Base::SP_input                   SP_input;
+  typedef typename Base::SP_state                   SP_state;
+  typedef typename Base::SP_mesh                    SP_mesh;
+  typedef typename Base::SP_material                SP_material;
+  typedef typename Base::SP_quadrature              SP_quadrature;
+  typedef typename Base::SP_boundary                SP_boundary;
+  typedef typename Base::SP_externalsource          SP_externalsource;
+  typedef typename Base::SP_fissionsource           SP_fissionsource;
+  typedef typename Sweeper<D>::SP_sweeper           SP_sweeper;
+  typedef typename SweepSource<D>::SP_sweepsource   SP_sweepsource;
+  typedef PreconditionerMG::SP_pc                   SP_pc;
+  typedef detran_utilities::vec_dbl                 vec_dbl;
+
+  //-------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //-------------------------------------------------------------------------//
 
   /*!
    *  \brief Constructor
@@ -148,32 +151,33 @@ public:
   /*!
    *  \brief SP Constructor.
    */
-  static SP<KrylovMG<D> >
-  Create(SP<detran::InputDB>          input,
-         SP<detran::State>            state,
-         SP<detran::Mesh>             mesh,
-         SP<detran::Material>         material,
-         SP<detran::Quadrature>       quadrature,
-         SP<detran::BoundaryBase<D> > boundary,
-         SP<detran::ExternalSource>   q_e,
-         SP<detran::FissionSource>    q_f)
+  static SP_solver
+  Create(SP_input           input,
+         SP_state           state,
+         SP_mesh            mesh,
+         SP_material        material,
+         SP_quadrature      quadrature,
+         SP_boundary        boundary,
+         SP_externalsource  q_e,
+         SP_fissionsource   q_f)
   {
     SP_solver p(new KrylovMG(input, state, mesh, material,
                              quadrature, boundary, q_e, q_f));
     return p;
   }
 
+  //-------------------------------------------------------------------------//
+  // ABSTRACT INTERFACE -- ALL MULTIGROUP SOLVERS MUST IMPLEMENT
+  //-------------------------------------------------------------------------//
+
   /// Solve the multigroup equations.
   void solve();
 
-  /// Unimplemented DBC function.
-  bool is_valid() const
-  {
-    return true;
-  }
-
-
 private:
+
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   // Expose base members.
   using Base::d_input;
@@ -191,9 +195,6 @@ private:
   using Base::d_print_out;
   using Base::d_print_interval;
   using Base::d_inner_solver;
-
-  /// \name Private Data
-  /// \{
 
   /// Linear solver
   KSP d_solver;
@@ -256,10 +257,9 @@ private:
   /// Preconditioner flag
   bool d_use_pc;
 
-  /// \}
-
-  /// \name Implementation
-  /// \{
+  //-------------------------------------------------------------------------//
+  // IMPLEMENTATION
+  //-------------------------------------------------------------------------//
 
   /// Set the templated operator function.
   PetscErrorCode set_operation();
@@ -280,8 +280,6 @@ private:
    */
 public:
   PetscErrorCode apply_MGTO(Mat A, Vec x, Vec y);
-
-  /// \}
 
 };
 

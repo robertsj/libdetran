@@ -20,10 +20,11 @@ namespace detran
 {
 
 template <class D>
-void SourceIteration<D>::solve(int g)
+void SourceIteration<D>::solve(const size_t g)
 {
   using std::cout;
   using std::endl;
+  using detran_utilities::norm_residual;
 
   if (d_print_out > 0) std::cout << "    Starting SI." << std::endl;
 
@@ -79,7 +80,10 @@ void SourceIteration<D>::solve(int g)
   }
 
   if (error > d_tolerance)
-    warning(SOLVER_CONVERGENCE, "    SourceIteration did not converge.");
+  {
+    detran_utilities::warning(detran_utilities::SOLVER_CONVERGENCE,
+      "    SourceIteration did not converge.");
+  }
 
   // Update the state with the new flux.
   d_state->phi(g) = phi;

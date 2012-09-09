@@ -4,35 +4,27 @@
  * \author robertsj
  * \date   Jun 18, 2012
  * \brief  Eigensolver class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts.
  */
 //---------------------------------------------------------------------------//
 
 #ifndef EIGENSOLVER_HH_
 #define EIGENSOLVER_HH_
 
-// Detran
-#include "ExternalSource.hh"
-#include "FissionSource.hh"
-#include "GaussSeidel.hh"
-#include "MultigroupSolver.hh"
-#include "Material.hh"
-#include "Mesh.hh"
-#include "InnerIteration.hh"
 #include "detran_config.h"
+#include "GaussSeidel.hh"
+#include "InnerIteration.hh"
 #ifdef DETRAN_ENABLE_PETSC
 #include "KrylovMG.hh"
-#endif
-
-// Utilities
-#include "DBC.hh"
-#include "InputDB.hh"
-#include "SP.hh"
-
-// System
-#ifdef DETRAN_ENABLE_PETSC
 #include "petsc.h"
 #endif
+#include "MultigroupSolver.hh"
+#include "external_source/ExternalSource.hh"
+#include "geometry/Mesh.hh"
+#include "material/Material.hh"
+#include "transport/FissionSource.hh"
+#include "utilities/DBC.hh"
+#include "utilities/InputDB.hh"
+#include "utilities/SP.hh"
 
 namespace detran
 {
@@ -149,24 +141,30 @@ namespace detran
 //---------------------------------------------------------------------------//
 
 template <class D>
-class Eigensolver: public Object
+class Eigensolver
 {
 
 public:
 
-  typedef SP<Eigensolver<D> >                   SP_solver;
-  typedef typename
-      MultigroupSolver<D>::SP_solver            SP_mg_solver;
-  // basic objects
-  typedef InputDB::SP_input                     SP_input;
-  typedef State::SP_state                       SP_state;
-  typedef Mesh::SP_mesh                         SP_mesh;
-  typedef Material::SP_material                 SP_material;
-  typedef Quadrature::SP_quadrature             SP_quadrature;
-  typedef typename BoundaryBase<D>::SP_boundary SP_boundary;
-  // source typedefs
-  typedef ExternalSource::SP_source             SP_externalsource;
-  typedef FissionSource::SP_source              SP_fissionsource;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
+
+  typedef detran_utilities::SP<Eigensolver<D> >       SP_solver;
+  typedef typename MultigroupSolver<D>::SP_solver     SP_mg_solver;
+  typedef detran_utilities::InputDB::SP_input         SP_input;
+  typedef State::SP_state                             SP_state;
+  typedef detran_geometry::Mesh::SP_mesh              SP_mesh;
+  typedef detran_material::Material::SP_material      SP_material;
+  typedef detran_angle::Quadrature::SP_quadrature     SP_quadrature;
+  typedef typename BoundaryBase<D>::SP_boundary       SP_boundary;
+  typedef detran_external_source::
+          ExternalSource::SP_externalsource           SP_externalsource;
+  typedef FissionSource::SP_fissionsource             SP_fissionsource;
+
+  //-------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //-------------------------------------------------------------------------//
 
   /*!
    *  \brief Constructor
@@ -191,11 +189,16 @@ public:
   /// Virtual destructor
   virtual ~Eigensolver(){}
 
+  //-------------------------------------------------------------------------//
+  // ABSTRACT INTERFACE -- ALL EIGENSOLVERS MUST IMPLEMENT
+  //-------------------------------------------------------------------------//
+
   /// Solve the eigenvalue problem.
   virtual void solve() = 0;
 
-  /// \name Getters
-  /// \{
+  //-------------------------------------------------------------------------//
+  // PUBLIC FUNCTIONS
+  //-------------------------------------------------------------------------//
 
   SP_input get_input() const
   {
@@ -231,18 +234,12 @@ public:
   {
     return b_fissionsource;
   }
-  /// \}
-
-  /// DBC function.
-  virtual bool is_valid() const
-  {
-    return true;
-  }
 
 protected:
 
-  /// \name Protected Data
-  /// \{
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   /// User input.
   SP_input b_input;
@@ -279,8 +276,6 @@ protected:
 
   /// Interval for print out
   int b_print_interval;
-
-  /// \}
 
 };
 

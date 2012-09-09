@@ -4,28 +4,20 @@
  * \author robertsj
  * \date   Apr 11, 2012
  * \brief  StupidParser class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 
 #ifndef STUPIDPARSER_HH_
 #define STUPIDPARSER_HH_
 
-// Detran
-#include "Material.hh"
-#include "Mesh.hh"
-#include "ExternalSource.hh"
-
-// Utilities
-#include "DBC.hh"
-#include "InputDB.hh"
-
-// IO Utilities
+#include "material/Material.hh"
+#include "geometry/Mesh.hh"
+#include "external_source/ExternalSource.hh"
 #ifdef DETRAN_ENABLE_HDF5
-#include "IO_HDF5.hh"
+#include "ioutils/IO_HDF5.hh"
 #endif
-
-// System
+#include "utilities/DBC.hh"
+#include "utilities/InputDB.hh"
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -34,7 +26,7 @@
 namespace detran
 {
 
-//===========================================================================//
+//---------------------------------------------------------------------------//
 /*!
  * \class StupidParser
  * \brief Parse a really simple input file.
@@ -87,19 +79,29 @@ namespace detran
  *
  * \sa InputDB
  */
-// ==============================================================================
+//---------------------------------------------------------------------------//
 
-class StupidParser: public Object
+class StupidParser
 {
 
 public:
 
-  typedef InputDB::SP_input                     SP_input;
-  typedef Mesh::SP_mesh                         SP_mesh;
-  typedef Material::SP_material                 SP_material;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
+
+  typedef detran_utilities::InputDB::SP_input     SP_input;
+  typedef detran_geometry::Mesh::SP_mesh          SP_mesh;
+  typedef detran_material::Material::SP_material  SP_material;
 #ifdef DETRAN_ENABLE_HDF5
-  typedef detran_ioutils::IO_HDF5::SP_io_hdf5   SP_io_hdf5;
+  typedef detran_ioutils::IO_HDF5::SP_io_hdf5     SP_io_hdf5;
 #endif
+  typedef detran_utilities::vec_int               vec_int;
+  typedef detran_utilities::vec_dbl               vec_dbl;
+
+  //-------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //-------------------------------------------------------------------------//
 
   /*!
    *  \brief Constructor
@@ -108,6 +110,10 @@ public:
    *  \param    argv    Arguments
    */
   StupidParser(int argc, char **argv);
+
+  //-------------------------------------------------------------------------//
+  // PUBLIC FUNCTIONS
+  //-------------------------------------------------------------------------//
 
   /// Parse the input.
   SP_input parse_input();
@@ -118,18 +124,17 @@ public:
   /// Parse material.
   SP_material parse_material();
 
-  /// DBC method
-  bool is_valid() const
-  {return true;}
-
 private:
 
-  ///
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
+
   SP_input d_input;
   SP_mesh d_mesh;
   SP_material d_material;
 
-  /// File handle.
+  /// File handle
   std::ifstream d_file;
 
   /// HDF5 file handler.
@@ -140,9 +145,9 @@ private:
   /// HDF5 enabled flag
   bool d_is_hdf5;
 
-
-  /// \name Implemenation
-  /// \{
+  //-------------------------------------------------------------------------//
+  // IMPLEMENTATION
+  //-------------------------------------------------------------------------//
 
   /// Get input from text file
   SP_input parse_input_text();
@@ -169,8 +174,6 @@ private:
         return filename.substr(filename.find_last_of(".") + 1);
       return "";
   }
-
-  /// \}
 
 };
 

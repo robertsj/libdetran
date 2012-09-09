@@ -63,7 +63,7 @@ void GainOperator::construct()
 //  MatSetSizes(d_operator, PETSC_DECIDE, PETSC_DECIDE, d_size, d_size);
 
   // Get the material map.
-  detran::vec_int mat_map = d_mesh->mesh_map("MATERIAL");
+  vec_int mat_map = d_mesh->mesh_map("MATERIAL");
 
   for (int g = 0; g < d_number_groups; g++)
   {

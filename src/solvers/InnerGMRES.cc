@@ -97,7 +97,7 @@ InnerGMRES<D>::InnerGMRES(SP_input          input,
   if (d_input->check("inner_use_pc"))
   {
     // \todo Why do I get a compile error if I use d_input instead?
-    if (input->get<int>("inner_use_pc"))
+    if (input->template get<int>("inner_use_pc"))
     {
       std::cout << "Using preconditioned GMRES." << std::endl;
       d_use_pc = true;

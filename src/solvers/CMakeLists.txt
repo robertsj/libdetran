@@ -16,9 +16,13 @@ SET(SOLVERS_SRC
     InnerGMRES.cc
     GaussSeidel.cc
     KrylovMG.cc
+    #Operator.cc
+    #OperatorMatrix.cc
+    #OperatorShell.cc
     PowerIteration.cc
     PreconditionerWG.cc
     PreconditionerMG.cc
+    #Vector.cc
 )
 
 #-------------------------------------#
@@ -33,7 +37,7 @@ TARGET_LINK_LIBRARIES( solvers
                        diffusion
                        transport
                        angle
-                       materials
+                       material
                        geometry
                        utilities
                        ${PETSC_LIBRARIES}

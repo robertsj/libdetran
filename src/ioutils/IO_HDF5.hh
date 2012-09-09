@@ -10,21 +10,13 @@
 #ifndef IO_HDF5_HH_
 #define IO_HDF5_HH_
 
-// Configuration
 #include "detran_config.h"
-
-// Detran
-#include "Material.hh"
-#include "Mesh.hh"
-
-// Utilities
-#include "DBC.hh"
-#include "InputDB.hh"
-#include "SP.hh"
-
-// System
+#include "material/Material.hh"
+#include "geometry/Mesh.hh"
+#include "utilities/DBC.hh"
+#include "utilities/InputDB.hh"
+#include "utilities/SP.hh"
 #include <string>
-
 #ifdef DETRAN_ENABLE_HDF5
 #include "hdf5.h"
 #include "IO_HDF5_Traits.hh"
@@ -50,23 +42,35 @@ namespace detran_ioutils
  *  entries will go in that group.  Later, it might be useful
  *  to add ones for the mesh and material specification.
  */
-class IO_HDF5: public detran::Object
+class IO_HDF5
 {
 
 public:
 
-  typedef detran::SP<IO_HDF5>             SP_io_hdf5;
-  typedef detran::InputDB::SP_input       SP_input;
-  typedef detran::Material::SP_material   SP_material;
-  typedef detran::Mesh::SP_mesh           SP_mesh;
-  typedef detran::vec_int                 vec_int;
-  typedef detran::vec_dbl                 vec_dbl;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
+
+  typedef detran_utilities::SP<IO_HDF5>             SP_io_hdf5;
+  typedef detran_utilities::InputDB::SP_input       SP_input;
+  typedef detran_material::Material::SP_material    SP_material;
+  typedef detran_geometry::Mesh::SP_mesh            SP_mesh;
+  typedef detran_utilities::vec_int                 vec_int;
+  typedef detran_utilities::vec_dbl                 vec_dbl;
+
+  //-------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //-------------------------------------------------------------------------//
 
   /*!
    *  \brief Constructor
    *  \param filename HDF5 filename
    */
   IO_HDF5(std::string filename);
+
+  //-------------------------------------------------------------------------//
+  // PUBLIC FUNCTIONS
+  //-------------------------------------------------------------------------//
 
   /// Open HDF5 file for writing.  This replaces old content.
   void open();
@@ -101,17 +105,13 @@ public:
   /// Get a mesh from file.
   SP_mesh read_mesh();
 
-  bool is_valid() const
-  {
-    return true;
-  }
-
 private:
 
 #ifdef DETRAN_ENABLE_HDF5
 
-  /// \name Private Data
-  /// \{
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   /// HDF5 file id
   hid_t d_file_id;
@@ -126,10 +126,9 @@ private:
   SP_material d_material;
   SP_mesh d_mesh;
 
-  /// \}
-
-  /// \name Implementation
-  /// \{
+  //-------------------------------------------------------------------------//
+  // IMPLEMENTATION
+  //-------------------------------------------------------------------------//
 
   /*!
    *  \brief Fill a temporary compound type container and write to file
@@ -182,8 +181,6 @@ private:
     if (flag <= 0) return false;
     return true;
   }
-
-  /// \}
 
 #endif
 

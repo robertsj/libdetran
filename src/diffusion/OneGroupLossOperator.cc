@@ -49,44 +49,21 @@ OneGroupLossOperator::OneGroupLossOperator(SP_input    input,
   }
   else
   {
-    // Left and right
-    d_albedo[detran::Mesh::LEFT] = 0.0;
-    if (d_input->check("bc_left"))
-      if (d_input->get<string>("bc_left") == "reflect")
-        d_albedo[detran::Mesh::LEFT] = 1.0;
-    d_albedo[detran::Mesh::RIGHT] = 0.0;
-    if (d_input->check("bc_right"))
-      if (d_input->get<string>("bc_right") == "reflect")
-        d_albedo[detran::Mesh::RIGHT] = 1.0;
-
-    if (d_dimension > 1)
+    std::vector<std::string> boundary_name(6, "");
+    boundary_name[Mesh::WEST]   = "bc_west";
+    boundary_name[Mesh::EAST]   = "bc_east";
+    boundary_name[Mesh::SOUTH]  = "bc_south";
+    boundary_name[Mesh::NORTH]  = "bc_north";
+    boundary_name[Mesh::BOTTOM] = "bc_bottom";
+    boundary_name[Mesh::TOP]    = "bc_top";
+    for (int b = 0; b < 6; b++)
     {
-      // Bottom and top
-      d_albedo[detran::Mesh::BOTTOM] = 0.0;
-      if (d_input->check("bc_bottom"))
-        if (d_input->get<string>("bc_bottom") == "reflect")
-          d_albedo[detran::Mesh::BOTTOM] = 1.0;
-      d_albedo[detran::Mesh::TOP] = 0.0;
-      if (d_input->check("bc_top"))
-        if (d_input->get<string>("bc_top") == "reflect")
-          d_albedo[detran::Mesh::TOP] = 1.0;
+      d_albedo[0] = 0.0;
+      if (d_input->check(boundary_name[b]))
+        if (d_input->get<string>(boundary_name[b]) == "reflect")
+          d_albedo[b] = 1.0;
     }
-
-    if (d_dimension == 3)
-    {
-      // South and north
-      d_albedo[detran::Mesh::SOUTH] = 0.0;
-      if (d_input->check("bc_south"))
-        if (d_input->get<string>("bc_south") == "reflect")
-          d_albedo[detran::Mesh::SOUTH] = 1.0;
-      d_albedo[detran::Mesh::NORTH] = 0.0;
-      if (d_input->check("bc_north"))
-        if (d_input->get<string>("bc_north") == "reflect")
-          d_albedo[detran::Mesh::NORTH] = 1.0;
-    }
-
   }
-
 
   // Construct the matrix.
   construct();
@@ -111,7 +88,7 @@ void OneGroupLossOperator::construct()
   MatSetSizes(d_operator, PETSC_DECIDE, PETSC_DECIDE, d_size, d_size);
 
   // Get the material map.
-  detran::vec_int mat_map = d_mesh->mesh_map("MATERIAL");
+  vec_int mat_map = d_mesh->mesh_map("MATERIAL");
 
   // Loop over all matrix rows, which, because of the ordering,
   // is the same as the cell index.

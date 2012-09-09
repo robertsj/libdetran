@@ -54,39 +54,39 @@ LossOperator::LossOperator(SP_input    input,
     for (int g = 0; g < d_material->number_groups(); g++)
     {
       // Left and right
-      d_albedo[detran::Mesh::LEFT][g] = 0.0;
-      if (d_input->check("bc_left"))
-        if (d_input->get<string>("bc_left") == "reflect")
-          d_albedo[detran::Mesh::LEFT][g] = 1.0;
-      d_albedo[detran::Mesh::RIGHT][g] = 0.0;
-      if (d_input->check("bc_right"))
-        if (d_input->get<string>("bc_right") == "reflect")
-          d_albedo[detran::Mesh::RIGHT][g] = 1.0;
+      d_albedo[Mesh::WEST][g] = 0.0;
+      if (d_input->check("bc_west"))
+        if (d_input->get<string>("bc_west") == "reflect")
+          d_albedo[Mesh::WEST][g] = 1.0;
+      d_albedo[Mesh::EAST][g] = 0.0;
+      if (d_input->check("bc_east"))
+        if (d_input->get<string>("bc_east") == "reflect")
+          d_albedo[Mesh::EAST][g] = 1.0;
 
       if (d_dimension > 1)
       {
         // Bottom and top
-        d_albedo[detran::Mesh::BOTTOM][g] = 0.0;
-        if (d_input->check("bc_bottom"))
-          if (d_input->get<string>("bc_bottom") == "reflect")
-            d_albedo[detran::Mesh::BOTTOM][g] = 1.0;
-        d_albedo[detran::Mesh::TOP][g] = 0.0;
-        if (d_input->check("bc_top"))
-          if (d_input->get<string>("bc_top") == "reflect")
-            d_albedo[detran::Mesh::TOP][g] = 1.0;
+        d_albedo[Mesh::SOUTH][g] = 0.0;
+        if (d_input->check("bc_south"))
+          if (d_input->get<string>("bc_sourth") == "reflect")
+            d_albedo[Mesh::SOUTH][g] = 1.0;
+        d_albedo[Mesh::NORTH][g] = 0.0;
+        if (d_input->check("bc_north"))
+          if (d_input->get<string>("bc_north") == "reflect")
+            d_albedo[Mesh::NORTH][g] = 1.0;
       }
 
       if (d_dimension == 3)
       {
         // South and north
-        d_albedo[detran::Mesh::SOUTH][g] = 0.0;
-        if (d_input->check("bc_south"))
-          if (d_input->get<string>("bc_south") == "reflect")
-            d_albedo[detran::Mesh::SOUTH][g] = 1.0;
-        d_albedo[detran::Mesh::NORTH][g] = 0.0;
-        if (d_input->check("bc_north"))
-          if (d_input->get<string>("bc_north") == "reflect")
-            d_albedo[detran::Mesh::NORTH][g] = 1.0;
+        d_albedo[Mesh::BOTTOM][g] = 0.0;
+        if (d_input->check("bc_bottom"))
+          if (d_input->get<string>("bc_bottom") == "reflect")
+            d_albedo[Mesh::BOTTOM][g] = 1.0;
+        d_albedo[Mesh::TOP][g] = 0.0;
+        if (d_input->check("bc_top"))
+          if (d_input->get<string>("bc_top") == "reflect")
+            d_albedo[Mesh::TOP][g] = 1.0;
       }
     }
   }
@@ -119,7 +119,7 @@ void LossOperator::construct()
 //  MatSetSizes(d_operator, PETSC_DECIDE, PETSC_DECIDE, d_size, d_size);
 
   // Get the material map.
-  detran::vec_int mat_map = d_mesh->mesh_map("MATERIAL");
+  vec_int mat_map = d_mesh->mesh_map("MATERIAL");
 
   for (int g = 0; g < d_number_groups; g++)
   {

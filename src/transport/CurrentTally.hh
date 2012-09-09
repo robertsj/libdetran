@@ -11,8 +11,8 @@
 #define CURRENTTALLY_HH_
 
 #include "CoarseMesh.hh"
-#include "discretization/Equation.hh"
 #include "angle/Quadrature.hh"
+#include "discretization/Equation.hh"
 #include "discretization/DimensionTraits.hh"
 #include "utilities/Definitions.hh"
 #include "utilities/SP.hh"

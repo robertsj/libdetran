@@ -53,6 +53,19 @@ public:
                   vec_int &map,
                   SP_quadrature quadrature = SP_quadrature(0));
 
+  /// SP constructor
+  static SP_externalsource
+  Create(size_t number_groups,
+         SP_mesh mesh,
+         spectra_type &spectra,
+         vec_int &map,
+         SP_quadrature quadrature = SP_quadrature(0))
+  {
+    SP_externalsource
+      p(new IsotropicSource(number_groups, mesh, spectra, map, quadrature));
+    return p;
+  }
+
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL EXTERNAL SOURCES MUST IMPLEMENT THESE
   //-------------------------------------------------------------------------//

@@ -25,7 +25,7 @@ ADD_LIBRARY(diffusion
             ${SRC} 
 )
 TARGET_LINK_LIBRARIES( diffusion
-                       materials
+                       material
                        geometry
                        utilities
                        transport

@@ -53,14 +53,14 @@ public:
                  vec_int        map,
                  SP_quadrature  quadrature);
 
-  static SP_source
+  static SP_externalsource
   Create(size_t      number_groups,
       SP_mesh        mesh,
       vec3_dbl       spectra,
       vec_int        map,
       SP_quadrature  quadrature)
   {
-    SP_source
+    SP_externalsource
       p(new DiscreteSource(number_groups, mesh, spectra, map, quadrature));
     return p;
   }

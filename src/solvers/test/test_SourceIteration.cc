@@ -20,10 +20,14 @@
 #include "angle/test/quadrature_fixture.hh"
 #include "geometry/test/mesh_fixture.hh"
 #include "material/test/material_fixture.hh"
-#include "transport/test/external_source_fixture.hh"
+#include "external_source/test/external_source_fixture.hh"
 
-using namespace detran;
 using namespace detran_test;
+using namespace detran;
+using namespace detran_angle;
+using namespace detran_external_source;
+using namespace detran_geometry;
+using namespace detran_utilities;
 using namespace std;
 
 int main(int argc, char *argv[])
@@ -44,8 +48,8 @@ int test_SourceIteration_2D(int argc, char *argv[])
   SP_quadrature quad    = quadruplerange_fixture();
 
   // Source; uniform, unit, isotropic. (mesh, quad, ng)
-  ConstantSource::SP_source q_e;
-  q_e = new detran::ConstantSource(mesh, quad, 1, 1.0);
+  ConstantSource::SP_externalsource
+    q_e(new ConstantSource(1, mesh, 1.0, quad));
 
   // Empty fission source
   SourceIteration<_2D>::SP_fissionsource q_f;
@@ -64,7 +68,7 @@ int test_SourceIteration_2D(int argc, char *argv[])
 
   // Boundary
   SourceIteration<_2D>::SP_boundary bound;
-  bound = new Boundary<_2D>(input, mesh, quad);
+  bound = new BoundarySN<_2D>(input, mesh, quad);
 
   // SI
   SourceIteration<_2D> solver(input, state, mesh, mat,

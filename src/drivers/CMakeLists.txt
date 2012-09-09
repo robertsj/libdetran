@@ -24,7 +24,7 @@ TARGET_LINK_LIBRARIES( xdetran
                        detran 
                        solvers
                        transport
-                       materials
+                       material
                        angle
                        geometry
                        utilities
@@ -45,7 +45,7 @@ ADD_LIBRARY( detran
 TARGET_LINK_LIBRARIES( detran 
                        solvers
                        transport
-                       materials
+                       material
                        angle
                        geometry
                        utilities

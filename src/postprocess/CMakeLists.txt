@@ -21,7 +21,7 @@ ADD_LIBRARY(postprocess
             ${SRC} 
 )
 TARGET_LINK_LIBRARIES( postprocess
-                       materials
+                       material
                        geometry
                        utilities
                        transport                 

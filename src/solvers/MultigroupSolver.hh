@@ -11,18 +11,15 @@
 #ifndef MULTIGROUPSOLVER_HH_
 #define MULTIGROUPSOLVER_HH_
 
-// Detran
-#include "ExternalSource.hh"
-#include "FissionSource.hh"
 #include "InnerIteration.hh"
-#include "Material.hh"
-#include "Mesh.hh"
-#include "Quadrature.hh"
-
-// Utilities
-#include "DBC.hh"
-#include "InputDB.hh"
-#include "SP.hh"
+#include "angle/Quadrature.hh"
+#include "external_source/ExternalSource.hh"
+#include "geometry/Mesh.hh"
+#include "material/Material.hh"
+#include "transport/FissionSource.hh"
+#include "utilities/DBC.hh"
+#include "utilities/InputDB.hh"
+#include "utilities/SP.hh"
 
 namespace detran
 {
@@ -39,21 +36,30 @@ namespace detran
 //---------------------------------------------------------------------------//
 
 template <class D>
-class MultigroupSolver: public Object
+class MultigroupSolver
 {
 
 public:
 
-  typedef SP<MultigroupSolver<D> >              SP_solver;
-  typedef InputDB::SP_input                     SP_input;
-  typedef State::SP_state                       SP_state;
-  typedef Mesh::SP_mesh                         SP_mesh;
-  typedef Material::SP_material                 SP_material;
-  typedef Quadrature::SP_quadrature             SP_quadrature;
-  typedef typename BoundaryBase<D>::SP_boundary SP_boundary;
-  typedef ExternalSource::SP_source             SP_externalsource;
-  typedef FissionSource::SP_source              SP_fissionsource;
-  typedef typename InnerIteration<D>::SP_inner  SP_inner;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
+
+  typedef detran_utilities::SP<MultigroupSolver<D> >  SP_solver;
+  typedef detran_utilities::InputDB::SP_input         SP_input;
+  typedef State::SP_state                             SP_state;
+  typedef detran_geometry::Mesh::SP_mesh              SP_mesh;
+  typedef detran_material::Material::SP_material      SP_material;
+  typedef detran_angle::Quadrature::SP_quadrature     SP_quadrature;
+  typedef typename BoundaryBase<D>::SP_boundary       SP_boundary;
+  typedef detran_external_source::
+          ExternalSource::SP_externalsource           SP_externalsource;
+  typedef FissionSource::SP_fissionsource             SP_fissionsource;
+  typedef typename InnerIteration<D>::SP_inner        SP_inner;
+
+  //-------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //-------------------------------------------------------------------------//
 
   /*!
    *  \brief Constructor
@@ -79,20 +85,18 @@ public:
   /// Virtual destructor
   virtual ~MultigroupSolver(){};
 
+  //-------------------------------------------------------------------------//
+  // ABSTRACT INTERFACE -- ALL MULTIGROUP SOLVERS MUST IMPLEMENT
+  //-------------------------------------------------------------------------//
+
   /// Solve the multigroup equations.
   virtual void solve() = 0;
 
-  /// Unimplemented DBC function.
-  bool is_valid() const
-  {
-    return true;
-  }
-
-
 protected:
 
-  /// \name Protected Data
-  /// \{
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   /// User input.
   SP_input d_input;
@@ -124,8 +128,6 @@ protected:
   int d_print_interval;
   /// Inner solver
   SP_inner d_inner_solver;
-
-  /// \}
 
 };
 

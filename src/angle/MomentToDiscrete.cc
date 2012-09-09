@@ -4,25 +4,21 @@
  * \author Jeremy Roberts
  * \date   Jul 1, 2011
  * \brief  MomentToDiscrete member definitions.
- * \note   Copyright (C) 2011 Jeremy Roberts.
  */
 //---------------------------------------------------------------------------//
 
-// Detran
 #include "MomentToDiscrete.hh"
-#include "SphericalHarmonics.hh"
 
-// Utilities
-#include "Constants.hh"
-#include "DBC.hh"
-#include "SoftEquivalence.hh"
-
-// System
-#include <cmath>
-
-namespace detran_angles
+namespace detran_angle
 {
 
+// Constructor
+MomentToDiscrete::MomentToDiscrete(const size_t legendre_order)
+  : d_legendre_order(legendre_order)
+  , d_number_moments(1) // \todo save for later use
+{
+  Require(d_number_moments > 0);
+}
 
 
 } // end namespace slabtran

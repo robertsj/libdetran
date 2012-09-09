@@ -8,19 +8,19 @@ message( "++ Adding detran diffusion tests." )
 # Create test executables
 #------------------------------------------------------------------------------#
 if(DETRAN_ENABLE_SLEPC)
-  ADD_EXECUTABLE(test_DiffusionEigensolver        test_DiffusionEigensolver.cc)
-  TARGET_LINK_LIBRARIES(test_DiffusionEigensolver diffusion utilities materials geometry transport)
+  ADD_EXECUTABLE(test_DiffusionEigensolver        	test_DiffusionEigensolver.cc)
+  TARGET_LINK_LIBRARIES(test_DiffusionEigensolver 	diffusion)
 endif()
 
 if(DETRAN_ENABLE_PETSC)
-ADD_EXECUTABLE(test_GainOperator                test_GainOperator.cc)
-TARGET_LINK_LIBRARIES(test_GainOperator         diffusion utilities materials geometry)
+ADD_EXECUTABLE(test_GainOperator                	test_GainOperator.cc)
+TARGET_LINK_LIBRARIES(test_GainOperator         	diffusion)
 
-ADD_EXECUTABLE(test_LossOperator                test_LossOperator.cc)
-TARGET_LINK_LIBRARIES(test_LossOperator         diffusion utilities materials geometry)
+ADD_EXECUTABLE(test_LossOperator                	test_LossOperator.cc)
+TARGET_LINK_LIBRARIES(test_LossOperator         	diffusion)
 
-ADD_EXECUTABLE(test_OneGroupLossOperator        test_OneGroupLossOperator.cc)
-TARGET_LINK_LIBRARIES(test_OneGroupLossOperator diffusion utilities materials geometry)
+ADD_EXECUTABLE(test_OneGroupLossOperator        	test_OneGroupLossOperator.cc)
+TARGET_LINK_LIBRARIES(test_OneGroupLossOperator 	diffusion)
 endif()
 
 #------------------------------------------------------------------------------#

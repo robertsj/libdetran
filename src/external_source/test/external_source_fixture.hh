@@ -19,9 +19,10 @@
 
 namespace detran_test
 {
-  typedef detran::ExternalSource::SP_source SP_source;
+  typedef detran_external_source::
+    ExternalSource::SP_externalsource SP_externalsource;
 
-  static SP_source constant_source_fixture(int dimension)
+  static SP_externalsource constant_source_fixture(int dimension)
   {
 
     SP_mesh mesh;
@@ -40,8 +41,8 @@ namespace detran_test
       mesh = mesh_3d_fixture();
     }
 
-    detran::ConstantSource::SP_source q_e;
-    q_e = new detran::ConstantSource(mesh, quad, 2, 1.0);
+    SP_externalsource
+      q_e(new detran_external_source::ConstantSource(2, mesh, 1.0, quad));
     return q_e;
 
   }

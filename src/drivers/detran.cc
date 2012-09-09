@@ -10,13 +10,10 @@
 
 // Config
 #include "detran_config.h"
-
-// Detran
 #include "StupidParser.hh"
 #include "Execute.hh"
-#include "Timer.hh"
-#include "Traits.hh"
-#include "Profiler.hh"
+#include "utilities/Timer.hh"
+#include "utilities/Profiler.hh"
 
 // System
 #include <iostream>
@@ -48,7 +45,7 @@ int main(int argc, char **argv)
   print_welcome();
 
   // Timer
-  detran::Timer timer;
+  detran_utilities::Timer timer;
 
   // Start timer.
   timer.tic();

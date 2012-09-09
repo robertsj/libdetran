@@ -71,7 +71,7 @@ int test_Sweeper3D_basic(int argc, char *argv[])
   m2d->build(quad);
 
   // External
-  ConstantSource::SP_source q_e(new ConstantSource(1, mesh, 1.0, quad));
+  ConstantSource::SP_externalsource q_e(new ConstantSource(1, mesh, 1.0, quad));
 
   // Sweep source
   Sweeper_T::SP_sweepsource

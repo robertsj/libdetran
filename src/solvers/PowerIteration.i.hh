@@ -4,18 +4,14 @@
  * \author robertsj
  * \date   Apr 10, 2012
  * \brief  PowerIteration inline member definitions.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 
 #ifndef POWERITERATION_I_HH_
 #define POWERITERATION_I_HH_
 
-// Utilities
-#include "MathUtilities.hh"
-#include "Warning.hh"
-
-// System
+#include "utilities/MathUtilities.hh"
+#include "utilities/Warning.hh"
 #include <algorithm>
 #include <cstdio>
 
@@ -25,6 +21,8 @@ namespace detran
 template <class D>
 void PowerIteration<D>::solve()
 {
+  using detran_utilities::norm_residual;
+  using detran_utilities::norm;
 
   std::cout << "Starting PI." << std::endl;
 
@@ -95,8 +93,11 @@ void PowerIteration<D>::solve()
     printf("*********************************************************************\n");
   }
 
-  if (error > b_tolerance) warning(SOLVER_CONVERGENCE,
-                                   "PowerIteration did not converge.");
+  if (error > b_tolerance)
+  {
+    detran_utilities::warning(detran_utilities::SOLVER_CONVERGENCE,
+      "PowerIteration did not converge.");
+  }
   b_state->set_eigenvalue(keff);
   std::cout << "PI done." << std::endl;
 }

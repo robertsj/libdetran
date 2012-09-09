@@ -94,19 +94,20 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<SweepSource>                     SP_sweepsource;
-  typedef State::SP_state                                       SP_state;
-  typedef detran_utilities::InputDB::SP_input                   SP_input;
-  typedef detran_geometry::Mesh::SP_mesh                        SP_mesh;
-  typedef detran_material::Material::SP_material                SP_material;
-  typedef detran_angle::Quadrature::SP_quadrature               SP_quadrature;
-  typedef detran_angle::MomentToDiscrete::SP_MtoD               SP_MtoD;
-  typedef detran_external_source::ExternalSource::SP_source     SP_externalsource;
-  typedef ScatterSource::SP_scattersource                       SP_scattersource;
-  typedef FissionSource::SP_fissionsource                       SP_fissionsource;
-  typedef detran_utilities::vec_dbl                             sweep_source_type;
-  typedef detran_utilities::size_t                              size_t;
-  typedef State::moments_type                                   moments_type;
+  typedef detran_utilities::SP<SweepSource>         SP_sweepsource;
+  typedef State::SP_state                           SP_state;
+  typedef detran_utilities::InputDB::SP_input       SP_input;
+  typedef detran_geometry::Mesh::SP_mesh            SP_mesh;
+  typedef detran_material::Material::SP_material    SP_material;
+  typedef detran_angle::Quadrature::SP_quadrature   SP_quadrature;
+  typedef detran_angle::MomentToDiscrete::SP_MtoD   SP_MtoD;
+  typedef detran_external_source::
+          ExternalSource::SP_externalsource         SP_externalsource;
+  typedef ScatterSource::SP_scattersource           SP_scattersource;
+  typedef FissionSource::SP_fissionsource           SP_fissionsource;
+  typedef detran_utilities::vec_dbl                 sweep_source_type;
+  typedef detran_utilities::size_t                  size_t;
+  typedef State::moments_type                       moments_type;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR

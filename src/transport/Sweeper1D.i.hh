@@ -49,8 +49,8 @@ inline void Sweeper1D<EQ>::sweep(moments_type &phi)
   SweepSource<_1D>::sweep_source_type source(d_mesh->number_cells(), 0.0);
 
   // Temporary edge fluxes
-  Equation_T::face_flux_type psi_in = 0.0;
-  Equation_T::face_flux_type psi_out = 0.0;
+  typename Equation_T::face_flux_type psi_in = 0.0;
+  typename Equation_T::face_flux_type psi_out = 0.0;
 
   // Sweep over all octants
   for (int o = 0; o < 2; o++)

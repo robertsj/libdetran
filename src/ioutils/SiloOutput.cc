@@ -12,14 +12,9 @@
 
 #ifdef DETRAN_ENABLE_SILO
 
-// Postprocess
 #include "SiloOutput.hh"
-
-// Utilities
-#include "DBC.hh"
-#include "Definitions.hh"
-
-// System
+#include "utilities/DBC.hh"
+#include "utilities/Definitions.hh"
 #include <string>
 #include <stdio.h>
 
@@ -75,9 +70,9 @@ bool SiloOutput::initialize(std::string filename)
   d_dims[2] = d_mesh->number_cells_z() + 1;
 
   // Create the coordinate vectors (mesh edges)
-  detran::vec_dbl x(d_mesh->number_cells_x() + 1, 0.0);
-  detran::vec_dbl y(d_mesh->number_cells_y() + 1, 0.0);
-  detran::vec_dbl z(d_mesh->number_cells_z() + 1, 0.0);
+  detran_utilities::vec_dbl x(d_mesh->number_cells_x() + 1, 0.0);
+  detran_utilities::vec_dbl y(d_mesh->number_cells_y() + 1, 0.0);
+  detran_utilities::vec_dbl z(d_mesh->number_cells_z() + 1, 0.0);
   for (int i = 0; i < d_mesh->number_cells_x(); i++)
     x[i + 1] = x[i] + d_mesh->dx(i);
   for (int i = 0; i < d_mesh->number_cells_y(); i++)
@@ -97,6 +92,7 @@ bool SiloOutput::initialize(std::string filename)
   d_dims[1]--;
   d_dims[2]--;
 
+  return true;
 }
 
 void SiloOutput::finalize()
@@ -125,7 +121,7 @@ bool SiloOutput::write_mesh_map(const std::string &key)
     cout << "Mesh map doesn't exist; not writing mesh map" << endl;
     return false;
   }
-  detran::vec_int map = d_mesh->mesh_map(key);
+  detran_utilities::vec_int map = d_mesh->mesh_map(key);
 
   // Write to silo
   DBPutQuadvar1(d_silofile, key.c_str(), "mesh", &map[0],

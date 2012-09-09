@@ -32,26 +32,29 @@ class SourceIteration: public InnerIteration<D>
 
 public:
 
-  typedef SP<SourceIteration>                   SP_inner;
-  typedef InnerIteration<D>                     Base;
-  typedef typename InnerIteration<D>::SP_inner  SP_base;
-  // basic objects
-  typedef InputDB::SP_input                     SP_input;
-  typedef State::SP_state                       SP_state;
-  typedef Mesh::SP_mesh                         SP_mesh;
-  typedef Material::SP_material                 SP_material;
-  typedef Quadrature::SP_quadrature             SP_quadrature;
-  typedef typename BoundaryBase<D>::SP_boundary SP_boundary;
-  typedef typename MomentToDiscrete<D>::SP_MtoD SP_MtoD;
-  // source typedefs
-  typedef ExternalSource::SP_source             SP_externalsource;
-  typedef FissionSource::SP_source              SP_fissionsource;
-  //
-  typedef typename Sweeper<D>::SP_sweeper       SP_sweeper;
-  typedef typename
-      SweepSource<D>::SP_sweepsource            SP_sweepsource;
-  //
-  typedef State::moments_type                   moments_type;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
+
+  typedef detran_utilities::SP<SourceIteration>   SP_inner;
+  typedef InnerIteration<D>                       Base;
+  typedef typename Base::SP_inner                 SP_base;
+  typedef typename Base::SP_input                 SP_input;
+  typedef typename Base::SP_state                 SP_state;
+  typedef typename Base::SP_mesh                  SP_mesh;
+  typedef typename Base::SP_material              SP_material;
+  typedef typename Base::SP_quadrature            SP_quadrature;
+  typedef typename Base::SP_boundary              SP_boundary;
+  typedef typename Base::SP_MtoD                  SP_MtoD;
+  typedef typename Base::SP_externalsource        SP_externalsource;
+  typedef typename Base::SP_fissionsource         SP_fissionsource;
+  typedef typename Base::SP_sweeper               SP_sweeper;
+  typedef typename Base::SP_sweepsource           SP_sweepsource;
+  typedef typename Base::moments_type             moments_type;
+
+  //-------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //-------------------------------------------------------------------------//
 
   /*!
    *  \brief Constructor
@@ -75,23 +78,33 @@ public:
                   SP_fissionsource   q_f);
 
   /// SP Constructor
-  static SP<SourceIteration<D> >
-  Create(SP<detran::InputDB>          input,
-         SP<detran::State>            state,
-         SP<detran::Mesh>             mesh,
-         SP<detran::Material>         material,
-         SP<detran::Quadrature>       quadrature,
-         SP<detran::BoundaryBase<D> > boundary,
-         SP<detran::ExternalSource>   q_e,
-         SP<detran::FissionSource>    q_f)
+  static SP_inner
+  Create(SP_input           input,
+         SP_state           state,
+         SP_mesh            mesh,
+         SP_material        material,
+         SP_quadrature      quadrature,
+         SP_boundary        boundary,
+         SP_externalsource  q_e,
+         SP_fissionsource   q_f)
   {
     SP_inner p(new SourceIteration(input, state, mesh, material,
                                    quadrature, boundary, q_e, q_f));
     return p;
   }
 
+  //-------------------------------------------------------------------------//
+  // ABSTRACT INTERFACE -- ALL WITHIN-GROUP SOLVERS MUST IMPLEMENT
+  //-------------------------------------------------------------------------//
+
   /// Solve the within group equation.
-  void solve(int g);
+  void solve(const size_t g);
+
+private:
+
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   // Make inherited data visible
   using Base::d_input;
@@ -106,7 +119,6 @@ public:
   using Base::d_max_iters;
   using Base::d_print_out;
   using Base::d_print_interval;
-  //using Base::b_acceleration;
 
 };
 

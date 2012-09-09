@@ -43,7 +43,7 @@ public:
   typedef typename Base::SP_state                       SP_state;
   typedef typename Base::SP_input                       SP_input;
   typedef typename Base::SP_material                    SP_material;
-  typedef typename Base::Mesh                           Mesh
+  typedef typename Base::Mesh                           Mesh;
   typedef typename Base::SP_sweepsource                 SP_sweepsource;
   typedef typename Base::moments_type                   moments_type;
   typedef typename Base::angular_flux_type              angular_flux_type;
@@ -100,7 +100,7 @@ public:
          SP_quadrature  quadrature,
          SP_state       state,
          SP_boundary    boundary,
-         SP_sweepsource sweepsource))
+         SP_sweepsource sweepsource)
   {
     SP_sweeper p(new Sweeper2DMOC(input, mesh, material, quadrature,
                                   state, boundary, sweepsource));

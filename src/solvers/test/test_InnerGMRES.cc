@@ -16,15 +16,20 @@
 #include "TestDriver.hh"
 #include "InnerGMRES.hh"
 #include "Mesh1D.hh"
+#include "external_source/ConstantSource.hh"
 
 // Setup
 #include "angle/test/quadrature_fixture.hh"
 #include "geometry/test/mesh_fixture.hh"
 #include "material/test/material_fixture.hh"
-#include "transport/test/external_source_fixture.hh"
+#include "external_source/test/external_source_fixture.hh"
 
-using namespace detran;
 using namespace detran_test;
+using namespace detran;
+using namespace detran_angle;
+using namespace detran_external_source;
+using namespace detran_geometry;
+using namespace detran_utilities;
 using namespace std;
 
 int main(int argc, char *argv[])
@@ -59,19 +64,19 @@ int test_InnerGMRES_1D_actual()
   SP_material mat = material_fixture_1g();
   mat->set_sigma_s(0, 0, 0, 0.99999);
   // Mesh
-  detran::vec_dbl cm(2, 0.0);
+  vec_dbl cm(2, 0.0);
   cm[1] = 10.0;
-  detran::vec_int fm(1, 100);
-  detran::vec_int mat_map(1, 0);
+  vec_int fm(1, 100);
+  vec_int mat_map(1, 0);
   SP_mesh mesh;
-  mesh = new detran::Mesh1D(fm, cm, mat_map);
+  mesh = new Mesh1D(fm, cm, mat_map);
 
   // Quadrature
   SP_quadrature quad = gausslegendre_fixture();
 
   // Constant unit source.
-  ConstantSource::SP_source
-    q_e(new detran::ConstantSource(mesh, quad, 1, 1.0));
+  ConstantSource::SP_externalsource
+    q_e(new ConstantSource(1, mesh, 1.0, quad));
 
   // Input
   InnerGMRES<_1D>::SP_input input;
@@ -90,7 +95,7 @@ int test_InnerGMRES_1D_actual()
   InnerGMRES<_1D>::SP_fissionsource q_f(new FissionSource(state, mesh, mat));
 
   // Boundary
-  InnerGMRES<_1D>::SP_boundary bound(new Boundary<_1D>(input, mesh, quad));
+  InnerGMRES<_1D>::SP_boundary bound(new BoundarySN<_1D>(input, mesh, quad));
 
   // SI
   InnerGMRES<_1D> solver(input, state, mesh, mat, quad, bound, q_e, q_f);

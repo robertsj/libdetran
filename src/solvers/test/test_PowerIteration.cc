@@ -20,10 +20,11 @@
 #include "angle/test/quadrature_fixture.hh"
 #include "geometry/test/mesh_fixture.hh"
 #include "material/test/material_fixture.hh"
-#include "transport/test/external_source_fixture.hh"
 
 using namespace detran;
 using namespace detran_test;
+using namespace detran_geometry;
+using namespace detran_utilities;
 using namespace std;
 
 int main(int argc, char *argv[])
@@ -42,19 +43,16 @@ int test_PowerIteration_2D(int argc, char *argv[])
   SP_material mat = material_fixture_1g();
 
   // Mesh
-  detran::vec_dbl cm(3, 0.0);
+  vec_dbl cm(3, 0.0);
   cm[1] = 1.0;
   cm[2] = 2.0;
-  detran::vec_int fm(2, 5);
-  detran::vec_int mat_map(4, 2);
+  vec_int fm(2, 5);
+  vec_int mat_map(4, 2);
   SP_mesh mesh;
-  mesh = new detran::Mesh2D(fm, fm, cm, cm, mat_map);
+  mesh = new Mesh2D(fm, fm, cm, cm, mat_map);
 
   // Quadrature
   SP_quadrature quad = quadruplerange_fixture();
-
-  // Empty source.
-  ExternalSource::SP_source q_e;
 
   // Input
   PowerIteration<_2D>::SP_input input;
@@ -84,7 +82,7 @@ int test_PowerIteration_2D(int argc, char *argv[])
 
   // Boundary
   PowerIteration<_2D>::SP_boundary bound;
-  bound = new Boundary<_2D>(input, mesh, quad);
+  bound = new BoundarySN<_2D>(input, mesh, quad);
 
   // SI
   PowerIteration<_2D> solver(input, state, mesh, mat,

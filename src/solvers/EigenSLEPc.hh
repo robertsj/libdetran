@@ -4,17 +4,13 @@
  * \author robertsj
  * \date   Jun 18, 2012
  * \brief  EigenSLEPc class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts.
  */
 //---------------------------------------------------------------------------//
 
 #ifndef EIGENSLEPC_HH_
 #define EIGENSLEPC_HH_
 
-// Detran
 #include "Eigensolver.hh"
-
-// System
 #include "slepceps.h"
 
 namespace detran
@@ -54,19 +50,25 @@ class EigenSLEPc: public Eigensolver<D>
 
 public:
 
-  typedef SP<EigenSLEPc<D> >                    SP_solver;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
+
+  typedef detran_utilities::SP<EigenSLEPc<D> >  SP_solver;
   typedef Eigensolver<D>                        Base;
   typedef typename Base::SP_solver              SP_base;
-  typedef typename
-      MultigroupSolver<D>::SP_solver            SP_mg_solver;
-  // basic objects
-  typedef InputDB::SP_input                     SP_input;
-  typedef State::SP_state                       SP_state;
-  typedef Mesh::SP_mesh                         SP_mesh;
-  typedef Material::SP_material                 SP_material;
-  typedef Quadrature::SP_quadrature             SP_quadrature;
-  typedef typename BoundaryBase<D>::SP_boundary SP_boundary;
-  typedef FissionSource::SP_source              SP_fissionsource;
+  typedef typename Base::SP_mg_solver           SP_mg_solver;
+  typedef typename Base::SP_input               SP_input;
+  typedef typename Base::SP_state               SP_state;
+  typedef typename Base::SP_mesh                SP_mesh;
+  typedef typename Base::SP_material            SP_material;
+  typedef typename Base::SP_quadrature          SP_quadrature;
+  typedef typename Base::SP_boundary            SP_boundary;
+  typedef typename Base::SP_fissionsource       SP_fissionsource;
+
+  //-------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //-------------------------------------------------------------------------//
 
   /*!
    *  \brief Constructor
@@ -88,31 +90,32 @@ public:
              SP_fissionsource   q_f);
 
   /// SP Constructor
-  static SP<EigenSLEPc<D> >
-  Create(SP<detran::InputDB>          input,
-         SP<detran::State>            state,
-         SP<detran::Mesh>             mesh,
-         SP<detran::Material>         material,
-         SP<detran::Quadrature>       quadrature,
-         SP<detran::BoundaryBase<D> > boundary,
-         SP<detran::FissionSource>    q_f)
+  static SP_solver
+  Create(SP_input           input,
+         SP_state           state,
+         SP_mesh            mesh,
+         SP_material        material,
+         SP_quadrature      quadrature,
+         SP_boundary        boundary,
+         SP_fissionsource   q_f)
   {
     SP_solver p(new EigenSLEPc(input, state, mesh, material,
                                quadrature, boundary, q_f));
     return p;
   }
 
+  //-------------------------------------------------------------------------//
+  // ABSTRACT INTERFACE -- ALL EIGENSOLVERS MUST IMPLEMENT
+  //-------------------------------------------------------------------------//
+
   /// Solve the eigenvalue problem.
   void solve();
 
-  /// Unimplemented DBC function.
-  bool is_valid() const
-  {
-    return true;
-  }
-
-
 protected:
+
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   using Base::b_input;
   using Base::b_state;
@@ -126,9 +129,6 @@ protected:
   using Base::b_tolerance;
   using Base::b_print_out;
   using Base::b_print_interval;
-
-  /// \name Protected Data
-  /// \{
 
   /// SLEPc eigensolver.
   EPS d_solver;
@@ -147,8 +147,10 @@ protected:
 
   /// \}
 
-  /// \name Implementation
-  /// \{
+  //-------------------------------------------------------------------------//
+  // IMPLEMENTATION
+  //-------------------------------------------------------------------------//
+
 
   /// Set the templated operator function.
   PetscErrorCode set_operation();
@@ -169,8 +171,6 @@ protected:
    */
 public:
   PetscErrorCode apply_eigen(Mat A, Vec x, Vec y);
-
-  /// \}
 
 };
 

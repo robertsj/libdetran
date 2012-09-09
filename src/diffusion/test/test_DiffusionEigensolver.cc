@@ -12,20 +12,22 @@
 #define TEST_LIST                        \
         FUNC(test_DiffusionEigensolver)
 
-// Detran headers
-#include "TestDriver.hh"
-#include "DiffusionEigensolver.hh"
-#include "Mesh1D.hh"
-#include "Mesh2D.hh"
-#include "Mesh3D.hh"
-
+#include "utilities/TestDriver.hh"
+#include "diffusion/DiffusionEigensolver.hh"
+#include "geometry/Mesh1D.hh"
+#include "geometry/Mesh2D.hh"
+#include "geometry/Mesh3D.hh"
 #include <iostream>
 
 // Setup
 //#include "material_fixture.hh"
+
+using namespace detran_test;
 using namespace detran;
 using namespace detran_diffusion;
-using namespace detran_test;
+using namespace detran_geometry;
+using namespace detran_material;
+using namespace detran_utilities;
 using namespace std;
 
 int main(int argc, char *argv[])
@@ -69,7 +71,7 @@ int test_DiffusionEigensolver_actual()
   inp->put<int>("diffusion_max_iters",  100);
 
   // Create material.
-  DiffusionEigensolver::SP_material mat(new Material(2, 1, false));
+  DiffusionEigensolver::SP_material mat(new Material(1, 2, false));
   mat->set_sigma_t(0, 0, 0.2263);
   mat->set_sigma_t(0, 1, 1.0119);
   mat->set_sigma_f(0, 0, 0.0067);

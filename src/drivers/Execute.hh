@@ -4,7 +4,6 @@
  * \author robertsj
  * \date   Apr 4, 2012
  * \brief  Execute class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts.
  */
 //---------------------------------------------------------------------------//
 
@@ -26,70 +25,70 @@
 #ifndef EXECUTE_HH_
 #define EXECUTE_HH_
 
-// Config
 #include "detran_config.h"
-
-// Detran
-#include "Material.hh"
-#include "Mesh.hh"
-#include "Eigensolver.hh"
-#ifdef DETRAN_ENABLE_SLEPC
-#include "EigenSLEPc.hh"
-#endif
-#include "ExternalSource.hh"
-#include "FissionSource.hh"
-#include "State.hh"
 #include "StupidParser.hh"
-#include "Traits.hh"
-#include "PowerIteration.hh"
-#include "GaussSeidel.hh"
-#ifdef DETRAN_ENABLE_PETSC
-#include "KrylovMG.hh"
+#include "discretization/DimensionTraits.hh"
+#include "external_source/ExternalSource.hh"
+#include "geometry/Mesh.hh"
+#include "material/Material.hh"
+#include "solvers/GaussSeidel.hh"
+#include "solvers/Eigensolver.hh"
+#ifdef DETRAN_ENABLE_SLEPC
+#include "solvers/EigenSLEPc.hh"
 #endif
-
-// Utilities
-#include "DBC.hh"
-#include "InputDB.hh"
-
-// System
-#include <iostream>
-#include <string>
 #ifdef DETRAN_ENABLE_PETSC
+#include "solvers/KrylovMG.hh"
 #include "petsc.h"
 #endif
+#include "solvers/PowerIteration.hh"
+#include "transport/FissionSource.hh"
+#include "transport/State.hh"
+#include "utilities/DBC.hh"
+#include "utilities/InputDB.hh"
+#include <iostream>
+#include <string>
 
 namespace detran
 {
 
-//===========================================================================//
+//---------------------------------------------------------------------------//
 /*!
  * \class Execute
  * \brief Setup and execute the problem.
  */
-//===========================================================================//
+//---------------------------------------------------------------------------//
 
-class Execute: public Object
+class Execute
 {
 
 public:
 
-  // Basic Objects
-  typedef InputDB::SP_input                     SP_input;
-  typedef State::SP_state                       SP_state;
-  typedef Mesh::SP_mesh                         SP_mesh;
-  typedef Material::SP_material                 SP_material;
-  typedef Quadrature::SP_quadrature             SP_quadrature;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
 
+  typedef detran_utilities::InputDB::SP_input             SP_input;
+  typedef State::SP_state                                 SP_state;
+  typedef detran_geometry::Mesh::SP_mesh                  SP_mesh;
+  typedef detran_material::Material::SP_material          SP_material;
+  typedef detran_angle::Quadrature::SP_quadrature         SP_quadrature;
+  typedef detran_external_source::
+          ExternalSource::SP_externalsource               SP_externalsource;
+  typedef detran::FissionSource::SP_fissionsource         SP_fissionsource;
 
-  // source typedefs
-  typedef ExternalSource::SP_source             SP_externalsource;
-  typedef FissionSource::SP_source              SP_fissionsource;
+  //-------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //-------------------------------------------------------------------------//
 
   /*
    *  \brief Constructor
    *  \param parser     Input parser
    */
   Execute(StupidParser &parser);
+
+  //-------------------------------------------------------------------------//
+  // PUBLIC FUNCTIONS
+  //-------------------------------------------------------------------------//
 
   /// Solve the problem.
   template <class D>
@@ -102,12 +101,6 @@ public:
   int dimension()
   {
     return d_dimension;
-  }
-
-  /// Unimplemented DBC method.
-  bool is_valid() const
-  {
-    return true;
   }
 
 private:
@@ -150,7 +143,7 @@ void Execute::solve()
   if (d_moc)
     boundary = new BoundaryMOC<D>(d_input, d_mesh, d_quadrature);
   else
-    boundary = new Boundary<D>(d_input, d_mesh, d_quadrature);
+    boundary = new BoundarySN<D>(d_input, d_mesh, d_quadrature);
 
   //--------------------------------------------------------------------------//
   // Create solver and solve.

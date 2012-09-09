@@ -13,15 +13,17 @@
         FUNC(test_SiloOutput)
 
 // Detran headers
-#include "TestDriver.hh"
-#include "SiloOutput.hh"
-#include "Mesh2D.hh"
-#include "QuadrupleRange.hh"
-
-// System
+#include "utilities/TestDriver.hh"
+#include "ioutils/SiloOutput.hh"
+#include "geometry/Mesh2D.hh"
+#include "angle/QuadrupleRange.hh"
 #include <iostream>
 
 using namespace detran_test;
+using namespace detran_utilities;
+using namespace detran_geometry;
+using namespace detran_angle;
+using namespace detran_material;
 using namespace detran_ioutils;
 using namespace detran;
 using namespace std;

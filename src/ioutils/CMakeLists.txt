@@ -22,7 +22,7 @@ ADD_LIBRARY(ioutils
             ${SRC} 
 )
 TARGET_LINK_LIBRARIES( ioutils
-                       materials
+                       material
                        geometry
                        utilities
                        transport

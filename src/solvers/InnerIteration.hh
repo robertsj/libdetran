@@ -4,36 +4,30 @@
  * \author robertsj
  * \date   Apr 4, 2012
  * \brief  InnerIteration class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 
 #ifndef INNERITERATION_HH_
 #define INNERITERATION_HH_
 
-// Detran
-//#include "Acceleration.hh"
-#include "BoundaryBase.hh"
-#include "MomentToDiscrete.hh"
-#include "State.hh"
-#include "Sweeper.hh"
-#include "Sweeper1D.hh"
-#include "Sweeper2D.hh"
-#include "Sweeper3D.hh"
-#include "Sweeper2DMOC.hh"
-#include "SweepSource.hh"
-
-// Utilities
-#include "InputDB.hh"
-#include "MathUtilities.hh"
-
-// System
+#include "angle/MomentToDiscrete.hh"
+#include "boundary/BoundaryBase.hh"
+#include "external_source/ExternalSource.hh"
+#include "transport/State.hh"
+#include "transport/Sweeper.hh"
+#include "transport/Sweeper1D.hh"
+#include "transport/Sweeper2D.hh"
+#include "transport/Sweeper3D.hh"
+#include "transport/Sweeper2DMOC.hh"
+#include "transport/SweepSource.hh"
+#include "utilities/InputDB.hh"
+#include "utilities/MathUtilities.hh"
 #include <string>
 
 namespace detran
 {
 
-//===========================================================================//
+//---------------------------------------------------------------------------//
 /*!
  * \class InnerIteration
  * \brief Solve the within-group transport equation.
@@ -83,36 +77,36 @@ namespace detran
  *
  * \sa SourceIteration, InnerGMRES
  */
-// ==============================================================================
+//---------------------------------------------------------------------------//
 
 template <class D>
-class InnerIteration: public Object
+class InnerIteration
 {
 
 public:
 
-  typedef SP<InnerIteration>                    SP_inner;
-  // basic objects
-  typedef InputDB::SP_input                     SP_input;
-  typedef State::SP_state                       SP_state;
-  typedef Mesh::SP_mesh                         SP_mesh;
-  typedef Material::SP_material                 SP_material;
-  typedef Quadrature::SP_quadrature             SP_quadrature;
-  typedef typename BoundaryBase<D>::SP_boundary SP_boundary;
-  typedef typename MomentToDiscrete<D>::SP_MtoD SP_MtoD;
-  // source typedefs
-  typedef ExternalSource::SP_source 		        SP_externalsource;
-  typedef FissionSource::SP_source 			        SP_fissionsource;
-  // sweep
-  typedef typename Sweeper<D>::SP_sweeper       SP_sweeper;
-  typedef typename
-      SweepSource<D>::SP_sweepsource            SP_sweepsource;
-  // acceleration
-//  typedef typename
-//      Acceleration<D>::SP_acceleration          SP_acceleration;
-  //
-  typedef State::moments_type                   moments_type;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
 
+  typedef detran_utilities::SP<InnerIteration>        SP_inner;
+  typedef detran_utilities::InputDB::SP_input         SP_input;
+  typedef State::SP_state                             SP_state;
+  typedef detran_geometry::Mesh::SP_mesh              SP_mesh;
+  typedef detran_material::Material::SP_material      SP_material;
+  typedef detran_angle::Quadrature::SP_quadrature     SP_quadrature;
+  typedef typename BoundaryBase<D>::SP_boundary       SP_boundary;
+  typedef detran_angle::MomentToDiscrete::SP_MtoD     SP_MtoD;
+  typedef detran_external_source::
+          ExternalSource::SP_externalsource           SP_externalsource;
+  typedef FissionSource::SP_fissionsource 		        SP_fissionsource;
+  typedef typename Sweeper<D>::SP_sweeper             SP_sweeper;
+  typedef typename SweepSource<D>::SP_sweepsource     SP_sweepsource;
+  typedef State::moments_type                         moments_type;
+
+  //-------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //-------------------------------------------------------------------------//
 
   /*!
    *  \brief Constructor
@@ -138,13 +132,18 @@ public:
 
   virtual ~InnerIteration(){}
 
+  //-------------------------------------------------------------------------//
+  // ABSTRACT INTERFACE -- ALL WITHIN-GROUP SOLVERS MUST IMPLEMENT
+  //-------------------------------------------------------------------------//
+
   /*!
    *  \brief Solve the within group equation.
    */
-  virtual void solve(int g) = 0;
+  virtual void solve(const size_t g) = 0;
 
-  /// \name Setters
-  /// \{
+  //-------------------------------------------------------------------------//
+  // PUBLIC FUNCTIONS
+  //-------------------------------------------------------------------------//
 
   /// Reset the tolerance.
   void set_tolerance(double tol)
@@ -159,11 +158,6 @@ public:
     Require(max_iters > 0);
     d_max_iters = max_iters;
   }
-
-  /// \}
-
-  /// \name Getters
-  /// \{
 
   SP_mesh get_mesh() const
   {
@@ -188,14 +182,6 @@ public:
   int group() const
   {
     return d_g;
-  }
-
-  /// \}
-
-  /// Unimplemented DBC function.
-  virtual bool is_valid() const
-  {
-    return true;
   }
 
 protected:
@@ -223,19 +209,19 @@ protected:
   SP_fissionsource d_fission_source;
 
   /// Maximum iterations
-  int d_max_iters;
+  size_t d_max_iters;
   /// Convergence tolerance
   double d_tolerance;
 
   /// Print out flag
-  int d_print_out;
+  size_t d_print_out;
   /// Interval for print out
-  int d_print_interval;
+  size_t d_print_interval;
 
   /// Group we are solving.
-  int d_g;
+  size_t d_g;
   /// Number of sweeps
-  int d_number_sweeps;
+  size_t d_number_sweeps;
 
   /// Low order acceleration
  // SP_acceleration b_acceleration;

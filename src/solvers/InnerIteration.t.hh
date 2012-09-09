@@ -63,7 +63,7 @@ InnerIteration<D>::InnerIteration(SP_input          input,
 
   // Moments-to-Discrete
   SP_MtoD MtoD;
-  MtoD = new MomentToDiscrete<D>(0); // 1 moment (0th order)
+  MtoD = new detran_angle::MomentToDiscrete(0); // 1 moment (0th order)
   MtoD->build(quadrature);
 
   // Build the sweep source.

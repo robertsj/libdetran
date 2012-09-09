@@ -10,18 +10,13 @@
 #ifndef PRECONDITIONERMG_HH_
 #define PRECONDITIONERMG_HH_
 
-// Detran
-#include "Material.hh"
-#include "Mesh.hh"
-#include "ScatterSource.hh"
-
-// Diffusion
-#include "LossOperator.hh"
-
-// Utilities
-#include "DBC.hh"
-#include "InputDB.hh"
-#include "SP.hh"
+#include "diffusion/LossOperator.hh"
+#include "geometry/Mesh.hh"
+#include "material/Material.hh"
+#include "transport/ScatterSource.hh"
+#include "utilities/DBC.hh"
+#include "utilities/InputDB.hh"
+#include "utilities/SP.hh"
 
 namespace detran
 {
@@ -65,13 +60,21 @@ class PreconditionerMG
 
 public:
 
-  typedef SP<PreconditionerMG>            SP_pc;
-  typedef InputDB::SP_input               SP_input;
-  typedef Material::SP_material           SP_material;
-  typedef Mesh::SP_mesh                   SP_mesh;
-  typedef ScatterSource::SP_source        SP_scattersource;
-  typedef detran_diffusion::
-    LossOperator::SP_operator             SP_lossoperator;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
+
+  typedef detran_utilities::SP<PreconditionerMG>        SP_pc;
+  typedef detran_utilities::InputDB::SP_input           SP_input;
+  typedef detran_material::Material::SP_material        SP_material;
+  typedef detran_geometry::Mesh::SP_mesh                SP_mesh;
+  typedef ScatterSource::SP_scattersource               SP_scattersource;
+  typedef detran_diffusion::LossOperator::SP_operator   SP_lossoperator;
+  typedef detran_utilities::size_t                      size_t;
+
+  //-------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //-------------------------------------------------------------------------//
 
   /*!
    *  \brief Constructor
@@ -106,6 +109,10 @@ public:
     VecDestroy(&d_y);
   }
 
+  //-------------------------------------------------------------------------//
+  // PUBLIC FUNCTIONS
+  //-------------------------------------------------------------------------//
+
   /*!
    *  \brief Apply the preconditioning process, \f$ \mathbf{P}^{-1} \f$.
    */
@@ -113,8 +120,9 @@ public:
 
 private:
 
-  /// \name Private Data
-  /// \{
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   /// Input database
   SP_input d_input;
@@ -129,7 +137,7 @@ private:
   SP_scattersource d_scattersource;
 
   /// System size
-  u_int d_size;
+  size_t d_size;
 
   /// Vector of linear solvers for applying the inverse diffusion operator
   KSP d_solver;
@@ -142,18 +150,16 @@ private:
   Vec d_y;
 
   /// Size of the moments in a group
-  u_int d_moments_size_group;
+  size_t d_moments_size_group;
 
   /// Size of the boundary in a group
-  u_int d_boundary_size_group;
+  size_t d_boundary_size_group;
 
   /// Upscatter cutoff (groups below and including don't get upscatter)
-  u_int d_upscatter_cutoff;
+  size_t d_upscatter_cutoff;
 
   /// Tolerance for the preconditioner solve
   double d_tolerance;
-
-  /// \}
 
 };
 

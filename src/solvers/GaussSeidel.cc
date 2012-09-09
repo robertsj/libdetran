@@ -32,7 +32,7 @@ GaussSeidel<D>::GaussSeidel(SP_input          input,
   , d_norm_type("Linf")
 {
   if (d_input->check("outer_norm_type"))
-    d_norm_type = input->get<std::string>("outer_norm_type");
+    d_norm_type = input->template get<std::string>("outer_norm_type");
 
   // Post conditions
   Ensure(d_norm_type == "Linf" or d_norm_type == "L1" or d_norm_type == "L2");

@@ -8,12 +8,8 @@ message( "++ Adding detran postprocess tests." )
 # Create test executables
 #------------------------------------------------------------------------------#
 
-ADD_EXECUTABLE(test_ReactionRates test_ReactionRates.cc)
-TARGET_LINK_LIBRARIES(test_ReactionRates postprocess 
-                                      	 geometry 
-                                         materials 
-                                         transport 
-                                         utilities)
+ADD_EXECUTABLE(test_ReactionRates 			test_ReactionRates.cc)
+TARGET_LINK_LIBRARIES(test_ReactionRates 	postprocess)
 
 #------------------------------------------------------------------------------#
 # Define tests

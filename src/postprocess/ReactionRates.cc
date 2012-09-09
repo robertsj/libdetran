@@ -1,14 +1,13 @@
-/*
- * ReactionRates.cc
- *
- *  Created on: May 24, 2012
- *      Author: robertsj
+//----------------------------------*-C++-*----------------------------------//
+/*!
+ * \file   ReactionRates.cc
+ * \author robertsj
+ * \date   May 24, 2012
+ * \brief  ReactionRates member definitions
  */
+//---------------------------------------------------------------------------//
 
-// Detran
 #include "ReactionRates.hh"
-
-// System
 #include <algorithm>
 #include <iostream>
 #include <cmath>
@@ -27,7 +26,8 @@ ReactionRates::ReactionRates(SP_material material,
   /* ... */
 }
 
-detran::vec_dbl ReactionRates::region_power(std::string key, double scale)
+detran_utilities::vec_dbl
+ReactionRates::region_power(std::string key, double scale)
 {
 
   // Make sure the mesh has what we need.

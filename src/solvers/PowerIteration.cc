@@ -31,7 +31,7 @@ PowerIteration<D>::PowerIteration(SP_input          input,
 {
 
   if (input->check("eigen_aitken"))
-    d_aitken = input->get<int>("eigen_aitken");
+    d_aitken = input->template get<int>("eigen_aitken");
 
 }
 

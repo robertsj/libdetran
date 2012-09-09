@@ -10,19 +10,12 @@
 #ifndef SILOOUTPUT_HH_
 #define SILOOUTPUT_HH_
 
-// Configuration
 #include "detran_config.h"
-
-// Detran
-#include "Material.hh"
-#include "Mesh.hh"
-#include "Quadrature.hh"
-#include "State.hh"
-
-// Utilities
-#include "InputDB.hh"
-
-// System
+#include "angle/Quadrature.hh"
+#include "geometry/Mesh.hh"
+#include "material/Material.hh"
+#include "transport/State.hh"
+#include "utilities/InputDB.hh"
 #include "silo.h"
 
 namespace detran_ioutils
@@ -37,11 +30,19 @@ class SiloOutput
 
 public:
 
-  typedef detran::InputDB::SP_input         SP_input;
-  typedef detran::Material::SP_material     SP_material;
-  typedef detran::Mesh::SP_mesh             SP_mesh;
-  typedef detran::State::SP_state           SP_state;
-  typedef detran::Quadrature::SP_quadrature SP_quadrature;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
+
+  typedef detran_utilities::InputDB::SP_input     SP_input;
+  typedef detran_material::Material::SP_material  SP_material;
+  typedef detran_geometry::Mesh::SP_mesh          SP_mesh;
+  typedef detran::State::SP_state                 SP_state;
+  typedef detran_angle::Quadrature::SP_quadrature SP_quadrature;
+
+  //-------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //-------------------------------------------------------------------------//
 
   /*!
    *  \brief Constructor
@@ -52,6 +53,10 @@ public:
 
   /// Destructor
   ~SiloOutput();
+
+  //-------------------------------------------------------------------------//
+  // PUBLIC FUNCTIONS
+  //-------------------------------------------------------------------------//
 
   /// Initialize file
   bool initialize(const std::string filename);
@@ -95,6 +100,10 @@ public:
   }
 
 private:
+
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   /// Problem mesh
   SP_mesh d_mesh;

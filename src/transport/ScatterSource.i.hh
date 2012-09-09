@@ -14,9 +14,10 @@
 namespace detran
 {
 
-void ScatterSource::build_within_group_source(const size_t g,
-                                              const moments_type &phi,
-                                              moments_type &source)
+inline void ScatterSource::
+build_within_group_source(const size_t g,
+                          const moments_type &phi,
+                          moments_type &source)
 {
   // Preconditions
   Require(g < d_material->number_groups());
@@ -29,8 +30,9 @@ void ScatterSource::build_within_group_source(const size_t g,
 }
 
 
-void ScatterSource::build_in_scatter_source(const size_t g,
-                                            moments_type &source)
+inline void ScatterSource::
+build_in_scatter_source(const size_t g,
+                        moments_type &source)
 {
   // Preconditions.
   Require(g < d_material->number_groups());
@@ -55,9 +57,10 @@ void ScatterSource::build_in_scatter_source(const size_t g,
   }
 }
 
-void ScatterSource::build_downscatter_source(const size_t g,
-                                             const size_t g_cutoff,
-                                             moments_type &source)
+inline void ScatterSource::
+build_downscatter_source(const size_t g,
+                         const size_t g_cutoff,
+                         moments_type &source)
 {
   // Preconditions.
   Require(g < d_material->number_groups());
@@ -75,10 +78,11 @@ void ScatterSource::build_downscatter_source(const size_t g,
 
 }
 
-void ScatterSource::build_total_group_source(const size_t g,
-                                             const size_t g_cutoff,
-                                             const State::vec_moments_type &phi,
-                                             moments_type &source)
+inline void ScatterSource::
+build_total_group_source(const size_t g,
+                         const size_t g_cutoff,
+                         const State::vec_moments_type &phi,
+                         moments_type &source)
 {
   // Preconditions
   Require(g < d_material->number_groups());

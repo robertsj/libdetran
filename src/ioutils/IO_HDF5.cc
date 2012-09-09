@@ -14,15 +14,10 @@
 
 #ifdef DETRAN_ENABLE_HDF5
 
-// Detran
-#include "Mesh1D.hh"
-#include "Mesh2D.hh"
-#include "Mesh3D.hh"
-
-// Detran IO Utils
 #include "IO_HDF5.hh"
-
-// System
+#include "geometry/Mesh1D.hh"
+#include "geometry/Mesh2D.hh"
+#include "geometry/Mesh3D.hh"
 #include <sstream>
 
 namespace detran_ioutils
@@ -222,7 +217,7 @@ void IO_HDF5::write(SP_mesh mesh)
   Assert(status);
 
   // Write all mesh maps.  Note, at *least* MATERIAL must be present.
-  detran::Mesh::mesh_map_type map = mesh->get_mesh_map();
+  detran_geometry::Mesh::mesh_map_type map = mesh->get_mesh_map();
 
   status = write_map(group, "mesh_map", map);
   Assert(status);
@@ -238,13 +233,13 @@ void IO_HDF5::close()
   d_open = false;
 }
 
-detran::InputDB::SP_input IO_HDF5::read_input()
+detran_utilities::InputDB::SP_input IO_HDF5::read_input()
 {
   // Preconditions
   /* ... */
 
   // Create the input object.
-  SP_input input(new detran::InputDB());
+  SP_input input(new detran_utilities::InputDB());
 
   // Open the file if necessary.
   if (!d_open)
@@ -278,7 +273,7 @@ detran::InputDB::SP_input IO_HDF5::read_input()
   return input;
 }
 
-detran::Material::SP_material IO_HDF5::read_material()
+detran_material::Material::SP_material IO_HDF5::read_material()
 {
   // Preconditions
   /* ... */
@@ -318,7 +313,7 @@ detran::Material::SP_material IO_HDF5::read_material()
   //-------------------------------------------------------------------------//
 
   // Create the material object.
-  mat = new detran::Material(ng, nm, false);
+  mat = new detran_material::Material(nm, ng, false);
 
   hid_t dset;
   hid_t space;
@@ -387,7 +382,7 @@ detran::Material::SP_material IO_HDF5::read_material()
   return mat;
 }
 
-detran::Mesh::SP_mesh IO_HDF5::read_mesh()
+detran_geometry::Mesh::SP_mesh IO_HDF5::read_mesh()
 {
   // Preconditions
   /* ... */
@@ -437,21 +432,21 @@ detran::Mesh::SP_mesh IO_HDF5::read_mesh()
     ez[i + 1] = ez[i] + dz[i];
 
   // Fill the mesh maps, and extract the material map.
-  detran::Mesh::mesh_map_type map;
+  detran_geometry::Mesh::mesh_map_type map;
   Insist(read_map(group, "mesh_map", map),
     "Problem reading mesh map.  It is missing or empty.");
   vec_int mt = map["MATERIAL"];
 
   // Create the mesh.
   if (dim == 1)
-    mesh = new detran::Mesh1D(ex, mt);
+    mesh = new detran_geometry::Mesh1D(ex, mt);
   else if (dim == 2)
-    mesh = new detran::Mesh2D(ex, ey, mt);
+    mesh = new detran_geometry::Mesh2D(ex, ey, mt);
   else
-    mesh = new detran::Mesh3D(ex, ey, ez, mt);
+    mesh = new detran_geometry::Mesh3D(ex, ey, ez, mt);
 
   // Add the rest of the maps.
-  detran::Mesh::mesh_map_type::iterator it = map.begin();
+  detran_geometry::Mesh::mesh_map_type::iterator it = map.begin();
   for (; it != map.end(); it++)
   {
     if (it->first != "MATERIAL")
@@ -463,7 +458,6 @@ detran::Mesh::SP_mesh IO_HDF5::read_mesh()
 
   // Postconditions
   Ensure(mesh);
-  Ensure(mesh->is_valid());
 
   return mesh;
 }

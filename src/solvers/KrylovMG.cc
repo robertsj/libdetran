@@ -49,7 +49,7 @@ KrylovMG<D>::KrylovMG(SP_input          input,
   d_upscatter_cutoff = material->upscatter_cutoff();
   if (input->check("outer_upscatter_cutoff"))
   {
-    d_upscatter_cutoff = input->get<int>("outer_upscatter_cutoff");
+    d_upscatter_cutoff = input->template get<int>("outer_upscatter_cutoff");
     Insist((d_upscatter_cutoff >= 0) and
            (d_upscatter_cutoff <= material->upscatter_cutoff()),
            "Upscatter cutoff must be >= 0 and <= material upscatter cutoff");
@@ -125,7 +125,7 @@ KrylovMG<D>::KrylovMG(SP_input          input,
   if (d_input->check("outer_use_pc"))
   {
     // \todo Why do I get a compile error if I use d_input instead?
-    if (input->get<int>("outer_use_pc"))
+    if (input->template get<int>("outer_use_pc"))
     {
       std::cout << "Using preconditioned multigroup Krylov." << std::endl;
       d_use_pc = true;
@@ -151,7 +151,7 @@ KrylovMG<D>::KrylovMG(SP_input          input,
     int side = 0;
     if (d_input->check("outer_pc_side"))
     {
-      side = input->get<int>("outer_pc_side");
+      side = input->template get<int>("outer_pc_side");
     }
     if (side)
       ierr = KSPSetPCSide(d_solver, PC_RIGHT);

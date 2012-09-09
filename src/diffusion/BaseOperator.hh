@@ -14,17 +14,11 @@
 #include "detran_config.h"
 
 #ifdef DETRAN_ENABLE_PETSC
-
-// Detran
-#include "Material.hh"
-#include "Mesh.hh"
-
-// Utilities
-#include "InputDB.hh"
-#include "Timer.hh"
-#include "SP.hh"
-
-// System
+#include "material/Material.hh"
+#include "geometry/Mesh.hh"
+#include "utilities/InputDB.hh"
+#include "utilities/Timer.hh"
+#include "utilities/SP.hh"
 #include "petsc.h"
 
 namespace detran_diffusion
@@ -40,10 +34,10 @@ class BaseOperator
 
 public:
 
-  typedef detran::SP<BaseOperator>      SP_operator;
-  typedef detran::InputDB::SP_input     SP_input;
-  typedef detran::Material::SP_material SP_material;
-  typedef detran::Mesh::SP_mesh         SP_mesh;
+  typedef detran_utilities::SP<BaseOperator>      SP_operator;
+  typedef detran_utilities::InputDB::SP_input     SP_input;
+  typedef detran_material::Material::SP_material  SP_material;
+  typedef detran_geometry::Mesh::SP_mesh          SP_mesh;
 
   /*!
    *  \brief Constructor
@@ -98,7 +92,7 @@ protected:
   int d_dimension;
 
   /// Timer
-  detran::Timer d_timer;
+  detran_utilities::Timer d_timer;
 
   /// \}
 

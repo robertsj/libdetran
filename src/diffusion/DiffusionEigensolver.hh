@@ -4,24 +4,16 @@
  * \author robertsj
  * \date   Jul 26, 2012
  * \brief  DiffusionEigensolver class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 
 #ifndef DIFFUSIONEIGENSOLVER_HH_
 #define DIFFUSIONEIGENSOLVER_HH_
 
-// Diffusion
 #include "LossOperator.hh"
 #include "GainOperator.hh"
-
-// Transport
-#include "State.hh"
-
-// Utilities
-#include "Definitions.hh"
-
-// System
+#include "transport/State.hh"
+#include "utilities/Definitions.hh"
 #include "slepc.h"
 
 namespace detran_diffusion
@@ -36,12 +28,12 @@ class DiffusionEigensolver
 
 public:
 
-  typedef detran::InputDB::SP_input     SP_input;
-  typedef detran::Material::SP_material SP_material;
-  typedef detran::Mesh::SP_mesh         SP_mesh;
-  typedef detran::State::SP_state       SP_state;
-  typedef LossOperator::SP_lossoperator SP_lossoperator;
-  typedef GainOperator::SP_gainoperator SP_gainoperator;
+  typedef detran_utilities::InputDB::SP_input     SP_input;
+  typedef detran_material::Material::SP_material  SP_material;
+  typedef detran_geometry::Mesh::SP_mesh          SP_mesh;
+  typedef detran::State::SP_state                 SP_state;
+  typedef LossOperator::SP_lossoperator           SP_lossoperator;
+  typedef GainOperator::SP_gainoperator           SP_gainoperator;
 
   /*!
    *  \brief Constructor
@@ -56,13 +48,13 @@ public:
   void solve();
 
   /// Get the loss operator
-  detran::SP<detran_diffusion::LossOperator> M()
+  SP_lossoperator M()
   {
     return d_M;
   }
 
   /// Get the gain operator
-  detran::SP<detran_diffusion::GainOperator> F()
+  SP_gainoperator F()
   {
     return d_F;
   }

@@ -11,10 +11,7 @@
 #ifndef IO_HDF5_TRAITS_HH_
 #define IO_HDF5_TRAITS_HH_
 
-// Utilities
-#include "DBC.hh"
-
-// System
+#include "utilities/DBC.hh"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -202,6 +199,12 @@ inline hid_t HDF5_MemoryType::type<int>()
   return d_type;
 }
 template <>
+inline hid_t HDF5_MemoryType::type<unsigned int>()
+{
+  d_type = H5Tcopy(H5T_NATIVE_INT);
+  return d_type;
+}
+template <>
 inline hid_t HDF5_MemoryType::type<double>()
 {
   d_type = H5Tcopy(H5T_NATIVE_DOUBLE);
@@ -251,6 +254,12 @@ private:
 
 template <>
 inline hid_t HDF5_FileType::type<int>()
+{
+  d_type = H5Tcopy(H5T_STD_I32LE);
+  return d_type;
+}
+template <>
+inline hid_t HDF5_FileType::type<unsigned int>()
 {
   d_type = H5Tcopy(H5T_STD_I32LE);
   return d_type;

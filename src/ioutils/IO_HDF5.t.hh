@@ -4,7 +4,6 @@
  * \author robertsj
  * \date   Aug 1, 2012
  * \brief  IO_HDF5 template definitions.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 

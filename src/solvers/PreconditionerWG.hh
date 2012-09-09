@@ -10,18 +10,13 @@
 #ifndef PRECONDITIONERWG_HH_
 #define PRECONDITIONERWG_HH_
 
-// Detran
-#include "Material.hh"
-#include "Mesh.hh"
-#include "ScatterSource.hh"
-
-// Diffusion
-#include "OneGroupLossOperator.hh"
-
-// Utilities
-#include "DBC.hh"
-#include "InputDB.hh"
-#include "SP.hh"
+#include "material/Material.hh"
+#include "geometry/Mesh.hh"
+#include "transport/ScatterSource.hh"
+#include "diffusion/OneGroupLossOperator.hh"
+#include "utilities/DBC.hh"
+#include "utilities/InputDB.hh"
+#include "utilities/SP.hh"
 
 namespace detran
 {
@@ -65,16 +60,23 @@ class PreconditionerWG
 
 public:
 
-  typedef SP<PreconditionerWG>            SP_pc;
-  typedef InputDB::SP_input               SP_input;
-  typedef Material::SP_material           SP_material;
-  typedef Mesh::SP_mesh                   SP_mesh;
-  typedef ScatterSource::SP_source        SP_scattersource;
-  typedef detran_diffusion::
-    OneGroupLossOperator::SP_operator     SP_lossoperator;
-  typedef std::vector<KSP>                vec_KSP;
-  typedef std::vector<SP_lossoperator>    vec_lossoperator;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
 
+  typedef detran_utilities::SP<PreconditionerWG>                SP_pc;
+  typedef detran_utilities::InputDB::SP_input                   SP_input;
+  typedef detran_material::Material::SP_material                SP_material;
+  typedef detran_geometry::Mesh::SP_mesh                        SP_mesh;
+  typedef ScatterSource::SP_scattersource                       SP_scattersource;
+  typedef detran_diffusion::OneGroupLossOperator::SP_operator   SP_lossoperator;
+  typedef std::vector<KSP>                                      vec_KSP;
+  typedef std::vector<SP_lossoperator>                          vec_lossoperator;
+  typedef detran_utilities::size_t                              size_t;
+
+  //-------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //-------------------------------------------------------------------------//
 
   /*!
    *  \brief Constructor
@@ -107,8 +109,12 @@ public:
     VecDestroy(&d_y);
   }
 
+  //-------------------------------------------------------------------------//
+  // PUBLIC FUNCTIONS
+  //-------------------------------------------------------------------------//
+
   /// Set the group for this solve.
-  void set_group(u_int group)
+  void set_group(const size_t group)
   {
     // Preconditions
     Require(group < d_material->number_groups());
@@ -122,8 +128,9 @@ public:
 
 private:
 
-  /// \name Private Data
-  /// \{
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   /// Input database
   SP_input d_input;
@@ -151,12 +158,10 @@ private:
   Vec d_y;
 
   /// Group of within group solve
-  u_int d_group;
+  size_t d_group;
 
   /// Tolerance for the preconditioner solve
   double d_tolerance;
-
-  /// \}
 
 };
 

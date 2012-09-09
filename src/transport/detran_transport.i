@@ -8,31 +8,8 @@
 
 // State
 %include "State.hh"
-// Boundary
-%include "BoundaryBase.hh"
-%include "Boundary.hh"
-%include "BoundaryMOC.hh"
-// Sources
-%include "ExternalSource.hh"
-%include "DiscreteSource.hh"
-%include "ConstantSource.hh"
-%include "FissionSource.hh"
-// Acceleration
-//%include "Acceleration.hh"
-// Trait
-%include "Traits.hh"
-// Equations
-%include "Equation.hh"
-%include "Equation_DD_1D.hh"
-%include "Equation_DD_2D.hh"
-%include "Equation_DD_3D.hh"
-%include "Equation_SC_2D.hh"
-%include "Equation_SD_1D.hh"
-%include "Equation_SD_2D.hh"
-%include "Equation_SC_MOC.hh"
 // SweepSource
 %include "SweepSource.hh"
-
 // Sweepers
 %include "Sweeper.hh"
 %include "Sweeper1D.hh"
@@ -72,10 +49,6 @@
 %template(SweepSource1DSP)  detran::SP<detran::SweepSource<detran::_1D> >;
 %template(SweepSource2DSP)  detran::SP<detran::SweepSource<detran::_2D> >;
 %template(SweepSource3DSP)  detran::SP<detran::SweepSource<detran::_3D> >;
-
-//%template(Acceleration1DSP) detran::Acceleration<detran::_1D>;
-//%template(Acceleration2DSP) detran::Acceleration<detran::_2D>;
-//%template(Acceleration3DSP) detran::Acceleration<detran::_3D>;
 
 // SWEEPER
 //%template(Sweeper1D_T)      detran::Sweeper<detran::_1D>;

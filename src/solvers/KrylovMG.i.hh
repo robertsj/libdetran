@@ -4,14 +4,13 @@
  * \author robertsj
  * \date   Jun 19, 2012
  * \brief  KrylovMG inline member definitions.
- * \note   Copyright (C) 2012 Jeremy Roberts.
  */
 //---------------------------------------------------------------------------//
 
 #ifndef KRYLOVMG_I_HH_
 #define KRYLOVMG_I_HH_
 
-// System
+#include "utilities/MathUtilities.hh"
 #include <algorithm>
 #include <cstdio>
 #include <iostream>
@@ -112,8 +111,10 @@ inline void KrylovMG<D>::solve()
            iteration, norm_resid, d_sweeper->number_sweeps());
   }
   if (norm_resid > d_tolerance)
-    warning(SOLVER_CONVERGENCE, "    KrylovMG did not converge.");
-
+  {
+    detran_utilities::warning(detran_utilities::SOLVER_CONVERGENCE,
+      "    KrylovMG did not converge.");
+  }
 
 
 } // end solve
@@ -123,6 +124,7 @@ inline void KrylovMG<D>::solve()
 template <class D>
 inline void KrylovMG<D>::build_rhs(State::vec_moments_type &B)
 {
+  using detran_utilities::norm_residual;
 
   for (int g = d_upscatter_cutoff; g < d_number_groups; g++)
   {

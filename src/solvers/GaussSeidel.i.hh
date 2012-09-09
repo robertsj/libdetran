@@ -4,17 +4,14 @@
  * \author robertsj
  * \date   Apr 10, 2012
  * \brief  GaussSeidel inline member definitions.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 
 #ifndef GAUSSSEIDEL_I_HH_
 #define GAUSSSEIDEL_I_HH_
 
-// Utilities
-#include "Warning.hh"
-
-// System
+#include "utilities/MathUtilities.hh"
+#include "utilities/Warning.hh"
 #include <algorithm>
 #include <cstdio>
 
@@ -24,6 +21,7 @@ namespace detran
 template <class D>
 void GaussSeidel<D>::solve()
 {
+  using detran_utilities::norm_residual;
 
   if (d_print_out > 0) std::cout << "  Starting GS." << std::endl;
 
@@ -82,8 +80,8 @@ void GaussSeidel<D>::solve()
 
     if (nres > d_tolerance)
     {
-      warning(SOLVER_CONVERGENCE,
-              "Gauss-Seidel upscatter did not converge.");
+      detran_utilities::warning(detran_utilities::SOLVER_CONVERGENCE,
+        "Gauss-Seidel upscatter did not converge.");
     }
 
   } // end upscatter block

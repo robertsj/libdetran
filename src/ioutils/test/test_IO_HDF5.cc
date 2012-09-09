@@ -15,16 +15,18 @@
         FUNC(test_IO_HDF5_mesh)
 
 // Detran headers
-#include "TestDriver.hh"
-#include "IO_HDF5.hh"
-#include "Mesh3D.hh"
+#include "utilities/TestDriver.hh"
+#include "ioutils/IO_HDF5.hh"
+#include "geometry/Mesh3D.hh"
 
 // Setup
 /* ... */
 
-using namespace detran;
-using namespace detran_ioutils;
 using namespace detran_test;
+using namespace detran_utilities;
+using namespace detran_geometry;
+using namespace detran_material;
+using namespace detran_ioutils;
 using namespace std;
 
 int main(int argc, char *argv[])
