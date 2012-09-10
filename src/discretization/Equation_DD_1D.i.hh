@@ -49,8 +49,6 @@ inline void Equation_DD_1D::solve(const size_t i,
   // Compute outgoing fluxes.
   psi_out = 2.0*psi_center - psi_in;
 
-  std::cout << " IN= " << psi_in << " OUT=" << psi_out << std::endl;
-
   // Compute flux moments.
   phi[cell] += d_quadrature->weight(d_angle) * psi_center;
 

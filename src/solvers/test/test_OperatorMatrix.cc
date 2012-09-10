@@ -1,16 +1,15 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   test_Operator.cc
+ * \file   test_OperatorMatrix.cc
  * \author Jeremy Roberts
  * \date   Aug 19, 2012
- * \brief  Test of Matrix class.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+ * \brief  Test of OperatorMatrix class.
  */
 //---------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
-#define TEST_LIST         \
-        FUNC(test_Operator)
+#define TEST_LIST                 \
+        FUNC(test_OperatorMatrix)
 
 // Detran test
 #include "utilities/TestDriver.hh"
@@ -35,16 +34,16 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------//
 
-int test_Operator_actual();
+int test_OperatorMatrix_actual();
 
 // Test of basic public interface
-int test_Operator(int argc, char *argv[])
+int test_OperatorMatrix(int argc, char *argv[])
 {
   // Initialize PETSc
   PetscInitialize(&argc, &argv, PETSC_NULL, PETSC_NULL);
 
   // Call actual test.
-  int result = test_Operator_actual();
+  int result = test_OperatorMatrix_actual();
 
   // Finalize PETSc
   PetscFinalize();
@@ -53,7 +52,7 @@ int test_Operator(int argc, char *argv[])
 }
 
 // Test of basic public interface
-int test_Operator_actual()
+int test_OperatorMatrix_actual()
 {
   typedef detran_utilities::size_t size_t;
 
@@ -79,13 +78,10 @@ int test_Operator_actual()
   A.multiply(X, Y);
 
   // Test the vector output.
-  double ref[] = {1, 2, -X.size() * 5 + 2};
+  double ref[] = {1, 2, 2, 2, -23};
   for (int i = 0; i < X.size(); i++)
   {
-    double ref = 2.0;
-    if (i == 0) ref = 1.0;
-    if (i == n - 1) ref = 2 - 25 * X.size() * X.size();
-    TEST(detran_utilities::soft_equiv(Y[i], ref));
+    TEST(detran_utilities::soft_equiv(Y[i], ref[i]));
   }
 
   A.display();

@@ -24,7 +24,11 @@ public:
 
   TestOperatorMatrix(size_t n)
     : OperatorMatrix(n, n)
-  { /* ... */ }
+  {
+    vec_int nnz(n, 3);
+    preallocate(nnz);
+    build();
+  }
 
 private:
 
@@ -64,7 +68,7 @@ class TestOperatorShell: public OperatorShell
 public:
 
   TestOperatorShell(const size_t m)
-      : OperatorShell(m, m, this), d_B(m, m)
+      : OperatorShell(m, m, this), d_B(m)
   {
     /* ... */
   }

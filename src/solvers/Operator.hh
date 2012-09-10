@@ -19,6 +19,15 @@ namespace detran
 /*!
  *  \class Operator
  *  \brief Base operator class based on PETSc matrix
+ *
+ *  An Operator can either be a concrete matrix object in which the elements
+ *  of the matrix are explicitly defined and stored (see \ref OperatorMatrix),
+ *  or the operator can be matrix-free (see \ref OperatorShell).  Because
+ *  PETSc is written in C, it defines no basic operator class akin to
+ *  the Epetra operator of Trilinos.  The simple operator interfaced defined
+ *  here should allow for fairly natural use of PETSc while hiding most of
+ *  the PETSC API from clients.
+ *
  */
 class Operator
 {
@@ -55,8 +64,8 @@ public:
   Operator(const size_t m,
            const size_t n);
 
-  /// Virtual destructor
-  virtual ~Operator(){};
+  /// Virtual destructor.  This destroys the PETSc matrix.
+  virtual ~Operator();
 
   //---------------------------------------------------------------------------//
   // ABSTRACT INTERFACE

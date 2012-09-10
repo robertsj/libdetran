@@ -21,7 +21,7 @@ Vector::Vector(const size_t m, const double val)
 
   // Create the vector
   PetscErrorCode ierr;
-  ierr = VecCreateSeq(PETSC_COMM_SELF, m, PETSC_DETERMINE, &d_V);
+  ierr = VecCreateSeq(PETSC_COMM_SELF, m, &d_V);
   ierr = VecSet(d_V, val);
 
   // Get acces to and then "restore" the array, but not actually.

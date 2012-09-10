@@ -12,15 +12,17 @@
 namespace detran
 {
 
+//---------------------------------------------------------------------------//
+// PUBLIC FUNCTIONS
+//---------------------------------------------------------------------------//
+
 OperatorMatrix::OperatorMatrix(const size_t m, const size_t n)
+  : Operator(m, n)
 {
 
   // Create appropriate matrix type.
   PetscErrorCode ierr;
   ierr = MatSetType(d_A, MATSEQAIJ);
-
-  // Build
-  build();
 
   // Postconditions
   Ensure(!ierr);
@@ -53,6 +55,25 @@ void OperatorMatrix::display(const int output, const std::string name) const
     THROW("Invalid output switch for Matrix display");
   MatView(d_A, viewer);
   PetscViewerDestroy(&viewer);
+}
+
+//---------------------------------------------------------------------------//
+// IMPLEMENTATION
+//---------------------------------------------------------------------------//
+
+void OperatorMatrix::preallocate(vec_int &nnz)
+{
+  PetscErrorCode ierr =
+    MatSeqAIJSetPreallocation(d_A, PETSC_DEFAULT, &nnz[0]);
+  Ensure(!ierr);
+}
+
+void OperatorMatrix::flush(InsertMode insert_t)
+{
+  if (insert_t == d_insert_mode) return;
+  MatAssemblyBegin(d_A, MAT_FLUSH_ASSEMBLY);
+  MatAssemblyEnd(d_A, MAT_FLUSH_ASSEMBLY);
+  d_insert_mode = insert_t;
 }
 
 } // end namespace detran

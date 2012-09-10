@@ -1,98 +1,62 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   LossOperator.cc
- * \brief  LossOperator 
+ * \file   DiffusionLossOperator.cc
+ * \brief  DiffusionLossOperator 
  * \author Jeremy Roberts
- * \date   Jul 25, 2012
+ * \date   Sep 10, 2012
  */
 //---------------------------------------------------------------------------//
 
-// Configuration
-#include "detran_config.h"
-
-#ifdef DETRAN_ENABLE_PETSC
-
-// Detran
-#include "LossOperator.hh"
-
-// System
-#include <string>
-#include <cmath>
+#include "DiffusionLossOperator.hh"
 #include <iostream>
-#include "petscmat.h"
 
-namespace detran_diffusion
+namespace detran
 {
 
-LossOperator::LossOperator(SP_input    input,
-                           SP_material material,
-                           SP_mesh     mesh)
-  : BaseOperator(input, material, mesh)
-  , d_albedo(6, vec_dbl(d_material->number_groups(), 1.0))
-  , d_number_groups(d_material->number_groups())
-  , d_group_size(d_mesh->number_cells())
+DiffusionLossOperator::DiffusionLossOperator(SP_input       input,
+                                             SP_material    material,
+                                             SP_mesh        mesh,
+                                             const bool     include_fission,
+                                             const double   keff)
+  : OperatorMatrix(material->number_groups()*mesh->number_cells(),
+                   material->number_groups()*mesh->number_cells())
+  , d_input(input)
+  , d_material(material)
+  , d_mesh(mesh)
+  , d_dimension(mesh->dimension())
+  , d_include_fission(false)
+  , d_keff(keff)
 {
-  // Preconditions
-  using std::string;
 
-  // The matrix dimension
-  d_size = d_group_size * d_number_groups;
+  // Nonzeros.  We have up to the number of groups in a block row
+  // due to scattering and potentially fission.  Additionally,
+  // we have 2*dimension entries off the energy block due to neighbors.
+  vec_int nnz(d_number_rows, 2 * d_dimension + d_number_groups);
 
+  // Preallocate the matrix.  Note, PETSc documentation suggests getting
+  // this right is extremely important.
+  preallocate(nnz);
 
-  // Set the albedo.  First, check if the input has an albedo
-  // entry.  If it does, this is the default way to set the
-  // condition.  Otherwise, check the boundary conditions.
-  if (d_input->check("albedo"))
-  {
-    // \todo Add a user-defined albedo
-  }
-  else
-  {
-    std::vector<std::string> boundary_name(6, "");
-    boundary_name[Mesh::WEST]   = "bc_west";
-    boundary_name[Mesh::EAST]   = "bc_east";
-    boundary_name[Mesh::SOUTH]  = "bc_south";
-    boundary_name[Mesh::NORTH]  = "bc_north";
-    boundary_name[Mesh::BOTTOM] = "bc_bottom";
-    boundary_name[Mesh::TOP]    = "bc_top";
-    for (int g = 0; g < d_material->number_groups(); g++)
-    {
-      for (int b = 0; b < d_mesh->dimension(); b++)
-      {
-        d_albedo[b][g] = 0.0;
-        if (d_input->check(boundary_name[b]))
-          if (d_input->get<string>(boundary_name[b]) == "reflect")
-            d_albedo[b][g] = 1.0;
-      }
-    }
-  }
-
-  // Construct the matrix.
-  construct();
+  // Build the matrix with the initial keff guess.
+  build();
 
 }
 
+void DiffusionLossOperator::construct(const double keff)
+{
+  d_keff = keff;
+  build();
+}
 
 //---------------------------------------------------------------------------//
 // IMPLEMENTATION
 //---------------------------------------------------------------------------//
 
-void LossOperator::construct()
+void DiffusionLossOperator::build()
 {
 
   using std::cout;
   using std::endl;
-
-  // Create the matrix.
-  int number_nz = 1 + 2*d_dimension + d_number_groups;
-
-  //MatCreateSeqAIJ(MPI_Comm comm,PetscInt m,PetscInt n,PetscInt nz,const PetscInt nnz[],Mat *A)
-  MatCreateSeqAIJ(PETSC_COMM_SELF, d_size, d_size,
-                  number_nz, PETSC_NULL, &d_operator);
-
-//  MatCreate(PETSC_COMM_SELF, &d_operator);
-//  MatSetType(d_operator, MATAIJ);
-//  MatSetSizes(d_operator, PETSC_DECIDE, PETSC_DECIDE, d_size, d_size);
 
   // Get the material map.
   vec_int mat_map = d_mesh->mesh_map("MATERIAL");
@@ -113,7 +77,7 @@ void LossOperator::construct()
       //cout << " row = " << row << endl;
 
       // Define the data for this cell.
-      int m = mat_map[cell];
+      size_t m = mat_map[cell];
 
       //cout << " m = " << m << endl;
 
@@ -123,9 +87,9 @@ void LossOperator::construct()
                        d_material->sigma_s(m, g, g);
 
       // Get the directional indices.
-      int i = d_mesh->cell_to_i(cell);
-      int j = d_mesh->cell_to_j(cell);
-      int k = d_mesh->cell_to_k(cell);
+      size_t i = d_mesh->cell_to_i(cell);
+      size_t j = d_mesh->cell_to_j(cell);
+      size_t k = d_mesh->cell_to_k(cell);
 
       // Cell width vector.
       double cell_hxyz[3] = {d_mesh->dx(i), d_mesh->dy(j), d_mesh->dz(k)};
@@ -181,11 +145,10 @@ void LossOperator::construct()
         {
 
           // Get the neighbor data.
-          int neig_cell = d_mesh->index(neig_idx[0], neig_idx[1], neig_idx[2]);
-          Assert(neig_cell >= 0);
-          int ii = d_mesh->cell_to_i(neig_cell);
-          int jj = d_mesh->cell_to_j(neig_cell);
-          int kk = d_mesh->cell_to_k(neig_cell);
+          size_t neig_cell = d_mesh->index(neig_idx[0], neig_idx[1], neig_idx[2]);
+          size_t ii = d_mesh->cell_to_i(neig_cell);
+          size_t jj = d_mesh->cell_to_j(neig_cell);
+          size_t kk = d_mesh->cell_to_k(neig_cell);
 
           //cout << " neig_row " << neig_row << endl;
 
@@ -201,8 +164,7 @@ void LossOperator::construct()
           // Compute and set the off-diagonal matrix value.
           double val = - dtilde / cell_hxyz[xyz_idx];
           int neig_row = neig_cell + g * d_group_size;
-          MatSetValue(d_operator, row, neig_row, val, INSERT_VALUES);
-
+          insert_values(1, &row, 1, &neig_row, &val, INSERT_VALUES);
         }
 
         // Compute leakage coefficient for this cell and surface.
@@ -217,14 +179,14 @@ void LossOperator::construct()
 
      // Compute and set the diagonal matrix value.
      double val = jnet + cell_sr;
-     MatSetValue(d_operator, row, row, val, INSERT_VALUES);
+     insert_values(1, &row, 1, &row, &val, INSERT_VALUES);
 
      // Add downscatter component.
      for (int gp = d_material->lower(g); gp < g; gp++)
      {
        int col = cell + gp * d_group_size;
        double val = -d_material->sigma_s(m, g, gp);
-       MatSetValue(d_operator, row, col, val, INSERT_VALUES);
+       insert_values(1, &row, 1, &col, &val, INSERT_VALUES);
      }
 
      // Add upscatter component.
@@ -232,30 +194,63 @@ void LossOperator::construct()
      {
        int col = cell + gp * d_group_size;
        double val = -d_material->sigma_s(m, g, gp);
-       MatSetValue(d_operator, row, col, val, INSERT_VALUES);
-     }
-
-     // Add the fission component, if this is a fixed source
-     // multiplying problem.
-     if (1==0)
-     {
-       // finish me
+       insert_values(1, &row, 1, &col, &val, INSERT_VALUES);
      }
 
     } // row loop
 
   } // group loop
 
+  if (d_include_fission)
+  {
+    // Loop over all groups
+    for (int g = 0; g < d_number_groups; g++)
+    {
+
+      // Loop over all cells.
+      for (int cell = 0; cell < d_group_size; cell++)
+      {
+
+        // Compute row index.
+        int row = cell + g * d_group_size;
+
+        // Define the data for this cell.
+        int m = mat_map[cell];
+
+        // Get the directional indices.
+        int i = d_mesh->cell_to_i(cell);
+        int j = d_mesh->cell_to_j(cell);
+        int k = d_mesh->cell_to_k(cell);
+
+        // Loop through source group.
+        for (int gp = 0; gp < d_number_groups; gp++)
+        {
+          // Compute column index.
+          int col = cell + gp * d_group_size;
+
+          // Fold the fission density with the spectrum.  Note that
+          // we scale by keff and take the negative, since it's on the
+          // left hand side.
+          double val = -d_material->nu_sigma_f(m, gp) *
+                       d_material->chi(m, g) / d_keff;
+
+          // Set the value.
+          insert_values(1, &row, 1, &col, &val, ADD_VALUES);
+        }
+
+      } // row loop
+
+    } // group loop
+
+  } // end fission block
+
   // Assemble.
-  MatAssemblyBegin(d_operator, MAT_FINAL_ASSEMBLY);
-  MatAssemblyEnd(d_operator, MAT_FINAL_ASSEMBLY);
+  assemble();
 
 }
 
-} // end namespace detran_diffusion
-
-#endif
+} // end namespace detran
 
 //---------------------------------------------------------------------------//
-//              end of file LossOperator.cc
+//              end of file DiffusionLossOperator.cc
 //---------------------------------------------------------------------------//

@@ -18,6 +18,8 @@ namespace detran
 /*!
  *  \class OperatorMatrix
  *  \brief An operator with an explicit matrix representation
+ *
+ *
  */
 class OperatorMatrix: public Operator
 {
@@ -61,6 +63,12 @@ protected:
   //---------------------------------------------------------------------------//
 
   /*!
+   *  \brief Preallocate the matrix
+   *  \param number_nonzeros    Number of nonzeros per row
+   */
+  void preallocate(vec_int &number_nonzeros);
+
+  /*!
    *  \brief Insert values (=)
    *
    *  \param number_rows    Number of column indices
@@ -68,34 +76,34 @@ protected:
    *  \param number_columns Number of column indices
    *  \param columns        Indices of global columns
    *  \param values         Logically 2D array of values to insert
+   *  \param insert_t       Insertion type
    */
    void insert_values(const size_t number_rows,
                       const int *rows,
                       const size_t number_columns,
                       const int *columns,
-                      const double *values);
-
-   /*!
-    *  \brief Add values (+=)
-    *
-    *  \param number_rows    Number of column indices
-    *  \param rows           Indices of global rows
-    *  \param number_columns Number of column indices
-    *  \param columns        Indices of global columns
-    *  \param values         Logically 2D array of values to insert
-    */
-    void add_values(const size_t number_rows,
-                    const int *rows,
-                    const size_t number_columns,
-                    const int *columns,
-                    const double *values);
+                      const double *values,
+                      InsertMode = INSERT_VALUES);
 
     /// Build the underlying matrix.
     virtual void build() = 0;
+
+private:
+
+    /// INSERT or ADD as last insert type
+    InsertMode d_insert_mode;
+
+    /// Flush the matrix insertion type
+    void flush(InsertMode insert_t);
 };
 
-
 } // end namespace detran
+
+//---------------------------------------------------------------------------//
+// INLINE MEMBERS
+//---------------------------------------------------------------------------//
+
+#include "OperatorMatrix.i.hh"
 
 #endif // detran_OPERATORMATRIX_HH_
 

@@ -142,15 +142,13 @@ private:
 
 };
 
-} // end namespace linear_algebra
+} // end namespace detran
 
 //---------------------------------------------------------------------------//
 // INLINE FUNCTIONS
 //---------------------------------------------------------------------------//
 
 #include "Vector.i.hh"
-
-} // end namespace detran
 
 #endif // detran_VECTOR_HH_
 

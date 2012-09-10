@@ -9,6 +9,7 @@ SET(SOLVERS_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 #-------------------------------------#
 
 SET(SOLVERS_SRC
+    DiffusionLossOperator
 	Eigensolver.cc
 	EigenSLEPc.cc
     InnerIteration.cc
@@ -16,13 +17,13 @@ SET(SOLVERS_SRC
     InnerGMRES.cc
     GaussSeidel.cc
     KrylovMG.cc
-    #Operator.cc
-    #OperatorMatrix.cc
-    #OperatorShell.cc
+    Operator.cc
+    OperatorMatrix.cc
+    OperatorShell.cc
     PowerIteration.cc
     PreconditionerWG.cc
     PreconditionerMG.cc
-    #Vector.cc
+    Vector.cc
 )
 
 #-------------------------------------#

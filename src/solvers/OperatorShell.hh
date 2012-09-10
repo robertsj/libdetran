@@ -46,13 +46,20 @@ public:
    *  \param  output    Flag indicating (stdout=0, ascii=1, binary=2)
    *  \param  name      File name for ascii or binary file
    */
-  virtual void display(const int output = 0,
-                       const std::string name) const
+  virtual void display(const int output = STDOUT,
+                       const std::string name = "matrix.out") const
   {
-    std::cout << "OperatorShell:" << std::endl
-              << "  # rows = " << d_number_rows << std::endl
-              << "  # cols = " << d_number_columns << std::endl
-              << std::endl;
+    if (output == STDOUT)
+    {
+      std::cout << "OperatorShell:" << std::endl
+                << "  # rows = " << d_number_rows << std::endl
+                << "  # cols = " << d_number_columns << std::endl
+                << std::endl;
+    }
+    else
+    {
+      THROW("NOT IMPLEMENTED");
+    }
   }
 
 protected:

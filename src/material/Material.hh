@@ -60,20 +60,13 @@ public:
            const size_t number_groups,
            bool downscatter = false);
 
-  /*!
-   *  \brief SP Constructor.
-   *
-   *  \param    number_groups       Number of energy groups.
-   *  \param    number_materials    Number of materials.
-   *  \param    downscatter         Switch on to use only downscatter.
-   *  \return                       Smart posize_ter to Material object.
-   */
+  /// SP constructor
   static SP_material Create(const size_t number_materials,
                             const size_t number_groups,
                             bool downscatter)
   {
     SP_material
-      p(new Material(number_groups, number_materials, downscatter));
+      p(new Material(number_materials, number_groups, downscatter));
     return p;
   }
 

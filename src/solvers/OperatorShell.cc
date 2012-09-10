@@ -7,14 +7,13 @@
  */
 //---------------------------------------------------------------------------//
 
-#include "Operator.hh"
+#include "OperatorShell.hh"
 
 namespace detran
 {
 
-
-OperatorShell::OperatorShell(const size_type m,
-                             const size_type n,
+OperatorShell::OperatorShell(const size_t m,
+                             const size_t n,
                              void* context)
   : Operator(m, n)
 {

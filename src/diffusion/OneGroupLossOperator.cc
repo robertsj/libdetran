@@ -56,9 +56,11 @@ OneGroupLossOperator::OneGroupLossOperator(SP_input    input,
     boundary_name[Mesh::NORTH]  = "bc_north";
     boundary_name[Mesh::BOTTOM] = "bc_bottom";
     boundary_name[Mesh::TOP]    = "bc_top";
-    for (int b = 0; b < 6; b++)
+    for (int b = 0; b < d_mesh->dimension() * 2; b++)
     {
-      d_albedo[0] = 0.0;
+      // Set the default to zero if it is an active boundary.  For 1/2-D problems,
+      // we leave the "infinite" boundaries as reflective.
+      d_albedo[b] = 0.0;
       if (d_input->check(boundary_name[b]))
         if (d_input->get<string>(boundary_name[b]) == "reflect")
           d_albedo[b] = 1.0;

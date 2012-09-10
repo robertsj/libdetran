@@ -4,19 +4,15 @@
  * \author Jeremy Roberts
  * \date   Aug 19, 2012
  * \brief  Test of OperatorShell class.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
-#define TEST_LIST         \
+#define TEST_LIST                \
         FUNC(test_OperatorShell)
 
-// Detran test
 #include "TestDriver.hh"
-
 #include "OperatorShell.hh"
-
 #include <iostream>
 
 // Setup
@@ -80,13 +76,10 @@ int test_OperatorShell_actual()
   A.multiply(X, Y);
 
   // Test the vector output.
-  double ref[] = {1, 2, -X.size() * 5 + 2};
+  double ref[] = {1, 2, 2, 2, -23};
   for (int i = 0; i < X.size(); i++)
   {
-    double ref = 2.0;
-    if (i == 0) ref = 1.0;
-    if (i == n - 1) ref = 2 - 25 * X.size() * X.size();
-    TEST(detran_utilities::soft_equiv(Y[i], ref));
+    TEST(detran_utilities::soft_equiv(Y[i], ref[i]));
   }
 
   A.display();

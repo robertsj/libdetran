@@ -23,6 +23,8 @@ Operator::Operator(const size_t m,
   Require(m > 0);
   Require(n > 0);
 
+  // Set the matrix size.  This applies to all operators, which should
+  // know their sizes from the start.
   PetscErrorCode ierr;
   ierr = MatCreate(PETSC_COMM_SELF, &d_A);
   ierr = MatSetSizes(d_A, m, n, PETSC_DETERMINE, PETSC_DETERMINE);
