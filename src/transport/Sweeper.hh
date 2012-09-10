@@ -155,6 +155,18 @@ public:
     return d_number_sweeps;
   }
 
+  /// Set adjoint
+  void set_adjoint(const bool adjoint)
+  {
+    d_adjoint = adjoint;
+  }
+
+  /// Is adjoint?
+  bool is_adjoint() const
+  {
+    return d_adjoint;
+  }
+
   /// Set a current tally.
   void set_current(SP_currenttally current)
   {

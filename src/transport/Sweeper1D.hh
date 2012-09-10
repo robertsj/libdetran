@@ -87,13 +87,13 @@ public:
 
   /// SP Constructor
   static SP_sweeper
-  Create(SP_input       input,
-         SP_mesh        mesh,
-         SP_material    material,
-         SP_quadrature  quadrature,
-         SP_state       state,
-         SP_boundary    boundary,
-         SP_sweepsource sweepsource)
+  Create(detran_utilities::InputDB::SP_input        input,
+         detran_geometry::Mesh::SP_mesh             mesh,
+         detran_material::Material::SP_material     material,
+         detran_angle::Quadrature::SP_quadrature    quadrature,
+         State::SP_state                            state,
+         BoundaryBase<_1D>::SP_boundary             boundary,
+         SweepSource<_1D>::SP_sweepsource           sweepsource)
   {
     SP_sweeper p(new Sweeper1D(input, mesh, material, quadrature,
                                state, boundary, sweepsource));
@@ -105,10 +105,10 @@ public:
   //-------------------------------------------------------------------------//
 
   /// Sweep.
-  inline void sweep(moments_type &phi);
+  inline void sweep(State::moments_type &phi);
 
   /// Setup the equations for the group
-  void setup_group(const size_t g)
+  void setup_group(const detran_utilities::size_t g)
   {
     d_g = g;
   }

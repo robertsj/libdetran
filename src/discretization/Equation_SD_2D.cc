@@ -43,8 +43,8 @@ void Equation_SD_2D::setup_angle(const size_t angle)
 {
   Require(angle < d_quadrature->number_angles_octant());
   d_angle = angle;
-  double mu  = d_quadrature->mu(d_octant, angle);
-  double eta = d_quadrature->eta(d_octant, angle);
+  double mu  = d_quadrature->mu(0, angle);
+  double eta = d_quadrature->eta(0, angle);
   for (int i = 0; i < d_mesh->number_cells_x(); i++)
   {
     d_coef_x[i] = mu / d_mesh->dx(i);

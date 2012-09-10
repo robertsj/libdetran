@@ -25,10 +25,10 @@
 %template(Sweeper1DBASE)     detran::Sweeper<detran::_1D>;
 %template(Sweeper2DBASE)     detran::Sweeper<detran::_2D>;
 %template(Sweeper3DBASE)     detran::Sweeper<detran::_3D>;
-
 %include "Sweeper1D.hh"
 %include "Sweeper2D.hh"
 %include "Sweeper3D.hh"
+
 %template(Sweeper1D_SD)     detran::Sweeper1D<detran::Equation_SD_1D>;
 %template(Sweeper2D_SD)     detran::Sweeper2D<detran::Equation_SD_2D>;
 %template(Sweeper1D_DD)     detran::Sweeper1D<detran::Equation_DD_1D>;

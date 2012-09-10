@@ -113,21 +113,21 @@ inline detran_utilities::size_t Sweeper<D>::index(const size_t o,
 {
   if (dim == 1)
   {
-    if ((o == 0 or o == 3 or o == 4 or o == 7))
+    if ((o == 0 or o == 3 or o == 4 or o == 7) and !d_adjoint)
       return ijk;
     else
       return d_mesh->number_cells_x() - ijk - 1;
   }
   if (dim == 2)
   {
-    if ((o == 0 or o == 1 or o == 4 or o == 5))
+    if ((o == 0 or o == 1 or o == 4 or o == 5) and !d_adjoint)
       return ijk;
     else
       return d_mesh->number_cells_y() - ijk - 1;
   }
   if (dim == 3)
   {
-    if ((o == 0 or o == 1 or o == 2 or o == 3))
+    if ((o == 0 or o == 1 or o == 2 or o == 3) and !d_adjoint)
       return ijk;
     else
       return d_mesh->number_cells_z() - ijk - 1;

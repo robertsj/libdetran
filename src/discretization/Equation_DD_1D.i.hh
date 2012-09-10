@@ -19,7 +19,7 @@ namespace detran
 inline void Equation_DD_1D::setup_angle(const size_t angle)
 {
   Require(angle < d_quadrature->number_angles_octant());
-  double mu = d_quadrature->mu(d_octant, angle);
+  double mu = d_quadrature->mu(0, angle);
   for (int i = 0; i < d_mesh->number_cells_x(); i++)
   {
     d_coef_x[i] = 2.0 * mu / d_mesh->dx(i);
@@ -48,6 +48,8 @@ inline void Equation_DD_1D::solve(const size_t i,
 
   // Compute outgoing fluxes.
   psi_out = 2.0*psi_center - psi_in;
+
+  std::cout << " IN= " << psi_in << " OUT=" << psi_out << std::endl;
 
   // Compute flux moments.
   phi[cell] += d_quadrature->weight(d_angle) * psi_center;

@@ -42,8 +42,8 @@ void Equation_SC_2D::setup_angle(const size_t angle)
 {
   Require(angle < d_quadrature->number_angles_octant());
   d_angle = angle;
-  double mu  = d_quadrature->mu(d_octant, d_angle);
-  double eta = d_quadrature->eta(d_octant, d_angle);
+  double mu  = d_quadrature->mu(0, d_angle);
+  double eta = d_quadrature->eta(0, d_angle);
   for (int i = 0; i < d_mesh->number_cells_x(); i++)
   {
     d_alpha[i] = d_mesh->dx(i) / mu;
