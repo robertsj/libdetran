@@ -7,8 +7,12 @@
 //---------------------------------------------------------------------------//
 
 %include "State.hh"
+%include "FissionSource.hh"
+%include "ScatterSource.hh"
 %include "SweepSource.hh"
 %template(StateSP)          detran_utilities::SP<detran::State>;
+%template(FissionSourceSP)  detran_utilities::SP<detran::FissionSource>;
+%template(ScatterSourceSP)  detran_utilities::SP<detran::ScatterSource>;
 %template(SweepSource1D)    detran::SweepSource<detran::_1D>;
 %template(SweepSource2D)    detran::SweepSource<detran::_2D>;
 %template(SweepSource3D)    detran::SweepSource<detran::_3D>;

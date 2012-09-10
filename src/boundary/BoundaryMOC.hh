@@ -77,7 +77,7 @@ public:
               SP_quadrature   quadrature);
 
   /// SP Constructor.
-  static SP_boundary
+  static SP_base
   Create(SP_input       input,
          SP_mesh        mesh,
          SP_quadrature  quadrature)
