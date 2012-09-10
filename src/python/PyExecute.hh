@@ -55,7 +55,7 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utility::InputDB::SP_input       SP_input;
+  typedef detran_utilities::InputDB::SP_input     SP_input;
   typedef detran_geometry::Mesh::SP_mesh          SP_mesh;
   typedef detran_material::Material::SP_material  SP_material;
 
@@ -229,7 +229,7 @@ void PyExecute<D>::setup()
   // Quadrature
   //-------------------------------------------------------------------------//
 
-  QuadratureFactory quad_factory;
+  detran_angle::QuadratureFactory quad_factory;
   quad_factory.build(d_quadrature, d_input, D::dimension);
   Assert(d_quadrature);
 
@@ -239,7 +239,7 @@ void PyExecute<D>::setup()
   if (d_moc)
   {
     // Track the mesh
-    Tracker tracker(d_mesh, d_quadrature);
+    detran_geometry::Tracker tracker(d_mesh, d_quadrature);
 
     // Normalize segments to conserve volume.
     tracker.normalize();
@@ -278,7 +278,7 @@ void PyExecute<D>::solve()
   if (d_moc)
     boundary = new BoundaryMOC<D>(d_input, d_mesh, d_quadrature);
   else
-    boundary = new Boundary<D>(d_input, d_mesh, d_quadrature);
+    boundary = new BoundarySN<D>(d_input, d_mesh, d_quadrature);
 
   //--------------------------------------------------------------------------//
   // Create solver and solve.
@@ -355,9 +355,9 @@ void PyExecute<D>::solve()
 }
 
 // Explicit instantiations
-template class PyExecute<_1D>;
-template class PyExecute<_2D>;
-template class PyExecute<_3D>;
+//template class PyExecute<_1D>;
+//template class PyExecute<_2D>;
+//template class PyExecute<_3D>;
 
 } // end namespace detran
 

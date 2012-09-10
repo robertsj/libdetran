@@ -57,8 +57,8 @@ public:
   static SP_externalsource
   Create(size_t number_groups,
          SP_mesh mesh,
-         spectra_type &spectra,
-         vec_int &map,
+         std::vector<std::vector<double> > &spectra,
+         std::vector<int>                  &map,
          SP_quadrature quadrature = SP_quadrature(0))
   {
     SP_externalsource

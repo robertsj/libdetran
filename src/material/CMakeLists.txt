@@ -23,8 +23,6 @@ ADD_LIBRARY(${LIB_NAME}
             ${SRC} 
 )
 TARGET_LINK_LIBRARIES(${LIB_NAME}
-                      angle
-                      geometry
                       utilities
 )
 

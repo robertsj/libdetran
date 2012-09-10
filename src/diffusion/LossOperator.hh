@@ -32,6 +32,8 @@ namespace detran_diffusion
  *  problems.
  *
  *  A mesh-centered discretization is used.
+ *
+ *
  */
 class LossOperator: public BaseOperator
 {

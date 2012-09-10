@@ -30,15 +30,22 @@ struct vec4_T {typedef std::vector<typename vec3_T<T>::value_type> value_type;};
 
 // Instantiations
 
-typedef vec1_T<int>::value_type      vec_int;
-typedef vec2_T<int>::value_type     vec2_int;
-typedef vec3_T<int>::value_type     vec3_int;
-typedef vec4_T<int>::value_type     vec4_int;
+//typedef vec1_T<int>::value_type      vec_int;
+//typedef vec2_T<int>::value_type     vec2_int;
+//typedef vec3_T<int>::value_type     vec3_int;
+//typedef vec4_T<int>::value_type     vec4_int;
+//
+//typedef vec1_T<double>::value_type      vec_dbl;
+//typedef vec2_T<double>::value_type     vec2_dbl;
+//typedef vec3_T<double>::value_type     vec3_dbl;
+//typedef vec4_T<double>::value_type     vec4_dbl;
 
-typedef vec1_T<double>::value_type      vec_dbl;
-typedef vec2_T<double>::value_type     vec2_dbl;
-typedef vec3_T<double>::value_type     vec3_dbl;
-typedef vec4_T<double>::value_type     vec4_dbl;
+typedef std::vector<int> vec_int;
+typedef std::vector<std::vector<int> > vec2_int;
+typedef std::vector<std::vector<std::vector<int> > > vec3_int;
+typedef std::vector<double> vec_dbl;
+typedef std::vector<std::vector<double> > vec2_dbl;
+typedef std::vector<std::vector<std::vector<double> > > vec3_dbl;
 
 typedef vec1_T<size_t>::value_type      vec_size_t;
 typedef vec2_T<size_t>::value_type     vec2_size_t;

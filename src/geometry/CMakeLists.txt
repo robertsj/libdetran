@@ -2,11 +2,13 @@
 # src/geometry/CMakeLists.txt
 #------------------------------------------------------------------------------#
 
+SET(LIB_NAME "geometry")
+
 SET(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
-#-------------------------------------#
+#-----------------------------------------------------------------------------#
 # SOURCE
-#-------------------------------------#
+#-----------------------------------------------------------------------------#
 
 SET(SRC
     Mesh.cc
@@ -20,26 +22,25 @@ SET(SRC
     Tracker.cc
 )
 
-#-------------------------------------#
+#-----------------------------------------------------------------------------#
 # SHARED LIBRARY
-#-------------------------------------#
+#-----------------------------------------------------------------------------#
 
-ADD_LIBRARY(geometry
+ADD_LIBRARY(${LIB_NAME}
             SHARED
             ${SRC} 
 )
-TARGET_LINK_LIBRARIES( geometry
-                       utilities
-                       angle
-                       ${Boost_LIBRARIES}        
+TARGET_LINK_LIBRARIES(${LIB_NAME}
+                      angle
+                      utilities
 )
 
-INSTALL_FILES(/include .hh)
-INSTALL_TARGETS(/lib geometry)
+INSTALL_FILES(/include/${LIB_NAME} .hh)
+INSTALL_TARGETS(/lib ${LIB_NAME})
 
-#-------------------------------------#
+#-----------------------------------------------------------------------------#
 # TESTING
-#-------------------------------------#
+#-----------------------------------------------------------------------------#
 
 if( DETRAN_ENABLE_TEST )
     include_directories(${SRC_DIR}/test)

@@ -1,27 +1,23 @@
 #------------------------------------------------------------------------------#
-# libdetran/src/python/CMakeLists.txt
+# src/python/CMakeLists.txt
 #------------------------------------------------------------------------------#
 
 SET_SOURCE_FILES_PROPERTIES(detran.i PROPERTIES CPLUSPLUS ON)
 SWIG_ADD_MODULE(pydetran python detran.i )
 SWIG_LINK_LIBRARIES(pydetran
                     ${PYTHON_LIBRARIES} 
-                    #
                     utilities 
-                    #
+                    material
                     angle
                     geometry
-                    materials
-                    #
+                    external_source
+                    discretization
+                    boundary
                     transport
-                    # 
                     diffusion
-                    #
                     solvers
-                    #
                     ioutils
                     postprocess
-                    #
                     ${PETSC_LIBRARIES}
                     ${Silo_LIBRARIES})
 

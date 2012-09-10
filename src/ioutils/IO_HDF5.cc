@@ -268,8 +268,6 @@ detran_utilities::InputDB::SP_input IO_HDF5::read_input()
 
   // Postconditions
   Ensure(input);
-  Ensure(input->is_valid());
-
   return input;
 }
 

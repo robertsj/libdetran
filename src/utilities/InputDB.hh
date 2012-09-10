@@ -52,7 +52,7 @@ namespace detran_utilities
  */
 //===========================================================================//
 
-class InputDB : public Object
+class InputDB
 {
 
 public:
@@ -132,19 +132,6 @@ public:
 
   /// Display all my contents.
   void display() const;
-
-  /*
-   *  \brief Validate the input database.
-   *
-   *  This is probably the only place where upkeep needs to occur.  There
-   *  may be an intelligent way to do it, something like a "grammar".
-   *
-   *  At the very least, it should contain things like dimension, groups,
-   *  and so forth.
-   *
-   *  \return Whether or not verification was successful.
-   */
-  bool is_valid() const {return true;};
 
 private:
 

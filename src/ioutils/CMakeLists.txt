@@ -1,6 +1,8 @@
 #------------------------------------------------------------------------------#
-# libdetran/src/ioutils/CMakeLists.txt
+# src/ioutils/CMakeLists.txt
 #------------------------------------------------------------------------------#
+
+SET(LIB_NAME "ioutils")
 
 SET(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -9,36 +11,35 @@ SET(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 #-------------------------------------#
 
 SET(SRC
-  IO_HDF5.cc
-  SiloOutput.cc
+    IO_HDF5.cc
+    SiloOutput.cc
 )
 
-#-------------------------------------#
+#-----------------------------------------------------------------------------#
 # SHARED LIBRARY
-#-------------------------------------#
+#-----------------------------------------------------------------------------#
 
-ADD_LIBRARY(ioutils
+ADD_LIBRARY(${LIB_NAME}
             SHARED
             ${SRC} 
 )
-TARGET_LINK_LIBRARIES( ioutils
-                       material
-                       geometry
-                       utilities
-                       transport
-                       ${HDF5_LIBRARIES}       
-                       ${Silo_LIBRARIES}          
+TARGET_LINK_LIBRARIES(${LIB_NAME}
+                      material
+                      geometry
+                      utilities
+                      transport
+                      ${HDF5_LIBRARIES}       
+                      ${Silo_LIBRARIES}          
 )
 
-INSTALL_FILES(/include .hh)
-INSTALL_TARGETS(/lib ioutils)
+INSTALL_FILES(/include/${LIB_NAME} .hh)
+INSTALL_TARGETS(/lib ${LIB_NAME})
 
-#-------------------------------------#
+#-----------------------------------------------------------------------------#
 # TESTING
-#-------------------------------------#
+#-----------------------------------------------------------------------------#
 
 if( DETRAN_ENABLE_TEST )
     include_directories(${SRC_DIR}/test)
     add_subdirectory(${SRC_DIR}/test)
 endif()
-

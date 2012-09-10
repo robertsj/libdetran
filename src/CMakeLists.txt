@@ -239,28 +239,28 @@ if( NOT CMAKE_INSTALL_PREFIX)
        FORCE)
 endif()
 
-# Python things for installation
-if( DETRAN_ENABLE_PYTHON )
-  add_subdirectory(python)
-endif()
-
 #------------------------------------------------------------------------------#
 # SOURCE
 #------------------------------------------------------------------------------#
 
 add_subdirectory(utilities)
 add_subdirectory(material)
-add_subdirectory(geometry)
 add_subdirectory(angle)
+add_subdirectory(geometry)
 add_subdirectory(external_source)
 add_subdirectory(discretization)
 add_subdirectory(boundary)
 add_subdirectory(transport)
 add_subdirectory(diffusion)
 add_subdirectory(solvers)
-add_subdirectory(drivers)
 add_subdirectory(ioutils)
 add_subdirectory(postprocess)
+add_subdirectory(drivers)
+
+# Python things for installation
+if( DETRAN_ENABLE_PYTHON )
+  add_subdirectory(python)
+endif()
 
 #------------------------------------------------------------------------------#
 # OUTPUT

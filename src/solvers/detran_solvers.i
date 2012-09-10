@@ -6,29 +6,16 @@
  */
 //---------------------------------------------------------------------------//
 
-%include "detran_utilities.i"
-
 // Note, only the basic, non-PETSc classes are exposed directly.
 // The others can be accessed from within Execute.
 
 %include "InnerIteration.hh"
-%include "GaussSeidel.hh"
-%include "PowerIteration.hh"
-
 %template(InnerIteration1D)     detran::InnerIteration<detran::_1D>;
-%template(InnerIteration1DSP)   detran::SP<detran::InnerIteration<detran::_1D> >;
+%template(InnerIteration1DSP)   detran_utilities::SP<detran::InnerIteration<detran::_1D> >;
 %template(InnerIteration2D)     detran::InnerIteration<detran::_2D>;
-%template(InnerIteration2DSP)   detran::SP<detran::InnerIteration<detran::_2D> >;
-
-%template(GaussSeidel1D)        detran::GaussSeidel<detran::_1D>;
-%template(GaussSeidel1DSP)      detran::SP<detran::GaussSeidel<detran::_1D> >;
-%template(GaussSeidel2D)        detran::GaussSeidel<detran::_2D>;
-%template(GaussSeidel2DSP)      detran::SP<detran::GaussSeidel<detran::_2D> >;
-
-%template(PowerIteration1D)     detran::PowerIteration<detran::_1D>;
-%template(PowerIteration1DSP)   detran::SP<detran::PowerIteration<detran::_1D> >;
-%template(PowerIteration2D)     detran::PowerIteration<detran::_2D>;
-%template(PowerIteration2DSP)   detran::SP<detran::PowerIteration<detran::_2D> >;
+%template(InnerIteration2DSP)   detran_utilities::SP<detran::InnerIteration<detran::_2D> >;
+%template(InnerIteration3D)     detran::InnerIteration<detran::_3D>;
+%template(InnerIteration3DSP)   detran_utilities::SP<detran::InnerIteration<detran::_3D> >;
 
 namespace detran
 {
@@ -42,34 +29,63 @@ class SourceIteration: public InnerIteration<D>
 {
 public:
   // Constructor
-  SourceIteration(SP<detran::InputDB>          input,
-                  SP<detran::State>            state,
-                  SP<detran::Mesh>             mesh,
-                  SP<detran::Material>         material,
-                  SP<detran::Quadrature>       quadrature,
-                  SP<detran::BoundaryBase<D> > boundary,
-                  SP<detran::ExternalSource>   q_e,
-                  SP<detran::FissionSource>    q_f);
+  SourceIteration(
+      detran_utilities::SP<detran_utilities::InputDB>             input,
+      detran_utilities::SP<detran::State>                           state,
+      detran_utilities::SP<detran_geometry::Mesh>                   mesh,
+      detran_utilities::SP<detran_material::Material>               material,
+      detran_utilities::SP<detran_angle::Quadrature>                quadrature,
+      detran_utilities::SP<detran::BoundaryBase<D> >                boundary,
+      detran_utilities::SP<detran_external_source::ExternalSource>  q_e,
+      detran_utilities::SP<detran::FissionSource>                   q_f);
   // SP Constructor
-  static SP<SourceIteration<D> >
-  Create(SP<detran::InputDB>          input,
-         SP<detran::State>            state,
-         SP<detran::Mesh>             mesh,
-         SP<detran::Material>         material,
-         SP<detran::Quadrature>       quadrature,
-         SP<detran::BoundaryBase<D> > boundary,
-         SP<detran::ExternalSource>   q_e,
-         SP<detran::FissionSource>    q_f);
+  static detran_utilities::SP<SourceIteration<D> >
+  Create(
+      detran_utilities::SP<detran_utilities::InputDB>             input,
+      detran_utilities::SP<detran::State>                           state,
+      detran_utilities::SP<detran_geometry::Mesh>                   mesh,
+      detran_utilities::SP<detran_material::Material>               material,
+      detran_utilities::SP<detran_angle::Quadrature>                quadrature,
+      detran_utilities::SP<detran::BoundaryBase<D> >                boundary,
+      detran_utilities::SP<detran_external_source::ExternalSource>  q_e,
+      detran_utilities::SP<detran::FissionSource>                   q_f);
   // Solve the within group equation.
-  void solve(int g);
+  void solve(const detran_utilities::size_t g);
 };
 
 } // end namespace detran
 
 %template(SourceIteration1D)    detran::SourceIteration<detran::_1D>;
-%template(SourceIteration1DSP)  detran::SP<detran::SourceIteration<detran::_1D> >;
+%template(SourceIteration1DSP)  detran_utilities::SP<detran::SourceIteration<detran::_1D> >;
 %template(SourceIteration2D)    detran::SourceIteration<detran::_2D>;
-%template(SourceIteration2DSP)  detran::SP<detran::SourceIteration<detran::_2D> >;
+%template(SourceIteration2DSP)  detran_utilities::SP<detran::SourceIteration<detran::_2D> >;
+
+
+%include "MultigroupSolver.hh"
+%template(MultigroupSolver1D)     detran::MultigroupSolver<detran::_1D>;
+%template(MultigroupSolver2D)     detran::MultigroupSolver<detran::_2D>;
+%template(MultigroupSolver3D)     detran::MultigroupSolver<detran::_3D>;
+
+
+%include "GaussSeidel.hh"
+%template(GaussSeidel1D)        detran::GaussSeidel<detran::_1D>;
+%template(GaussSeidel1DSP)      detran_utilities::SP<detran::GaussSeidel<detran::_1D> >;
+%template(GaussSeidel2D)        detran::GaussSeidel<detran::_2D>;
+%template(GaussSeidel2DSP)      detran_utilities::SP<detran::GaussSeidel<detran::_2D> >;
+
+
+%include "Eigensolver.hh"
+%template(Eigensolver1D)     detran::Eigensolver<detran::_1D>;
+%template(Eigensolver2D)     detran::Eigensolver<detran::_2D>;
+%template(Eigensolver3D)     detran::Eigensolver<detran::_3D>;
+
+%include "PowerIteration.hh"
+%template(PowerIteration1D)     detran::PowerIteration<detran::_1D>;
+%template(PowerIteration1DSP)   detran_utilities::SP<detran::PowerIteration<detran::_1D> >;
+%template(PowerIteration2D)     detran::PowerIteration<detran::_2D>;
+%template(PowerIteration2DSP)   detran_utilities::SP<detran::PowerIteration<detran::_2D> >;
+%template(PowerIteration3D)     detran::PowerIteration<detran::_3D>;
+%template(PowerIteration3DSP)   detran_utilities::SP<detran::PowerIteration<detran::_3D> >;
 
 //---------------------------------------------------------------------------//
 //              end of detran_transport.i

@@ -54,7 +54,7 @@ public:
   Create(size_t number_groups,
          SP_mesh mesh,
          double source,
-         SP_quadrature quadrature)
+         SP_quadrature quadrature = SP_quadrature(0))
   {
     SP_externalsource
       p(new ConstantSource(number_groups, mesh, source, quadrature));

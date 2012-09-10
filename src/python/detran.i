@@ -40,7 +40,6 @@
 #include "Uniform.hh"
 #include "UniformEqual.hh"
 
-
 // Geometry
 #include "Assembly.hh"
 #include "Core.hh"
@@ -115,6 +114,7 @@
 // LEVEL 4 
 //---------------------------------------------------------------------------//  
 
+#include "ReactionRates.hh"
 #include "Manager.hh"
 #include "PyExecute.hh"
 #ifdef DETRAN_ENABLE_SILO
@@ -142,17 +142,19 @@
 
 // Angle
 %include "detran_angle.i"
-
-// Geometry
+//// Geometry
 %include "detran_geometry.i"
-
 // Material
 %include "detran_materials.i"
+// External source
+%include "detran_external_source.i"
 
 //------------------------------------//
 // LEVEL 2
 
 // Transport
+%include "detran_discretization.i"
+%include "detran_boundary.i"
 %include "detran_transport.i"
 
 //------------------------------------//

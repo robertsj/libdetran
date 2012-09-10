@@ -1,6 +1,6 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   detran_utilities.i
+ * \file   detran_angle.i
  * \author Jeremy Roberts
  * \brief  Python interface for detran angular system.
  */
@@ -28,13 +28,7 @@
 %template(QuadrupleRangeSP) detran_utilities::SP<detran_angle::QuadrupleRange>;
 %template(UniformEqualSP)   detran_utilities::SP<detran_angle::UniformEqual>;
 //
-%template(MomentToDiscrete1D) detran_angle::MomentToDiscrete<detran::_1D>;
-%template(MomentToDiscrete2D) detran_angle::MomentToDiscrete<detran::_2D>;
-%template(MomentToDiscrete3D) detran_angle::MomentToDiscrete<detran::_3D>;
-//
-%template(MomentToDiscrete1DSP) detran_utilities::SP<detran_angle::MomentToDiscrete<detran::_1D> >;
-%template(MomentToDiscrete2DSP) detran_utilities::SP<detran_angle::MomentToDiscrete<detran::_2D> >;
-%template(MomentToDiscrete3DSP) detran_utilities::SP<detran_angle::MomentToDiscrete<detran::_3D> >;
+%template(MomentToDiscreteSP) detran_utilities::SP<detran_angle::MomentToDiscrete>;
 
 %template(QuadratureMOCSP)    detran_utilities::SP<detran_angle::QuadratureMOC>;
 %template(CollocatedSP)       detran_utilities::SP<detran_angle::Collocated>;

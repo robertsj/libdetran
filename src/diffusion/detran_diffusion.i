@@ -5,18 +5,17 @@
  * \brief  Python interface for detran diffusion.
  */
 //---------------------------------------------------------------------------//
-   
-%include "detran_utilities.i"
 
 #ifdef DETRAN_ENABLE_SLEPC
 %include "DiffusionEigensolver.hh"
 #endif
 
+%include "BaseOperator.hh"
 %include "LossOperator.hh"
 %include "GainOperator.hh"
 
-%template(LossOperatorSP) detran::SP<detran_diffusion::LossOperator>;
-%template(GainOperatorSP) detran::SP<detran_diffusion::GainOperator>;
+%template(LossOperatorSP) detran_utilities::SP<detran_diffusion::LossOperator>;
+%template(GainOperatorSP) detran_utilities::SP<detran_diffusion::GainOperator>;
 
 //---------------------------------------------------------------------------//
 //              end of detran_diffusion.i

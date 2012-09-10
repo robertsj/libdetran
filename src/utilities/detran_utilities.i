@@ -12,22 +12,48 @@
 %include std_vector.i
 
 // SP
-%include "SP.hh"
+//%include "SP.hh"
+
+// We define a dummy SP interface to stop some annoying warnings from SWIG
+namespace detran_utilities
+{
+
+template<class T>
+class SP 
+{
+public:
+  SP();
+  inline explicit SP(T *p_in);
+  template<class X>
+  inline explicit SP(X *px_in);
+  inline SP(const SP<T> &sp_in);
+  template<class X>
+  inline SP(const SP<X> &spx_in);
+  ~SP();
+  T* operator->() const;
+  T& operator*() const;
+  T* bp() const;
+  operator bool() const;
+  bool operator==(const T *p_in) const;
+  bool operator!=(const T *p_in) const;
+  bool operator==(const SP<T> &sp_in) const;
+  bool operator!=(const SP<T> &sp_in) const;
+};
+
+} // end namespace detran_utilities
 
 // Vectors
 %include "Definitions.hh"
+
 namespace std
 {
-  %template(Vec_int)  vector<int>;
-  %template(Vec2_int) vector<vector<int> >;
-  %template(Vec3_int) vector<vector<vector<int> > >;
-  %template(Vec_dbl)  vector<double>;
-  %template(Vec2_dbl) vector<vector<double> >;
-  %template(Vec3_dbl) vector<vector<vector<double> > >;
+  %template(vec_int)  vector<int>;
+  %template(vec2_int) vector<vector<int> >;
+  %template(vec3_int) vector<vector<vector<int> > >;
+  %template(vec_dbl)  vector<double>;
+  %template(vec2_dbl) vector<vector<double> >;
+  %template(vec3_dbl) vector<vector<vector<double> > >;
 }
-
-// Dimension
-%include "Traits.hh"
 
 // Input
 %include "InputDB.hh"
@@ -35,7 +61,7 @@ namespace std
 // Math utilities
 %include "MathUtilities.hh"
 
-// 2-D point
+// 3-D point
 %include "Point.hh"
 
 // SP template of input database
