@@ -1,15 +1,18 @@
 #------------------------------------------------------------------------------#
-# libdetran/src/solvers/CMakeLists.txt
+# src/solvers/CMakeLists.txt
 #------------------------------------------------------------------------------#
 
-SET(SOLVERS_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+SET(LIB_NAME "solvers")
 
-#-------------------------------------#
+SET(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+
+#-----------------------------------------------------------------------------#
 # SOURCE
-#-------------------------------------#
+#-----------------------------------------------------------------------------#
 
-SET(SOLVERS_SRC
-    DiffusionLossOperator
+SET(SRC
+	DiffusionGainOperator.cc
+    DiffusionLossOperator.cc
 	Eigensolver.cc
 	EigenSLEPc.cc
     InnerIteration.cc
@@ -26,34 +29,33 @@ SET(SOLVERS_SRC
     Vector.cc
 )
 
-#-------------------------------------#
+#-----------------------------------------------------------------------------#
 # SHARED LIBRARY
-#-------------------------------------#
+#-----------------------------------------------------------------------------#
 
-ADD_LIBRARY(solvers
+ADD_LIBRARY(${LIB_NAME}
             SHARED
-            ${SOLVERS_SRC} 
+            ${SRC} 
 )
-TARGET_LINK_LIBRARIES( solvers
-                       diffusion
-                       transport
-                       angle
-                       material
-                       geometry
-                       utilities
-                       ${PETSC_LIBRARIES}
-                       ${SLEPC_LIBRARIES}  
-                       ${GPERFTOOLS_LIBRARIES}
+TARGET_LINK_LIBRARIES(${LIB_NAME}
+                      diffusion
+                      transport
+                      angle
+                      material
+                      geometry
+                      utilities
+                      ${PETSC_LIBRARIES}
+                      ${SLEPC_LIBRARIES}  
 )
 
-INSTALL_FILES(/include .hh)
-INSTALL_TARGETS(/lib solvers)
+INSTALL_FILES(/include/${LIB_NAME} .hh)
+INSTALL_TARGETS(/lib ${LIB_NAME})
 
-#-------------------------------------#
+#-----------------------------------------------------------------------------#
 # TESTING
-#-------------------------------------#
+#-----------------------------------------------------------------------------#
 
 if( DETRAN_ENABLE_TEST )
-    include_directories(${SOLVERS_DIR}/test)
-    add_subdirectory(${SOLVERS_DIR}/test)
+    include_directories(${SRC_DIR}/test)
+    add_subdirectory(${SRC_DIR}/test)
 endif()

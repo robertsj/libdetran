@@ -52,6 +52,16 @@ void DiffusionLossOperator::construct(const double keff)
 // IMPLEMENTATION
 //---------------------------------------------------------------------------//
 
+/*!
+ *  \page mesh-centered-diffusion Mesh-Centered Finite-Difference Diffusion
+ *
+ *  In this note, we describe our implementation of finite difference
+ *  diffusion.  We assume a Cartesian grid with cells in which the materials,
+ *  flux, and source are taken to be constant.
+ *
+ *
+ *
+ */
 void DiffusionLossOperator::build()
 {
 
@@ -63,23 +73,14 @@ void DiffusionLossOperator::build()
 
   for (int g = 0; g < d_number_groups; g++)
   {
-
-    //cout << " g = " << g << endl;
-
     // Loop over all cells.
     for (int cell = 0; cell < d_group_size; cell++)
     {
-      //cout << " cell = " << cell << endl;
-
       // Compute row index.
       int row = cell + g * d_group_size;
 
-      //cout << " row = " << row << endl;
-
       // Define the data for this cell.
       size_t m = mat_map[cell];
-
-      //cout << " m = " << m << endl;
 
       double cell_dc = d_material->diff_coef(m, g);
       Assert(cell_dc > 0.0);
@@ -150,8 +151,6 @@ void DiffusionLossOperator::build()
           size_t jj = d_mesh->cell_to_j(neig_cell);
           size_t kk = d_mesh->cell_to_k(neig_cell);
 
-          //cout << " neig_row " << neig_row << endl;
-
           // Neighbor volume and diffusion coefficient.
           double neig_hxyz[3] = {d_mesh->dx(ii), d_mesh->dy(jj), d_mesh->dz(kk)};
           double neig_dc = d_material->diff_coef(mat_map[neig_cell], g);
@@ -206,11 +205,9 @@ void DiffusionLossOperator::build()
     // Loop over all groups
     for (int g = 0; g < d_number_groups; g++)
     {
-
       // Loop over all cells.
       for (int cell = 0; cell < d_group_size; cell++)
       {
-
         // Compute row index.
         int row = cell + g * d_group_size;
 
