@@ -141,11 +141,11 @@ inline void BoundarySN<D>::clear(const size_t g)
   {
     for (int angle = 0; angle < d_boundary_flux[side][g].size(); angle++)
     {
-      for (int j = 0; j < d_mesh->number_cells_y(); j++)
+      for (int j = 0; j < d_boundary_flux[side][g][angle].size(); j++)
       {
-        for (int i = 0; i < d_mesh->number_cells_x(); i++)
+        for (int i = 0; i < d_boundary_flux[side][g][angle][0].size(); i++)
         {
-          d_boundary_flux[side][g][angle][i][j] = 0.0;
+          d_boundary_flux[side][g][angle][j][i] = 0.0;
         }
       }
     }
@@ -414,10 +414,6 @@ inline void BoundarySN<_1D>::get_incident(const size_t g, double *v)
 //---------------------------------------------------------------------------//
 // Instantiations
 //---------------------------------------------------------------------------//
-
-template class BoundaryTraits<_1D>;
-template class BoundaryTraits<_2D>;
-template class BoundaryTraits<_3D>;
 
 template class BoundarySN<_1D>;
 template class BoundarySN<_2D>;

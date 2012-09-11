@@ -79,10 +79,6 @@ inline void Sweeper3D<EQ>::sweep(moments_type &phi)
       boundary_flux_type psi_xy = (*d_boundary)
         (d_face_index[o][Mesh::XY][Boundary_T::IN], o, a, d_g);
 
-//      cout << " size psi_yz and psi_yz[0] = " << psi_yz.size() << " " << psi_yz[0].size() << endl;
-//      cout << " size psi_xz and psi_yz[0] = " << psi_xz.size() << " " << psi_xz[0].size() << endl;
-//      cout << " size psi_xy and psi_xy[0] = " << psi_xy.size() << " " << psi_xy[0].size() << endl;
-
       // Temporary edge fluxes.
       Equation<_3D>::face_flux_type psi_in  = { 0.0, 0.0, 0.0 };
       Equation<_3D>::face_flux_type psi_out = { 0.0, 0.0, 0.0 };
@@ -92,14 +88,12 @@ inline void Sweeper3D<EQ>::sweep(moments_type &phi)
       {
         // Get actual index.
         int k = index(o, 3, kk);
-        //cout << " k = " << k << endl;
 
         // Sweep over all y
         for (int jj = 0; jj < d_mesh->number_cells_y(); jj++)
         {
           // Get actual index.
           int j = index(o, 2, jj);
-          //cout << " j = " << j << endl;
 
           psi_out[Mesh::YZ] = psi_yz[k][j];
 
@@ -107,7 +101,6 @@ inline void Sweeper3D<EQ>::sweep(moments_type &phi)
           {
             // Get actual index.
             int i = index(o, 1, ii);
-            //cout << " i = " << i << endl;
 
             psi_in[Mesh::YZ] = psi_out[Mesh::YZ];
             psi_in[Mesh::XZ] = psi_xz[k][i];

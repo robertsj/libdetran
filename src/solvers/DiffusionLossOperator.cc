@@ -139,7 +139,7 @@ void DiffusionLossOperator::build()
 
           dtilde = ( 2.0 * cell_dc * (1.0 - d_albedo[leak][g]) ) /
                    ( 4.0 * cell_dc * (1.0 + d_albedo[leak][g]) +
-                     (1.0 - d_albedo[leak][g]) * cell_hxyz[xyz_idx] );
+                    (1.0 - d_albedo[leak][g]) * cell_hxyz[xyz_idx] );
 
         }
         else // not a boundary
@@ -167,14 +167,14 @@ void DiffusionLossOperator::build()
         }
 
         // Compute leakage coefficient for this cell and surface.
-        jo[leak] = (double)shift_idx * dtilde;
+        jo[leak] = dtilde;
 
       } // leak loop
 
       // Net leakage coefficient.
-      double jnet = (jo[1] - jo[0]) / d_mesh->dx(i) +
-                    (jo[3] - jo[2]) / d_mesh->dy(j) +
-                    (jo[5] - jo[4]) / d_mesh->dz(k);
+      double jnet = (jo[1] + jo[0]) / d_mesh->dx(i) +
+                    (jo[3] + jo[2]) / d_mesh->dy(j) +
+                    (jo[5] + jo[4]) / d_mesh->dz(k);
 
      // Compute and set the diagonal matrix value.
      double val = jnet + cell_sr;

@@ -95,7 +95,7 @@ void BoundarySN<_3D>::initialize()
           boundary_flux_type(nz, vec_dbl(ny, 0.0)));
         d_boundary_flux[Mesh::EAST][g].resize(na,
           boundary_flux_type(nz, vec_dbl(ny, 0.0)));
-        // xz planes
+        // zx planes
         d_boundary_flux[Mesh::SOUTH][g].resize(na,
           boundary_flux_type(nz, vec_dbl(nx, 0.0)));
         d_boundary_flux[Mesh::NORTH][g].resize(na,
@@ -107,12 +107,12 @@ void BoundarySN<_3D>::initialize()
           boundary_flux_type(ny, vec_dbl(nx, 0.0)));
     }
   }
-  d_boundary_flux_size[Mesh::WEST]   = na * ny * nz;
-  d_boundary_flux_size[Mesh::EAST]   = na * ny * nz;
-  d_boundary_flux_size[Mesh::SOUTH]  = na * nx * nz;
-  d_boundary_flux_size[Mesh::NORTH]  = na * nx * nz;
-  d_boundary_flux_size[Mesh::BOTTOM] = na * nx * ny;
-  d_boundary_flux_size[Mesh::TOP]    = na * nx * ny;
+  d_boundary_flux_size[Mesh::WEST]   = na * nz * ny;
+  d_boundary_flux_size[Mesh::EAST]   = na * nz * ny;
+  d_boundary_flux_size[Mesh::SOUTH]  = na * nz * nx;
+  d_boundary_flux_size[Mesh::NORTH]  = na * nz * nx;
+  d_boundary_flux_size[Mesh::BOTTOM] = na * ny * nx;
+  d_boundary_flux_size[Mesh::TOP]    = na * ny * nx;
 }
 
 

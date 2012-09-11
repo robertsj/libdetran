@@ -11,6 +11,7 @@
 #define BOUNDARYDIFFUSION_HH_
 
 #include "BoundaryBase.hh"
+#include "BoundaryTraits.hh"
 
 namespace detran
 {
@@ -18,6 +19,11 @@ namespace detran
 /*!
  *  \class BoundaryDiffusion
  *  \brief Container for diffusion boundary partial currents
+ *
+ *  Unlike the boundary containers for transport, the diffusion boundary
+ *  is not responsible for boundary conditions.  This is because these
+ *  conditions are built into the diffusion operator.
+ *
  */
 template <class D>
 class BoundaryDiffusion: public BoundaryBase<D>
@@ -34,7 +40,6 @@ public:
   typedef typename Base::SP_input                       SP_input;
   typedef typename Base::SP_mesh                        SP_mesh;
   typedef typename BoundaryTraits<D>::value_type        boundary_flux_type;
-  typedef typename BoundaryCondition<D>::SP_bc          SP_bc;
   typedef typename std::vector<boundary_flux_type>      vec_boundary_flux;
   typedef typename std::vector<vec_boundary_flux>       vec2_boundary_flux;
   typedef typename std::vector<vec2_boundary_flux>      vec3_boundary_flux;
@@ -63,7 +68,7 @@ public:
   Create(SP_input         input,
          SP_mesh          mesh)
   {
-    SP_boundary p(new BoundaryDiffusion(input, mesh, quadrature));
+    SP_boundary p(new BoundaryDiffusion(input, mesh));
     return p;
   }
 
@@ -168,29 +173,29 @@ public:
   boundary_flux_type&
   operator()(const size_t side, const size_t g, const size_t inout);
 
-  /*
-   *  \brief Const access to ordered incident flux.
-   */
-  const boundary_flux_type&
-  incident(const size_t side, const size_t g) const;
-
-  /*
-   *  \brief Mutable access to ordered incident boundary flux.
-   */
-  boundary_flux_type&
-  incident(const size_t side, const size_t g);
-
-  /*
-   *  \brief Const access to ordered outgoing flux.
-   */
-  const boundary_flux_type&
-  outgoing(const size_t side, const size_t g) const;
-
-  /*
-   *  \brief Mutable access to ordered outgoing boundary flux.
-   */
-  boundary_flux_type&
-  outgoing(const size_t side, const size_t g);
+//  /*
+//   *  \brief Const access to ordered incident flux.
+//   */
+//  const boundary_flux_type&
+//  incident(const size_t side, const size_t g) const;
+//
+//  /*
+//   *  \brief Mutable access to ordered incident boundary flux.
+//   */
+//  boundary_flux_type&
+//  incident(const size_t side, const size_t g);
+//
+//  /*
+//   *  \brief Const access to ordered outgoing flux.
+//   */
+//  const boundary_flux_type&
+//  outgoing(const size_t side, const size_t g) const;
+//
+//  /*
+//   *  \brief Mutable access to ordered outgoing boundary flux.
+//   */
+//  boundary_flux_type&
+//  outgoing(const size_t side, const size_t g);
 
   //-------------------------------------------------------------------------//
   // GETTERS
@@ -222,8 +227,8 @@ private:
   using Base::d_is_reflective;
   using Base::d_boundary_flux_size;
 
-  /// Boundary flux (side, energy).(space^D)
-  vec2_boundary_flux d_boundary_flux;
+  /// Boundary flux (inout, side, energy).(space^D)
+  vec3_boundary_flux d_boundary_flux;
 
   //-------------------------------------------------------------------------//
   // IMPLEMENTATION
@@ -240,7 +245,7 @@ private:
 // INLINE FUNCTIONS
 //---------------------------------------------------------------------------//
 
-//#include "BoundaryDiffusion.i.hh"
+#include "BoundaryDiffusion.i.hh"
 
 #endif // BOUNDARYDIFFUSION_HH_ 
 

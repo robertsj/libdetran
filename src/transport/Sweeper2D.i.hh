@@ -54,6 +54,12 @@ inline void Sweeper2D<EQ>::sweep(moments_type &phi)
     // Setup equation for this octant.
     equation.setup_octant(o);
 
+    // Get face indices
+    const int face_V_i = d_face_index[o][Mesh::VERT][Boundary_T::IN];
+    const int face_H_i = d_face_index[o][Mesh::HORZ][Boundary_T::IN];
+    const int face_V_o = d_face_index[o][Mesh::VERT][Boundary_T::OUT];
+    const int face_H_o = d_face_index[o][Mesh::HORZ][Boundary_T::OUT];
+
     // Sweep over all angles.
     #pragma omp for
     for (size_t a = 0; a < d_quadrature->number_angles_octant(); a++)
@@ -73,10 +79,8 @@ inline void Sweeper2D<EQ>::sweep(moments_type &phi)
       if (d_update_boundary) d_boundary->update(d_g, o, a);
 
       // Get boundary fluxes.
-      boundary_flux_type psi_v = (*d_boundary)
-          (d_face_index[o][Mesh::VERT][Boundary_T::IN], o, a, d_g);
-      boundary_flux_type psi_h = (*d_boundary)
-          (d_face_index[o][Mesh::HORZ][Boundary_T::IN], o, a, d_g);
+      boundary_flux_type psi_v = (*d_boundary)(face_V_i, o, a, d_g);
+      boundary_flux_type psi_h = (*d_boundary)(face_H_i, o, a, d_g);
 
       // Temporary edge fluxes.
       Equation<_2D>::face_flux_type psi_in  = {0.0, 0.0};
@@ -88,6 +92,8 @@ inline void Sweeper2D<EQ>::sweep(moments_type &phi)
         // Get actual index.
         int j = index(o, 2, jj);
 
+        // Note the index: incident boundaries are access from
+        // "left to right" w/r to self.
         psi_out[Mesh::VERT] = psi_v[j];
 
         // Sweep over all x.
@@ -116,10 +122,8 @@ inline void Sweeper2D<EQ>::sweep(moments_type &phi)
       } // end y loop
 
       // Update boundary
-      (*d_boundary)
-          (d_face_index[o][Mesh::VERT][Boundary_T::OUT], o, a, d_g) = psi_v;
-      (*d_boundary)
-          (d_face_index[o][Mesh::HORZ][Boundary_T::OUT], o, a, d_g) = psi_h;
+      (*d_boundary)(face_V_o, o, a, d_g) = psi_v;
+      (*d_boundary)(face_H_o, o, a, d_g) = psi_h;
 
       // Update the angular flux.
       if (d_update_psi) d_state->psi(d_g, o, a) = psi;

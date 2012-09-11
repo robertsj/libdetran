@@ -11,33 +11,12 @@
 #define BOUNDARYSN_HH_
 
 #include "BoundaryBase.hh"
+#include "BoundaryTraits.hh"
 #include "BoundaryCondition.hh"
 #include "angle/Quadrature.hh"
 
 namespace detran
 {
-
-/*!
- *  \brief Boundary traits to simplify type access.
- */
-template <class D>
-class BoundaryTraits
-{
-public:
-  typedef detran_utilities::vec2_dbl value_type;
-};
-template <>
-class BoundaryTraits<_2D>
-{
-public:
-  typedef detran_utilities::vec_dbl value_type;
-};
-template <>
-class BoundaryTraits<_1D>
-{
-public:
-  typedef double value_type;
-};
 
 //---------------------------------------------------------------------------//
 /*!
@@ -54,21 +33,23 @@ public:
  * Keeping the fundamental type templated should allow this to be used in
  * all the SN stuff and potentially MOC applications. 
  *
- * All boundary fluxes are stored as follows:
- * for g = 0, ng
- *   for a = 0, na
- *     for i,j,k
+ * All boundary fluxes are stored as follows: side->energy->angle->space^D
  *
- * Note, the angles are order by the quadrature as follows:
- * for octant = 0, no
- *   for angle = 0, na in octant
+ * Moreover, the angles are ordered in the same order as the quadrature,
+ * i.e. octants->angles.
  *
- * For most applications, the order of the mu/eta/ksi within an octant
- * doesn't matter.  However, for response generation, it helps a lot
- * to have a standard ordering.  Hence, we enforce
- * for all mu
- *  for all eta
- *    for all xi
+ * To facilitate response generation somewhat, it is assumed that the
+ * boundary fluxes are stored spatial in a way that allows fluxes to be
+ * read from left to right, from bottom up on a face.  That means that
+ * a sweeper can sweep over ii=0..I-1, jj= ..., selecte i, j, and k for
+ * the octant (i.e. does it reverse?), but the boundaries are read using
+ * the ii, jj, and kk.  What this allows for is that an incident boundary
+ * condition can be inserted in a left to right, bottom up orientation
+ * for any face.
+ *
+ * Unfortunately, the angular orientation isn't so easy.  Ideally, we'd
+ * like phi=0..2-pi, theta=0..pi with respect to a surface, but that
+ * would
  *
  */
 //---------------------------------------------------------------------------//
