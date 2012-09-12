@@ -28,7 +28,7 @@ public:
   // TYPEDEFS
   //---------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<DiffusionGainOperator>   SP_lossoperator;
+  typedef detran_utilities::SP<DiffusionGainOperator>   SP_gainoperator;
   typedef detran_utilities::InputDB::SP_input           SP_input;
   typedef detran_material::Material::SP_material        SP_material;
   typedef detran_geometry::Mesh::SP_mesh                SP_mesh;

@@ -132,6 +132,8 @@ void DiffusionLossOperator::build()
         int shift_idx   = -2 * ((leak + 1) % 2) + 1;
         neig_idx[xyz_idx] += shift_idx;
 
+        // \todo It might make sense to template the coupling coefficient
+
         // Compute coupling coefficient
         double dtilde = 0.0;
         if (bound[leak] == nxyz[xyz_idx][dir_idx])
