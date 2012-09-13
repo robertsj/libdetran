@@ -55,6 +55,66 @@ inline void Vector::scale(const double factor)
   Ensure(!ierr);
 }
 
+inline void Vector::add(Vector &x)
+{
+  // Preconditions
+  Require(x.is_assembled());
+  Require(is_assembled());
+  Require(x.size() == d_size);
+
+  PetscErrorCode ierr;
+  ierr = VecAXPY(d_V, 1.0, x.V());
+
+  // Postconditions
+  Ensure(!ierr);
+}
+
+inline void Vector::subtract(Vector &x)
+{
+  // Preconditions
+  Require(x.is_assembled());
+  Require(is_assembled());
+  Require(x.size() == d_size);
+
+  PetscErrorCode ierr;
+  ierr = VecAXPY(d_V, -1.0, x.V());
+
+  // Postconditions
+  Ensure(!ierr);
+}
+
+inline double Vector::residual_norm(Vector &x, const int type)
+{
+  // Preconditions
+  Require(x.is_assembled());
+  Require(is_assembled());
+  Require(x.size() == d_size);
+
+  PetscErrorCode ierr;
+  double val = 0.0;
+
+  if (type == L1)
+  {
+    for (int i = 0; i < d_size; i++)
+      val += std::abs(d_array[i] - x[i]);
+  }
+  else if (type == L2)
+  {
+    for (int i = 0; i < d_size; i++)
+      val += (d_array[i] - x[i])*(d_array[i] - x[i]);
+    val = std::sqrt(val);
+  }
+  else if (type == LINF)
+  {
+    for (int i = 0; i < d_size; i++)
+      val = std::max(val, std::abs(d_array[i] - x[i]));
+  }
+
+  // Postconditions
+  Ensure(!ierr);
+  return val;
+}
+
 //---------------------------------------------------------------------------//
 // Accessors
 //---------------------------------------------------------------------------//

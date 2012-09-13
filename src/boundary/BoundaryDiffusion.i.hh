@@ -11,6 +11,8 @@
 #ifndef BOUNDARYDIFFUSION_I_HH_
 #define BOUNDARYDIFFUSION_I_HH_
 
+#include <iostream>
+
 namespace detran
 {
 
@@ -25,10 +27,11 @@ BoundaryDiffusion<D>::operator()(const size_t side,
                                  const size_t g,
                                  const size_t inout) const
 {
+  std::cout << " side =  " << side << std::endl;
   Require(side < D::dimension * 2);
   Require(g < d_number_groups);
   Require(inout < 2);
-  return d_boundary_flux[side][g][inout];
+  return d_boundary_flux[inout][side][g];
 }
 
 template <class D>
@@ -99,6 +102,14 @@ inline void BoundaryDiffusion<_1D>::clear(const size_t g)
     }
   }
 }
+
+//---------------------------------------------------------------------------//
+// EXPLICIT INSTANTIATIONS
+//---------------------------------------------------------------------------//
+
+template class BoundaryDiffusion<_1D>;
+template class BoundaryDiffusion<_2D>;
+template class BoundaryDiffusion<_3D>;
 
 } // end namespace detran
 

@@ -11,6 +11,8 @@
 #ifndef BOUNDARYTRAITS_HH_
 #define BOUNDARYTRAITS_HH_
 
+#include "utilities/Definitions.hh"
+
 namespace detran
 {
 
@@ -24,23 +26,78 @@ namespace detran
  *
  */
 template <class D>
-class BoundaryTraits
+struct BoundaryTraits
 {
-public:
   typedef detran_utilities::vec2_dbl value_type;
 };
 template <>
-class BoundaryTraits<_2D>
+struct BoundaryTraits<_2D>
 {
-public:
   typedef detran_utilities::vec_dbl value_type;
 };
 template <>
-class BoundaryTraits<_1D>
+struct BoundaryTraits<_1D>
 {
-public:
   typedef double value_type;
 };
+
+/*!
+ *  \brief Boundary access.
+ *
+ *  Because we employ a templated boundary type, it can sometimes
+ *  complicate simple access within an otherwise general algorithm.
+ *  This accessor returns a boundary element given boundary spatial
+ *  indices.
+ */
+
+template <class D>
+struct BoundaryValue
+{
+  /* ... */
+};
+
+template <>
+struct BoundaryValue<_3D>
+{
+  // Mutable access to boundary value
+  static inline double&
+  value(BoundaryTraits<_3D>::value_type &b,
+        const size_t                     i,
+        const size_t                     j)
+  {
+    Require(i < b.size());
+    Require(j < b[0].size());
+    return b[i][j];
+  }
+};
+
+template <>
+struct BoundaryValue<_2D>
+{
+  // Mutable access to boundary value
+  static inline double&
+  value(BoundaryTraits<_2D>::value_type &b,
+        const size_t                     i,
+        const size_t                     j = 0)
+  {
+    Require(i < b.size());
+    return b[i];
+  }
+};
+
+template <>
+struct BoundaryValue<_1D>
+{
+  // Mutable access to boundary value
+  static inline double&
+  value(BoundaryTraits<_1D>::value_type &b,
+        const size_t                     i = 0,
+        const size_t                     j = 0)
+  {
+    return b;
+  }
+};
+
 
 } // end namespace detran
 

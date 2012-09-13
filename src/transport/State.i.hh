@@ -31,7 +31,6 @@ State::phi(const size_t g)
     // Add const to *this's type and call const version
     static_cast<const State*>(this)->phi(g)
   );
-
 }
 
 //---------------------------------------------------------------------------//

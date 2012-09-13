@@ -57,7 +57,7 @@ LossOperator::LossOperator(SP_input    input,
     boundary_name[Mesh::TOP]    = "bc_top";
     for (int g = 0; g < d_material->number_groups(); g++)
     {
-      for (int b = 0; b < d_mesh->dimension(); b++)
+      for (int b = 0; b < d_mesh->dimension() * 2; b++)
       {
         d_albedo[b][g] = 0.0;
         if (d_input->check(boundary_name[b]))

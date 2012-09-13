@@ -25,6 +25,9 @@ TARGET_LINK_LIBRARIES(test_OperatorMatrix		solvers)
 ADD_EXECUTABLE(test_OperatorShell			    test_OperatorShell.cc)
 TARGET_LINK_LIBRARIES(test_OperatorShell		solvers)
 
+ADD_EXECUTABLE(test_DiffusionFixedSourceSolver          test_DiffusionFixedSourceSolver.cc)
+TARGET_LINK_LIBRARIES(test_DiffusionFixedSourceSolver   solvers)
+
 endif ()
 
 #------------------------------------------------------------------------------#
@@ -41,5 +44,8 @@ if (DETRAN_ENABLE_PETSC)
 ADD_TEST(test_InnerGMRES_1D 		test_InnerGMRES 0)
 ADD_TEST(test_OperatorMatrix 		test_OperatorMatrix 0)
 ADD_TEST(test_OperatorShell 		test_OperatorShell 0)
+ADD_TEST(test_DiffusionFixedSourceSolver_1D  test_DiffusionFixedSourceSolver 0)
+ADD_TEST(test_DiffusionFixedSourceSolver_2D  test_DiffusionFixedSourceSolver 1)
+ADD_TEST(test_DiffusionFixedSourceSolver_3D  test_DiffusionFixedSourceSolver 2)
 
 endif ()

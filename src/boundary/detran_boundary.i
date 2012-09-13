@@ -6,6 +6,11 @@
  */
 //---------------------------------------------------------------------------//
 
+%include "BoundaryTraits.hh"
+%template(BoundaryValue1D)    detran::BoundaryValue<detran::_1D>; 
+%template(BoundaryValue2D)    detran::BoundaryValue<detran::_2D>;
+%template(BoundaryValue3D)    detran::BoundaryValue<detran::_3D>; 
+
 %include "BoundaryBase.hh"
 %template(BoundaryBase1D)     detran::BoundaryBase<detran::_1D>; 
 %template(BoundaryBase2D)     detran::BoundaryBase<detran::_2D>;
