@@ -82,6 +82,8 @@ DiffusionFixedSourceSolver<D>::DiffusionFixedSourceSolver(SP_input input,
   // Allow for command line flags.
   ierr = KSPSetFromOptions(d_solver);
 
+  d_M->display();
+
   // Postconditions
   Ensure(!ierr);
 }
@@ -97,6 +99,7 @@ void DiffusionFixedSourceSolver<D>::solve()
   else
     THROW("Unsupported diffusion fixed source type");
 
+  std::cout << " filling state..." << std::endl;
   // Fill the state with the converged flux
   size_t row = 0;
   for (size_t g = 0; g < d_material->number_groups(); ++g)
@@ -109,6 +112,7 @@ void DiffusionFixedSourceSolver<D>::solve()
   }
 
   // Fill the boundary with the outgoing current
+  std::cout << " filling boundary..." << std::endl;
   fill_boundary();
 }
 
@@ -200,6 +204,7 @@ void DiffusionFixedSourceSolver<D>::build_volume_source(SP_source q)
 {
   // Preconditions
   Require(q);
+  std::cout << "building v source..." << std::endl;
 
   // Loop over all groups.
   for (int g = 0; g < d_material->number_groups(); g++)
@@ -222,7 +227,7 @@ void DiffusionFixedSourceSolver<D>::build_volume_source(SP_source q)
 template <class D>
 void DiffusionFixedSourceSolver<D>::build_boundary_source()
 {
-
+  std::cout << "building b source..." << std::endl;
   // Make reference to boundary for better notation
   Boundary_T &J = *d_boundary;
 
@@ -242,7 +247,7 @@ void DiffusionFixedSourceSolver<D>::build_boundary_source()
   for (int dim0 = 0; dim0 < D::dimension; ++dim0)
   {
     // Bounding cell indices for this dimension
-    int bound[2] = {0, d_mesh->number_cells(dim0)};
+    int bound[2] = {0, d_mesh->number_cells(dim0)-1};
 
     // Other dimensions
     int dim1 = remdims[dim0][0];
@@ -320,7 +325,7 @@ void DiffusionFixedSourceSolver<D>::fill_boundary()
   for (int dim0 = 0; dim0 < D::dimension; ++dim0)
   {
     // Bounding cell indices for this dimension
-    int bound[2] = {0, d_mesh->number_cells(dim0)};
+    int bound[2] = {0, d_mesh->number_cells(dim0)-1};
 
     // Other dimensions
     int dim1 = remdims[dim0][0];

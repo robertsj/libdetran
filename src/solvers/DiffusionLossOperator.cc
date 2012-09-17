@@ -100,6 +100,9 @@ void DiffusionLossOperator::build()
   // Get the material map.
   vec_int mat_map = d_mesh->mesh_map("MATERIAL");
 
+  d_number_groups = d_material->number_groups();
+  d_group_size    = d_mesh->number_cells();
+
   for (int g = 0; g < d_number_groups; g++)
   {
     // Loop over all cells.
@@ -210,7 +213,7 @@ void DiffusionLossOperator::build()
      // Compute and set the diagonal matrix value.
      double val = jnet + cell_sr;
      insert_values(1, &row, 1, &row, &val, INSERT_VALUES);
-
+     std::cout << " valu = " << val << endl;
      // Add downscatter component.
      for (int gp = d_material->lower(g); gp < g; gp++)
      {

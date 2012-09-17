@@ -53,7 +53,8 @@ int test_DiffusionFixedSourceSolver_1D(int argc, char *argv[])
   mat->set_sigma_t(0, 0,    1.0);
   mat->set_sigma_s(0, 0, 0, 0.6);
   mat->set_sigma_f(0, 0,    0.5);
-
+  mat->set_diff_coef(0, 0,  0.33);
+  mat->finalize();
   // Mesh
   vec_dbl cm(2, 0.0); cm[1] = 10.0;
   vec_int fm(1, 10);
@@ -67,8 +68,8 @@ int test_DiffusionFixedSourceSolver_1D(int argc, char *argv[])
   DiffusionFixedSourceSolver<_1D>::SP_input input;
   input = new InputDB();
   input->put<int>(     "number_groups",         1);
-  input->put<string>(  "bc_left",               "reflect");
-  input->put<string>(  "diffusion_fixed_type",           "reflect");
+  input->put<string>(  "bc_west",               "reflect");
+  input->put<string>(  "diffusion_fixed_type",  "reflect");
 
   // State
   DiffusionFixedSourceSolver<_1D>::SP_state state(new State(input, mesh));
@@ -79,7 +80,7 @@ int test_DiffusionFixedSourceSolver_1D(int argc, char *argv[])
 
   // Build source
   cout << " Building source... " << endl;
-  solver.build_source();
+  solver.build_source(q_e);
 
   // Solve.
   cout << " Solving... " << endl;
@@ -87,6 +88,17 @@ int test_DiffusionFixedSourceSolver_1D(int argc, char *argv[])
 
   for (int i = 0; i < 10; i++)
     cout << " i = " << i << " phi = " << state->phi(0)[i] << endl;
+  DiffusionFixedSourceSolver<_1D>::SP_boundary boundary;
+  boundary = solver.boundary();
+
+//  BoundaryValue<D>::value
+//              (J(surface, g, Boundary_T::OUT), ijk[dim1], ijk[dim2]) =
+//                ((2.0 * DC) * (*d_phi)[row] + (W - 4.0*DC) * Jinc) / (4.0 * DC + W);
+
+  cout << (*boundary)(0, 0, 1) << endl;
+  cout << (*boundary)(0, 0, 0) << endl;
+  cout << (*boundary)(1, 0, 1) << endl;
+  cout << (*boundary)(1, 0, 0) << endl;
 
   return 0;
 }
