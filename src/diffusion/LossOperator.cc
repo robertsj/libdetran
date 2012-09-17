@@ -57,12 +57,13 @@ LossOperator::LossOperator(SP_input    input,
     boundary_name[Mesh::TOP]    = "bc_top";
     for (int g = 0; g < d_material->number_groups(); g++)
     {
-      for (int b = 0; b < d_mesh->dimension(); b++)
+      for (int b = 0; b < 2*d_mesh->dimension(); b++)
       {
         d_albedo[b][g] = 0.0;
         if (d_input->check(boundary_name[b]))
           if (d_input->get<string>(boundary_name[b]) == "reflect")
             d_albedo[b][g] = 1.0;
+        std::cout << " b=" << b << " a=" << d_albedo[b][g] << std::endl;
       }
     }
   }
@@ -171,7 +172,7 @@ void LossOperator::construct()
         double dtilde = 0.0;
         if (bound[leak] == nxyz[xyz_idx][dir_idx])
         {
-
+          cout << " leak = " << leak << " alb =  " << d_albedo[leak][g] << endl;
           dtilde = ( 2.0 * cell_dc * (1.0 - d_albedo[leak][g]) ) /
                    ( 4.0 * cell_dc * (1.0 + d_albedo[leak][g]) +
                      (1.0 - d_albedo[leak][g]) * cell_hxyz[xyz_idx] );
@@ -206,14 +207,14 @@ void LossOperator::construct()
         }
 
         // Compute leakage coefficient for this cell and surface.
-        jo[leak] = (double)shift_idx * dtilde;
+        jo[leak] = dtilde;
 
       } // leak loop
 
       // Net leakage coefficient.
-      double jnet = (jo[1] - jo[0]) / d_mesh->dx(i) +
-                    (jo[3] - jo[2]) / d_mesh->dy(j) +
-                    (jo[5] - jo[4]) / d_mesh->dz(k);
+      double jnet = (jo[1] + jo[0]) / d_mesh->dx(i) +
+                    (jo[3] + jo[2]) / d_mesh->dy(j) +
+                    (jo[5] + jo[4]) / d_mesh->dz(k);
 
      // Compute and set the diagonal matrix value.
      double val = jnet + cell_sr;

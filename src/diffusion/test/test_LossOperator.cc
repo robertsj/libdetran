@@ -62,9 +62,10 @@ int test_LossOperator_actual()
 
   // Create input.
   LossOperator::SP_input inp(new InputDB());
-  inp->put<string>("bc_left",  "reflect");
-  inp->put<string>("bc_right", "reflect");
-
+  inp->put<string>("bc_west",  "reflect");
+  inp->put<string>("bc_south", "reflect");
+  inp->put<string>("bc_east",  "vacuum");
+  inp->put<string>("bc_north", "vacuum");
   // Create material.
   LossOperator::SP_material mat(new Material(1, 2, false));
   mat->set_sigma_t(0, 0, 0.1890);
@@ -73,8 +74,8 @@ int test_LossOperator_actual()
   mat->set_sigma_s(0, 0, 1, 0.0000);
   mat->set_sigma_s(0, 1, 0, 0.0380);
   mat->set_sigma_s(0, 1, 1, 1.4536);
-  mat->set_diff_coef(0, 0, 0.1890/3.0);
-  mat->set_diff_coef(0, 1, 1.4633/3.0);
+  mat->set_diff_coef(0, 0, 1 / ( 3*0.1890));
+  mat->set_diff_coef(0, 1, 1 / ( 3*1.4633));
   mat->finalize();
 
   // phi0 = 1 / (0.1890-0.1507)
@@ -82,16 +83,17 @@ int test_LossOperator_actual()
 
   // Create mesh.
   vec_dbl cm(2, 0.0);
-  cm[1] = 10.0;
-  vec_int fm(1, 10);
+  cm[1] = 100.0;
+  vec_int fm(1, 3);
   vec_int mt(1, 0);
-  Mesh1D::SP_mesh mesh(new Mesh1D(fm, cm, mt));
-  //Mesh2D::SP_mesh mesh(new Mesh2D(fm, fm, cm, cm, mt));
+  //Mesh1D::SP_mesh mesh(new Mesh1D(fm, cm, mt));
+  Mesh2D::SP_mesh mesh(new Mesh2D(fm, fm, cm, cm, mt));
   //Mesh3D::SP_mesh mesh(new Mesh3D(fm, fm, fm, cm, cm, cm, mt));
 
   // Create the operator.
   LossOperator M(inp, mat, mesh);
-
+  M.display();
+  return 0;
   // Create a right hand side.
   Vec x;
   Vec y;
