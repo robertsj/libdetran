@@ -151,10 +151,18 @@ int test_DiffusionFixedSourceSolver_1D(int argc, char *argv[])
      *      0 0  0 0  1 0
      *      0 0  0 1  0 0
      *      0 0  0 0  0 B
+     *    Jo = R * Ji ==> Ji = MRJi
      *
      */
-    double Ji[3][2] = { {0, 0}, {0, 0}, {0, 0} };
-    double Jo[3][2] = { {0, 0}, {0, 0}, {0, 0} };
+    int nslab = 3;
+    vec_dbl Ji(2*nslab, 0.0);
+    vec_dbl Jo(2*nslab, 0.0);
+    vec_int con(2*nslab, 0);
+    for (int i = 0; i < nslab; i++)
+    {
+      if (i < nslab - 1) con[2*i+1] = con[2*i+2];
+      if (i > 0)         con[2*i]   = con[2*i-2+1];
+    }
 
     for (int i = 0; i < 3; i++)
     {
@@ -172,6 +180,16 @@ int test_DiffusionFixedSourceSolver_1D(int argc, char *argv[])
       {
         F += state->phi(0)[i] * mesh->dx(i) * mat->nu_sigma_f(0, 0);
         A += state->phi(0)[i] * mesh->dx(i) * mat->sigma_a(0, 0);
+      }
+      for (int n = 0; n < nslab; n++)
+      {
+        int i1 = nslab*2;
+        int i2 = i1+1;
+        Jo[i1] = r * Ji[i1] + t * Ji[i2];
+        Jo[i2] = t * Ji[i1] + r * Ji[i2];
+        // ji = m*jo
+        Ji[con[i1]] = Jo[i1];
+        Ji[con[i2]] = Jo[i2];
       }
 
     }
