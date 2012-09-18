@@ -218,6 +218,9 @@ public:
     return d_store_angular_flux;
   }
 
+  /// Format display of flux
+  void display() const;
+
 private:
 
   //-------------------------------------------------------------------------//

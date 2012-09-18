@@ -17,12 +17,12 @@ template <class D>
 BoundaryDiffusion<D>::BoundaryDiffusion(SP_input        input,
                                         SP_mesh         mesh)
   : Base(input, mesh)
-  , d_boundary_flux(2*D::dimension, // number of sides
-                    vec2_boundary_flux(2))
+  , d_boundary_flux(2,
+                    vec2_boundary_flux(2*D::dimension))
 {
 
   // Size the boundaries
-
+  initialize();
 }
 
 //---------------------------------------------------------------------------//
@@ -103,6 +103,7 @@ void BoundaryDiffusion<_1D>::initialize()
   d_boundary_flux_size[Mesh::WEST]  = 1;
   d_boundary_flux_size[Mesh::EAST]  = 1;
 }
+
 
 } // end namespace detran
 

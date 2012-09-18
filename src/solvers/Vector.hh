@@ -37,6 +37,15 @@ class Vector
 public:
 
   //---------------------------------------------------------------------------//
+  // ENUMERATIONS
+  //---------------------------------------------------------------------------//
+
+  enum vec_norm_types
+  {
+    L1, L2, LINF, END_VEC_NORM_TYPES
+  };
+
+  //---------------------------------------------------------------------------//
   // TYPEDEFS
   //---------------------------------------------------------------------------//
 
@@ -84,6 +93,15 @@ public:
 
   /// Scale the Vector
   void scale(const double factor);
+
+  /// Add a vector to me
+  void add(Vector &x);
+
+  /// Subtract a vector from me
+  void subtract(Vector &x);
+
+  /// Residual norm
+  double residual_norm(Vector &x, const int type);
 
   //---------------------------------------------------------------------------//
   // PUBLIC INTERFACE

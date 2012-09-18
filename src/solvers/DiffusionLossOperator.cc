@@ -24,7 +24,8 @@ DiffusionLossOperator::DiffusionLossOperator(SP_input       input,
   , d_material(material)
   , d_mesh(mesh)
   , d_dimension(mesh->dimension())
-  , d_include_fission(false)
+  , d_albedo(6, vec_dbl(material->number_groups(), 1.0)) // default to 1.0
+  , d_include_fission(include_fission)
   , d_keff(keff)
 {
 
@@ -36,6 +37,36 @@ DiffusionLossOperator::DiffusionLossOperator(SP_input       input,
   // Preallocate the matrix.  Note, PETSc documentation suggests getting
   // this right is extremely important.
   preallocate(nnz);
+
+  // Set the albedo.  First, check if the input has an albedo
+  // entry.  If it does, this is the default way to set the
+  // condition.  Otherwise, check the boundary conditions.
+  if (d_input->check("albedo"))
+  {
+    // \todo Add a user-defined albedo
+  }
+  else
+  {
+    std::vector<std::string> boundary_name(6, "");
+    boundary_name[Mesh::WEST]   = "bc_west";
+    boundary_name[Mesh::EAST]   = "bc_east";
+    boundary_name[Mesh::SOUTH]  = "bc_south";
+    boundary_name[Mesh::NORTH]  = "bc_north";
+    boundary_name[Mesh::BOTTOM] = "bc_bottom";
+    boundary_name[Mesh::TOP]    = "bc_top";
+    for (int g = 0; g < d_material->number_groups(); g++)
+    {
+      for (int b = 0; b < d_mesh->dimension() * 2; b++)
+      {
+        d_albedo[b][g] = 0.0;
+        if (d_input->check(boundary_name[b]))
+          if (d_input->get<std::string>(boundary_name[b]) == "reflect")
+            d_albedo[b][g] = 1.0;
+      }
+    }
+  }
+
+  std::cout << " including fission? " << d_include_fission << std::endl;
 
   // Build the matrix with the initial keff guess.
   build();
@@ -70,6 +101,9 @@ void DiffusionLossOperator::build()
 
   // Get the material map.
   vec_int mat_map = d_mesh->mesh_map("MATERIAL");
+
+  d_number_groups = d_material->number_groups();
+  d_group_size    = d_mesh->number_cells();
 
   for (int g = 0; g < d_number_groups; g++)
   {
@@ -231,7 +265,7 @@ void DiffusionLossOperator::build()
           // we scale by keff and take the negative, since it's on the
           // left hand side.
           double val = -d_material->nu_sigma_f(m, gp) *
-                       d_material->chi(m, g) / d_keff;
+                        d_material->chi(m, g) / d_keff;
 
           // Set the value.
           insert_values(1, &row, 1, &col, &val, ADD_VALUES);
