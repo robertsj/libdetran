@@ -9,6 +9,7 @@ SWIG_LINK_LIBRARIES(pydetran
                     utilities 
                     material
                     angle
+                    callow
                     geometry
                     external_source
                     discretization
@@ -17,9 +18,7 @@ SWIG_LINK_LIBRARIES(pydetran
                     diffusion
                     solvers
                     ioutils
-                    postprocess
-                    ${PETSC_LIBRARIES}
-                    ${Silo_LIBRARIES})
+                    postprocess)
 
 # Install the module and library
 INSTALL(FILES ${CMAKE_BINARY_DIR}/python/pydetran.py

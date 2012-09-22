@@ -1,13 +1,13 @@
 //-----------------------------------*-C-*-----------------------------------//
 /*!
- * \file   detran_config.h.in
+ * \file   detran_config.hh.in
  * \author Jeremy Roberts 
  * \brief  Definitions for DETRAN packages.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef DETRAN_CONFIG_H_
-#define DETRAN_CONFIG_H_
+#ifndef DETRAN_CONFIG_HH_
+#define DETRAN_CONFIG_HH_
 
 // DBC
 #cmakedefine DETRAN_ENABLE_DEBUG
@@ -24,11 +24,8 @@
 #cmakedefine DETRAN_ENABLE_HDF5
 #cmakedefine DETRAN_ENABLE_BOOST
 
-// Floating point type
-#cmakedefine DETRAN_FP_TYPE
-
-#endif // DETRAN_CONFIG_H_ 
+#endif // DETRAN_CONFIG_HH 
 
 //---------------------------------------------------------------------------//
-//              end of serment_config.h.in
+//              end of detran_config.hh.in
 //---------------------------------------------------------------------------//

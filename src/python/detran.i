@@ -120,20 +120,20 @@
 // LEVEL 3 
 //---------------------------------------------------------------------------//  
       
-// Diffusion
-#ifdef DETRAN_ENABLE_SLEPC
-#include "DiffusionEigensolver.hh"
-#endif
-#ifdef DETRAN_ENABLE_PETSC
-#include "GainOperator.hh"
-#include "LossOperator.hh"
-#endif
+/*// Diffusion*/
+/*#ifdef DETRAN_ENABLE_SLEPC*/
+/*#include "DiffusionEigensolver.hh"*/
+/*#endif*/
+/*#ifdef DETRAN_ENABLE_PETSC*/
+/*#include "GainOperator.hh"*/
+/*#include "LossOperator.hh"*/
+/*#endif*/
   
 // Solvers
-#include "InnerIteration.hh"
-#include "GaussSeidel.hh"
-#include "PowerIteration.hh"
-#include "SourceIteration.hh"
+#include "solver/InnerIteration.hh"
+#include "solver/GaussSeidel.hh"
+#include "solver/PowerIteration.hh"
+#include "solver/SourceIteration.hh"
 #include "DiffusionFixedSourceSolver.hh"
 #include "DiffusionLossOperator.hh"
 #include "DiffusionGainOperator.hh"
