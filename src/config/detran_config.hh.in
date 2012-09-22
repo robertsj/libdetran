@@ -24,6 +24,9 @@
 #cmakedefine DETRAN_ENABLE_HDF5
 #cmakedefine DETRAN_ENABLE_BOOST
 
+// Floating point type
+#cmakedefine DETRAN_FP_TYPE
+
 #endif // DETRAN_CONFIG_H_ 
 
 //---------------------------------------------------------------------------//

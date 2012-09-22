@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   DiffusionFixedSourceSolve.cc
- * \brief  DiffusionFixedSourceSolve member definitions
- * \author Jeremy Roberts
- * \date   Sep 11, 2012
+/**
+ *  @file   DiffusionFixedSourceSolve.cc
+ *  @brief  DiffusionFixedSourceSolve member definitions
+ *  @author Jeremy Roberts
+ *  @date   Sep 11, 2012
  */
 //---------------------------------------------------------------------------//
 
@@ -27,7 +27,8 @@ DiffusionFixedSourceSolver<D>::DiffusionFixedSourceSolver(SP_input input,
   , d_state(state)
   , d_boundary(new BoundaryDiffusion<D>(input, mesh))
   , d_fixed_type(FIXED)
-  , d_maximum_iterations(100)
+  , d_solver_type("gmres")
+  , d_maximum_iterations(10000)
   , d_maximum_fission_iterations(20)
   , d_tolerance(1e-6)
   , d_fission_tolerance(1e-6)
@@ -44,54 +45,59 @@ DiffusionFixedSourceSolver<D>::DiffusionFixedSourceSolver(SP_input input,
   d_problem_size = d_mesh->number_cells() * d_material->number_groups();
 
   // Select solver type
+  if (d_input->check("diffusion_solver_type"))
+  {
+    d_solver_type = d_input->template get<std::string>("diffusion_solver_type");
+  }
+  // Select solve modality
   if (d_input->check("diffusion_fixed_type"))
   {
     d_fixed_type = d_input->template get<int>("diffusion_fixed_type");
     Ensure(d_fixed_type < END_FIXED_TYPES);
     std::cout << " Using fixed type " << d_fixed_type << std::endl;
   }
-
+  // maximum iterations
+  if (d_input->check("diffusion_maximum_iterations"))
+  {
+    d_maximum_iterations =
+      d_input->template get<int>("diffusion_maximum_iterations");
+  }
+  // absolute tolerance
+  if (d_input->check("diffusion_tolerance"))
+  {
+    d_tolerance =
+      d_input->template get<double>("diffusion_tolerance");
+  }
   // Create operators and vectors
-  d_phi = new Vector(d_problem_size, 0.0);
-  d_Q   = new Vector(d_problem_size, 0.0);
+  d_phi = new Vector_T(d_problem_size, 0.0);
+  d_Q   = new Vector_T(d_problem_size, 0.0);
   if (d_fixed_type == MULTIPLY)
   {
-    d_M = new DiffusionLossOperator(d_input, d_material, d_mesh, true, d_fission_scaling);
+    d_M = new DiffusionLossOperator(d_input, d_material, d_mesh,
+                                    true, d_fission_scaling);
   }
   else
   {
-    THROW("fuck you");
     d_M =  new DiffusionLossOperator(d_input, d_material, d_mesh, false);
   }
   if (d_fixed_type == ITERATE)
   {
     d_F = new DiffusionGainOperator(d_input, d_material, d_mesh);
-    d_phi_old = new Vector(d_problem_size, 0.0);
-    d_Q_total = new Vector(d_problem_size, 0.0);
+    d_phi_old = new Vector_T(d_problem_size, 0.0);
+    d_Q_total = new Vector_T(d_problem_size, 0.0);
   }
 
   // Create solver
-  PetscErrorCode ierr;
-  ierr = KSPCreate(PETSC_COMM_WORLD, &d_solver);
-  Insist(!ierr, "Error creating KSP object.");
+  d_solver = Creator_T::Create(d_solver_type,
+                               d_tolerance,    // atol
+                               0.0,            // rtol (not using for now)
+                               d_maximum_iterations);
 
-  // Set the operators.  We use the same operator for the PC.
-  KSPSetOperators(d_solver, d_M->A(), d_M->A(), SAME_NONZERO_PATTERN);
-
-  // Set tolerances.
-  ierr = KSPSetTolerances(d_solver,
-                          d_tolerance,   // relative tolerance
-                          PETSC_DEFAULT, // absolute tolerance
-                          PETSC_DEFAULT, // divergence tolerance
-                          d_maximum_iterations);
-
-  // Allow for command line flags.
-  ierr = KSPSetFromOptions(d_solver);
+  // Set the operator.  We use no preconditioner by default.
+  // \todo add preconditioner option
+  d_solver->set_operators(d_M);
 
   d_M->display();
-
-  // Postconditions
-  Ensure(!ierr);
 }
 
 template <class D>
@@ -134,6 +140,13 @@ void DiffusionFixedSourceSolver<D>::build_source(SP_source q)
   std::cout << "built boundary source" << std::endl;
 }
 
+template <class D>
+void DiffusionFixedSourceSolver<D>::build_source(SP_vector b)
+{
+  Insist(b, "The right hand side must exist");
+  d_Q = b;
+}
+
 //---------------------------------------------------------------------------//
 // IMPLEMENTATION
 //---------------------------------------------------------------------------//
@@ -142,8 +155,7 @@ void DiffusionFixedSourceSolver<D>::build_source(SP_source q)
 template <class D>
 void DiffusionFixedSourceSolver<D>::solve_fixed()
 {
-  PetscErrorCode ierr = KSPSolve(d_solver, d_Q->V(), d_phi->V());
-  Insist(!ierr, "Error in KSPSolve.");
+  d_solver->solve(*d_Q, *d_phi);
 }
 
 // Fission source iterations
@@ -176,14 +188,13 @@ void DiffusionFixedSourceSolver<D>::solve_iterate()
     //-----------------------------------------------------------------------//
 
     // Compute
-    PetscErrorCode ierr = KSPSolve(d_solver, d_Q_total->V(), d_phi->V());
-    Insist(!ierr, "Error in KSPSolve.");
+    d_solver->solve(*d_Q_total, *d_phi);
 
     //-----------------------------------------------------------------------//
     // CHECK CONVERGENCE
     //-----------------------------------------------------------------------//
 
-    error = d_phi->residual_norm(*d_phi_old, Vector::L2);
+    error = d_phi->norm_residual(*d_phi_old, Vector_T::L2);
     if (d_print_out > 1 and iteration % d_print_interval == 0)
     {
       printf("  Fixed fission iteration: %3i  Error: %12.9f \n",

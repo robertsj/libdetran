@@ -122,10 +122,10 @@ public:
   /*!
    *  \brief Constructor
    *
-   *  \param input          Input database
-   *  \param material       Material database
-   *  \param coarsemesh     Coarse mesh
-   *  \param currenttally   Current tally
+   *  @param input          Input database
+   *  @param material       Material database
+   *  @param coarsemesh     Coarse mesh
+   *  @param currenttally   Current tally
    */
   CMR(SP_input input,
       SP_material material,
@@ -139,9 +139,9 @@ public:
   /*!
    *  \brief Solve the low order equation to update the scalar flux moments
    *
-   *  \param  group   Energy group for this solve
-   *  \param  phi     Reference to the group flux to be updated.
-   *  \param  source  Smart pointer to up-to-date sweep source.
+   *  @param  group   Energy group for this solve
+   *  @param  phi     Reference to the group flux to be updated.
+   *  @param  source  Smart pointer to up-to-date sweep source.
    *
    */
   void accelerate(u_int group,
@@ -171,8 +171,8 @@ private:
 
   /*!
    *  \brief Compute the coarse mesh integrated removal rate and source
-   *  \param  phi     Reference to fine mesh flux
-   *  \param  source  Smart pointer to sweep source
+   *  @param  phi     Reference to fine mesh flux
+   *  @param  source  Smart pointer to sweep source
    */
   void integrate(u_int group,
                  State::moments_type &phi,

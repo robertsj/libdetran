@@ -10,16 +10,16 @@
 #ifndef DIFFUSIONGAINOPERATOR_HH_
 #define DIFFUSIONGAINOPERATOR_HH_
 
-#include "OperatorMatrix.hh"
 #include "material/Material.hh"
 #include "geometry/Mesh.hh"
 #include "utilities/InputDB.hh"
 #include "utilities/SP.hh"
+#include "callow/matrix/Matrix.hh"
 
 namespace detran
 {
 
-class DiffusionGainOperator: public OperatorMatrix
+class DiffusionGainOperator: public callow::Matrix<double>
 {
 
 public:
@@ -28,6 +28,7 @@ public:
   // TYPEDEFS
   //---------------------------------------------------------------------------//
 
+  typedef callow::Matrix<double>                        Base;
   typedef detran_utilities::SP<DiffusionGainOperator>   SP_gainoperator;
   typedef detran_utilities::InputDB::SP_input           SP_input;
   typedef detran_material::Material::SP_material        SP_material;
@@ -41,17 +42,24 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //---------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Constructor
-   *  \param input            Pointer to input parameters
-   *  \param material         Pointer to materials
-   *  \param mesh             Pointer to mesh
-   *  \param include_fission  Flag for including fission source implicitly
-   *  \param keff             Fission scaling factor
+  /**
+   *  @brief Constructor
+   *  @param input      parameter database
+   *  @param material   material database
+   *  @param mesh       mesh definition
    */
   DiffusionGainOperator(SP_input      input,
                         SP_material   material,
                         SP_mesh       mesh);
+
+  /// SP constructor
+  static SP_gainoperator Create(SP_input input,
+                                SP_material material,
+                                SP_mesh mesh)
+  {
+    SP_gainoperator p(new DiffusionGainOperator(input, material, mesh));
+    return p;
+  }
 
   //---------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS

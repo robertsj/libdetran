@@ -15,8 +15,8 @@ namespace detran
 DiffusionGainOperator::DiffusionGainOperator(SP_input      input,
                                              SP_material   material,
                                              SP_mesh       mesh)
-  : OperatorMatrix(material->number_groups()*mesh->number_cells(),
-                   material->number_groups()*mesh->number_cells())
+  : Base(material->number_groups()*mesh->number_cells(),
+         material->number_groups()*mesh->number_cells())
   , d_input(input)
   , d_material(material)
   , d_mesh(mesh)
@@ -24,11 +24,11 @@ DiffusionGainOperator::DiffusionGainOperator(SP_input      input,
 
   // Nonzeros.  We have up to the number of groups in a row
   // due to fission.
-  vec_int nnz(d_number_rows, d_number_groups);
+  vec_int nnz(d_m, d_number_groups);
 
   // Preallocate the matrix.  Note, PETSc documentation suggests getting
   // this right is extremely important.
-  preallocate(nnz);
+  preallocate(&nnz[0]);
 
   // Build the matrix with the initial keff guess.
   build();
@@ -75,7 +75,7 @@ void DiffusionGainOperator::build()
                      d_material->chi(m, g);
 
         // Set the value.
-        insert_values(1, &row, 1, &col, &val, INSERT_VALUES);
+        insert(row, col, val);
       }
 
     } // row loop

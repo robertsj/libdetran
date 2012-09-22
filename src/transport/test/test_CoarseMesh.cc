@@ -2,7 +2,7 @@
 /*!
  * \file   test_CoarseMesh.cc
  * \author Jeremy Roberts
- * \date   Apr 1, 2012
+ * @date   Apr 1, 2012
  * \brief  Test of CoarseMesh
  */
 //---------------------------------------------------------------------------//

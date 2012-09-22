@@ -10,7 +10,7 @@
 #ifndef EIGENSOLVER_HH_
 #define EIGENSOLVER_HH_
 
-#include "detran_config.h"
+#include "detran_config.hh"
 #include "GaussSeidel.hh"
 #include "InnerIteration.hh"
 #ifdef DETRAN_ENABLE_PETSC

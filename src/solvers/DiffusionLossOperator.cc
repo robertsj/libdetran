@@ -18,8 +18,8 @@ DiffusionLossOperator::DiffusionLossOperator(SP_input       input,
                                              SP_mesh        mesh,
                                              const bool     include_fission,
                                              const double   keff)
-  : OperatorMatrix(material->number_groups()*mesh->number_cells(),
-                   material->number_groups()*mesh->number_cells())
+  : Base(material->number_groups()*mesh->number_cells(),
+         material->number_groups()*mesh->number_cells())
   , d_input(input)
   , d_material(material)
   , d_mesh(mesh)
@@ -29,14 +29,15 @@ DiffusionLossOperator::DiffusionLossOperator(SP_input       input,
   , d_keff(keff)
 {
 
-  // Nonzeros.  We have up to the number of groups in a block row
-  // due to scattering and potentially fission.  Additionally,
-  // we have 2*dimension entries off the energy block due to neighbors.
-  vec_int nnz(d_number_rows, 2 * d_dimension + d_number_groups);
+  // Nonzeros.  We have
+  //   diagonal + 2*dim neighbors + num_groups coupling from scatter/fission
+  vec_int nnz(d_m, 1 + 2 * d_dimension + d_number_groups);
+
+  std::cout << " nnz = " << nnz[0] << std::endl;
 
   // Preallocate the matrix.  Note, PETSc documentation suggests getting
   // this right is extremely important.
-  preallocate(nnz);
+  preallocate(&nnz[0]);
 
   // Set the albedo.  First, check if the input has an albedo
   // entry.  If it does, this is the default way to set the
@@ -105,13 +106,21 @@ void DiffusionLossOperator::build()
   d_number_groups = d_material->number_groups();
   d_group_size    = d_mesh->number_cells();
 
+  bool db = true;
+
   for (int g = 0; g < d_number_groups; g++)
   {
+    if (db) cout << "group = " << g << endl;
+
     // Loop over all cells.
     for (int cell = 0; cell < d_group_size; cell++)
     {
+      if (db) cout << "  cell = " << cell << endl;
+
       // Compute row index.
       int row = cell + g * d_group_size;
+
+      if (db) cout << "    row = " << row << endl;
 
       // Define the data for this cell.
       size_t m = mat_map[cell];
@@ -138,6 +147,10 @@ void DiffusionLossOperator::build()
                         0, d_mesh->number_cells_y()-1,
                         0, d_mesh->number_cells_z()-1};
 
+
+      // Flag for insertion status.  If false, it means we didn't add
+      // the value and should counter accordingly (here, we assert)
+      bool flag;
 
       // For each spatial cell, there are 6 faces that connect the
       // cell to a neighbor or the global boundary.  Looping through
@@ -199,7 +212,12 @@ void DiffusionLossOperator::build()
           // Compute and set the off-diagonal matrix value.
           double val = - dtilde / cell_hxyz[xyz_idx];
           int neig_row = neig_cell + g * d_group_size;
-          insert_values(1, &row, 1, &neig_row, &val, INSERT_VALUES);
+
+          if (db) cout << "      col = " << neig_row << endl;
+
+
+          flag = insert(row, neig_row, val, INSERT);
+          Assert(flag);
         }
 
         // Compute leakage coefficient for this cell and surface.
@@ -214,14 +232,18 @@ void DiffusionLossOperator::build()
 
      // Compute and set the diagonal matrix value.
      double val = jnet + cell_sr;
-     insert_values(1, &row, 1, &row, &val, INSERT_VALUES);
+     if (db) cout << "      col = " << row << endl;
+     flag = insert(row, row, val, INSERT);
+     Assert(flag);
 
      // Add downscatter component.
      for (int gp = d_material->lower(g); gp < g; gp++)
      {
        int col = cell + gp * d_group_size;
+       if (db) cout << "      col = " << col << endl;
        double val = -d_material->sigma_s(m, g, gp);
-       insert_values(1, &row, 1, &col, &val, INSERT_VALUES);
+       flag = insert(row, col, val, INSERT);
+       Assert(flag);
      }
 
      // Add upscatter component.
@@ -229,7 +251,9 @@ void DiffusionLossOperator::build()
      {
        int col = cell + gp * d_group_size;
        double val = -d_material->sigma_s(m, g, gp);
-       insert_values(1, &row, 1, &col, &val, INSERT_VALUES);
+       if (db) cout << "      col = " << col << endl;
+       flag = insert(row, col, val, INSERT);
+       Assert(flag);
      }
 
     } // row loop
@@ -260,15 +284,17 @@ void DiffusionLossOperator::build()
         {
           // Compute column index.
           int col = cell + gp * d_group_size;
-
+          if (db) cout << "      col = " << col << endl;
           // Fold the fission density with the spectrum.  Note that
           // we scale by keff and take the negative, since it's on the
           // left hand side.
           double val = -d_material->nu_sigma_f(m, gp) *
                         d_material->chi(m, g) / d_keff;
 
-          // Set the value.
-          insert_values(1, &row, 1, &col, &val, ADD_VALUES);
+          // Set the value. Note, we now have to add the value, since
+          // in general fission contributes to nonzero cells.
+          bool flag = insert(row, col, val, ADD);
+          Assert(flag);
         }
 
       } // row loop

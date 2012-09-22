@@ -2,7 +2,7 @@
 /*!
  * \file   test_State.cc
  * \author Jeremy Roberts
- * \date   Mar 25, 2012
+ * @date   Mar 25, 2012
  * \brief  Test of State.
  */
 //---------------------------------------------------------------------------//

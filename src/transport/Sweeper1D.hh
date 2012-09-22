@@ -2,7 +2,7 @@
 /*!
  * \file   Sweeper1D.hh
  * \author Jeremy Roberts
- * \date   Mar 24, 2012
+ * @date   Mar 24, 2012
  * \brief  Sweeper1D class definition.
  */
 //---------------------------------------------------------------------------//
@@ -60,13 +60,13 @@ public:
   /*!
    *  \brief Constructor.
    *
-   *  \param    input       User input database.
-   *  \param    mesh        Cartesian mesh.
-   *  \param    material    Material database.
-   *  \param    quadrature  Angular quadrature.
-   *  \param    state       State vectors.
-   *  \param    boundary    Boundary based on mesh.
-   *  \param    sweepsource Sweep source constructor.
+   *  @param    input       User input database.
+   *  @param    mesh        Cartesian mesh.
+   *  @param    material    Material database.
+   *  @param    quadrature  Angular quadrature.
+   *  @param    state       State vectors.
+   *  @param    boundary    Boundary based on mesh.
+   *  @param    sweepsource Sweep source constructor.
    */
   Sweeper1D(SP_input input,
             SP_mesh mesh,

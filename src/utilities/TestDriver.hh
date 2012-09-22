@@ -131,7 +131,7 @@ test_name test_names[] =
 /*!
  *  \namespace detran_test
  *  \brief Includes all functionality for performing tests using the
- *         Detran unit test framework.
+ *         detran unit test framework.
  */
 namespace detran_test
 {

@@ -3,7 +3,7 @@
  * \file   coarsemesh_fixture.hh
  * \brief  coarsemesh_fixture 
  * \author Jeremy Roberts
- * \date   Aug 9, 2012
+ * @date   Aug 9, 2012
  */
 //---------------------------------------------------------------------------//
 

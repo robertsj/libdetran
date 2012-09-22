@@ -2,7 +2,7 @@
 /*!
  * \file   test_Sweeper2D.cc
  * \author Jeremy Roberts
- * \date   Apr 1, 2012
+ * @date   Apr 1, 2012
  * \brief  Test of test_Sweeper2D
  */
 //---------------------------------------------------------------------------//

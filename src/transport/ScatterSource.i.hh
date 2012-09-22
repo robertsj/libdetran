@@ -2,7 +2,7 @@
 /*!
  * \file   ScatterSource.i.hh
  * \author robertsj
- * \date   Sep 7, 2012
+ * @date   Sep 7, 2012
  * \brief  ScatterSource inline member definitions
  * \note   Copyright (C) 2012 Jeremy Roberts. 
  */

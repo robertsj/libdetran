@@ -12,22 +12,18 @@ SET(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 SET(SRC
     DiffusionFixedSourceSolver.cc
-	DiffusionGainOperator.cc
+	  DiffusionGainOperator.cc
     DiffusionLossOperator.cc
-	Eigensolver.cc
-	EigenSLEPc.cc
+	  Eigensolver.cc
+	  EigenSLEPc.cc
     InnerIteration.cc
     SourceIteration.cc
     InnerGMRES.cc
     GaussSeidel.cc
     KrylovMG.cc
-    Operator.cc
-    OperatorMatrix.cc
-    OperatorShell.cc
     PowerIteration.cc
     PreconditionerWG.cc
     PreconditionerMG.cc
-    Vector.cc
 )
 
 #-----------------------------------------------------------------------------#
@@ -45,8 +41,7 @@ TARGET_LINK_LIBRARIES(${LIB_NAME}
                       material
                       geometry
                       utilities
-                      ${PETSC_LIBRARIES}
-                      ${SLEPC_LIBRARIES}  
+                      ${Callow_LIBRARIES}
 )
 
 INSTALL_FILES(/include/${LIB_NAME} .hh)

@@ -11,7 +11,7 @@
 #define PYEXECUTE_HH_
 
 // Config
-#include "detran_config.h"
+#include "detran_config.hh"
 
 // Detran
 #include "discretization/DimensionTraits.hh"

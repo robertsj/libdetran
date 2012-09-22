@@ -19,6 +19,7 @@
 #include "Mesh2D.hh"
 #include "Mesh3D.hh"
 #include "external_source/ConstantSource.hh"
+#include "callow/utils/Initialization.hh"
 
 // Setup
 #include "angle/test/quadrature_fixture.hh"
@@ -36,9 +37,9 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-  PetscInitialize(&argc, &argv, PETSC_NULL, PETSC_NULL);
+  callow_initialize(argc, argv);
   RUN(argc, argv);
-  PetscFinalize();
+  callow_finalize();
 }
 
 //----------------------------------------------//
@@ -68,7 +69,8 @@ int test_DiffusionFixedSourceSolver_1D(int argc, char *argv[])
   typedef BoundaryValue<_1D>     BV_T;
 
   // fixed volume
-  if (0){
+  if (1)
+  {
 
     // Constant unit source.
     ConstantSource::SP_externalsource q_e(new ConstantSource(1, mesh, 1.0));
@@ -94,6 +96,7 @@ int test_DiffusionFixedSourceSolver_1D(int argc, char *argv[])
     double absorption = 0;
     for (int i = 0; i < mesh->number_cells(); i++)
     {
+      cout << state->phi(0)[i] << " " << endl;
       gain += q_e->source(i, 0);
       absorption += state->phi(0)[i] * mat->sigma_a(0, 0);
     }
@@ -110,6 +113,7 @@ int test_DiffusionFixedSourceSolver_1D(int argc, char *argv[])
   }
 
   // boundary source (RMM example
+  if (0)
   {
 
     // Constant unit source.

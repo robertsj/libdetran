@@ -3,7 +3,7 @@
  * \file   CoarseMesh.cc
  * \brief  CoarseMesh 
  * \author Jeremy Roberts
- * \date   Aug 8, 2012
+ * @date   Aug 8, 2012
  */
 //---------------------------------------------------------------------------//
 

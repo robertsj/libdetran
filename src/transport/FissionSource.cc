@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   FissionSource.cc
- * \author robertsj
- * \date   Apr 10, 2012
- * \brief  FissionSource class definition.
+/**
+ * @file   FissionSource.cc
+ * @author robertsj
+ * @date   Apr 10, 2012
+ * @brief  FissionSource class definition.
  */
 //---------------------------------------------------------------------------//
 
