@@ -1,25 +1,25 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   GaussSeidel.hh
+ * \file   GaussSeidelMG.hh
  * \author robertsj
  * \date   Apr 9, 2012
- * \brief  GaussSeidel class definition.
+ * \brief  GaussSeidelMG class definition.
  * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 
-#ifndef GAUSSSEIDEL_HH_
-#define GAUSSSEIDEL_HH_
+#ifndef detran_GAUSSSEIDEL_HH_
+#define detran_GAUSSSEIDEL_HH_
 
 // Detran
-#include "MultigroupSolver.hh"
+#include "SolverMG.hh"
 
 namespace detran
 {
 
 //---------------------------------------------------------------------------//
 /*!
- * \class GaussSeidel
+ * \class GaussSeidelMG
  * \brief Solves the multigroup transport equation via Gauss-Seidel.
  *
  * Relevant db entries:
@@ -28,7 +28,7 @@ namespace detran
 //---------------------------------------------------------------------------//
 
 template <class D>
-class GaussSeidel: public MultigroupSolver<D>
+class GaussSeidelMG: public SolverMG<D>
 {
 
 public:
@@ -37,8 +37,8 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<GaussSeidel<D> >     SP_solver;
-  typedef MultigroupSolver<D>                       Base;
+  typedef detran_utilities::SP<GaussSeidelMG<D> >     SP_solver;
+  typedef SolverMG<D>                       Base;
   typedef typename Base::SP_solver                  SP_base;
   typedef typename Base::SP_inner                   SP_inner;
   typedef typename Base::SP_input                   SP_input;
@@ -66,7 +66,7 @@ public:
    *  \param external_source   User-defined external source.
    *  \param fission_source    Fission source.
    */
-  GaussSeidel(SP_input           input,
+  GaussSeidelMG(SP_input           input,
               SP_state           state,
               SP_mesh            mesh,
               SP_material        material,
@@ -87,7 +87,7 @@ public:
          SP_fissionsource     q_f)
   {
     SP_solver p;
-    p = new GaussSeidel(input, state, mesh, material,
+    p = new GaussSeidelMG(input, state, mesh, material,
                         quadrature, boundary, q_e, q_f);
     return p;
   }
@@ -133,6 +133,6 @@ private:
 // INLINE FUNCTIONS
 //---------------------------------------------------------------------------//
 
-#include "GaussSeidel.i.hh"
+#include "GaussSeidelMG.i.hh"
 
-#endif /* GAUSSSEIDEL_HH_ */
+#endif /* detran_GAUSSSEIDEL_HH_ */

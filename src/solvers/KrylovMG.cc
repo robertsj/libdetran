@@ -3,7 +3,7 @@
  * \file   KrylovMG.cc
  * \author robertsj
  * \date   Jun 19, 2012
- * \brief  GaussSeidel member definitions.
+ * \brief  GaussSeidelMG member definitions.
  * \note   Copyright (C) 2012 Jeremy Roberts.
  */
 //---------------------------------------------------------------------------//

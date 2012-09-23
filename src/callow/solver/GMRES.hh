@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   GMRES.hh
- * \author robertsj
- * \date   Sep 14, 2012
- * \brief  GMRES class definition.
+ *  @file   GMRES.hh
+ *  @author robertsj
+ *  @date   Sep 14, 2012
+ *  @brief  GMRES class definition.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef GMRES_HH_
-#define GMRES_HH_
+#ifndef callow_GMRES_HH_
+#define callow_GMRES_HH_
 
 #include "LinearSolver.hh"
 
@@ -121,4 +121,4 @@ private:
 // Inline member definitions
 #include "GMRES.i.hh"
 
-#endif /* GMRES_HH_ */
+#endif /* callow_GMRES_HH_ */

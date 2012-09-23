@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   GaussSeidel.hh
- * \author robertsj
- * \date   Sep 14, 2012
- * \brief  GaussSeidel class definition.
+/**
+ *  @file   GaussSeidel.hh
+ *  @author robertsj
+ *  @date   Sep 14, 2012
+ *  @brief  GaussSeidel class definition.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef GAUSSSEIDEL_HH_
-#define GAUSSSEIDEL_HH_
+#ifndef callow_GAUSSSEIDEL_HH_
+#define callow_GAUSSSEIDEL_HH_
 
 #include "LinearSolver.hh"
 
@@ -16,25 +16,25 @@ namespace callow
 {
 
 /**
- *  \class GaussSeidel
- *  \brief Uses Gauss-Seidel iteration to solve a system
+ *  @class GaussSeidel
+ *  @brief Uses Gauss-Seidel iteration to solve a system
  *
  *  Gauss-Seidel iteration in matrix form uses a splitting of
  *  the form
- *  \f[
+ *  @f[
  *      \mathbf{A} = \mathbf{L} + \mathbf{U} +  \mathbf{D} \, ,
- *  \f]
+ *  @f]
  *  which are strictly lower and upper triangle and diagonal,
  *  respectively.  The Gauss-Seidel iteration is then
- *  \f[
+ *  @f[
  *      \mathbf{D + L} x^{n+1} = -\mathbf{U}x^{n} + b
- *  \f]
+ *  @f]
  *  or
- *  \f[
+ *  @f[
  *      x^{n+1} = \overbrace{-\mathbf{D+L}^{-1}(\mathbf{U})}^
  *                          {\mathbf{M}}x^{n} + \mathbf{D+L}^{-1}b \, .
- *  \f]
- *  Alternatively, one can swap \f$ U \f$ and \f$ L \f$ to produce
+ *  @f]
+ *  Alternatively, one can swap @f$ U @f$ and @f$ L @f$ to produce
  *  the backward Gauss-Seidel iteration.  If used together, one
  *  has symmetric Gauss-Seidel iteration.
  *
@@ -93,8 +93,8 @@ private:
   //-------------------------------------------------------------------------//
 
   /**
-   *  \param b  right hand side
-   *  \param x  unknown vector
+   *  @param b  right hand side
+   *  @param x  unknown vector
    */
   void solve_impl(const Vector<T> &b, Vector<T> &x);
 
@@ -106,4 +106,4 @@ private:
 #include "GaussSeidel.i.hh"
 
 
-#endif /* GAUSSSEIDEL_HH_ */
+#endif /* callow_GAUSSSEIDEL_HH_ */

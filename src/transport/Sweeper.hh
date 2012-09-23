@@ -10,7 +10,7 @@
 #ifndef SWEEPER_HH_
 #define SWEEPER_HH_
 
-#include "detran_config.h"
+#include "detran_config.hh"
 #include "CurrentTally.hh"
 #include "State.hh"
 #include "SweepSource.hh"

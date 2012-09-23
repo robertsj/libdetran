@@ -7,8 +7,8 @@
  */
 //---------------------------------------------------------------------------//
 
-#ifndef PCILU0_I_HH_
-#define PCILU0_I_HH_
+#ifndef callow_PCILU0_I_HH_
+#define callow_PCILU0_I_HH_
 
 #include <iostream>
 
@@ -143,7 +143,7 @@ void PCILU0<T>::apply(Vector<T> &b, Vector<T> &x)
 
 } // end namespace detran
 
-#endif // PCILU0_I_HH_ 
+#endif // callow_PCILU0_I_HH_
 
 //---------------------------------------------------------------------------//
 //              end of file PCILU0.i.hh

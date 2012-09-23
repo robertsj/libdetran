@@ -1,15 +1,15 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   GaussSeidel.cc
+ * \file   GaussSeidelMG.cc
  * \author robertsj
  * \date   Apr 10, 2012
- * \brief  GaussSeidel member definitions.
+ * \brief  GaussSeidelMG member definitions.
  * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 
 // Detran
-#include "GaussSeidel.hh"
+#include "GaussSeidelMG.hh"
 
 // System
 #include <iostream>
@@ -20,7 +20,7 @@ namespace detran
 
 // Constructor
 template <class D>
-GaussSeidel<D>::GaussSeidel(SP_input          input,
+GaussSeidelMG<D>::GaussSeidelMG(SP_input          input,
                             SP_state          state,
                             SP_mesh           mesh,
                             SP_material       material,
@@ -41,6 +41,6 @@ GaussSeidel<D>::GaussSeidel(SP_input          input,
 } // end namespace detran
 
 //---------------------------------------------------------------------------//
-//              end of GaussSeidel.cc
+//              end of GaussSeidelMG.cc
 //---------------------------------------------------------------------------//
 

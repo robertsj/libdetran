@@ -18,7 +18,7 @@
 #include "external_source/ExternalSource.hh"
 #include "geometry/Mesh.hh"
 #include "material/Material.hh"
-#include "solvers/GaussSeidel.hh"
+#include "solvers/GaussSeidelMG.hh"
 #include "solvers/Eigensolver.hh"
 #ifdef DETRAN_ENABLE_SLEPC
 #include "solvers/EigenSLEPc.hh"
@@ -325,7 +325,7 @@ void PyExecute<D>::solve()
     }
     if (outer_solver == "GS")
     {
-      GaussSeidel<D> solver(d_input, d_state, d_mesh, d_material, d_quadrature,
+      GaussSeidelMG<D> solver(d_input, d_state, d_mesh, d_material, d_quadrature,
                             boundary, d_externalsource, d_fissionsource);
       solver.solve();
     }

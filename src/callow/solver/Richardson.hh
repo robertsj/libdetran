@@ -7,8 +7,8 @@
  */
 //---------------------------------------------------------------------------//
 
-#ifndef RICHARDSON_HH_
-#define RICHARDSON_HH_
+#ifndef callow_RICHARDSON_HH_
+#define callow_RICHARDSON_HH_
 
 #include "LinearSolver.hh"
 
@@ -94,4 +94,4 @@ private:
 // Inline member definitions
 #include "Richardson.i.hh"
 
-#endif /* RICHARDSON_HH_ */
+#endif /* callow_RICHARDSON_HH_ */

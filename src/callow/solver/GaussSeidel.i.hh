@@ -1,15 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   GaussSeidel.i.hh
- * \author robertsj
- * \date   Sep 14, 2012
- * \brief  GaussSeidel.i class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+/**
+ *  @file   GaussSeidel.i.hh
+ *  @author robertsj
+ *  @date   Sep 14, 2012
+ *  @brief  GaussSeidel.i class definition.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef GAUSSSEIDEL_I_HH_
-#define GAUSSSEIDEL_I_HH_
+#ifndef callow_GAUSSSEIDEL_I_HH_
+#define callow_GAUSSSEIDEL_I_HH_
 
 #include "callow/matrix/Matrix.hh"
 #include <cmath>
@@ -110,4 +109,4 @@ inline void GaussSeidel<T>::solve_impl(const Vector<T> &b, Vector<T> &x)
 } // end namespace callow
 
 
-#endif /* GAUSSSEIDEL_I_HH_ */
+#endif /* callow_GAUSSSEIDEL_I_HH_ */

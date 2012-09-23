@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   MultigroupSolver.hh
+ * \file   SolverMG.hh
  * \author robertsj
  * \date   Jun 19, 2012
- * \brief  MultigroupSolver class definition.
+ * \brief  SolverMG class definition.
  * \note   Copyright (C) 2012 Jeremy Roberts.
  */
 //---------------------------------------------------------------------------//
@@ -26,7 +26,7 @@ namespace detran
 
 //---------------------------------------------------------------------------//
 /*!
- *  \class MultigroupSolver
+ *  \class SolverMG
  *  \brief Base class for multigroup transport solvers.
  *
  *  The multigroup transport equations are
@@ -36,7 +36,7 @@ namespace detran
 //---------------------------------------------------------------------------//
 
 template <class D>
-class MultigroupSolver
+class SolverMG
 {
 
 public:
@@ -45,7 +45,7 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<MultigroupSolver<D> >  SP_solver;
+  typedef detran_utilities::SP<SolverMG<D> >  SP_solver;
   typedef detran_utilities::InputDB::SP_input         SP_input;
   typedef State::SP_state                             SP_state;
   typedef detran_geometry::Mesh::SP_mesh              SP_mesh;
@@ -73,7 +73,7 @@ public:
    *  \param external_source   User-defined external source.
    *  \param fission_source    Fission source.
    */
-  MultigroupSolver(SP_input           input,
+  SolverMG(SP_input           input,
                    SP_state           state,
                    SP_mesh            mesh,
                    SP_material        material,
@@ -83,7 +83,7 @@ public:
                    SP_fissionsource   q_f);
 
   /// Virtual destructor
-  virtual ~MultigroupSolver(){};
+  virtual ~SolverMG(){};
 
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL MULTIGROUP SOLVERS MUST IMPLEMENT
@@ -137,7 +137,7 @@ protected:
 // INLINE FUNCTIONS
 //---------------------------------------------------------------------------//
 
-#include "MultigroupSolver.i.hh"
+#include "SolverMG.i.hh"
 
 
 #endif /* MULTIGROUPSOLVER_HH_ */

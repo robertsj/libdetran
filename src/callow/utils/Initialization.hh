@@ -7,8 +7,8 @@
  */
 //---------------------------------------------------------------------------//
 
-#ifndef INITIALIZATION_HH_
-#define INITIALIZATION_HH_
+#ifndef callow_INITIALIZATION_HH_
+#define callow_INITIALIZATION_HH_
 
 #include "callow_config.hh"
 
@@ -45,4 +45,4 @@ inline void callow_finalize()
 #endif
 }
 
-#endif /* INITIALIZATION_HH_ */
+#endif /* callow_INITIALIZATION_HH_ */

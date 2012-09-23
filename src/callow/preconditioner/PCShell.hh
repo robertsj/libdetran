@@ -8,8 +8,8 @@
  */
 //---------------------------------------------------------------------------//
 
-#ifndef PCSHELL_HH_
-#define PCSHELL_HH_
+#ifndef callow_PCSHELL_HH_
+#define callow_PCSHELL_HH_
 
 #include "Preconditioner.hh"
 
@@ -74,4 +74,4 @@ protected:
 
 #include "PCShell.i.hh"
 
-#endif /* PCSHELL_HH_ */
+#endif /* callow_PCSHELL_HH_ */

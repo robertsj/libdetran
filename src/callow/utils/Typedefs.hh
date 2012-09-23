@@ -7,8 +7,8 @@
  */
 //---------------------------------------------------------------------------//
 
-#ifndef TYPEDEFS_HH_
-#define TYPEDEFS_HH_
+#ifndef callow_TYPEDEFS_HH_
+#define callow_TYPEDEFS_HH_
 
 #include "callow/callow_config.hh"
 
@@ -30,7 +30,7 @@ namespace callow
 
 } // end namespace detran
 
-#endif // TYPEDEFS_HH_ 
+#endif // callow_TYPEDEFS_HH_
 
 //---------------------------------------------------------------------------//
 //              end of file Typedefs.hh

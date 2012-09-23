@@ -7,8 +7,8 @@
  */
 //---------------------------------------------------------------------------//
 
-#ifndef PRECONDITIONER_HH_
-#define PRECONDITIONER_HH_
+#ifndef callow_PRECONDITIONER_HH_
+#define callow_PRECONDITIONER_HH_
 
 #include "callow/callow_config.hh"
 #include "callow/vector/Vector.hh"
@@ -114,7 +114,7 @@ PetscErrorCode pc_apply_wrapper(PC pc, Vec b, Vec x);
 
 #include "Preconditioner.i.hh"
 
-#endif // PRECONDITIONER_HH_ 
+#endif // callow_PRECONDITIONER_HH_
 
 //---------------------------------------------------------------------------//
 //              end of file Preconditioner.hh

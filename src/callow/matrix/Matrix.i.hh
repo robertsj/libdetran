@@ -127,6 +127,12 @@ inline void Matrix<T>::preallocate(int* nnzrows)
   // preconditions
   Require(d_sizes_set);
   Require(!d_allocated);
+
+  for (int i = 0; i < d_m; ++i)
+  {
+    std::cout << " i=" << i << " nnz=" << nnzrows[i] << std::endl;
+  }
+  THROW("lalal");
   // set number of nonzeros, preallocate triplets, and initialize counter
   d_aij.resize(d_m);
   for (int i = 0; i < d_m; i++)

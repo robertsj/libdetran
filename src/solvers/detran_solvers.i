@@ -61,17 +61,17 @@ public:
 %template(SourceIteration2DSP)  detran_utilities::SP<detran::SourceIteration<detran::_2D> >;
 
 
-%include "MultigroupSolver.hh"
-%template(MultigroupSolver1D)     detran::MultigroupSolver<detran::_1D>;
-%template(MultigroupSolver2D)     detran::MultigroupSolver<detran::_2D>;
-%template(MultigroupSolver3D)     detran::MultigroupSolver<detran::_3D>;
+%include "SolverMG.hh"
+%template(SolverMG1D)     detran::SolverMG<detran::_1D>;
+%template(SolverMG2D)     detran::SolverMG<detran::_2D>;
+%template(SolverMG3D)     detran::SolverMG<detran::_3D>;
 
 
-%include "GaussSeidel.hh"
-%template(GaussSeidel1D)        detran::GaussSeidel<detran::_1D>;
-%template(GaussSeidel1DSP)      detran_utilities::SP<detran::GaussSeidel<detran::_1D> >;
-%template(GaussSeidel2D)        detran::GaussSeidel<detran::_2D>;
-%template(GaussSeidel2DSP)      detran_utilities::SP<detran::GaussSeidel<detran::_2D> >;
+%include "GaussSeidelMG.hh"
+%template(GaussSeidelMG1D)        detran::GaussSeidelMG<detran::_1D>;
+%template(GaussSeidelMG1DSP)      detran_utilities::SP<detran::GaussSeidelMG<detran::_1D> >;
+%template(GaussSeidelMG2D)        detran::GaussSeidelMG<detran::_2D>;
+%template(GaussSeidelMG2DSP)      detran_utilities::SP<detran::GaussSeidelMG<detran::_2D> >;
 
 
 %include "Eigensolver.hh"

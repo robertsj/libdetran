@@ -11,13 +11,13 @@
 #define EIGENSOLVER_HH_
 
 #include "detran_config.hh"
-#include "GaussSeidel.hh"
+#include "GaussSeidelMG.hh"
 #include "InnerIteration.hh"
 #ifdef DETRAN_ENABLE_PETSC
 #include "KrylovMG.hh"
 #include "petsc.h"
 #endif
-#include "MultigroupSolver.hh"
+#include "SolverMG.hh"
 #include "external_source/ExternalSource.hh"
 #include "geometry/Mesh.hh"
 #include "material/Material.hh"
@@ -151,7 +151,7 @@ public:
   //-------------------------------------------------------------------------//
 
   typedef detran_utilities::SP<Eigensolver<D> >       SP_solver;
-  typedef typename MultigroupSolver<D>::SP_solver     SP_mg_solver;
+  typedef typename SolverMG<D>::SP_solver     SP_mg_solver;
   typedef detran_utilities::InputDB::SP_input         SP_input;
   typedef State::SP_state                             SP_state;
   typedef detran_geometry::Mesh::SP_mesh              SP_mesh;
@@ -329,7 +329,7 @@ Eigensolver<D>::Eigensolver(SP_input          input,
   }
   if (outer_solver == "GS")
   {
-    b_mg_solver = new GaussSeidel<D>(input, state, mesh, material,
+    b_mg_solver = new GaussSeidelMG<D>(input, state, mesh, material,
                                      quadrature, boundary,
                                      SP_externalsource(), q_f);
   }

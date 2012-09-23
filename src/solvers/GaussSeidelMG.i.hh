@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   GaussSeidel.i.hh
+ * \file   GaussSeidelMG.i.hh
  * \author robertsj
  * \date   Apr 10, 2012
- * \brief  GaussSeidel inline member definitions.
+ * \brief  GaussSeidelMG inline member definitions.
  */
 //---------------------------------------------------------------------------//
 
@@ -19,7 +19,7 @@ namespace detran
 {
 
 template <class D>
-void GaussSeidel<D>::solve()
+void GaussSeidelMG<D>::solve()
 {
   using detran_utilities::norm_residual;
 
@@ -100,9 +100,9 @@ void GaussSeidel<D>::solve()
 
 // Explicit instantiations
 
-template class GaussSeidel<_1D>;
-template class GaussSeidel<_2D>;
-template class GaussSeidel<_3D>;
+template class GaussSeidelMG<_1D>;
+template class GaussSeidelMG<_2D>;
+template class GaussSeidelMG<_3D>;
 
 } // end namespace detran
 

@@ -1,4 +1,4 @@
-# src/python/detran/__init__.py
+# src/python/detran/pydetranutils/__init__.py
 #
 # Copyright 2012 Jeremy Roberts <j.alyn.roberts@gmail.com>
 #
@@ -17,6 +17,5 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-from pydetran import *
-from pydetranutils import *
+from mesh_plot import *
 

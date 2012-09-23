@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   GMRES.i.hh
- * \author robertsj
- * \date   Sep 14, 2012
- * \brief  GMRES inline member definitions
+/**
+ *  @file   GMRES.i.hh
+ *  @author robertsj
+ *  @date   Sep 14, 2012
+ *  @brief  GMRES inline member definitions
  */
 //---------------------------------------------------------------------------//
 
-#ifndef GMRES_I_HH_
-#define GMRES_I_HH_
+#ifndef callow_GMRES_I_HH_
+#define callow_GMRES_I_HH_
 
 #include "matrix/Matrix.hh"
 #include <cmath>
@@ -321,7 +321,4 @@ inline void GMRES<T>::initialize_H()
 
 } // end namespace callow
 
-
-
-
-#endif /* GMRES_I_HH_ */
+#endif /* callow_GMRES_I_HH_ */

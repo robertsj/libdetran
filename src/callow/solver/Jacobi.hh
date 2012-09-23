@@ -7,8 +7,8 @@
  */
 //---------------------------------------------------------------------------//
 
-#ifndef JACOBI_HH_
-#define JACOBI_HH_
+#ifndef callow_JACOBI_HH_
+#define callow_JACOBI_HH_
 
 #include "LinearSolver.hh"
 
@@ -108,7 +108,7 @@ private:
 // Inline member definitions
 #include "Jacobi.i.hh"
 
-#endif // JACOBI_HH_ 
+#endif // callow_JACOBI_HH_
 
 //---------------------------------------------------------------------------//
 //              end of file Jacobi.hh

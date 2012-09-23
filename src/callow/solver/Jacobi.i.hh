@@ -7,8 +7,8 @@
  */
 //---------------------------------------------------------------------------//
 
-#ifndef JACOBI_I_HH_
-#define JACOBI_I_HH_
+#ifndef callow_JACOBI_I_HH_
+#define callow_JACOBI_I_HH_
 
 #include "callow/matrix/Matrix.hh"
 #include <cmath>
@@ -111,7 +111,7 @@ inline void Jacobi<T>::solve_impl(const Vector<T> &b, Vector<T> &x)
 
 } // end namespace callow
 
-#endif // JACOBI_I_HH_ 
+#endif // callow_JACOBI_I_HH_
 
 //---------------------------------------------------------------------------//
 //              end of file Jacobi.i.hh

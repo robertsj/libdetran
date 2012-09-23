@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   MultigroupSolver.hh
+ * \file   SolverMG.hh
  * \author robertsj
  * \date   Jun 19, 2012
- * \brief  MultigroupSolver inline member definitions.
+ * \brief  SolverMG inline member definitions.
  * \note   Copyright (C) 2012 Jeremy Roberts.
  */
 //---------------------------------------------------------------------------//
@@ -12,7 +12,7 @@
 #define MULTIGROUPSOLVER_I_HH_
 
 // Detran
-#include "detran_config.h"
+#include "detran_config.hh"
 #include "SourceIteration.hh"
 #ifdef DETRAN_ENABLE_PETSC
 #include "InnerGMRES.hh"
@@ -22,7 +22,7 @@ namespace detran
 {
 
 template <class D>
-MultigroupSolver<D>::MultigroupSolver(SP_input          input,
+SolverMG<D>::SolverMG(SP_input          input,
                                       SP_state          state,
                                       SP_mesh           mesh,
                                       SP_material       material,

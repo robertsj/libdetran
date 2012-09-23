@@ -7,8 +7,8 @@
  */
 //---------------------------------------------------------------------------//
 
-#ifndef PCILU0_HH_
-#define PCILU0_HH_
+#ifndef callow_PCILU0_HH_
+#define callow_PCILU0_HH_
 
 #include "Preconditioner.hh"
 #include "callow/matrix/Matrix.hh"
@@ -82,7 +82,7 @@ protected:
 
 #include "PCILU0.i.hh"
 
-#endif // PCILU0_HH_ 
+#endif // callow_PCILU0_HH_
 
 //---------------------------------------------------------------------------//
 //              end of file PCILU0.hh

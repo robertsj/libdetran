@@ -14,7 +14,7 @@
 #include "external_source/IsotropicSource.hh"
 #include "geometry/Tracker.hh"
 #include "solvers/PowerIteration.hh"
-#include "solvers/GaussSeidel.hh"
+#include "solvers/GaussSeidelMG.hh"
 #include "utilities/Definitions.hh"
 
 namespace detran

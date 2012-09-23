@@ -7,8 +7,8 @@
  */
 //---------------------------------------------------------------------------//
 
-#ifndef RICHARDSON_I_HH_
-#define RICHARDSON_I_HH_
+#ifndef callow_RICHARDSON_I_HH_
+#define callow_RICHARDSON_I_HH_
 
 #include <cmath>
 #include <cstdio>
@@ -107,4 +107,4 @@ inline void Richardson<T>::solve_impl(const Vector<T> &b, Vector<T> &x)
 
 } // end namespace callow
 
-#endif /* RICHARDSON_I_HH_ */
+#endif /* callow_RICHARDSON_I_HH_ */

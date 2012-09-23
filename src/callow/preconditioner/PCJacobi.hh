@@ -7,8 +7,8 @@
  */
 //---------------------------------------------------------------------------//
 
-#ifndef PCJACOBI_HH_
-#define PCJACOBI_HH_
+#ifndef callow_PCJACOBI_HH_
+#define callow_PCJACOBI_HH_
 
 #include "Preconditioner.hh"
 #include "callow/matrix/Matrix.hh"
@@ -74,7 +74,7 @@ protected:
 
 #include "PCJacobi.i.hh"
 
-#endif // PCJACOBI_HH_ 
+#endif // callow_PCJACOBI_HH_
 
 //---------------------------------------------------------------------------//
 //              end of file PCJacobi.hh
