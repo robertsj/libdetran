@@ -25,6 +25,31 @@
 // LEVEL 1
 //---------------------------------------------------------------------------//
   
+// Callow
+#include "callow/callow_config.hh"
+#include "callow/utils/Initialization.hh"
+#include "callow/utils/Typedefs.hh"
+//
+#include "callow/vector/Vector.hh"
+//
+#include "callow/matrix/MatrixBase.hh"
+#include "callow/matrix/Matrix.hh"
+#include "callow/matrix/MatrixShell.hh"
+//
+#include "callow/solver/LinearSolverCreator.hh"
+#include "callow/solver/Richardson.hh"
+#include "callow/solver/Jacobi.hh"
+#include "callow/solver/GaussSeidel.hh"
+#include "callow/solver/GMRES.hh"
+#ifdef CALLOW_ENABLE_PETSC
+#include "callow/solver/PetscSolver.hh"
+#endif
+//
+#include "callow/preconditioner/Preconditioner.hh"
+#include "callow/preconditioner/PCJacobi.hh"
+#include "callow/preconditioner/PCILU0.hh"
+#include "callow/preconditioner/PCShell.hh"
+
 // Angle
 #include "Collocated.hh"
 #include "GaussLegendre.hh"
@@ -106,9 +131,12 @@
   
 // Solvers
 #include "InnerIteration.hh"
-#include "GaussSeidel.hh"
+#include "GaussSeidelMG.hh"
 #include "PowerIteration.hh"
 #include "SourceIteration.hh"
+#include "DiffusionFixedSourceSolver.hh"
+#include "DiffusionLossOperator.hh"
+#include "DiffusionGainOperator.hh"
 
 //---------------------------------------------------------------------------//
 // LEVEL 4 
@@ -129,7 +157,7 @@
 //------------------------------------//
 // CONFIGURATION
 
-%include "detran_config.h"
+%include "detran_config.hh"
 
 //------------------------------------//
 // LEVEL 0
@@ -140,9 +168,11 @@
 //------------------------------------//
 // LEVEL 1
 
+// Callow
+%include "callow.i"
 // Angle
 %include "detran_angle.i"
-//// Geometry
+// Geometry
 %include "detran_geometry.i"
 // Material
 %include "detran_materials.i"
@@ -161,9 +191,7 @@
 // LEVEL 3
 
 // Diffusion
-#ifdef DETRAN_ENABLE_PETSC
 %include "detran_diffusion.i"
-#endif
 
 // Transport
 %include "detran_solvers.i"

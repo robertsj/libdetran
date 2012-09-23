@@ -2,7 +2,7 @@
 /*!
  * \file   ScatterSource.cc
  * \author robertsj
- * \date   Apr 4, 2012
+ * @date   Apr 4, 2012
  * \brief  ScatterSource class definition.
  */
 //---------------------------------------------------------------------------//

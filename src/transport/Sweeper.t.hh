@@ -2,7 +2,7 @@
 /*!
  * \file   Sweeper.t.hh
  * \author Jeremy Roberts
- * \date   Apr 22, 2012
+ * @date   Apr 22, 2012
  * \brief  Sweeper inline member definitions
  */
 //---------------------------------------------------------------------------//

@@ -2,7 +2,7 @@
 /*!
  * \file   Sweeper2DMOC.i.hh
  * \author Jeremy Roberts
- * \date   Jun 22, 2012
+ * @date   Jun 22, 2012
  * \brief  Sweeper2DMOC inline member definitions.
  */
 //---------------------------------------------------------------------------//

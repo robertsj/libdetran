@@ -2,7 +2,7 @@
 /*!
  * \file   SweepSource.hh
  * \author robertsj
- * \date   Apr 4, 2012
+ * @date   Apr 4, 2012
  * \brief  SweepSource class definition.
  */
 //---------------------------------------------------------------------------//
@@ -118,12 +118,12 @@ public:
    *
    * This sizes the source variables.
    *
-   * \param state           The state.
-   * \param mesh            The mesh.
-   * \param angularmesh     The angular mesh.
-   * \param materials       The material library.
-   * \param momentsindex    The moments index.
-   * \param m_operator      The moments to discrete operator.
+   * @param state           The state.
+   * @param mesh            The mesh.
+   * @param angularmesh     The angular mesh.
+   * @param materials       The material library.
+   * @param momentsindex    The moments index.
+   * @param m_operator      The moments to discrete operator.
    *
    */
   SweepSource(SP_state      state,
@@ -164,7 +164,7 @@ public:
   /*!
    * \brief Set an external moment source.
    *
-   * \param source  Smart pointer to external source
+   * @param source  Smart pointer to external source
    */
   void set_moment_source(SP_externalsource source)
   {
@@ -175,7 +175,7 @@ public:
   /*!
    * \brief Set an external discrete source.
    *
-   * \param source  Smart pointer to external source
+   * @param source  Smart pointer to external source
    */
   void set_discrete_source(SP_externalsource source)
   {
@@ -186,7 +186,7 @@ public:
   /*!
    * \brief Set a fission source.
    *
-   * \param source  Smart pointer to fission source
+   * @param source  Smart pointer to fission source
    */
   void set_fission_source(SP_fissionsource source)
   {
@@ -228,8 +228,8 @@ public:
    *  the in-scatter source.  This is the typical construction
    *  to be called within source iteration.
    *
-   *  \param g          Group of current solve
-   *  \param g_cutoff   Last group to include in downscatter source
+   *  @param g          Group of current solve
+   *  @param g_cutoff   Last group to include in downscatter source
    */
   void build_fixed_with_downscatter(const size_t g, const size_t g_cutoff);
 

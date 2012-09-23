@@ -3,7 +3,7 @@
  * \file   CurrentTally.cc
  * \brief  CurrentTally member definitions
  * \author Jeremy Roberts
- * \date   Aug 9, 2012
+ * @date   Aug 9, 2012
  */
 //---------------------------------------------------------------------------//
 

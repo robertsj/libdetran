@@ -2,7 +2,7 @@
 /*!
  * \file   Acceleration.cc
  * \author Jeremy Roberts
- * \date   May 17, 2012
+ * @date   May 17, 2012
  * \brief  Acceleration member definitions.
  * \note   Copyright (C) 2012 Jeremy Roberts.
  */

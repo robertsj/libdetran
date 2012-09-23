@@ -8,7 +8,7 @@
 //---------------------------------------------------------------------------//
 
 // Configuration
-#include "detran_config.h"
+#include "detran_config.hh"
 
 #ifdef DETRAN_ENABLE_PETSC
 

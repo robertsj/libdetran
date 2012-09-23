@@ -53,10 +53,10 @@ public:
   /*!
    *  \brief Constructor
    *
-   *  \param input          Input database
-   *  \param material       Material database
-   *  \param coarsemesh     Coarse mesh
-   *  \param currenttally   Current tally
+   *  @param input          Input database
+   *  @param material       Material database
+   *  @param coarsemesh     Coarse mesh
+   *  @param currenttally   Current tally
    */
   WithinGroupAcceleration(SP_input input,
                           SP_material material,
@@ -84,9 +84,9 @@ public:
   /*!
    *  \brief Solve the low order equation to update the scalar flux moments
    *
-   *  \param  group   Energy group for this solve
-   *  \param  phi     Reference to the group flux to be updated.
-   *  \param  source  Smart pointer to up-to-date sweep source.
+   *  @param  group   Energy group for this solve
+   *  @param  phi     Reference to the group flux to be updated.
+   *  @param  source  Smart pointer to up-to-date sweep source.
    *
    */
   virtual void accelerate(u_int group,

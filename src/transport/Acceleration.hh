@@ -60,9 +60,9 @@ public:
   /*!
    *  \brief Constructor
    *
-   *  \param mesh       Mesh smart pointer
-   *  \param material   Material smart pointer
-   *  \param quadrature Quadrature smart pointer
+   *  @param mesh       Mesh smart pointer
+   *  @param material   Material smart pointer
+   *  @param quadrature Quadrature smart pointer
    */
   Acceleration(SP_mesh mesh, SP_material material, SP_quadrature quadrature);
 
@@ -80,7 +80,7 @@ public:
    *  Clients may re-implement this to do more than just coarsen (e.g.
    *  allocations).
    *
-   *  \param level  Desired number of fine meshes per coarse mesh
+   *  @param level  Desired number of fine meshes per coarse mesh
    */
   virtual void initialize(int level) = 0;
 
@@ -88,12 +88,12 @@ public:
    *  \brief Add contribution to an arbitrary function of the coarse
    *         mesh edge flux.
    *
-   *  \param  i   x mesh index
-   *  \param  j   y mesh index
-   *  \param  k   z mesh index
-   *  \param  o   octant
-   *  \param  a   angle within octant
-   *  \param  psi edge angular flux
+   *  @param  i   x mesh index
+   *  @param  j   y mesh index
+   *  @param  k   z mesh index
+   *  @param  o   octant
+   *  @param  a   angle within octant
+   *  @param  psi edge angular flux
    */
   virtual void tally(int i, int j, int k, int o, int a, face_flux_type psi) = 0;
 
@@ -111,14 +111,14 @@ public:
    *  This function takes the current state vector and homogenizes the
    *  group constants via flux-weighting.
    *
-   *  \param state  The current state vector
+   *  @param state  The current state vector
    */
   //void homogenize(SP_state state, int group);
 
   /*!
    *  \brief Get the coarse mesh index for a fine mesh
-   *  \param  ijk fine mesh index
-   *  \param  dim dimension of index
+   *  @param  ijk fine mesh index
+   *  @param  dim dimension of index
    *  \return     coarse mesh index
    */
   int fine_to_coarse(int ijk, int dim) const;
@@ -192,17 +192,17 @@ protected:
 
   /*!
    *  \brief Create the coarse mesh for a given level.
-   *  \param  level   Desired number of fine cells per coarse cell
+   *  @param  level   Desired number of fine cells per coarse cell
    */
   void coarsen(int level);
 
   /*!
    *  \brief Check the outgoing edge of a fine mesh cell is on a coarse
    *         mesh boundary.
-   *  \param  i   x fine mesh index
-   *  \param  j   y fine mesh index
-   *  \param  k   z fine mesh index
-   *  \param  o   octant index
+   *  @param  i   x fine mesh index
+   *  @param  j   y fine mesh index
+   *  @param  k   z fine mesh index
+   *  @param  o   octant index
    */
   bool on_coarse_boundary(int i, int j, int k, int o) const;
 

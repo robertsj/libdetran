@@ -10,7 +10,7 @@
 #ifndef IO_HDF5_HH_
 #define IO_HDF5_HH_
 
-#include "detran_config.h"
+#include "detran_config.hh"
 #include "material/Material.hh"
 #include "geometry/Mesh.hh"
 #include "utilities/DBC.hh"

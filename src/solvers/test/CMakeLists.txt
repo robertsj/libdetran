@@ -14,21 +14,13 @@ TARGET_LINK_LIBRARIES(test_SourceIteration 		solvers )
 ADD_EXECUTABLE(test_PowerIteration 				test_PowerIteration.cc)
 TARGET_LINK_LIBRARIES(test_PowerIteration  		solvers)
 
-if (DETRAN_ENABLE_PETSC)
 
-ADD_EXECUTABLE(test_InnerGMRES 					test_InnerGMRES.cc)
-TARGET_LINK_LIBRARIES(test_InnerGMRES 			solvers)
-
-ADD_EXECUTABLE(test_OperatorMatrix 			    test_OperatorMatrix.cc)
-TARGET_LINK_LIBRARIES(test_OperatorMatrix		solvers)
-
-ADD_EXECUTABLE(test_OperatorShell			    test_OperatorShell.cc)
-TARGET_LINK_LIBRARIES(test_OperatorShell		solvers)
+#ADD_EXECUTABLE(test_InnerGMRES 					test_InnerGMRES.cc)
+#TARGET_LINK_LIBRARIES(test_InnerGMRES 			solvers)
 
 ADD_EXECUTABLE(test_DiffusionFixedSourceSolver          test_DiffusionFixedSourceSolver.cc)
 TARGET_LINK_LIBRARIES(test_DiffusionFixedSourceSolver   solvers)
 
-endif ()
 
 #------------------------------------------------------------------------------#
 # Define tests

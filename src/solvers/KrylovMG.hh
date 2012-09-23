@@ -11,7 +11,7 @@
 #define KRYLOVMG_HH_
 
 #include "InnerIteration.hh"
-#include "MultigroupSolver.hh"
+#include "SolverMG.hh"
 #include "Sweeper.hh"
 #include "PreconditionerMG.hh"
 #include "petsc.h"
@@ -88,7 +88,7 @@ namespace detran
 //---------------------------------------------------------------------------//
 
 template <class D>
-class KrylovMG: public MultigroupSolver<D>
+class KrylovMG: public SolverMG<D>
 {
 
 public:
@@ -98,7 +98,7 @@ public:
   //-------------------------------------------------------------------------//
 
   typedef detran_utilities::SP<KrylovMG<D> >        SP_solver;
-  typedef MultigroupSolver<D>                       Base;
+  typedef SolverMG<D>                       Base;
   typedef typename Base::SP_solver                  SP_base;
   typedef typename Base::SP_inner                   SP_inner;
   typedef typename Base::SP_input                   SP_input;

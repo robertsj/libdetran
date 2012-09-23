@@ -2,7 +2,7 @@
 /*!
  * \file   Sweeper2DMOC.hh
  * \author Jeremy Roberts
- * \date   Mar 24, 2012
+ * @date   Mar 24, 2012
  * \brief  Sweeper2DMOC class definition.
  * \note   Copyright (C) 2012 Jeremy Roberts.
  */
@@ -67,13 +67,13 @@ public:
   /*!
    *  \brief Constructor.
    *
-   *  \param    input       User input database.
-   *  \param    mesh        Tracked mesh.
-   *  \param    material    Material database.
-   *  \param    quadrature  Angular quadrature for MOC.
-   *  \param    state       State vectors.
-   *  \param    boundary    Boundary based on tracks.
-   *  \param    sweepsource Sweep source constructor.
+   *  @param    input       User input database.
+   *  @param    mesh        Tracked mesh.
+   *  @param    material    Material database.
+   *  @param    quadrature  Angular quadrature for MOC.
+   *  @param    state       State vectors.
+   *  @param    boundary    Boundary based on tracks.
+   *  @param    sweepsource Sweep source constructor.
    */
   Sweeper2DMOC(SP_input input,
                SP_mesh mesh,

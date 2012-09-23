@@ -1,4 +1,4 @@
-# detran/__init__.py
+# src/python/detran/__init__.py
 #
 # Copyright 2012 Jeremy Roberts <j.alyn.roberts@gmail.com>
 #
@@ -18,4 +18,5 @@
 # MA 02110-1301, USA.
 
 from pydetran import *
+from pydetranutils import *
 

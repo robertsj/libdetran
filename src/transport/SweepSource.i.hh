@@ -2,7 +2,7 @@
 /*!
  * \file   SweepSource.i.hh
  * \author robertsj
- * \date   Apr 4, 2012
+ * @date   Apr 4, 2012
  * \brief  SweepSource inline member definitions.
  */
 //---------------------------------------------------------------------------//

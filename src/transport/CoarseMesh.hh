@@ -3,7 +3,7 @@
  * \file   CoarseMesh.hh
  * \brief  CoarseMesh 
  * \author Jeremy Roberts
- * \date   Aug 8, 2012
+ * @date   Aug 8, 2012
  */
 //---------------------------------------------------------------------------//
 
@@ -70,8 +70,8 @@ public:
 
   /*!
    *  \brief Get the coarse mesh index for a fine mesh
-   *  \param  ijk fine mesh index
-   *  \param  dim dimension of index
+   *  @param  ijk fine mesh index
+   *  @param  dim dimension of index
    *  \return     coarse mesh index
    */
   size_t fine_to_coarse(const size_t ijk, const size_t dim) const
@@ -83,8 +83,8 @@ public:
 
   /*!
    *  \brief Determine whether a fine mesh edge is on a coarse mesh edge
-   *  \param  ijk fine mesh edge index
-   *  \param  dim dimension of index
+   *  @param  ijk fine mesh edge index
+   *  @param  dim dimension of index
    *  \return     nonnegative index of coarse edge (otherwise -1)
    */
   size_t coarse_edge_flag(const size_t ijk, const size_t dim) const

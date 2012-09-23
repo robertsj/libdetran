@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   State.hh
- * \author Jeremy Roberts
- * \date   Mar 24, 2012
- * \brief  State class definition.
+/**
+ *  @file   State.hh
+ *  @author Jeremy Roberts
+ *  @date   Mar 24, 2012
+ *  @brief  State class definition.
  */
 //---------------------------------------------------------------------------//
 
@@ -21,33 +21,33 @@ namespace detran
 {
 
 //---------------------------------------------------------------------------//
-/*!
- * \class State
- * \brief Problem state.
+/**
+ *  @class State
+ *  @brief Problem state.
  *
- * The state of the problem at any point in the solution process can be
- * defined by the unknown flux moments (scalar flux and higher moments),
- * as these quantities are sufficient to describe reaction rates, which is
- * typically what we need (e.g. doses or fission rates).  For eigenvalue
- * problems, keff is also important.
+ *  The state of the problem at any point in the solution process can be
+ *  defined by the unknown flux moments (scalar flux and higher moments),
+ *  as these quantities are sufficient to describe reaction rates, which is
+ *  typically what we need (e.g. doses or fission rates).  For eigenvalue
+ *  problems, keff is also important.
  *
- * When needed, the underlying data array for a group can be accessed as
- * demonstrated by the following (I <b>think!</b>).
- * \code
-     // Get moments by reference.
-     moments_type moments = state.moments();
-     double *localgrouparray;
-     localgrouparray = &moments[g][0];
- * \endcode
- * This would be useful e.g. for filling a PETSc Vec object to use in one
- * of their Krylov schemes (rather than copying into another array).
+ *  When needed, the underlying data array for a group can be accessed as
+ *  demonstrated by the following (I <b>think!</b>).
+ *  \code
+      // Get moments by reference.
+      moments_type moments = state.moments();
+      double *localgrouparray;
+      localgrouparray = &moments[g][0];
+ *  \endcode
+ *  This would be useful e.g. for filling a PETSc Vec object to use in one
+ *  of their Krylov schemes (rather than copying into another array).
  *
- * \todo Test whether referencing a Moments_Field object at [0] actually
- *       yields the array underneath.
+ *  \todo Test whether referencing a Moments_Field object at [0] actually
+ *        yields the array underneath.
  *
- * Relevant input entries:
- * - number_groups (int)
- * - store_angular_flux (int)
+ *  Relevant input entries:
+ *  - number_groups (int)
+ *  - store_angular_flux (int)
  */
 //---------------------------------------------------------------------------//
 class State
@@ -75,25 +75,25 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Constructor.
+  /**
+   *  @brief Constructor.
    *
-   *  \param    input       User input database.
-   *  \param    mesh        Cartesian mesh.
-   *  \param    quadrature  Angular quadrature.
+   *  @param    input       User input database.
+   *  @param    mesh        Cartesian mesh.
+   *  @param    quadrature  Angular quadrature.
    */
   State(SP_input        input,
         SP_mesh         mesh,
         SP_quadrature   quadrature);
 
   /*!
-   *  \brief Constructor.
+   *  @brief Constructor.
    *
    *  This variant has no quadrature and can be used in
    *  diffusion problems.
    *
-   *  \param    input       User input database.
-   *  \param    mesh        Cartesian mesh.
+   *  @param    input       User input database.
+   *  @param    mesh        Cartesian mesh.
    */
   State(SP_input        input,
         SP_mesh         mesh);
@@ -119,16 +119,16 @@ public:
   // PUBLIC INTERFACE
   //-------------------------------------------------------------------------//
 
-  /*
-   *  \brief Const accessor to a group moments field.
+  /**
+   *  @brief Const accessor to a group moments field.
    *
-   *  \param    g   Group of field requested.
-   *  \return       Constant reference to group moment vector.
+   *  @param    g   Group of field requested.
+   *  @return       Constant reference to group moment vector.
    */
   const moments_type& phi(const size_t g) const;
 
-  /*
-   *  \brief Mutable accessor to a group moments field.
+  /**
+   *  @brief Mutable accessor to a group moments field.
    *
    *  This is to be used for copying, i.e.
    *  \code
@@ -137,44 +137,42 @@ public:
    *    moments->phi(g) = new_phi;
    *  \endcode
    *
-   *  \param    g   Group of field requested.
-   *  \return       Mutable reference to group moment vector.
+   *  @param    g   Group of field requested.
+   *  @return       Mutable reference to group moment vector.
    */
   moments_type& phi(const size_t g);
 
-  /*
-   *  \brief Const accessor to all group moments.
-   */
+  /// Const access to all group moments.
   const group_moments_type& all_phi() const;
 
-  /*
-   *  \brief Mutable accessor to all group moments.
-   */
+  /// Mutable access to all group moments.
   group_moments_type& all_phi();
 
-  /*!
-   *   \brief Set a group moment vector.
-   *   \param   f   User-defined moment vector.
+  /**
+   *   @brief Set a group moment vector.
+   *   @param   g   Energy group
+   *   @param   f   User-defined moment vector.
    */
   void set_moments(const size_t g, std::vector<double>& f);
-  /*
-   *  \brief Const accessor to a group angular flux.
+
+  /**
+   *  @brief Const accessor to a group angular flux.
    *
-   *  \param    g   Group of field requested.
-   *  \param    o   Octant
-   *  \param    a   Angle within octant
-   *  \return       Constant reference to group angular flux vector.
+   *  @param    g   Group of field requested.
+   *  @param    o   Octant
+   *  @param    a   Angle within octant
+   *  @return       Constant reference to group angular flux vector.
    */
   const angular_flux_type& psi(const size_t g,
                                const size_t o,
                                const size_t a) const;
-  /*
-   *  \brief Mutable accessor to a group angular flux.
+  /**
+   *  @brief Mutable accessor to a group angular flux.
    *
-   *  \param    g   Group of field requested.
-   *  \param    o   Octant
-   *  \param    a   Angle within octant
-   *  \return       Mutable reference to group angular flux vector.
+   *  @param    g   Group of field requested.
+   *  @param    o   Octant
+   *  @param    a   Angle within octant
+   *  @return       Mutable reference to group angular flux vector.
    */
   angular_flux_type& psi(const size_t g, const size_t o, const size_t a);
 

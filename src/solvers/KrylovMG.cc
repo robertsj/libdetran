@@ -3,12 +3,12 @@
  * \file   KrylovMG.cc
  * \author robertsj
  * \date   Jun 19, 2012
- * \brief  GaussSeidel member definitions.
+ * \brief  GaussSeidelMG member definitions.
  * \note   Copyright (C) 2012 Jeremy Roberts.
  */
 //---------------------------------------------------------------------------//
 
-#include "detran_config.h"
+#include "detran_config.hh"
 
 #ifdef DETRAN_ENABLE_PETSC
 

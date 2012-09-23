@@ -2,7 +2,7 @@
 /*!
  * \file   State.i.hh
  * \author robertsj
- * \date   Sep 7, 2012
+ * @date   Sep 7, 2012
  * \brief  State inline member definitions
  */
 //---------------------------------------------------------------------------//

@@ -2,7 +2,7 @@
 /*!
  * \file   ScatterSource.hh
  * \author robertsj
- * \date   Apr 4, 2012
+ * @date   Apr 4, 2012
  * \brief  ScatterSource class definition.
  */
 //---------------------------------------------------------------------------//
@@ -51,9 +51,9 @@ public:
 
   /*!
    *  \brief Constructor
-   *  \param mesh           Pointer to mesh
-   *  \param material       Pointer to material
-   *  \param state          Pointer to state vector
+   *  @param mesh           Pointer to mesh
+   *  @param material       Pointer to material
+   *  @param state          Pointer to state vector
    */
   ScatterSource(SP_mesh mesh, SP_material material, SP_state state);
 
@@ -69,9 +69,9 @@ public:
    *      q_g = \mathbf{S}_{gg} \phi_g \, .
    *  \f]
    *
-   *  \param   g        Group for this problem
-   *  \param   phi      Const reference to group flux.
-   *  \param   source   Mutable reference to moments source.
+   *  @param   g        Group for this problem
+   *  @param   phi      Const reference to group flux.
+   *  @param   source   Mutable reference to moments source.
    *
    */
   void build_within_group_source(const size_t g,
@@ -88,10 +88,10 @@ public:
    *
    *  This *assumes* the state is up-to-date.
    *
-   *  \param   g        Group for this problem
-   *  \param   source   Mutable reference to moments source.
-   *  \param   g_down   Highest group to contribute to downscatter
-   *  \param   g_up     Lowest group to contribute to upscatter
+   *  @param   g        Group for this problem
+   *  @param   source   Mutable reference to moments source.
+   *  @param   g_down   Highest group to contribute to downscatter
+   *  @param   g_up     Lowest group to contribute to upscatter
    *
    */
   void build_in_scatter_source(const size_t g,
@@ -110,9 +110,9 @@ public:
    *  multigroup solves when Gauss-Seidel has been used for the
    *  downscatter block.
    *
-   *  \param   g        Group for this problem
-   *  \param   g_down   Highest group to contribute to downscatter
-   *  \param   source   Mutable reference to moments source.
+   *  @param   g        Group for this problem
+   *  @param   g_down   Highest group to contribute to downscatter
+   *  @param   source   Mutable reference to moments source.
    */
   void build_downscatter_source(const size_t g,
                                 const size_t g_cutoff,
@@ -132,10 +132,10 @@ public:
    *  a cutoff group is passed to exclude the solved portion of
    *  the problem.
    *
-   *  \param   g        Group for this problem.
-   *  \param   g_cutoff Highest group to contribute to downscatter.
-   *  \param   phi      Const reference to multigroup flux moments.
-   *  \param   source   Mutable reference to moments source.
+   *  @param   g        Group for this problem.
+   *  @param   g_cutoff Highest group to contribute to downscatter.
+   *  @param   phi      Const reference to multigroup flux moments.
+   *  @param   source   Mutable reference to moments source.
    *
    */
   void build_total_group_source(const size_t g,

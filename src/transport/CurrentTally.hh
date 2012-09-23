@@ -3,7 +3,7 @@
  * \file   CurrentTally.hh
  * \brief  CurrentTally 
  * \author Jeremy Roberts
- * \date   Aug 7, 2012
+ * @date   Aug 7, 2012
  */
 //---------------------------------------------------------------------------//
 
@@ -112,9 +112,9 @@ public:
 
   /*!
    *  \brief Constructor
-   *  \param mesh
-   *  \param quadrature
-   *  \param number_groups
+   *  @param mesh
+   *  @param quadrature
+   *  @param number_groups
    */
   CurrentTally(SP_coarsemesh mesh,
                SP_quadrature quadrature,
@@ -127,13 +127,13 @@ public:
   /*!
    *  \brief Add angular flux to the current tally
    *
-   *  \param  i           x mesh index
-   *  \param  j           y mesh index
-   *  \param  k           z mesh index
-   *  \param  g           group index
-   *  \param  o           octant
-   *  \param  a           angle within octant
-   *  \param  psi         edge angular flux
+   *  @param  i           x mesh index
+   *  @param  j           y mesh index
+   *  @param  k           z mesh index
+   *  @param  g           group index
+   *  @param  o           octant
+   *  @param  a           angle within octant
+   *  @param  psi         edge angular flux
    */
   inline void tally(const size_t i,
                     const size_t j,
@@ -149,14 +149,14 @@ public:
    *  This is used to sweep over incident boundary containers so that
    *  the incident conditions can be avoided for the sweep.
    *
-   *  \param  i           x mesh index
-   *  \param  j           y mesh index
-   *  \param  k           z mesh index
-   *  \param  g           group index
-   *  \param  o           octant
-   *  \param  a           angle within octant
-   *  \param  d           axis index for the incident flux
-   *  \param  psi         edge angular flux
+   *  @param  i           x mesh index
+   *  @param  j           y mesh index
+   *  @param  k           z mesh index
+   *  @param  g           group index
+   *  @param  o           octant
+   *  @param  a           angle within octant
+   *  @param  d           axis index for the incident flux
+   *  @param  psi         edge angular flux
    */
   inline void tally(const size_t i,
                     const size_t j,
@@ -169,12 +169,12 @@ public:
 
   /*!
    *  \brief Get the partial current from a surface and sense
-   *  \param  i       x mesh index
-   *  \param  j       y mesh index
-   *  \param  k       z mesh index
-   *  \param  g       group index
-   *  \param  axis    0, 1, or 2 for x, y, or z
-   *  \param  sense   true for positive (e.g. +x)
+   *  @param  i       x mesh index
+   *  @param  j       y mesh index
+   *  @param  k       z mesh index
+   *  @param  g       group index
+   *  @param  axis    0, 1, or 2 for x, y, or z
+   *  @param  sense   true for positive (e.g. +x)
    */
   inline double partial_current(const size_t i,
                                 const size_t j,

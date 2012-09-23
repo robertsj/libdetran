@@ -2,7 +2,7 @@
 /*!
  * \file   Sweeper2D.i.hh
  * \author Jeremy Roberts
- * \date   Mar 24, 2012
+ * @date   Mar 24, 2012
  * \brief  Sweeper2D inline member definitions.
  */
 //---------------------------------------------------------------------------//

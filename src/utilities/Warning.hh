@@ -10,7 +10,7 @@
 #ifndef WARNING_HH_
 #define WARNING_HH_
 
-#include "detran_config.h"
+#include "detran_config.hh"
 #include <iostream>
 #include <exception>
 #include <string>

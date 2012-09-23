@@ -9,7 +9,7 @@
 #define DBC_HH
 
 #include "GenException.hh"
-#include "detran_config.h"
+#include "detran_config.hh"
 
 #include <iostream>
 

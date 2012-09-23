@@ -10,7 +10,7 @@
 #ifndef SILOOUTPUT_HH_
 #define SILOOUTPUT_HH_
 
-#include "detran_config.h"
+#include "detran_config.hh"
 #include "angle/Quadrature.hh"
 #include "geometry/Mesh.hh"
 #include "material/Material.hh"

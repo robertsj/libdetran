@@ -25,13 +25,13 @@
 #ifndef EXECUTE_HH_
 #define EXECUTE_HH_
 
-#include "detran_config.h"
+#include "detran_config.hh"
 #include "StupidParser.hh"
 #include "discretization/DimensionTraits.hh"
 #include "external_source/ExternalSource.hh"
 #include "geometry/Mesh.hh"
 #include "material/Material.hh"
-#include "solvers/GaussSeidel.hh"
+#include "solvers/GaussSeidelMG.hh"
 #include "solvers/Eigensolver.hh"
 #ifdef DETRAN_ENABLE_SLEPC
 #include "solvers/EigenSLEPc.hh"
@@ -188,7 +188,7 @@ void Execute::solve()
     }
     if (outer_solver == "GS")
     {
-      GaussSeidel<D> solver(d_input, d_state, d_mesh, d_material, d_quadrature,
+      GaussSeidelMG<D> solver(d_input, d_state, d_mesh, d_material, d_quadrature,
                             boundary, d_externalsource, d_fissionsource);
       solver.solve();
     }

@@ -9,7 +9,7 @@
 //---------------------------------------------------------------------------//
 
 // Config
-#include "detran_config.h"
+#include "detran_config.hh"
 #include "StupidParser.hh"
 #include "Execute.hh"
 #include "utilities/Timer.hh"

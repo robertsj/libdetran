@@ -12,35 +12,35 @@ LIST( APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" )
 #------------------------------------------------------------------------------#
 
 # Set the default build type (debug)
-if( NOT CMAKE_BUILD_TYPE)
-  set( CMAKE_BUILD_TYPE Debug CACHE STRING
-       "Choose the type of build, options are: Debug Release."
-       FORCE)
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Debug CACHE STRING
+      "Choose the type of build, options are: Debug Release."
+      FORCE)
 endif()
 
 # Options for Python bindings. On or Off.
-SET( DETRAN_ENABLE_PYTHON NO CACHE BOOL
-  "Enable Python bindings via SWIG."
+SET(DETRAN_ENABLE_PYTHON NO CACHE BOOL
+    "Enable Python bindings via SWIG."
 )
 
 # Options for OpenMP directives. On or Off.
-SET( DETRAN_ENABLE_OPENMC NO CACHE BOOL
-  "Enable OpenMP for multithreaded solves."
+SET(DETRAN_ENABLE_OPENMC NO CACHE BOOL
+    "Enable OpenMP for multithreaded solves."
 )
 
 # Options for PETSc. On or Off.
-SET( DETRAN_ENABLE_PETSC NO CACHE BOOL
-  "Enable PETSc."
+SET(DETRAN_ENABLE_PETSC NO CACHE BOOL
+    "Build callow with PETSc ."
 )
 
 # Options for SLEPc. On or Off.
-SET( DETRAN_ENABLE_SLEPC NO CACHE BOOL
-  "Enable SLEPc."
+SET(DETRAN_ENABLE_SLEPC NO CACHE BOOL
+    "Build callow SLEPc."
 )
 
 # Options for gperftools. On or Off.
-SET( DETRAN_ENABLE_GPERFTOOLS NO CACHE BOOL
-  "Enable Google Performance Tools for profiling."
+SET(DETRAN_ENABLE_GPERFTOOLS NO CACHE BOOL
+    "Enable Google Performance Tools for profiling."
 )
 
 # Options for silo. On or Off.
@@ -59,12 +59,14 @@ SET( DETRAN_ENABLE_BOOST NO CACHE BOOL
 )
 
 # Write config file, install it, and include that directory for all source
-set(DETRAN_CONFIG_IN  "${CMAKE_CURRENT_SOURCE_DIR}/config/detran_config.h.in")
-set(DETRAN_CONFIG_OUT "${PROJECT_BINARY_DIR}/config/detran_config.h")
+set(DETRAN_CONFIG_IN  "${CMAKE_CURRENT_SOURCE_DIR}/config/detran_config.hh.in")
+set(DETRAN_CONFIG_OUT "${PROJECT_BINARY_DIR}/config/detran_config.hh")
 message("DETRAN_CONFIG_IN = ${DETRAN_CONFIG_IN}")
+message("DETRAN_CONFIG_OUT = ${DETRAN_CONFIG_OUT}")
 configure_file(${DETRAN_CONFIG_IN} ${DETRAN_CONFIG_OUT})
+include_directories("${PROJECT_BINARY_DIR}")
 include_directories("${PROJECT_BINARY_DIR}/config")
-install(FILES ${PROJECT_BINARY_DIR}/config/detran_config.h
+install(FILES ${PROJECT_BINARY_DIR}/config/detran_config.hh
         DESTINATION include)
 
 #------------------------------------------------------------------------------#
@@ -192,6 +194,7 @@ if ( DETRAN_ENABLE_TEST )
     include_directories(material/test)
     include_directories(geometry/test)
     include_directories(angle/test)
+    include_directories(callow/test)
     include_directories(external_source/test)
     include_directories(discretization/test)
     include_directories(boundary/test)
@@ -217,6 +220,7 @@ include_directories(utilities)
 include_directories(angle)
 include_directories(geometry)
 include_directories(material)
+include_directories(callow)
 include_directories(external_source)
 # level 2
 include_directories(discretization)
@@ -244,6 +248,7 @@ endif()
 #------------------------------------------------------------------------------#
 
 add_subdirectory(utilities)
+add_subdirectory(callow)
 add_subdirectory(material)
 add_subdirectory(angle)
 add_subdirectory(geometry)

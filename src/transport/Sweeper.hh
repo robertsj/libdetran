@@ -2,7 +2,7 @@
 /*!
  * \file   Sweeper.hh
  * \author Jeremy Roberts
- * \date   Mar 24, 2012
+ * @date   Mar 24, 2012
  * \brief  Sweeper class definition.
  */
 //---------------------------------------------------------------------------//
@@ -10,7 +10,7 @@
 #ifndef SWEEPER_HH_
 #define SWEEPER_HH_
 
-#include "detran_config.h"
+#include "detran_config.hh"
 #include "CurrentTally.hh"
 #include "State.hh"
 #include "SweepSource.hh"
@@ -90,11 +90,11 @@ public:
   /*!
    *  \brief Constructor.
    *
-   *  \param    input       User input database.
-   *  \param    mesh        Cartesian mesh.
-   *  \param    material    Material database.
-   *  \param    quadrature  Angular quadrature.
-   *  \param    state       State vectors.
+   *  @param    input       User input database.
+   *  @param    mesh        Cartesian mesh.
+   *  @param    material    Material database.
+   *  @param    quadrature  Angular quadrature.
+   *  @param    state       State vectors.
    */
   Sweeper(SP_input input,
           SP_mesh mesh,

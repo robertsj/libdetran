@@ -12,22 +12,18 @@ SET(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 SET(SRC
     DiffusionFixedSourceSolver.cc
-	DiffusionGainOperator.cc
+    DiffusionGainOperator.cc
     DiffusionLossOperator.cc
-	Eigensolver.cc
+    Eigensolver.cc
 	EigenSLEPc.cc
     InnerIteration.cc
     SourceIteration.cc
     InnerGMRES.cc
-    GaussSeidel.cc
+    GaussSeidelMG.cc
     KrylovMG.cc
-    Operator.cc
-    OperatorMatrix.cc
-    OperatorShell.cc
     PowerIteration.cc
     PreconditionerWG.cc
     PreconditionerMG.cc
-    Vector.cc
 )
 
 #-----------------------------------------------------------------------------#
@@ -39,14 +35,14 @@ ADD_LIBRARY(${LIB_NAME}
             ${SRC} 
 )
 TARGET_LINK_LIBRARIES(${LIB_NAME}
+                      callow
                       diffusion
                       transport
                       angle
                       material
                       geometry
                       utilities
-                      ${PETSC_LIBRARIES}
-                      ${SLEPC_LIBRARIES}  
+                      ${Callow_LIBRARIES}
 )
 
 INSTALL_FILES(/include/${LIB_NAME} .hh)
