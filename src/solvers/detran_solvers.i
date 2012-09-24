@@ -86,17 +86,21 @@ public:
 %template(PowerIteration2DSP)   detran_utilities::SP<detran::PowerIteration<detran::_2D> >;
 %template(PowerIteration3D)     detran::PowerIteration<detran::_3D>;
 %template(PowerIteration3DSP)   detran_utilities::SP<detran::PowerIteration<detran::_3D> >;
-//
-//%include "DiffusionGainOperator.hh"
-//%include "DiffusionLossOperator.hh"
-//%include "DiffusionFixedSourceSolver.hh"
-//%template(DiffusionFixed1D)     detran::DiffusionFixedSourceSolver<detran::_1D>;
-//%template(DiffusionFixed1DSP)   detran_utilities::SP<detran::DiffusionFixedSourceSolver<detran::_1D> >;
-//%template(DiffusionFixed2D)     detran::DiffusionFixedSourceSolver<detran::_2D>;
-//%template(DiffusionFixed2DSP)   detran_utilities::SP<detran::DiffusionFixedSourceSolver<detran::_2D> >;
-//%template(DiffusionFixed3D)     detran::DiffusionFixedSourceSolver<detran::_3D>;
-//%template(DiffusionFixed3DSP)   detran_utilities::SP<detran::DiffusionFixedSourceSolver<detran::_3D> >;
-//
+
+%include "DiffusionGainOperator.hh"
+%template(DiffusionGainOperatorSP)   detran_utilities::SP<detran::DiffusionGainOperator>;
+
+%include "DiffusionLossOperator.hh"
+%template(DiffusionLossOperatorSP)   detran_utilities::SP<detran::DiffusionLossOperator>;
+
+%include "DiffusionFixedSourceSolver.hh"
+%template(DiffusionFixed1D)     detran::DiffusionFixedSourceSolver<detran::_1D>;
+%template(DiffusionFixed1DSP)   detran_utilities::SP<detran::DiffusionFixedSourceSolver<detran::_1D> >;
+%template(DiffusionFixed2D)     detran::DiffusionFixedSourceSolver<detran::_2D>;
+%template(DiffusionFixed2DSP)   detran_utilities::SP<detran::DiffusionFixedSourceSolver<detran::_2D> >;
+%template(DiffusionFixed3D)     detran::DiffusionFixedSourceSolver<detran::_3D>;
+%template(DiffusionFixed3DSP)   detran_utilities::SP<detran::DiffusionFixedSourceSolver<detran::_3D> >;
+
 
 //---------------------------------------------------------------------------//
 //              end of detran_transport.i

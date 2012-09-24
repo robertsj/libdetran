@@ -14,13 +14,27 @@ namespace detran
 
 DiffusionGainOperator::DiffusionGainOperator(SP_input      input,
                                              SP_material   material,
-                                             SP_mesh       mesh)
-  : Base(material->number_groups()*mesh->number_cells(),
-         material->number_groups()*mesh->number_cells())
-  , d_input(input)
+                                             SP_mesh       mesh,
+                                             bool          adjoint)
+  : d_input(input)
   , d_material(material)
   , d_mesh(mesh)
+  , d_adjoint(adjoint)
 {
+  // Preconditions
+  Require(d_input);
+  Require(d_material);
+  Require(d_mesh);
+
+  // Set the dimension and group count
+  d_dimension = d_mesh->dimension();
+  d_number_groups = d_material->number_groups();
+  d_group_size    = d_mesh->number_cells();
+
+  // Set matrix dimensions
+  Base::set_size(d_number_groups*d_group_size,
+                 d_number_groups*d_group_size);
+
 
   // Nonzeros.  We have up to the number of groups in a row
   // due to fission.
@@ -75,7 +89,12 @@ void DiffusionGainOperator::build()
                      d_material->chi(m, g);
 
         // Set the value.
-        insert(row, col, val);
+        bool flag;
+        if (!d_adjoint)
+          flag = insert(row, col, val, INSERT);
+        else
+          flag = insert(col, row, val, INSERT);
+        Assert(flag);
       }
 
     } // row loop

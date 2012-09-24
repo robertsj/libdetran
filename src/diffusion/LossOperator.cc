@@ -8,7 +8,7 @@
 //---------------------------------------------------------------------------//
 
 // Configuration
-#include "detran_config.hh"
+#include "config/detran_config.hh"
 
 #ifdef DETRAN_ENABLE_PETSC
 
@@ -63,7 +63,7 @@ LossOperator::LossOperator(SP_input    input,
         if (d_input->check(boundary_name[b]))
           if (d_input->get<string>(boundary_name[b]) == "reflect")
             d_albedo[b][g] = 1.0;
-        std::cout << " b=" << b << " a=" << d_albedo[b][g] << std::endl;
+        //std::cout << " b=" << b << " a=" << d_albedo[b][g] << std::endl;
       }
     }
   }
@@ -172,7 +172,7 @@ void LossOperator::construct()
         double dtilde = 0.0;
         if (bound[leak] == nxyz[xyz_idx][dir_idx])
         {
-          cout << " leak = " << leak << " alb =  " << d_albedo[leak][g] << endl;
+          //cout << " leak = " << leak << " alb =  " << d_albedo[leak][g] << endl;
           dtilde = ( 2.0 * cell_dc * (1.0 - d_albedo[leak][g]) ) /
                    ( 4.0 * cell_dc * (1.0 + d_albedo[leak][g]) +
                      (1.0 - d_albedo[leak][g]) * cell_hxyz[xyz_idx] );

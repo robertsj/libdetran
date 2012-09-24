@@ -246,8 +246,11 @@ protected:
     if (d_monitor_output) printf("iteration: %5i    residual: %12.8e \n", 0, r);
     if (r < d_absolute_tolerance)
     {
-      printf("*** %s converged in %5i iterations with a residual of %12.8e \n",
-             d_name.c_str(), 0, r );
+      if (d_monitor_output)
+      {
+        printf("*** %s converged in %5i iterations with a residual of %12.8e \n",
+               d_name.c_str(), 0, r );
+      }
       d_status = SUCCESS;
       return true;
     }
@@ -264,14 +267,17 @@ protected:
     if (r < std::max(d_relative_tolerance * d_L2_residual[0],
                      d_absolute_tolerance))
     {
-      printf("*** %s converged in %5i iterations with a residual of %12.8e \n",
-             d_name.c_str(), it, r );
+      if (d_monitor_output)
+      {
+        printf("*** %s converged in %5i iterations with a residual of %12.8e \n",
+               d_name.c_str(), it, r );
+      }
       d_status = SUCCESS;
       return true;
     }
     else if (d_monitor_diverge and it >  1 and r - d_L2_residual[it - 1] > 0.0)
     {
-      printf("*** %s diverged \n", d_name.c_str());
+      if (d_monitor_output) printf("*** %s diverged \n", d_name.c_str());
       d_status = DIVERGE;
       return true;
     }

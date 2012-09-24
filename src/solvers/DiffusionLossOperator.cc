@@ -17,23 +17,36 @@ DiffusionLossOperator::DiffusionLossOperator(SP_input       input,
                                              SP_material    material,
                                              SP_mesh        mesh,
                                              const bool     include_fission,
+                                             const bool     adjoint,
                                              const double   keff)
-  : Base(material->number_groups()*mesh->number_cells(),
-         material->number_groups()*mesh->number_cells())
-  , d_input(input)
+  : d_input(input)
   , d_material(material)
   , d_mesh(mesh)
-  , d_dimension(mesh->dimension())
-  , d_albedo(6, vec_dbl(material->number_groups(), 1.0)) // default to 1.0
   , d_include_fission(include_fission)
+  , d_adjoint(adjoint)
   , d_keff(keff)
 {
+  // Preconditions
+  Require(d_input);
+  Require(d_material);
+  Require(d_mesh);
+
+  // Set the dimension and group count
+  d_dimension = d_mesh->dimension();
+  d_number_groups = d_material->number_groups();
+  d_group_size    = d_mesh->number_cells();
+
+  // Set matrix dimensions
+  Base::set_size(d_number_groups*d_group_size,
+                 d_number_groups*d_group_size);
+
+  // Default albedos to 1.0.  For dimensions in play, this will be
+  // overwritten by the default boundary.
+  d_albedo.resize(6,  vec_dbl(d_number_groups, 1.0));
 
   // Nonzeros.  We have
   //   diagonal + 2*dim neighbors + num_groups coupling from scatter/fission
   vec_int nnz(d_m, 1 + 2 * d_dimension + d_number_groups);
-
-  std::cout << " nnz = " << nnz[0] << std::endl;
 
   // Preallocate the matrix.  Note, PETSc documentation suggests getting
   // this right is extremely important.
@@ -67,8 +80,6 @@ DiffusionLossOperator::DiffusionLossOperator(SP_input       input,
     }
   }
 
-  std::cout << " including fission? " << d_include_fission << std::endl;
-
   // Build the matrix with the initial keff guess.
   build();
 
@@ -79,6 +90,8 @@ void DiffusionLossOperator::construct(const double keff)
   d_keff = keff;
   build();
 }
+
+
 
 //---------------------------------------------------------------------------//
 // IMPLEMENTATION
@@ -103,10 +116,7 @@ void DiffusionLossOperator::build()
   // Get the material map.
   vec_int mat_map = d_mesh->mesh_map("MATERIAL");
 
-  d_number_groups = d_material->number_groups();
-  d_group_size    = d_mesh->number_cells();
-
-  bool db = true;
+  bool db = false;
 
   for (int g = 0; g < d_number_groups; g++)
   {
@@ -242,7 +252,10 @@ void DiffusionLossOperator::build()
        int col = cell + gp * d_group_size;
        if (db) cout << "      col = " << col << endl;
        double val = -d_material->sigma_s(m, g, gp);
-       flag = insert(row, col, val, INSERT);
+       if (!d_adjoint)
+         flag = insert(row, col, val, INSERT);
+       else
+         flag = insert(col, row, val, INSERT);
        Assert(flag);
      }
 
@@ -252,7 +265,10 @@ void DiffusionLossOperator::build()
        int col = cell + gp * d_group_size;
        double val = -d_material->sigma_s(m, g, gp);
        if (db) cout << "      col = " << col << endl;
-       flag = insert(row, col, val, INSERT);
+       if (!d_adjoint)
+         flag = insert(row, col, val, INSERT);
+       else
+         flag = insert(col, row, val, INSERT);
        Assert(flag);
      }
 
@@ -293,7 +309,11 @@ void DiffusionLossOperator::build()
 
           // Set the value. Note, we now have to add the value, since
           // in general fission contributes to nonzero cells.
-          bool flag = insert(row, col, val, ADD);
+          bool flag;
+          if (!d_adjoint)
+            flag = insert(row, col, val, ADD);
+          else
+            flag = insert(col, row, val, ADD);
           Assert(flag);
         }
 

@@ -117,12 +117,12 @@ inline void GMRES<T>::solve_impl(const Vector<T> &b, Vector<T> &x)
     // with a solved system.
     if (iteration == 0)
     {
-      cout << "initial..." << endl;
+      //cout << "initial..." << endl;
       if (monitor_init(rho)) return;
     }
     else
     {
-      if (d_monitor_output) cout << "restarting..." << endl;
+      //if (d_monitor_output) cout << "restarting..." << endl;
     }
 
     // initial krylov vector
@@ -234,10 +234,10 @@ inline void GMRES<T>::solve_impl(const Vector<T> &b, Vector<T> &x)
       if (monitor(iteration, rho))
       {
         ++k;
-        printf("gmres(%3i) terminated at outer iteration %5i ",
-               d_restart, iteration/d_restart);
-        printf("(inner iteration %3i) to a solution with residual: %12.8e \n",
-               k, rho);
+//        printf("gmres(%3i) terminated at outer iteration %5i ",
+//               d_restart, iteration/d_restart);
+//        printf("(inner iteration %3i) to a solution with residual: %12.8e \n",
+//               k, rho);
         done = true;
         break;
       }
@@ -269,7 +269,7 @@ inline void GMRES<T>::solve_impl(const Vector<T> &b, Vector<T> &x)
   r.subtract(b);
   r.scale(-1.0);
   T resid = r.norm(Vec_T::L2);
-  printf(" final residual norm is actually: %12.8e \n", resid);
+  //printf(" final residual norm is actually: %12.8e \n", resid);
 
   return;
 

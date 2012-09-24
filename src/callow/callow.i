@@ -51,9 +51,12 @@ namespace callow
 //---------------------------------------------------------------------------//
 // matrix
 //---------------------------------------------------------------------------//
+%include "matrix/MatrixBase.hh"
+%template(MatrixBaseDouble)     callow::MatrixBase<double>;
+%template(MatrixBaseDoubleSP)   detran_utilities::SP<callow::MatrixBase<double> >;
 %include "matrix/Matrix.hh"
-%template(MatrixDouble)    callow::Matrix<double>;
-%template(MatrixDoubleSP)  detran_utilities::SP<callow::Matrix<double> >;
+%template(MatrixDouble)     callow::Matrix<double>;
+%template(MatrixDoubleSP)   detran_utilities::SP<callow::Matrix<double> >;
 
 
 

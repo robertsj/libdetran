@@ -3,8 +3,9 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib
         
-def plot_mesh_function(mesh, f, colormap = "", edges = False) :
+def plot_mesh_function(mesh, f, colormap = "hot", edges = False) :
     """ Plot a mesh function.
     """
     if mesh.dimension() == 1 :
@@ -18,10 +19,13 @@ def plot_mesh_function(mesh, f, colormap = "", edges = False) :
         # Get the mesh axes and then make a grid of them for plotting.
         x, y = mesh_axes(mesh)
         X, Y = np.meshgrid(x, y)
+        # Reshape the function
+        f = f.reshape(mesh.number_cells_x(), mesh.number_cells_y())
         edgec = 'none'
         if edges :
             edgec = 'k'
         plt.pcolor(X, Y, f, cmap=colormap, edgecolors=edgec)
+        plt.axis("scaled") 
         
     else :
         print "not ready for 3d"

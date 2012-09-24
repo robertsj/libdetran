@@ -73,6 +73,7 @@ public:
                         SP_material   material,
                         SP_mesh       mesh,
                         const bool    include_fission,
+                        const bool    adjoint = false,
                         const double  keff = 1.0);
 
   /// SP constructor
@@ -123,6 +124,8 @@ private:
   bool d_include_fission;
   /// Scaling factor for fission source
   double d_keff;
+  /// Adjoint flag
+  bool d_adjoint;
 
   //---------------------------------------------------------------------------//
   // IMPLEMENTATION

@@ -50,14 +50,16 @@ public:
    */
   DiffusionGainOperator(SP_input      input,
                         SP_material   material,
-                        SP_mesh       mesh);
+                        SP_mesh       mesh,
+                        bool          adjoint = false);
 
   /// SP constructor
-  static SP_gainoperator Create(SP_input input,
+  static SP_gainoperator Create(SP_input    input,
                                 SP_material material,
-                                SP_mesh mesh)
+                                SP_mesh     mesh,
+                                bool        adjoint = false)
   {
-    SP_gainoperator p(new DiffusionGainOperator(input, material, mesh));
+    SP_gainoperator p(new DiffusionGainOperator(input, material, mesh, adjoint));
     return p;
   }
 
@@ -83,6 +85,8 @@ private:
   size_t d_number_groups;
   /// One group spatial size
   size_t d_group_size;
+  /// Adjoint flag
+  bool d_adjoint;
 
   //---------------------------------------------------------------------------//
   // IMPLEMENTATION

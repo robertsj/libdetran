@@ -9,6 +9,7 @@
 
 #include "DiffusionFixedSourceSolver.hh"
 #include "boundary/BoundaryTraits.hh"
+#include "callow/preconditioner/PCILU0.hh"
 #include <cstdio>
 #include <cmath>
 #include <iostream>
@@ -27,6 +28,7 @@ DiffusionFixedSourceSolver<D>::DiffusionFixedSourceSolver(SP_input input,
   , d_state(state)
   , d_boundary(new BoundaryDiffusion<D>(input, mesh))
   , d_fixed_type(FIXED)
+  , d_adjoint(false)
   , d_solver_type("gmres")
   , d_maximum_iterations(10000)
   , d_maximum_fission_iterations(20)
@@ -56,6 +58,12 @@ DiffusionFixedSourceSolver<D>::DiffusionFixedSourceSolver(SP_input input,
     Ensure(d_fixed_type < END_FIXED_TYPES);
     std::cout << " Using fixed type " << d_fixed_type << std::endl;
   }
+  // Select solve adjoint
+  if (d_input->check("diffusion_adjoint"))
+  {
+    d_adjoint = d_input->template get<int>("diffusion_adjoint");
+  }
+
   // maximum iterations
   if (d_input->check("diffusion_maximum_iterations"))
   {
@@ -74,15 +82,16 @@ DiffusionFixedSourceSolver<D>::DiffusionFixedSourceSolver(SP_input input,
   if (d_fixed_type == MULTIPLY)
   {
     d_M = new DiffusionLossOperator(d_input, d_material, d_mesh,
-                                    true, d_fission_scaling);
+                                    true, d_adjoint, d_fission_scaling);
   }
   else
   {
-    d_M =  new DiffusionLossOperator(d_input, d_material, d_mesh, false);
+    d_M =  new DiffusionLossOperator(d_input, d_material, d_mesh,
+                                     false, d_adjoint);
   }
   if (d_fixed_type == ITERATE)
   {
-    d_F = new DiffusionGainOperator(d_input, d_material, d_mesh);
+    d_F = new DiffusionGainOperator(d_input, d_material, d_mesh, d_adjoint);
     d_phi_old = new Vector_T(d_problem_size, 0.0);
     d_Q_total = new Vector_T(d_problem_size, 0.0);
   }
@@ -95,9 +104,9 @@ DiffusionFixedSourceSolver<D>::DiffusionFixedSourceSolver(SP_input input,
 
   // Set the operator.  We use no preconditioner by default.
   // \todo add preconditioner option
-  d_solver->set_operators(d_M);
-
-  d_M->display();
+  callow::PCILU0<double>::SP_preconditioner P;
+  P = new callow::PCILU0<double>(d_M);
+  d_solver->set_operators(d_M, P);
 }
 
 template <class D>
@@ -111,7 +120,7 @@ void DiffusionFixedSourceSolver<D>::solve()
   else
     THROW("Unsupported diffusion fixed source type");
 
-  std::cout << " filling state..." << std::endl;
+  //std::cout << " filling state..." << std::endl;
   // Fill the state with the converged flux
   size_t row = 0;
   for (size_t g = 0; g < d_material->number_groups(); ++g)
@@ -124,7 +133,7 @@ void DiffusionFixedSourceSolver<D>::solve()
   }
 
   // Fill the boundary with the outgoing current
-  std::cout << " filling boundary..." << std::endl;
+  //std::cout << " filling boundary..." << std::endl;
   fill_boundary();
 }
 
@@ -134,10 +143,10 @@ void DiffusionFixedSourceSolver<D>::build_source(SP_source q)
   if (q)
   {
     build_volume_source(q);
-    std::cout << "built volume source" << std::endl;
+    //std::cout << "built volume source" << std::endl;
   }
   build_boundary_source();
-  std::cout << "built boundary source" << std::endl;
+  //std::cout << "built boundary source" << std::endl;
 }
 
 template <class D>

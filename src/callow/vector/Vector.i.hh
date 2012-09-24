@@ -227,20 +227,7 @@ inline T& Vector<T>::value(const int i)
 // VECTOR OPERATIONS
 //---------------------------------------------------------------------------//
 
-template <class T>
-inline T Vector<T>::dot(const Vector<T>& x)
-{
-  Require(d_size == x.size());
-  T val = 0;
-#ifdef CALLOW_ENABLE_PETSC_OPS
-  VecDot(d_petsc_vector, const_cast<Vector<T>* >(&x)->petsc_vector(), &val);
-#else
-  for (int i = 0; i < d_size; i++)
-    val += d_value[i] * x[i];
-#endif
-  return val;
-}
-
+//---------------------------------------------------------------------------//
 template <class T>
 inline T Vector<T>::norm(const int type)
 {
@@ -307,6 +294,13 @@ inline T Vector<T>::norm_residual(const Vector<T>& x, const int type)
 #endif
   return val;
 }
+template <class T>
+inline T Vector<T>::norm_residual(SP_vector x, const int type)
+{
+  Require(x);
+  return norm_residual(*x, type);
+}
+
 
 template <class T>
 inline void Vector<T>::set(const T v)
@@ -330,6 +324,29 @@ inline void Vector<T>::scale(const T v)
 #endif
 }
 
+
+//---------------------------------------------------------------------------//
+template <class T>
+inline T Vector<T>::dot(const Vector<T>& x)
+{
+  Require(d_size == x.size());
+  T val = 0;
+#ifdef CALLOW_ENABLE_PETSC_OPS
+  VecDot(d_petsc_vector, const_cast<Vector<T>* >(&x)->petsc_vector(), &val);
+#else
+  for (int i = 0; i < d_size; i++)
+    val += d_value[i] * x[i];
+#endif
+  return val;
+}
+template <class T>
+inline T Vector<T>::dot(SP_vector x)
+{
+  Require(x);
+  return dot(*x);
+}
+
+//---------------------------------------------------------------------------//
 template <class T>
 inline void Vector<T>::add(const Vector &x)
 {
@@ -341,7 +358,14 @@ inline void Vector<T>::add(const Vector &x)
     d_value[i] += x[i];
 #endif
 }
+template <class T>
+inline void Vector<T>::add(SP_vector x)
+{
+  Require(x);
+  add(*x);
+}
 
+//---------------------------------------------------------------------------//
 template <class T>
 inline void Vector<T>::add_a_times_x(const T a, const Vector<T>& x)
 {
@@ -353,7 +377,14 @@ inline void Vector<T>::add_a_times_x(const T a, const Vector<T>& x)
     d_value[i] += a*x[i];
 #endif
 }
+template <class T>
+inline void Vector<T>::add_a_times_x(const T a, SP_vector x)
+{
+  Require(x);
+  add_a_times_x(a, *x);
+}
 
+//---------------------------------------------------------------------------//
 template <class T>
 inline void Vector<T>::subtract(const Vector<T> &x)
 {
@@ -365,7 +396,14 @@ inline void Vector<T>::subtract(const Vector<T> &x)
     d_value[i] -= x[i];
 #endif
 }
+template <class T>
+inline void Vector<T>::subtract(SP_vector x)
+{
+  Require(x);
+  subtract(*x);
+}
 
+//---------------------------------------------------------------------------//
 template <class T>
 inline void Vector<T>::multiply(const Vector &x)
 {
@@ -378,7 +416,14 @@ inline void Vector<T>::multiply(const Vector &x)
     d_value[i] *= x[i];
 #endif
 }
+template <class T>
+inline void Vector<T>::multiply(SP_vector x)
+{
+  Require(x);
+  multiply(*x);
+}
 
+//---------------------------------------------------------------------------//
 template <class T>
 inline void Vector<T>::divide(const Vector &x)
 {
@@ -391,7 +436,14 @@ inline void Vector<T>::divide(const Vector &x)
     d_value[i] /= x[i];
 #endif
 }
+template <class T>
+inline void Vector<T>::divide(SP_vector x)
+{
+  Require(x);
+  divide(*x);
+}
 
+//---------------------------------------------------------------------------//
 template <class T>
 inline void Vector<T>::copy(const Vector &x)
 {
@@ -403,6 +455,13 @@ inline void Vector<T>::copy(const Vector &x)
     d_value[i] = x[i];
 #endif
 }
+template <class T>
+inline void Vector<T>::copy(SP_vector x)
+{
+  Require(x);
+  copy(*x);
+}
+
 
 //---------------------------------------------------------------------------//
 // IO

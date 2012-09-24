@@ -28,6 +28,7 @@ public:
   //---------------------------------------------------------------------------//
 
   typedef detran_utilities::SP<MatrixBase<T> >    SP_matrix;
+  typedef typename Vector<T>::SP_vector           SP_vector;
 
   //---------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -73,16 +74,29 @@ public:
   Mat petsc_matrix() {return d_petsc_matrix;}
 #endif
 
+  // multiply with SP vectors
+  void multiplysp(SP_vector x,  SP_vector y)
+  {
+    multiply(*x, *y);
+  }
+  // multiply transpose with SP vectors
+  void multiply_transposesp(SP_vector x, SP_vector y)
+  {
+    multiply_transpose(*x, *y);
+  }
+
   //---------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL MATRICES MUST IMPLEMENT
   //---------------------------------------------------------------------------//
 
   // postprocess storage
   virtual void assemble() = 0;
+
   // action y <-- A * x
   virtual void multiply(const Vector<T> &x,  Vector<T> &y) = 0;
   // action y <-- A' * x
   virtual void multiply_transpose(const Vector<T> &x, Vector<T> &y) = 0;
+
   // pretty print to screen
   virtual void display() const = 0;
 

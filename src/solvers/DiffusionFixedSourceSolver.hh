@@ -200,6 +200,7 @@ private:
   SP_solver d_solver;
   int d_print_out;
   int d_print_interval;
+  bool d_adjoint;
 
   //-------------------------------------------------------------------------//
   // IMPLEMENTATION
