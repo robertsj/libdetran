@@ -18,10 +18,17 @@ ADD_EXECUTABLE(test_MatrixShell         test_MatrixShell.cc)
 TARGET_LINK_LIBRARIES(test_MatrixShell  callow )
 ADD_TEST(test_MatrixShell               test_MatrixShell 0)
 
-## Solvers
+# Linear Solvers
 ADD_EXECUTABLE(test_LinearSolver        test_LinearSolver.cc)
 TARGET_LINK_LIBRARIES(test_LinearSolver callow )
 ADD_TEST(test_Richardson                test_LinearSolver 0)
 ADD_TEST(test_Jacobi                    test_LinearSolver 1)
 ADD_TEST(test_GaussSeidell              test_LinearSolver 2)
 ADD_TEST(test_GMRES                     test_LinearSolver 3)
+
+# Eigenvalue Solvers
+ADD_EXECUTABLE(test_EigenSolver         test_EigenSolver.cc)
+TARGET_LINK_LIBRARIES(test_EigenSolver  callow )
+ADD_TEST(test_PowerIteration            test_EigenSolver 0)
+
+

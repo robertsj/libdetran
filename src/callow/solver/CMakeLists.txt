@@ -7,6 +7,7 @@ SET(SOLVER_SRC
   ${SRC_DIR}/GMRES.cc
   ${SRC_DIR}/PetscSolver.cc
   ${SRC_DIR}/LinearSolverCreator.cc
+  ${SRC_DIR}/PowerIteration.cc
   PARENT_SCOPE
 )
 
