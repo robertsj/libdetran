@@ -12,9 +12,9 @@
 namespace callow
 {
 
+/* ... */
 
-
-} // end namespace detran
+} // end namespace callow
 
 //---------------------------------------------------------------------------//
 //              end of file PowerIteration.cc

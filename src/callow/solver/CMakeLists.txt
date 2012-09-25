@@ -8,6 +8,7 @@ SET(SOLVER_SRC
   ${SRC_DIR}/PetscSolver.cc
   ${SRC_DIR}/LinearSolverCreator.cc
   ${SRC_DIR}/PowerIteration.cc
+  ${SRC_DIR}/SlepcSolver.cc
   PARENT_SCOPE
 )
 

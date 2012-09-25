@@ -9,7 +9,8 @@
 
 // LIST OF TEST FUNCTIONS
 #define TEST_LIST                 \
-        FUNC(test_PowerIteration)
+        FUNC(test_PowerIteration) \
+        FUNC(test_SlepcSolver)
 
 #include "utilities/TestDriver.hh"
 #include "callow/utils/Initialization.hh"
@@ -75,6 +76,22 @@ int test_PowerIteration(int argc, char *argv[])
 //  {
 //    TEST(soft_equiv(X[i],  X_ref[i], 1e-9));
 //  }
+  return 0;
+}
+
+int test_SlepcSolver(int argc, char *argv[])
+{
+#ifdef CALLOW_ENABLE_SLEPC
+  Vector<double> X(n, 0.0);
+  Vector<double> X0(n, 1.0);
+  Matrix<double>::SP_matrix A = test_matrix_1<double>(n);
+  A->print_matlab("A.out");
+  SlepcSolver solver(1e-6, 10000);
+  solver.set_operators(test_matrix_1<double>(n));
+  solver.set_monitor_level(2);
+  int status = solver.solve(X, X0);
+  cout << solver.eigenvalue() << endl;
+#endif
   return 0;
 }
 

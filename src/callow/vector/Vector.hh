@@ -11,6 +11,7 @@
 #define callow_VECTOR_HH_
 
 #include "callow/callow_config.hh"
+#include "callow/utils/CallowDefinitions.hh"
 #include "utilities/SP.hh"
 #include <vector>
 
@@ -29,25 +30,18 @@ class Vector
 
 public:
 
-  //---------------------------------------------------------------------------//
-  // ENUMERATIONS
-  //---------------------------------------------------------------------------//
-
-  enum vec_norm_types
-  {
-    L1, L2, LINF, L1GRID, L2GRID, L2REL, END_VEC_NORM_TYPES
-  };
-
-  //---------------------------------------------------------------------------//
+  //-------------------------------------------------------------------------//
   // TYPEDEFS
-  //---------------------------------------------------------------------------//
+  //-------------------------------------------------------------------------//
 
   typedef detran_utilities::SP<Vector<T> >    SP_vector;
 
-  //---------------------------------------------------------------------------//
+  //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
-  //---------------------------------------------------------------------------//
+  //-------------------------------------------------------------------------//
 
+  /// Various constructor interfaces
+  /// @{
   Vector();
   Vector(const int n, T v = 0);
   Vector(const Vector &x);
@@ -57,6 +51,7 @@ public:
 #ifdef CALLOW_ENABLE_PETSC
   Vector(Vec pv);
 #endif
+  /// @}
 
   /// SP constructor
   static SP_vector
@@ -66,13 +61,15 @@ public:
     return p;
   }
 
-
+  /// Virtual destructor
   virtual ~Vector();
+
+  /// Wipe out the contents and resize
   void resize(const int n, const T v = 0.0);
 
-  //---------------------------------------------------------------------------//
+  //-------------------------------------------------------------------------//
   // ACCESS
-  //---------------------------------------------------------------------------//
+  //-------------------------------------------------------------------------//
 
   const T& operator[](const int i) const;
   T& operator[](const int i);
@@ -84,62 +81,77 @@ public:
   Vec petsc_vector() {return d_petsc_vector;}
 #endif
 
-  //---------------------------------------------------------------------------//
+  //-------------------------------------------------------------------------//
   // VECTOR OPERATIONS
-  //---------------------------------------------------------------------------//
+  //-------------------------------------------------------------------------//
 
-  // scalar
+  /// Inner product of this vector with vector x
   T dot(const Vector<T>& x);
   T dot(SP_vector x);
+  /// Norm of this vector
   T norm(const int type = L2);
+  /**
+   *  @brief Norm of the difference of this and another
+   *
+   *  Relative norms are with respect to this vector, and zeros
+   *  are not checked.
+   */
   T norm_residual(const Vector<T>& x, const int type = L2);
   T norm_residual(SP_vector x, const int type = L2);
 
-  // element-wise operations
+  /// Set all elements of this vector to a value v
   void set(const T v);
+  /// Multiply all elements of this vector by a value v
   void scale(const T v);
-  //
+  /// Add a vector x to this vector
   void add(const Vector<T>& x);
-  void subtract(const Vector<T>& x);
-  void multiply(const Vector<T>& x);
-  void divide(const Vector<T>& x);
-  void copy(const Vector<T>& x);
-  void add_a_times_x(const T a, const Vector<T>& x);
-  //
   void add(SP_vector x);
+  /// Subtract a vector x from this vector
+  void subtract(const Vector<T>& x);
   void subtract(SP_vector x);
+  /// Multiply this vector pointwise with a vector x
+  void multiply(const Vector<T>& x);
   void multiply(SP_vector x);
+  /// Multiply this vector pointwise with a vector x
+  void divide(const Vector<T>& x);
   void divide(SP_vector x);
+  /// Copy a vector x to this vector
+  void copy(const Vector<T>& x);
   void copy(SP_vector x);
+  /// Add a vector x times a scalar a to this vector
+  void add_a_times_x(const T a, const Vector<T>& x);
   void add_a_times_x(const T a, SP_vector x);
 
-  //---------------------------------------------------------------------------//
+  //-------------------------------------------------------------------------//
   // QUERY
-  //---------------------------------------------------------------------------//
+  //-------------------------------------------------------------------------//
 
   int size() const { return d_size; }
 
-  //---------------------------------------------------------------------------//
+  //-------------------------------------------------------------------------//
   // IO
-  //---------------------------------------------------------------------------//
+  //-------------------------------------------------------------------------//
 
-  /// pretty print to stdout
+  /// Pretty print to stdout
   void display() const;
-  /// formatted write to ascii for matlab
+  /// Formatted write to ascii for matlab
   void print_matlab(std::string filename="vector.out") const;
 
 protected:
 
-  //---------------------------------------------------------------------------//
+  //-------------------------------------------------------------------------//
   // DATA
-  //---------------------------------------------------------------------------//
+  //-------------------------------------------------------------------------//
 
+  /// Size of the vector
   int d_size;
+  /// Values of the vector
   T* d_value;
 #ifdef CALLOW_ENABLE_PETSC
+  /// PETSc vector object
   Vec d_petsc_vector;
 #endif
-  // is this a temporary wrapper around a pointer? i.e. no delete?
+  // Is this a temporary wrapper around a pointer? i.e. no delete at dtor?
   bool d_temporary;
 
 };

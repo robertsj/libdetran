@@ -101,7 +101,6 @@ private:
   //-------------------------------------------------------------------------//
 
   // expose base class members
-  using LinearSolver<PetscScalar>::status;
   using LinearSolver<PetscScalar>::d_absolute_tolerance;
   using LinearSolver<PetscScalar>::d_relative_tolerance;
   using LinearSolver<PetscScalar>::d_maximum_iterations;

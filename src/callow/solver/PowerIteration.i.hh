@@ -7,8 +7,8 @@
  */
 //---------------------------------------------------------------------------//
 
-#ifndef POWERITERATION_I_HH_
-#define POWERITERATION_I_HH_
+#ifndef callow_POWERITERATION_I_HH_
+#define callow_POWERITERATION_I_HH_
 
 #include <cmath>
 
@@ -44,7 +44,7 @@ inline void PowerIteration<T>::solve_impl(Vector<T> &x, Vector<T> &x0)
   T x_err    = 1.0;
 
   // Normalize guess to unity
-  lambda = x0.norm(Vector<T>::L2);
+  lambda = x0.norm(L1);
   x0.scale(1.0 / lambda);
 
   // Next iteration to check eigenvector convergence.
@@ -69,13 +69,13 @@ inline void PowerIteration<T>::solve_impl(Vector<T> &x, Vector<T> &x0)
     }
 
     // Compute the eigenvalue and update eigenvalue error.
-    lambda     = x.norm(Vector<T>::L2);
+    lambda     = x.norm(L1);
     lambda_err = std::fabs(lambda - lambda_0);
 
     // Compute residual
     x0.scale(-lambda_0);
     x0.add(x);
-    x_err = x0.norm(Vector<T>::L2);
+    x_err = x0.norm(L1);
 
     // Normalize the vector and save.
     x.scale(1.0 / lambda);
@@ -86,13 +86,14 @@ inline void PowerIteration<T>::solve_impl(Vector<T> &x, Vector<T> &x0)
 
   }
 
+  /// Store the eigenvalue
   d_lambda = lambda;
 
 }
 
 } // end namespace callow
 
-#endif // POWERITERATION_I_HH_ 
+#endif // callow_POWERITERATION_I_HH_
 
 //---------------------------------------------------------------------------//
 //              end of file PowerIteration.i.hh

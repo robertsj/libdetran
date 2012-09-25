@@ -237,8 +237,10 @@ inline T Vector<T>::norm(const int type)
     VecNorm(d_petsc_vector, NORM_1, &val);
   else if (type == L2 or type == L2GRID)
     VecNorm(d_petsc_vector, NORM_2, &val);
-  else
+  else if (type == LINF)
     VecNorm(d_petsc_vector, NORM_INFINITY, &val);
+  else
+    THROW("Unsupported norm type");
 #else
   if (type == L1 or type == L1GRID)
   {
@@ -275,6 +277,7 @@ inline T Vector<T>::norm_residual(const Vector<T>& x, const int type)
   // and take its norm
   val = tmp.norm(type);
 #else
+  // basic norms
   if (type == L1)
   {
     for (int i = 0; i < d_size; i++)
@@ -291,6 +294,25 @@ inline T Vector<T>::norm_residual(const Vector<T>& x, const int type)
     for (int i = 0; i < d_size; i++)
       val = std::max(val, std::abs(d_value[i] - x[i]));
   }
+  // relative norms
+  else if (type == L1REL)
+  {
+    for (int i = 0; i < d_size; i++)
+      val += std::abs((d_value[i] - x[i])/d_value[i]);
+  }
+  else if (type == L2REL)
+  {
+    for (int i = 0; i < d_size; i++)
+      val += (d_value[i] - x[i])*(d_value[i] - x[i]);
+    val = std::sqrt(val);
+  }
+  else if (type == LINFREL)
+  {
+    for (int i = 0; i < d_size; i++)
+      val = std::max(val, std::abs(d_value[i] - x[i]));
+  }
+  else
+    THROW("Unsupported norm residual type");
 #endif
   return val;
 }

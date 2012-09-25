@@ -11,6 +11,7 @@
 #define callow_LINEARSOLVER_HH_
 
 #include "callow/callow_config.hh"
+#include "callow/utils/CallowDefinitions.hh"
 #include "callow/matrix/MatrixBase.hh"
 #include "callow/preconditioner/Preconditioner.hh"
 #include "utilities/SP.hh"
@@ -76,11 +77,6 @@ public:
   // ENUMERATIONS
   //-------------------------------------------------------------------------//
 
-  enum status
-  {
-    SUCCESS, MAXIT, DIVERGE
-  };
-
   enum pcside
   {
     NONE, LEFT, RIGHT
@@ -112,7 +108,7 @@ public:
     , d_number_iterations(0)
     , d_monitor_output(false)
     , d_monitor_diverge(true)
-    , d_norm_type(Vector<T>::L2)
+    , d_norm_type(L2)
     , d_name(name)
     , d_pc_side(NONE)
   {
@@ -130,9 +126,9 @@ public:
   /**
    *  Sets the operators for the linear system to solve.
    *
-   *  \param A      linear operator
-   *  \param P      optional preconditioning process
-   *  \param side   specifies on what side of A the preconditioner operates
+   *  @param A      linear operator
+   *  @param P      optional preconditioning process
+   *  @param side   specifies on what side of A the preconditioner operates
    */
   virtual void set_operators(SP_matrix A,
                              SP_preconditioner P = SP_preconditioner(0),
@@ -240,7 +236,7 @@ protected:
   //-------------------------------------------------------------------------//
 
   // print out iteration and residual for initial
-  bool monitor_init(T r)
+  virtual bool monitor_init(T r)
   {
     d_L2_residual[0] = r;
     if (d_monitor_output) printf("iteration: %5i    residual: %12.8e \n", 0, r);
@@ -258,7 +254,7 @@ protected:
   }
 
   // print out iteration and residual
-  bool monitor(int it, T r)
+  virtual bool monitor(int it, T r)
   {
     d_number_iterations = it;
     d_L2_residual[it] = r;

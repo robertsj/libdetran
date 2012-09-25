@@ -109,7 +109,7 @@ inline void GMRES<T>::solve_impl(const Vector<T> &b, Vector<T> &x)
       d_P->apply(t, r);
     }
     //   compute norm of residual
-    T rho = r.norm(Vec_T::L2);
+    T rho = r.norm(L2);
 
     // otherwise, we must be restarting
 
@@ -172,7 +172,7 @@ inline void GMRES<T>::solve_impl(const Vector<T> &b, Vector<T> &x)
         d_H[j][k] = v[k+1].dot(v[j]);
         v[k+1].add_a_times_x(-d_H[j][k], v[j]);
       }
-      d_H[k+1][k] = v[k+1].norm(Vec_T::L2);
+      d_H[k+1][k] = v[k+1].norm(L2);
       T norm_Av_2 = d_H[k+1][k];
 
       //---------------------------------------------------------------------//
@@ -268,7 +268,7 @@ inline void GMRES<T>::solve_impl(const Vector<T> &b, Vector<T> &x)
   d_A->multiply(x, r);
   r.subtract(b);
   r.scale(-1.0);
-  T resid = r.norm(Vec_T::L2);
+  T resid = r.norm(L2);
   //printf(" final residual norm is actually: %12.8e \n", resid);
 
   return;

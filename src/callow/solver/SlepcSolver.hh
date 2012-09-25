@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   PowerIteration.hh
- *  @brief  PowerIteration
- *  @author Jeremy Roberts
- *  @date   Sep 24, 2012
+ *  @file   SlepcSolver.hh
+ *  @author robertsj
+ *  @date   Sep 25, 2012
+ *  @brief  SlepcSolver class definition.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef callow_POWERITERATION_HH_
-#define callow_POWERITERATION_HH_
+#ifndef callow_SLEPCSOLVER_HH_
+#define callow_SLEPCSOLVER_HH_
 
 #include "EigenSolver.hh"
 
@@ -16,11 +16,10 @@ namespace callow
 {
 
 /**
- *  @class PowerIteration
- *  @brief Solve the eigenvalue problem with the power method
+ *  @class SlepcSolver
+ *  @brief Solve the eigenvalue problem with SLEPc
  */
-template <class T>
-class PowerIteration: public EigenSolver<T>
+class SlepcSolver: public EigenSolver<PetscScalar>
 {
 
 public:
@@ -29,7 +28,7 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef EigenSolver<T>                    Base;
+  typedef EigenSolver<PetscScalar>          Base;
   typedef typename Base::SP_matrix          SP_matrix;
   typedef typename Base::SP_solver          SP_solver;
   typedef typename Base::SP_vector          SP_vector;
@@ -38,12 +37,29 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  PowerIteration(const double    tol = 1e-6,
-                 const int       maxit = 100);
+  SlepcSolver(const double tol,
+              const int    maxit);
 
-  virtual ~PowerIteration(){}
+  virtual ~SlepcSolver();
 
-protected:
+  //-------------------------------------------------------------------------//
+  // PUBLIC FUNCTIONS
+  //-------------------------------------------------------------------------//
+
+  /**
+   *  @brief Sets the operators for the linear system to solve.
+   *
+   *  This allows for the system
+   *  @param A      right side operator
+   *  @param B      left side operator
+   *  @param type
+   */
+  virtual void set_operators(SP_matrix A,
+                             SP_matrix B = SP_matrix(0),
+                             std::string type = "gmres");
+
+
+private:
 
   //-------------------------------------------------------------------------//
   // DATA
@@ -61,20 +77,20 @@ protected:
   using Base::d_monitor_level;
   using Base::d_lambda;
 
+  /// SLEPc solver object
+  EPS d_slepc_solver;
+
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL EIGENSOLVERS MUST IMPLEMENT THIS
   //-------------------------------------------------------------------------//
 
-  virtual void solve_impl(Vector<T> &x, Vector<T> &x0);
+  virtual void solve_impl(Vector<PetscScalar> &x, Vector<PetscScalar> &x0);
+
 
 };
 
 } // end namespace callow
 
-#include "PowerIteration.i.hh"
+#include "SlepcSolver.i.hh"
 
-#endif // callow_POWERITERATION_HH_
-
-//---------------------------------------------------------------------------//
-//              end of file PowerIteration.hh
-//---------------------------------------------------------------------------//
+#endif /* callow_SLEPCSOLVER_HH_ */

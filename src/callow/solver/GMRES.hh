@@ -72,7 +72,6 @@ private:
   //-------------------------------------------------------------------------//
 
   // expose base class members
-  using LinearSolver<T>::status;
   using LinearSolver<T>::d_absolute_tolerance;
   using LinearSolver<T>::d_relative_tolerance;
   using LinearSolver<T>::d_maximum_iterations;

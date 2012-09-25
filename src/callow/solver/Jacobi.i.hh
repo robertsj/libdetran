@@ -55,7 +55,7 @@ inline void Jacobi<T>::solve_impl(const Vector<T> &b, Vector<T> &x)
 
   // compute initial residual Ax - b and its norm
   A->multiply((*x0), (*x1));
-  T r = x1->norm_residual(b, Vec::L2);
+  T r = x1->norm_residual(b, L2);
   if (monitor_init(r))
   {
     //return;
@@ -90,7 +90,7 @@ inline void Jacobi<T>::solve_impl(const Vector<T> &b, Vector<T> &x)
     // compute residual norm
     //---------------------------------------------------//
 
-    r = x1->norm_residual(*x0, Vec::L2);
+    r = x1->norm_residual(*x0, L2);
 
     //---------------------------------------------------//
     // swap pointers

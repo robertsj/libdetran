@@ -7,10 +7,11 @@
  */
 //---------------------------------------------------------------------------//
 
-#ifndef EIGENSOLVER_HH_
-#define EIGENSOLVER_HH_
+#ifndef callow_EIGENSOLVER_HH_
+#define callow_EIGENSOLVER_HH_
 
 #include "callow/callow_config.hh"
+#include "callow/utils/CallowDefinitions.hh"
 #include "LinearSolver.hh"
 #include "callow/matrix/MatrixBase.hh"
 #include "callow/vector/Vector.hh"
@@ -26,7 +27,7 @@ namespace callow
  *  @class EigenSolver
  *  @brief Base class for iterative eigensolvers
  *
- *  We solve problems of the form
+ *  We solve generalized eigenvalue problems of the form
  *  @f[
  *      \mathbf{A}x = \lambda \mathbf{B} x
  *  @f]
@@ -64,15 +65,6 @@ class EigenSolver
 public:
 
   //-------------------------------------------------------------------------//
-  // ENUMERATIONS
-  //-------------------------------------------------------------------------//
-
-  enum status
-  {
-    SUCCESS, MAXIT, DIVERGE
-  };
-
-  //-------------------------------------------------------------------------//
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
@@ -86,17 +78,7 @@ public:
 
   EigenSolver(const double    tol = 1e-6,
               const int       maxit = 100,
-              std::string     name = "solver")
-    : d_tolerance(tol)
-    , d_maximum_iterations(maxit)
-    , d_residual_norm(maxit + 1, 0)
-    , d_number_iterations(0)
-    , d_monitor_level(1)
-    , d_name(name)
-  {
-    Require(d_tolerance >= 0.0);
-    Require(d_maximum_iterations > 0);
-  }
+              std::string     name = "solver");
 
   virtual ~EigenSolver(){}
 
@@ -105,26 +87,16 @@ public:
   //-------------------------------------------------------------------------//
 
   /**
-   *  @brief Sets the operators for the linear system to solve.
+   *  @brief Sets the operators for the problem.
    *
    *  This allows for the system
-   *  @param A      right side operator
-   *  @param B      left side operator
+   *  @param A      left side operator
+   *  @param B      optional right side operator (to be inverted)
+   *  @param type   optional solver type for inversion
    */
   virtual void set_operators(SP_matrix A,
-                             SP_matrix B = SP_matrix(0))
-  {
-    Require(A);
-    d_A = A;
-    Ensure(d_A->number_rows() == d_A->number_columns());
-    if (B)
-    {
-      d_B = B;
-      Ensure(d_B->number_rows() == d_B->number_columns());
-      Ensure(d_B->number_rows() == d_A->number_columns());
-      // create linear solver
-    }
-  }
+                             SP_matrix B = SP_matrix(0),
+                             std::string type = "gmres");
 
 
   /**
@@ -155,23 +127,14 @@ public:
   /**
    *  @brief Solve the eigenvalue problem
    *
+   *  Upon return, the initial gues is *not*
+   *  guaranteed to be unchanged, as it may be used
+   *  as temporary storage.
+   *
    *  @param x    vector to fill with solution
    *  @param x0   initial guess
    */
-  int solve(Vector<T> &x, Vector<T> &x0)
-  {
-    Require(x.size() == d_A->number_rows());
-    if (x0.size())
-      Require(x0.size() == d_A->number_rows());
-    d_status = MAXIT;
-    solve_impl(x, x0);
-    if (d_status ==  MAXIT)
-    {
-      printf("*** %s did not converge within the maximum number of iterations\n",
-             d_name.c_str());
-    }
-    return d_status;
-  }
+  int solve(Vector<T> &x, Vector<T> &x0);
 
   /**
    *  @brief Solve the eigenvalue problem (SP variant)
@@ -181,7 +144,7 @@ public:
     return solve(*x, *x0);
   }
 
-  /// return the residual norms
+  /// Return the residual norms
   std::vector<T> residual_norms()
   {
     return d_residual_norm;
@@ -203,6 +166,12 @@ public:
   SP_solver linearsolver()
   {
     return d_solver;
+  }
+
+  /// Get the eigenvalue
+  T eigenvalue()
+  {
+    return d_lambda;
   }
 
 protected:
@@ -231,33 +200,24 @@ protected:
   int d_monitor_level;
   /// eigenvalue
   T d_lambda;
+  /// solver status
+  int d_status;
 
   //-------------------------------------------------------------------------//
   // IMPLEMENTATION
   //-------------------------------------------------------------------------//
 
-  // print out iteration and residual
-  virtual bool monitor(int it, T l, T r)
-  {
-    // record the iteration and residual norm
-    d_number_iterations = it;
-    d_residual_norm[it] = r;
-    // echo the residual
-    if (d_monitor_level > 1)
-      printf("iteration: %5i  eigenvalue: %12.8e    residual: %12.8e \n", it, l, r);
-    // send a signal
-    if (r < d_tolerance)
-    {
-      if (d_monitor_level > 0)
-      {
-        printf("*** %s converged in %5i iterations with a residual of %12.8e \n",
-               d_name.c_str(), it, r);
-      }
-      d_status = SUCCESS;
-      return true;
-    }
-    return false;
-  }
+  /**
+   *  @brief Print out iteration and residual
+   *
+   *  Monitoring can be overloaded so that method-specific criteria
+   *  can be employed.
+   *
+   *  @param it iteration
+   *  @param l  eigenvalue estimate (dominant, if others computed)
+   *  @param r  residual
+   */
+  virtual bool monitor(int it, T l, T r);
 
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL EIGENSOLVERS MUST IMPLEMENT THIS
@@ -265,15 +225,13 @@ protected:
 
   virtual void solve_impl(Vector<T> &x, Vector<T> &x0) = 0;
 
-private:
-
-  int d_status;
-
 };
 
 } // end namespace callow
 
-#endif // EIGENSOLVER_HH_ 
+#include "EigenSolver.i.hh"
+
+#endif // callow_EIGENSOLVER_HH_
 
 //---------------------------------------------------------------------------//
 //              end of file Eigensolver.hh

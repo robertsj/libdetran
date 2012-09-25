@@ -52,7 +52,7 @@ inline void GaussSeidel<T>::solve_impl(const Vector<T> &b, Vector<T> &x)
 
   // compute initial residual Ax - b and its norm
   A->multiply((*x0), (*x1));
-  T r = x1->norm_residual(b, Vec::L2);
+  T r = x1->norm_residual(b, L2);
   if (monitor_init(r)) 
   {
     //return;
