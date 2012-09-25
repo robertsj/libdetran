@@ -10,7 +10,6 @@ SET(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 SET(SRC
     BaseOperator.cc
-    DiffusionEigensolver.cc
     GainOperator.cc
     LossOperator.cc
     OneGroupLossOperator.cc

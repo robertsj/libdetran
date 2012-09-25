@@ -12,6 +12,8 @@
 
 // System
 #include <iostream>
+#include <typeinfo>
+#include <string>
 
 namespace detran_utilities
 {
@@ -101,7 +103,9 @@ SP<T>::SP(X *px_in)
     T *np = dynamic_cast<T *>(px_in);
 
     // check that we have made a successfull cast if px exists
-    Insist(np, "Incompatible dumb pointer conversion between X and SP<T>.");
+    Insist(np, "Incompatible dumb pointer conversion between " +
+           std::string(typeid(X).name()) + " and SP<" +
+           std::string(typeid(T).name()) + ">.");
 
     // assign the pointer and reference
     p = np;
@@ -148,7 +152,9 @@ SP<T>::SP(const SP<X> &spx_in)
   // make a pointer to T *
   T *np = dynamic_cast<T *>(spx_in.p);
   Insist(spx_in.p ? np != 0 : true,
-    "Incompatible SP conversion between SP<X> and SP<T>.");
+         "Incompatible SP conversion between SP<" +
+         std::string(typeid(X).name()) + "> and SP<" +
+         std::string(typeid(T).name()) + ">.");
 
   // assign the pointer and reference
   p = np;
@@ -219,7 +225,10 @@ SP<T>& SP<T>::operator=(X *px_in)
 
   // do a dynamic cast to Ensure convertiblility between T* and X*
   T *np = dynamic_cast<T *>(px_in);
-  Insist(np, "Incompatible dumb pointer conversion between X and SP<T>.");
+  Insist(np, "Incompatible dumb pointer conversion between " +
+         std::string(typeid(X).name()) + " and SP<" +
+         std::string(typeid(T).name()) + ">.");
+
 
   // now assign this to np (using previously defined assignment operator)
   *this = np;
@@ -274,8 +283,9 @@ SP<T>& SP<T>::operator=(const SP<X> spx_in)
   // make a pointer to T *
   T *np = dynamic_cast<T *>(spx_in.p);
   Insist(spx_in.p ? np != 0 : true,
-    "Incompatible SP conversion between SP<X> and SP<T>.");
-
+         "Incompatible SP conversion between SP<" +
+         std::string(typeid(X).name()) + "> and SP<" +
+         std::string(typeid(T).name()) + ">.");
   // check to see if we are holding the same pointer (and np is not NULL);
   // to NULL pointers to the same type are defined to be equal by the
   // standard

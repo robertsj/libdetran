@@ -99,7 +99,11 @@ public:
 
   // pretty print to screen
   virtual void display() const = 0;
-
+  // print output for reading into matlab
+  virtual void print_matlab(std::string filename = "matrix.out") const
+  {
+    /* ... */
+  }
 protected:
 
   //---------------------------------------------------------------------------//

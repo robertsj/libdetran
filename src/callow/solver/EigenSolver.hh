@@ -68,8 +68,9 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
+  typedef detran_utilities::SP<EigenSolver<T> >           SP_solver;
   typedef typename MatrixBase<T>::SP_matrix               SP_matrix;
-  typedef typename LinearSolver<T>::SP_solver             SP_solver;
+  typedef typename LinearSolver<T>::SP_solver             SP_linearsolver;
   typedef typename Vector<T>::SP_vector                   SP_vector;
 
   //-------------------------------------------------------------------------//
@@ -163,7 +164,7 @@ public:
   }
 
   /// Get the linear solver
-  SP_solver linearsolver()
+  SP_linearsolver linearsolver()
   {
     return d_solver;
   }
@@ -195,7 +196,7 @@ protected:
   /// right side operator (can be null)
   SP_matrix d_B;
   /// solver for inverting A
-  SP_solver d_solver;
+  SP_linearsolver d_solver;
   /// diagnostic level
   int d_monitor_level;
   /// eigenvalue

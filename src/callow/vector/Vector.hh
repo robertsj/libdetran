@@ -42,15 +42,19 @@ public:
 
   /// Various constructor interfaces
   /// @{
+
+  /// Default constructor
   Vector();
   Vector(const int n, T v = 0);
   Vector(const Vector &x);
   Vector(Vector &x);
+  /// *Temporarily* wrap a std::vector
   Vector(std::vector<T> &x);
   //Vector(SP_vector x);
 #ifdef CALLOW_ENABLE_PETSC
   Vector(Vec pv);
 #endif
+
   /// @}
 
   /// SP constructor

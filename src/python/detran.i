@@ -121,9 +121,6 @@
 //---------------------------------------------------------------------------//  
       
 // Diffusion
-#ifdef DETRAN_ENABLE_SLEPC
-#include "DiffusionEigensolver.hh"
-#endif
 #ifdef DETRAN_ENABLE_PETSC
 #include "GainOperator.hh"
 #include "LossOperator.hh"
@@ -135,6 +132,7 @@
 #include "PowerIteration.hh"
 #include "SourceIteration.hh"
 #include "DiffusionFixedSourceSolver.hh"
+#include "DiffusionEigensolver.hh"
 #include "DiffusionLossOperator.hh"
 #include "DiffusionGainOperator.hh"
 

@@ -4,7 +4,6 @@
  * \author robertsj
  * \date   Apr 4, 2012
  * \brief  test_DiffusionFixedSourceSolver class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts.
  */
 //---------------------------------------------------------------------------//
 
@@ -80,10 +79,12 @@ int test_DiffusionFixedSourceSolver_1D(int argc, char *argv[])
     input = new InputDB();
     input->put<int>(     "number_groups",         1);
     input->put<string>(  "bc_west",               "reflect");
+    input->put<double>(  "diffusion_tolerance",   1e-13);
     // State
     DiffusionFixedSourceSolver<_1D>::SP_state state(new State(input, mesh));
     // solver
     DiffusionFixedSourceSolver<_1D> solver(input, mat, mesh, state);
+    solver.lossoperator()->print_matlab("loss.out");
     // Build source
     solver.build_source(q_e);
     // Solve.

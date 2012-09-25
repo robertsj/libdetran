@@ -15,12 +15,14 @@ ADD_EXECUTABLE(test_PowerIteration 				test_PowerIteration.cc)
 TARGET_LINK_LIBRARIES(test_PowerIteration  		solvers)
 
 
-#ADD_EXECUTABLE(test_InnerGMRES 					test_InnerGMRES.cc)
-#TARGET_LINK_LIBRARIES(test_InnerGMRES 			solvers)
+#ADD_EXECUTABLE(test_InnerGMRES                 test_InnerGMRES.cc)
+#TARGET_LINK_LIBRARIES(test_InnerGMRES          solvers)
 
 ADD_EXECUTABLE(test_DiffusionFixedSourceSolver          test_DiffusionFixedSourceSolver.cc)
 TARGET_LINK_LIBRARIES(test_DiffusionFixedSourceSolver   solvers)
 
+ADD_EXECUTABLE(test_DiffusionEigensolver          test_DiffusionEigensolver.cc)
+TARGET_LINK_LIBRARIES(test_DiffusionEigensolver   solvers)
 
 #------------------------------------------------------------------------------#
 # Define tests
@@ -34,10 +36,9 @@ ADD_TEST(test_PowerIteration_2D test_PowerIteration 0)
 if (DETRAN_ENABLE_PETSC)
 
 ADD_TEST(test_InnerGMRES_1D 		test_InnerGMRES 0)
-ADD_TEST(test_OperatorMatrix 		test_OperatorMatrix 0)
-ADD_TEST(test_OperatorShell 		test_OperatorShell 0)
 ADD_TEST(test_DiffusionFixedSourceSolver_1D  test_DiffusionFixedSourceSolver 0)
 ADD_TEST(test_DiffusionFixedSourceSolver_2D  test_DiffusionFixedSourceSolver 1)
 ADD_TEST(test_DiffusionFixedSourceSolver_3D  test_DiffusionFixedSourceSolver 2)
+ADD_TEST(test_DiffusionEigenSolver_1D        test_DiffusionEigensolver 0)
 
 endif ()

@@ -51,6 +51,8 @@ inline void EigenSolver<T>::set_operators(SP_matrix    A,
     d_solver = LinearSolverCreator<PetscScalar>::
                Create(type, d_tolerance, d_tolerance);
     d_solver->set_operators(d_B);
+    d_A->print_matlab("A.out");
+    d_B->print_matlab("B.out");
   }
 }
 

@@ -203,7 +203,7 @@ void DiffusionFixedSourceSolver<D>::solve_iterate()
     // CHECK CONVERGENCE
     //-----------------------------------------------------------------------//
 
-    error = d_phi->norm_residual(*d_phi_old, Vector_T::L2);
+    error = d_phi->norm_residual(*d_phi_old, callow::L2);
     if (d_print_out > 1 and iteration % d_print_interval == 0)
     {
       printf("  Fixed fission iteration: %3i  Error: %12.9f \n",

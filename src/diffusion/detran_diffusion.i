@@ -6,10 +6,6 @@
  */
 //---------------------------------------------------------------------------//
 
-#ifdef DETRAN_ENABLE_SLEPC
-%include "DiffusionEigensolver.hh"
-#endif
-
 #ifdef DETRAN_ENABLE_PETSC
 %include "BaseOperator.hh"
 %include "LossOperator.hh"

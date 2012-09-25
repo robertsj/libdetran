@@ -8,8 +8,8 @@ message( "++ Adding detran diffusion tests." )
 # Create test executables
 #------------------------------------------------------------------------------#
 if(DETRAN_ENABLE_SLEPC)
-  ADD_EXECUTABLE(test_DiffusionEigensolver        	test_DiffusionEigensolver.cc)
-  TARGET_LINK_LIBRARIES(test_DiffusionEigensolver 	diffusion)
+  #ADD_EXECUTABLE(test_DiffusionEigensolver        	test_DiffusionEigensolver.cc)
+  #TARGET_LINK_LIBRARIES(test_DiffusionEigensolver 	diffusion)
 endif()
 
 if(DETRAN_ENABLE_PETSC)
@@ -28,7 +28,7 @@ endif()
 #------------------------------------------------------------------------------#
 
 if(DETRAN_ENABLE_SLEPC)
-  ADD_TEST( test_DiffusionEigensolver 	test_DiffusionEigensolver 0)
+  #ADD_TEST( test_DiffusionEigensolver 	test_DiffusionEigensolver 0)
 endif()
 
 if(DETRAN_ENABLE_PETSC)

@@ -34,7 +34,7 @@ protected:
 };
 
 
-} // end namespace detran
+} // end namespace detran_external_source
 
 #endif // BOUNDARYSOURCE_HH_ 
 

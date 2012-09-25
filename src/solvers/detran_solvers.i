@@ -101,6 +101,14 @@ public:
 %template(DiffusionFixed3D)     detran::DiffusionFixedSourceSolver<detran::_3D>;
 %template(DiffusionFixed3DSP)   detran_utilities::SP<detran::DiffusionFixedSourceSolver<detran::_3D> >;
 
+%include "DiffusionEigensolver.hh"
+%template(DiffusionEigen1D)     detran::DiffusionEigensolver<detran::_1D>;
+%template(DiffusionEigen1DSP)   detran_utilities::SP<detran::DiffusionEigensolver<detran::_1D> >;
+%template(DiffusionEigen2D)     detran::DiffusionEigensolver<detran::_2D>;
+%template(DiffusionEigen2DSP)   detran_utilities::SP<detran::DiffusionEigensolver<detran::_2D> >;
+%template(DiffusionEigen3D)     detran::DiffusionEigensolver<detran::_3D>;
+%template(DiffusionEigen3DSP)   detran_utilities::SP<detran::DiffusionEigensolver<detran::_3D> >;
+
 
 //---------------------------------------------------------------------------//
 //              end of detran_transport.i

@@ -12,6 +12,7 @@ SET(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 SET(SRC
     DiffusionFixedSourceSolver.cc
+    DiffusionEigensolver.cc
     DiffusionGainOperator.cc
     DiffusionLossOperator.cc
     Eigensolver.cc
