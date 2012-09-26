@@ -53,7 +53,7 @@ public:
   static SP_solver Create(std::string  type,
                           const double atol,
                           const double rtol,
-                          const int    maxit = 100)
+                          const int    maxit = 1000)
   {
     SP_solver solver;
 

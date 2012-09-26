@@ -11,6 +11,7 @@
 #define callow_POWERITERATION_I_HH_
 
 #include <cmath>
+#include <iostream>
 
 namespace callow
 {
@@ -57,6 +58,8 @@ inline void PowerIteration<T>::solve_impl(Vector<T> &x, Vector<T> &x0)
     // Save previous value.
     lambda_0 = lambda;
     x_err_0  = x_err;
+
+    std::cout << " x0=" << x0[0] << std::endl;
 
     // compute x <-- A*x0
     d_A->multiply(x0, x);

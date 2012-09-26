@@ -36,7 +36,9 @@ solve_impl(Vector<PetscScalar> &x, Vector<PetscScalar> &x0)
 
   // Scale the result by its sum.  This points it in the positive
   // direction and gives the L1 normalization we're using in PI.
-  x.scale(1.0 / x.norm(L1));
+  PetscScalar sign = 1;
+  if (x[0] < 0) sign = -1;
+  x.scale(sign / x.norm(L1));
 
   // Store the eigenvalue
   d_lambda = lambda;

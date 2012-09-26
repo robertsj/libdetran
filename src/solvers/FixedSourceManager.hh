@@ -13,7 +13,7 @@
 #include "material/Material.hh"
 #include "geometry/Mesh.hh"
 #include "utilities/InputDB.hh"
-#include "callow/solvers/LinearSolver.hh"
+#include "callow/solver/LinearSolver.hh"
 #include "transport/State.hh"
 #include "utilities/Definitions.hh"
 #include "boundary/BoundaryBase.hh"
@@ -106,7 +106,7 @@ private:
   //std::vector<SP_source> d_sources;
 
   /// Linear solver
-  SP_solver d_solver
+  SP_solver d_solver;
 
   /// Adjoint mode flag
   bool d_adjoint;

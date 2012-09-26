@@ -21,16 +21,17 @@ def plot_mesh_function(mesh, f, colormap = "hot", edges = False) :
         X, Y = np.meshgrid(x, y)
         # Reshape the function
         f = f.reshape(mesh.number_cells_x(), mesh.number_cells_y())
-        edgec = 'none'
         if edges :
-            edgec = 'k'
-        plt.pcolor(X, Y, f, cmap=colormap, edgecolors=edgec)
+            plt.pcolor(X, Y, f, cmap=colormap, edgecolors='k')
+        else :
+            plt.pcolor(X, Y, f, cmap=colormap)
         plt.axis("scaled") 
         
     else :
         print "not ready for 3d"
         return
     # show the plot
+    cbar = plt.colorbar()
     plt.show()
 
 def plot_mesh_map(mesh, key, edges = False) :

@@ -58,5 +58,7 @@ namespace callow
 %template(MatrixDouble)     callow::Matrix<double>;
 %template(MatrixDoubleSP)   detran_utilities::SP<callow::Matrix<double> >;
 
-
+//---------------------------------------------------------------------------//
+// linear solver
+//---------------------------------------------------------------------------//
 

@@ -25,7 +25,7 @@ EigenSolver<T>::EigenSolver(const double    tol,
   , d_name(name)
   , d_residual_norm(maxit + 1, 0)
   , d_number_iterations(0)
-  , d_monitor_level(1)
+  , d_monitor_level(2)
 {
   Require(d_tolerance >= 0.0);
   Require(d_maximum_iterations > 0);
@@ -48,7 +48,7 @@ inline void EigenSolver<T>::set_operators(SP_matrix    A,
     // Create linear solver.  Defaults can be changed by
     // extracting the solver and resetting.  The same goes
     // for the preconditioner, which is null by default.
-    d_solver = LinearSolverCreator<PetscScalar>::
+    d_solver = LinearSolverCreator<T>::
                Create(type, d_tolerance, d_tolerance);
     d_solver->set_operators(d_B);
     d_A->print_matlab("A.out");
