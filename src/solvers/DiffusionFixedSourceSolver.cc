@@ -104,9 +104,9 @@ DiffusionFixedSourceSolver<D>::DiffusionFixedSourceSolver(SP_input input,
 
   // Set the operator.  We use no preconditioner by default.
   // \todo add preconditioner option
-  callow::PCILU0<double>::SP_preconditioner P;
-  P = new callow::PCILU0<double>(d_M);
-  d_solver->set_operators(d_M, P);
+  //callow::PCILU0<double>::SP_preconditioner P;
+  d_P = new callow::PCILU0<double>(d_M);
+  d_solver->set_operators(d_M, d_P);
 }
 
 template <class D>

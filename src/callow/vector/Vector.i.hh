@@ -137,7 +137,6 @@ Vector<T>::~Vector()
 {
   if (!d_size or d_temporary) return;
 #ifdef CALLOW_ENABLE_PETSC
-  d_value = 0;
   VecDestroy(&d_petsc_vector);
 #else
   delete [] d_value;

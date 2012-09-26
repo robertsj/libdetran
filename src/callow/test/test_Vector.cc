@@ -8,8 +8,9 @@
 //---------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
-#define TEST_LIST         \
-        FUNC(test_Vector)
+#define TEST_LIST               \
+        FUNC(test_Vector)       \
+        FUNC(test_Vector_resize)
 
 #include "TestDriver.hh"
 #include "vector/Vector.hh"
@@ -56,9 +57,16 @@ int test_Vector(int argc, char *argv[])
   }
   cout << val2 << endl;
   TEST(soft_equiv(val, 20.0));
+  return 0;
+}
 
-
-
+int test_Vector_resize(int argc, char *argv[])
+{
+  typedef Vector<double> Vec_T;
+  Vec_T v;
+  v.resize(5, 1.0);
+  v.set(3.0);
+  v.display();
   return 0;
 }
 

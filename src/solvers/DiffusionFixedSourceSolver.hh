@@ -88,6 +88,7 @@ public:
   typedef Vector_T::SP_vector                         SP_vector;
   typedef callow::LinearSolverCreator<double>         Creator_T;
   typedef callow::LinearSolver<double>::SP_solver     SP_solver;
+  typedef callow::LinearSolver<double>::SP_preconditioner     SP_preconditioner;
   //
   typedef detran_utilities::size_t                    size_t;
 
@@ -172,6 +173,8 @@ private:
   SP_lossoperator d_M;
   /// Fission operator
   SP_gainoperator d_F;
+  /// Preconditioner
+  SP_preconditioner d_P;
   /// Unknown vector
   SP_vector d_phi;
   /// Saved unknown vector

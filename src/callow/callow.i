@@ -10,6 +10,13 @@
 %include "callow_config.hh"
 
 //---------------------------------------------------------------------------//
+// initialization
+//---------------------------------------------------------------------------//
+
+void callow_initialize(int argc, char *argv[]);
+void callow_finalize();
+
+//---------------------------------------------------------------------------//
 // setup for numerical arrays
 //---------------------------------------------------------------------------//
 
@@ -31,32 +38,20 @@
 // vector
 //---------------------------------------------------------------------------//
 
-%include "vector/Vector.hh"
-%template(VectorDouble) callow::Vector<double>;
-namespace callow
-{
-%extend Vector<double>{
-   double  __getitem__(int i) 
-   { 
-     return (*self)[i]; 
-   }
-   void __setitem__(int i, double v) 
-   { 
-     (*self)[i] = v; 
-   }
-}
-}
-%template(VectorDoubleSP) detran_utilities::SP<callow::Vector<double> >;
+%include "vector/Vector.i"
 
 //---------------------------------------------------------------------------//
 // matrix
 //---------------------------------------------------------------------------//
-%include "matrix/MatrixBase.hh"
-%template(MatrixBaseDouble)     callow::MatrixBase<double>;
-%template(MatrixBaseDoubleSP)   detran_utilities::SP<callow::MatrixBase<double> >;
-%include "matrix/Matrix.hh"
-%template(MatrixDouble)     callow::Matrix<double>;
-%template(MatrixDoubleSP)   detran_utilities::SP<callow::Matrix<double> >;
+
+%include "matrix/Matrix.i"
+
+//%include "matrix/MatrixBase.hh"
+//%template(MatrixBaseDouble)     callow::MatrixBase<double>;
+//%template(MatrixBaseDoubleSP)   detran_utilities::SP<callow::MatrixBase<double> >;
+//%include "matrix/Matrix.hh"
+//%template(MatrixDouble)     callow::Matrix<double>;
+//%template(MatrixDoubleSP)   detran_utilities::SP<callow::Matrix<double> >;
 
 //---------------------------------------------------------------------------//
 // linear solver

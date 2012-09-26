@@ -66,6 +66,14 @@ Matrix<T>::Matrix(Matrix<T> &A)
   std::memcpy(d_columns,   A.columns(),   size_I * d_nnz     );
   std::memcpy(d_values,    A.values(),    size_T * d_nnz     );
 
+#ifdef CALLOW_ENABLE_PETSC
+  PetscErrorCode ierr;
+  ierr = MatCreateSeqAIJWithArrays(PETSC_COMM_SELF, d_m, d_n,
+                                   d_rows, d_columns,
+                                   d_values, &d_petsc_matrix);
+  Assert(!ierr);
+#endif
+
   d_allocated = true;
   d_is_ready = true;
 }
@@ -159,9 +167,9 @@ inline void Matrix<T>::preallocate(int* nnzrows)
 template <class T>
 inline void Matrix<T>::assemble()
 {
-  // preconditions
-  Require(!d_is_ready);
-  Require(d_allocated);
+  // Preconditions
+  Insist(!d_is_ready, "This matrix must not have been assembled already.");
+  Insist(d_allocated, "This matrix must be allocated before assembling.");
 
   typedef typename std::vector<triplet_T>::iterator it_T;
 

@@ -44,6 +44,7 @@ SlepcSolver::SlepcSolver(const double  tol,
 
 SlepcSolver::~SlepcSolver()
 {
+  std::cout << "*** DESTROYING SLEPC ***" << std::endl;
   EPSDestroy(&d_slepc_solver);
 }
 

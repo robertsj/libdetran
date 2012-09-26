@@ -37,12 +37,13 @@ inline void callow_initialize(int argc, char** argv)
 inline void callow_finalize()
 {
   STOP_PROFILER();
-#ifdef CALLOW_ENABLE_PETSC
-  PetscFinalize();
-#endif
 #ifdef CALLOW_ENABLE_SLEPC
   SlepcFinalize();
 #endif
+#ifdef CALLOW_ENABLE_PETSC
+  PetscFinalize();
+#endif
+
 }
 
 #endif /* callow_INITIALIZATION_HH_ */

@@ -31,6 +31,8 @@ GMRES<T>::GMRES(const double  atol,
                 const int     restart)
   : LinearSolver<T>(atol, rtol, maxit, "solver_gmres")
   , d_restart(restart)
+  , d_c(restart+1, 0.0)
+  , d_s(restart+1, 0.0)
   , d_reorthog(1)
 {
   Insist(d_restart > 2, "Need a restart of > 2");
@@ -41,8 +43,8 @@ GMRES<T>::GMRES(const double  atol,
     for (int j = 0; j < d_restart; j++)
       d_H[i][j] = 0.0;
   }
-  d_c.resize(restart + 1);
-  d_s.resize(restart + 1);
+//  d_c.resize(restart + 1);
+//  d_s.resize(restart + 1);
 }
 
 template <class T>
