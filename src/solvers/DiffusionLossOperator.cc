@@ -30,7 +30,7 @@ DiffusionLossOperator::DiffusionLossOperator(SP_input       input,
   Require(d_input);
   Require(d_material);
   Require(d_mesh);
-
+  std::cout << " KEFF = " << keff << " fiss ? " << include_fission << std::endl;
   // Set the dimension and group count
   d_dimension = d_mesh->dimension();
   d_number_groups = d_material->number_groups();

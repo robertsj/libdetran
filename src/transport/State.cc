@@ -70,6 +70,25 @@ State::State(SP_input        input,
   Require(d_number_groups > 0);
 }
 
+void State::clear()
+{
+  for (int g = 0; g < d_number_groups; ++g)
+  {
+    for (int i = 0; i < d_mesh->number_cells(); ++i)
+    {
+      d_moments[g][i] = 0.0;
+      if (d_store_angular_flux)
+      {
+        for (int a = 0; a < d_quadrature->number_angles(); ++a)
+        {
+          d_angular_flux[g][a][i] = 0.0;
+        }
+      }
+    }
+  }
+
+}
+
 void State::display() const
 {
   using std::printf;

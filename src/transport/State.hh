@@ -216,6 +216,9 @@ public:
     return d_store_angular_flux;
   }
 
+  /// Zero out the state
+  void clear();
+
   /// Format display of flux
   void display() const;
 

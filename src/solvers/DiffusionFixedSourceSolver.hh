@@ -151,6 +151,8 @@ public:
   SP_lossoperator lossoperator() const { return d_M; }
   SP_gainoperator gainoperator() const { return d_F; }
   SP_vector phi() { return d_phi; }
+  SP_vector Q() { return d_Q; }
+  SP_vector Q_total() { return d_Q_total; }
   /// @}
 
 private:

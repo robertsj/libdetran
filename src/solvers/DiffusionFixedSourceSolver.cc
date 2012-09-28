@@ -76,6 +76,11 @@ DiffusionFixedSourceSolver<D>::DiffusionFixedSourceSolver(SP_input input,
     d_tolerance =
       d_input->template get<double>("diffusion_tolerance");
   }
+  // Select solver type
+  if (d_input->check("fission_scaling"))
+  {
+    d_fission_scaling = d_input->template get<double>("fission_scaling");
+  }
   // Create operators and vectors
   d_phi = new Vector_T(d_problem_size, 0.0);
   d_Q   = new Vector_T(d_problem_size, 0.0);
@@ -86,8 +91,8 @@ DiffusionFixedSourceSolver<D>::DiffusionFixedSourceSolver(SP_input input,
   }
   else
   {
-    d_M =  new DiffusionLossOperator(d_input, d_material, d_mesh,
-                                     false, d_adjoint);
+    //d_M =  new DiffusionLossOperator(d_input, d_material, d_mesh,
+    //                                 false, d_adjoint);
   }
   if (d_fixed_type == ITERATE)
   {
