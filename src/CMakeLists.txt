@@ -326,5 +326,10 @@ else()
 message("++++ Testing:     disabled")
 endif()
 message("---------------------------------------------------------------")
+message("To use, remember to add:")
+message("    ${CMAKE_INSTALL_PREFIX}/bin    to PATH")
+message("    ${CMAKE_INSTALL_PREFIX}/lib    to LD_LIBRARY_PATH")
+message("    ${CMAKE_INSTALL_PREFIX}/python to PYTHONPATH")
+message("---------------------------------------------------------------")
 
 

@@ -244,7 +244,7 @@ public:
 
     if (dim == 1)
     {
-      if (s == Mesh::BOTTOM) return d_mesh->number_cells_x() - ijk - 1;
+      if (s == Mesh::SOUTH)  return d_mesh->number_cells_x() - ijk - 1;
     }
     if (dim == 2)
     {
@@ -252,7 +252,7 @@ public:
     }
     if (dim == 3)
     {
-      if (s == Mesh::SOUTH) return d_mesh->number_cells_z() - ijk - 1;
+      if (s == Mesh::BOTTOM) return d_mesh->number_cells_z() - ijk - 1;
     }
 
     return ijk_new;

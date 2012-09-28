@@ -26,12 +26,12 @@ def plot_mesh_function(mesh, f, colormap = "hot", edges = False) :
         else :
             plt.pcolor(X, Y, f, cmap=colormap)
         plt.axis("scaled") 
+        cbar = plt.colorbar()
         
     else :
         print "not ready for 3d"
         return
     # show the plot
-    cbar = plt.colorbar()
     plt.show()
 
 def plot_mesh_map(mesh, key, edges = False) :
