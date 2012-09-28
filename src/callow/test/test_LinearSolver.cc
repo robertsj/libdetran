@@ -71,11 +71,11 @@ double X_ref[] = {5.459135698786395e+00, 8.236037378063020e+00,
 
 int test_Richardson(int argc, char *argv[])
 {
-  Vector<double> X(n, 0.0);
-  Vector<double> B(n, 1.0);
-  Richardson<double> solver(abstol, reltol, maxit, 1.0);
-  solver.set_operators(test_matrix_1<double>(n));
-  solver.set_monitor_output(true);
+  Vector X(n, 0.0);
+  Vector B(n, 1.0);
+  Richardson solver(abstol, reltol, maxit, 1.0);
+  solver.set_operators(test_matrix_1(n));
+  solver.set_monitor_level(2);
   solver.set_monitor_diverge(false);
   int status = solver.solve(B, X);
   TEST(status == 0);
@@ -88,11 +88,11 @@ int test_Richardson(int argc, char *argv[])
 
 int test_Jacobi(int argc, char *argv[])
 {
-  Vector<double> X(n, 0.0);
-  Vector<double> B(n, 1.0);
-  Jacobi<double> solver(abstol, reltol, maxit);
-  solver.set_operators(test_matrix_1<double>(n));
-  solver.set_monitor_output(true);
+  Vector X(n, 0.0);
+  Vector B(n, 1.0);
+  Jacobi solver(abstol, reltol, maxit);
+  solver.set_operators(test_matrix_1(n));
+  solver.set_monitor_level(2);
   solver.set_monitor_diverge(false);
   int status = solver.solve(B, X);
   TEST(status == 0);
@@ -105,11 +105,11 @@ int test_Jacobi(int argc, char *argv[])
 
 int test_GaussSeidel(int argc, char *argv[])
 {
-  Vector<double> X(n, 0.0);
-  Vector<double> B(n, 1.0);
-  GaussSeidel<double> solver(abstol, reltol, maxit);
-  solver.set_operators(test_matrix_1<double>(n));
-  solver.set_monitor_output(true);
+  Vector X(n, 0.0);
+  Vector B(n, 1.0);
+  GaussSeidel solver(abstol, reltol, maxit);
+  solver.set_operators(test_matrix_1(n));
+  solver.set_monitor_level(2);
   solver.set_monitor_diverge(false);
   int status = solver.solve(B, X);
   TEST(status == 0);
@@ -122,11 +122,11 @@ int test_GaussSeidel(int argc, char *argv[])
 
 int test_GMRES(int argc, char *argv[])
 {
-  Vector<double> X(n, 0.0);
-  Vector<double> B(n, 1.0);
-  GMRES<double> solver(abstol, reltol, maxit, 10);
-  solver.set_operators(test_matrix_1<double>(n));
-  solver.set_monitor_output(true);
+  Vector X(n, 0.0);
+  Vector B(n, 1.0);
+  GMRES solver(abstol, reltol, maxit, 10);
+  solver.set_operators(test_matrix_1(n));
+  solver.set_monitor_level(2);
   solver.set_monitor_diverge(false);
   int status = solver.solve(B, X);
   TEST(status == 0);
@@ -140,11 +140,11 @@ int test_GMRES(int argc, char *argv[])
 int test_PetscSolver(int argc, char *argv[])
 {
 #ifdef CALLOW_ENABLE_PETSC
-  Vector<double> X(n, 0.0);
-  Vector<double> B(n, 1.0);
+  Vector X(n, 0.0);
+  Vector B(n, 1.0);
   PetscSolver solver(abstol, reltol, maxit);
-  solver.set_operators(test_matrix_1<double>(n));
-  solver.set_monitor_output(true);
+  solver.set_operators(test_matrix_1(n));
+  solver.set_monitor_level(2);
   solver.set_monitor_diverge(false);
   int status = solver.solve(B, X);
   X.display();

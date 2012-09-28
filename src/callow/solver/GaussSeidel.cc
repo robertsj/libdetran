@@ -12,13 +12,17 @@
 namespace callow
 {
 
-// Instantiations
-//#ifdef CALLOW_ENABLE_PETSC
-//template class GaussSeidel<PetscScalar>;
-//#else
-//template class GaussSeidel<float>;
-//template class GaussSeidel<double>;
-//#endif
+//---------------------------------------------------------------------------//
+// CONSTRUCTOR & DESTRUCTOR
+//---------------------------------------------------------------------------//
+
+GaussSeidel::GaussSeidel(const double  atol,
+                         const double  rtol,
+                         const int     maxit)
+  : LinearSolver(atol, rtol, maxit, "gauss-seidel")
+{
+  /* ... */
+}
 
 } // end namespace callow
 

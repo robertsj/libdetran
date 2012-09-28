@@ -38,7 +38,7 @@ namespace detran
  *  not including the fission source is required.
  *
  */
-class DiffusionLossOperator: public callow::Matrix<double>
+class DiffusionLossOperator: public callow::Matrix
 {
 
 public:
@@ -47,7 +47,7 @@ public:
   // TYPEDEFS
   //---------------------------------------------------------------------------//
 
-  typedef callow::Matrix<double>                        Base;
+  typedef callow::Matrix                                Base;
   typedef detran_utilities::SP<DiffusionLossOperator>   SP_lossoperator;
   typedef detran_utilities::InputDB::SP_input           SP_input;
   typedef detran_material::Material::SP_material        SP_material;

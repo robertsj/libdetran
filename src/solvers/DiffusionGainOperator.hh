@@ -19,7 +19,7 @@
 namespace detran
 {
 
-class DiffusionGainOperator: public callow::Matrix<double>
+class DiffusionGainOperator: public callow::Matrix
 {
 
 public:
@@ -28,7 +28,7 @@ public:
   // TYPEDEFS
   //---------------------------------------------------------------------------//
 
-  typedef callow::Matrix<double>                        Base;
+  typedef callow::Matrix                                Base;
   typedef detran_utilities::SP<DiffusionGainOperator>   SP_gainoperator;
   typedef detran_utilities::InputDB::SP_input           SP_input;
   typedef detran_material::Material::SP_material        SP_material;

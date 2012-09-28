@@ -20,23 +20,20 @@ namespace callow
 //---------------------------------------------------------------------------//
 
 inline void PetscSolver::
-solve_impl(const Vector<PetscScalar> &b, Vector<PetscScalar> &x)
+solve_impl(const Vector &b, Vector &x)
 {
   PetscErrorCode ierr;
 
-  // set array for residual
-  ierr = KSPSetResidualHistory(d_petsc_solver, &d_L2_residual[0],
-                               d_L2_residual.size(), PETSC_TRUE);
-
   // solve the problem
   ierr = KSPSolve(d_petsc_solver,
-                  const_cast<Vector<PetscScalar>* >(&b)->petsc_vector(),
+                  const_cast<Vector*>(&b)->petsc_vector(),
                   x.petsc_vector());
-  Insist(!ierr, "Error in KSPSolve.");
 
+  Insist(!ierr, "Error in KSPSolve.");
 }
 
-inline PetscErrorCode petsc_ksp_monitor(KSP ksp, PetscInt it, PetscReal rnorm, void* ctx)
+inline PetscErrorCode
+petsc_ksp_monitor(KSP ksp, PetscInt it, PetscReal rnorm, void* ctx)
 {
   PetscSolver* solver = (PetscSolver*)ctx;
   solver->monitor(it, rnorm); // note, petsc is in charge of terminating

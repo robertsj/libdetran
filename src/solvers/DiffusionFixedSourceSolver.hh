@@ -84,11 +84,11 @@ public:
   //
   typedef DiffusionLossOperator::SP_lossoperator      SP_lossoperator;
   typedef DiffusionGainOperator::SP_gainoperator      SP_gainoperator;
-  typedef callow::Vector<double>                      Vector_T;
+  typedef callow::Vector                              Vector_T;
   typedef Vector_T::SP_vector                         SP_vector;
-  typedef callow::LinearSolverCreator<double>         Creator_T;
-  typedef callow::LinearSolver<double>::SP_solver     SP_solver;
-  typedef callow::LinearSolver<double>::SP_preconditioner     SP_preconditioner;
+  typedef callow::LinearSolverCreator                 Creator_T;
+  typedef callow::LinearSolver::SP_solver             SP_solver;
+  typedef callow::LinearSolver::SP_preconditioner     SP_preconditioner;
   //
   typedef detran_utilities::size_t                    size_t;
 

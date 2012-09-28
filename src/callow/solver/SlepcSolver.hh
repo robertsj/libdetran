@@ -12,6 +12,8 @@
 
 #include "EigenSolver.hh"
 
+#ifdef CALLOW_ENABLE_SLEPC
+
 namespace callow
 {
 
@@ -19,7 +21,7 @@ namespace callow
  *  @class SlepcSolver
  *  @brief Solve the eigenvalue problem with SLEPc
  */
-class SlepcSolver: public EigenSolver<PetscScalar>
+class SlepcSolver: public EigenSolver
 {
 
 public:
@@ -28,7 +30,7 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef EigenSolver<PetscScalar>          Base;
+  typedef EigenSolver          Base;
   typedef typename Base::SP_matrix          SP_matrix;
   typedef typename Base::SP_solver          SP_solver;
   typedef typename Base::SP_vector          SP_vector;
@@ -84,7 +86,7 @@ private:
   // ABSTRACT INTERFACE -- ALL EIGENSOLVERS MUST IMPLEMENT THIS
   //-------------------------------------------------------------------------//
 
-  virtual void solve_impl(Vector<PetscScalar> &x, Vector<PetscScalar> &x0);
+  virtual void solve_impl(Vector &x, Vector &x0);
 
 
 };
@@ -92,5 +94,7 @@ private:
 } // end namespace callow
 
 #include "SlepcSolver.i.hh"
+
+#endif // CALLOW_ENABLE_SLEPC
 
 #endif /* callow_SLEPCSOLVER_HH_ */

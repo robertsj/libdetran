@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Jacobi.hh
- * \brief  Jacobi class definition
- * \author Jeremy Roberts
- * \date   Sep 13, 2012
+/**
+ *  @file   Jacobi.hh
+ *  @brief  Jacobi class definition
+ *  @author Jeremy Roberts
+ *  date   Sep 13, 2012
  */
 //---------------------------------------------------------------------------//
 
@@ -16,40 +16,39 @@ namespace callow
 {
 
 /**
- *  \class Jacobi
- *  \brief Uses Jacobi iteration to solve a system
+ *  @class Jacobi
+ *  @brief Uses Jacobi iteration to solve a system
  *
  *  Jacobi iteration in matrix form uses a splitting of
  *  the form
- *  \f[
+ *  @f[
  *      \mathbf{A} = \mathbf{L} + \mathbf{U} +  \mathbf{D} \, ,
- *  \f]
+ *  @f]
  *  which are strictly lower and upper triangle and diagonal,
  *  respectively.  The Jacobi iteration is then
- *  \f[
+ *  @f[
  *      \mathbf{D} x^{n+1} = -(\mathbf{L}+\mathbf{U})x^{n} + b
- *  \f]
+ *  @f]
  *  or
- *  \f[
+ *  @f[
  *      x^{n+1} = \overbrace{-\mathbf{D}^{-1}(\mathbf{L}+\mathbf{U})}^
  *                          {\mathbf{M}}x^{n} + \mathbf{D}^{-1}b \, .
- *  \f]
+ *  @f]
  *  The procedure converges if the iteration matrix is bounded, i.e.
- *  \f[
+ *  @f[
  *     \rho(\mathbf{M}) < 1 \, ,
- *  \f]
+ *  @f]
  *  which is guaranteed if \f$ \mathbf{A} \f$ is strictly diagonally
  *  dominant, meaning that
- *  \f[
+ *  @f[
  *      |a_{ii}| > \sum_{j \neq i} |a_{ij}| \, .
- *  \f]
+ *  @f]
  *
  *  Because we use a sparse matrix, we actually access the elements
  *  directly rather than via indexing.
  *
  */
-template<class T>
-class Jacobi: public LinearSolver<T>
+class Jacobi: public LinearSolver
 {
 
 public:
@@ -58,7 +57,7 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef LinearSolver<T> Base;
+  typedef LinearSolver Base;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -79,16 +78,14 @@ private:
   //-------------------------------------------------------------------------//
 
   // expose base class members
-  using LinearSolver<T>::d_absolute_tolerance;
-  using LinearSolver<T>::d_relative_tolerance;
-  using LinearSolver<T>::d_maximum_iterations;
-  using LinearSolver<T>::d_L1_residual;
-  using LinearSolver<T>::d_L2_residual;
-  using LinearSolver<T>::d_LI_residual;
-  using LinearSolver<T>::d_number_iterations;
-  using LinearSolver<T>::d_A;
-  using LinearSolver<T>::d_P;
-  using LinearSolver<T>::d_norm_type;
+  using LinearSolver::d_absolute_tolerance;
+  using LinearSolver::d_relative_tolerance;
+  using LinearSolver::d_maximum_iterations;
+  using LinearSolver::d_residual;
+  using LinearSolver::d_number_iterations;
+  using LinearSolver::d_A;
+  using LinearSolver::d_P;
+  using LinearSolver::d_norm_type;
 
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL LINEAR SOLVERS MUST IMPLEMENT THIS
@@ -98,7 +95,7 @@ private:
    *  \param b  right hand side
    *  \param x  unknown vector
    */
-  void solve_impl(const Vector<T> &b, Vector<T> &x);
+  void solve_impl(const Vector &b, Vector &x);
 
 };
 

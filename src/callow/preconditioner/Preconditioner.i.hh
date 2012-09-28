@@ -16,8 +16,7 @@ namespace callow
 
 #ifdef DETRAN_ENABLE_PETSC
 /// set the PETSc preconditioner
-template <>
-inline void Preconditioner<PetscScalar>::set_petsc_pc(PC pc)
+inline void Preconditioner::set_petsc_pc(PC pc)
 {
   // save the pc object
   d_petsc_pc = pc;
@@ -46,11 +45,10 @@ inline PetscErrorCode pc_apply_wrapper(PC pc, Vec b, Vec x)
   PetscErrorCode ierr;
   void *context;
   ierr = PCShellGetContext(pc, &context); CHKERRQ(ierr);
-  Preconditioner<PetscScalar> *foo =
-    (Preconditioner<PetscScalar> *) context;
+  Preconditioner *foo = (Preconditioner *) context;
   // wrap the petsc vectors
-  Vector<PetscScalar> B(b);
-  Vector<PetscScalar> X(x);
+  Vector B(b);
+  Vector X(x);
   // call the actual apply operator.
   foo->apply(B, X);
   return ierr;

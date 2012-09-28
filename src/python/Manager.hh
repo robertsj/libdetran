@@ -12,14 +12,8 @@
 
 // Configuration
 #include "detran_config.hh"
-
-#ifdef DETRAN_ENABLE_PETSC
-#include "petsc.h"
-#endif
-
-#ifdef DETRAN_ENABLE_SLEPC
-#include "slepc.h"
-#endif
+// Callow
+#include "callow/utils/Initialization.hh"
 
 namespace detran
 {
@@ -37,32 +31,16 @@ class Manager
 
 public:
 
-  /// Manager PETSc and SLEPc, if present.
+  /// Initialize libraries (PETSc/SLEPc through callow)
   static void initialize(int argc, char *argv[])
   {
-    #ifdef DETRAN_ENABLE_PETSC
-    // Start PETSc.
-    PetscInitialize(&argc, &argv, PETSC_NULL, PETSC_NULL);
-    #endif
-
-    #ifdef DETRAN_ENABLE_SLEPC
-    // Start SLEPc.
-    SlepcInitialize(&argc, &argv, PETSC_NULL, PETSC_NULL);
-    #endif
+    callow_initialize(argc, argv);
   }
 
-  /// Manager PETSc and SLEPc, if present.
+  /// Finalize libraries
   static void finalize()
   {
-    #ifdef DETRAN_ENABLE_SLEPC
-    // Finish SLEPc.
-    SlepcFinalize();
-    #endif
-
-    #ifdef DETRAN_ENABLE_PETSC
-    // Finish PETSc.
-    PetscFinalize();
-    #endif
+    callow_finalize();
   }
 
 };

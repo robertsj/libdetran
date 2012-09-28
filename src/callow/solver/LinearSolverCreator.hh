@@ -24,10 +24,9 @@ namespace callow
 {
 
 /**
- *  \class LinearSolverCreator
- *  \brief Creates a 
+ *  @class LinearSolverCreator
+ *  @brief Creates a
  */
-template <class T>
 class LinearSolverCreator
 {
 
@@ -37,7 +36,7 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef typename LinearSolver<T>::SP_solver   SP_solver;
+  typedef typename LinearSolver::SP_solver   SP_solver;
 
   //-------------------------------------------------------------------------//
   // PUBLIC METHODS
@@ -58,13 +57,13 @@ public:
     SP_solver solver;
 
     if (type == "richardson")
-      solver = new Richardson<T>(atol, rtol, maxit);
+      solver = new Richardson(atol, rtol, maxit);
     else if (type == "jacobi")
-      solver = new Jacobi<T>(atol, rtol, maxit);
+      solver = new Jacobi(atol, rtol, maxit);
     else if (type == "gauss-seidel")
-      solver = new GaussSeidel<T>(atol, rtol, maxit);
+      solver = new GaussSeidel(atol, rtol, maxit);
     else if (type == "gmres")
-      solver = new GMRES<T>(atol, rtol, maxit);
+      solver = new GMRES(atol, rtol, maxit);
     else if (type == "petsc")
     {
 #ifdef CALLOW_ENABLE_PETSC

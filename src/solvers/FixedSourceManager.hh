@@ -47,7 +47,7 @@ class FixedSourceManager
   //
   typedef State::moments_type                         moments_type;
   //
-  typedef callow::LinearSolver<double>::SP_solver     SP_solver;
+  typedef callow::LinearSolver::SP_solver             SP_solver;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR

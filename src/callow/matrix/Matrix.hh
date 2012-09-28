@@ -11,42 +11,13 @@
 #define callow_MATRIX_HH_
 
 #include "MatrixBase.hh"
+#include "Triplet.hh"
 #include <ostream>
 #include <vector>
 #include <string>
 
 namespace callow
 {
-
-/// Structure for storing COO matrix
-template <class T>
-struct triplet
-{
-  int i;
-  int j;
-  T   v;
-  // i, j initialized to -1 to ensure they get sorted out
-  triplet(int ii=-1, int jj=-1, T vv=0.0)
-    : i(ii), j(jj), v(vv)
-  {}
-};
-
-template <class T>
-inline bool compare_triplet(const triplet<T> &x, const triplet<T> &y)
-{
-  // leave -1's on the right
-  if (x.j == -1) return false;
-  if (y.j == -1) return true;
-  // otherwise, order from low to high j
-  return x.j < y.j;
-}
-
-template <class T>
-inline std::ostream& operator<< (std::ostream &out, triplet<T> s)
-{
-  out << "(i = " << s.i << ", j = " << s.j << ", v = " << s.v << ")";
-  return out;
-}
 
 /*!
  *  \class Matrix
@@ -99,8 +70,8 @@ inline std::ostream& operator<< (std::ostream &out, triplet<T> s)
  * certain preconditioner types.
  *
  */
-template <class T>
-class Matrix: public MatrixBase<T>
+
+class Matrix: public MatrixBase
 {
 
 public:
@@ -118,8 +89,8 @@ public:
   // TYPEDEFS
   //---------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<Matrix<T> >  SP_matrix;
-  typedef triplet<T>                        triplet_T;
+  typedef detran_utilities::SP<Matrix>  SP_matrix;
+  typedef triplet                       triplet_T;
 
   //---------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -132,7 +103,7 @@ public:
   // construction with sizing and allocation
   Matrix(const int m, const int n, const int nnz);
   // copy constructor
-  Matrix(Matrix<T> &A);
+  Matrix(Matrix &A);
   // destructor
   virtual ~Matrix();
   // sp constructor
@@ -149,13 +120,13 @@ public:
   void preallocate(int *nnz_rows);
 
   /// add one value (return false if can't add)
-  bool insert(int  i, int  j, T  v, const int type = INSERT);
+  bool insert(int  i, int  j, double  v, const int type = INSERT);
   /// add n values to a row  (return false if can't add)
-  bool insert(int  i, int *j, T *v, int n, const int type = INSERT);
+  bool insert(int  i, int *j, double *v, int n, const int type = INSERT);
   /// add n values to a column  (return false if can't add)
-  bool insert(int *i, int  j, T *v, int n, const int type = INSERT);
+  bool insert(int *i, int  j, double *v, int n, const int type = INSERT);
   /// add n triplets  (return false if can't add)
-  bool insert(int *i, int *j, T *v, int n, const int type = INSERT);
+  bool insert(int *i, int *j, double *v, int n, const int type = INSERT);
 
 
   /// starting index for a row
@@ -168,12 +139,12 @@ public:
   int column(const int p) const;
 
   /// value at a cardinal index
-  T operator[](const int p) const;
+  double operator[](const int p) const;
   /// value at ij and returns 0 if not present
-  T operator()(const int i, const int j) const;
+  double operator()(const int i, const int j) const;
 
   // get underlying storage and indexing. careful!
-  T*   values()    {return d_values;}
+  double*   values()    {return d_values;}
   int* columns()   {return d_columns;}
   int* rows()      {return d_rows;}
   int* diagonals() {return d_diagonals;}
@@ -192,9 +163,9 @@ public:
   // postprocess storage
   void assemble();
   // action y <-- A * x
-  void multiply(const Vector<T> &x,  Vector<T> &y);
+  void multiply(const Vector &x,  Vector &y);
   // action y <-- A' * x
-  void multiply_transpose(const Vector<T> &x, Vector<T> &y);
+  void multiply_transpose(const Vector &x, Vector &y);
   // pretty print to screen
   void display() const;
 
@@ -205,16 +176,16 @@ protected:
   //---------------------------------------------------------------------------//
 
   /// expose base members
-  using MatrixBase<T>::d_m;
-  using MatrixBase<T>::d_n;
-  using MatrixBase<T>::d_sizes_set;
-  using MatrixBase<T>::d_is_ready;
+  using MatrixBase::d_m;
+  using MatrixBase::d_n;
+  using MatrixBase::d_sizes_set;
+  using MatrixBase::d_is_ready;
 
 #ifdef CALLOW_ENABLE_PETSC
-  using MatrixBase<T>::d_petsc_matrix;
+  using MatrixBase::d_petsc_matrix;
 #endif
   /// matrix elements
-  T* d_values;
+  double* d_values;
   /// column indices
   int* d_columns;
   /// row pointers
@@ -226,7 +197,7 @@ protected:
   /// are we allocated?
   bool d_allocated;
   // temporaries [number of rows][nonzeros per row]
-  std::vector<std::vector<triplet_T> > d_aij;
+  std::vector<std::vector<triplet> > d_aij;
   // counts entries added per row
   std::vector<int> d_counter;
 

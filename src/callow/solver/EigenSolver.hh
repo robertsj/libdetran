@@ -58,7 +58,6 @@ namespace callow
  *  structure is really intended for the dominant mode.
  *  Other modes will require different handling.
  */
-template <class T>
 class EigenSolver
 {
 
@@ -68,10 +67,10 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<EigenSolver<T> >           SP_solver;
-  typedef typename MatrixBase<T>::SP_matrix               SP_matrix;
-  typedef typename LinearSolver<T>::SP_solver             SP_linearsolver;
-  typedef typename Vector<T>::SP_vector                   SP_vector;
+  typedef detran_utilities::SP<EigenSolver>           SP_solver;
+  typedef typename MatrixBase::SP_matrix               SP_matrix;
+  typedef typename LinearSolver::SP_solver             SP_linearsolver;
+  typedef typename Vector::SP_vector                   SP_vector;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -135,7 +134,7 @@ public:
    *  @param x    vector to fill with solution
    *  @param x0   initial guess
    */
-  int solve(Vector<T> &x, Vector<T> &x0);
+  int solve(Vector &x, Vector &x0);
 
   /**
    *  @brief Solve the eigenvalue problem (SP variant)
@@ -146,7 +145,7 @@ public:
   }
 
   /// Return the residual norms
-  std::vector<T> residual_norms()
+  std::vector<double> residual_norms()
   {
     return d_residual_norm;
   }
@@ -170,7 +169,7 @@ public:
   }
 
   /// Get the eigenvalue
-  T eigenvalue()
+  double eigenvalue()
   {
     return d_lambda;
   }
@@ -188,7 +187,7 @@ protected:
   /// solver name
   std::string d_name;
   /// norm of successive residuals
-  std::vector<T> d_residual_norm;
+  std::vector<double> d_residual_norm;
   /// number of iterations performed
   int d_number_iterations;
   /// left side operator
@@ -200,7 +199,7 @@ protected:
   /// diagnostic level
   int d_monitor_level;
   /// eigenvalue
-  T d_lambda;
+  double d_lambda;
   /// solver status
   int d_status;
 
@@ -218,13 +217,13 @@ protected:
    *  @param l  eigenvalue estimate (dominant, if others computed)
    *  @param r  residual
    */
-  virtual bool monitor(int it, T l, T r);
+  virtual bool monitor(int it, double l, double r);
 
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL EIGENSOLVERS MUST IMPLEMENT THIS
   //-------------------------------------------------------------------------//
 
-  virtual void solve_impl(Vector<T> &x, Vector<T> &x0) = 0;
+  virtual void solve_impl(Vector &x, Vector &x0) = 0;
 
 };
 

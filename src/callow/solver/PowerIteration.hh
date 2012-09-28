@@ -19,8 +19,8 @@ namespace callow
  *  @class PowerIteration
  *  @brief Solve the eigenvalue problem with the power method
  */
-template <class T>
-class PowerIteration: public EigenSolver<T>
+
+class PowerIteration: public EigenSolver
 {
 
 public:
@@ -29,10 +29,10 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef EigenSolver<T>                    Base;
-  typedef typename Base::SP_matrix          SP_matrix;
-  typedef typename Base::SP_solver          SP_solver;
-  typedef typename Base::SP_vector          SP_vector;
+  typedef EigenSolver              Base;
+  typedef Base::SP_matrix          SP_matrix;
+  typedef Base::SP_solver          SP_solver;
+  typedef Base::SP_vector          SP_vector;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -65,7 +65,7 @@ protected:
   // ABSTRACT INTERFACE -- ALL EIGENSOLVERS MUST IMPLEMENT THIS
   //-------------------------------------------------------------------------//
 
-  virtual void solve_impl(Vector<T> &x, Vector<T> &x0);
+  virtual void solve_impl(Vector &x, Vector &x0);
 
 };
 

@@ -10,6 +10,7 @@
 #ifndef callow_EIGENSOLVERCREATOR_HH_
 #define callow_EIGENSOLVERCREATOR_HH_
 
+#include "callow/callow_config.hh"
 #include "EigenSolver.hh"
 // solvers
 #include "PowerIteration.hh"
@@ -24,7 +25,6 @@ namespace callow
  *  \class EigenSolverCreator
  *  \brief Creates an eigensolver
  */
-template <class T>
 class EigenSolverCreator
 {
 
@@ -34,7 +34,7 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<EigenSolver<T> >   SP_solver;
+  typedef detran_utilities::SP<EigenSolver>   SP_solver;
 
   //-------------------------------------------------------------------------//
   // PUBLIC METHODS
@@ -53,10 +53,10 @@ public:
     SP_solver solver;
 
     if (type == "power")
-      solver = new PowerIteration<T>(tol, maxit);
+      solver = new PowerIteration(tol, maxit);
     else if (type == "slepc")
     {
-#ifdef CALLOW_ENABLE_PETSC
+#ifdef CALLOW_ENABLE_SLEPC
       solver = new SlepcSolver(tol,maxit);
 #else
       THROW("SLEPc solvers not available with this build");

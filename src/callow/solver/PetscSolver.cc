@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   PetscSolver.cc
- * \brief  PetscSolver 
- * \author Jeremy Roberts
- * \date   Sep 20, 2012
+/**
+ *  @file   PetscSolver.cc
+ *  @brief  PetscSolver
+ *  @author Jeremy Roberts
+ *  @date   Sep 20, 2012
  */
 //---------------------------------------------------------------------------//
 
@@ -23,7 +23,7 @@ namespace callow
 PetscSolver::PetscSolver(const double  atol,
                          const double  rtol,
                          const int     maxit)
-  : LinearSolver<PetscScalar>(atol, rtol, maxit, "solver_petsc")
+  : LinearSolver(atol, rtol, maxit, "petsc")
 {
 
   // create the petsc object

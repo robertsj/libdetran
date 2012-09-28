@@ -21,66 +21,27 @@ namespace callow
 {
 
 //---------------------------------------------------------------------------//
-// CONSTRUCTOR & DESTRUCTOR
-//---------------------------------------------------------------------------//
-
-template <class T>
-GMRES<T>::GMRES(const double  atol,
-                const double  rtol,
-                const int     maxit,
-                const int     restart)
-  : LinearSolver<T>(atol, rtol, maxit, "solver_gmres")
-  , d_restart(restart)
-  , d_c(restart+1, 0.0)
-  , d_s(restart+1, 0.0)
-  , d_reorthog(1)
-{
-  Insist(d_restart > 2, "Need a restart of > 2");
-  d_H = new T*[(restart + 1)];
-  for (int i = 0; i <= d_restart; i++)
-  {
-    d_H[i] = new T[restart];
-    for (int j = 0; j < d_restart; j++)
-      d_H[i][j] = 0.0;
-  }
-//  d_c.resize(restart + 1);
-//  d_s.resize(restart + 1);
-}
-
-template <class T>
-GMRES<T>::~GMRES()
-{
-  for (int i = 0; i <= d_restart; i++)
-  {
-    delete [] d_H[i];
-  }
-  delete [] d_H;
-}
-//---------------------------------------------------------------------------//
 // IMPLEMENTATION
 //---------------------------------------------------------------------------//
 
-template <class T>
-inline void GMRES<T>::solve_impl(const Vector<T> &b, Vector<T> &x)
+inline void GMRES::solve_impl(const Vector &b, Vector &x)
 {
-
-  typedef Vector<T> Vec_T;
 
   int restart = d_restart;
   if (restart >= d_A->number_rows()) restart = d_A->number_rows();
 
   // krylov basis
-  std::vector<Vec_T>  v(d_restart + 1, Vec_T(x.size(), 0.0));
+  std::vector<Vector>  v(d_restart + 1, Vector(x.size(), 0.0));
 
   // residual
-  Vec_T r(x.size(), 0.0);
-  Vec_T t(x.size(), 0.0);
+  Vector r(x.size(), 0.0);
+  Vector t(x.size(), 0.0);
 
   // vector such that x = V*y
-  Vec_T y(d_restart, 0.0);
+  Vector y(d_restart, 0.0);
 
   // vector such that g(1:k) = R*y --> x = V*inv(R)*g and |g(k+1)| is the residual
-  Vec_T g(d_restart + 1, 0.0);
+  Vector g(d_restart + 1, 0.0);
 
   // initialize c and s
   d_c.set(0.0);
@@ -111,7 +72,7 @@ inline void GMRES<T>::solve_impl(const Vector<T> &b, Vector<T> &x)
       d_P->apply(t, r);
     }
     //   compute norm of residual
-    T rho = r.norm(L2);
+    double rho = r.norm(L2);
 
     // otherwise, we must be restarting
 
@@ -168,14 +129,14 @@ inline void GMRES<T>::solve_impl(const Vector<T> &b, Vector<T> &x)
       // use modified gram-schmidt to orthogonalize v(k+1)
       //---------------------------------------------------------------------//
 
-      T norm_Av = v[k+1].norm();
+      double norm_Av = v[k+1].norm();
       for (int j = 0; j <= k; ++j)
       {
         d_H[j][k] = v[k+1].dot(v[j]);
         v[k+1].add_a_times_x(-d_H[j][k], v[j]);
       }
       d_H[k+1][k] = v[k+1].norm(L2);
-      T norm_Av_2 = d_H[k+1][k];
+      double norm_Av_2 = d_H[k+1][k];
 
       //---------------------------------------------------------------------//
       // optional reorthogonalization
@@ -192,7 +153,7 @@ inline void GMRES<T>::solve_impl(const Vector<T> &b, Vector<T> &x)
         cout << " reorthog ... " << endl;
         for (int j = 0; j < k; ++j)
         {
-          T hr = v[j].dot(v[k+1]);
+          double hr = v[j].dot(v[k+1]);
           d_H[j][k] += hr;
           v[k+1].add_a_times_x(-hr, v[j]);
         }
@@ -223,8 +184,8 @@ inline void GMRES<T>::solve_impl(const Vector<T> &b, Vector<T> &x)
       d_s[k] = -d_H[k+1][k] / nu;
       d_H[k  ][k] = d_c[k] * d_H[k][k] - d_s[k]*d_H[k+1][k];
       d_H[k+1][k] = 0.0;
-      T g_0 = d_c[k]*g[k] - d_s[k]*g[k+1];
-      T g_1 = d_s[k]*g[k] + d_c[k]*g[k+1];
+      double g_0 = d_c[k]*g[k] - d_s[k]*g[k+1];
+      double g_1 = d_s[k]*g[k] + d_c[k]*g[k+1];
       g[k  ] = g_0;
       g[k+1] = g_1;
 
@@ -264,34 +225,30 @@ inline void GMRES<T>::solve_impl(const Vector<T> &b, Vector<T> &x)
       d_P->apply(t, x);
     }
 
-
   } // end outers
 
   d_A->multiply(x, r);
   r.subtract(b);
   r.scale(-1.0);
-  T resid = r.norm(L2);
-  //printf(" final residual norm is actually: %12.8e \n", resid);
+  double resid = r.norm(L2);
 
   return;
 
 }
 
-template <class T>
-inline void GMRES<T>::apply_givens(const int k)
+inline void GMRES::apply_givens(const int k)
 {
   Require(k < d_restart);
   for (int i = 0; i < k; ++i)
   {
-    T g_0 = d_c[i]*d_H[i][k] - d_s[i]*d_H[i+1][k];
-    T g_1 = d_s[i]*d_H[i][k] + d_c[i]*d_H[i+1][k];
+    double g_0 = d_c[i]*d_H[i][k] - d_s[i]*d_H[i+1][k];
+    double g_1 = d_s[i]*d_H[i][k] + d_c[i]*d_H[i+1][k];
     d_H[i][k]   = g_0;
     d_H[i+1][k] = g_1;
   }
 }
 
-template <class T>
-inline void GMRES<T>::compute_y(Vector<T> &y, const Vector<T> &g, const int k)
+inline void GMRES::compute_y(Vector &y, const Vector &g, const int k)
 {
   // H is [m+1][m], though we may have only need for k*k
   // solves H[0:k][0:k]*y[0:k] = g[0:k]
@@ -313,8 +270,7 @@ inline void GMRES<T>::compute_y(Vector<T> &y, const Vector<T> &g, const int k)
 
 }
 
-template <class T>
-inline void GMRES<T>::initialize_H()
+inline void GMRES::initialize_H()
 {
   for (int i = 0; i <= d_restart; i++)
     for (int j = 0; j < d_restart; j++)

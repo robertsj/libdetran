@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Jacobi.i.hh
- * \brief  Jacobi inline member definitions
- * \author Jeremy Roberts
- * \date   Sep 13, 2012
+/**
+ *  @file   Jacobi.i.hh
+ *  @brief  Jacobi inline member definitions
+ *  @author Jeremy Roberts
+ *  @date   Sep 13, 2012
  */
 //---------------------------------------------------------------------------//
 
@@ -18,44 +18,28 @@ namespace callow
 {
 
 //---------------------------------------------------------------------------//
-// CONSTRUCTOR & DESTRUCTOR
-//---------------------------------------------------------------------------//
-
-template <class T>
-Jacobi<T>::Jacobi(const double  atol,
-                  const double  rtol,
-                  const int     maxit)
-  : LinearSolver<T>(atol, rtol, maxit, "solver_jacobi")
-{
-  /* ... */
-}
-
-//---------------------------------------------------------------------------//
 // SOLVE
 //---------------------------------------------------------------------------//
 
-template <class T>
-inline void Jacobi<T>::solve_impl(const Vector<T> &b, Vector<T> &x)
+inline void Jacobi::solve_impl(const Vector &b, Vector &x)
 {
 
-  Insist(dynamic_cast< Matrix<T>* >(d_A.bp()),
+  Insist(dynamic_cast<Matrix*>(d_A.bp()),
     "Need an explicit matrix for use with Jacobi iteration");
-  typename Matrix<T>::SP_matrix A = d_A;
-
-  typedef Vector<T> Vec;
+  typename Matrix::SP_matrix A = d_A;
 
   // temporary storage and pointers for swapping
-  Vec temp(x.size(), 0.0);
-  Vec* x0 = &x;
-  Vec* x1 = &temp;
-  Vec* swap;
+  Vector temp(x.size(), 0.0);
+  Vector* x0 = &x;
+  Vector* x1 = &temp;
+  Vector* swap;
 
   // iteration count
   int &iteration = d_number_iterations;
 
   // compute initial residual Ax - b and its norm
   A->multiply((*x0), (*x1));
-  T r = x1->norm_residual(b, L2);
+  double r = x1->norm_residual(b, L2);
   if (monitor_init(r))
   {
     //return;
@@ -69,10 +53,10 @@ inline void Jacobi<T>::solve_impl(const Vector<T> &b, Vector<T> &x)
     // compute X1 <-- -inv(D)*(L+U)*X0 + inv(D)*b
     //---------------------------------------------------//
 
-    T* a = A->values();
+    double* a = A->values();
     for (int i = 0; i < A->number_rows(); i++)
     {
-      T v = 0;
+      double v = 0;
       int p = A->start(i);
       int d = A->diagonal(i);
       // L * X0

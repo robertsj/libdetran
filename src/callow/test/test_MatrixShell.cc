@@ -37,8 +37,8 @@ int main(int argc, char *argv[])
 // Test of basic public interface
 int test_MatrixShell(int argc, char *argv[])
 {
-  typedef TestMatrixShell<double> Mat_T;
-  typedef Vector<double>          Vec_T;
+  typedef TestMatrixShell Mat_T;
+  typedef Vector          Vec_T;
 
   // n * n
   {

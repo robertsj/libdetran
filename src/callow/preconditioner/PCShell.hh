@@ -1,10 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   PCShell.hh
- * \author robertsj
- * \date   Sep 20, 2012
- * \brief  PCShell class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+/**
+ *  @file   PCShell.hh
+ *  @author robertsj
+ *  @date   Sep 20, 2012
+ *  @brief  PCShell class definition.
  */
 //---------------------------------------------------------------------------//
 
@@ -24,8 +23,8 @@ namespace callow
  *  preconditioning processes that are potentially matrix free.
  *
  */
-template <class T>
-class PCShell: public Preconditioner<T>
+
+class PCShell: public Preconditioner
 {
 
 public:
@@ -34,9 +33,9 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef Preconditioner<T>                   Base;
-  typedef typename Base::SP_preconditioner    SP_preconditioner;
-  typedef typename Vector<T>::SP_vector       SP_vector;
+  typedef Preconditioner                   Base;
+  typedef typename Base::SP_preconditioner SP_preconditioner;
+  typedef typename Vector::SP_vector       SP_vector;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -52,13 +51,14 @@ public:
   // PUBLIC FUNCTIONS
   //-------------------------------------------------------------------------//
 
+  /* ... */
 
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL PRECONDITIONERS MUST IMPLEMENT THIS
   //-------------------------------------------------------------------------//
 
   /// Solve Px = b
-  virtual void apply(Vector<T> &b, Vector<T> &x) = 0;
+  virtual void apply(Vector &b, Vector &x) = 0;
 
 protected:
 
@@ -71,7 +71,5 @@ protected:
 };
 
 } // end namespace callow
-
-#include "PCShell.i.hh"
 
 #endif /* callow_PCSHELL_HH_ */

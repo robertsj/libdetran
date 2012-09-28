@@ -23,101 +23,10 @@ namespace callow
 {
 
 //---------------------------------------------------------------------------//
-// CONSTRUCTOR & DESTRUCTOR
-//---------------------------------------------------------------------------//
-
-template <class T>
-Matrix<T>::Matrix()
-  : d_allocated(false)
-{
-  /* ... */
-}
-
-template <class T>
-Matrix<T>::Matrix(const int m, const int n)
-  : MatrixBase<T>(m, n)
-  , d_allocated(false)
-{
-  /* ... */
-}
-
-template <class T>
-Matrix<T>::Matrix(const int m, const int n, const int nnzrow)
-  : MatrixBase<T>(m, n)
-  , d_allocated(false)
-{
-  preallocate(nnzrow);
-}
-
-template <class T>
-Matrix<T>::Matrix(Matrix<T> &A)
-  : MatrixBase<T>(A.number_rows(), A.number_columns())
-{
-  d_nnz = A.number_nonzeros();
-  d_rows      = new int[d_m + 1];
-  d_columns   = new int[d_nnz];
-  d_values    = new T[d_nnz];
-  d_diagonals = new int[d_m];
-
-  int size_I = sizeof(d_rows[0]);
-  int size_T = sizeof(d_values[0]);
-  std::memcpy(d_rows,      A.rows(),      size_I * (d_m + 1) );
-  std::memcpy(d_diagonals, A.diagonals(), size_I * d_m       );
-  std::memcpy(d_columns,   A.columns(),   size_I * d_nnz     );
-  std::memcpy(d_values,    A.values(),    size_T * d_nnz     );
-
-#ifdef CALLOW_ENABLE_PETSC
-  PetscErrorCode ierr;
-  ierr = MatCreateSeqAIJWithArrays(PETSC_COMM_SELF, d_m, d_n,
-                                   d_rows, d_columns,
-                                   d_values, &d_petsc_matrix);
-  Assert(!ierr);
-#endif
-
-  d_allocated = true;
-  d_is_ready = true;
-}
-
-template <class T>
-Matrix<T>::~Matrix()
-{
-  if (d_is_ready)
-  {
-#ifdef CALLOW_ENABLE_PETSC
-    // destroy the petsc matrix.  note, since we constructed it
-    // using our own arrays, those still need to be deleted.
-    MatDestroy(&d_petsc_matrix);
-#endif
-    delete [] d_values;
-    delete [] d_columns;
-    delete [] d_rows;
-    delete [] d_diagonals;
-  }
-}
-
-template <class T>
-inline typename Matrix<T>::SP_matrix
-Matrix<T>::Create(const int m, const int n)
-{
-  SP_matrix p(new Matrix<T>(m, n));
-  return p;
-}
-
-template <class T>
-inline typename Matrix<T>::SP_matrix
-Matrix<T>::Create(const int m, const int n, const int nnz)
-{
-  SP_matrix p(new Matrix<T>(m, n, nnz));
-  return p;
-}
-
-
-//---------------------------------------------------------------------------//
 // PREALLOCATION
 //---------------------------------------------------------------------------//
 
-template <class T>
-inline void Matrix<T>::preallocate(const int nnzrow)
+inline void Matrix::preallocate(const int nnzrow)
 {
   // preconditions
   Require(d_sizes_set);
@@ -129,18 +38,12 @@ inline void Matrix<T>::preallocate(const int nnzrow)
   d_allocated = true;
 }
 
-template <class T>
-inline void Matrix<T>::preallocate(int* nnzrows)
+
+inline void Matrix::preallocate(int* nnzrows)
 {
   // preconditions
   Require(d_sizes_set);
   Require(!d_allocated);
-
-//  for (int i = 0; i < 5; ++i)
-//  {
-//    std::cout << " i=" << i << " nnz=" << nnzrows[i] << std::endl;
-//  }
-//  THROW("lalal");
   // set number of nonzeros, preallocate triplets, and initialize counter
   d_aij.resize(d_m);
   for (int i = 0; i < d_m; i++)
@@ -164,8 +67,8 @@ inline void Matrix<T>::preallocate(int* nnzrows)
  *  we insert it, since that's needed for Gauss-Seidel, preconditioning,
  *  and other things.
  */
-template <class T>
-inline void Matrix<T>::assemble()
+
+inline void Matrix::assemble()
 {
   // Preconditions
   Insist(!d_is_ready, "This matrix must not have been assembled already.");
@@ -182,7 +85,7 @@ inline void Matrix<T>::assemble()
 //      std::cout << d_aij[i][j] << std::endl;
 
     // do the sort
-    std::sort(d_aij[i].begin(), d_aij[i].end(), compare_triplet<T>);
+    std::sort(d_aij[i].begin(), d_aij[i].end(), compare_triplet);
 
 //    std::cout << " after sort" << std::endl;
 //    for (int j = 0; j < d_aij[i].size(); ++j)
@@ -213,10 +116,10 @@ inline void Matrix<T>::assemble()
   }
 
   // allocate
-  d_rows   = new int[d_m + 1];
+  d_rows = new int[d_m + 1];
   d_columns = new int[d_nnz];
-  d_values          = new T[d_nnz];
-  d_diagonals       = new int[d_m];
+  d_values = new double[d_nnz];
+  d_diagonals = new int[d_m];
 
   // fill the csr storage
   int aij_idx = 0;
@@ -257,39 +160,39 @@ inline void Matrix<T>::assemble()
 // INDEXING
 //---------------------------------------------------------------------------//
 
-template <class T>
-inline int Matrix<T>::start(const int i) const
+
+inline int Matrix::start(const int i) const
 {
   Require(d_is_ready);
   Require(i >= 0 and i < d_m);
   return d_rows[i];
 }
-template <class T>
-inline int Matrix<T>::diagonal(const int i) const
+
+inline int Matrix::diagonal(const int i) const
 {
   Require(d_is_ready);
   Require(i >= 0 and i < d_m);
   return d_diagonals[i];
 }
 
-template <class T>
-inline int Matrix<T>::end(const int i) const
+
+inline int Matrix::end(const int i) const
 {
   Require(d_is_ready);
   Require(i >= 0 and i < d_m);
   return d_rows[i + 1];
 }
 
-template <class T>
-inline int Matrix<T>::column(const int p) const
+
+inline int Matrix::column(const int p) const
 {
   Require(d_is_ready);
   Require(p >= 0 and p < d_nnz);
   return d_columns[p];
 }
 
-template <class T>
-inline T Matrix<T>::operator[](const int p) const
+
+inline double Matrix::operator[](const int p) const
 {
   Require(d_is_ready);
   Require(p >= 0 and p < d_nnz);
@@ -300,8 +203,8 @@ inline T Matrix<T>::operator[](const int p) const
 // ACCESS
 //---------------------------------------------------------------------------//
 
-template <class T>
-inline T Matrix<T>::operator()(const int i, const int j) const
+
+inline double Matrix::operator()(const int i, const int j) const
 {
   Require(d_is_ready);
   Require(i >= 0 and i < d_m);
@@ -327,14 +230,14 @@ inline T Matrix<T>::operator()(const int i, const int j) const
 // MULTIPLY
 //---------------------------------------------------------------------------//
 
-template <class T>
-inline void Matrix<T>::multiply(const Vector<T> &x, Vector<T> &y)
+
+inline void Matrix::multiply(const Vector &x, Vector &y)
 {
   Require(d_is_ready);
   Require(x.size() == d_n);
   Require(y.size() == d_m);
 #ifdef CALLOW_ENABLE_PETSC_OPS
-  MatMult(d_petsc_matrix, const_cast<Vector<T>* >(&x)->petsc_vector(), y.petsc_vector());
+  MatMult(d_petsc_matrix, const_cast<Vector* >(&x)->petsc_vector(), y.petsc_vector());
 #else
   // clear the output vector
   y.scale(0);
@@ -344,7 +247,7 @@ inline void Matrix<T>::multiply(const Vector<T> &x, Vector<T> &y)
   #pragma omp for private(p)
   for (int i = 0; i < d_m; i++)
   {
-    T temp = y[i];
+    double temp = y[i];
     // for all columns
     for (p = d_rows[i]; p < d_rows[i + 1]; p++)
     {
@@ -357,15 +260,15 @@ inline void Matrix<T>::multiply(const Vector<T> &x, Vector<T> &y)
 }
 
 // \todo good threading option needed
-template <class T>
-inline void Matrix<T>::multiply_transpose(const Vector<T> &x, Vector<T> &y)
+
+inline void Matrix::multiply_transpose(const Vector &x, Vector &y)
 {
   Require(d_is_ready);
   Require(x.size() == d_m);
   Require(y.size() == d_n);
 #ifdef CALLOW_ENABLE_PETSC_OPS
   MatMultTranspose(d_petsc_matrix,
-                   const_cast<Vector<T>* >(&x)->petsc_vector(),
+                   const_cast<Vector* >(&x)->petsc_vector(),
                    y.petsc_vector());
 #else
   // clear the output vector
@@ -387,8 +290,8 @@ inline void Matrix<T>::multiply_transpose(const Vector<T> &x, Vector<T> &y)
 // INSERTING VALUES
 //---------------------------------------------------------------------------//
 
-template <class T>
-inline bool Matrix<T>::insert(int i, int j, T v, const int type)
+
+inline bool Matrix::insert(int i, int j, double v, const int type)
 {
   Require(!d_is_ready);
   Require(d_allocated);
@@ -416,8 +319,8 @@ inline bool Matrix<T>::insert(int i, int j, T v, const int type)
   return true;
 }
 
-template <class T>
-inline bool Matrix<T>::insert(int i, int *j, T *v, int n, const int type)
+
+inline bool Matrix::insert(int i, int *j, double *v, int n, const int type)
 {
   Require(!d_is_ready);
   Require(d_allocated);
@@ -458,8 +361,8 @@ inline bool Matrix<T>::insert(int i, int *j, T *v, int n, const int type)
   return true;
 }
 
-template <class T>
-inline bool Matrix<T>::insert(int *i, int j, T *v, int n, const int type)
+
+inline bool Matrix::insert(int *i, int j, double *v, int n, const int type)
 {
   Require(!d_is_ready);
   Require(d_allocated);
@@ -483,8 +386,8 @@ inline bool Matrix<T>::insert(int *i, int j, T *v, int n, const int type)
   return true;
 }
 
-template <class T>
-inline bool Matrix<T>::insert(int *i, int *j, T *v, int n, const int type)
+
+inline bool Matrix::insert(int *i, int *j, double *v, int n, const int type)
 {
   Require(!d_is_ready);
   Require(d_allocated);
@@ -513,8 +416,8 @@ inline bool Matrix<T>::insert(int *i, int *j, T *v, int n, const int type)
 // IO
 //---------------------------------------------------------------------------//
 
-template <class T>
-inline void Matrix<T>::display() const
+
+inline void Matrix::display() const
 {
   Require(d_is_ready);
   printf(" CSR matrix \n");
@@ -534,7 +437,7 @@ inline void Matrix<T>::display() const
     for (int p = d_rows[i]; p < d_rows[i + 1]; p++)
     {
       int j = d_columns[p];
-      T   v = d_values[p];
+      double v = d_values[p];
       printf(" %3i (%13.6e)", j, v);
     }
     printf("\n");
@@ -542,8 +445,7 @@ inline void Matrix<T>::display() const
   printf("\n");
 }
 
-template <class T>
-inline void Matrix<T>::print_matlab(std::string filename) const
+inline void Matrix::print_matlab(std::string filename) const
 {
   Require(d_is_ready);
   FILE * f;
@@ -553,7 +455,7 @@ inline void Matrix<T>::print_matlab(std::string filename) const
     for (int p = d_rows[i]; p < d_rows[i + 1]; p++)
     {
       int j = d_columns[p];
-      T   v = d_values[p];
+      double v = d_values[p];
       fprintf(f, "%8i   %8i    %23.16e \n", i+1, j+1, v);
     }
   }

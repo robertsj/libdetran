@@ -12,13 +12,19 @@
 namespace callow
 {
 
-//// Instantiations
-//#ifdef CALLOW_ENABLE_PETSC
-//template class Richardson<PetscScalar>;
-//#else
-//template class Richardson<float>;
-//template class Richardson<double>;
-//#endif
+//---------------------------------------------------------------------------//
+// CONSTRUCTOR & DESTRUCTOR
+//---------------------------------------------------------------------------//
+
+Richardson::Richardson(const double  atol,
+                       const double  rtol,
+                       const int     maxit,
+                       const double  omega)
+  : LinearSolver(atol, rtol, maxit, "richardson")
+  , d_omega(omega)
+{
+
+}
 
 } // end namespace callow
 

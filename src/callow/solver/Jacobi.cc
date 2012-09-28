@@ -12,13 +12,17 @@
 namespace callow
 {
 
-//// Instantiations
-//#ifdef CALLOW_ENABLE_PETSC
-//template class Jacobi<PetscScalar>;
-//#else
-//template class Jacobi<float>;
-//template class Jacobi<double>;
-//#endif
+//---------------------------------------------------------------------------//
+// CONSTRUCTOR & DESTRUCTOR
+//---------------------------------------------------------------------------//
+
+Jacobi::Jacobi(const double  atol,
+               const double  rtol,
+               const int     maxit)
+  : LinearSolver(atol, rtol, maxit, "jacobi")
+{
+  /* ... */
+}
 
 } // end namespace callow
 

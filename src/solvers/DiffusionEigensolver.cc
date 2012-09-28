@@ -10,8 +10,6 @@
 // Configuration
 #include "detran_config.hh"
 
-#ifdef DETRAN_ENABLE_SLEPC
-
 // Diffusion
 #include "DiffusionEigensolver.hh"
 
@@ -120,8 +118,6 @@ template class DiffusionEigensolver<_2D>;
 template class DiffusionEigensolver<_3D>;
 
 } // end namespace detran
-
-#endif
 
 //---------------------------------------------------------------------------//
 //              end of file DiffusionEigensolver.cc

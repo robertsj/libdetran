@@ -45,8 +45,7 @@ namespace callow
  *  directly rather than via indexing.
  *
  */
-template<class T>
-class GaussSeidel: public LinearSolver<T>
+class GaussSeidel: public LinearSolver
 {
 
 public:
@@ -55,7 +54,7 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef LinearSolver<T> Base;
+  typedef LinearSolver Base;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -76,16 +75,14 @@ private:
   //-------------------------------------------------------------------------//
 
   // expose base class members
-  using LinearSolver<T>::d_absolute_tolerance;
-  using LinearSolver<T>::d_relative_tolerance;
-  using LinearSolver<T>::d_maximum_iterations;
-  using LinearSolver<T>::d_L1_residual;
-  using LinearSolver<T>::d_L2_residual;
-  using LinearSolver<T>::d_LI_residual;
-  using LinearSolver<T>::d_number_iterations;
-  using LinearSolver<T>::d_A;
-  using LinearSolver<T>::d_P;
-  using LinearSolver<T>::d_norm_type;
+  using LinearSolver::d_absolute_tolerance;
+  using LinearSolver::d_relative_tolerance;
+  using LinearSolver::d_maximum_iterations;
+  using LinearSolver::d_residual;
+  using LinearSolver::d_number_iterations;
+  using LinearSolver::d_A;
+  using LinearSolver::d_P;
+  using LinearSolver::d_norm_type;
 
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL LINEAR SOLVERS MUST IMPLEMENT THIS
@@ -95,7 +92,7 @@ private:
    *  @param b  right hand side
    *  @param x  unknown vector
    */
-  void solve_impl(const Vector<T> &b, Vector<T> &x);
+  void solve_impl(const Vector &b, Vector &x);
 
 };
 

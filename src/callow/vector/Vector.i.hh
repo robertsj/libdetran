@@ -19,203 +19,45 @@ namespace callow
 {
 
 //---------------------------------------------------------------------------//
-// CONSTRUCTOR & DESTRUCTOR
-//---------------------------------------------------------------------------//
-
-//---------------------------------------------------------------------------//
-template <class T>
-Vector<T>::Vector()
-  : d_size(0)
-  , d_temporary(false)
-{
-  /* ... */
-}
-
-//---------------------------------------------------------------------------//
-template <class T>
-Vector<T>::Vector(const int n, T v)
-  : d_size(n)
-  , d_temporary(false)
-{
-  // Preconditions
-  Require(d_size > 0);
-
-  // Size the vector
-#ifdef CALLOW_ENABLE_PETSC
-  // Create the vector and initialize values
-  PetscErrorCode ierr;
-  ierr = VecCreateSeq(PETSC_COMM_SELF, n, &d_petsc_vector);
-  ierr = VecSet(d_petsc_vector, v);
-  // Grab the underlying storage
-  ierr = VecGetArray(d_petsc_vector, &d_value);
-  ierr = VecRestoreArray(d_petsc_vector, PETSC_NULL);
-#else
-  d_value = new T[n];
-  set(v);
-#endif
-  // Postconditions
-  Ensure(d_value);
-}
-
-//---------------------------------------------------------------------------//
-template <class T>
-Vector<T>::Vector(const Vector &x)
-  : d_size(x.size())
-  , d_temporary(false)
-{
-  // nothing to do if x has no elements
-  if (!d_size) return;
-#ifdef CALLOW_ENABLE_PETSC
-  // create the vector and initialize values
-  PetscErrorCode ierr;
-  Vec x_v = const_cast<Vector<T>* >(&x)->petsc_vector();
-  ierr = VecDuplicate(x_v, &d_petsc_vector);
-  ierr = VecCopy(x_v, d_petsc_vector);
-  // Grab the underlying storage
-  ierr = VecGetArray(d_petsc_vector, &d_value);
-  ierr = VecRestoreArray(d_petsc_vector, PETSC_NULL);
-#else
-  d_value = new T[d_size];
-  set(0.0);
-  add(x);
-#endif
-}
-
-//---------------------------------------------------------------------------//
-template <class T>
-Vector<T>::Vector(Vector &x)
-  : d_size(x.size())
-  , d_temporary(false)
-{
-  // nothing to do if x has no elements
-  if (!d_size) return;
-#ifdef CALLOW_ENABLE_PETSC
-  // create the vector and initialize values
-  PetscErrorCode ierr;
-  Vec x_v = x.petsc_vector();
-  ierr = VecDuplicate(x_v, &d_petsc_vector);
-  ierr = VecCopy(x_v, d_petsc_vector);
-  // Grab the underlying storage
-  ierr = VecGetArray(d_petsc_vector, &d_value);
-  ierr = VecRestoreArray(d_petsc_vector, PETSC_NULL);
-#else
-  d_value = new T[d_size];
-  set(0.0);
-  add(x);
-#endif
-}
-
-//---------------------------------------------------------------------------//
-template <class T>
-Vector<T>::Vector(std::vector<T> &x)
-  : d_size(0)
-  , d_temporary(true)
-{
-  d_value = &x[0];
-  d_size  = x.size();
-}
-
-//---------------------------------------------------------------------------//
-#ifdef CALLOW_ENABLE_PETSC
-template <class T>
-Vector<T>::Vector(Vec pv)
-  : d_size(0)
-  , d_temporary(true)
-{
-  PetscErrorCode ierr;
-  ierr = VecGetArray(pv, &d_value);
-  ierr = VecRestoreArray(pv, PETSC_NULL);
-  ierr = VecGetSize(pv, &d_size);
-  d_petsc_vector = pv;
-  Ensure(!ierr);
-}
-#endif
-
-//---------------------------------------------------------------------------//
-template <class T>
-Vector<T>::~Vector()
-{
-  if (!d_size or d_temporary) return;
-#ifdef CALLOW_ENABLE_PETSC
-  VecDestroy(&d_petsc_vector);
-#else
-  delete [] d_value;
-#endif
-}
-
-template <class T>
-void Vector<T>::resize(const int n, const T v)
-{
-  Insist(!d_temporary, "Cannot resize a temporary Vector!");
-#ifdef CALLOW_ENABLE_PETSC
-  // destroy the vector if it's built
-  if (d_size)
-  {
-    d_value = 0;
-    VecDestroy(&d_petsc_vector);
-  }
-  d_size = n;
-  // create a new vector
-  VecCreateSeq(PETSC_COMM_SELF, n, &d_petsc_vector);
-  // grab the underlying storage
-  PetscErrorCode ierr;
-  ierr = VecGetArray(d_petsc_vector, &d_value);
-  ierr = VecRestoreArray(d_petsc_vector, PETSC_NULL);
-#else
-  if (d_size) delete [] d_value;
-  d_size = n;
-  if (d_size) d_value = new T[d_size];
-  set(v);
-#endif
-}
-
-
-//---------------------------------------------------------------------------//
 // ACCESS
 //---------------------------------------------------------------------------//
 
-template <class T>
-inline const T& Vector<T>::operator[](const int i) const
+inline const double& Vector::operator[](const int i) const
 {
   Require(i >= 0);
   Require(i < d_size);
   return d_value[i];
 }
 
-template <class T>
-inline T& Vector<T>::operator[](const int i)
+inline double& Vector::operator[](const int i)
 {
   Require(i >= 0);
   Require(i < d_size);
   return d_value[i];
 }
 
-template <class T>
-inline const T& Vector<T>::operator()(const int i) const
+inline const double& Vector::operator()(const int i) const
 {
   Require(i >= 0);
   Require(i < d_size);
   return d_value[i];
 }
 
-template <class T>
-inline T& Vector<T>::operator()(const int i)
+inline double& Vector::operator()(const int i)
 {
   Require(i >= 0);
   Require(i < d_size);
   return d_value[i];
 }
 
-template <class T>
-inline const T& Vector<T>::value(const int i) const
+inline const double& Vector::value(const int i) const
 {
   Require(i >= 0);
   Require(i < d_size);
   return d_value[i];
 }
 
-template <class T>
-inline T& Vector<T>::value(const int i)
+inline double& Vector::value(const int i)
 {
   Require(i >= 0);
   Require(i < d_size);
@@ -227,10 +69,9 @@ inline T& Vector<T>::value(const int i)
 //---------------------------------------------------------------------------//
 
 //---------------------------------------------------------------------------//
-template <class T>
-inline T Vector<T>::norm(const int type)
+inline double Vector::norm(const int type)
 {
-  T val = 0.0;
+  double val = 0.0;
 #ifdef CALLOW_ENABLE_PETSC_OPS
   if (type == L1)
     VecNorm(d_petsc_vector, NORM_1, &val);
@@ -259,20 +100,20 @@ inline T Vector<T>::norm(const int type)
   }
 #endif
   // divide by N or sqrt(N) for the grid norms
-  if (type == L1GRID) val /= (T)d_size;
-  if (type == L2GRID) val /= std::sqrt((T)d_size);
+  if (type == L1GRID) val /= (double)d_size;
+  if (type == L2GRID) val /= std::sqrt((double)d_size);
   return val;
 }
 
-template <class T>
-inline T Vector<T>::norm_residual(const Vector<T>& x, const int type)
+//---------------------------------------------------------------------------//
+inline double Vector::norm_residual(const Vector& x, const int type)
 {
   Require(d_size == x.size());
-  T val = 0.0;
+  double val = 0.0;
 #ifdef CALLOW_ENABLE_PETSC_OPS
   // create the vector tmp = me - x;
-  Vector<T> tmp(*this);
-  VecAXPY(tmp.petsc_vector(), -1.0, const_cast<Vector<T>* >(&x)->petsc_vector());
+  Vector tmp(*this);
+  VecAXPY(tmp.petsc_vector(), -1.0, const_cast<Vector*>(&x)->petsc_vector());
   // and take its norm
   val = tmp.norm(type);
 #else
@@ -315,16 +156,15 @@ inline T Vector<T>::norm_residual(const Vector<T>& x, const int type)
 #endif
   return val;
 }
-template <class T>
-inline T Vector<T>::norm_residual(SP_vector x, const int type)
+
+inline double Vector::norm_residual(SP_vector x, const int type)
 {
   Require(x);
   return norm_residual(*x, type);
 }
 
-
-template <class T>
-inline void Vector<T>::set(const T v)
+//---------------------------------------------------------------------------//
+inline void Vector::set(const double v)
 {
 #ifdef CALLOW_ENABLE_PETSC_OPS
   VecSet(d_petsc_vector, v);
@@ -334,8 +174,8 @@ inline void Vector<T>::set(const T v)
 #endif
 }
 
-template <class T>
-inline void Vector<T>::scale(const T v)
+//---------------------------------------------------------------------------//
+inline void Vector::scale(const double v)
 {
 #ifdef CALLOW_ENABLE_PETSC_OPS
   VecScale(d_petsc_vector, v);
@@ -345,178 +185,134 @@ inline void Vector<T>::scale(const T v)
 #endif
 }
 
-
 //---------------------------------------------------------------------------//
-template <class T>
-inline T Vector<T>::dot(const Vector<T>& x)
+inline double Vector::dot(const Vector& x)
 {
   Require(d_size == x.size());
-  T val = 0;
+  double val = 0;
 #ifdef CALLOW_ENABLE_PETSC_OPS
-  VecDot(d_petsc_vector, const_cast<Vector<T>* >(&x)->petsc_vector(), &val);
+  VecDot(d_petsc_vector, const_cast<Vector* >(&x)->petsc_vector(), &val);
 #else
   for (int i = 0; i < d_size; i++)
     val += d_value[i] * x[i];
 #endif
   return val;
 }
-template <class T>
-inline T Vector<T>::dot(SP_vector x)
+
+inline double Vector::dot(SP_vector x)
 {
   Require(x);
   return dot(*x);
 }
 
 //---------------------------------------------------------------------------//
-template <class T>
-inline void Vector<T>::add(const Vector &x)
+inline void Vector::add(const Vector &x)
 {
   Require(x.size() == d_size);
 #ifdef CALLOW_ENABLE_PETSC_OPS
-  VecAXPY(d_petsc_vector, 1.0, const_cast<Vector<T>* >(&x)->petsc_vector());
+  VecAXPY(d_petsc_vector, 1.0, const_cast<Vector* >(&x)->petsc_vector());
 #else
   for (int i = 0; i < d_size; i++)
     d_value[i] += x[i];
 #endif
 }
-template <class T>
-inline void Vector<T>::add(SP_vector x)
+
+inline void Vector::add(SP_vector x)
 {
   Require(x);
   add(*x);
 }
 
 //---------------------------------------------------------------------------//
-template <class T>
-inline void Vector<T>::add_a_times_x(const T a, const Vector<T>& x)
+inline void Vector::add_a_times_x(const double a, const Vector& x)
 {
   Require(x.size() == d_size);
 #ifdef CALLOW_ENABLE_PETSC_OPS
-  VecAXPY(d_petsc_vector, a, const_cast<Vector<T>* >(&x)->petsc_vector());
+  VecAXPY(d_petsc_vector, a, const_cast<Vector* >(&x)->petsc_vector());
 #else
   for (int i = 0; i < d_size; i++)
     d_value[i] += a*x[i];
 #endif
 }
-template <class T>
-inline void Vector<T>::add_a_times_x(const T a, SP_vector x)
+
+inline void Vector::add_a_times_x(const double a, SP_vector x)
 {
   Require(x);
   add_a_times_x(a, *x);
 }
 
 //---------------------------------------------------------------------------//
-template <class T>
-inline void Vector<T>::subtract(const Vector<T> &x)
+inline void Vector::subtract(const Vector &x)
 {
   Require(x.size() == d_size);
 #ifdef CALLOW_ENABLE_PETSC_OPS
-  VecAXPY(d_petsc_vector, -1.0, const_cast<Vector<T>* >(&x)->petsc_vector());
+  VecAXPY(d_petsc_vector, -1.0, const_cast<Vector* >(&x)->petsc_vector());
 #else
   for (int i = 0; i < d_size; i++)
     d_value[i] -= x[i];
 #endif
 }
-template <class T>
-inline void Vector<T>::subtract(SP_vector x)
+
+inline void Vector::subtract(SP_vector x)
 {
   Require(x);
   subtract(*x);
 }
 
 //---------------------------------------------------------------------------//
-template <class T>
-inline void Vector<T>::multiply(const Vector &x)
+inline void Vector::multiply(const Vector &x)
 {
   Require(x.size() == d_size);
 #ifdef CALLOW_ENABLE_PETSC_OPS
-  Vector<T> tmp(*this);
-  VecPointwiseMult(d_petsc_vector, tmp.petsc_vector(), const_cast<Vector<T>* >(&x)->petsc_vector());
+  Vector tmp(*this);
+  VecPointwiseMult(d_petsc_vector, tmp.petsc_vector(), const_cast<Vector* >(&x)->petsc_vector());
 #else
   for (int i = 0; i < d_size; i++)
     d_value[i] *= x[i];
 #endif
 }
-template <class T>
-inline void Vector<T>::multiply(SP_vector x)
+
+inline void Vector::multiply(SP_vector x)
 {
   Require(x);
   multiply(*x);
 }
 
 //---------------------------------------------------------------------------//
-template <class T>
-inline void Vector<T>::divide(const Vector &x)
+inline void Vector::divide(const Vector &x)
 {
   Require(x.size() == d_size);
 #ifdef CALLOW_ENABLE_PETSC_OPS
-  Vector<T> tmp(*this);
-  VecPointwiseDivide(d_petsc_vector, tmp.petsc_vector(), const_cast<Vector<T>* >(&x)->petsc_vector());
+  Vector tmp(*this);
+  VecPointwiseDivide(d_petsc_vector, tmp.petsc_vector(), const_cast<Vector* >(&x)->petsc_vector());
 #else
   for (int i = 0; i < d_size; i++)
     d_value[i] /= x[i];
 #endif
 }
-template <class T>
-inline void Vector<T>::divide(SP_vector x)
+
+inline void Vector::divide(SP_vector x)
 {
   Require(x);
   divide(*x);
 }
 
 //---------------------------------------------------------------------------//
-template <class T>
-inline void Vector<T>::copy(const Vector &x)
+inline void Vector::copy(const Vector &x)
 {
   Require(x.size() == d_size);
 #ifdef CALLOW_ENABLE_PETSC_OPS
-  VecCopy(const_cast<Vector<T>* >(&x)->petsc_vector(), d_petsc_vector);
+  VecCopy(const_cast<Vector* >(&x)->petsc_vector(), d_petsc_vector);
 #else
   for (int i = 0; i < d_size; i++)
     d_value[i] = x[i];
 #endif
 }
-template <class T>
-inline void Vector<T>::copy(SP_vector x)
+
+inline void Vector::copy(SP_vector x)
 {
   Require(x);
   copy(*x);
-}
-
-
-//---------------------------------------------------------------------------//
-// IO
-//---------------------------------------------------------------------------//
-
-template <class T>
-void Vector<T>::display() const
-{
-  printf(" Vector \n");
-  printf(" ---------------------------\n");
-  printf("      number rows = %5i \n\n", d_size);
-  if (d_size > 100)
-  {
-    printf("  *** vector not printed for size > 20 *** ");
-    return;
-  }
-  for (int i = 0; i < d_size; i++)
-  {
-    printf(" row  %3i | %13.6e \n", i, d_value[i]);
-  }
-  printf("\n");
-}
-
-template <class T>
-inline void Vector<T>::print_matlab(std::string filename) const
-{
-  FILE * f;
-  f = fopen (filename.c_str(), "w");
-  for (int i = 0; i < d_size; i++)
-  {
-    fprintf(f, "%23.16e \n", d_value[i]);
-  }
-  fprintf(f, "\n");
-  fclose (f);
 }
 
 } // end namespace callow

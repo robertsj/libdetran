@@ -12,7 +12,12 @@
 namespace callow
 {
 
-/* ... */
+PowerIteration::PowerIteration(const double    tol,
+                                  const int       maxit)
+  : Base(tol, maxit, "power")
+{
+  /* ... */
+}
 
 } // end namespace callow
 

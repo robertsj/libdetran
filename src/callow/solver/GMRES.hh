@@ -44,13 +44,12 @@ namespace callow
  *  matrix \f$ H \f$ to an upper triangle matrix \f$ R \f$.
  *
  */
-template<class T>
-class GMRES: public LinearSolver<T>
+class GMRES: public LinearSolver
 {
 
 public:
 
-  typedef LinearSolver<T> Base;
+  typedef LinearSolver Base;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -72,17 +71,15 @@ private:
   //-------------------------------------------------------------------------//
 
   // expose base class members
-  using LinearSolver<T>::d_absolute_tolerance;
-  using LinearSolver<T>::d_relative_tolerance;
-  using LinearSolver<T>::d_maximum_iterations;
-  using LinearSolver<T>::d_L1_residual;
-  using LinearSolver<T>::d_L2_residual;
-  using LinearSolver<T>::d_LI_residual;
-  using LinearSolver<T>::d_number_iterations;
-  using LinearSolver<T>::d_A;
-  using LinearSolver<T>::d_P;
-  using LinearSolver<T>::d_pc_side;
-  using LinearSolver<T>::d_monitor_output;
+  using LinearSolver::d_absolute_tolerance;
+  using LinearSolver::d_relative_tolerance;
+  using LinearSolver::d_maximum_iterations;
+  using LinearSolver::d_residual;
+  using LinearSolver::d_number_iterations;
+  using LinearSolver::d_A;
+  using LinearSolver::d_P;
+  using LinearSolver::d_pc_side;
+  using LinearSolver::d_monitor_level;
 
   /// maximum size of krylov subspace
   int d_restart;
@@ -91,11 +88,11 @@ private:
   int d_reorthog;
 
   /// upper hessenberg [m+1][m], treated as dense
-  T** d_H;
+  double** d_H;
 
   /// cosine and sine term in givens rotation [k+1]
-  Vector<T> d_c;
-  Vector<T> d_s;
+  Vector d_c;
+  Vector d_s;
 
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL LINEAR SOLVERS MUST IMPLEMENT THIS
@@ -105,12 +102,12 @@ private:
    *  @param b  right hand side
    *  @param x  unknown vector
    */
-  void solve_impl(const Vector<T> &b, Vector<T> &x);
+  void solve_impl(const Vector &b, Vector &x);
 
   /// apply givens rotation to H
   void apply_givens(const int k);
 
-  void compute_y(Vector<T> &y, const Vector<T> &g, const int k);
+  void compute_y(Vector &y, const Vector &g, const int k);
 
   void initialize_H();
 };

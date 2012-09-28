@@ -50,13 +50,13 @@ public:
   //
   typedef State::moments_type                         moments_type;
   //
-  typedef DiffusionLossOperator::SP_lossoperator        SP_lossoperator;
-  typedef DiffusionGainOperator::SP_gainoperator        SP_gainoperator;
-  typedef callow::Vector<double>                        Vector_T;
-  typedef Vector_T::SP_vector                           SP_vector;
-  typedef callow::EigenSolverCreator<double>            Creator_T;
-  typedef Creator_T::SP_solver                          SP_solver;
-  typedef callow::EigenSolver<double>::SP_linearsolver  SP_linearsolver;
+  typedef DiffusionLossOperator::SP_lossoperator      SP_lossoperator;
+  typedef DiffusionGainOperator::SP_gainoperator      SP_gainoperator;
+  typedef callow::Vector                              Vector_T;
+  typedef Vector_T::SP_vector                         SP_vector;
+  typedef callow::EigenSolverCreator                  Creator_T;
+  typedef Creator_T::SP_solver                        SP_solver;
+  typedef callow::EigenSolver::SP_linearsolver        SP_linearsolver;
   //
   typedef detran_utilities::size_t                    size_t;
 

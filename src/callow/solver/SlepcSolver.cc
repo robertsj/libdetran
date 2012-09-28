@@ -22,7 +22,7 @@ namespace callow
 
 SlepcSolver::SlepcSolver(const double  tol,
                          const int     maxit)
-  : EigenSolver<PetscScalar>(tol, maxit, "solver_slepc")
+  : EigenSolver(tol, maxit, "solver_slepc")
 {
   PetscErrorCode ierr;
   std::cout << " start slepcsolver... " << std::endl;

@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   PCJacobi.hh
- * \brief  PCJacobi 
- * \author Jeremy Roberts
- * \date   Sep 18, 2012
+/**
+ *  @file   PCJacobi.hh
+ *  @brief  PCJacobi
+ *  @author Jeremy Roberts
+ *  @date   Sep 18, 2012
  */
 //---------------------------------------------------------------------------//
 
@@ -16,23 +16,23 @@
 namespace callow
 {
 
-/*!
- *  \class PCJacobi
- *  \brief Applies a Jacobi preconditioner
+/**
+ *  @class PCJacobi
+ *  @brief Applies a Jacobi preconditioner
  *
  *  The Jacobi preconditioner is defined by the process
- *  \f[
+ *  @f[
  *      \mathbf{P}^{-1} = \mathbf{D}^{-1}
  *                      = \mathrm{diag}([a^{-1}_{11}, a^{-1}_{22}, \cdots]^T) \, ,
- *  \f]
+ *  @f]
  *  where \f$ a_{ii} \f$ is the \e ith diagonal element of \f$ \mathbf{A} \f$.
  *
  *  If zero elements are found on the diagonal, the inverse is set to the
  *  matrix size.
  *
  */
-template <class T>
-class PCJacobi: public Preconditioner<T>
+
+class PCJacobi: public Preconditioner
 {
 
 public:
@@ -41,10 +41,10 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef Preconditioner<T>                   Base;
-  typedef typename Base::SP_preconditioner    SP_preconditioner;
-  typedef typename Matrix<T>::SP_matrix       SP_matrix;
-  typedef typename Vector<T>::SP_vector       SP_vector;
+  typedef Preconditioner                   Base;
+  typedef typename Base::SP_preconditioner SP_preconditioner;
+  typedef typename Matrix::SP_matrix       SP_matrix;
+  typedef typename Vector::SP_vector       SP_vector;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -61,7 +61,7 @@ public:
   //-------------------------------------------------------------------------//
 
   /// Solve Px = y
-  void apply(Vector<T> &b, Vector<T> &x);
+  void apply(Vector &b, Vector &x);
 
 protected:
 

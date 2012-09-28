@@ -18,31 +18,17 @@ namespace callow
 {
 
 //---------------------------------------------------------------------------//
-// CONSTRUCTOR & DESTRUCTOR
-//---------------------------------------------------------------------------//
-
-template <class T>
-GaussSeidel<T>::GaussSeidel(const double  atol,
-                  const double  rtol,
-                  const int     maxit)
-  : LinearSolver<T>(atol, rtol, maxit, "solver_gauss_seidel")
-{
-  /* ... */
-}
-
-//---------------------------------------------------------------------------//
 // SOLVE
 //---------------------------------------------------------------------------//
 
-template <class T>
-inline void GaussSeidel<T>::solve_impl(const Vector<T> &b, Vector<T> &x)
+inline void GaussSeidel::solve_impl(const Vector &b, Vector &x)
 {
 
-  Insist(dynamic_cast< Matrix<T>* >(d_A.bp()),
+  Insist(dynamic_cast< Matrix* >(d_A.bp()),
     "Need an explicit matrix for use with GaussSeidel iteration");
-  typename Matrix<T>::SP_matrix A = d_A;
+  typename Matrix::SP_matrix A = d_A;
 
-  typedef Vector<T> Vec;
+  typedef Vector Vec;
 
   // temporary storage and pointers for swapping
   Vec temp(x.size(), 0.0);
@@ -52,7 +38,7 @@ inline void GaussSeidel<T>::solve_impl(const Vector<T> &b, Vector<T> &x)
 
   // compute initial residual Ax - b and its norm
   A->multiply((*x0), (*x1));
-  T r = x1->norm_residual(b, L2);
+  double r = x1->norm_residual(b, L2);
   if (monitor_init(r)) 
   {
     //return;
@@ -65,10 +51,10 @@ inline void GaussSeidel<T>::solve_impl(const Vector<T> &b, Vector<T> &x)
     // compute X1 <-- -inv(D+L)*U*X0 + inv(D+L)*b
     //---------------------------------------------------//
 
-    T* a = A->values();
+    double* a = A->values();
     for (int i = 0; i < A->number_rows(); i++)
     {
-      T v = 0;
+      double v = 0;
       int p = A->start(i);
       int d = A->diagonal(i);
       // lower triangle -- we have updated unknowns

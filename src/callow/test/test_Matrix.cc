@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   test_Matrix.cc
- * \author Jeremy Roberts
- * \date   Aug 19, 2012
- * \brief  Test of Matrix class.
+/**
+ *  @file   test_Matrix.cc
+ *  @author Jeremy Roberts
+ *  @date   Aug 19, 2012
+ *  @brief  Test of Matrix class.
  */
 //---------------------------------------------------------------------------//
 
@@ -36,8 +36,8 @@ int main(int argc, char *argv[])
 // Test of basic public interface
 int test_Matrix(int argc, char *argv[])
 {
-  typedef Matrix<double> Mat;
-  typedef Vector<double> Vec;
+  typedef Matrix Mat;
+  typedef Vector Vec;
 
   // n * n
   {
@@ -72,8 +72,8 @@ int test_Matrix(int argc, char *argv[])
     A.assemble();
 
     // Create two vectors
-    Vector<double> X(n, 0.0);
-    Vector<double> Y(n, 0.0);
+    Vector X(n, 0.0);
+    Vector Y(n, 0.0);
 
     for (int i = 0; i < X.size(); i++)
     {
@@ -141,8 +141,8 @@ int test_Matrix(int argc, char *argv[])
     A.assemble();
 
     // Create two vectors
-    Vector<double> X(n, 1.0);
-    Vector<double> Y(m, 0.0);
+    Vector X(n, 1.0);
+    Vector Y(m, 0.0);
 
     // Multiply
     A.multiply(X, Y);

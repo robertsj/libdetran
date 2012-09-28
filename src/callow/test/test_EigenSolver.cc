@@ -44,12 +44,12 @@ int    maxit  = 1000;
 
 int test_PowerIteration(int argc, char *argv[])
 {
-  Vector<double> X(n, 0.0);
-  Vector<double> X0(n, 1.0);
-  Matrix<double>::SP_matrix A = test_matrix_1<double>(n);
-  EigenSolver<double>::SP_solver solver =
-    EigenSolverCreator<double>::Create("power", tol, maxit);
-  solver->set_operators(test_matrix_1<double>(n));
+  Vector X(n, 0.0);
+  Vector X0(n, 1.0);
+  Matrix::SP_matrix A = test_matrix_1(n);
+  EigenSolver::SP_solver solver =
+    EigenSolverCreator::Create("power", tol, maxit);
+  solver->set_operators(test_matrix_1(n));
   solver->set_monitor_level(1);
   int status = solver->solve(X, X0);
   cout << solver->eigenvalue() << endl;
@@ -58,12 +58,12 @@ int test_PowerIteration(int argc, char *argv[])
 
 int test_SlepcSolver(int argc, char *argv[])
 {
-  Vector<double> X(n, 0.0);
-  Vector<double> X0(n, 1.0);
-  Matrix<double>::SP_matrix A = test_matrix_1<double>(n);
-  EigenSolver<double>::SP_solver solver =
-    EigenSolverCreator<double>::Create("slepc", tol, maxit);
-  solver->set_operators(test_matrix_1<double>(n));
+  Vector X(n, 0.0);
+  Vector X0(n, 1.0);
+  Matrix::SP_matrix A = test_matrix_1(n);
+  EigenSolver::SP_solver solver =
+    EigenSolverCreator::Create("slepc", tol, maxit);
+  solver->set_operators(test_matrix_1(n));
   solver->set_monitor_level(1);
   int status = solver->solve(X, X0);
   cout << solver->eigenvalue() << endl;

@@ -50,105 +50,106 @@
 #include "callow/preconditioner/PCILU0.hh"
 #include "callow/preconditioner/PCShell.hh"
 
-/*// Angle*/
-/*#include "Collocated.hh"*/
-/*#include "GaussLegendre.hh"*/
-/*#include "LevelSymmetric.hh"*/
-/*#include "MomentToDiscrete.hh"*/
-/*#include "PolarQuadrature.hh"*/
-/*#include "Quadrature.hh"*/
-/*#include "QuadratureFactory.hh"*/
-/*#include "QuadratureMOC.hh"*/
-/*#include "QuadrupleRange.hh"*/
-/*#include "SphericalHarmonics.hh"*/
-/*#include "TabuchiYamamoto.hh"*/
-/*#include "Uniform.hh"*/
-/*#include "UniformEqual.hh"*/
+// Angle
 
-/*// Geometry*/
-/*#include "Assembly.hh"*/
-/*#include "Core.hh"*/
-/*#include "Mesh.hh"*/
-/*#include "MeshMOC.hh"*/
-/*#include "Mesh1D.hh" */
-/*#include "Mesh2D.hh" */
-/*#include "Mesh3D.hh"   */
-/*#include "PinCell.hh"*/
-/*#include "Segment.hh"*/
-/*#include "Track.hh"*/
-/*#include "TrackDB.hh"*/
-/*#include "Tracker.hh"*/
+#include "Collocated.hh"
+#include "GaussLegendre.hh"
+#include "LevelSymmetric.hh"
+#include "MomentToDiscrete.hh"
+#include "PolarQuadrature.hh"
+#include "Quadrature.hh"
+#include "QuadratureFactory.hh"
+#include "QuadratureMOC.hh"
+#include "QuadrupleRange.hh"
+#include "SphericalHarmonics.hh"
+#include "TabuchiYamamoto.hh"
+#include "Uniform.hh"
+#include "UniformEqual.hh"
 
-/*// Material*/
-/*#include "Material.hh"*/
-/*  */
-/*// External source*/
-/*#include "ExternalSource.hh"*/
-/*#include "ConstantSource.hh"*/
-/*#include "DiscreteSource.hh"*/
-/*#include "IsotropicSource.hh"*/
-/*  */
-/*//---------------------------------------------------------------------------//*/
-/*// LEVEL 2 */
-/*//---------------------------------------------------------------------------//  */
-/*  */
-/*// Discretization*/
-/*#include "DimensionTraits.hh"*/
-/*#include "Equation_DD_1D.hh"*/
-/*#include "Equation_DD_2D.hh"*/
-/*#include "Equation_DD_3D.hh"*/
-/*#include "Equation_SC_2D.hh"*/
-/*#include "Equation_SD_1D.hh"*/
-/*#include "Equation_SD_2D.hh"*/
-/*#include "Equation_SC_MOC.hh"*/
-/*  */
-/*// Boundary*/
-/*#include "BoundarySN.hh"*/
-/*#include "BoundaryMOC.hh"*/
-/*  */
-/*// Transport*/
-/*#include "FissionSource.hh"*/
-/*#include "State.hh"*/
-/*#include "SweepSource.hh"*/
-/*#include "Sweeper.hh"*/
-/*#include "Sweeper1D.hh"*/
-/*#include "Sweeper2D.hh"*/
-/*#include "Sweeper3D.hh"*/
-/*#include "Sweeper2DMOC.hh"*/
+// Geometry
+#include "Assembly.hh"
+#include "Core.hh"
+#include "Mesh.hh"
+#include "MeshMOC.hh"
+#include "Mesh1D.hh" 
+#include "Mesh2D.hh" 
+#include "Mesh3D.hh"   
+#include "PinCell.hh"
+#include "Segment.hh"
+#include "Track.hh"
+#include "TrackDB.hh"
+#include "Tracker.hh"
 
-/*//---------------------------------------------------------------------------//*/
-/*// LEVEL 3 */
-/*//---------------------------------------------------------------------------//  */
-/*      */
-/*// Diffusion*/
-/*#ifdef DETRAN_ENABLE_PETSC*/
-/*#include "GainOperator.hh"*/
-/*#include "LossOperator.hh"*/
-/*#endif*/
-/*  */
-/*// Solvers*/
-/*#include "InnerIteration.hh"*/
-/*#include "GaussSeidelMG.hh"*/
-/*#include "PowerIteration.hh"*/
-/*#include "SourceIteration.hh"*/
-/*#include "DiffusionFixedSourceSolver.hh"*/
-/*#include "DiffusionEigensolver.hh"*/
-/*#include "DiffusionLossOperator.hh"*/
-/*#include "DiffusionGainOperator.hh"*/
+// Material
+#include "Material.hh"
 
-/*//---------------------------------------------------------------------------//*/
-/*// LEVEL 4 */
-/*//---------------------------------------------------------------------------//  */
+// External source
+#include "ExternalSource.hh"
+#include "ConstantSource.hh"
+#include "DiscreteSource.hh"
+#include "IsotropicSource.hh"
 
-/*#include "ReactionRates.hh"*/
-/*#include "Manager.hh"*/
-/*#include "PyExecute.hh"*/
-/*#ifdef DETRAN_ENABLE_SILO*/
-/*#include "SiloOutput.hh"*/
-/*#endif*/
-/*#ifdef DETRAN_ENABLE_HDF5*/
-/*#include "IO_HDF5.hh"*/
-/*#endif*/
+//---------------------------------------------------------------------------//
+// LEVEL 2 
+//---------------------------------------------------------------------------//  
+
+// Discretization
+#include "DimensionTraits.hh"
+#include "Equation_DD_1D.hh"
+#include "Equation_DD_2D.hh"
+#include "Equation_DD_3D.hh"
+#include "Equation_SC_2D.hh"
+#include "Equation_SD_1D.hh"
+#include "Equation_SD_2D.hh"
+#include "Equation_SC_MOC.hh"
+    
+// Boundary
+#include "BoundarySN.hh"
+#include "BoundaryMOC.hh"
+
+// Transport
+#include "FissionSource.hh"
+#include "State.hh"
+#include "SweepSource.hh"
+#include "Sweeper.hh"
+#include "Sweeper1D.hh"
+#include "Sweeper2D.hh"
+#include "Sweeper3D.hh"
+#include "Sweeper2DMOC.hh"
+
+//---------------------------------------------------------------------------//
+// LEVEL 3 
+//---------------------------------------------------------------------------//  
+
+// Diffusion
+#ifdef DETRAN_ENABLE_PETSC
+#include "GainOperator.hh"
+#include "LossOperator.hh"
+#endif
+
+// Solvers
+#include "InnerIteration.hh"
+#include "GaussSeidelMG.hh"
+#include "PowerIteration.hh"
+#include "SourceIteration.hh"
+#include "DiffusionFixedSourceSolver.hh"
+#include "DiffusionEigensolver.hh"
+#include "DiffusionLossOperator.hh"
+#include "DiffusionGainOperator.hh"
+
+//---------------------------------------------------------------------------//
+// LEVEL 4 
+//---------------------------------------------------------------------------//  
+
+#include "ReactionRates.hh"
+#include "Manager.hh"
+#include "PyExecute.hh"
+#ifdef DETRAN_ENABLE_SILO
+#include "SiloOutput.hh"
+#endif
+#ifdef DETRAN_ENABLE_HDF5
+#include "IO_HDF5.hh"
+#endif
   
 %} // end module pydetran
 
@@ -168,44 +169,43 @@
 
 // Callow
 %include "callow.i"
-/*// Angle*/
-/*%include "detran_angle.i"*/
-/*// Geometry*/
-/*%include "detran_geometry.i"*/
-/*// Material*/
-/*%include "detran_materials.i"*/
-/*// External source*/
-/*%include "detran_external_source.i"*/
+// Angle
+%include "detran_angle.i"
+// Geometry
+%include "detran_geometry.i"
+// Material
+%include "detran_materials.i"
+// External source
+%include "detran_external_source.i"
 
-/*//------------------------------------//*/
-/*// LEVEL 2*/
+//------------------------------------//
+// LEVEL 2
 
-/*// Transport*/
-/*%include "detran_discretization.i"*/
-/*%include "detran_boundary.i"*/
-/*%include "detran_transport.i"*/
+// Transport
+%include "detran_discretization.i"
+%include "detran_boundary.i"
+%include "detran_transport.i"
 
-/*//------------------------------------//*/
-/*// LEVEL 3*/
+//------------------------------------//
+// LEVEL 3
 
-/*// Diffusion*/
-/*%include "detran_diffusion.i"*/
+// Diffusion
+%include "detran_diffusion.i"
 
-/*// Transport*/
-/*%include "detran_solvers.i"*/
+// Transport
+%include "detran_solvers.i"
 
-/*//------------------------------------//*/
-/*// LEVEL 4*/
+//------------------------------------//
+// LEVEL 4
 
-/*// IO utilities*/
-/*%include "detran_ioutils.i"*/
+// IO utilities
+%include "detran_ioutils.i"
 
-/*// Post process*/
-/*%include "detran_postprocess.i"*/
+// Post process
+%include "detran_postprocess.i"
 
-
-/*%include "PyExecute.hh"*/
-/*%include "Manager.hh"*/
-/*%template(Execute1D) detran::PyExecute<detran::_1D>;*/
-/*%template(Execute2D) detran::PyExecute<detran::_2D>;*/
-/*%template(Execute3D) detran::PyExecute<detran::_3D>;*/
+%include "PyExecute.hh"
+%include "Manager.hh"
+%template(Execute1D) detran::PyExecute<detran::_1D>;
+%template(Execute2D) detran::PyExecute<detran::_2D>;
+%template(Execute3D) detran::PyExecute<detran::_3D>;

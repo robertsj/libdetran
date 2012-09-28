@@ -19,4 +19,5 @@
 
 from pydetran import *
 from pydetranutils import *
+import numpy as np
 

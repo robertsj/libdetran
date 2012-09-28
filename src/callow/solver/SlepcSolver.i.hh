@@ -13,8 +13,7 @@
 namespace callow
 {
 
-inline void SlepcSolver::
-solve_impl(Vector<PetscScalar> &x, Vector<PetscScalar> &x0)
+inline void SlepcSolver::solve_impl(Vector &x, Vector &x0)
 {
 
   // Temporaries

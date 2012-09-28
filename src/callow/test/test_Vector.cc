@@ -37,7 +37,8 @@ int main(int argc, char *argv[])
 // Test of basic public interface
 int test_Vector(int argc, char *argv[])
 {
-  typedef Vector<double> vec_dbl;
+
+  typedef Vector vec_dbl;
 
   vec_dbl v(10, 1.0);
   for (int i = 0; i < 10; i++)
@@ -62,7 +63,7 @@ int test_Vector(int argc, char *argv[])
 
 int test_Vector_resize(int argc, char *argv[])
 {
-  typedef Vector<double> Vec_T;
+  typedef Vector Vec_T;
   Vec_T v;
   v.resize(5, 1.0);
   v.set(3.0);

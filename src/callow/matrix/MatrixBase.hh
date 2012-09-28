@@ -17,7 +17,6 @@
 namespace callow
 {
 
-template <class T>
 class MatrixBase
 {
 
@@ -27,8 +26,8 @@ public:
   // TYPEDEFS
   //---------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<MatrixBase<T> >    SP_matrix;
-  typedef typename Vector<T>::SP_vector           SP_vector;
+  typedef detran_utilities::SP<MatrixBase >    SP_matrix;
+  typedef typename Vector::SP_vector           SP_vector;
 
   //---------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -52,7 +51,14 @@ public:
     d_sizes_set = true;
   }
 
-  virtual ~MatrixBase(){}
+  virtual ~MatrixBase()
+  {
+#ifdef CALLOW_ENABLE_PETSC
+    // destroy the petsc matrix.  note, since we constructed it
+    // using our own arrays, those still need to be deleted.
+    MatDestroy(&d_petsc_matrix);
+#endif
+  }
 
   //---------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
@@ -75,12 +81,12 @@ public:
 #endif
 
   // multiply with SP vectors
-  void multiplysp(SP_vector x,  SP_vector y)
+  void multiply(SP_vector x,  SP_vector y)
   {
     multiply(*x, *y);
   }
   // multiply transpose with SP vectors
-  void multiply_transposesp(SP_vector x, SP_vector y)
+  void multiply_transpose(SP_vector x, SP_vector y)
   {
     multiply_transpose(*x, *y);
   }
@@ -93,9 +99,9 @@ public:
   virtual void assemble() = 0;
 
   // action y <-- A * x
-  virtual void multiply(const Vector<T> &x,  Vector<T> &y) = 0;
+  virtual void multiply(const Vector &x,  Vector &y) = 0;
   // action y <-- A' * x
-  virtual void multiply_transpose(const Vector<T> &x, Vector<T> &y) = 0;
+  virtual void multiply_transpose(const Vector &x, Vector &y) = 0;
 
   // pretty print to screen
   virtual void display() const = 0;
@@ -104,6 +110,7 @@ public:
   {
     /* ... */
   }
+
 protected:
 
   //---------------------------------------------------------------------------//

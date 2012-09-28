@@ -16,26 +16,9 @@ namespace callow
 {
 
 //---------------------------------------------------------------------------//
-template <class T>
-EigenSolver<T>::EigenSolver(const double    tol,
-                            const int       maxit,
-                            std::string     name)
-  : d_tolerance(tol)
-  , d_maximum_iterations(maxit)
-  , d_name(name)
-  , d_residual_norm(maxit + 1, 0)
-  , d_number_iterations(0)
-  , d_monitor_level(2)
-{
-  Require(d_tolerance >= 0.0);
-  Require(d_maximum_iterations > 0);
-}
-
-//---------------------------------------------------------------------------//
-template <class T>
-inline void EigenSolver<T>::set_operators(SP_matrix    A,
-                                          SP_matrix    B,
-                                          std::string  type)
+inline void EigenSolver::set_operators(SP_matrix    A,
+                                       SP_matrix    B,
+                                       std::string  type)
 {
   Insist(A, "The operator A cannot be null");
   d_A = A;
@@ -48,7 +31,7 @@ inline void EigenSolver<T>::set_operators(SP_matrix    A,
     // Create linear solver.  Defaults can be changed by
     // extracting the solver and resetting.  The same goes
     // for the preconditioner, which is null by default.
-    d_solver = LinearSolverCreator<T>::
+    d_solver = LinearSolverCreator::
                Create(type, d_tolerance, d_tolerance);
     d_solver->set_operators(d_B);
     d_A->print_matlab("A.out");
@@ -57,8 +40,7 @@ inline void EigenSolver<T>::set_operators(SP_matrix    A,
 }
 
 //---------------------------------------------------------------------------//
-template <class T>
-inline int EigenSolver<T>::solve(Vector<T> &x, Vector<T> &x0)
+inline int EigenSolver::solve(Vector &x, Vector &x0)
 {
   Require(x.size() == d_A->number_rows());
   if (x0.size())
@@ -74,8 +56,7 @@ inline int EigenSolver<T>::solve(Vector<T> &x, Vector<T> &x0)
 }
 
 //---------------------------------------------------------------------------//
-template <class T>
-inline bool EigenSolver<T>::monitor(int it, T l, T r)
+inline bool EigenSolver::monitor(int it, double l, double r)
 {
   // record the iteration and residual norm
   d_number_iterations = it;
@@ -96,8 +77,6 @@ inline bool EigenSolver<T>::monitor(int it, T l, T r)
   }
   return false;
 }
-
-
 
 } // end namespace callow
 

@@ -21,6 +21,15 @@
 #define STOP_PROFILER()  ((void) 0)
 #endif // CALLOW_ENABLE_GPERFTOOLS
 
+/*
+ *  \todo In python, we can't use callow directly in a single
+ *        scope when PETSc is enabled.  This is because finalizing
+ *        apparently kills the library before the objects are done.
+ *        The workaround is putting work in a different scope
+ *        sandwiched between init/fin.
+ */
+
+
 /// Initialize external packages, if enabled
 inline void callow_initialize(int argc, char** argv)
 {

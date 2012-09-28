@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   PCILU0.hh
- * \brief  PCILU0 
- * \author Jeremy Roberts
- * \date   Sep 18, 2012
+/**
+ *  @file   PCILU0.hh
+ *  @brief  PCILU0
+ *  @author Jeremy Roberts
+ *  @date   Sep 18, 2012
  */
 //---------------------------------------------------------------------------//
 
@@ -36,8 +36,8 @@ namespace callow
  *    end
  *  \endcode
  */
-template <class T>
-class PCILU0: public Preconditioner<T>
+
+class PCILU0: public Preconditioner
 {
 
 public:
@@ -46,10 +46,10 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef Preconditioner<T>                   Base;
-  typedef typename Base::SP_preconditioner    SP_preconditioner;
-  typedef typename Matrix<T>::SP_matrix       SP_matrix;
-  typedef typename Vector<T>::SP_vector       SP_vector;
+  typedef Preconditioner                   Base;
+  typedef typename Base::SP_preconditioner SP_preconditioner;
+  typedef typename Matrix::SP_matrix       SP_matrix;
+  typedef typename Vector::SP_vector       SP_vector;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -66,7 +66,7 @@ public:
   //-------------------------------------------------------------------------//
 
   /// Solve Px = b
-  void apply(Vector<T> &b, Vector<T> &x);
+  void apply(Vector &b, Vector &x);
 
 protected:
 
@@ -74,7 +74,7 @@ protected:
   SP_matrix d_P;
 
   /// Working vector
-  Vector<T> d_y;
+  Vector d_y;
 
 };
 

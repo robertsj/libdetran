@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   PCJacobi.i.hh
- * \brief  PCJacobi.i 
- * \author Jeremy Roberts
- * \date   Sep 18, 2012
+/**
+ *  @file   PCJacobi.i.hh
+ *  @brief  PCJacobi inline member definitions
+ *  @author Jeremy Roberts
+ *  @date   Sep 18, 2012
  */
 //---------------------------------------------------------------------------//
 
@@ -13,32 +13,7 @@
 namespace callow
 {
 
-template <class T>
-PCJacobi<T>::PCJacobi(SP_matrix A)
-{
-  // preconditions
-  Require(A);
-  Require(A->number_rows() == A->number_columns());
-
-  // create the diagonal vector
-  int n = A->number_rows();
-  d_P = new Vector<T>(n, 0.0);
-
-  // load values from A and avoid divide by zero
-  for (int i = 0; i < n; ++i)
-  {
-    int d = A->diagonal(i);
-    T aii = (*A)[d];
-    if (aii == 0.0)
-      (*d_P)[i] = 1.0; // or n?
-    else
-      (*d_P)[i] = 1.0 / aii;  // / aii;
-  }
-  d_P->print_matlab("pcjacobi.out");
-}
-
-template <class T>
-void PCJacobi<T>::apply(Vector<T> &b, Vector<T> &x)
+inline void PCJacobi::apply(Vector &b, Vector &x)
 {
   // preconditions
   Require(x.size() == d_P->size());

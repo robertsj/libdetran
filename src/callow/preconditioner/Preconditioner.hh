@@ -53,7 +53,7 @@ namespace callow
  *  as shells.  Otherwise, the user can set PETSc preconditioners
  *  with PetscSolver parameters.
  */
-template <class T>
+
 class Preconditioner
 {
 
@@ -63,7 +63,7 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<Preconditioner<T> >    SP_preconditioner;
+  typedef detran_utilities::SP<Preconditioner >    SP_preconditioner;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -89,7 +89,7 @@ public:
   //-------------------------------------------------------------------------//
 
   /// solve Px = b
-  virtual void apply(Vector<T> &b, Vector<T> &x) = 0;
+  virtual void apply(Vector &b, Vector &x) = 0;
 
 protected:
 

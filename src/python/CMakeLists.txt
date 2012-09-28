@@ -7,18 +7,18 @@ SWIG_ADD_MODULE(pydetran python detran.i )
 SWIG_LINK_LIBRARIES(pydetran
                     ${PYTHON_LIBRARIES} 
                     utilities 
-                    callow)
-#                    material
-#                    angle
-#                    geometry
-#                    external_source
-#                    discretization
-#                    boundary
-#                    transport
-#                    diffusion
-#                    solvers
-#                    ioutils
-#                    postprocess)
+                    callow
+                    material
+                    angle
+                    geometry
+                    external_source
+                    discretization
+                    boundary
+                    transport
+                    diffusion
+                    solvers
+                    ioutils
+                    postprocess)
 
 # Install the module and library
 INSTALL(FILES ${CMAKE_BINARY_DIR}/python/pydetran.py

@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   PetscSolver.hh
- * \author robertsj
- * \date   Sep 20, 2012
- * \brief  PetscSolver class definition.
+/**
+ *  @file   PetscSolver.hh
+ *  @author robertsj
+ *  @date   Sep 20, 2012
+ *  @brief  PetscSolver class definition.
  */
 //---------------------------------------------------------------------------//
 
@@ -18,12 +18,10 @@ namespace callow
 {
 
 /**
- *  \class PetscSolver
- *  \brief Uses PETSc to solve a system
- *
- *
+ *  @class PetscSolver
+ *  @brief Uses PETSc to solve a system
  */
-class PetscSolver: public LinearSolver<PetscScalar>
+class PetscSolver: public LinearSolver
 {
 
 public:
@@ -32,11 +30,11 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef LinearSolver<PetscScalar>                       Base;
-  typedef Base::SP_solver                                 SP_solver;
-  typedef MatrixBase<PetscScalar>::SP_matrix              SP_matrix;
-  typedef Preconditioner<PetscScalar>::SP_preconditioner  SP_preconditioner;
-  typedef Vector<PetscScalar>::SP_vector                  SP_vector;
+  typedef LinearSolver                          Base;
+  typedef Base::SP_solver                       SP_solver;
+  typedef MatrixBase ::SP_matrix                SP_matrix;
+  typedef Preconditioner::SP_preconditioner     SP_preconditioner;
+  typedef Vector::SP_vector                     SP_vector;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -101,15 +99,13 @@ private:
   //-------------------------------------------------------------------------//
 
   // expose base class members
-  using LinearSolver<PetscScalar>::d_absolute_tolerance;
-  using LinearSolver<PetscScalar>::d_relative_tolerance;
-  using LinearSolver<PetscScalar>::d_maximum_iterations;
-  using LinearSolver<PetscScalar>::d_L1_residual;
-  using LinearSolver<PetscScalar>::d_L2_residual;
-  using LinearSolver<PetscScalar>::d_LI_residual;
-  using LinearSolver<PetscScalar>::d_number_iterations;
-  using LinearSolver<PetscScalar>::d_A;
-  using LinearSolver<PetscScalar>::d_P;
+  using LinearSolver::d_absolute_tolerance;
+  using LinearSolver::d_relative_tolerance;
+  using LinearSolver::d_maximum_iterations;
+  using LinearSolver::d_residual;
+  using LinearSolver::d_number_iterations;
+  using LinearSolver::d_A;
+  using LinearSolver::d_P;
 
   // petsc solver type
   KSP d_petsc_solver;
@@ -122,7 +118,7 @@ private:
    *  \param b  right hand side
    *  \param x  unknown vector
    */
-  void solve_impl(const Vector<PetscScalar> &b, Vector<PetscScalar> &x);
+  void solve_impl(const Vector &b, Vector &x);
 
   /// let the monitor wrapper call our monitor
   friend PetscErrorCode
@@ -130,7 +126,8 @@ private:
 };
 
 /// Monitor the solution
-PetscErrorCode petsc_ksp_monitor(KSP ksp, PetscInt it, PetscReal rnorm, void* ctx);
+PetscErrorCode petsc_ksp_monitor(KSP ksp, PetscInt it,
+                                 PetscReal rnorm, void* ctx);
 
 } // end namespace callow
 

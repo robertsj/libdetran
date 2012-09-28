@@ -14,24 +14,24 @@ namespace callow
 {
 
 //---------------------------------------------------------------------------//
-template <class T>
-MatrixShell<T>::MatrixShell(void* context)
+
+MatrixShell::MatrixShell(void* context)
   : d_context(context)
 {
   /* ... */
 }
 
 //---------------------------------------------------------------------------//
-template <class T>
-MatrixShell<T>::MatrixShell(void* context, const int m, const int n)
+
+MatrixShell::MatrixShell(void* context, const int m, const int n)
   : d_context(context)
 {
   set_size(m, n);
 }
 
 //---------------------------------------------------------------------------//
-template <class T>
-MatrixShell<T>::~MatrixShell()
+
+MatrixShell::~MatrixShell()
 {
   if (d_is_ready)
   {
@@ -44,8 +44,8 @@ MatrixShell<T>::~MatrixShell()
 }
 
 //---------------------------------------------------------------------------//
-template <class T>
-void MatrixShell<T>::set_operation()
+
+void MatrixShell::set_operation()
 {
 #ifdef CALLOW_ENABLE_PETSC
   MatShellSetOperation(d_petsc_matrix, MATOP_MULT,
@@ -63,10 +63,10 @@ inline PetscErrorCode shell_multiply_wrapper(Mat A, Vec x, Vec y)
   void *context;
   ierr = MatShellGetContext(A, &context);
   Assert(!ierr);
-  MatrixShell<PetscScalar>* foo = (MatrixShell<PetscScalar>*) context;
+  MatrixShell* foo = (MatrixShell*) context;
   // wrap the petsc vectors
-  Vector<PetscScalar> X(x);
-  Vector<PetscScalar> Y(y);
+  Vector X(x);
+  Vector Y(y);
   // call the actual apply operator.
   foo->multiply(X, Y);
   return ierr;

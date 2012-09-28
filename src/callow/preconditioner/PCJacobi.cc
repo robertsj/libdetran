@@ -12,14 +12,27 @@
 namespace callow
 {
 
-// Instantiations
-//#ifdef CALLOW_ENABLE_PETSC
-//template class PCJacobi<PetscScalar>;
-//#else
-//template class PCJacobi<float>;
-//template class PCJacobi<double>;
-//#endif
+PCJacobi::PCJacobi(SP_matrix A)
+{
+  // preconditions
+  Require(A);
+  Require(A->number_rows() == A->number_columns());
 
+  // create the diagonal vector
+  int n = A->number_rows();
+  d_P = new Vector(n, 0.0);
+
+  // load values from A and avoid divide by zero
+  for (int i = 0; i < n; ++i)
+  {
+    int d = A->diagonal(i);
+    double aii = (*A)[d];
+    if (aii == 0.0)
+      (*d_P)[i] = 1.0; // or n?
+    else
+      (*d_P)[i] = 1.0 / aii;  // / aii;
+  }
+}
 
 } // end namespace detran
 

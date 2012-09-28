@@ -15,12 +15,11 @@ namespace callow
 {
 
 // test 1D finite difference stencil
-template<class T>
-typename Matrix<T>::SP_matrix test_matrix_1(int n = 5)
+typename Matrix::SP_matrix test_matrix_1(int n = 5)
 {
 
-  typename Matrix<T>::SP_matrix A;
-  A = new Matrix<T>(n, n);
+  typename Matrix::SP_matrix A;
+  A = new Matrix(n, n);
   A->preallocate(3);
 
   double l = -0.20;
@@ -61,8 +60,7 @@ typename Matrix<T>::SP_matrix test_matrix_1(int n = 5)
  *  SigmaR    0.1  0.1
  *  Sigma21   0.1  n/a
  */
-template <class T>
-typename Matrix<T>::SP_matrix test_matrix_2(int n = 10)
+typename Matrix::SP_matrix test_matrix_2(int n = 10)
 {
   using std::cout;
   using std::endl;
@@ -71,20 +69,20 @@ typename Matrix<T>::SP_matrix test_matrix_2(int n = 10)
   // total cells = 2 * n * n
   // mesh size   = n * n
   // num group   = 2
-  typename Matrix<T>::SP_matrix A;
+  typename Matrix::SP_matrix A;
   int size = 2 * n * n;
-  A = new Matrix<T>(size, size);
+  A = new Matrix(size, size);
   A->preallocate(2*2+2);
 
   // cell width
-  T h = 100.0 / n;
+  double h = 100.0 / n;
   // diffusion coefficient
-  T D[] = {1.0 / ( 3*0.1890), 1.0 / ( 3*1.4633)};
+  double D[] = {1.0 / ( 3*0.1890), 1.0 / ( 3*1.4633)};
   // removal cross section
-  T sigma_r[] = {0.1890 - 0.1507,  1.4633-1.4536};
-  T sigma_s21 = 0.0380;
+  double sigma_r[] = {0.1890 - 0.1507,  1.4633-1.4536};
+  double sigma_s21 = 0.0380;
   // boundary condition
-  T albedo[] = {1, 0, 1, 0};
+  double albedo[] = {1, 0, 1, 0};
 
   cout << " constructing..." << endl;
   for (int g = 0; g < 2; g++)
@@ -101,7 +99,7 @@ typename Matrix<T>::SP_matrix test_matrix_2(int n = 10)
       j = int(tmp);
       //cout << " row = " << row << " i = " << i << " j = " << j << endl;
       // Direction-specific leakage coefficients.
-      T jo[4] = {0.0, 0.0, 0.0, 0.0};
+      double jo[4] = {0.0, 0.0, 0.0, 0.0};
       // Index arrays to help determine if a cell surface is on the boundary.
       int bound[4] = {i, i, j, j};
       int nxyz[2][2] = {0, n-1, 0, n-1};
@@ -121,7 +119,7 @@ typename Matrix<T>::SP_matrix test_matrix_2(int n = 10)
         int shift_idx      = -2 * ((leak + 1) % 2) + 1;
         neig_idx[xyz_idx] += shift_idx;
         // Compute coupling coefficient
-        T dtilde = 0.0;
+        double dtilde = 0.0;
         if (bound[leak] == nxyz[xyz_idx][dir_idx])
         {
           dtilde = ( 2.0 * D[g] * (1.0 - albedo[leak]) ) /
@@ -137,24 +135,24 @@ typename Matrix<T>::SP_matrix test_matrix_2(int n = 10)
           // Compute dtilde.
           dtilde = ( 2.0 * D[g] * D[g] ) / ( h * D[g] + h * D[g] );
           // Compute and set the off-diagonal matrix value.
-          T val = - dtilde / h;
+          double val = - dtilde / h;
           int neig_row = neig_cell + g * n * n;
           A->insert(row, neig_row, val);
         }
         // Compute leakage coefficient for this cell and surface.
-        jo[leak] = (T)shift_idx * dtilde;
+        jo[leak] = (double)shift_idx * dtilde;
       } // leak loop
       // Net leakage coefficient.
-      T jnet = (jo[1] - jo[0]) / h + (jo[3] - jo[2]) / h ;
+      double jnet = (jo[1] - jo[0]) / h + (jo[3] - jo[2]) / h ;
 
      // Compute and set the diagonal matrix value.
-     T val = jnet + sigma_r[g];
+     double val = jnet + sigma_r[g];
      A->insert(row, row, val);
      // Add downscatter component.
      if (g == 1)
      {
        int col = cell;
-       T val = -sigma_s21;
+       double val = -sigma_s21;
        A->insert(row, col, val);
      }
 

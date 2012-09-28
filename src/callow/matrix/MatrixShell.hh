@@ -29,8 +29,7 @@ namespace callow
  *  client may simply throw an exception to forbid its use).
  *
  */
-template <class T>
-class MatrixShell: public MatrixBase<T>
+class MatrixShell: public MatrixBase
 {
 
 public:
@@ -39,7 +38,7 @@ public:
   // TYPEDEFS
   //---------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<MatrixShell<T> >    SP_matrix;
+  typedef detran_utilities::SP<MatrixShell>    SP_matrix;
 
   //---------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -87,9 +86,9 @@ public:
               << std::endl;
   }
   // the client must implement the action y <-- A * x
-  virtual void multiply(const Vector<T> &x,  Vector<T> &y) = 0;
+  virtual void multiply(const Vector &x,  Vector &y) = 0;
   // the client must implement the action y <-- A' * x
-  virtual void multiply_transpose(const Vector<T> &x, Vector<T> &y) = 0;
+  virtual void multiply_transpose(const Vector &x, Vector &y) = 0;
 
 protected:
 
@@ -98,13 +97,13 @@ protected:
   //---------------------------------------------------------------------------//
 
   /// expose base members
-  using MatrixBase<T>::d_m;
-  using MatrixBase<T>::d_n;
-  using MatrixBase<T>::d_sizes_set;
-  using MatrixBase<T>::d_is_ready;
+  using MatrixBase::d_m;
+  using MatrixBase::d_n;
+  using MatrixBase::d_sizes_set;
+  using MatrixBase::d_is_ready;
 
 #ifdef DETRAN_ENABLE_PETSC
-  using MatrixBase<T>::d_petsc_matrix;
+  using MatrixBase::d_petsc_matrix;
 #endif
 
 private:

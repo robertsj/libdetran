@@ -17,46 +17,27 @@ namespace callow
 {
 
 //---------------------------------------------------------------------------//
-// CONSTRUCTOR & DESTRUCTOR
-//---------------------------------------------------------------------------//
-
-template <class T>
-Richardson<T>::Richardson(const double  atol,
-                          const double  rtol,
-                          const int     maxit,
-                          const double  omega)
-  : LinearSolver<T>(atol, rtol, maxit, "solver_richardson")
-  , d_omega(omega)
-{
-
-}
-
-//---------------------------------------------------------------------------//
 // SOLVE
 //---------------------------------------------------------------------------//
 
-
-template <class T>
-inline void Richardson<T>::solve_impl(const Vector<T> &b, Vector<T> &x)
+inline void Richardson::solve_impl(const Vector &b, Vector &x)
 {
 
-  typedef Vector<T> Vec;
-
   // scale rhs by relaxation factor
-  Vec B(b.size(), 0.0);
+  Vector B(b.size(), 0.0);
   B.add(b);
   B.scale(d_omega);
 
   // temporary storage and pointers for swapping
-  Vec temp(x.size(), 0.0);
-  Vec* x0 = &x;
-  Vec* x1 = &temp;
-  Vec* swap;
+  Vector temp(x.size(), 0.0);
+  Vector* x0 = &x;
+  Vector* x1 = &temp;
+  Vector* swap;
 
   // compute initial residual w(Ax - b) and its norm
   d_A->multiply((*x0), (*x1));
   x1->scale(d_omega);
-  T r = x1->norm_residual(B, L2);
+  double r = x1->norm_residual(B, L2);
   if (monitor_init(r)) return;
 
   // perform iterations
