@@ -107,6 +107,14 @@ DiffusionFixedSourceSolver<D>::DiffusionFixedSourceSolver(SP_input input,
                                0.0,            // rtol (not using for now)
                                d_maximum_iterations);
 
+  // solver monitor level
+  int level = 0;
+  if (d_input->check("diffusion_monitor_level"))
+  {
+    level =
+      d_input->template get<int>("diffusion_monitor_level");
+  }
+  d_solver->set_monitor_level(level);
   // Set the operator.  We use no preconditioner by default.
   // \todo add preconditioner option
   //callow::PCILU0<double>::SP_preconditioner P;
@@ -263,7 +271,7 @@ void DiffusionFixedSourceSolver<D>::build_boundary_source()
   Boundary_T &J = *d_boundary;
 
   // For a given dimension, provide remaining dimensions
-  int remdims[3][2] = {{2,1}, {2,0}, {1,0}};
+  int remdims[3][2] = {{1,2}, {0,2}, {0,1}};
 
   // Cell indices
   int ijk[3] = {0, 0, 0};
@@ -341,7 +349,7 @@ void DiffusionFixedSourceSolver<D>::fill_boundary()
   Boundary_T &J = *d_boundary;
 
   // For a given dimension, provide remaining dimensions
-  int remdims[3][2] = {{2,1}, {2,0}, {1,0}};
+  int remdims[3][2] = {{1,2}, {0,2}, {0,1}};
 
   // Cell indices
   int ijk[3] = {0, 0, 0};

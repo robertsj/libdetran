@@ -56,7 +56,7 @@ TARGET_LINK_LIBRARIES(${LIB_NAME}
                       postprocess
 )
 
-INSTALL_FILES(/include/${LIB_NAME} .hh)
+INSTALL_FILES(/include/drivers/${LIB_NAME} .hh)
 INSTALL_TARGETS(/lib ${LIB_NAME})
 
 #-----------------------------------------------------------------------------#

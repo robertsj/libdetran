@@ -33,7 +33,7 @@ TARGET_LINK_LIBRARIES( diffusion
                        ${GPERFTOOLS_LIBRARIES}                       
 )
 
-INSTALL_FILES(/include .hh)
+INSTALL_FILES(/include/detran/diffusion .hh)
 INSTALL_TARGETS(/lib diffusion)
 
 #-------------------------------------#

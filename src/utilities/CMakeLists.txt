@@ -1,45 +1,43 @@
 #------------------------------------------------------------------------------#
-# libdetran/src/utilities/CMakeLists.txt
+# src/utilities/CMakeLists.txt
 #------------------------------------------------------------------------------#
 
-SET(UTILITIES_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+SET(LIB_NAME "utilities")
 
-#-------------------------------------#
+SET(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+
+#-----------------------------------------------------------------------------#
 # SOURCE
-#-------------------------------------#
+#-----------------------------------------------------------------------------#
 
-SET( UTILITIES_SRC 
-  InputDB.cc
-  GenException.cc
+SET(SRC
+    InputDB.cc
+    GenException.cc
 )
 
-#-------------------------------------#
+#-----------------------------------------------------------------------------#
 # SHARED LIBRARY
-#-------------------------------------#
+#-----------------------------------------------------------------------------#
 
-ADD_LIBRARY( utilities 
-             SHARED
-             ${UTILITIES_SRC} 
+ADD_LIBRARY(${LIB_NAME}
+            SHARED
+            ${SRC} 
+)
+TARGET_LINK_LIBRARIES(${LIB_NAME}
+                      ${GPERFTOOLS_LIBRARIES}
+                      ${Boost_LIBRARIES} 
 )
 
-TARGET_LINK_LIBRARIES( utilities
-                       ${GPERFTOOLS_LIBRARIES}
-                       ${Boost_LIBRARIES} 
-) 
+INSTALL_FILES(/include/${LIB_NAME} .hh)
+INSTALL_TARGETS(/lib ${LIB_NAME})
 
-#-------------------------------------#
-# INSTALL
-#-------------------------------------#
-
-INSTALL_FILES(/include .hh)
-INSTALL_TARGETS(/lib utilities)
-
-#-------------------------------------#
+#-----------------------------------------------------------------------------#
 # TESTING
-#-------------------------------------#
+#-----------------------------------------------------------------------------#
 
 if( DETRAN_ENABLE_TEST )
-    include_directories(${UTILITIES_DIR}/test)
-    add_subdirectory(${UTILITIES_DIR}/test)
+    include_directories(${SRC_DIR}/test)
+    add_subdirectory(${SRC_DIR}/test)
 endif()
+
 
