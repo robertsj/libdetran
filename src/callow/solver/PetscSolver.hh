@@ -76,7 +76,8 @@ public:
     }
     // else do something else
     {
-      ierr = PCSetType(pc, PCNONE);
+      ierr = PCSetType(pc, PCILU);
+      ierr = PCFactorSetLevels(pc, 2);
     }
 
     // Set the operator.

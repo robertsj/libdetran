@@ -56,7 +56,6 @@ DiffusionFixedSourceSolver<D>::DiffusionFixedSourceSolver(SP_input input,
   {
     d_fixed_type = d_input->template get<int>("diffusion_fixed_type");
     Ensure(d_fixed_type < END_FIXED_TYPES);
-    std::cout << " Using fixed type " << d_fixed_type << std::endl;
   }
   // Select solve adjoint
   if (d_input->check("diffusion_adjoint"))
@@ -91,8 +90,8 @@ DiffusionFixedSourceSolver<D>::DiffusionFixedSourceSolver(SP_input input,
   }
   else
   {
-    //d_M =  new DiffusionLossOperator(d_input, d_material, d_mesh,
-    //                                 false, d_adjoint);
+    d_M =  new DiffusionLossOperator(d_input, d_material, d_mesh,
+                                     false, d_adjoint);
   }
   if (d_fixed_type == ITERATE)
   {
@@ -118,7 +117,7 @@ DiffusionFixedSourceSolver<D>::DiffusionFixedSourceSolver(SP_input input,
   // Set the operator.  We use no preconditioner by default.
   // \todo add preconditioner option
   //callow::PCILU0<double>::SP_preconditioner P;
-  d_P = new callow::PCILU0(d_M);
+  //d_P = new callow::PCILU0(d_M);
   d_solver->set_operators(d_M, d_P);
 }
 

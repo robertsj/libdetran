@@ -10,7 +10,7 @@
 #ifndef TRACK_HH_
 #define TRACK_HH_
 
-#include "Point.hh"
+#include "utilities/Point.hh"
 #include "Segment.hh"
 #include "utilities/DBC.hh"
 #include "utilities/SP.hh"

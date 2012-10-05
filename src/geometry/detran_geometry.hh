@@ -16,6 +16,11 @@
 #include "PinCell.hh"
 #include "Assembly.hh"
 #include "Core.hh"
+#include "Segment.hh"
+#include "Track.hh"
+#include "TrackDB.hh"
+#include "Tracker.hh"
+#include "MeshMOC.hh"
 
 #endif // DETRAN_GEOMETRY_HH_ 
 
