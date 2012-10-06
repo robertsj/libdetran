@@ -174,7 +174,7 @@
 // Geometry
 %include "detran_geometry.i"
 // Material
-%include "detran_materials.i"
+%include "detran_material.i"
 // External source
 %include "detran_external_source.i"
 

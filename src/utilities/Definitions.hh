@@ -47,10 +47,15 @@ typedef std::vector<double> vec_dbl;
 typedef std::vector<std::vector<double> > vec2_dbl;
 typedef std::vector<std::vector<std::vector<double> > > vec3_dbl;
 
-typedef vec1_T<size_t>::value_type      vec_size_t;
-typedef vec2_T<size_t>::value_type     vec2_size_t;
-typedef vec3_T<size_t>::value_type     vec3_size_t;
-typedef vec4_T<size_t>::value_type     vec4_size_t;
+
+typedef std::vector<size_t> vec_size_t;
+typedef std::vector<std::vector<size_t> > vec2_size_t;
+typedef std::vector<std::vector<std::vector<size_t> > > vec3_size_t;
+typedef std::vector<std::vector<std::vector<std::vector<size_t> > > > vec4_size_t;
+//typedef vec1_T<size_t>::value_type      vec_size_t;
+//typedef vec2_T<size_t>::value_type     vec2_size_t;
+//typedef vec3_T<size_t>::value_type     vec3_size_t;
+//typedef vec4_T<size_t>::value_type     vec4_size_t;
 
 
 

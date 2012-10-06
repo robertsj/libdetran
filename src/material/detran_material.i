@@ -6,7 +6,7 @@
  */
 //---------------------------------------------------------------------------//
    
-%include "detran_utilities.i"
+%include "utilities/detran_utilities.i"
 
 %include "Material.hh"
 

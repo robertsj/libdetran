@@ -53,6 +53,9 @@ namespace std
   %template(vec_dbl)  vector<double>;
   %template(vec2_dbl) vector<vector<double> >;
   %template(vec3_dbl) vector<vector<vector<double> > >;
+  %template(vec_size_t)  vector<unsigned int>;
+  %template(vec2_size_t) vector<vector<unsigned int> >;
+  %template(vec3_size_t) vector<vector<vector<unsigned int> > >;
 }
 
 // Input
