@@ -235,7 +235,7 @@ void Material::compute_sigma_a()
     {
       double sa = d_sigma_t[g][m];
       for (size_t gp = 0; gp < d_number_groups; gp++)
-        sa -= d_sigma_s[g][gp][m];
+        sa -= d_sigma_s[gp][g][m];
       d_sigma_a[g][m] = sa;
     }
   }
@@ -362,6 +362,12 @@ void Material::display()
     for (size_t g = 0; g < d_number_groups; g++)
     {
       printf("%13.10f ", sigma_t(m, g));
+    }
+    printf("\n  absorption  ");
+    // Total
+    for (size_t g = 0; g < d_number_groups; g++)
+    {
+      printf("%13.10f ", sigma_a(m, g));
     }
     printf("\n  nufis  ");
     // nu*Fission
