@@ -109,6 +109,11 @@ public:
 %template(DiffusionEigen3D)     detran::DiffusionEigensolver<detran::_3D>;
 %template(DiffusionEigen3DSP)   detran_utilities::SP<detran::DiffusionEigensolver<detran::_3D> >;
 
+%include "FixedSourceManager.hh"
+%template(FixedSourceManager1D) detran::FixedSourceManager<detran::_1D>;
+%template(FixedSourceManager2D) detran::FixedSourceManager<detran::_2D>;
+%template(FixedSourceManager3D) detran::FixedSourceManager<detran::_3D>;
+
 
 //---------------------------------------------------------------------------//
 //              end of detran_transport.i

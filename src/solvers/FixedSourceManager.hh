@@ -10,13 +10,16 @@
 #ifndef detran_FIXEDSOURCEMANAGER_HH_
 #define detran_FIXEDSOURCEMANAGER_HH_
 
-#include "material/Material.hh"
-#include "geometry/Mesh.hh"
-#include "utilities/InputDB.hh"
-#include "callow/solver/LinearSolver.hh"
-#include "transport/State.hh"
-#include "utilities/Definitions.hh"
+#include "angle/Quadrature.hh"
 #include "boundary/BoundaryBase.hh"
+#include "callow/solver/LinearSolver.hh"
+#include "external_source/ExternalSource.hh"
+#include "geometry/Mesh.hh"
+#include "material/Material.hh"
+#include "utilities/Definitions.hh"
+#include "utilities/InputDB.hh"
+#include "transport/FissionSource.hh"
+#include "transport/State.hh"
 #include <vector>
 
 namespace detran
@@ -29,6 +32,19 @@ namespace detran
 template <class D>
 class FixedSourceManager
 {
+  //-------------------------------------------------------------------------//
+  // ENUMERATION
+  //-------------------------------------------------------------------------//
+
+  enum EQTYPES
+  {
+    SN, MOC, DIFF
+  };
+
+  enum FIXEDTYPE
+  {
+    FIXED, FIXEDMULTIPLY
+  };
 
   //-------------------------------------------------------------------------//
   // TYPEDEFS
@@ -38,16 +54,20 @@ class FixedSourceManager
   typedef State::SP_state                             SP_state;
   typedef detran_geometry::Mesh::SP_mesh              SP_mesh;
   typedef detran_material::Material::SP_material      SP_material;
+  typedef detran_angle::Quadrature::SP_quadrature     SP_quadrature;
   //
   typedef BoundaryBase<D>                             Boundary_T;
   typedef typename Boundary_T::SP_boundary            SP_boundary;
   //
   typedef detran_external_source::
           ExternalSource::SP_externalsource           SP_source;
+  typedef FissionSource::SP_fissionsource             SP_fissionsource;
   //
   typedef State::moments_type                         moments_type;
   //
   typedef callow::LinearSolver::SP_solver             SP_solver;
+  //
+
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -58,21 +78,36 @@ class FixedSourceManager
    *  @param input      parameter database
    *  @param material   material database
    *  @param mesh       mesh definition
-   *  @param state      state vector
    */
   FixedSourceManager(SP_input    input,
                      SP_material material,
-                     SP_mesh     mesh,
-                     SP_state    state);
+                     SP_mesh     mesh);
 
   //-------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
   //-------------------------------------------------------------------------//
 
+  /**
+   *  @brief Sets up a problem to be solved
+   *
+   *  This sets up the discretization, quadrature, boundary, and
+   *  state.  By changing the appropriate database parameters,
+   *  a call to setup will rebuild the problem using a different
+   *  discretization, etc.
+   *
+   */
+  void setup();
+
   /// Add a new external source
   void set_source(SP_source q);
 
-  /// Solve the system
+  /**
+   *  @brief Solve the system
+   *
+   *  By changing the appropriate database parameters, a problem already
+   *  set up can be solved by a different method by calling this
+   *  method.
+   */
   void solve();
 
   /// @name Getters
@@ -98,18 +133,22 @@ private:
   SP_mesh d_mesh;
   /// State vector
   SP_state d_state;
+  /// Quadrature
+  SP_quadrature d_quadrature;
   /// Boundary container
   SP_boundary d_boundary;
+  /// Fission source
+  SP_fissionsource d_fissionsource;
   /// External volume sources
   std::vector<SP_source> d_sources;
-  /// External boundary sources
-  //std::vector<SP_source> d_sources;
-
   /// Linear solver
   SP_solver d_solver;
-
   /// Adjoint mode flag
   bool d_adjoint;
+  /// Discretization general type (SN, MOC, or diffusion)
+  int d_discretization;
+  /// Fixed type
+  int d_fixed_type;
 
   //-------------------------------------------------------------------------//
   // IMPLEMENTATION

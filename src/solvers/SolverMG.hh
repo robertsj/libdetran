@@ -45,7 +45,7 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<SolverMG<D> >  SP_solver;
+  typedef detran_utilities::SP<SolverMG<D> >          SP_solver;
   typedef detran_utilities::InputDB::SP_input         SP_input;
   typedef State::SP_state                             SP_state;
   typedef detran_geometry::Mesh::SP_mesh              SP_mesh;
@@ -74,13 +74,13 @@ public:
    *  \param fission_source    Fission source.
    */
   SolverMG(SP_input           input,
-                   SP_state           state,
-                   SP_mesh            mesh,
-                   SP_material        material,
-                   SP_quadrature      quadrature,
-                   SP_boundary        boundary,
-                   SP_externalsource  q_e,
-                   SP_fissionsource   q_f);
+           SP_state           state,
+           SP_mesh            mesh,
+           SP_material        material,
+           SP_quadrature      quadrature,
+           SP_boundary        boundary,
+           SP_externalsource  q_e,
+           SP_fissionsource   q_f);
 
   /// Virtual destructor
   virtual ~SolverMG(){};

@@ -25,6 +25,7 @@ SET(SRC
     PowerIteration.cc
     PreconditionerWG.cc
     PreconditionerMG.cc
+    FixedSourceManager.cc
 )
 
 #-----------------------------------------------------------------------------#

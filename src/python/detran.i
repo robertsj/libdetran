@@ -136,6 +136,7 @@
 #include "DiffusionEigensolver.hh"
 #include "DiffusionLossOperator.hh"
 #include "DiffusionGainOperator.hh"
+#include "FixedSourceManager.hh"
 
 //---------------------------------------------------------------------------//
 // LEVEL 4 
