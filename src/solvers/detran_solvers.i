@@ -1,8 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   detran_solvers.i
- * \author Jeremy Roberts
- * \brief  Python interface for detran solvers.
+/**
+ *  @file   detran_solvers.i
+ *  @author Jeremy Roberts
+ *  @brief  Python interface for detran solvers.
  */
 //---------------------------------------------------------------------------//
 

@@ -69,6 +69,17 @@ inline double ProductQuadrature::cos_phi(const size_t a) const
   return d_cos_phi[a];
 }
 
+inline ProductQuadrature::size_t
+ProductQuadrature::number_azimuths_octant() const
+{
+  return d_number_azimuths_octant;
+}
+
+inline ProductQuadrature::size_t
+ProductQuadrature::number_polar_octant() const
+{
+  return d_number_polar_octant;
+}
 
 } // end namespace detran_angle
 

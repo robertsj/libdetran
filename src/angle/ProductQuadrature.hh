@@ -94,6 +94,8 @@ public:
   double phi(const size_t a) const;
   double sin_phi(const size_t a) const;
   double cos_phi(const size_t a) const;
+  size_t number_azimuths_octant() const;
+  size_t number_polar_octant() const;
 
 protected:
 
