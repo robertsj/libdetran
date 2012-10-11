@@ -7,8 +7,8 @@
  */
 //---------------------------------------------------------------------------//
 
-#ifndef QUADRATUREFACTORY_HH_
-#define QUADRATUREFACTORY_HH_
+#ifndef detran_angle_QUADRATUREFACTORY_HH_
+#define detran_angle_QUADRATUREFACTORY_HH_
 
 #include "Quadrature.hh"
 #include "utilities/InputDB.hh"
@@ -38,16 +38,19 @@ public:
   //-------------------------------------------------------------------------//
 
   /**
-   *  \brief Build a quadrature set.
+   *  @brief Build a quadrature set.
    *
-   *  \param q          Smart pointer to quadrature being constructed
-   *  \param input      Smart point to input.
-   *  \param dimension  Quadrature dimension
+   *  @param q          Smart pointer to quadrature being constructed
+   *  @param input      Smart point to input.
+   *  @param dimension  Quadrature dimension
    */
   void build(SP_quadrature &q, SP_input input, int dimension);
+
+  /// Print out the available quadratures, etc.
+  void help() const;
 
 };
 
 } // end namespace detran_angle
 
-#endif /* QUADRATUREFACTORY_HH_ */
+#endif /* detran_angle_QUADRATUREFACTORY_HH_ */

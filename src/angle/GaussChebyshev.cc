@@ -27,8 +27,7 @@ GaussChebyshev::GaussChebyshev(const size_t number_polar_octant,
   // fill parameters
   for (int i = 0; i < d_number_angles_octant; i++)
   {
-    // Shift the mu to [0, 1] from [-1, 1]
-    d_mu[i]     = 0.5*tmp_mu[i] + 0.5;
+    d_mu[i]     = tmp_mu[i];
     d_weight[i] = tmp_wt[i];
   }
 

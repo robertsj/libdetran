@@ -175,6 +175,22 @@ build(SP_quadrature &q, SP_input input, int dimension)
 
 }
 
+void QuadratureFactory::help() const
+{
+
+  std::cout << "Available quadratures are: " << std::endl;
+  std::cout << "  gausslegendre (1D)" << std::endl;
+  std::cout << "  gausschebyshev (1D)" << std::endl;
+  std::cout << "  dpn (1D)" << std::endl;
+  std::cout << "  dtn (1D)" << std::endl;
+  std::cout << "  levelsymmetric" << std::endl;
+  std::cout << "  quadruplerange" << std::endl;
+  std::cout << "  uniformequal" << std::endl;
+  std::cout << "  chebyshevlegendre" << std::endl;
+  std::cout << "  chebyshevdpn" << std::endl;
+
+}
+
 } // end namespace detran_angle
 
 //---------------------------------------------------------------------------//

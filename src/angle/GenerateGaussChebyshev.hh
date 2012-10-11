@@ -72,7 +72,7 @@ inline void generate_gc_parameters(detran_utilities::size_t  m,
   double w_tot = 0.0;
   for (int i = 0; i < m; ++i)
   {
-    w[i] = W * 1.0 / std::sqrt(1.0 - x[i]*x[i]);
+    w[i] = W * std::sqrt(1.0 - x[i]*x[i]);
     w_tot += w[i];
   }
 

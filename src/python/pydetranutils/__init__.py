@@ -17,5 +17,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-from mesh_plot import *
-
+try :
+  from mesh_plot import *
+  from quad_plot import *
+except :
+  print("Error importing Detran plotting utilities")
