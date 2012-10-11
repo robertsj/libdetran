@@ -34,6 +34,9 @@ namespace detran_angle
  *  The resulting abscissa are those of the GC quadrature but scaled
  *  and shifted.
  *
+ *  Relevant database parameters:
+ *    - quad_number_polar_octant -- number of abscissa per half space
+ *    - gausschebyshev_normalize -- normalize half space weight to 1 [false]
  */
 class DTN: public Quadrature
 {
@@ -46,16 +49,15 @@ public:
 
   /**
    *  @brief Constructor
-   *  @param order       Quadrature order (total number of polar angles)
+   *  @param number_polar_octant    number of angles per half space
+   *  @param normalize              normalize half space weights to 1
    */
-  DTN(size_t order);
+  DTN(const size_t number_polar_octant,
+      const bool   normalize = false);
 
   /// SP constructor
-  static SP_quadrature Create(size_t order)
-  {
-    SP_quadrature p(new DTN(order));
-    return p;
-  }
+  static SP_quadrature Create(const size_t number_polar_octant,
+                              const bool   normalize = false);
 
 };
 

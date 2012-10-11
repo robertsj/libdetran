@@ -16,11 +16,13 @@
 namespace detran_angle
 {
 
-LevelSymmetric::LevelSymmetric(size_t order, size_t dim)
+//---------------------------------------------------------------------------//
+LevelSymmetric::LevelSymmetric(const size_t np, const size_t dim)
   : Quadrature(dim,
-               order * (order + 2) / 8 * size_t(std::pow(float(2), dim)),
+               2 * np * (2 * np + 2) / 8 * size_t(std::pow(float(2), dim)),
                "LevelSymmetric")
 {
+  int order = 2 * np;
 
   // Set up some temporaries.
   vec_dbl att;
@@ -375,6 +377,14 @@ void LevelSymmetric::set_quad_values(const size_t order, vec_dbl &att, vec_dbl &
   }
 
   }
+}
+
+//---------------------------------------------------------------------------//
+LevelSymmetric::SP_quadrature
+LevelSymmetric::Create(const size_t np, const size_t dim)
+{
+  SP_quadrature p(new LevelSymmetric(np, dim));
+  return p;
 }
 
 }

@@ -28,6 +28,7 @@ SET(SRC
     UniformEqual.cc
     ProductQuadrature.cc
     ChebyshevLegendre.cc
+    ChebyshevDPN.cc
 )
 
 #-----------------------------------------------------------------------------#

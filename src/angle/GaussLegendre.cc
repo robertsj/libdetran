@@ -16,16 +16,15 @@
 namespace detran_angle
 {
 
-GaussLegendre::GaussLegendre(size_t order)
-  : Quadrature(1, order, "GaussLegendre")
+//---------------------------------------------------------------------------//
+GaussLegendre::GaussLegendre(const size_t number_polar_octant)
+  : Quadrature(1, 2*number_polar_octant, "GaussLegendre")
 {
-  Require(order % 2 == 0); // need an even order
-
   // Set GL values for one half-space based on the SN order specified.
   // For 2:2:20, we use hard-coded, high precision values, though I honestly
   // doubt the value of storing more than 16 decimal places.
   // For order > 20, the quadrature is computed numerically.
-  switch (order)
+  switch (d_number_angles)
   {
   case 2:
   {
@@ -200,9 +199,9 @@ GaussLegendre::GaussLegendre(size_t order)
   default:
   {
     // generate the parameters on-the-fly
-    vec_dbl tmp_mu(order, 0.0);
-    vec_dbl tmp_wt(order, 0.0);
-    generate_gl_parameters(order, tmp_mu, tmp_wt);
+    vec_dbl tmp_mu(d_number_angles, 0.0);
+    vec_dbl tmp_wt(d_number_angles, 0.0);
+    generate_gl_parameters(d_number_angles, tmp_mu, tmp_wt);
     for (int i = 0; i < d_number_angles_octant; i++)
     {
       d_mu[i]     = tmp_mu[i];
@@ -214,7 +213,13 @@ GaussLegendre::GaussLegendre(size_t order)
 
 } // end constructor
 
-
+//---------------------------------------------------------------------------//
+GaussLegendre::SP_quadrature
+GaussLegendre::Create(const size_t number_polar_octant)
+{
+  SP_quadrature p(new GaussLegendre(number_polar_octant));
+  return p;
+}
 
 } // end namespace detran
 

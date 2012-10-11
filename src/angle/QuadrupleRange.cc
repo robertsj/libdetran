@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   QuadrupleRange.cc
- * \author Jeremy Roberts
- * \date   Mar 23, 2012
- * \brief  QuadrupleRange member definitions
+/**
+ *  @file   QuadrupleRange.cc
+ *  @author Jeremy Roberts
+ *  @date   Mar 23, 2012
+ *  @brief  QuadrupleRange member definitions
  */
 //---------------------------------------------------------------------------//
 
@@ -15,7 +15,8 @@
 namespace detran_angle
 {
 
-QuadrupleRange::QuadrupleRange(size_t order, size_t dim)
+//---------------------------------------------------------------------------//
+QuadrupleRange::QuadrupleRange(const size_t order, const size_t dim)
   : Quadrature(dim,
                order*std::pow(2.0, dim),
                "QuadrupleRange")
@@ -54,6 +55,13 @@ QuadrupleRange::QuadrupleRange(size_t order, size_t dim)
   //d_mu[0]=0.3124597141; d_eta[1]=0.3124597141;
   //d_mu[1]=0.7543444795; d_eta[0]=0.7543444795;
   Ensure(k == d_number_angles_octant);
+}
+
+QuadrupleRange::SP_quadrature
+QuadrupleRange::Create(const size_t order, const size_t dim)
+{
+  SP_quadrature p(new QuadrupleRange(order, dim));
+  return p;
 }
 
 double QuadrupleRange::get_phi(size_t N, size_t i, size_t j)

@@ -97,6 +97,11 @@ void Quadrature::set_adjoint(const bool v)
 
 }
 
+std::string Quadrature::name() const
+{
+  return d_name;
+}
+
 // Display
 void Quadrature::display() const
 {

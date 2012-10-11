@@ -187,8 +187,12 @@ public:
     return d_adjoint;
   }
 
+  // Return my name
+  std::string name() const;
+
   /// Pretty print of the first octant parameters.
   virtual void display() const;
+
 
 protected:
 

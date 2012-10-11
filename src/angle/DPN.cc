@@ -14,8 +14,8 @@ namespace detran_angle
 {
 
 //---------------------------------------------------------------------------//
-DPN::DPN(size_t order)
-  : Quadrature(1, order, "DPN")
+DPN::DPN(const size_t number_polar_octant)
+  : Quadrature(1, 2*number_polar_octant, "DPN")
 {
 
   // generate the parameters on-the-fly.
@@ -30,6 +30,14 @@ DPN::DPN(size_t order)
     d_weight[i] = tmp_wt[i];
   }
 
+}
+
+//---------------------------------------------------------------------------//
+DPN::SP_quadrature
+DPN::Create(const size_t number_polar_octant)
+{
+  SP_quadrature p(new DPN(number_polar_octant));
+  return p;
 }
 
 } // end namespace detran_angle

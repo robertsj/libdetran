@@ -41,6 +41,10 @@ namespace detran_angle
  *  the azimuthal and polar quadratures are defined only within an
  *  octant.
  *
+ *  Relevant database parameters:
+ *    - quad_number_polar_octant    -- number polar angles per octant
+ *    - quad_number_azimuth_octant  -- number azimuths per octant
+ *
  */
 class ProductQuadrature: public Quadrature
 {

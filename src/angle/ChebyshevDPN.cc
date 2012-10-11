@@ -1,22 +1,23 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   ChebyshevLegendre.cc
- *  @author robertsj
- *  @date   Oct 10, 2012
- *  @brief  ChebyshevLegendre class definition.
+ *  @file   ChebyshevDPN.cc
+ *  @brief  ChebyshevDPN
+ *  @author Jeremy Roberts
+ *  @date   Oct 11, 2012
  */
 //---------------------------------------------------------------------------//
 
-#include "ChebyshevLegendre.hh"
+#include "ChebyshevDPN.hh"
 #include "GenerateGaussLegendre.hh"
 
 namespace detran_angle
 {
 
-ChebyshevLegendre::ChebyshevLegendre(const size_t dim,
-                                     const size_t na,
-                                     const size_t np)
-  : ProductQuadrature(dim, na, np, "ChebyshevLegendre")
+//---------------------------------------------------------------------------//
+ChebyshevDPN::ChebyshevDPN(const size_t dim,
+                           const size_t na,
+                           const size_t np)
+  : ProductQuadrature(dim, na, np, "ChebyshevDPN")
 {
 
   //-------------------------------------------------------------------------//
@@ -38,17 +39,17 @@ ChebyshevLegendre::ChebyshevLegendre(const size_t dim,
   //-------------------------------------------------------------------------//
 
   // temporary arrays
-  vec_dbl x(2*np, 0.0);
-  vec_dbl w(2*np, 0.0);
+  vec_dbl x(np, 0.0);
+  vec_dbl w(np, 0.0);
 
   // generate parameters
-  generate_gl_parameters(2*np, x, w);
+  generate_gl_parameters(np, x, w);
 
   // fill array
   for (int i = 0; i < np; ++i)
   {
-    d_cos_theta[i]    = x[i];
-    d_sin_theta[i]    = std::sqrt(1.0 - x[i]*x[i]);
+    d_cos_theta[i]    = 0.5*x[i] + 0.5; // shift and scale
+    d_sin_theta[i]    = std::sqrt(1.0 - d_cos_theta[i]*d_cos_theta[i]);
     d_polar_weight[i] = w[i];
   }
 
@@ -67,21 +68,23 @@ ChebyshevLegendre::ChebyshevLegendre(const size_t dim,
       d_xi[n]     = d_sin_theta[p];
       d_weight[n] = d_polar_weight[p] * d_azimuth_weight[a];
       weight_tot += d_weight[n];
-    }
-  }
+    } // end polar loop
+  } // end azimuth loop
 
 }
 
 //---------------------------------------------------------------------------//
-ChebyshevLegendre::SP_quadrature
-ChebyshevLegendre::Create(const size_t dim,
-                          const size_t na,
-                          const size_t np)
+ChebyshevDPN::SP_quadrature
+ChebyshevDPN::Create(const size_t dim,
+                     const size_t na,
+                     const size_t np)
 {
-  ChebyshevLegendre::SP_quadrature p(new ChebyshevLegendre(dim, na, np));
+  SP_quadrature p(new ChebyshevDPN(dim, na, np));
   return p;
 }
 
-} // namespace detran_angle
+} // end namespace detran_angle
 
-
+//---------------------------------------------------------------------------//
+//              end of file ChebyshevDPN.cc
+//---------------------------------------------------------------------------//

@@ -34,6 +34,8 @@ namespace detran_angle
  *  The resulting abscissa are those of the GL quadrature but scaled
  *  and shifted.
  *
+ *  Relevant database parameters:
+ *    - quad_number_polar_octant -- number of abscissa per half space
  */
 class DPN: public Quadrature
 {
@@ -41,21 +43,18 @@ class DPN: public Quadrature
 public:
 
   //-------------------------------------------------------------------------//
-  // PUBLIC INTERFACE
+  // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
   /**
    *  @brief Constructor
-   *  @param order       Quadrature order (total number of polar angles)
+   *  @param number_polar_octant  Number of polar angles per octant
    */
-  DPN(size_t order);
+  DPN(const size_t number_polar_octant);
 
   /// SP constructor
-  static SP_quadrature Create(size_t order)
-  {
-    SP_quadrature p(new DPN(order));
-    return p;
-  }
+  static SP_quadrature Create(const size_t number_polar_octant);
+
 
 };
 

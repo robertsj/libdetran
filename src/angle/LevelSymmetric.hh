@@ -33,6 +33,8 @@ namespace detran_angle
  *  weight quadrature set (UEn) \ref UniformEqual, which yields positive
  *  weights for arbitrarily high \f$ N \f$.
  *
+ *  Relevant database parameters:
+ *    - quad_number_polar_octant -- number of abscissa per half space
  */
 class LevelSymmetric : public Quadrature
 {
@@ -44,21 +46,14 @@ public:
   //-------------------------------------------------------------------------//
 
   /**
-   *  \brief Constructor.
-   *  \param    order       Quadrature order.
-   *  \param    dim         Problem dimension
+   *  @brief Constructor.
+   *  @param np     Number of abscissa per axis in one octant (2*np = order)
+   *  @param dim    Problem dimension
    */
-  LevelSymmetric(size_t order, size_t dim);
+  LevelSymmetric(size_t np, size_t dim);
 
-  /**
-   *  \brief SP Constructor.
-   */
-  static SP_quadrature Create(size_t order, size_t dim)
-  {
-    SP_quadrature p;
-    p = new LevelSymmetric(order, dim);
-    return p;
-  }
+  /// SP Constructor.
+  static SP_quadrature Create(size_t np, size_t dim);
 
 private:
 

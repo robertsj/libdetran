@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   QuadrupleRange.hh
- * \author Jeremy Roberts
- * \date   Mar 23, 2012
- * \brief  QuadrupleRange class definition.
+/**
+ *  @file   QuadrupleRange.hh
+ *  @author Jeremy Roberts
+ *  @date   Mar 23, 2012
+ *  @brief  QuadrupleRange class definition.
  */
 //---------------------------------------------------------------------------//
 
@@ -17,9 +17,9 @@ namespace detran_angle
 {
 
 //---------------------------------------------------------------------------//
-/*!
- * \class QuadrupleRange
- * \brief Quadruple Range quadrature class.
+/**
+ * @class QuadrupleRange
+ * @brief Quadruple Range quadrature class.
  *
  * For two-dimensional transport, Abu-Shumays developed several quadrature
  * sets that are in some sense analogs of the DPn quadrature.  The sets he
@@ -101,8 +101,11 @@ namespace detran_angle
  *
  * Abu-Shumays, I.K. <em>Nuclear Science and Engineering</em>
  *     <b>64</b>, 299-316 (1977).
+ *
+ *
+ *
  */
-/*!
+/**
  *  \example angle/test/test_QuadrupleRange.cc
  *
  *  Test of class QuadrupleRange
@@ -115,28 +118,17 @@ class QuadrupleRange : public Quadrature
 public:
 
   //-------------------------------------------------------------------------//
-  // TYPEDEFS
-  //-------------------------------------------------------------------------//
-
-  typedef detran_utilities::SP<QuadrupleRange>  SP_quadrature;
-  typedef detran_utilities::SP<Quadrature>      SP_base;
-
-  //-------------------------------------------------------------------------//
   // PUBLIC INTERFACE
   //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Constructor.
-   *  \param    order       Quadrature order.
+  /**
+   *  @brief Constructor.
+   *  @param    order       Quadrature order.
    */
-  QuadrupleRange(size_t order, size_t dim = 2);
+  QuadrupleRange(const size_t order, const size_t dim = 2);
 
   /// SP constructor
-  static detran_utilities::SP<Quadrature> Create(size_t order)
-  {
-    SP_quadrature p(new QuadrupleRange(order));
-    return p;
-  }
+  static SP_quadrature Create(const size_t order, const size_t dim = 2);
 
 private:
 
@@ -144,19 +136,19 @@ private:
   // IMPLEMENTATION
   //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Return cosine of \f$ \theta \f$.
-   *  \param    N   number of azimuthal angles per quadrant
-   *  \param    i   0 for angle and 1 for weight
-   *  \param    j   index of requested point
+  /**
+   *  @brief Return cosine of \f$ \theta \f$.
+   *  @param    N   number of azimuthal angles per quadrant
+   *  @param    i   0 for angle and 1 for weight
+   *  @param    j   index of requested point
    */
   double get_theta(size_t N, size_t i, size_t j);
 
-  /*!
-   *  \brief Return sine of \f$ \phi \f$.
-   *  \param    N   number of polar angles per quadrant
-   *  \param    i   0 for angle and 1 for weight
-   *  \param    j   index of requested point
+  /**
+   *  @brief Return sine of \f$ \phi \f$.
+   *  @param    N   number of polar angles per quadrant
+   *  @param    i   0 for angle and 1 for weight
+   *  @param    j   index of requested point
    */
 
   double get_phi(size_t N, size_t i, size_t j);

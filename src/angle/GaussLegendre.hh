@@ -15,27 +15,43 @@
 namespace detran_angle
 {
 
+/**
+ *  @class GaussLegendre
+ *  @brief Implements Gauss-Legendre quadrature
+ *
+ *  Gauss-Legendre quadrature approximates
+ *  @f[
+ *      \int^{1}_{-1} f(x) dx
+ *        \approx \sum^m_{i=1} w_i f(x_i) \, .
+ *  @f]
+ *  The abscissa @f$ x_i @f$ are the zeros of the Legendre
+ *  polynomial of degree @f$ m + 1 @f$.  The weights are
+ *  then computed numerically.  Notably, an m-point G-L
+ *  quadrature exactly integrates polynomials of degree
+ *  less than or equal to 2m - 1.  In general, this is
+ *  the best that can be achieved when integrating
+ *  polynomial functions.
+ *
+ *  Relevant database parameters:
+ *    - quad_number_polar_octant -- number of abscissa per half space
+ */
 class GaussLegendre: public Quadrature
 {
 
 public:
 
   //-------------------------------------------------------------------------//
-  // PUBLIC INTERFACE
+  // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
   /**
    *  @brief Constructor
-   *  @param    order       Quadrature order.
+   *  @param number_polar_octant  Number of polar angles per octant
    */
-  GaussLegendre(size_t order);
+  GaussLegendre(const size_t number_polar_octant);
 
   /// SP constructor
-  static SP_quadrature Create(size_t order)
-  {
-    SP_quadrature p(new GaussLegendre(order));
-    return p;
-  }
+  static SP_quadrature Create(const size_t number_polar_octant);
 
 };
 
