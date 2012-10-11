@@ -16,8 +16,7 @@ namespace detran_angle
 {
 
 QuadrupleRange::QuadrupleRange(size_t order, size_t dim)
-  : Quadrature(order,
-               dim,
+  : Quadrature(dim,
                order*std::pow(2.0, dim),
                "QuadrupleRange")
 {

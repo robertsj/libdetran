@@ -20,12 +20,10 @@ namespace detran_angle
 {
 
 // Constructor
-Quadrature::Quadrature(const size_t order,
-                       const size_t dim,
+Quadrature::Quadrature(const size_t dim,
                        const size_t number_angles,
                        const std::string name)
   : d_dimension(dim)
-  , d_order(order)
   , d_number_angles(number_angles)
   , d_number_octants(std::pow(2.0, dim))
   , d_number_angles_octant(number_angles/d_number_octants)
@@ -37,10 +35,10 @@ Quadrature::Quadrature(const size_t order,
   , d_octant_sign(8, vec_dbl(3, 0.0))
   , d_adjoint(false)
 {
-  Insist(order > 0,
-    "The quadrature order MUST be positive.");
+  // Preconditions
   Insist((dim > 0) and (dim < 4),
     "The quadrature dimension MUST be 1, 2, or 3.");
+
   // Define the signs for all eight octants.
   // first
   d_octant_sign[0][0] =  1.0;

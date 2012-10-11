@@ -17,8 +17,7 @@ namespace detran_angle
 {
 
 UniformEqual::UniformEqual(size_t order, size_t dim)
-  : Quadrature(order,
-               dim,
+  : Quadrature(dim,
                std::pow(2, dim) * order * order,
                "UniformEqual")
 {

@@ -28,17 +28,17 @@ inline Quadrature::size_t Quadrature::number_angles_octant() const
   return d_number_angles_octant;
 }
 
-inline Quadrature::size_t Quadrature::number_azimuths_octant() const
-{
-  THROW("A PRODUCT QUADRATURE MUST IMPLEMENT THIS");
-  return 0;
-}
-
-inline Quadrature::size_t Quadrature::number_polar_octant() const
-{
-  THROW("A PRODUCT QUADRATURE MUST IMPLEMENT THIS");
-  return 0;
-}
+//inline Quadrature::size_t Quadrature::number_azimuths_octant() const
+//{
+//  THROW("A PRODUCT QUADRATURE MUST IMPLEMENT THIS");
+//  return 0;
+//}
+//
+//inline Quadrature::size_t Quadrature::number_polar_octant() const
+//{
+//  THROW("A PRODUCT QUADRATURE MUST IMPLEMENT THIS");
+//  return 0;
+//}
 
 inline Quadrature::size_t Quadrature::index(const size_t o, const size_t a)
 {
@@ -49,11 +49,11 @@ inline Quadrature::size_t Quadrature::index(const size_t o, const size_t a)
   return angle;
 }
 
-inline Quadrature::size_t Quadrature::angle(const size_t a, const size_t p) const
-{
-  THROW("NOT A PRODUCT QUADRATURE");
-  return 0;
-}
+//inline Quadrature::size_t Quadrature::angle(const size_t a, const size_t p) const
+//{
+//  THROW("NOT A PRODUCT QUADRATURE");
+//  return 0;
+//}
 
 inline const Quadrature::vec_dbl& Quadrature::weights() const
 {
@@ -88,7 +88,6 @@ inline double Quadrature::eta(const size_t o, const size_t a) const
 {
   Require(a < d_number_angles_octant);
   Require(o < d_number_octants);
-  Require(d_dimension > 1); // 1d calcs have no business with eta...
   return d_octant_sign[o][ETA] * d_eta[a];
 }
 
@@ -96,7 +95,6 @@ inline double Quadrature::xi(const size_t o, const size_t a) const
 {
   Require(a < d_number_angles_octant);
   Require(o < d_number_octants);
-  //Require(d_dimension == 3); // 1d/2d calcs have no need for xi...
   return d_octant_sign[o][XI] * d_xi[a];
 }
 

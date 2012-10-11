@@ -17,8 +17,7 @@ namespace detran_angle
 {
 
 LevelSymmetric::LevelSymmetric(size_t order, size_t dim)
-  : Quadrature(order,
-               dim,
+  : Quadrature(dim,
                order * (order + 2) / 8 * size_t(std::pow(float(2), dim)),
                "LevelSymmetric")
 {
@@ -28,7 +27,7 @@ LevelSymmetric::LevelSymmetric(size_t order, size_t dim)
   vec_dbl wtt;
 
   // Fill the temporaries
-  set_quad_values(att, wtt);
+  set_quad_values(order, att, wtt);
 
   // Scaling for weight.
   double scale = detran_utilities::pi;
@@ -36,9 +35,9 @@ LevelSymmetric::LevelSymmetric(size_t order, size_t dim)
 
   // Evaluate mu and eta for octant 1
   int m = 0;
-  for (int i = 0; i <= d_order / 2 - 1; ++i)
+  for (int i = 0; i <= order / 2 - 1; ++i)
   {
-    for (int j = 0; j <= (d_order / 2) - (i + 1); ++j)
+    for (int j = 0; j <= (order / 2) - (i + 1); ++j)
     {
       d_mu[m] = att[i];
       d_eta[m] = att[j];
@@ -52,11 +51,11 @@ LevelSymmetric::LevelSymmetric(size_t order, size_t dim)
   wtt.clear();
 }
 
-void LevelSymmetric::set_quad_values(vec_dbl &att, vec_dbl &wtt)
+void LevelSymmetric::set_quad_values(const size_t order, vec_dbl &att, vec_dbl &wtt)
 {
 
   // Set LS values for one quadrant based on the SN order specified.
-  switch (d_order)
+  switch (order)
   {
 
   case 2:

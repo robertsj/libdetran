@@ -12,6 +12,9 @@ SET(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 SET(SRC
     Collocated.cc
+    DPN.cc
+    DTN.cc
+    GaussChebyshev.cc
     GaussLegendre.cc
     LevelSymmetric.cc
     MomentToDiscrete.cc
@@ -23,6 +26,8 @@ SET(SRC
     TabuchiYamamoto.cc
     Uniform.cc
     UniformEqual.cc
+    ProductQuadrature.cc
+    ChebyshevLegendre.cc
 )
 
 #-----------------------------------------------------------------------------#

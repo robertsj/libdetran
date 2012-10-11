@@ -1,24 +1,28 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   GaussLegendre.hh
- *  @author Jeremy Roberts
- *  @date   Mar 23, 2012
- *  @brief  GaussLegendre class definition.
+ *  @file   GaussChebyshev.hh
+ *  @author robertsj
+ *  @date   Oct 10, 2012
+ *  @brief  GaussChebyshev class definition.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef detran_angle_GAUSSLEGENDRE_HH_
-#define detran_angle_GAUSSLEGENDRE_HH_
+#ifndef detran_angle_GAUSSCHEBYSHEV_HH_
+#define detran_angle_GAUSSCHEBYSHEV_HH_
 
 #include "Quadrature.hh"
 
 namespace detran_angle
 {
 
-class GaussLegendre: public Quadrature
+class GaussChebyshev: public Quadrature
 {
 
 public:
+
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
 
   //-------------------------------------------------------------------------//
   // PUBLIC INTERFACE
@@ -28,12 +32,12 @@ public:
    *  @brief Constructor
    *  @param    order       Quadrature order.
    */
-  GaussLegendre(size_t order);
+  GaussChebyshev(size_t order);
 
   /// SP constructor
   static SP_quadrature Create(size_t order)
   {
-    SP_quadrature p(new GaussLegendre(order));
+    SP_quadrature p(new GaussChebyshev(order));
     return p;
   }
 
@@ -41,8 +45,5 @@ public:
 
 } // end namespace detran_angle
 
-#endif /* detran_angle_GAUSSLEGENDRE_HH_ */
 
-//---------------------------------------------------------------------------//
-//              end of GaussLegendre.hh
-//---------------------------------------------------------------------------//
+#endif /* detran_angle_GAUSSCHEBYSHEV_HH_ */

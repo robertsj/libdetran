@@ -19,7 +19,6 @@ QuadratureMOC::QuadratureMOC(size_t dim,
                              std::string name,
                              std::string polar)
   : Quadrature(dim,
-               dim,
                num_polar*num_azimuths_octant*int(std::pow(2.0, dim)),
                name+"-"+polar)
   , d_number_azimuths_octant(num_azimuths_octant)
