@@ -153,19 +153,20 @@ cast_diff( detran_utilities::SP<detran::BoundaryBase<detran::_3D> >* b )
 detran_utilities::SP<detran::BoundarySN<detran::_1D> > 
 cast_sn( detran_utilities::SP<detran::BoundaryBase<detran::_1D> >* b )
 {
-  return detran_utilities::SP<detran::BoundaryDiffusion<detran::_1D> >( *b );
+  return detran_utilities::SP<detran::BoundarySN<detran::_1D> >( *b );
 } 
 detran_utilities::SP<detran::BoundarySN<detran::_2D> > 
 cast_sn( detran_utilities::SP<detran::BoundaryBase<detran::_2D> >* b )
 {
-  return detran_utilities::SP<detran::BoundaryDiffusion<detran::_2D> >( *b );
+  return detran_utilities::SP<detran::BoundarySN<detran::_2D> >( *b );
 } 
 detran_utilities::SP<detran::BoundarySN<detran::_3D> > 
 cast_sn( detran_utilities::SP<detran::BoundaryBase<detran::_3D> >* b )
 {
-  return detran_utilities::SP<detran::BoundaryDiffusion<detran::_3D> >( *b );
+  return detran_utilities::SP<detran::BoundarySN<detran::_3D> >( *b );
 } 
 
+// return a boundary value
 double value(detran::BoundaryTraits<detran::_1D>::value_type* b, int i, int j)           
 { 
   return detran::BoundaryValue<detran::_1D>::value(*b, i, j); 
@@ -178,7 +179,7 @@ double value(detran::BoundaryTraits<detran::_3D>::value_type* b, int i, int j)
 { 
   return detran::BoundaryValue<detran::_3D>::value(*b, i, j); 
 }
-//
+// set a boundary value
 void   value(detran::BoundaryTraits<detran::_1D>::value_type* b, int i, int j, double v) 
 { 
   detran::BoundaryValue<detran::_1D>::value(*b, i, j) = v; 
@@ -197,8 +198,4 @@ void   value(detran::BoundaryTraits<detran::_3D>::value_type* b, int i, int j, d
 //---------------------------------------------------------------------------//
 //              end of detran_boundary.i
 //---------------------------------------------------------------------------//
-
-
-
-
 

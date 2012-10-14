@@ -171,7 +171,7 @@ public:
   //-------------------------------------------------------------------------//
 
   /// Solve the multigroup equations.
-  void solve();
+  void solve(const double keff = 1.0);
 
 private:
 

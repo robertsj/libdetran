@@ -35,18 +35,11 @@ build(SP_quadrature &q, SP_input input, int dimension)
   using std::string;
 
   // Set the quadrature type.
-  string quad_type;
+  string quad_type = "chebyshevdpn";
   if (!input->check("quad_type"))
-  {
-    // Default types
     if (dimension == 1) quad_type = "gausslegendre";
-    if (dimension == 2) quad_type = "quadruplerange";
-    if (dimension == 3) quad_type = "levelsymmetric";
-  }
   else
-  {
     quad_type = input->get<string>("quad_type");
-  }
 
   // Set default values.
   bool moc = false;
@@ -128,7 +121,7 @@ build(SP_quadrature &q, SP_input input, int dimension)
   else if (quad_type == "quadruplerange")
   {
     Insist(dimension > 1, "QuadrupleRange only for 2D or 3D.");
-    q = new QuadrupleRange(np, dimension);
+    q = new QuadrupleRange(2*np, dimension);
   }
   else if (quad_type == "levelsymmetric")
   {
@@ -143,12 +136,12 @@ build(SP_quadrature &q, SP_input input, int dimension)
   else if (quad_type == "chebyshevlegendre")
   {
     Insist(dimension > 1, "ChebyshevLegendre only for 2D or 3D.");
-    q = new ChebyshevLegendre(dimension, np, na);
+    q = new ChebyshevLegendre(dimension, na, np);
   }
   else if (quad_type == "chebyshevdpn")
   {
     Insist(dimension > 1, "ChebyshevDPN only for 2D or 3D.");
-    q = new ChebyshevDPN(dimension, np, na);
+    q = new ChebyshevDPN(dimension, na, np);
   }
 
   //-------------------------------------------------------------------------//

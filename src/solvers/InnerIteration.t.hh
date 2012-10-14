@@ -60,6 +60,13 @@ InnerIteration<D>::InnerIteration(SP_input          input,
   {
     d_print_interval = input->get<int>("inner_print_interval");
   }
+  bool multiply = false;
+  if (input->check("problem_type"))
+  {
+    if (input->get<std::string>("problem_type") == "multiply")
+      multiply = true;
+    std::cout << "INNER: MULTIPLY" << std::endl;
+  }
 
   // Moments-to-Discrete
   SP_MtoD MtoD;
@@ -68,9 +75,10 @@ InnerIteration<D>::InnerIteration(SP_input          input,
 
   // Build the sweep source.
   d_sweepsource =
-      new SweepSource<D>(state, mesh, quadrature, material, MtoD);
+    new SweepSource<D>(state, mesh, quadrature, material, MtoD, multiply);
 
   if (q_f) d_sweepsource->set_fission_source(q_f);
+  Assert(!multiply or (multiply and q_f));
 
   if (q_e)
   {

@@ -23,24 +23,26 @@ namespace detran
 
 template <class D>
 SolverMG<D>::SolverMG(SP_input          input,
-                                      SP_state          state,
-                                      SP_mesh           mesh,
-                                      SP_material       material,
-                                      SP_quadrature     quadrature,
-                                      SP_boundary       boundary,
-                                      SP_externalsource q_e,
-                                      SP_fissionsource  q_f)
+                      SP_state          state,
+                      SP_mesh           mesh,
+                      SP_material       material,
+                      SP_quadrature     quadrature,
+                      SP_boundary       boundary,
+                      SP_externalsource q_e,
+                      SP_fissionsource  q_f)
   : d_input(input)
   , d_state(state)
   , d_mesh(mesh)
   , d_material(material)
   , d_quadrature(quadrature)
   , d_boundary(boundary)
+  , d_fissionsource(q_f)
   , d_downscatter(false)
   , d_max_iters(100)
   , d_tolerance(1e-5)
   , d_print_out(2)
   , d_print_interval(10)
+  , d_multiply(false)
 {
   Require(d_input);
   Require(d_state);
@@ -61,6 +63,17 @@ SolverMG<D>::SolverMG(SP_input          input,
 
   if (input->check("outer_print_interval"))
     d_print_interval = input->get<int>("outer_print_interval");
+
+  // Check if we need to include fission
+  if (input->check("problem_type"))
+  {
+    if (input->get<std::string>("problem_type") == "multiply")
+    {
+      Insist(d_fissionsource,
+            "Fission source must be constructed for multiplying problem");
+      d_multiply = true;
+    }
+  }
 
   Assert(d_input->check("number_groups"));
   d_number_groups = d_input->get<int>("number_groups");

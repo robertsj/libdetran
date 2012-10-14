@@ -1,5 +1,5 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
+/**
  * @file   FissionSource.hh
  * @author robertsj
  * @date   Apr 4, 2012
@@ -79,8 +79,8 @@ public:
   /**
    *   @brief Setup the fission source for an outer iteration.
    *
-   *   This sets a new scaling factor @f$ k @f$ and precomputes the
-   *   quantity @f$ v = fd(k)^{-1} @f$.
+   *   This sets a new scaling factor @f$ C @f$ and precomputes the
+   *   quantity @f$ v = C \times fd @f$.
    *
    *   @param scale     Scaling factor (typically 1/keff)
    */
@@ -108,7 +108,7 @@ public:
    */
   const State::moments_type& source(const size_t g);
 
-  /*!
+  /**
    *   @brief Return the fission density.
    *
    *   @f[
@@ -136,22 +136,16 @@ private:
 
   /// State vector
   SP_state d_state;
-
   /// Mesh
   SP_mesh d_mesh;
-
   /// Materials
   SP_material d_material;
-
   /// @f$ q_{fg} = norm \times \chi_g \sum_g \nu \Sigma_{fg} \phi_g @f$ .
   State::moments_type d_source;
-
   /// @f$ d = \sum_g \nu \Sigma_{fg} \phi_g @f$ .
   State::moments_type d_density;
-
   /// Scaling factor
   double d_scale;
-
   /// Number of groups.
   size_t d_number_groups;
 

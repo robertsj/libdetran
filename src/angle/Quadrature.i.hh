@@ -62,13 +62,20 @@ inline const Quadrature::vec_dbl& Quadrature::weights() const
 
 inline const Quadrature::vec_dbl& Quadrature::cosines(const size_t dir) const
 {
-  Require (dir < d_dimension);
   if (dir == MU)
+  {
     return d_mu;
+  }
   else if (dir == ETA)
+  {
+    Require(d_dimension > 1);
     return d_eta;
+  }
   else
+  {
+    Require(d_dimension > 1);
     return d_xi;
+  }
 }
 
 inline double Quadrature::weight(const size_t a) const

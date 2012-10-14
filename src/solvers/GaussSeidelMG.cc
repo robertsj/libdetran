@@ -21,13 +21,13 @@ namespace detran
 // Constructor
 template <class D>
 GaussSeidelMG<D>::GaussSeidelMG(SP_input          input,
-                            SP_state          state,
-                            SP_mesh           mesh,
-                            SP_material       material,
-                            SP_quadrature     quadrature,
-                            SP_boundary       boundary,
-                            SP_externalsource q_e,
-                            SP_fissionsource  q_f)
+                                SP_state          state,
+                                SP_mesh           mesh,
+                                SP_material       material,
+                                SP_quadrature     quadrature,
+                                SP_boundary       boundary,
+                                SP_externalsource q_e,
+                                SP_fissionsource  q_f)
   : Base(input, state, mesh, material, quadrature, boundary, q_e, q_f)
   , d_norm_type("Linf")
 {

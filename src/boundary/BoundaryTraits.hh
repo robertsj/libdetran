@@ -98,7 +98,6 @@ struct BoundaryValue<_1D>
   }
 };
 
-
 } // end namespace detran
 
 #endif /* BOUNDARYTRAITS_HH_ */

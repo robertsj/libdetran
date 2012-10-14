@@ -97,7 +97,7 @@ public:
   //-------------------------------------------------------------------------//
 
   /// Solve the multigroup equations.
-  void solve();
+  void solve(const double keff = 1.0);
 
 private:
 
@@ -121,6 +121,7 @@ private:
   using Base::d_print_out;
   using Base::d_print_interval;
   using Base::d_inner_solver;
+  using Base::d_multiply;
 
   /// Determines which norm to use (default is Linf)
   std::string d_norm_type;

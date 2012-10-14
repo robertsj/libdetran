@@ -37,6 +37,7 @@ FixedSourceManager<D>::FixedSourceManager(SP_input    input,
   , d_material(material)
   , d_mesh(mesh)
   , d_fixed_type(FIXED)
+  , d_is_setup(false)
 {
   // Preconditions
   Require(d_input);
@@ -97,12 +98,15 @@ void FixedSourceManager<D>::setup()
   // Build the fission source if needed
   if (d_input->check("problem_type"))
   {
-    if(d_input->get<std::string>("problem_type") == "fixed_multiply")
+    if(d_input->get<std::string>("problem_type") == "multiply")
     {
       d_fissionsource = new FissionSource(d_state, d_mesh, d_material);
-      d_fixed_type = FIXEDMULTIPLY;
+      d_fixed_type = MULTIPLY;
     }
   }
+
+  // Signify the manager is ready to solve
+  d_is_setup = true;
 
   // Postconditions
   Ensure(d_boundary);
@@ -122,8 +126,19 @@ void FixedSourceManager<D>::set_source(SP_source q)
 }
 
 template <class D>
-void FixedSourceManager<D>::solve()
+bool FixedSourceManager<D>::solve(const double keff)
 {
+
+  if (!d_is_setup)
+  {
+    std::cout << "You must setup the manager before solving.  Skipping solve."
+              << std::endl;
+    return false;
+  }
+
+  /// Setup fission source scaling, if needed
+  if (d_fixed_type == MULTIPLY) d_fissionsource->setup_outer(1.0/keff);
+
   if (d_discretization == DIFF)
   {
     THROW("NOT FOR DIFFUSION YET");
@@ -135,9 +150,7 @@ void FixedSourceManager<D>::solve()
     // Default solver is Gauss-Seidel
     std::string outer_solver = "GS";
     if (d_input->check("outer_solver"))
-    {
       outer_solver = d_input->get<std::string>("outer_solver");
-    }
 
     // \todo enable use of more than one source
     if (outer_solver == "GS")
@@ -149,21 +162,32 @@ void FixedSourceManager<D>::solve()
     {
       #ifdef DETRAN_ENABLE_PETSC
         solver = new KrylovMG<D>(d_input, d_state, d_mesh, d_material, d_quadrature,
-                                 boundary, d_sources[0], d_fissionsource);
+                                 d_boundary, d_sources[0], d_fissionsource);
       #else
-        THROW("KrylovMG is unavailable since PETSc is not enabled.");
+        std::cout << "KrylovMG is unavailable since PETSc is not enabled."
+                  << std::endl;
+        return false;
       #endif
     }
     else
     {
-      THROW("Unsupported outer_solver type selected: " + outer_solver);
+      std::cout << "Unsupported outer_solver type selected:"
+                << outer_solver << std::endl;
+      return false;
     }
 
     // Solve the problem
     solver->solve();
+
+    return true;
   }
 
 }
+
+// Explicit instantiations
+template class FixedSourceManager<_1D>;
+template class FixedSourceManager<_2D>;
+template class FixedSourceManager<_3D>;
 
 } // end namespace detran
 

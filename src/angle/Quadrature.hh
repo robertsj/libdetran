@@ -87,6 +87,8 @@ public:
   typedef detran_utilities::SP<Quadrature>      SP_quadrature;
   typedef detran_utilities::vec_dbl             vec_dbl;
   typedef detran_utilities::vec2_dbl            vec2_dbl;
+  typedef detran_utilities::vec_int             vec_int;
+  typedef detran_utilities::vec2_int            vec2_int;
   typedef detran_utilities::size_t              size_t;
 
   //-------------------------------------------------------------------------//
@@ -166,6 +168,12 @@ public:
    */
   static double angular_norm(const size_t d);
 
+  /// Get vector of incident octants for a side
+  const vec_int& incident_octant(const size_t s);
+
+  /// Get vector of outgoing octants for a side
+  const vec_int& outgoing_octant(const size_t s);
+
   /**
    *  @brief Are the indices valid?
    *  @param o    Octant index
@@ -216,6 +224,10 @@ protected:
   std::string d_name;
   /// octant cosign signs (e.g [1 1 1] for octant 1)
   vec2_dbl d_octant_sign;
+  /// incident octants
+  vec2_int d_incident_octants;
+  /// outgoing octants
+  vec2_int d_outgoing_octants;
   /// Is this an adjoint problem?
   bool d_adjoint;
 

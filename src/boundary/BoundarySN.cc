@@ -157,8 +157,8 @@ void BoundarySN<_1D>::initialize()
         d_boundary_flux[Mesh::EAST][g].resize(na, 0.0);
     }
   }
-  d_boundary_flux_size[Mesh::WEST]   = na;
-  d_boundary_flux_size[Mesh::EAST]  = na;
+  d_boundary_flux_size[Mesh::WEST] = na;
+  d_boundary_flux_size[Mesh::EAST] = na;
 }
 
 } // end namespace detran

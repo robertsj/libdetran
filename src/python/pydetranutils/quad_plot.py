@@ -3,9 +3,13 @@
 import numpy as np
 import mpl_toolkits.mplot3d.axes3d as p3
 import matplotlib.pyplot as plt
-from matplotlib import rc
-rc('text', usetex=True)
-rc('font', family='serif')
+
+try :
+    from matplotlib import rc
+    rc('text', usetex=True)
+    rc('font', family='serif')
+except ImportError :
+    print "Warning: LaTeX labels being skipped"
 
 def plot_quadrature(quad) :
    """ Plots a quadrature.
@@ -35,7 +39,9 @@ def plot_quadrature(quad) :
      eta = np.asarray(quad.cosines(1))
      xi  = np.asarray(quad.cosines(2))
      wt  = np.asarray(quad.weights())
-     # Plot
+     # Plot.  Note, using my (old) version of matplotlib, the colors
+     # are not translated to the scatter plot.  The sizes are, but
+     # it's not really enough.  What's a good solution?
      fig = plt.figure()
      ax = p3.Axes3D(fig)
      ax.view_init(30, 60) 

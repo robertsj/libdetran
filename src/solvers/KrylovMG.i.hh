@@ -22,7 +22,7 @@ namespace detran
 // Public Interface
 
 template <class D>
-inline void KrylovMG<D>::solve()
+inline void KrylovMG<D>::solve(const double keff)
 {
 
   using std::cout;

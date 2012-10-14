@@ -19,7 +19,7 @@ namespace detran
 {
 
 template <class D>
-void GaussSeidelMG<D>::solve()
+void GaussSeidelMG<D>::solve(const double keff)
 {
   using detran_utilities::norm_residual;
 
@@ -34,30 +34,58 @@ void GaussSeidelMG<D>::solve()
   // Upscatter iterations.
   int iteration = 0;
 
+  // Set the scaling factor for multiplying problems
+  if (d_multiply) d_fissionsource->setup_outer(1.0/keff);
+
   // Initial downscatter.
   for (int g = 0; g < d_number_groups; g++)
   {
+    // Recompute the fission density
+    if (d_multiply) d_fissionsource->update();
+    // Solve the within-group equation
     d_inner_solver->solve(g);
   }
 
-  // Do upscatter iterations if required.  Skip these if the max_iters = 0.
-  if (!d_downscatter and d_max_iters > 0 and d_number_groups > 1)
+  // Decide whether to iterate or not
+  bool iterate = false;
+  if ((!d_downscatter and d_max_iters > 0 and d_number_groups > 1)
+      or d_multiply)
   {
-    // Upscatter iterations.
+    iterate = true;
+  }
+
+  // Do upscatter iterations if required.  Skip these if the max_iters = 0.
+  if (iterate)
+  {
+    std::cout << " iterating gs ... " << std::endl;
+    // Iterations
     for (iteration = 1; iteration <= d_max_iters; iteration++)
     {
+
       // Reset the residual norm.
       nres = 0.0;
 
       // Save current group flux.
       State::group_moments_type phi_old = d_state->all_phi();
 
+      // Do downscatter iterations to pick up fission contributions
+      if (d_multiply)
+      {
+        for (int g = 0; g < d_material->upscatter_cutoff(); g++)
+        {
+          d_fissionsource->update();
+          d_inner_solver->solve(g);
+        }
+      }
+
       // Loop over just those groups into which upscatter occurs.  I have
       // no idea whether symmetric GS (i.e. loop up and down) is better.
       for (int g = d_material->upscatter_cutoff(); g < d_number_groups; g++)
       {
+        // Recompute the fission density
+        if (d_multiply) d_fissionsource->update();
+        // Solve the within-group equation
         d_inner_solver->solve(g);
-
         // Constructing the norm piecewise.
         double nres_g = norm_residual(d_state->phi(g), phi_old[g], d_norm_type);
         if (d_norm_type == "Linf")

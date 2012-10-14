@@ -32,6 +32,9 @@ namespace detran
 template <class D>
 class FixedSourceManager
 {
+
+public:
+
   //-------------------------------------------------------------------------//
   // ENUMERATION
   //-------------------------------------------------------------------------//
@@ -43,7 +46,7 @@ class FixedSourceManager
 
   enum FIXEDTYPE
   {
-    FIXED, FIXEDMULTIPLY
+    FIXED, MULTIPLY
   };
 
   //-------------------------------------------------------------------------//
@@ -67,7 +70,6 @@ class FixedSourceManager
   //
   typedef callow::LinearSolver::SP_solver             SP_solver;
   //
-
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -107,8 +109,10 @@ class FixedSourceManager
    *  By changing the appropriate database parameters, a problem already
    *  set up can be solved by a different method by calling this
    *  method.
+   *
+   *  @param keff   Scaling factor for multiplying problems
    */
-  void solve();
+  bool solve(const double keff = 1.0);
 
   /// @name Getters
   /// @{
@@ -117,6 +121,8 @@ class FixedSourceManager
   SP_mesh mesh() const { return d_mesh; }
   SP_state state() const { return d_state; }
   SP_boundary boundary() const { return d_boundary; }
+  SP_quadrature quadrature() const { return d_quadrature; }
+  SP_fissionsource fissionsource() const { return d_fissionsource; }
   /// @}
 
 private:
@@ -149,6 +155,8 @@ private:
   int d_discretization;
   /// Fixed type
   int d_fixed_type;
+  /// Setup status flag
+  bool d_is_setup;
 
   //-------------------------------------------------------------------------//
   // IMPLEMENTATION

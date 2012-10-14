@@ -28,9 +28,11 @@ FissionSource::FissionSource(SP_state state,
   , d_material(material)
   , d_scale(1.0)
 {
+  // Preconditions
   Require(d_state);
   Require(d_mesh);
   Require(d_material);
+
   d_number_groups = d_material->number_groups();
   d_density.assign(d_mesh->number_cells(), 0.0);
   d_source.assign(d_mesh->number_cells(), 0.0);

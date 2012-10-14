@@ -90,7 +90,7 @@ public:
   //-------------------------------------------------------------------------//
 
   /// Solve the multigroup equations.
-  virtual void solve() = 0;
+  virtual void solve(const double keff = 1.0) = 0;
 
 protected:
 
@@ -128,6 +128,8 @@ protected:
   int d_print_interval;
   /// Inner solver
   SP_inner d_inner_solver;
+  /// Multiplying problem flag
+  bool d_multiply;
 
 };
 

@@ -1,10 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   SourceIteration.i.hh
- * \author robertsj
- * \date   Apr 4, 2012
- * \brief  SourceIteration inline member definitions.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+/**
+ *  @file   SourceIteration.i.hh
+ *  @author robertsj
+ *  @date   Apr 4, 2012
+ *  @brief  SourceIteration inline member definitions.
  */
 //---------------------------------------------------------------------------//
 
