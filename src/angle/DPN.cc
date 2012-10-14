@@ -27,7 +27,7 @@ DPN::DPN(const size_t number_polar_octant)
   {
     // Shift the mu to [0, 1] from [-1, 1]
     d_mu[i]     = 0.5*tmp_mu[i] + 0.5;
-    d_weight[i] = tmp_wt[i];
+    d_weight[i] = 0.5*tmp_wt[i];
   }
 
 }

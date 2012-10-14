@@ -35,11 +35,16 @@ build(SP_quadrature &q, SP_input input, int dimension)
   using std::string;
 
   // Set the quadrature type.
-  string quad_type = "chebyshevdpn";
+  string quad_type = "notset";
   if (!input->check("quad_type"))
+  {
+    quad_type = "chebyshevdpn";
     if (dimension == 1) quad_type = "gausslegendre";
+  }
   else
+  {
     quad_type = input->get<string>("quad_type");
+  }
 
   // Set default values.
   bool moc = false;

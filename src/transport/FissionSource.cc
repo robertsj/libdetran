@@ -19,7 +19,7 @@
 namespace detran
 {
 
-// Constructor
+//---------------------------------------------------------------------------//
 FissionSource::FissionSource(SP_state state,
                              SP_mesh mesh,
                              SP_material material)
@@ -38,13 +38,23 @@ FissionSource::FissionSource(SP_state state,
   d_source.assign(d_mesh->number_cells(), 0.0);
 }
 
-/*
- *  Define the density as the normalized sum of
- *  nu * fission cross section.  Normalized
- *  using the L1 norm.
- */
+//---------------------------------------------------------------------------//
+FissionSource::SP_fissionsource
+FissionSource::Create(SP_state state, SP_mesh mesh, SP_material material)
+{
+  SP_fissionsource p;
+  p = new FissionSource(state, mesh, material);
+  return p;
+}
+
+//---------------------------------------------------------------------------//
 void FissionSource::initialize()
 {
+  /*
+   *  Define the density as the normalized sum of
+   *  nu * fission cross section.  Normalized
+   *  using the L1 norm.
+   */
   vec_int mat_map = d_mesh->mesh_map("MATERIAL");
   int ng = d_material->number_groups();
   for (int cell = 0; cell < d_mesh->number_cells(); cell++)
@@ -60,43 +70,13 @@ void FissionSource::initialize()
   detran_utilities::vec_scale(d_density, 1.0/norm_density);
 }
 
-void FissionSource::update()
-{
-  d_density.assign(d_density.size(), 0.0);
-  vec_int mat_map = d_mesh->mesh_map("MATERIAL");
-  for(int g = 0; g < d_number_groups; g++)
-  {
-    State::moments_type phi = d_state->phi(g);
-    for (int cell = 0; cell < d_mesh->number_cells(); cell++)
-    {
-      d_density[cell] += phi[cell] *
-                         d_material->nu_sigma_f(mat_map[cell], g);
-    }
-  }
-}
-
+//---------------------------------------------------------------------------//
 void FissionSource::setup_outer(const double scale)
 {
   d_scale = scale;
 }
 
-const State::moments_type& FissionSource::source(const size_t g)
-{
-  Require(g >= 0);
-  Require(g < d_number_groups);
-  vec_int mat_map = d_mesh->mesh_map("MATERIAL");
-  for (int cell = 0; cell < d_mesh->number_cells(); cell++)
-  {
-    d_source[cell] = d_scale * d_density[cell] *
-                     d_material->chi(mat_map[cell], g);
-  }
-  return d_source;
-}
 
-const State::moments_type& FissionSource::density()
-{
-  return d_density;
-}
 
 } // end namespace detran
 

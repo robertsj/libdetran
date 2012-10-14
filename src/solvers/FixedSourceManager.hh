@@ -28,6 +28,14 @@ namespace detran
 /**
  *  @class FixedSourceManager
  *  @brief Manage solution of a multigroup fixed source problem
+ *
+ *  Fixed source problems are classified generically as "fixed" or
+ *  "multiplying".  For the latter, the fission source is included
+ *  based on an assumed k-eigenvalue (defaulted to unity).  A
+ *  multiplying problem can be solved with fission treated like
+ *  scatter, or it can be added via iteration outside the normal
+ *  multigroup solver.  The latter is useful when we want to
+ *  expand solutions in fission generation series.
  */
 template <class D>
 class FixedSourceManager
@@ -39,14 +47,16 @@ public:
   // ENUMERATION
   //-------------------------------------------------------------------------//
 
+  // basic spatial discretization categories
   enum EQTYPES
   {
-    SN, MOC, DIFF
+    SN, MOC, DIFF, END_EQTYPES
   };
 
+  // various fixed source problem approaches
   enum FIXEDTYPE
   {
-    FIXED, MULTIPLY
+    FIXED, MULTIPLY, END_FIXEDTYPE
   };
 
   //-------------------------------------------------------------------------//
@@ -113,6 +123,39 @@ public:
    *  @param keff   Scaling factor for multiplying problems
    */
   bool solve(const double keff = 1.0);
+
+  /**
+   *  @brief Perform a fission iteration
+   *
+   *  This function provides a way for a client to perform expansion
+   *  of a fixed source problem solution in terms of a series in
+   *  fission generations.
+   *
+   *  To use this function, the client sets up a problem in the typical
+   *  way by setting a source, options, etc.  For each generation, the
+   *  user iterates.  The function returns the norm of the difference
+   *  between fluxes of successive generations.  Following each iteration,
+   *  the state is filled with the m-th iteration contribution to the
+   *  flux.  In other words, the solution is represented as
+   *  @f[
+   *      \phi = \phi_0 + \phi_1 + \ldots
+   *  @f]
+   *  where @f$ \phi_0 @f$ is the flux due to the initial source,
+   *        @f$ \phi_1 @f$ is the "once-fissioned" flux, and so on.
+   *  Thus, for arbitrary eigenvalue @f$ k @f$, we have
+   *  @f[
+   *      \phi = \phi_0 + \frac{1}{k}\phi_1 + \frac{1}{k^2}\phi_2 + \ldots
+   *  @f]
+   *  Moreover, it turns out that the ratio of successive terms tends
+   *  toward @f$ k @f$ of the domain in a vacuum, @f$ k_v @f$, so that the
+   *  series can be approximately summed as
+   *  @f[
+   *      \phi = \phi_0 + \frac{1}{k}\phi_1 + \frac{1}{k^2(1-k_v/k)}\phi_2
+   *  @f]
+   *
+   *  Note, after generation zero, the fixed sources are eliminated.
+   */
+  double iterate(const int generation);
 
   /// @name Getters
   /// @{

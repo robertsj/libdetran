@@ -29,6 +29,7 @@
 namespace detran
 {
 
+//---------------------------------------------------------------------------//
 template <class D>
 FixedSourceManager<D>::FixedSourceManager(SP_input    input,
                                           SP_material material,
@@ -47,6 +48,7 @@ FixedSourceManager<D>::FixedSourceManager(SP_input    input,
   // Postconditions
 }
 
+//---------------------------------------------------------------------------//
 template <class D>
 void FixedSourceManager<D>::setup()
 {
@@ -113,6 +115,7 @@ void FixedSourceManager<D>::setup()
   Ensure(d_state);
 }
 
+//---------------------------------------------------------------------------//
 template <class D>
 void FixedSourceManager<D>::set_source(SP_source q)
 {
@@ -177,11 +180,19 @@ bool FixedSourceManager<D>::solve(const double keff)
     }
 
     // Solve the problem
-    solver->solve();
+    solver->solve(keff);
 
     return true;
   }
+}
 
+//---------------------------------------------------------------------------//
+template <class D>
+double FixedSourceManager<D>::iterate(const int generation)
+{
+
+
+  return 0.0;
 }
 
 // Explicit instantiations

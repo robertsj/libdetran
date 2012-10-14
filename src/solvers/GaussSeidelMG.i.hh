@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   GaussSeidelMG.i.hh
- * \author robertsj
- * \date   Apr 10, 2012
- * \brief  GaussSeidelMG inline member definitions.
+/**
+ *  @file   GaussSeidelMG.i.hh
+ *  @author robertsj
+ *  @date   Apr 10, 2012
+ *  @brief  GaussSeidelMG inline member definitions.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef GAUSSSEIDEL_I_HH_
-#define GAUSSSEIDEL_I_HH_
+#ifndef detran_GAUSSSEIDEL_I_HH_
+#define detran_GAUSSSEIDEL_I_HH_
 
 #include "utilities/MathUtilities.hh"
 #include "utilities/Warning.hh"
@@ -62,32 +62,27 @@ void GaussSeidelMG<D>::solve(const double keff)
     for (iteration = 1; iteration <= d_max_iters; iteration++)
     {
 
-      // Reset the residual norm.
-      nres = 0.0;
+      // Iteration residual norm for all fluxes and group flux
+      double nres = 0.0;
+      double nres_g = 0.0;
 
       // Save current group flux.
       State::group_moments_type phi_old = d_state->all_phi();
 
-      // Do downscatter iterations to pick up fission contributions
-      if (d_multiply)
-      {
-        for (int g = 0; g < d_material->upscatter_cutoff(); g++)
-        {
-          d_fissionsource->update();
-          d_inner_solver->solve(g);
-        }
-      }
+      // Set group iteration lower bound
+      int g_lower = d_material->upscatter_cutoff();
+      if (d_multiply) g_lower = 0;
 
-      // Loop over just those groups into which upscatter occurs.  I have
-      // no idea whether symmetric GS (i.e. loop up and down) is better.
-      for (int g = d_material->upscatter_cutoff(); g < d_number_groups; g++)
+      // Loop over required groups
+      for (int g = g_lower; g < d_number_groups; ++g)
       {
         // Recompute the fission density
         if (d_multiply) d_fissionsource->update();
         // Solve the within-group equation
         d_inner_solver->solve(g);
         // Constructing the norm piecewise.
-        double nres_g = norm_residual(d_state->phi(g), phi_old[g], d_norm_type);
+        nres_g = norm_residual(d_state->phi(g), phi_old[g], d_norm_type);
+        std::cout << " nres_g=" << nres_g << " phi(g)[0] = " << d_state->phi(g)[0] << " old = " << phi_old[g][0] << std::endl;
         if (d_norm_type == "Linf")
           nres = std::max(nres, nres_g);
         else if (d_norm_type == "L1")
@@ -127,11 +122,10 @@ void GaussSeidelMG<D>::solve(const double keff)
 }
 
 // Explicit instantiations
-
 template class GaussSeidelMG<_1D>;
 template class GaussSeidelMG<_2D>;
 template class GaussSeidelMG<_3D>;
 
 } // end namespace detran
 
-#endif /* GAUSSSEIDEL_I_HH_ */
+#endif /* detran_GAUSSSEIDEL_I_HH_ */

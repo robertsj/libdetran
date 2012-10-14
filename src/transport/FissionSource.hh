@@ -20,13 +20,10 @@
 namespace detran
 {
 
-//---------------------------------------------------------------------------//
 /**
  *  @class FissionSource
  *  @brief Defines the isotropic source from fission reactions.
  */
-//---------------------------------------------------------------------------//
-
 class FissionSource
 {
 
@@ -42,6 +39,7 @@ public:
   typedef detran_material::Material::SP_material    SP_material;
   typedef detran_utilities::vec_int                 vec_int;
   typedef detran_utilities::size_t                  size_t;
+  typedef State::moments_type                       moments_type;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -58,19 +56,17 @@ public:
   FissionSource(SP_state state, SP_mesh mesh, SP_material material);
 
   /// SP Constructor
-  static SP_fissionsource
-  Create(SP_state state, SP_mesh mesh, SP_material material)
-  {
-    SP_fissionsource p;
-    p = new FissionSource(state, mesh, material);
-    return p;
-  }
+  static SP_fissionsource Create(SP_state state,
+                                 SP_mesh mesh,
+                                 SP_material material);
 
   //-------------------------------------------------------------------------//
   // PUBLIC INTERFACE
   //-------------------------------------------------------------------------//
 
-  /// Initialize to thermal fission cross-section, normalized.
+  /// Methods to treat fission in an outer iteration (e.g. power iteration)
+
+  /// Initialize to sum of cell nu*fission cross-section, normalized.
   void initialize();
 
   /// Update the fission density.
@@ -93,7 +89,7 @@ public:
    *   released in  a particular group.  Mathematically, this is just
    *
    *   @f[
-   *     q_{f,g} = @frac{\chi_g}{4\pi k} \sum_g \nu\Sigma_{f,g} \phi_g \, .
+   *       q_{f,g} = @frac{\chi_g}{4\pi k} \sum_g \nu\Sigma_{f,g} \phi_g \, .
    *   @f]
    *
    *   Note, the scaling factor is actually arbitrary.  For 2-D and 3-D, it
@@ -106,27 +102,81 @@ public:
    *   @param   g   Group of the source.
    *   @return      Source vector.
    */
-  const State::moments_type& source(const size_t g);
+  const moments_type& source(const size_t g);
 
   /**
    *   @brief Return the fission density.
    *
    *   @f[
-   *     fd = \sum_g \nu\Sigma_{f,g} \phi_g \, .
+   *       fd = \sum_g \nu\Sigma_{f,g} \phi_g \, .
    *   @f]
    *
    *   @return      Fission density vector.
    */
-  const State::moments_type& density();
+  const moments_type& density();
 
-  /*!
+  /**
    *   @brief Set the fission density.
    *   @param   f   User-defined density.
    */
-  void set_density(std::vector<double> &f)
+  void set_density(moments_type& f)
   {
     d_density = f;
   }
+
+  /// Methods to treat fission like scatter
+
+  /**
+   *  \brief Build the within group fission source.
+   *
+   *  This constructs
+   *  @f[
+   *      q_g = \chi_g \nu \Sigma_{fg} \phi_g \, .
+   *  @f]
+   *
+   *  @param   g        Group for this problem
+   *  @param   phi      Const reference to group flux.
+   *  @param   source   Mutable reference to moments source.
+   *
+   */
+  void build_within_group_source(const size_t g,
+                                 const moments_type &phi,
+                                 moments_type &source);
+
+  /**
+   *  \brief Build the in-fission source.
+   *
+   *  This constructs
+   *  @f[
+   *      q_g = \chi_g \sum^G_{g',g\ne g'} \Sigma_{fg'} \phi_{g'} \, .
+   *  @f]
+   *
+   *  This *assumes* the state is up-to-date.
+   *
+   *  @param   g        Group for this problem
+   *  @param   source   Mutable reference to moments source.
+   *
+   */
+  void build_in_fission_source(const size_t g,
+                               moments_type &source);
+
+  /**
+   *   @brief Fill a group source vector with a fission source given
+   *          a client-defined flux vector
+   *
+   *   For Krylov methods, we can bring the entire flux-dependent
+   *   terms to the left hand side, thus treating the flux implicitly.
+   *   This function allows the client to build the total fission
+   *   source into a given group based on an arbitrary, client-defined
+   *   multigroup flux vector.
+   *
+   *   @param   g       group of source being constructed
+   *   @param   phi     multigroup fluxes
+   *   @param   source  moment vector of group source to contribute to
+   */
+  void build_total_group_source(const size_t g,
+                                const State::vec_moments_type &phi,
+                                State::moments_type &source);
 
 private:
 
@@ -152,6 +202,8 @@ private:
 };
 
 } // end namespace detran
+
+#include "FissionSource.i.hh"
 
 #endif /* FISSIONSOURCE_HH_ */
 

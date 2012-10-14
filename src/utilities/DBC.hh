@@ -12,6 +12,7 @@
 #include "detran_config.hh"
 
 #include <iostream>
+#include <string>
 
 namespace detran_utilities
 {
@@ -73,17 +74,24 @@ public:
 
 #ifdef DETRAN_ENABLE_DEBUG
 
+// DBC Macros
 #define Assert(c)     if (!(c)) throw detran_utilities::GenException( __LINE__, __FILE__,#c)
-#define IsValid(obj)  Assert((obj) != NULL && (obj)->is_valid())
 #define Require(c)    Assert(c)
 #define Ensure(c)     Assert(c)
+
+// DBC Macros with additional message
+#define Assert_msg(c, m)     if (!(c)) throw detran_utilities::GenException( __LINE__, __FILE__,std::string(#c)+" "+std::string(m))
+#define Require_msg(c, m)    Assert_msg(c, m)
+#define Ensure_msg(c, m)     Assert_msg(c, m)
 
 #else
 
 #define Assert(c)   ((void) 0)
-#define IsValid(c)  ((void) 0)
 #define Require(c)  ((void) 0)
 #define Ensure(c)   ((void) 0)
+#define Assert_msg(c, m)   ((void) 0)
+#define Require_msg(c, m)  ((void) 0)
+#define Ensure_msg(c, m)   ((void) 0)
 
 #endif
 

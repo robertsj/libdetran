@@ -1,19 +1,19 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   ScatterSource.i.hh
- * \author robertsj
- * @date   Sep 7, 2012
- * \brief  ScatterSource inline member definitions
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+/**
+ *  @file   ScatterSource.i.hh
+ *  @author robertsj
+ *  @date   Sep 7, 2012
+ *  @brief  ScatterSource inline member definitions
  */
 //---------------------------------------------------------------------------//
 
-#ifndef SCATTERSOURCE_I_HH_
-#define SCATTERSOURCE_I_HH_
+#ifndef detran_SCATTERSOURCE_I_HH_
+#define detran_SCATTERSOURCE_I_HH_
 
 namespace detran
 {
 
+//---------------------------------------------------------------------------//
 inline void ScatterSource::
 build_within_group_source(const size_t g,
                           const moments_type &phi,
@@ -29,7 +29,7 @@ build_within_group_source(const size_t g,
   }
 }
 
-
+//---------------------------------------------------------------------------//
 inline void ScatterSource::
 build_in_scatter_source(const size_t g,
                         moments_type &source)
@@ -57,6 +57,7 @@ build_in_scatter_source(const size_t g,
   }
 }
 
+//---------------------------------------------------------------------------//
 inline void ScatterSource::
 build_downscatter_source(const size_t g,
                          const size_t g_cutoff,
@@ -78,6 +79,7 @@ build_downscatter_source(const size_t g,
 
 }
 
+//---------------------------------------------------------------------------//
 inline void ScatterSource::
 build_total_group_source(const size_t g,
                          const size_t g_cutoff,
@@ -97,7 +99,6 @@ build_total_group_source(const size_t g,
   }
 }
 
-
 } // end namespace detran
 
-#endif /* SCATTERSOURCE_I_HH_ */
+#endif /* detran_SCATTERSOURCE_I_HH_ */

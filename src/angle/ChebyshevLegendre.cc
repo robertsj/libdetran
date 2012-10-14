@@ -56,6 +56,8 @@ ChebyshevLegendre::ChebyshevLegendre(const size_t dim,
   // PRODUCT QUADRATURE
   //-------------------------------------------------------------------------//
 
+  double scale = 1.0;
+  if (d_dimension == 2) scale = 2.0;
   double weight_tot = 0.0;
   int n = 0;
   for (int a = 0; a < na; ++a)
@@ -65,7 +67,7 @@ ChebyshevLegendre::ChebyshevLegendre(const size_t dim,
       d_mu[n]     = d_cos_theta[p] * d_cos_phi[a];
       d_eta[n]    = d_cos_theta[p] * d_sin_phi[a];
       d_xi[n]     = d_sin_theta[p];
-      d_weight[n] = d_polar_weight[p] * d_azimuth_weight[a];
+      d_weight[n] = scale * d_polar_weight[p] * d_azimuth_weight[a];
       weight_tot += d_weight[n];
     }
   }

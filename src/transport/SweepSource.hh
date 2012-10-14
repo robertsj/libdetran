@@ -123,12 +123,12 @@ public:
               SP_quadrature quadrature,
               SP_material   material,
               SP_MtoD       MtoD,
-              bool          multiply = false)
+              bool          implicit_fission = false)
     :  d_state(state)
     ,  d_mesh(mesh)
     ,  d_quadrature(quadrature)
     ,  d_MtoD(MtoD)
-    ,  d_multiply(multiply)
+    ,  d_implicit_fission(implicit_fission)
     ,  d_source(mesh->number_cells(), 0.0)
     ,  d_fixed_group_source(mesh->number_cells(), 0.0)
     ,  d_scatter_group_source(mesh->number_cells(), 0.0)
@@ -273,8 +273,8 @@ private:
   std::vector<SP_externalsource> d_discrete_external_sources;
   /// Fission source
   SP_fissionsource d_fissionsource;
-  /// Multiplying fixed source flag
-  bool d_multiply;
+  /// Implicit fission flag
+  bool d_implicit_fission;
   /// Scattering source
   SP_scattersource d_scattersource;
 
