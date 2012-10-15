@@ -81,10 +81,11 @@ public:
                                 SP_material   material,
                                 SP_mesh       mesh,
                                 const bool    include_fission,
+                                const bool    adjoint = false,
                                 const double  keff = 1.0)
   {
     SP_lossoperator p(new DiffusionLossOperator(input, material, mesh,
-                                                include_fission, keff));
+                                                include_fission, adjoint, keff));
     return p;
   }
 
