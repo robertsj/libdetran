@@ -94,10 +94,10 @@
   %{
     def __setitem__(self, key, v) :
       t = self(key[0], key[1], key[2], key[3])
-      value(t, key[5], 0, v)
+      value(t, key[4], 0, v)
     def __getitem__(self, key) :
       t = self(key[0], key[1], key[2], key[3])
-      return value(t, key[5], 0)
+      return value(t, key[4], 0)
   %}
 }
 %extend detran_utilities::SP<detran::BoundarySN<_3D> >

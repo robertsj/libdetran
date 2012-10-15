@@ -57,7 +57,6 @@ void GaussSeidelMG<D>::solve(const double keff)
   // Do upscatter iterations if required.  Skip these if the max_iters = 0.
   if (iterate)
   {
-    std::cout << " iterating gs ... " << std::endl;
     // Iterations
     for (iteration = 1; iteration <= d_max_iters; iteration++)
     {
@@ -82,7 +81,6 @@ void GaussSeidelMG<D>::solve(const double keff)
         d_inner_solver->solve(g);
         // Constructing the norm piecewise.
         nres_g = norm_residual(d_state->phi(g), phi_old[g], d_norm_type);
-        std::cout << " nres_g=" << nres_g << " phi(g)[0] = " << d_state->phi(g)[0] << " old = " << phi_old[g][0] << std::endl;
         if (d_norm_type == "Linf")
           nres = std::max(nres, nres_g);
         else if (d_norm_type == "L1")
