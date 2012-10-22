@@ -1,19 +1,19 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   CurrentTally.i.hh
- * \brief  CurrentTally inline member definitions
- * \author Jeremy Roberts
- * @date   Aug 9, 2012
+/**
+ *  @file   CurrentTally.i.hh
+ *  @brief  CurrentTally inline member definitions
+ *  @author Jeremy Roberts
+ *  @date   Aug 9, 2012
  */
 //---------------------------------------------------------------------------//
 
 #ifndef CURRENTTALLY_I_HH_
 #define CURRENTTALLY_I_HH_
 
-
 namespace detran
 {
 
+//---------------------------------------------------------------------------//
 // Get the partial current on a coarse mesh edge.
 template <class D>
 inline double
@@ -37,6 +37,7 @@ CurrentTally<D>::partial_current(const size_t i,
   return d_partial_current[axis][g][sense][index(i, j, k, axis)];
 }
 
+//---------------------------------------------------------------------------//
 // Tallying for main body
 template <class D>
 inline void
@@ -88,6 +89,7 @@ CurrentTally<D>::tally(const size_t i,
   }
 }
 
+//---------------------------------------------------------------------------//
 // Tallying for main body, 1D specialization. Things simplify a lot,
 // e.g. the current has no area.
 template <>
@@ -116,6 +118,7 @@ CurrentTally<_1D>::tally(const size_t i,
   }
 }
 
+//---------------------------------------------------------------------------//
 // Tallying for incident boundary.
 template <class D>
 inline void

@@ -63,7 +63,10 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  Jacobi(const double atol, const double rtol, const int maxit);
+  Jacobi(const double atol,
+         const double rtol,
+         const int maxit,
+         bool successive_norm = false);
 
   virtual ~Jacobi(){}
 
@@ -86,6 +89,9 @@ private:
   using LinearSolver::d_A;
   using LinearSolver::d_P;
   using LinearSolver::d_norm_type;
+
+  // Use norm of residual (false=default) or successive iterates
+  bool d_successive_norm;
 
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL LINEAR SOLVERS MUST IMPLEMENT THIS

@@ -57,3 +57,6 @@ void callow_finalize();
 // linear solver
 //---------------------------------------------------------------------------//
 
+%include "solver/Solver.i"
+%include "preconditioner/Preconditioner.i"
+

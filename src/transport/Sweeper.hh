@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Sweeper.hh
- * \author Jeremy Roberts
- * @date   Mar 24, 2012
- * \brief  Sweeper class definition.
+/**
+ *  @file   Sweeper.hh
+ *  @author Jeremy Roberts
+ *  @date   Mar 24, 2012
+ *  @brief  Sweeper class definition.
  */
 //---------------------------------------------------------------------------//
 
@@ -29,26 +29,26 @@ namespace detran
 {
 
 //---------------------------------------------------------------------------//
-/*!
- * \class Sweeper
- * \brief Sweeper for discrete ordinates problems.
+/**
+ *  @class Sweeper
+ *  @brief Sweeper for discrete ordinates problems.
  *
- * The within-group transport equation is
- * \f[
+ *  The within-group transport equation is
+ *  @f[
  *      \mathbf{L}\psi = Q \, ,
- * \f]
- * where \f$ \mathbf{L} \f$ is the streaming and collision operator and
- * \f$ Q \f$ is a discrete representation of all source contributions.
+ *  @f]
+ *  where \f$ \mathbf{L} \f$ is the streaming and collision operator and
+ *  \f$ Q \f$ is a discrete representation of all source contributions.
  *
- * To invert the operator \f$ \mathbf{L} \f$, we "sweep" over the mesh for all
- * angles,
- * which gives us updated angular fluxes in each cell.  Actually, the
- * flux *moments* are updated, while the discrete angular flux is
- * optionally stored.
+ *  To invert the operator \f$ \mathbf{L} \f$, we "sweep" over the mesh for all
+ *  angles,
+ *  which gives us updated angular fluxes in each cell.  Actually, the
+ *  flux *moments* are updated, while the discrete angular flux is
+ *  optionally stored.
  *
- * Relevant input database entries:
- *   - store_angular_flux [int]
- *   - equation [string]
+ *  Relevant input database entries:
+ *    - store_angular_flux [int]
+ *    - equation [string]
  *
  */
 //---------------------------------------------------------------------------//
@@ -74,7 +74,7 @@ public:
   typedef State::moments_type                       moments_type;
   typedef State::angular_flux_type                  angular_flux_type;
   typedef CurrentTally<D>                           CurrentTally_T;
-  typedef typename CurrentTally_T::SP_currenttally  SP_currenttally;
+  typedef typename CurrentTally_T::SP_tally  SP_tally;
   typedef detran_utilities::vec_int                 vec_int;
   typedef detran_utilities::vec2_int                vec2_int;
   typedef detran_utilities::vec3_int                vec3_int;
@@ -87,7 +87,7 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  /*!
+  /**
    *  \brief Constructor.
    *
    *  @param    input       User input database.
@@ -110,8 +110,8 @@ public:
   // ABSTRACT INTERFACE -- ALL SWEEPERS MUST IMPLEMENT THESE
   //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Sweep over all angles and space.
+  /**
+   *  @brief Sweep over all angles and space.
    *
    *  Note, if the angular flux is to be updated,
    *  it is done directly to via State.  Having
@@ -168,7 +168,7 @@ public:
   }
 
   /// Set a current tally.
-  void set_current(SP_currenttally current)
+  void set_current(SP_tally current)
   {
     Require(current);
     d_current = current;
@@ -182,48 +182,30 @@ protected:
 
   /// Input database
   SP_input d_input;
-
   /// Mesh
   SP_mesh d_mesh;
-
   /// Material
   SP_material d_material;
-
   /// Angular quadrature
   SP_quadrature d_quadrature;
-
   /// State vectors
   SP_state d_state;
-
-  /// Boundary
-  //SP_boundary d_boundary;
-
   /// Sweep source
   SP_sweepsource d_sweepsource;
-
-  /// Acceleration
-  //SP_acceleration d_acceleration;
-
   /// Current group
   size_t d_g;
-
   /// Update the angular flux?
   bool d_update_psi;
-
   /// Match incident/outgoing side with octant
   vec3_size_t d_face_index;
-
   /// Adjoint problem?
   bool d_adjoint;
-
   /// Count the sweeps.
   size_t d_number_sweeps;
-
   /// Update the boundary on the fly?  Can't be used for Krylov.
   bool d_update_boundary;
-
   /// Current tally
-  SP_currenttally d_current;
+  SP_tally d_current;
 
   //-------------------------------------------------------------------------//
   // IMPLEMENTATION

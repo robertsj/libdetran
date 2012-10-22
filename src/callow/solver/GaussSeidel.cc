@@ -18,8 +18,12 @@ namespace callow
 
 GaussSeidel::GaussSeidel(const double  atol,
                          const double  rtol,
-                         const int     maxit)
+                         const int     maxit,
+                         const double  omega,
+                         bool          successive_norm)
   : LinearSolver(atol, rtol, maxit, "gauss-seidel")
+  , d_omega(omega)
+  , d_successive_norm(successive_norm)
 {
   /* ... */
 }

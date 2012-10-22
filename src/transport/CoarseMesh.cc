@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   CoarseMesh.cc
- * \brief  CoarseMesh 
- * \author Jeremy Roberts
- * @date   Aug 8, 2012
+/**
+ *  @file   CoarseMesh.cc
+ *  @brief  CoarseMesh
+ *  @author Jeremy Roberts
+ *  @date   Aug 8, 2012
  */
 //---------------------------------------------------------------------------//
 
@@ -120,7 +120,6 @@ CoarseMesh::CoarseMesh(SP_mesh fine_mesh, const size_t level)
   }
 
 }
-
 
 } // end namespace detran
 

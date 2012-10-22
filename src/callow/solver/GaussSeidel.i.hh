@@ -69,10 +69,31 @@ inline void GaussSeidel::solve_impl(const Vector &b, Vector &x)
     a = 0; // nullify pointer
 
     //---------------------------------------------------//
+    // relax
+    //---------------------------------------------------//
+
+    if (d_omega != 1.0)
+    {
+      // x1 <-- (1-w)*x0 + w*x1
+      x1->scale(d_omega);
+      x1->add_a_times_x((1.0-d_omega), *x0);
+    }
+
+    //---------------------------------------------------//
     // compute residual norm
     //---------------------------------------------------//
 
-    r = x1->norm_residual(*x0, d_norm_type);
+    if (!d_successive_norm)
+    {
+      // Compute the residual and put it into x0
+      A->multiply(*x1, *x0);
+      r = x0->norm_residual(b, d_norm_type);
+    }
+    else
+    {
+      // compare x1 with x0
+      r = x1->norm_residual(*x0, d_norm_type);
+    }
 
     //---------------------------------------------------//
     // swap pointers

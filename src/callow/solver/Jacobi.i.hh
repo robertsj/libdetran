@@ -74,7 +74,17 @@ inline void Jacobi::solve_impl(const Vector &b, Vector &x)
     // compute residual norm
     //---------------------------------------------------//
 
-    r = x1->norm_residual(*x0, L2);
+    if (!d_successive_norm)
+    {
+      // Compute the residual and put it into x0
+      A->multiply(*x1, *x0);
+      r = x0->norm_residual(b, d_norm_type);
+    }
+    else
+    {
+      // compare x1 with x0
+      r = x1->norm_residual(*x0, d_norm_type);
+    }
 
     //---------------------------------------------------//
     // swap pointers

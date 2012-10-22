@@ -47,7 +47,7 @@ public:
   typedef typename Base::SP_sweepsource                 SP_sweepsource;
   typedef typename Base::moments_type                   moments_type;
   typedef typename Base::angular_flux_type              angular_flux_type;
-  typedef typename Base::SP_currenttally                SP_currenttally;
+  typedef typename Base::SP_tally                       SP_tally;
   typedef typename Base::vec_int                        vec_int;
   typedef typename Base::vec2_int                       vec2_int;
   typedef typename Base::vec3_int                       vec3_int;

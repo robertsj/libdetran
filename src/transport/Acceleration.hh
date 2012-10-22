@@ -1,63 +1,55 @@
-/*
- * Acceleration.hh
- *
- *  Created on: May 16, 2012
- *      Author: robertsj
+//----------------------------------*-C++-*----------------------------------//
+/**
+ *  @file   Acceleration.hh
+ *  @brief  Acceleration class definition
+ *  @author Jeremy Roberts
+ *  @date   Aug 8, 2012
  */
+//---------------------------------------------------------------------------//
 
-#ifndef ACCELERATION_HH_
-#define ACCELERATION_HH_
+#ifndef detran_ACCELERATION_HH_
+#define detran_ACCELERATION_HH_
 
-// Detran
-#include "Equation.hh"
-#include "Material.hh"
-#include "Mesh.hh"
-#include "Quadrature.hh"
 #include "State.hh"
-
-// Utilities
-#include "DBC.hh"
-#include "Definitions.hh"
-#include "SP.hh"
+#include "angle/Quadrature.hh"
+#include "discretization/Equation.hh"
+#include "geometry/Mesh.hh"
+#include "material/Material.hh"
+#include "utilities/DBC.hh"
+#include "utilities/Definitions.hh"
+#include "utilities/SP.hh"
 
 namespace detran
 {
 
-/*!
- *  \class Acceleration
- *  \brief Base class for coarse mesh acceleration schemes
+/**
+ *  @class Acceleration
+ *  @brief Base class for coarse mesh acceleration schemes
  *
  *  All anticipated acceleration schemes have several shared
  *  features.  These include
- *    + Requiring reaction rates within a coarse mesh
- *    + Requiring knowledge of the angular flux at coarse
- *      mesh boundaries (to compute net currents, partial
- *      currents, or some other function of the flux)
- *    + Solution of some lower order equation with the
- *      condition that the lower order solution is
- *      equivelent to the homogenized (and converged)
- *      high order solution
- *
+ *    + Computing coarse mesh reaction rates
+ *    + Computing functions of coarse mesh boundary fluxes
+ *    + Solving a low order equation on the coarse mesh
  */
 template <class D>
-class Acceleration : public Object
+class Acceleration
 {
 
 public:
 
-  /// \name Useful Typedefs
-  // \{
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
 
-  typedef SP<Acceleration>                            SP_acceleration;
-  typedef Mesh::SP_mesh                               SP_mesh;
-  typedef Material::SP_material                       SP_material;
-  typedef Quadrature::SP_quadrature                   SP_quadrature;
+  typedef detran_utilities::SP<Acceleration>          SP_acceleration;
+  typedef detran_geometry::Mesh::SP_mesh              SP_mesh;
+  typedef detran_material::Material::SP_material      SP_material;
+  typedef detran_angle::Quadrature::SP_quadrature     SP_quadrature;
   typedef State::SP_state                             SP_state;
   typedef typename EquationTraits<D>::face_flux_type  face_flux_type;
 
-  // \}
-
-  /*!
+  /**
    *  \brief Constructor
    *
    *  @param mesh       Mesh smart pointer
@@ -67,10 +59,10 @@ public:
   Acceleration(SP_mesh mesh, SP_material material, SP_quadrature quadrature);
 
   /// Virtual destructor
-  ~Acceleration(){}
+  virtual ~Acceleration(){}
 
-  /*!
-   *  \brief Create acceleration mesh given coarseness level and other setup.
+  /**
+   *  @brief Create acceleration mesh given coarseness level and other setup.
    *
    *  By default, this initializes the coarse mesh by
    *  assigning a desired number
@@ -169,15 +161,6 @@ protected:
 
   /// Quadrature
   SP_quadrature b_quadrature;
-
-  /// Fine-to-coarse maps
-  vec2_int b_fine_to_coarse;
-
-  /// Fine mesh coarse edge flags
-  vec2_int b_coarse_edge_flag;
-
-  ///
-  vec2_int b_octant_shift;
 
   /// Coarseness level
   int b_level;

@@ -60,7 +60,11 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  GaussSeidel(const double atol, const double rtol, const int maxit);
+  GaussSeidel(const double atol,
+              const double rtol,
+              const int maxit,
+              const double omega = 1.0,
+              bool successive_norm = false);
 
   virtual ~GaussSeidel(){}
 
@@ -83,6 +87,12 @@ private:
   using LinearSolver::d_A;
   using LinearSolver::d_P;
   using LinearSolver::d_norm_type;
+
+  // Relaxation parameter
+  double d_omega;
+
+  // Use norm of residual (false=default) or successive iterates
+  bool d_successive_norm;
 
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL LINEAR SOLVERS MUST IMPLEMENT THIS

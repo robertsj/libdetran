@@ -63,9 +63,9 @@ inline void generate_gc_parameters(detran_utilities::size_t  m,
   double W = pi / (double)m;
 
   // Generate abscissa
-  for (int i = 0; i < m; ++i)
+  for (int i = 1; i <= m; ++i)
   {
-    x[i] = std::cos((2*(i+1)- 1)*pi/(2.0*m));
+    x[i-1] = std::cos((i-0.5)*pi/m);
   }
 
   // Generate weights
