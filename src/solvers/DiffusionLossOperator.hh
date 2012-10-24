@@ -48,6 +48,7 @@ public:
   //---------------------------------------------------------------------------//
 
   typedef callow::Matrix                                Base;
+  typedef callow::MatrixBase::SP_matrix                 SP_matrix;
   typedef detran_utilities::SP<DiffusionLossOperator>   SP_lossoperator;
   typedef detran_utilities::InputDB::SP_input           SP_input;
   typedef detran_material::Material::SP_material        SP_material;
@@ -77,15 +78,15 @@ public:
                         const double  keff = 1.0);
 
   /// SP constructor
-  static SP_lossoperator Create(SP_input      input,
-                                SP_material   material,
-                                SP_mesh       mesh,
-                                const bool    include_fission,
-                                const bool    adjoint = false,
-                                const double  keff = 1.0)
+  static SP_matrix Create(SP_input      input,
+                          SP_material   material,
+                          SP_mesh       mesh,
+                          const bool    include_fission,
+                          const bool    adjoint = false,
+                          const double  keff = 1.0)
   {
-    SP_lossoperator p(new DiffusionLossOperator(input, material, mesh,
-                                                include_fission, adjoint, keff));
+    SP_matrix p(new DiffusionLossOperator(input, material, mesh,
+                                          include_fission, adjoint, keff));
     return p;
   }
 

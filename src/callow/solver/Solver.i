@@ -7,6 +7,7 @@
 //---------------------------------------------------------------------------//
 
 %include "detran_utilities.i"
+%include "preconditioner/Preconditioner.i"
 
 %include "LinearSolver.hh"
 %include "Jacobi.hh"

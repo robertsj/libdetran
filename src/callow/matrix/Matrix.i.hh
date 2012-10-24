@@ -428,7 +428,7 @@ inline void Matrix::display() const
   printf("\n");
   if (d_m > 20 or d_n > 20)
   {
-    printf("  *** matrix not printed for m or n > 20 *** ");
+    printf("  *** matrix not printed for m or n > 20 *** \n");
     return;
   }
   for (int i = 0; i < d_m; i++)

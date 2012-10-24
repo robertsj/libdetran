@@ -12,14 +12,18 @@
 namespace callow
 {
 
+//---------------------------------------------------------------------------//
 PCILU0::PCILU0(SP_matrix A)
 {
   // preconditions
   Require(A);
   Require(A->number_rows() == A->number_columns());
+  Insist(dynamic_cast<Matrix*>(A.bp()),
+    "Need an explicit matrix for use with PCILU0");
+  SP_matrixfull B(A);
 
   // copy A
-  d_P = new Matrix(*A);
+  d_P = new Matrix(*B);
 
   using std::cout;
   using std::endl;
@@ -86,6 +90,13 @@ PCILU0::PCILU0(SP_matrix A)
   // size the working vector
   d_y.resize(d_P->number_rows(), 0.0);
 
+}
+
+//---------------------------------------------------------------------------//
+PCILU0::SP_preconditioner PCILU0::Create(SP_matrix A)
+{
+  SP_preconditioner p(new PCILU0(A));
+  return p;
 }
 
 } // end namespace callow

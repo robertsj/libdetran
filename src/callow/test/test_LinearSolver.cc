@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   test_LinearSolver.cc
- * \author Jeremy Roberts
- * \date   Aug 19, 2012
- * \brief  Test of LinearSolver class and its subclasses
+/**
+ *  @file   test_LinearSolver.cc
+ *  @author Jeremy Roberts
+ *  @date   Aug 19, 2012
+ *  @brief  Test of LinearSolver class and its subclasses
  */
 //---------------------------------------------------------------------------//
 
@@ -12,6 +12,7 @@
         FUNC(test_Richardson)  \
         FUNC(test_Jacobi)      \
         FUNC(test_GaussSeidel) \
+        FUNC(test_SOR)         \
         FUNC(test_GMRES)       \
         FUNC(test_PetscSolver)
 
@@ -28,6 +29,7 @@
 // pc
 #include "callow/preconditioner/PCJacobi.hh"
 #include "callow/preconditioner/PCILU0.hh"
+#include "callow/preconditioner/PCIdentity.hh"
 //
 #include "callow/test/matrix_fixture.hh"
 #include <iostream>
@@ -120,11 +122,12 @@ int test_GaussSeidel(int argc, char *argv[])
   return 0;
 }
 
-int test_GMRES(int argc, char *argv[])
+int test_SOR(int argc, char *argv[])
 {
   Vector X(n, 0.0);
   Vector B(n, 1.0);
-  GMRES solver(abstol, reltol, maxit, 10);
+  // G-S with omega = 1.3s (i.e. SOR(1.3))
+  GaussSeidel solver(abstol, reltol, maxit, 1.30);
   solver.set_operators(test_matrix_1(n));
   solver.set_monitor_level(2);
   solver.set_monitor_diverge(false);
@@ -134,6 +137,74 @@ int test_GMRES(int argc, char *argv[])
   {
     TEST(soft_equiv(X[i],  X_ref[i], 1e-9));
   }
+  return 0;
+}
+
+int test_GMRES(int argc, char *argv[])
+{
+
+  GMRES::SP_matrix A;
+  A = test_matrix_1(n);
+  Vector X(n, 0.0);
+  Vector B(n, 1.0);
+  GMRES solver(abstol, reltol, maxit, 20);
+  Preconditioner::SP_preconditioner P1, P2;
+  P1 = new PCILU0(A);
+  P2 = new PCJacobi(A);
+  solver.set_monitor_level(2);
+  solver.set_monitor_diverge(false);
+  int status = 1;
+
+  // No preconditioner
+  X.set(0.0);
+  solver.set_operators(A);
+  status = solver.solve(B, X);
+  TEST(status == 0);
+  for (int i = 0; i < 20; ++i)
+  {
+    TEST(soft_equiv(X[i],  X_ref[i], 1e-9));
+  }
+
+  // PCILU0 -- LEFT
+  X.set(0.0);
+  solver.set_operators(A, P1, GMRES::LEFT);
+  status = solver.solve(B, X);
+  TEST(status == 0);
+  for (int i = 0; i < 20; ++i)
+  {
+    TEST(soft_equiv(X[i],  X_ref[i], 1e-9));
+  }
+
+  // PCILU0 -- RIGHT
+  X.set(0.0);
+  solver.set_operators(A, P1, GMRES::RIGHT);
+  status = solver.solve(B, X);
+  TEST(status == 0);
+  for (int i = 0; i < 20; ++i)
+  {
+    TEST(soft_equiv(X[i],  X_ref[i], 1e-9));
+  }
+
+  // PCJacobi -- LEFT
+  X.set(0.0);
+  solver.set_operators(A, P2, GMRES::LEFT);
+  status = solver.solve(B, X);
+  TEST(status == 0);
+  for (int i = 0; i < 20; ++i)
+  {
+    TEST(soft_equiv(X[i],  X_ref[i], 1e-9));
+  }
+
+  // PCJacobi -- RIGHT
+  X.set(0.0);
+  solver.set_operators(A, P2, GMRES::RIGHT);
+  status = solver.solve(B, X);
+  TEST(status == 0);
+  for (int i = 0; i < 20; ++i)
+  {
+    TEST(soft_equiv(X[i],  X_ref[i], 1e-9));
+  }
+
   return 0;
 }
 
@@ -160,5 +231,5 @@ int test_PetscSolver(int argc, char *argv[])
 
 
 //---------------------------------------------------------------------------//
-//              end of test_Matrix.cc
+//              end of test_LinearSolver.cc
 //---------------------------------------------------------------------------//

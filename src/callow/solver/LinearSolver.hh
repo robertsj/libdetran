@@ -150,6 +150,12 @@ public:
     d_monitor_diverge = v;
   }
 
+  /// Set a norm type
+  void set_norm_type(const int norm_type)
+  {
+    d_norm_type = norm_type;
+  }
+
   /**
    *  @param b  right hand side
    *  @param x  unknown vector
@@ -160,6 +166,12 @@ public:
   std::vector<double> residual_norms()
   {
     return d_residual;
+  }
+
+  /// return the number of iterations
+  int number_iterations() const
+  {
+    return d_number_iterations;
   }
 
 protected:

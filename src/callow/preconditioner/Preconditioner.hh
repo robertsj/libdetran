@@ -63,7 +63,7 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<Preconditioner >    SP_preconditioner;
+  typedef detran_utilities::SP<Preconditioner>  SP_preconditioner;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR

@@ -24,11 +24,14 @@ namespace callow
 // IMPLEMENTATION
 //---------------------------------------------------------------------------//
 
-inline void GMRES::solve_impl(const Vector &b, Vector &x)
+inline void GMRES::solve_impl(const Vector &b, Vector &x0)
 {
 
   int restart = d_restart;
   if (restart >= d_A->number_rows()) restart = d_A->number_rows();
+
+  // Unknowns.  If x0 is nonzero, we need to separate it out.
+  Vector x(x0);
 
   // krylov basis
   std::vector<Vector>  v(d_restart + 1, Vector(x.size(), 0.0));
@@ -51,7 +54,7 @@ inline void GMRES::solve_impl(const Vector &b, Vector &x)
   // outer iterations
   //-------------------------------------------------------------------------//
 
-  int iteration = 0; // outer iteration
+  int iteration = 0;  // total iterations (i.e. applications of A)
   bool done = false;
   while (!done and iteration < d_maximum_iterations)
   {
@@ -74,8 +77,6 @@ inline void GMRES::solve_impl(const Vector &b, Vector &x)
     //   compute norm of residual
     double rho = r.norm(L2);
 
-    // otherwise, we must be restarting
-
     // check initial outer residual.  if it's small enough, we started
     // with a solved system.
     if (iteration == 0)
@@ -95,7 +96,6 @@ inline void GMRES::solve_impl(const Vector &b, Vector &x)
 
     // inner iterations (of size restart)
     int k = 0;
-    int lala = 0;
     for (; k < d_restart; ++k)
     {
       ++iteration;
@@ -110,19 +110,23 @@ inline void GMRES::solve_impl(const Vector &b, Vector &x)
       // compute v(k+1) <-- inv(P_L)*A*inv(P_R) * v(k)
       //---------------------------------------------------------------------//
 
-      // right preconditioner
+      // apply right preconditioner and operator
       if (d_P and d_pc_side == Base::RIGHT)
       {
-        t.copy(v[k]);
-        d_P->apply(t, v[k]);
+        d_P->apply(v[k], v[k + 1]);
+        t.copy(v[k + 1]);
+        d_A->multiply(t, v[k + 1]);
       }
-      // apply A
-      d_A->multiply(v[k], v[k+1]);
-      // left preconditioner
+      else
+      {
+        // save on a copy
+        d_A->multiply(v[k], v[k + 1]);
+      }
+      // apply left preconditioner
       if (d_P and d_pc_side == Base::LEFT)
       {
-        t.copy(v[k+1]);
-        d_P->apply(t, v[k+1]);
+        t.copy(v[k + 1]);
+        d_P->apply(t, v[k + 1]);
       }
 
       //---------------------------------------------------------------------//
@@ -163,13 +167,14 @@ inline void GMRES::solve_impl(const Vector &b, Vector &x)
       //---------------------------------------------------------------------//
       // watch for happy breakdown: if H[k+1][k] == 0, we've solved Ax=b
       //---------------------------------------------------------------------//
-
+      bool happy = false;
       if (d_H[k+1][k] != 0.0)
       {
         v[k+1].scale(1.0/d_H[k+1][k]);
       }
       else
       {
+        happy = true;
         std::printf("happy breakdown for k = %5i (iteration = %5i) \n",
                     k, iteration);
       }
@@ -188,6 +193,7 @@ inline void GMRES::solve_impl(const Vector &b, Vector &x)
       double g_1 = d_s[k]*g[k] + d_c[k]*g[k+1];
       g[k  ] = g_0;
       g[k+1] = g_1;
+      if (happy) cout << " g_0 = " << g_0 << " g_1 = " << g_1 << endl;
 
       //---------------------------------------------------------------------//
       // monitor the residual and break if done
@@ -213,27 +219,28 @@ inline void GMRES::solve_impl(const Vector &b, Vector &x)
 
     compute_y(y, g, k);
 
-    // update x = x0 + v[0]*y[0] + ...
+    // reset the solution
+    x.set(0.0);
+    // update x = v[0]*y[0] + ...
+    x.set(0.0);
     for (int i = 0; i < k; ++i)
     {
       x.add_a_times_x(y[i], v[i]);
     }
-    // \todo this assumes x_0 = 0; otherwise, need x = x_0 + inv(P)*(V*y)
     if (d_P and d_pc_side == Base::RIGHT)
     {
       t.copy(x);
       d_P->apply(t, x);
     }
+    // add the initial guess
+    x.add(x0);
 
   } // end outers
 
-  d_A->multiply(x, r);
-  r.subtract(b);
-  r.scale(-1.0);
-  double resid = r.norm(L2);
+  // copy solution to outgoing vector
+  x0.copy(x);
 
   return;
-
 }
 
 inline void GMRES::apply_givens(const int k)

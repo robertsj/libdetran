@@ -89,6 +89,7 @@ public:
   typedef callow::LinearSolverCreator                 Creator_T;
   typedef callow::LinearSolver::SP_solver             SP_solver;
   typedef callow::LinearSolver::SP_preconditioner     SP_preconditioner;
+  typedef callow::MatrixBase::SP_matrix               SP_matrix;
   //
   typedef detran_utilities::size_t                    size_t;
 
@@ -148,8 +149,8 @@ public:
   SP_mesh mesh() const { return d_mesh; }
   SP_state state() const { return d_state; }
   SP_boundary boundary() const { return d_boundary; }
-  SP_lossoperator lossoperator() const { return d_M; }
-  SP_gainoperator gainoperator() const { return d_F; }
+  SP_matrix lossoperator() const { return d_M; }
+  SP_matrix gainoperator() const { return d_F; }
   SP_vector phi() { return d_phi; }
   SP_vector Q() { return d_Q; }
   SP_vector Q_total() { return d_Q_total; }

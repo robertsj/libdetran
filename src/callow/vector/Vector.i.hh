@@ -143,7 +143,7 @@ inline double Vector::norm_residual(const Vector& x, const int type)
   else if (type == L2REL)
   {
     for (int i = 0; i < d_size; i++)
-      val += (d_value[i] - x[i])*(d_value[i] - x[i]);
+      val += ((d_value[i] - x[i])/d_value[i])*((d_value[i] - x[i])/d_value[i]);
     val = std::sqrt(val);
   }
   else if (type == LINFREL)

@@ -43,7 +43,8 @@ public:
 
   typedef Preconditioner                   Base;
   typedef typename Base::SP_preconditioner SP_preconditioner;
-  typedef typename Matrix::SP_matrix       SP_matrix;
+  typedef typename MatrixBase::SP_matrix   SP_matrix;
+  typedef typename Matrix::SP_matrix       SP_matrixfull;
   typedef typename Vector::SP_vector       SP_vector;
 
   //-------------------------------------------------------------------------//
@@ -52,6 +53,9 @@ public:
 
   /// Construct a Jacobi preconditioner for the explicit matrix A
   PCJacobi(SP_matrix A);
+
+  /// SP constructor
+  static SP_preconditioner Create(SP_matrix A);
 
   /// Virtual destructor
   virtual ~PCJacobi(){};

@@ -1,43 +1,27 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   PCILU0.hh
- *  @brief  PCILU0
- *  @author Jeremy Roberts
- *  @date   Sep 18, 2012
+ *  @file   PCIdentity.hh
+ *  @author robertsj
+ *  @date   Oct 24, 2012
+ *  @brief  PCIdentity class definition.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef callow_PCILU0_HH_
-#define callow_PCILU0_HH_
+#ifndef callow_PCIDENTITY_HH_
+#define callow_PCIDENTITY_HH_
 
 #include "Preconditioner.hh"
-#include "callow/matrix/Matrix.hh"
 
 namespace callow
 {
 
 /**
- *  @class PCILU0
- *  @brief Implements the ILU(0) preconditioner
+ *  @class PCIdentity
+ *  @brief Implements an indentity preconditioner (i.e. no preconditioning)
  *
- *  Following Saad, ILU(0) is defined
- *  @code
- *    for i = 2, n
- *      for k = 1, i - 1
- *        for (i, k) in nonzeros of lower A
- *          A(i,k) = A(i,k)/A(k,k)
- *          for j = k + 1 .. n
- *            for (i, j) in nonzeros of upper A
- *              A(i, j) = A(i, j) - A(i, k)*A(k, k)
- *            end
- *          end
- *        end
- *      end
- *    end
- *  @endcode
+ *  This is mostly for testing purposes.
  */
-
-class PCILU0: public Preconditioner
+class PCIdentity: public Preconditioner
 {
 
 public:
@@ -56,37 +40,39 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  /// Construct an ILU0 preconditioner for the explicit matrix A
-  PCILU0(SP_matrix A);
+  /// Constructor
+  PCIdentity(double factor = 1.0)
+    : d_factor(factor)
+  {/* ... */}
 
   /// SP constructor
-  static SP_preconditioner Create(SP_matrix A);
+  static SP_preconditioner Create(double factor = 1.0)
+  {
+    SP_preconditioner p(new PCIdentity(factor));
+    return p;
+  }
 
   /// Virtual destructor
-  virtual ~PCILU0(){};
+  virtual ~PCIdentity(){};
 
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL PRECONDITIONERS MUST IMPLEMENT THIS
   //-------------------------------------------------------------------------//
 
   /// Solve Px = b
-  void apply(Vector &b, Vector &x);
+  void apply(Vector &b, Vector &x)
+  {
+    x.copy(b);
+    x.scale(d_factor);
+  }
 
-protected:
+private:
 
-  /// ILU decomposition of A
-  SP_matrixfull d_P;
-  /// Working vector
-  Vector d_y;
+  /// Scaling factor
+  double d_factor;
 
 };
 
 } // end namespace callow
 
-#include "PCILU0.i.hh"
-
-#endif // callow_PCILU0_HH_
-
-//---------------------------------------------------------------------------//
-//              end of file PCILU0.hh
-//---------------------------------------------------------------------------//
+#endif /* callow_PCIDENTITY_HH_ */

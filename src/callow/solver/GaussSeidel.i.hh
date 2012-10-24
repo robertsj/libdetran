@@ -32,6 +32,7 @@ inline void GaussSeidel::solve_impl(const Vector &b, Vector &x)
 
   // temporary storage and pointers for swapping
   Vec temp(x.size(), 0.0);
+  Vec temp2(x.size(), 0.0);
   Vec* x0 = &x;
   Vec* x1 = &temp;
   Vec* swap;
@@ -83,16 +84,16 @@ inline void GaussSeidel::solve_impl(const Vector &b, Vector &x)
     // compute residual norm
     //---------------------------------------------------//
 
-    if (!d_successive_norm)
-    {
-      // Compute the residual and put it into x0
-      A->multiply(*x1, *x0);
-      r = x0->norm_residual(b, d_norm_type);
-    }
-    else
+    if (d_successive_norm)
     {
       // compare x1 with x0
       r = x1->norm_residual(*x0, d_norm_type);
+    }
+    else
+    {
+      // Compute the residual and put it into x0
+      A->multiply(*x1, temp2);
+      r = temp2.norm_residual(b, d_norm_type);
     }
 
     //---------------------------------------------------//
