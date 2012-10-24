@@ -120,9 +120,9 @@ void MGSolverGS<D>::solve(const double keff)
 }
 
 // Explicit instantiations
-template class MGSolverGS<_1D>;
-template class MGSolverGS<_2D>;
-template class MGSolverGS<_3D>;
+//template class MGSolverGS<_1D>;
+//template class MGSolverGS<_2D>;
+//template class MGSolverGS<_3D>;
 
 } // end namespace detran
 

@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Execute.cc
- * \author robertsj
- * \date   Apr 11, 2012
- * \brief  Execute class definition.
+/**
+ *  @file   Execute.cc
+ *  @author robertsj
+ *  @date   Apr 11, 2012
+ *  @brief  Execute class definition.
  */
 //---------------------------------------------------------------------------//
 
@@ -151,6 +151,11 @@ void Execute::solve()
   // INSERT POST PROCESSING HERE
 
 }
+
+// Explicit instantiations of function templates 
+template void Execute::solve<_1D>();
+template void Execute::solve<_2D>();
+template void Execute::solve<_3D>();
 
 } // end namespace detran
 

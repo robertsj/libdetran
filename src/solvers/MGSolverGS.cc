@@ -32,6 +32,10 @@ MGSolverGS<D>::MGSolverGS(SP_state                  state,
   Ensure(d_norm_type == "Linf" or d_norm_type == "L1" or d_norm_type == "L2");
 }
 
+template class MGSolverGS<_1D>;
+template class MGSolverGS<_2D>;
+template class MGSolverGS<_3D>;
+
 } // end namespace detran
 
 //---------------------------------------------------------------------------//

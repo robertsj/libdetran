@@ -109,20 +109,16 @@ private:
   SP_material d_material;
   // Mesh
   SP_mesh d_mesh;
-  //
+  // State vector
   SP_state d_state;
   // Number of groups
   int d_number_groups;
-  //
+  // External source
   SP_externalsource d_externalsource;
-  //
+  // Problem dimensions
   int d_dimension;
-  //
+  // Problem type
   std::string d_problem_type;
-
-
-  /// Do nontemplated portion of problem setup.
-  void setup();
 
 };
 

@@ -28,6 +28,10 @@ PowerIteration<D>::PowerIteration(SP_mg_solver mg_solver)
 
 }
 
+template class PowerIteration<_1D>;
+template class PowerIteration<_2D>;
+template class PowerIteration<_3D>;
+
 } // end namespace detran
 
 //---------------------------------------------------------------------------//

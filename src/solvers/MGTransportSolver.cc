@@ -61,6 +61,10 @@ MGTransportSolver<D>::MGTransportSolver(SP_state                  state,
 
 }
 
+template class MGTransportSolver<_1D>;
+template class MGTransportSolver<_2D>;
+template class MGTransportSolver<_3D>;
+
 } // end namespace detran
 
 

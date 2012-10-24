@@ -50,6 +50,9 @@ Solver<D>::~Solver()
   /* ... */
 }
 
+template class Solver<_1D>;
+template class Solver<_2D>;
+template class Solver<_3D>;
 
 }
 

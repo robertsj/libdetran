@@ -103,9 +103,9 @@ void PowerIteration<D>::solve()
 }
 
 // Explicit instantiations
-template class PowerIteration<_1D>;
-template class PowerIteration<_2D>;
-template class PowerIteration<_3D>;
+//template class PowerIteration<_1D>;
+//template class PowerIteration<_2D>;
+//template class PowerIteration<_3D>;
 
 } // end namespace detran
 

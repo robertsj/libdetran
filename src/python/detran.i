@@ -46,6 +46,7 @@
 #endif
 //
 #include "callow/preconditioner/Preconditioner.hh"
+#include "callow/preconditioner/PCIdentity.hh"
 #include "callow/preconditioner/PCJacobi.hh"
 #include "callow/preconditioner/PCILU0.hh"
 #include "callow/preconditioner/PCShell.hh"
