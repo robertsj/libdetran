@@ -1,15 +1,13 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   InnerIteration.cc
- * \author robertsj
- * \date   Apr 4, 2012
- * \brief  InnerIteration class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+/**
+ *  @file   WGSolver.cc
+ *  @author robertsj
+ *  @date   Apr 4, 2012
+ *  @brief  WGSolver class definition.
  */
 //---------------------------------------------------------------------------//
 
-// Detran
-#include "InnerIteration.hh"
+#include "WGSolver.hh"
 
 namespace detran
 {
@@ -20,5 +18,5 @@ namespace detran
 } // end namespace detran
 
 //---------------------------------------------------------------------------//
-//              end of InnerIteration.cc
+//              end of WGSolver.cc
 //---------------------------------------------------------------------------//

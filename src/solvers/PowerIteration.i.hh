@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   PowerIteration.i.hh
- * \author robertsj
- * \date   Apr 10, 2012
- * \brief  PowerIteration inline member definitions.
+/**
+ *  @file   PowerIteration.i.hh
+ *  @author robertsj
+ *  @date   Apr 10, 2012
+ *  @brief  PowerIteration inline member definitions.
  */
 //---------------------------------------------------------------------------//
 
@@ -34,38 +34,38 @@ void PowerIteration<D>::solve()
   double keff_2 = 1.0;
 
   // Initialize the fission density
-  b_fissionsource->initialize();
+  d_fissionsource->initialize();
 
   // Power iterations.
   int iteration;
   double error;
-  for (iteration = 1; iteration <= b_max_iters; iteration++)
+  for (iteration = 1; iteration <= d_maximum_iterations; iteration++)
   {
     // Reset the error.
     error = 0.0;
 
     // Save current density.
-    State::moments_type fb_old(b_fissionsource->density());
+    State::moments_type fb_old(d_fissionsource->density());
 
     // Setup outer iteration.
-    b_fissionsource->setup_outer(1/keff);
+    d_fissionsource->setup_outer(1/keff);
 
     // Solve the multigroup equations.
-    b_mg_solver->solve();
+    d_mg_solver->solve();
 
     // Update density.
-    b_fissionsource->update();
+    d_fissionsource->update();
 
     // Compute keff.  Here, using L1.  Could implement
     // volume-integrated fission rate if desired.
-    State::moments_type fd(b_fissionsource->density());
+    State::moments_type fd(d_fissionsource->density());
     keff_2 = keff_1;
     keff_1 = keff;
     keff = keff_1 * norm(fd, "L1") / norm(fb_old, "L1");
 
     // Compute error in fission density.
     error = norm_residual(fd, fb_old, "L1");
-    if (b_print_out > 1 and iteration % b_print_interval == 0)
+    if (d_print_level > 1 and iteration % d_print_interval == 0)
     {
       if (d_aitken)
       {
@@ -81,11 +81,11 @@ void PowerIteration<D>::solve()
                iteration, error, keff);
       }
     }
-    if (error < b_tolerance) break;
+    if (error < d_tolerance) break;
 
   } // eigensolver loop
 
-  if (b_print_out > 0)
+  if (d_print_level > 0)
   {
     printf("*********************************************************************\n");
     printf(" PI Final: Number Iters: %3i  Error: %12.9f keff: %12.9f \n",
@@ -93,12 +93,12 @@ void PowerIteration<D>::solve()
     printf("*********************************************************************\n");
   }
 
-  if (error > b_tolerance)
+  if (error > d_tolerance)
   {
     detran_utilities::warning(detran_utilities::SOLVER_CONVERGENCE,
       "PowerIteration did not converge.");
   }
-  b_state->set_eigenvalue(keff);
+  d_state->set_eigenvalue(keff);
   std::cout << "PI done." << std::endl;
 }
 

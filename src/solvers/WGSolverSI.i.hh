@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   SourceIteration.i.hh
+ *  @file   WGSolverSI.i.hh
  *  @author robertsj
  *  @date   Apr 4, 2012
- *  @brief  SourceIteration inline member definitions.
+ *  @brief  WGSolverSI inline member definitions.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef SOURCEITERATION_I_HH_
-#define SOURCEITERATION_I_HH_
+#ifndef detran_WGSOLVERSI_I_HH
+#define detran_WGSOLVERSI_I_HH
 
 // System
 #include <algorithm>
@@ -19,13 +19,13 @@ namespace detran
 {
 
 template <class D>
-void SourceIteration<D>::solve(const size_t g)
+void WGSolverSI<D>::solve(const size_t g)
 {
   using std::cout;
   using std::endl;
   using detran_utilities::norm_residual;
 
-  if (d_print_out > 0) std::cout << "    Starting SI." << std::endl;
+  if (d_print_level > 0) std::cout << "    Starting SI." << std::endl;
 
   // Setup boundary conditions.  This sets any conditions fixed for the solve.
   d_boundary->set(g);
@@ -46,7 +46,7 @@ void SourceIteration<D>::solve(const size_t g)
   // Iterate.
   double error = 1.0;
   int iteration;
-  for (iteration = 1; iteration <= d_max_iters; iteration++)
+  for (iteration = 1; iteration <= d_maximum_iterations; iteration++)
   {
 
     // Update boundary.  This updates boundaries due to reflection, etc.
@@ -61,7 +61,7 @@ void SourceIteration<D>::solve(const size_t g)
     // Flux residual using L-infinity.
     error = norm_residual(phi_old, phi, "Linf");
 
-    if (d_print_out > 1 and iteration % d_print_interval == 0)
+    if (d_print_level > 1 and iteration % d_print_interval == 0)
     {
       printf("    SI Iter: %3i  Error: %12.9f \n", iteration, error);
     }
@@ -72,7 +72,7 @@ void SourceIteration<D>::solve(const size_t g)
 
   } // end iterations
 
-  if (d_print_out > 0)
+  if (d_print_level > 0)
   {
     printf("    SI Final: Number Iters: %3i  Error: %12.9f  Sweeps: %6i \n",
            iteration, error, d_sweeper->number_sweeps());
@@ -81,7 +81,7 @@ void SourceIteration<D>::solve(const size_t g)
   if (error > d_tolerance)
   {
     detran_utilities::warning(detran_utilities::SOLVER_CONVERGENCE,
-      "    SourceIteration did not converge.");
+      "    WGSolverSI did not converge.");
   }
 
   // Update the state with the new flux.
@@ -89,14 +89,14 @@ void SourceIteration<D>::solve(const size_t g)
 
 }
 
-template class SourceIteration<_1D>;
-template class SourceIteration<_2D>;
-template class SourceIteration<_3D>;
+template class WGSolverSI<_1D>;
+template class WGSolverSI<_2D>;
+template class WGSolverSI<_3D>;
 
 } // namespace detran
 
-#endif /* SOURCEITERATION_I_HH_ */
+#endif /* detran_WGSOLVERSI_I_HH */
 
 //---------------------------------------------------------------------------//
-//              end of SourceIteration.i.hh
+//              end of WGSolverSI.i.hh
 //---------------------------------------------------------------------------//

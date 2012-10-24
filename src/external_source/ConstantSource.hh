@@ -40,13 +40,13 @@ public:
    *  \brief Constructor
    *  \param number_groups  Number of energy groups
    *  \param mesh           Pointer to mesh
-   *  \param source         Source strength in all groups and all space;
+   *  \param strength       Source strength in all groups and all space;
    *                        the unit is n/cc-sec
    *  \param quadrature     Pointer to quadrature (optional)
    */
   ConstantSource(size_t number_groups,
                  SP_mesh mesh,
-                 double source,
+                 double strength,
                  SP_quadrature quadrature = SP_quadrature(0));
 
   /// SP constructor

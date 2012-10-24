@@ -11,21 +11,24 @@ SET(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 #-----------------------------------------------------------------------------#
 
 SET(SRC
+    Solver.cc
     DiffusionFixedSourceSolver.cc
     DiffusionEigensolver.cc
     DiffusionGainOperator.cc
     DiffusionLossOperator.cc
     Eigensolver.cc
-	EigenSLEPc.cc
-    InnerIteration.cc
-    SourceIteration.cc
-    InnerGMRES.cc
-    GaussSeidelMG.cc
-    KrylovMG.cc
+	  EigenSLEPc.cc
+    WGSolver.cc
+    WGSolverSI.cc
+    MGSolver.cc
+    MGTransportSolver.cc
+    MGSolverGS.cc
+    MGSolverGMRES.cc
     PowerIteration.cc
     PreconditionerWG.cc
     PreconditionerMG.cc
     FixedSourceManager.cc
+    EigenvalueManager.cc
 )
 
 #-----------------------------------------------------------------------------#

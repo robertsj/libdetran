@@ -1,86 +1,72 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Eigensolver.hh
- * \author robertsj
- * \date   Jun 18, 2012
- * \brief  Eigensolver class definition.
+/**
+ *  @file   Eigensolver.hh
+ *  @author robertsj
+ *  @date   Jun 18, 2012
+ *  @brief  Eigensolver class definition.
  */
 //---------------------------------------------------------------------------//
 
 #ifndef EIGENSOLVER_HH_
 #define EIGENSOLVER_HH_
 
-#include "detran_config.hh"
-#include "GaussSeidelMG.hh"
-#include "InnerIteration.hh"
-#ifdef DETRAN_ENABLE_PETSC
-#include "KrylovMG.hh"
-#include "petsc.h"
-#endif
-#include "SolverMG.hh"
-#include "external_source/ExternalSource.hh"
-#include "geometry/Mesh.hh"
-#include "material/Material.hh"
-#include "transport/FissionSource.hh"
-#include "utilities/DBC.hh"
-#include "utilities/InputDB.hh"
-#include "utilities/SP.hh"
+#include "FixedSourceManager.hh"
 
 namespace detran
 {
 
 //---------------------------------------------------------------------------//
-/*!
- *  \class Eigensolver
- *  \brief Base class for solving the eigenvalue problem
+/**
+ *  @class Eigensolver
+ *  @brief Base class for solving the eigenvalue problem
  *
- *  \section theeigenvalueproblem The Eigenvalue Problem
+ *  @section theeigenvalueproblem The Eigenvalue Problem
  *
  *  The steady-state balance of neutrons in a fissile system is
  *  characterized by the multigroup eigenvalue problem
  *
- *  \f[
- *      \hat{\Omega} \cdot \nabla  \psi +
- *        \Sigma_t(\vec{r},E_g) \psi(\vec{r},\hat{\Omega},E_g) =
- *      \frac{1}{4\pi} \sum^G_{g'} \int_{4\pi} d\Omega'
- *        \Sigma_S(\vec{r},\hat{\Omega}'\cdot \hat{\Omega}, E_g'\to E_g)
- *          \psi(\vec{r},\hat{\Omega}',E_{g'}) +
- *      \frac{\chi_g}{4\pi k} \sum^G_{g'} \int_{4\pi} d\Omega'
- *        \nu \Sigma_f(\vec{r}, E_{g'}) \psi(\vec{r}, \hat{\Omega}', E_{g'})
- *  \f]
+ *  @f[
+ *      @hat{\Omega} \cdot \nabla  @psi +
+ *        @Sigma_t(\vec{r},E_g) \psi(\vec{r},\hat{\Omega},E_g) =
+ *      @frac{1}{4\pi} \sum^G_{g'} \int_{4\pi} d\Omega'
+ *        @Sigma_S(\vec{r},\hat{\Omega}'\cdot \hat{\Omega}, E_g'\to E_g)
+ *          @psi(\vec{r},\hat{\Omega}',E_{g'}) +
+ *      @frac{\chi_g}{4\pi k} \sum^G_{g'} \int_{4\pi} d\Omega'
+ *        @nu \Sigma_f(\vec{r}, E_{g'}) \psi(\vec{r}, \hat{\Omega}', E_{g'})
+ *  @f]
  *
  *  where \f$ k \f$ is the eigenvalue, which physically represents the
  *  ratio of the number of neutrons in successive generations.
  *
- *  \section operatorform Operator Form
+ *  @section operatorform Operator Form
  *
  *  In operator form, the eigenvalue problem is
  *
- *  \f[
+ *  @f[
  *      (\mathbf{I} - \mathbf{DL}^{-1}\mathbf{MS})\phi =
- *        \frac{1}{k} \mathbf{DL}^{-1}\mathbf{M}\chi \mathbf{F}^T \phi \, .
- *  \f]
+ *        @frac{1}{k} \mathbf{DL}^{-1}\mathbf{M}\chi \mathbf{F}^T \phi \, .
+ *  @f]
  *
  *  where the eigenvector consists of the angular flux moments.  In the more
  *  standard form \f$ \mathbf{A}x = k x \f$, we have two options.  We
  *  can keep the problem in terms of the multigroup fluxes so that
  *
- *  \f[
- *      \overbrace{(\mathbf{I} - \mathbf{DL}^{-1}\mathbf{MS})^{-1}
- *        \mathbf{DL}^{-1}\mathbf{M}\chi \mathbf{F}^T}^{\mathbf{A}} \phi =
+ *  @f[
+ *      @overbrace{(\mathbf{I} - \mathbf{DL}^{-1}\mathbf{MS})^{-1}
+ *        @mathbf{DL}^{-1}\mathbf{M}\chi \mathbf{F}^T}^{\mathbf{A}} \phi =
  *        k \phi \, .
- *  \f]
+ *  @f]
  *
  *  Alternatively, we can solve in terms of the fission density,
- *  \f[
+ *  @f[
  *      d = \mathbf{F}^T \phi = \sum^G_g \nu \Sigma_{fg} \phi_g
- *  \f]
+ *  @f]
  *  so that
- *  \f[
- *      \overbrace{(\mathbf{I} - \mathbf{DL}^{-1}\mathbf{MS})^{-1}
- *        \mathbf{DL}^{-1}\mathbf{M}\chi }^{\mathbf{A}} d =
+ *  @f[
+ *      @overbrace{(\mathbf{I} - \mathbf{DL}^{-1}\mathbf{MS})^{-1}
+ *        @mathbf{DL}^{-1}\mathbf{M}\chi }^{\mathbf{A}} d =
  *        k d \, .
- *  \f]
+ *  @f]
  *
  *  We choose the second approach, since it represents a smaller
  *  system independent of energy and represents the more canonical
@@ -88,10 +74,10 @@ namespace detran
  *  of value when parallelizing over energy, as in Denovo, but
  *  that is not our focus here.
  *
- *  \section anoteaboutthemultigroupsolve A Note About the Multigroup Solve
+ *  @section anoteaboutthemultigroupsolve A Note About the Multigroup Solve
  *
  *  Note that in both cases, we require the action
- *  \f$ (\mathbf{I} - \mathbf{DL}^{-1} )\f$.  This is equivalent
+ *  @f$ (\mathbf{I} - \mathbf{DL}^{-1} )\f$.  This is equivalent
  *  to an \e exact multigroup solve.
  *
  *  For the power method (see \ref PowerIteration), an
@@ -123,25 +109,25 @@ namespace detran
  *  problem represents an entirely different operator \f$ \mathbf{A} \f$,
  *  and hence will yield an entirely different spectrum.
  *
- *  \section eigensolverinput Eigensolver Input Entries
+ *  @section eigensolverinput Eigensolver Input Entries
  *
  *
- *  \f[
-    \begin{tabular}{llll}
+ *  @f[
+    @begin{tabular}{llll}
       Key                     & Type  & Description                         & Default \\
-    \hline
-      eigen\_max\_iters       & int   & Maximum iterations allowed          & 100     \\
-      eigen\_tolerance        & dbl   & Tolerance on residual               & 1e-5    \\
-      eigen\_print\_out       & int   & Diagnostic print level              & 0       \\
-      eigen\_print\_interval  & int   & Iteration interval for diagonostics & 10      \\
-    \end{tabular}
-    \f]
+    @hline
+      eigen\_max\_iters       & int   & Maximum iterations allowed          & 100     @\
+      eigen\_tolerance        & dbl   & Tolerance on residual               & 1e-5    @\
+      eigen\_print\_out       & int   & Diagnostic print level              & 0       @\
+      eigen\_print\_interval  & int   & Iteration interval for diagonostics & 10      @\
+    @end{tabular}
+    @f]
  *
  */
 //---------------------------------------------------------------------------//
 
 template <class D>
-class Eigensolver
+class Eigensolver: public Solver<D>
 {
 
 public:
@@ -150,44 +136,30 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<Eigensolver<D> >       SP_solver;
-  typedef typename SolverMG<D>::SP_solver     SP_mg_solver;
-  typedef detran_utilities::InputDB::SP_input         SP_input;
-  typedef State::SP_state                             SP_state;
-  typedef detran_geometry::Mesh::SP_mesh              SP_mesh;
-  typedef detran_material::Material::SP_material      SP_material;
-  typedef detran_angle::Quadrature::SP_quadrature     SP_quadrature;
-  typedef typename BoundaryBase<D>::SP_boundary       SP_boundary;
-  typedef detran_external_source::
-          ExternalSource::SP_externalsource           SP_externalsource;
-  typedef FissionSource::SP_fissionsource             SP_fissionsource;
+  typedef FixedSourceManager<D>                     Fixed_T;
+  typedef typename Fixed_T::SP_manager              SP_mg_solver;
+  typedef detran_utilities::SP<Eigensolver<D> >     SP_solver;
+  typedef Solver<D>                                 Base;
+  typedef typename Base::SP_input                   SP_input;
+  typedef typename Base::SP_state                   SP_state;
+  typedef typename Base::SP_mesh                    SP_mesh;
+  typedef typename Base::SP_material                SP_material;
+  typedef typename Base::SP_boundary                SP_boundary;
+  typedef typename Base::SP_fissionsource           SP_fissionsource;
+
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Constructor
-   *
-   *  \param input             Input database.
-   *  \param state             State vectors, etc.
-   *  \param mesh              Problem mesh.
-   *  \param mat               Material definitions.
-   *  \param quadrature        Angular mesh.
-   *  \param boundary          Boundary fluxes.
-   *  \param external_source   User-defined external source.
-   *  \param fission_source    Fission source.
+  /**
+   *  @brief Constructor
+   *  @param mg_solver  Multigroup solver
    */
-  Eigensolver(SP_input           input,
-              SP_state           state,
-              SP_mesh            mesh,
-              SP_material        material,
-              SP_quadrature      quadrature,
-              SP_boundary        boundary,
-              SP_fissionsource   q_f);
+  Eigensolver(SP_mg_solver mg_solver);
 
   /// Virtual destructor
-  virtual ~Eigensolver(){}
+  virtual ~Eigensolver() = 0;
 
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL EIGENSOLVERS MUST IMPLEMENT
@@ -196,159 +168,26 @@ public:
   /// Solve the eigenvalue problem.
   virtual void solve() = 0;
 
-  //-------------------------------------------------------------------------//
-  // PUBLIC FUNCTIONS
-  //-------------------------------------------------------------------------//
-
-  SP_input get_input() const
-  {
-    return b_input;
-  }
-
-  SP_state get_state() const
-  {
-    return b_state;
-  }
-
-  SP_mesh  get_mesh() const
-  {
-    return b_mesh;
-  }
-
-  SP_material get_material() const
-  {
-    return b_material;
-  }
-
-  SP_quadrature get_quadrature() const
-  {
-    return b_quadrature;
-  }
-
-  SP_boundary get_boundary() const
-  {
-    return b_boundary;
-  }
-
-  SP_fissionsource get_fissionsource() const
-  {
-    return b_fissionsource;
-  }
-
 protected:
 
   //-------------------------------------------------------------------------//
   // DATA
   //-------------------------------------------------------------------------//
 
-  /// User input.
-  SP_input b_input;
+  /// Expose base members
+  using Base::d_input;
+  using Base::d_state;
+  using Base::d_mesh;
+  using Base::d_fissionsource;
+  using Base::d_maximum_iterations;
+  using Base::d_tolerance;
+  using Base::d_print_level;
+  using Base::d_print_interval;
 
-  /// State vectors.
-  SP_state b_state;
-
-  /// Problem mesh.
-  SP_mesh b_mesh;
-
-  /// Materials definitions.
-  SP_material b_material;
-
-  /// Angular mesh.
-  SP_quadrature b_quadrature;
-
-  /// Boundary fluxes.
-  SP_boundary b_boundary;
-
-  /// Fission source.
-  SP_fissionsource b_fissionsource;
-
-  /// multigroup solver
-  SP_mg_solver b_mg_solver;
-
-  /// Maximum eigensolver iterations
-  int b_max_iters;
-
-  /// Eigensolver tolerance, \f$ ||\mathbf{A} x-\lambda x|| < tol \f$.
-  double b_tolerance;
-
-  /// Print out flag
-  int b_print_out;
-
-  /// Interval for print out
-  int b_print_interval;
+  // Multigroup solver
+  SP_mg_solver d_mg_solver;
 
 };
-
-// Constructor
-template <class D>
-Eigensolver<D>::Eigensolver(SP_input          input,
-                            SP_state          state,
-                            SP_mesh           mesh,
-                            SP_material       material,
-                            SP_quadrature     quadrature,
-                            SP_boundary       boundary,
-                            SP_fissionsource  q_f)
-  : b_input(input)
-  , b_state(state)
-  , b_mesh(mesh)
-  , b_material(material)
-  , b_quadrature(quadrature)
-  , b_boundary(boundary)
-  , b_fissionsource(q_f)
-  , b_max_iters(100)
-  , b_tolerance(1e-5)
-  , b_print_out(2)
-  , b_print_interval(10)
-{
-  Require(b_input);
-  Require(b_state);
-  Require(b_mesh);
-  Require(b_material);
-  Require(b_quadrature);
-  Require(b_boundary);
-  Require(b_fissionsource);
-
-  // Get relevant input parameters.
-  if (input->check("eigen_max_iters"))
-    b_max_iters = input->get<int>("eigen_max_iters");
-
-  if (input->check("eigen_tolerance"))
-    b_tolerance = input->get<double>("eigen_tolerance");
-
-  if (input->check("eigen_print_out"))
-    b_print_out = input->get<int>("eigen_print_out");
-
-  if (input->check("eigen_print_interval"))
-    b_print_interval = input->get<int>("eigen_print_interval");
-
-  // Get the multigroup solver type and create.
-  std::string outer_solver = "GS";
-  if (input->check("outer_solver"))
-  {
-    outer_solver = input->get<std::string>("outer_solver");
-  }
-  if (outer_solver == "GS")
-  {
-    b_mg_solver = new GaussSeidelMG<D>(input, state, mesh, material,
-                                     quadrature, boundary,
-                                     SP_externalsource(), q_f);
-  }
-  else if (outer_solver == "KrylovMG")
-  {
-#ifdef DETRAN_ENABLE_PETSC
-    b_mg_solver = new KrylovMG<D>(input, state, mesh, material,
-                                  quadrature, boundary,
-                                  SP_externalsource(), q_f);
-#else
-    THROW("KrylovMG is not available because PETSc is not enabled.");
-#endif
-  }
-  else
-  {
-    THROW("Unsupported outer solver type selected: "+outer_solver);
-  }
-
-}
 
 } // namespace detran
 

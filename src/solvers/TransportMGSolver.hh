@@ -1,15 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   MGSolver.hh
- * \author robertsj
- * \date   Jun 19, 2012
- * \brief  MGSolver class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts.
+/**
+ *  @file   MGTransportSolver.hh
+ *  @author robertsj
+ *  @date   Oct 24, 2012
+ *  @brief  TransportMGSolver class definition.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef detran_MGSOLVER_HH_
-#define detran_MGSOLVER_HH_
+#ifndef detran_MGTransportSolver_HH_
+#define detran_MGTransportSolver_HH_
 
 #include "InnerIteration.hh"
 #include "angle/Quadrature.hh"
@@ -26,13 +25,17 @@ namespace detran
 
 //---------------------------------------------------------------------------//
 /**
- *  @class MGSolver
- *  @brief Base class for multigroup solvers.
+ *  \class MGTransportSolver
+ *  \brief Base class for multigroup transport solvers.
+ *
+ *  The multigroup transport equations are
+ *  tbf.
+ *
  */
 //---------------------------------------------------------------------------//
 
 template <class D>
-class MGSolver
+class MGTransportSolver
 {
 
 public:
@@ -41,7 +44,7 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<MGSolver<D> >          SP_solver;
+  typedef detran_utilities::SP<SolverMG<D> >          SP_solver;
   typedef detran_utilities::InputDB::SP_input         SP_input;
   typedef State::SP_state                             SP_state;
   typedef detran_geometry::Mesh::SP_mesh              SP_mesh;
@@ -69,7 +72,7 @@ public:
    *  \param external_source   User-defined external source.
    *  \param fission_source    Fission source.
    */
-  MGSolver(SP_input           input,
+  SolverMG(SP_input           input,
            SP_state           state,
            SP_mesh            mesh,
            SP_material        material,
@@ -79,7 +82,7 @@ public:
            SP_fissionsource   q_f);
 
   /// Virtual destructor
-  virtual ~MGSolver(){};
+  virtual ~SolverMG(){};
 
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL MULTIGROUP SOLVERS MUST IMPLEMENT
@@ -135,7 +138,7 @@ protected:
 // INLINE FUNCTIONS
 //---------------------------------------------------------------------------//
 
-#include "MGSolver.i.hh"
+#include "SolverMG.i.hh"
 
 
-#endif /* detran_MGSOLVER_HH_ */
+#endif /* detran_TRANSPORTMGSOLVER_HH_ */

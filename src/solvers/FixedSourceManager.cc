@@ -8,7 +8,6 @@
 //---------------------------------------------------------------------------//
 
 #include "FixedSourceManager.hh"
-#include "SolverMG.hh"
 #include "config/detran_config.hh"
 #include "angle/QuadratureFactory.hh"
 #include "boundary/BoundaryDiffusion.hh"
@@ -17,12 +16,11 @@
 #include "geometry/Tracker.hh"
 
 // Multigroup solvers
-#include "GaussSeidelMG.hh"
+#include "MGSolverGS.hh"
 #ifdef DETRAN_ENABLE_PETSC
 #include "petsc.h"
-#include "KrylovMG.hh"
+#include "MGSolverGMRES.hh"
 #endif
-
 
 #include <string>
 
@@ -33,12 +31,14 @@ namespace detran
 template <class D>
 FixedSourceManager<D>::FixedSourceManager(SP_input    input,
                                           SP_material material,
-                                          SP_mesh     mesh)
+                                          SP_mesh     mesh,
+                                          bool        multiply)
   : d_input(input)
   , d_material(material)
   , d_mesh(mesh)
-  , d_fixed_type(FIXED)
+  , d_multiply(multiply)
   , d_is_setup(false)
+  , d_is_ready(false)
 {
   // Preconditions
   Require(d_input);
@@ -53,8 +53,10 @@ template <class D>
 void FixedSourceManager<D>::setup()
 {
 
-  // Decide the discretization.  Default is discrete ordinates
-  // with a diamond difference approximation.
+  //-------------------------------------------------------------------------//
+  // DISCRETIZATION
+  //-------------------------------------------------------------------------//
+
   std::string eq = "dd";
   d_discretization = SN;
   if (d_input->check("equation"))
@@ -63,6 +65,10 @@ void FixedSourceManager<D>::setup()
     d_discretization = MOC;
   else if (eq == "diffusion")
     d_discretization = DIFF;
+
+  //-------------------------------------------------------------------------//
+  // QUADRATURE
+  //-------------------------------------------------------------------------//
 
   // Setup the quadrature if needed
   if (d_discretization != DIFF)
@@ -82,6 +88,10 @@ void FixedSourceManager<D>::setup()
     }
   }
 
+  //-------------------------------------------------------------------------//
+  // BOUNDARY AND STATE
+  //-------------------------------------------------------------------------//
+
   // Setup the boundary conditions
   if (d_discretization == MOC)
     d_boundary = new BoundaryMOC<D>(d_input, d_mesh, d_quadrature);
@@ -97,18 +107,19 @@ void FixedSourceManager<D>::setup()
   else
     d_state = new State(d_input, d_mesh, d_quadrature);
 
+  //-------------------------------------------------------------------------//
+  // FISSION SOURCE
+  //-------------------------------------------------------------------------//
+
   // Build the fission source if needed
-  if (d_input->check("problem_type"))
-  {
-    if(d_input->get<std::string>("problem_type") == "multiply")
-    {
-      d_fissionsource = new FissionSource(d_state, d_mesh, d_material);
-      d_fixed_type = MULTIPLY;
-    }
-  }
+  if (d_multiply)
+    d_fissionsource = new FissionSource(d_state, d_mesh, d_material);
 
   // Signify the manager is ready to solve
   d_is_setup = true;
+
+  // Ensure a solver is rebuilt
+  d_is_ready = false;
 
   // Postconditions
   Ensure(d_boundary);
@@ -128,10 +139,10 @@ void FixedSourceManager<D>::set_source(SP_source q)
   d_sources.push_back(q);
 }
 
+//---------------------------------------------------------------------------//
 template <class D>
-bool FixedSourceManager<D>::solve(const double keff)
+bool FixedSourceManager<D>::set_solver()
 {
-
   if (!d_is_setup)
   {
     std::cout << "You must setup the manager before solving.  Skipping solve."
@@ -139,37 +150,31 @@ bool FixedSourceManager<D>::solve(const double keff)
     return false;
   }
 
-  /// Setup fission source scaling, if needed
-  if (d_fixed_type == MULTIPLY) d_fissionsource->setup_outer(1.0/keff);
-
   if (d_discretization == DIFF)
   {
     THROW("NOT FOR DIFFUSION YET");
   }
   else
   {
-    typename SolverMG<D>::SP_solver solver;
 
     // Default solver is Gauss-Seidel
     std::string outer_solver = "GS";
     if (d_input->check("outer_solver"))
       outer_solver = d_input->get<std::string>("outer_solver");
 
-    // \todo enable use of more than one source
     if (outer_solver == "GS")
     {
-      solver = new GaussSeidelMG<D>(d_input, d_state, d_mesh, d_material, d_quadrature,
-                                    d_boundary, d_sources[0], d_fissionsource);
+      d_solver = new MGSolverGS<D>(d_state, d_material, d_boundary,
+                                   d_sources, d_fissionsource, d_multiply);
     }
-    else if (outer_solver == "KrylovMG")
+    else if (outer_solver == "GMRES")
     {
       #ifdef DETRAN_ENABLE_PETSC
-        solver = new KrylovMG<D>(d_input, d_state, d_mesh, d_material, d_quadrature,
-                                 d_boundary, d_sources[0], d_fissionsource);
+        d_solver = new MGSolverGMRES<D>(d_state, d_material, d_boundary,
+                                        d_sources, d_fissionsource, d_multiply);
       #else
-        std::cout << "KrylovMG is unavailable since PETSc is not enabled."
+        std::cout << "MGSolverGMRES is unavailable since PETSc is not enabled."
                   << std::endl;
-        return false;
       #endif
     }
     else
@@ -178,19 +183,32 @@ bool FixedSourceManager<D>::solve(const double keff)
                 << outer_solver << std::endl;
       return false;
     }
-
-    // Solve the problem
-    solver->solve(keff);
-
-    return true;
+    d_is_ready = true;
   }
+  return d_is_ready;
+}
+
+//---------------------------------------------------------------------------//
+template <class D>
+bool FixedSourceManager<D>::solve(const double keff)
+{
+
+  if (!d_is_ready)
+  {
+    std::cout << "You must set the solver before solving.  Skipping solve."
+              << std::endl;
+    return false;
+  }
+
+  // Solve the problem
+  d_solver->solve(keff);
+
 }
 
 //---------------------------------------------------------------------------//
 template <class D>
 double FixedSourceManager<D>::iterate(const int generation)
 {
-
 
   return 0.0;
 }

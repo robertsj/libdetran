@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   GaussSeidelMG.i.hh
+ *  @file   MGSolverGS.i.hh
  *  @author robertsj
  *  @date   Apr 10, 2012
- *  @brief  GaussSeidelMG inline member definitions.
+ *  @brief  MGSolverGS inline member definitions.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef detran_GAUSSSEIDEL_I_HH_
-#define detran_GAUSSSEIDEL_I_HH_
+#ifndef detran_MGSolverGS_I_HH_
+#define detran_MGSolverGS_I_HH_
 
 #include "utilities/MathUtilities.hh"
 #include "utilities/Warning.hh"
@@ -19,11 +19,11 @@ namespace detran
 {
 
 template <class D>
-void GaussSeidelMG<D>::solve(const double keff)
+void MGSolverGS<D>::solve(const double keff)
 {
   using detran_utilities::norm_residual;
 
-  if (d_print_out > 0) std::cout << "  Starting GS." << std::endl;
+  if (d_print_level > 0) std::cout << "  Starting GS." << std::endl;
 
   // Save current group flux.
   State::group_moments_type phi_old = d_state->all_phi();
@@ -43,12 +43,12 @@ void GaussSeidelMG<D>::solve(const double keff)
     // Recompute the fission density
     if (d_multiply) d_fissionsource->update();
     // Solve the within-group equation
-    d_inner_solver->solve(g);
+    d_wg_solver->solve(g);
   }
 
   // Decide whether to iterate or not
   bool iterate = false;
-  if ((!d_downscatter and d_max_iters > 0 and d_number_groups > 1)
+  if ((!d_downscatter and d_maximum_iterations > 0 and d_number_groups > 1)
       or d_multiply)
   {
     iterate = true;
@@ -58,7 +58,7 @@ void GaussSeidelMG<D>::solve(const double keff)
   if (iterate)
   {
     // Iterations
-    for (iteration = 1; iteration <= d_max_iters; iteration++)
+    for (iteration = 1; iteration <= d_maximum_iterations; iteration++)
     {
 
       // Iteration residual norm for all fluxes and group flux
@@ -78,7 +78,7 @@ void GaussSeidelMG<D>::solve(const double keff)
         // Recompute the fission density
         if (d_multiply) d_fissionsource->update();
         // Solve the within-group equation
-        d_inner_solver->solve(g);
+        d_wg_solver->solve(g);
         // Constructing the norm piecewise.
         nres_g = norm_residual(d_state->phi(g), phi_old[g], d_norm_type);
         if (d_norm_type == "Linf")
@@ -91,7 +91,7 @@ void GaussSeidelMG<D>::solve(const double keff)
       if (d_norm_type == "L2")
         nres = std::sqrt(nres);
 
-      if (d_print_out > 1  and iteration % d_print_interval == 0)
+      if (d_print_level > 1  and iteration % d_print_interval == 0)
       {
         printf("  GS Iter: %3i  Error: %12.9f \n", iteration, nres);
       }
@@ -108,9 +108,9 @@ void GaussSeidelMG<D>::solve(const double keff)
   } // end upscatter block
 
   // Diagnostic output
-  if (d_print_out > 0)
+  if (d_print_level > 0)
   {
-    int number_sweeps = d_inner_solver->get_sweeper()->number_sweeps();
+    int number_sweeps = d_wg_solver->get_sweeper()->number_sweeps();
     printf("  GS Final: Number Iters: %3i  Error: %12.9f  Sweeps: %6i \n",
            iteration, nres, number_sweeps);
     std::cout << "  GS done!" << std::endl;
@@ -120,10 +120,10 @@ void GaussSeidelMG<D>::solve(const double keff)
 }
 
 // Explicit instantiations
-template class GaussSeidelMG<_1D>;
-template class GaussSeidelMG<_2D>;
-template class GaussSeidelMG<_3D>;
+template class MGSolverGS<_1D>;
+template class MGSolverGS<_2D>;
+template class MGSolverGS<_3D>;
 
 } // end namespace detran
 
-#endif /* detran_GAUSSSEIDEL_I_HH_ */
+#endif /* detran_MGSolverGS_I_HH_ */

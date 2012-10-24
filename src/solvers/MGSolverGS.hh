@@ -1,34 +1,32 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   GaussSeidelMG.hh
- * \author robertsj
- * \date   Apr 9, 2012
- * \brief  GaussSeidelMG class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+/**
+ *  @file   GaussSeidelMG.hh
+ *  @author robertsj
+ *  @date   Apr 9, 2012
+ *  @brief  GaussSeidelMG class definition.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef detran_GAUSSSEIDEL_HH_
-#define detran_GAUSSSEIDEL_HH_
+#ifndef detran_MGSOLVERGS_HH_
+#define detran_MGSOLVERGS_HH_
 
-// Detran
-#include "SolverMG.hh"
+#include "MGTransportSolver.hh"
 
 namespace detran
 {
 
 //---------------------------------------------------------------------------//
-/*!
- * \class GaussSeidelMG
- * \brief Solves the multigroup transport equation via Gauss-Seidel.
+/**
+ *  @class GaussSeidelMG
+ *  @brief Solves the multigroup transport equation via Gauss-Seidel.
  *
- * Relevant db entries:
- * - outer_norm_type (str) [default = "Linf"]
+ *  Relevant db entries:
+ *  - outer_norm_type (str) [default = "Linf"]
  */
 //---------------------------------------------------------------------------//
 
 template <class D>
-class GaussSeidelMG: public SolverMG<D>
+class MGSolverGS: public MGTransportSolver<D>
 {
 
 public:
@@ -37,10 +35,9 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<GaussSeidelMG<D> >     SP_solver;
-  typedef SolverMG<D>                       Base;
-  typedef typename Base::SP_solver                  SP_base;
-  typedef typename Base::SP_inner                   SP_inner;
+  typedef MGTransportSolver<D>                      Base;
+  typedef typename Base::SP_solver                  SP_solver;
+  typedef typename Base::SP_wg_solver               SP_wg_solver;
   typedef typename Base::SP_input                   SP_input;
   typedef typename Base::SP_state                   SP_state;
   typedef typename Base::SP_mesh                    SP_mesh;
@@ -48,49 +45,31 @@ public:
   typedef typename Base::SP_quadrature              SP_quadrature;
   typedef typename Base::SP_boundary                SP_boundary;
   typedef typename Base::SP_externalsource          SP_externalsource;
+  typedef typename Base::vec_externalsource         vec_externalsource;
   typedef typename Base::SP_fissionsource           SP_fissionsource;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Constructor
+  /**
+   *  @brief Constructor
    *
-   *  \param input             Input database.
-   *  \param state             State vectors, etc.
-   *  \param mesh              Problem mesh.
-   *  \param mat               Material definitions.
-   *  \param quadrature        Angular mesh.
-   *  \param boundary          Boundary fluxes.
-   *  \param external_source   User-defined external source.
-   *  \param fission_source    Fission source.
+   *  @param input             Input database.
+   *  @param state             State vectors, etc.
+   *  @param mesh              Problem mesh.
+   *  @param mat               Material definitions.
+   *  @param quadrature        Angular mesh.
+   *  @param boundary          Boundary fluxes.
+   *  @param external_source   User-defined external source.
+   *  @param fission_source    Fission source.
    */
-  GaussSeidelMG(SP_input           input,
-              SP_state           state,
-              SP_mesh            mesh,
-              SP_material        material,
-              SP_quadrature      quadrature,
-              SP_boundary        boundary,
-              SP_externalsource  q_e,
-              SP_fissionsource   q_f);
-
-  /// SP constructor
-  static SP_solver
-  Create(SP_input             input,
-         SP_state             state,
-         SP_mesh              mesh,
-         SP_material          material,
-         SP_quadrature        quadrature,
-         SP_boundary          boundary,
-         SP_externalsource    q_e,
-         SP_fissionsource     q_f)
-  {
-    SP_solver p;
-    p = new GaussSeidelMG(input, state, mesh, material,
-                        quadrature, boundary, q_e, q_f);
-    return p;
-  }
+  MGSolverGS(SP_state                   state,
+             SP_material                material,
+             SP_boundary                boundary,
+             const vec_externalsource  &q_e,
+             SP_fissionsource           q_f,
+             bool                       multiply = false);
 
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL MULTIGROUP SOLVERS MUST IMPLEMENT
@@ -112,15 +91,15 @@ private:
   using Base::d_material;
   using Base::d_quadrature;
   using Base::d_boundary;
-  using Base::d_external_source;
+  using Base::d_externalsources;
   using Base::d_fissionsource;
   using Base::d_downscatter;
   using Base::d_number_groups;
-  using Base::d_max_iters;
+  using Base::d_maximum_iterations;
   using Base::d_tolerance;
-  using Base::d_print_out;
+  using Base::d_print_level;
   using Base::d_print_interval;
-  using Base::d_inner_solver;
+  using Base::d_wg_solver;
   using Base::d_multiply;
 
   /// Determines which norm to use (default is Linf)
@@ -134,6 +113,6 @@ private:
 // INLINE FUNCTIONS
 //---------------------------------------------------------------------------//
 
-#include "GaussSeidelMG.i.hh"
+#include "MGSolverGS.i.hh"
 
-#endif /* detran_GAUSSSEIDEL_HH_ */
+#endif /* detran_MGSOLVERGS_HH_ */

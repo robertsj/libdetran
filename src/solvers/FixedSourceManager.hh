@@ -10,17 +10,8 @@
 #ifndef detran_FIXEDSOURCEMANAGER_HH_
 #define detran_FIXEDSOURCEMANAGER_HH_
 
+#include "MGSolver.hh"
 #include "angle/Quadrature.hh"
-#include "boundary/BoundaryBase.hh"
-#include "callow/solver/LinearSolver.hh"
-#include "external_source/ExternalSource.hh"
-#include "geometry/Mesh.hh"
-#include "material/Material.hh"
-#include "utilities/Definitions.hh"
-#include "utilities/InputDB.hh"
-#include "transport/FissionSource.hh"
-#include "transport/State.hh"
-#include <vector>
 
 namespace detran
 {
@@ -63,22 +54,25 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::InputDB::SP_input         SP_input;
-  typedef State::SP_state                             SP_state;
-  typedef detran_geometry::Mesh::SP_mesh              SP_mesh;
-  typedef detran_material::Material::SP_material      SP_material;
-  typedef detran_angle::Quadrature::SP_quadrature     SP_quadrature;
+  typedef detran_utilities::SP<FixedSourceManager<D> >  SP_manager;
+  typedef detran_utilities::InputDB::SP_input           SP_input;
+  typedef State::SP_state                               SP_state;
+  typedef detran_geometry::Mesh::SP_mesh                SP_mesh;
+  typedef detran_material::Material::SP_material        SP_material;
+  typedef detran_angle::Quadrature::SP_quadrature       SP_quadrature;
   //
-  typedef BoundaryBase<D>                             Boundary_T;
-  typedef typename Boundary_T::SP_boundary            SP_boundary;
+  typedef BoundaryBase<D>                               Boundary_T;
+  typedef typename Boundary_T::SP_boundary              SP_boundary;
   //
   typedef detran_external_source::
-          ExternalSource::SP_externalsource           SP_source;
-  typedef FissionSource::SP_fissionsource             SP_fissionsource;
+          ExternalSource::SP_externalsource             SP_source;
+  typedef detran_external_source::
+          ExternalSource::vec_externalsource            vec_source;
+  typedef FissionSource::SP_fissionsource               SP_fissionsource;
   //
-  typedef State::moments_type                         moments_type;
+  typedef State::moments_type                           moments_type;
   //
-  typedef callow::LinearSolver::SP_solver             SP_solver;
+  typedef typename MGSolver<D>::SP_solver               SP_solver;
   //
 
   //-------------------------------------------------------------------------//
@@ -90,10 +84,12 @@ public:
    *  @param input      parameter database
    *  @param material   material database
    *  @param mesh       mesh definition
+   *  @param multiply   flag for multiplying fixed source problem
    */
   FixedSourceManager(SP_input    input,
                      SP_material material,
-                     SP_mesh     mesh);
+                     SP_mesh     mesh,
+                     bool        multiply = false);
 
   //-------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
@@ -107,11 +103,18 @@ public:
    *  a call to setup will rebuild the problem using a different
    *  discretization, etc.
    *
+   *  Source defining external sources, the quadrature is often needed.
+   *  By calling setup first, the client can extract the quadrature for
+   *  building an external source.
+   *
    */
   void setup();
 
   /// Add a new external source
   void set_source(SP_source q);
+
+  /// Set the solver (based on parameter database)
+  bool set_solver();
 
   /**
    *  @brief Solve the system
@@ -166,6 +169,7 @@ public:
   SP_boundary boundary() const { return d_boundary; }
   SP_quadrature quadrature() const { return d_quadrature; }
   SP_fissionsource fissionsource() const { return d_fissionsource; }
+  int discretization() const { return d_discretization; }
   /// @}
 
 private:
@@ -189,17 +193,19 @@ private:
   /// Fission source
   SP_fissionsource d_fissionsource;
   /// External volume sources
-  std::vector<SP_source> d_sources;
-  /// Linear solver
+  vec_source d_sources;
+  /// Multigroup solver
   SP_solver d_solver;
   /// Adjoint mode flag
   bool d_adjoint;
   /// Discretization general type (SN, MOC, or diffusion)
   int d_discretization;
-  /// Fixed type
-  int d_fixed_type;
-  /// Setup status flag
+  /// Flag for multiplying fixed source problem
+  bool d_multiply;
+  /// Problem setup status flag
   bool d_is_setup;
+  /// Solver setup status flag
+  bool d_is_ready;
 
   //-------------------------------------------------------------------------//
   // IMPLEMENTATION

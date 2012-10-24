@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Solver.hh
- * \brief  Solver class definition
- * \author Jeremy Roberts
- * \date   Sep 8, 2012
+/**
+ *  @file   Solver.hh
+ *  @brief  Solver class definition
+ *  @author Jeremy Roberts
+ *  @date   Sep 8, 2012
  */
 //---------------------------------------------------------------------------//
 
-#ifndef SOLVER_HH_
-#define SOLVER_HH_
+#ifndef detran_SOLVER_HH_
+#define detran_SOLVER_HH_
 
 #include "boundary/BoundaryBase.hh"
 #include "external_source/ExternalSource.hh"
@@ -22,11 +22,9 @@
 namespace detran
 {
 
-/*!
- *  \class Solver
- *  \brief Base class for transport solvers
- *
- *
+/**
+ *  @class Solver
+ *  @brief Boilerplate shared by all solvers.
  */
 template <class D>
 class Solver
@@ -38,52 +36,91 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::InputDB::SP_input               SP_input;
-  typedef detran_geometry::Mesh::SP_mesh                    SP_mesh;
-  typedef detran_material::Material::SP_material            SP_material;
-  typedef detran::State::SP_state                           SP_state;
-  typedef typename detran::BoundaryBase<D>::SP_boundary     SP_boundary;
+  typedef detran_utilities::InputDB::SP_input         SP_input;
+  typedef State::SP_state                             SP_state;
+  typedef detran_geometry::Mesh::SP_mesh              SP_mesh;
+  typedef detran_material::Material::SP_material      SP_material;
+  typedef typename BoundaryBase<D>::SP_boundary       SP_boundary;
   typedef detran_external_source::
-          ExternalSource::SP_externalsource                 SP_externalsource;
-  typedef detran::FissionSource::SP_fissionsource           SP_fissionsource;
-  typedef detran::State::moments_type                       moments_type;
+          ExternalSource::SP_externalsource           SP_externalsource;
+  typedef detran_external_source::
+          ExternalSource::vec_externalsource          vec_externalsource;
+  typedef FissionSource::SP_fissionsource             SP_fissionsource;
+  typedef detran_utilities::size_t                    size_t;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Constructor
+  /**
+   *  @brief Constructor
+   *
+   *  @param input             Input database.
+   *  @param state             State vectors, etc.
+   *  @param mesh              Problem mesh.
+   *  @param material          Material definitions.
+   *  @param boundary          Boundary fluxes.
+   *  @param q_e               Vector of user-defined external sources
+   *  @param q_f               Fission source.
+   *  @param multiply          Flag for a multiplying fixed source problem
    */
-  Solver();
+  Solver(SP_state                   state,
+         SP_material                material,
+         SP_boundary                boundary,
+         const vec_externalsource  &q_e,
+         SP_fissionsource           q_f);
+
+  /// Pure virtual destructor
+  virtual ~Solver() = 0;
 
   //-------------------------------------------------------------------------//
-  // ABSTRACT INTERFACE -- ALL SOLVERS MUST IMPLEMENT THESE
+  // PUBLIC FUNCTIONS
   //-------------------------------------------------------------------------//
+
+  /// Reset the tolerance.
+  void set_tolerance(double tol)
+  {
+    Require(tol > 0.0);
+    d_tolerance = tol;
+  }
+
+  /// Reset the maximum iterations.
+  void set_max_iters(int max_iters)
+  {
+    Require(max_iters > 0);
+    d_maximum_iterations = max_iters;
+  }
 
 protected:
+
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   /// User input.
   SP_input d_input;
   /// State vectors.
   SP_state d_state;
-  /// Problem mesh (either Cartesian mesh or MOC tracking)
+  /// Problem mesh
   SP_mesh d_mesh;
   /// Materials definitions.
   SP_material d_material;
   /// Boundary fluxes.
   SP_boundary d_boundary;
-  /// User-defined external source
-  SP_externalsource d_external_source;
+  /// Vector of user-defined external sources
+  vec_externalsource d_externalsources;
   /// Fission source, if used
-  SP_fissionsource d_fission_source;
+  SP_fissionsource d_fissionsource;
+
+  /// Number of groups
+  int d_number_groups;
+
   /// Maximum iterations
   size_t d_maximum_iterations;
   /// Convergence tolerance
   double d_tolerance;
-
   /// Print out flag
-  int d_print_out;
+  int d_print_level;
   /// Interval for print out
   int d_print_interval;
 

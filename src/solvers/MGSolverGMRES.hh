@@ -1,17 +1,17 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   KrylovMG.hh
- * \author robertsj
- * \date   Apr 9, 2012
- * \brief  KrylovMG class definition.
+/**
+ *  @file   MGSolverGMRES.hh
+ *  @author robertsj
+ *  @date   Apr 9, 2012
+ *  @brief  MGSolverGMRES class definition.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef KRYLOVMG_HH_
-#define KRYLOVMG_HH_
+#ifndef detran_MGSOLVERGMRES_HH_
+#define detran_MGSOLVERGMRES_HH_
 
 #include "InnerIteration.hh"
-#include "SolverMG.hh"
+#include "MGTransportSolver.hh"
 #include "Sweeper.hh"
 #include "PreconditionerMG.hh"
 #include "petsc.h"
@@ -21,8 +21,8 @@ namespace detran
 
 //---------------------------------------------------------------------------//
 /*!
- *  \class KrylovMG
- *  \brief Solves the multigroup transport equation via Krylov methods.
+ *  \class MGSolverGMRES
+ *  \brief Solves the multigroup transport equation via GMRES.
  *
  * Traditionally, the Gauss-Seidel method has been used for multigroup
  * problems. For each group, the within-group equation is solved, and
@@ -88,7 +88,7 @@ namespace detran
 //---------------------------------------------------------------------------//
 
 template <class D>
-class KrylovMG: public SolverMG<D>
+class MGSolverGMRES: public MGTransportSolver<D>
 {
 
 public:
@@ -97,8 +97,8 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<KrylovMG<D> >        SP_solver;
-  typedef SolverMG<D>                       Base;
+  typedef SolverTransportMG<D>                      Base;
+  typedef typename Base::SP_solver                  SP_solver;
   typedef typename Base::SP_solver                  SP_base;
   typedef typename Base::SP_inner                   SP_inner;
   typedef typename Base::SP_input                   SP_input;
@@ -130,40 +130,20 @@ public:
    *  \param external_source   User-defined external source.
    *  \param fission_source    Fission source.
    */
-  KrylovMG(SP_input           input,
-           SP_state           state,
-           SP_mesh            mesh,
-           SP_material        material,
-           SP_quadrature      quadrature,
-           SP_boundary        boundary,
-           SP_externalsource  q_e,
-           SP_fissionsource   q_f);
+  MGSolverGMRES(SP_state           state,
+                SP_material        material,
+                SP_quadrature      quadrature,
+                SP_boundary        boundary,
+                SP_externalsource  q_e,
+                SP_fissionsource   q_f);
 
   /// Destructor
-  ~KrylovMG()
+  ~MGSolverGMRES()
   {
     KSPDestroy(&d_solver);
     MatDestroy(&d_operator);
     VecDestroy(&d_X);
     VecDestroy(&d_B);
-  }
-
-  /*!
-   *  \brief SP Constructor.
-   */
-  static SP_solver
-  Create(SP_input           input,
-         SP_state           state,
-         SP_mesh            mesh,
-         SP_material        material,
-         SP_quadrature      quadrature,
-         SP_boundary        boundary,
-         SP_externalsource  q_e,
-         SP_fissionsource   q_f)
-  {
-    SP_solver p(new KrylovMG(input, state, mesh, material,
-                             quadrature, boundary, q_e, q_f));
-    return p;
   }
 
   //-------------------------------------------------------------------------//
@@ -192,7 +172,7 @@ private:
   using Base::d_number_groups;
   using Base::d_max_iters;
   using Base::d_tolerance;
-  using Base::d_print_out;
+  using Base::d_print_level;
   using Base::d_print_interval;
   using Base::d_inner_solver;
 
@@ -289,7 +269,7 @@ public:
 // INLINE FUNCTIONS
 //---------------------------------------------------------------------------//
 
-#include "KrylovMG.i.hh"
+#include "MGSolverGMRES.i.hh"
 
 //---------------------------------------------------------------------------//
 // EXTERNAL WRAPPER FUNCTIONS
@@ -299,8 +279,8 @@ PetscErrorCode apply_MGTO_1D(Mat A, Vec x, Vec y);
 PetscErrorCode apply_MGTO_2D(Mat A, Vec x, Vec y);
 PetscErrorCode apply_MGTO_3D(Mat A, Vec x, Vec y);
 
-#endif /* KRYLOVMG_HH_ */
+#endif /* detran_MGSOLVERGMRES_HH_ */
 
 //---------------------------------------------------------------------------//
-//              end of KrylovMG.hh
+//              end of MGSolverGMRES.hh
 //---------------------------------------------------------------------------//

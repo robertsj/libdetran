@@ -12,23 +12,18 @@
 
 #ifdef DETRAN_ENABLE_PETSC
 
-// Detran
 #include "InnerGMRES.hh"
-//
-//#include "CMR.hh"
 
 namespace detran
 {
 
-// Constructor
+//---------------------------------------------------------------------------//
 template <class D>
-InnerGMRES<D>::InnerGMRES(SP_input          input,
-                          SP_state          state,
-                          SP_mesh           mesh,
-                          SP_material       material,
-                          SP_quadrature     quadrature,
-                          SP_boundary       boundary,
-                          SP_externalsource q_e,
+InnerGMRES<D>::InnerGMRES(SP_state              state,
+                          SP_material           material,
+                          SP_quadrature         quadrature,
+                          SP_boundary           boundary,
+                          vec_externalsource   &q_e,
                           SP_fissionsource  q_f)
   :  InnerIteration<D>::InnerIteration(input,
                                        state,

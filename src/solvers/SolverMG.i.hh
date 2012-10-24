@@ -1,15 +1,15 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   SolverMG.hh
+ * \file   MGSolver.hh
  * \author robertsj
  * \date   Jun 19, 2012
- * \brief  SolverMG inline member definitions.
+ * \brief  MGSolver inline member definitions.
  * \note   Copyright (C) 2012 Jeremy Roberts.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef MULTIGROUPSOLVER_I_HH_
-#define MULTIGROUPSOLVER_I_HH_
+#ifndef detran_MGSOLVER_I_HH_
+#define detran_MGSOLVER_I_HH_
 
 // Detran
 #include "detran_config.hh"
@@ -22,7 +22,7 @@ namespace detran
 {
 
 template <class D>
-SolverMG<D>::SolverMG(SP_input          input,
+MGSolver<D>::MGSolver(SP_input          input,
                       SP_state          state,
                       SP_mesh           mesh,
                       SP_material       material,
@@ -118,4 +118,4 @@ SolverMG<D>::SolverMG(SP_input          input,
 } // end namespace detran
 
 
-#endif /* MULTIGROUPSOLVER_I_HH_ */
+#endif /* detran_MGSOLVER_I_HH_ */

@@ -1,10 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   InnerGMRES.hh
- * \author robertsj
- * \date   Apr 4, 2012
- * \brief  InnerGMRES class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts.
+/**
+ *  @file   InnerGMRES.hh
+ *  @author robertsj
+ *  @date   Apr 4, 2012
+ *  @brief  InnerGMRES class definition.
  */
 //---------------------------------------------------------------------------//
 

@@ -1,10 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   PowerIteration.cc
- * \author robertsj
- * \date   Apr 10, 2012
- * \brief  PowerIteration class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+/**
+ *  @file   PowerIteration.cc
+ *  @author robertsj
+ *  @date   Apr 10, 2012
+ *  @brief  PowerIteration class definition.
  */
 //---------------------------------------------------------------------------//
 
@@ -19,19 +18,13 @@ namespace detran
 
 // Constructor
 template <class D>
-PowerIteration<D>::PowerIteration(SP_input          input,
-                                  SP_state          state,
-                                  SP_mesh           mesh,
-                                  SP_material       material,
-                                  SP_quadrature     quadrature,
-                                  SP_boundary       boundary,
-                                  SP_fissionsource  q_f)
-  : Base(input, state, mesh, material, quadrature, boundary, q_f)
+PowerIteration<D>::PowerIteration(SP_mg_solver mg_solver)
+  : Base(mg_solver)
   , d_aitken(false)
 {
 
-  if (input->check("eigen_aitken"))
-    d_aitken = input->template get<int>("eigen_aitken");
+  if (d_input->check("eigen_aitken"))
+    d_aitken = d_input->template get<int>("eigen_aitken");
 
 }
 

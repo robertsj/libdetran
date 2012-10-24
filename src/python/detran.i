@@ -51,20 +51,6 @@
 #include "callow/preconditioner/PCShell.hh"
 
 // Angle
-
-//#include "Collocated.hh"
-//#include "GaussLegendre.hh"
-//#include "LevelSymmetric.hh"
-//#include "MomentToDiscrete.hh"
-//#include "PolarQuadrature.hh"
-//#include "Quadrature.hh"
-//#include "QuadratureFactory.hh"
-//#include "QuadratureMOC.hh"
-//#include "QuadrupleRange.hh"
-//#include "SphericalHarmonics.hh"
-//#include "TabuchiYamamoto.hh"
-//#include "Uniform.hh"
-//#include "UniformEqual.hh"
 #include "angle/detran_angle.hh"
 
 // Geometry
@@ -129,23 +115,20 @@
 #endif
 
 // Solvers
-#include "InnerIteration.hh"
-#include "GaussSeidelMG.hh"
-#include "PowerIteration.hh"
-#include "SourceIteration.hh"
 #include "DiffusionFixedSourceSolver.hh"
 #include "DiffusionEigensolver.hh"
 #include "DiffusionLossOperator.hh"
 #include "DiffusionGainOperator.hh"
 #include "FixedSourceManager.hh"
-
+#include "EigenvalueManager.hh"
+  
 //---------------------------------------------------------------------------//
 // LEVEL 4 
 //---------------------------------------------------------------------------//  
 
 #include "ReactionRates.hh"
-#include "Manager.hh"
-#include "PyExecute.hh"
+//#include "Manager.hh"
+//#include "PyExecute.hh"
 #ifdef DETRAN_ENABLE_SILO
 #include "SiloOutput.hh"
 #endif
@@ -206,8 +189,8 @@
 // Post process
 %include "detran_postprocess.i"
 
-%include "PyExecute.hh"
-%include "Manager.hh"
-%template(Execute1D) detran::PyExecute<detran::_1D>;
-%template(Execute2D) detran::PyExecute<detran::_2D>;
-%template(Execute3D) detran::PyExecute<detran::_3D>;
+//%include "PyExecute.hh"
+//%include "Manager.hh"
+//%template(Execute1D) detran::PyExecute<detran::_1D>;
+//%template(Execute2D) detran::PyExecute<detran::_2D>;
+//%template(Execute3D) detran::PyExecute<detran::_3D>;
