@@ -89,7 +89,8 @@ public:
   FixedSourceManager(SP_input    input,
                      SP_material material,
                      SP_mesh     mesh,
-                     bool        multiply = false);
+                     bool        multiply = false,
+                     bool        fission = false);
 
   //-------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
@@ -202,6 +203,8 @@ private:
   int d_discretization;
   /// Flag for multiplying fixed source problem
   bool d_multiply;
+  /// Flag for including fission source
+  bool d_fission;
   /// Problem setup status flag
   bool d_is_setup;
   /// Solver setup status flag

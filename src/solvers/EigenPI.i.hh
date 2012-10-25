@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   PowerIteration.i.hh
+ *  @file   EigenPI.i.hh
  *  @author robertsj
  *  @date   Apr 10, 2012
- *  @brief  PowerIteration inline member definitions.
+ *  @brief  EigenPI inline member definitions.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef POWERITERATION_I_HH_
-#define POWERITERATION_I_HH_
+#ifndef detran_EIGENPI_I_HH_
+#define detran_EIGENPI_I_HH_
 
 #include "utilities/MathUtilities.hh"
 #include "utilities/Warning.hh"
@@ -19,7 +19,7 @@ namespace detran
 {
 
 template <class D>
-void PowerIteration<D>::solve()
+void EigenPI<D>::solve()
 {
   using detran_utilities::norm_residual;
   using detran_utilities::norm;
@@ -96,17 +96,12 @@ void PowerIteration<D>::solve()
   if (error > d_tolerance)
   {
     detran_utilities::warning(detran_utilities::SOLVER_CONVERGENCE,
-      "PowerIteration did not converge.");
+      "EigenPI did not converge.");
   }
   d_state->set_eigenvalue(keff);
   std::cout << "PI done." << std::endl;
 }
 
-// Explicit instantiations
-//template class PowerIteration<_1D>;
-//template class PowerIteration<_2D>;
-//template class PowerIteration<_3D>;
-
 } // end namespace detran
 
-#endif /* POWERITERATION_I_HH_ */
+#endif /* detran_EIGENPI_I_HH_ */

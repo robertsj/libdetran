@@ -58,6 +58,28 @@ SET( DETRAN_ENABLE_BOOST NO CACHE BOOL
   "Enable BOOST."
 )
 
+SET(DETRAN_COMPILED_DATE 7 CACHE INTEGER
+  "Date of compilation."
+)
+
+#macro(today result)
+#  if(WIN32)
+#    execute_process(COMMAND "cmd" " /C date /T" OUTPUT_VARIABLE ${result})
+#    string(REGEX REPLACE "(..)/(..)/..(..).*" "\\1/\\2/\\3" ${result} ${${result}})
+#  elseif(UNIX)
+#    execute_process(COMMAND "date" "+%m/%d/%Y" OUTPUT_VARIABLE ${result})
+#    string(REGEX REPLACE "(..)/(..)/..(..).*" "\\1/\\2/\\3" ${result} ${${result}})
+#  else (WIN32)
+#    message("date not implemented")
+#    set(${result} 000000)
+#  endif (WIN32)
+#endmacro(today)
+#today(TODAY)
+
+#set(DETRAN_COMPILED_DATE ${TODAY})
+#message(STATUS "Compilation date = ${DETRAN_COMPILED_DATE}")
+
+
 # Write config file, install it, and include that directory for all source
 set(DETRAN_CONFIG_IN  "${CMAKE_CURRENT_SOURCE_DIR}/config/detran_config.hh.in")
 set(DETRAN_CONFIG_OUT "${PROJECT_BINARY_DIR}/config/detran_config.hh")

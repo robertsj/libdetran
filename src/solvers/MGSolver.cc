@@ -14,12 +14,12 @@ namespace detran
 
 //---------------------------------------------------------------------------//
 template <class D>
-MGSolver<D>::MGSolver(SP_state              state,
-                      SP_material           material,
-                      SP_boundary           boundary,
-                      vec_externalsource   &q_e,
-                      SP_fissionsource      q_f,
-                      bool                  multiply)
+MGSolver<D>::MGSolver(SP_state                  state,
+                      SP_material               material,
+                      SP_boundary               boundary,
+                      const vec_externalsource &q_e,
+                      SP_fissionsource          q_f,
+                      bool                      multiply)
   : Base(state, material, boundary, q_e, q_f)
   , d_multiply(multiply)
 {
@@ -29,8 +29,8 @@ MGSolver<D>::MGSolver(SP_state              state,
     d_maximum_iterations = d_input->template get<int>("outer_max_iters");
   if (d_input->check("outer_tolerance"))
     d_tolerance = d_input->template get<double>("outer_tolerance");
-  if (d_input->check("outer_print_out"))
-    d_print_level = d_input->template get<int>("outer_print_out");
+  if (d_input->check("outer_print_level"))
+    d_print_level = d_input->template get<int>("outer_print_level");
   if (d_input->check("outer_print_interval"))
     d_print_interval = d_input->template get<int>("outer_print_interval");
 
@@ -45,6 +45,12 @@ MGSolver<D>::MGSolver(SP_state              state,
   }
 
 }
+
+//---------------------------------------------------------------------------//
+// EXPLICIT INSTANTIATION
+template class MGSolver<_1D>;
+template class MGSolver<_2D>;
+template class MGSolver<_3D>;
 
 } // end namespace detran
 

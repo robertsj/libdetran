@@ -89,10 +89,6 @@ void WGSolverSI<D>::solve(const size_t g)
 
 }
 
-template class WGSolverSI<_1D>;
-template class WGSolverSI<_2D>;
-template class WGSolverSI<_3D>;
-
 } // namespace detran
 
 #endif /* detran_WGSOLVERSI_I_HH */

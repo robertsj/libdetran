@@ -12,6 +12,9 @@
 #include "external_source/DiscreteSource.hh"
 #include "external_source/IsotropicSource.hh"
 #include "utilities/Definitions.hh"
+#ifdef DETRAN_ENABLE_SILO
+#include "ioutils/SiloOutput.hh"
+#endif
 
 namespace detran
 {
@@ -48,10 +51,12 @@ void Execute::solve()
   using std::string;
   using detran_utilities::vec_dbl;
   using detran_utilities::vec_int;
+  typename FixedSourceManager<D>::SP_quadrature q;
 
   //--------------------------------------------------------------------------//
   // FIXED SOURCE
   //--------------------------------------------------------------------------//
+
   if (d_problem_type != "eigenvalue")
   {
 
@@ -69,11 +74,11 @@ void Execute::solve()
     if (d_input->check("fixed_scaling_factor"))
       keff = d_input->get<double>("fixed_scaling_factor");
 
-    // Create fixed source solver
+    // Create fixed source solver and setup
     FixedSourceManager<D> solver(d_input, d_material, d_mesh, multiply);
+    solver.setup();
 
     // Get the quadrature (may be NULL)
-    typename FixedSourceManager<D>::SP_quadrature q;
     q = solver.quadrature();
 
     // Define the fixed source
@@ -119,8 +124,9 @@ void Execute::solve()
     // Solve the problem
     solver.solve(keff);
 
-    // Get the state
+    // Get the state and quadrature
     d_state = solver.state();
+    q = solver.quadrature();
   }
 
   //--------------------------------------------------------------------------//
@@ -137,6 +143,9 @@ void Execute::solve()
 
     // Get the state
     d_state = solver.state();
+
+    // Spit out the eigenvalue for sanity (need better output)
+    std::cout << " *** Eigenvalue = " << d_state->eigenvalue() << std::endl;
   }
 
   else
@@ -148,7 +157,36 @@ void Execute::solve()
               << std::endl;
   }
 
-  // INSERT POST PROCESSING HERE
+  //--------------------------------------------------------------------------//
+  // OUTPUT
+  //--------------------------------------------------------------------------//
+
+  if (d_input->check("output_silo"))
+  {
+
+#ifdef DETRAN_ENABLE_SILO
+    // Create the silo output
+    detran_ioutils::SiloOutput silo(d_mesh);
+    std::string siloname = d_input->get<std::string>("output_silo");
+    silo.initialize(siloname);
+
+    // Write out mesh maps; some are optional.
+    silo.write_mesh_map("MATERIAL");
+    silo.write_mesh_map("PINS");
+    silo.write_mesh_map("ASSEMBLIES");
+
+    // Write scalar flux
+    silo.write_scalar_flux(d_state);
+
+    // Write angular flux
+    if (d_state->store_angular_flux())
+    {
+      silo.write_angular_flux(d_state, q);
+    }
+#else
+    std::cout << "Silo output requested, but Silo is unavaible." << std::endl;
+#endif
+  }
 
 }
 

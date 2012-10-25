@@ -32,11 +32,13 @@ template <class D>
 FixedSourceManager<D>::FixedSourceManager(SP_input    input,
                                           SP_material material,
                                           SP_mesh     mesh,
-                                          bool        multiply)
+                                          bool        multiply,
+                                          bool        fission)
   : d_input(input)
   , d_material(material)
   , d_mesh(mesh)
   , d_multiply(multiply)
+  , d_fission(multiply or fission)
   , d_is_setup(false)
   , d_is_ready(false)
 {
@@ -111,8 +113,7 @@ void FixedSourceManager<D>::setup()
   // FISSION SOURCE
   //-------------------------------------------------------------------------//
 
-  // Build the fission source if needed
-  if (d_multiply)
+  if (d_fission)
     d_fissionsource = new FissionSource(d_state, d_mesh, d_material);
 
   // Signify the manager is ready to solve
@@ -213,6 +214,7 @@ double FixedSourceManager<D>::iterate(const int generation)
   return 0.0;
 }
 
+//---------------------------------------------------------------------------//
 // Explicit instantiations
 template class FixedSourceManager<_1D>;
 template class FixedSourceManager<_2D>;

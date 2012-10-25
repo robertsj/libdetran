@@ -111,10 +111,8 @@ protected:
   vec_externalsource d_externalsources;
   /// Fission source, if used
   SP_fissionsource d_fissionsource;
-
   /// Number of groups
   int d_number_groups;
-
   /// Maximum iterations
   size_t d_maximum_iterations;
   /// Convergence tolerance
@@ -123,6 +121,13 @@ protected:
   int d_print_level;
   /// Interval for print out
   int d_print_interval;
+
+  //-------------------------------------------------------------------------//
+  // IMPLEMENTATION
+  //-------------------------------------------------------------------------//
+
+  // Default constructor for inherited class use
+  Solver(){}
 
 };
 

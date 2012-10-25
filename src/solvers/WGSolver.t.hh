@@ -40,7 +40,7 @@ WGSolver<D>::WGSolver(SP_state                  state,
     d_maximum_iterations = d_input->template get<int>("inner_max_iters");
   if (d_input->check("inner_tolerance"))
     d_tolerance = d_input->template get<double>("inner_tolerance");
-  if (d_input->check("inner_print_out"))
+  if (d_input->check("inner_print_level"))
     d_print_level = d_input->template get<int>("inner_print_level");
   if (d_input->check("inner_print_interval"))
     d_print_interval = d_input->template get<int>("inner_print_interval");

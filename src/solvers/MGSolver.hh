@@ -53,7 +53,6 @@ public:
 
   /**
    *  @brief Constructor
-   *
    *  @param state             State vectors, etc.
    *  @param material          Material definitions.
    *  @param boundary          Boundary fluxes.
@@ -61,12 +60,12 @@ public:
    *  @param q_f               Fission source.
    *  @param multiply          Flag for a multiplying fixed source problem
    */
-  MGSolver(SP_state             state,
-           SP_material          material,
-           SP_boundary          boundary,
-           vec_externalsource  &q_e,
-           SP_fissionsource     q_f,
-           bool                 multiply = false);
+  MGSolver(SP_state                  state,
+           SP_material               material,
+           SP_boundary               boundary,
+           const vec_externalsource &q_e,
+           SP_fissionsource          q_f,
+           bool                      multiply = false);
 
   /// Virtual destructor
   virtual ~MGSolver(){};

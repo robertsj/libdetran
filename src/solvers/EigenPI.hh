@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   PowerIteration.hh
+ *  @file   EigenPI.hh
  *  @author robertsj
  *  @date   Apr 10, 2012
- *  @brief  PowerIteration class definition.
+ *  @brief  EigenPI class definition.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef POWERITERATION_HH_
-#define POWERITERATION_HH_
+#ifndef detran_EIGENPI_HH_
+#define detran_EIGENPI_HH_
 
 #include "Eigensolver.hh"
 
@@ -17,7 +17,7 @@ namespace detran
 
 //---------------------------------------------------------------------------//
 /**
- *  @class PowerIteration
+ *  @class EigenPI
  *  @brief Solves the eigenvalue problem via the power method.
  *
  *  The eigenvalue problem can be cast in the form
@@ -43,11 +43,14 @@ namespace detran
  *  discretization).  Here, we use the L1 norm, and begin
  *  with \f$ || d^{0} || = 1 \f$.
  *
+ *  Note, this is a hand-coded power iteration implementation that
+ *  can be used with nonlinear acceleration.
+ *
  */
 //---------------------------------------------------------------------------//
 
 template <class D>
-class PowerIteration: public Eigensolver<D>
+class EigenPI: public Eigensolver<D>
 {
 
 public:
@@ -74,7 +77,7 @@ public:
    *  @brief Constructor
    *  @param mg_solver         Multigroup solver
    */
-  PowerIteration(SP_mg_solver mg_solver);
+  EigenPI(SP_mg_solver mg_solver);
 
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL EIGENSOLVERS MUST IMPLEMENT
@@ -110,6 +113,6 @@ protected:
 // INLINE FUNCTIONS
 //---------------------------------------------------------------------------//
 
-#include "PowerIteration.i.hh"
+#include "EigenPI.i.hh"
 
-#endif /* POWERITERATION_HH_ */
+#endif /* detran_EIGENPI_HH_ */

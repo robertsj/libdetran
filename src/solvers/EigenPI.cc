@@ -1,16 +1,13 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   PowerIteration.cc
+ *  @file   EigenPI.cc
  *  @author robertsj
  *  @date   Apr 10, 2012
- *  @brief  PowerIteration class definition.
+ *  @brief  EigenPI class definition.
  */
 //---------------------------------------------------------------------------//
 
-// Detran
-#include "PowerIteration.hh"
-
-// System
+#include "EigenPI.hh"
 #include <iostream>
 
 namespace detran
@@ -18,7 +15,7 @@ namespace detran
 
 // Constructor
 template <class D>
-PowerIteration<D>::PowerIteration(SP_mg_solver mg_solver)
+EigenPI<D>::EigenPI(SP_mg_solver mg_solver)
   : Base(mg_solver)
   , d_aitken(false)
 {
@@ -28,14 +25,14 @@ PowerIteration<D>::PowerIteration(SP_mg_solver mg_solver)
 
 }
 
-template class PowerIteration<_1D>;
-template class PowerIteration<_2D>;
-template class PowerIteration<_3D>;
+template class EigenPI<_1D>;
+template class EigenPI<_2D>;
+template class EigenPI<_3D>;
 
 } // end namespace detran
 
 //---------------------------------------------------------------------------//
-//              end of PowerIteration.cc
+//              end of EigenPI.cc
 //---------------------------------------------------------------------------//
 
 

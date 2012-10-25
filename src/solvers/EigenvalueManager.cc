@@ -16,7 +16,7 @@
 #include "geometry/Tracker.hh"
 
 // Eigenvalue solvers
-#include "PowerIteration.hh"
+#include "EigenPI.hh"
 #ifdef DETRAN_ENABLE_SLEPC
 #include "EigenSLEPc.hh"
 #endif
@@ -38,7 +38,9 @@ EigenvalueManager<D>::EigenvalueManager(SP_input    input,
   Require(mesh);
 
   /// Create the fixed source manager
-  d_mg_solver = new FixedSourceManager<D>(input, material, mesh);
+  d_mg_solver = new FixedSourceManager<D>(input, material, mesh, false, true);
+  d_mg_solver->setup();
+  d_mg_solver->set_solver();
 
   // Postconditions
   Ensure(d_mg_solver);
@@ -48,6 +50,7 @@ EigenvalueManager<D>::EigenvalueManager(SP_input    input,
 template <class D>
 bool EigenvalueManager<D>::solve()
 {
+  std::cout << "Solving eigenvalue problem..." << std::endl;
 
   if (d_discretization == Fixed_T::DIFF)
   {
@@ -61,7 +64,7 @@ bool EigenvalueManager<D>::solve()
 
     if (eigen_solver == "PI")
     {
-      d_solver = new PowerIteration<D>(d_mg_solver);
+      d_solver = new EigenPI<D>(d_mg_solver);
     }
     else if (eigen_solver == "SLEPc")
     {
@@ -80,6 +83,8 @@ bool EigenvalueManager<D>::solve()
     }
   }
 
+  // Solve the eigenvalue problem
+  d_solver->solve();
 
 }
 

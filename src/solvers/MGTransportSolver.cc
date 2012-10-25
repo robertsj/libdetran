@@ -29,7 +29,7 @@ MGTransportSolver<D>::MGTransportSolver(SP_state                  state,
 {
 
   // Get the quadrature from the state
-  d_quadrature = d_state;
+  d_quadrature = d_state->get_quadrature();
   Ensure(d_quadrature);
 
   // Get the inner solver type and create.
@@ -42,14 +42,14 @@ MGTransportSolver<D>::MGTransportSolver(SP_state                  state,
   {
     d_wg_solver = new WGSolverSI<D>(d_state, d_material, d_quadrature,
                                     d_boundary, d_externalsources,
-                                    d_fissionsource);
+                                    d_fissionsource, d_multiply);
   }
   else if (wg_solver == "GMRES")
   {
 #ifdef DETRAN_ENABLE_PETSC
     d_wg_solver = new WGSolverGMRES<D>(d_state, d_material, d_quadrature,
                                        d_boundary, d_externalsources,
-                                       d_fissionsource);
+                                       d_fissionsource, d_multiply);
 #else
     THROW("InnerGMRES is not available because PETSc is not enabled.");
 #endif

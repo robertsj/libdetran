@@ -118,7 +118,7 @@ bool SiloOutput::write_mesh_map(const std::string &key)
   // Get the mesh map
   if (!d_mesh->mesh_map_exists(key))
   {
-    cout << "Mesh map doesn't exist; not writing mesh map" << endl;
+    cout << "Mesh map " + key + " doesn't exist; not writing mesh map" << endl;
     return false;
   }
   detran_utilities::vec_int map = d_mesh->mesh_map(key);
