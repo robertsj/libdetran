@@ -31,6 +31,7 @@ template <class D>
 EigenvalueManager<D>::EigenvalueManager(SP_input    input,
                                         SP_material material,
                                         SP_mesh     mesh)
+  : d_discretization(0)
 {
   // Preconditions
   Require(input);
@@ -41,6 +42,7 @@ EigenvalueManager<D>::EigenvalueManager(SP_input    input,
   d_mg_solver = new FixedSourceManager<D>(input, material, mesh, false, true);
   d_mg_solver->setup();
   d_mg_solver->set_solver();
+  d_discretization = d_mg_solver->discretization();
 
   // Postconditions
   Ensure(d_mg_solver);

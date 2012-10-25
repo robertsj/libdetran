@@ -116,13 +116,7 @@ void MGSolverGS<D>::solve(const double keff)
     std::cout << "  GS done!" << std::endl;
   }
 
-
 }
-
-// Explicit instantiations
-//template class MGSolverGS<_1D>;
-//template class MGSolverGS<_2D>;
-//template class MGSolverGS<_3D>;
 
 } // end namespace detran
 

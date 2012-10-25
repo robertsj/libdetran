@@ -128,7 +128,7 @@
 //---------------------------------------------------------------------------//  
 
 #include "ReactionRates.hh"
-//#include "Manager.hh"
+#include "Manager.hh"
 //#include "PyExecute.hh"
 #ifdef DETRAN_ENABLE_SILO
 #include "SiloOutput.hh"
@@ -191,7 +191,7 @@
 %include "detran_postprocess.i"
 
 //%include "PyExecute.hh"
-//%include "Manager.hh"
+%include "Manager.hh"
 //%template(Execute1D) detran::PyExecute<detran::_1D>;
 //%template(Execute2D) detran::PyExecute<detran::_2D>;
 //%template(Execute3D) detran::PyExecute<detran::_3D>;

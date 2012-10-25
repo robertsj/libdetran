@@ -59,21 +59,6 @@ public:
   //-------------------------------------------------------------------------//
 
   /**
-   *  @brief Sets up a problem to be solved
-   *
-   *  This sets up the discretization, quadrature, boundary, and
-   *  state.  By changing the appropriate database parameters,
-   *  a call to setup will rebuild the problem using a different
-   *  discretization, etc.
-   *
-   *  Source defining external sources, the quadrature is often needed.
-   *  By calling setup first, the client can extract the quadrature for
-   *  building an external source.
-   *
-   */
-  void setup();
-
-  /**
    *  @brief Solve the system
    *
    *  By changing the appropriate database parameters, a problem already

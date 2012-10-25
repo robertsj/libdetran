@@ -8,10 +8,11 @@
 //---------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
-#define TEST_LIST                        \
-        FUNC(test_FixedSourceManager_1D) \
-        FUNC(test_FixedSourceManager_2D) \
-        FUNC(test_FixedSourceManager_3D)
+#define TEST_LIST                            \
+        FUNC(test_FixedSourceManager_1D)     \
+        FUNC(test_FixedSourceManager_2D)     \
+        FUNC(test_FixedSourceManager_3D)     \
+        FUNC(test_FixedSourceManager_iterate)
 
 // Detran headers
 #include "TestDriver.hh"
@@ -53,10 +54,10 @@ int main(int argc, char *argv[])
 
 SP_material test_FixedSourceManager_material()
 {
-  // Material (kinf = 5/4 = 1.25)
+  // Material (kinf = 1)
   SP_material mat(new Material(1, 1));
   mat->set_sigma_t(0, 0, 1.0);
-  mat->set_sigma_s(0, 0, 0, 0.6);
+  mat->set_sigma_s(0, 0, 0, 0.5);
   mat->set_sigma_f(0, 0, 0.5);
   mat->set_chi(0, 0, 1.0);
   mat->set_diff_coef(0, 0, 0.33);
@@ -67,7 +68,7 @@ SP_material test_FixedSourceManager_material()
 
 SP_mesh test_FixedSourceManager_mesh(int d)
 {
-  vec_dbl cm(2, 0.0); cm[1] = 10.0;
+  vec_dbl cm(2, 0.0); cm[1] = 5.0;
   vec_int fm(1, 10);
   vec_int mat_map(1, 0);
   SP_mesh mesh;
@@ -84,6 +85,8 @@ InputDB::SP_input test_FixedSourceManager_input()
   inp->put<int>("number_groups", 1);
   inp->put<string>("problem_type", "multiply");
   inp->put<double>("inner_tolerance", 1e-17);
+  inp->put<int>("inner_print_level", 0);
+  inp->put<int>("outer_print_level", 0);
   inp->put<int>("quad_number_polar_octant", 2);
   return inp;
 }
@@ -166,9 +169,10 @@ int test_FixedSourceManager_T()
   Manager_T manager(input, mat, mesh);
   manager.setup();
 
-  // Build source
+  // Build source and set solver
   ConstantSource::SP_externalsource q_e(new ConstantSource(1, mesh, 1.0));
   manager.set_source(q_e);
+  manager.set_solver();
 
   // Solve.
   bool flag = manager.solve();
@@ -220,6 +224,79 @@ int test_FixedSourceManager_2D(int argc, char *argv[])
 int test_FixedSourceManager_3D(int argc, char *argv[])
 {
   return test_FixedSourceManager_T<_3D>();
+}
+
+int test_FixedSourceManager_iterate(int argc, char *argv[])
+{
+
+  typedef FixedSourceManager<_1D>       Manager_T;
+  typedef BoundarySN<_1D>               B_T;
+  typedef typename B_T::SP_boundary     SP_boundary;
+
+  // Input, materials, and mesh
+  typename Manager_T::SP_input input = test_FixedSourceManager_input();
+  SP_material mat = test_FixedSourceManager_material();
+  SP_mesh mesh = test_FixedSourceManager_mesh(1);
+
+  // Manager
+  Manager_T manager(input, mat, mesh, false, true);
+  manager.setup();
+
+  // Build source and set solver.
+  ConstantSource::SP_externalsource q_e(new ConstantSource(1, mesh, 1.0));
+  manager.set_source(q_e);
+  manager.set_solver();
+
+  int ng = 100;
+  vec2_dbl stored_phi(ng, vec_dbl(mesh->number_cells(), 0.0));
+  vec_dbl P(ng, 0.0);
+
+  double r0 = 0.0;
+  double r1 = 1.0;
+  double rat0 = 1.0;
+  double rat1 = 1.0;
+  for (int g = 0; g < ng; ++g)
+  {
+
+    // Perform fission iteration
+    r0 = r1;
+    r1 = manager.iterate(g);
+    rat0 = rat1;
+    rat1 = r1/r0;
+    std::cout << " res = " <<  r1 << " k_vac ~ " << rat1 << " delta = " << rat1 - rat0 << std::endl;
+
+    // Store the state.
+    stored_phi[g] = manager.state()->phi(0);
+    for (int i = 0; i < mesh->number_cells(); ++i)
+      P[g] += stored_phi[g][i];
+
+  }
+  for (int i = 0; i < mesh->number_cells(); ++i)
+  {
+    for (int g = 0; g < ng; ++g)
+    {
+      cout << stored_phi[g][i] << " ";
+    }
+    cout << endl;
+  }
+  double phi_r = 0.0;
+  double k = 1.0;
+  for (int g = 0; g < ng; ++g)
+  {
+    phi_r += P[g] / k;
+    if (g % 1 == 0) cout << " g = " << g << " phi response (k=1.1) = " << phi_r << endl;
+    k *= 1.1;
+  }
+  double kvac = 0.863251;//0.863246;
+  k = 1.1;
+  phi_r = P[0] + P[1]/k + P[2]/(k*k*(1-kvac/k));
+  cout << " approx P(2) = " << phi_r << endl;
+  phi_r = P[0] + P[1]/k + P[2]/(k*k) + P[3]/(k*k*k*(1-kvac/k));
+  cout << " approx P(3) = " << phi_r << endl;
+  phi_r = P[0] + P[1]/k + P[2]/(k*k) + P[3]/(k*k*k) +  P[4]/(k*k*k*k*(1 - kvac/k));
+  cout << " approx P(4) = " << phi_r << endl;
+
+  return 0;
 }
 
 //---------------------------------------------------------------------------//

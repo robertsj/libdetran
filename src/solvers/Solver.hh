@@ -127,7 +127,12 @@ protected:
   //-------------------------------------------------------------------------//
 
   // Default constructor for inherited class use
-  Solver(){}
+  Solver()
+    : d_maximum_iterations(100)
+    , d_tolerance(1e-5)
+    , d_print_level(2)
+    , d_print_interval(10)
+  {/* ... */}
 
 };
 

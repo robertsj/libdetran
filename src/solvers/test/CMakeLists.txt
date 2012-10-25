@@ -27,6 +27,10 @@ TARGET_LINK_LIBRARIES(test_DiffusionEigensolver   solvers)
 ADD_EXECUTABLE(test_FixedSourceManager          test_FixedSourceManager.cc)
 TARGET_LINK_LIBRARIES(test_FixedSourceManager   solvers)
 
+ADD_EXECUTABLE(test_EigenvalueManager           test_EigenvalueManager.cc)
+TARGET_LINK_LIBRARIES(test_EigenvalueManager    solvers)
+
+
 #------------------------------------------------------------------------------#
 # Define tests
 #------------------------------------------------------------------------------#
@@ -36,6 +40,7 @@ TARGET_LINK_LIBRARIES(test_FixedSourceManager   solvers)
 #ADD_TEST(test_SourceIteration_3D  test_SourceIteration 3)
 #ADD_TEST(test_PowerIteration_2D test_PowerIteration 0)
 ADD_TEST(test_FixedSourceManager_1D        test_FixedSourceManager 0)
+ADD_TEST(test_EigenvalueManager_1D         test_EigenvalueManager 0)
 
 if (DETRAN_ENABLE_PETSC)
 

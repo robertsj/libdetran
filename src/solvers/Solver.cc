@@ -41,6 +41,7 @@ Solver<D>::Solver(SP_state                  state,
 
   Assert(d_input->check("number_groups"));
   d_number_groups = d_input->get<int>("number_groups");
+
 }
 
 //---------------------------------------------------------------------------//

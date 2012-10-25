@@ -210,8 +210,57 @@ bool FixedSourceManager<D>::solve(const double keff)
 template <class D>
 double FixedSourceManager<D>::iterate(const int generation)
 {
+  // Preconditions
+  Require(!d_multiply);
+  Require(d_fissionsource);
+  Require(d_is_ready);
 
-  return 0.0;
+  using detran_utilities::norm_residual;
+
+  //  setup problem
+  //  build fixed source
+  //  solve generation 0
+  //  save state & boundary for response
+  //  for generation = 1, N
+  //    compute first fission source
+  //    wipe fixed source & boundary
+  //    solve generation
+  //    save state & boundary
+
+  // Save current group flux.
+  State::group_moments_type phi_old = d_state->all_phi();
+
+  if (generation == 0)
+  {
+    // Solve the direct problem.
+    d_solver->solve();
+    // Kill the fixed source vector and rebuild the solver with no
+    // external sources.
+    d_sources.clear();
+    set_solver();
+  }
+  else
+  {
+    // Build fission source from current state.
+    d_fissionsource->update();
+    // Wipe state and boundary
+    d_state->clear();
+    d_boundary->clear();
+    // Solve the problem
+    d_solver->solve();
+  }
+
+  // Compute L2 norm of difference between iterates
+  double norm_delta_phi   = 0;
+  double norm_delta_phi_g = 0;
+  for (int g = 0; g < d_material->number_groups(); ++g)
+  {
+    norm_delta_phi_g = norm_residual(d_state->phi(g), phi_old[g], "L2");
+    norm_delta_phi += norm_delta_phi_g * norm_delta_phi_g;
+  }
+  norm_delta_phi = std::sqrt(norm_delta_phi);
+
+  return norm_delta_phi;
 }
 
 //---------------------------------------------------------------------------//

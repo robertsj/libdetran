@@ -34,7 +34,10 @@ Eigensolver<D>::Eigensolver(SP_mg_solver mg_solver)
   if (d_input->check("eigen_print_level"))
     d_print_level = d_input->template get<int>("eigen_print_level");
   if (d_input->check("eigen_print_interval"))
+  {
     d_print_interval = d_input->template get<int>("eigen_print_interval");
+  }
+
 }
 
 //---------------------------------------------------------------------------//

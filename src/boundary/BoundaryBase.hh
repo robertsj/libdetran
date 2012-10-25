@@ -204,6 +204,12 @@ public:
   // PUBLIC INTERFACE
   //-------------------------------------------------------------------------//
 
+  /// Clear all groups.
+  void clear()
+  {
+    for (size_t g = 0; g < d_number_groups; ++g) clear(g);
+  }
+
   /// Does the boundary have any reflective conditions?
   bool has_reflective() const
   {

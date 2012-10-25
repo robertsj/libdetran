@@ -111,19 +111,25 @@ public:
    */
   void setup();
 
-  /// Add a new external source
+  /**
+   *  @brief Add a new external source.
+   *
+   *  This is called after setup, since external sources often
+   *  need the quadrature set produced by the manager.
+   */
   void set_source(SP_source q);
 
-  /// Set the solver (based on parameter database)
+  /**
+   *  @brief Set the solver based on parameter database.
+   *
+   *  This must be called after setup is called and after all sources
+   *  have been set.  By changing the appropriate parameters, a
+   *  problem can be re-run with a different solver.
+   */
   bool set_solver();
 
   /**
    *  @brief Solve the system
-   *
-   *  By changing the appropriate database parameters, a problem already
-   *  set up can be solved by a different method by calling this
-   *  method.
-   *
    *  @param keff   Scaling factor for multiplying problems
    */
   bool solve(const double keff = 1.0);
@@ -137,7 +143,7 @@ public:
    *
    *  To use this function, the client sets up a problem in the typical
    *  way by setting a source, options, etc.  For each generation, the
-   *  user iterates.  The function returns the norm of the difference
+   *  client iterates.  The function returns the norm of the difference
    *  between fluxes of successive generations.  Following each iteration,
    *  the state is filled with the m-th iteration contribution to the
    *  flux.  In other words, the solution is represented as
@@ -209,6 +215,8 @@ private:
   bool d_is_setup;
   /// Solver setup status flag
   bool d_is_ready;
+  /// Iteration generation
+  int d_generation;
 
   //-------------------------------------------------------------------------//
   // IMPLEMENTATION
