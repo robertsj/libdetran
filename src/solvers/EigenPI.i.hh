@@ -45,7 +45,7 @@ void EigenPI<D>::solve()
     error = 0.0;
 
     // Save current density.
-    State::moments_type fb_old(d_fissionsource->density());
+    State::moments_type fd_old(d_fissionsource->density());
 
     // Setup outer iteration.
     d_fissionsource->setup_outer(1/keff);
@@ -59,12 +59,18 @@ void EigenPI<D>::solve()
     // Compute keff.  Here, using L1.  Could implement
     // volume-integrated fission rate if desired.
     State::moments_type fd(d_fissionsource->density());
+
+    // Overrelaxation
+    for (int i = 0; i < fd.size(); ++i)
+      fd[i] = d_omega * fd[i] + (1.0 - d_omega) * fd_old[i];
+
+
     keff_2 = keff_1;
     keff_1 = keff;
-    keff = keff_1 * norm(fd, "L1") / norm(fb_old, "L1");
+    keff = keff_1 * norm(fd, "L1") / norm(fd_old, "L1");
 
     // Compute error in fission density.
-    error = norm_residual(fd, fb_old, "L1");
+    error = norm_residual(fd, fd_old, "L1");
     if (d_print_level > 1 and iteration % d_print_interval == 0)
     {
       if (d_aitken)

@@ -105,6 +105,9 @@ protected:
   /// Display Aitken extrapolation
   bool d_aitken;
 
+  /// Over-relaxation parameter
+  double d_omega;
+
 };
 
 } // namespace detran

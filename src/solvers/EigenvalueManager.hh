@@ -29,16 +29,17 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef typename Eigensolver<D>::Fixed_T      Fixed_T;
-  typedef typename Eigensolver<D>::SP_solver    SP_solver;
-  typedef typename Fixed_T::SP_manager          SP_mg_solver;
-  typedef typename Fixed_T::SP_input            SP_input;
-  typedef typename Fixed_T::SP_state            SP_state;
-  typedef typename Fixed_T::SP_mesh             SP_mesh;
-  typedef typename Fixed_T::SP_material         SP_material;
-  typedef typename Fixed_T::SP_quadrature       SP_quadrature;
-  typedef typename Fixed_T::SP_boundary         SP_boundary;
-  typedef typename Fixed_T::SP_fissionsource    SP_fissionsource;
+  typedef typename Eigensolver<D>::Fixed_T              Fixed_T;
+  typedef typename Eigensolver<D>::SP_solver            SP_solver;
+  typedef typename Fixed_T::SP_manager                  SP_mg_solver;
+  typedef detran_utilities::InputDB::SP_input           SP_input;
+  typedef State::SP_state                               SP_state;
+  typedef detran_geometry::Mesh::SP_mesh                SP_mesh;
+  typedef detran_material::Material::SP_material        SP_material;
+  typedef detran_angle::Quadrature::SP_quadrature       SP_quadrature;
+  typedef BoundaryBase<D>                               Boundary_T;
+  typedef typename Boundary_T::SP_boundary              SP_boundary;
+  typedef FissionSource::SP_fissionsource               SP_fissionsource;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -58,15 +59,7 @@ public:
   // PUBLIC FUNCTIONS
   //-------------------------------------------------------------------------//
 
-  /**
-   *  @brief Solve the system
-   *
-   *  By changing the appropriate database parameters, a problem already
-   *  set up can be solved by a different method by calling this
-   *  method.
-   *
-   *  @param keff   Scaling factor for multiplying problems
-   */
+  /// Solve the system
   bool solve();
 
   /// @name Getters
@@ -96,11 +89,6 @@ private:
   int d_discretization;
   /// Problem setup status flag
   bool d_is_setup;
-
-  //-------------------------------------------------------------------------//
-  // IMPLEMENTATION
-  //-------------------------------------------------------------------------//
-
 
 };
 

@@ -60,20 +60,15 @@ public:
   typedef detran_geometry::Mesh::SP_mesh                SP_mesh;
   typedef detran_material::Material::SP_material        SP_material;
   typedef detran_angle::Quadrature::SP_quadrature       SP_quadrature;
-  //
   typedef BoundaryBase<D>                               Boundary_T;
   typedef typename Boundary_T::SP_boundary              SP_boundary;
-  //
   typedef detran_external_source::
           ExternalSource::SP_externalsource             SP_source;
   typedef detran_external_source::
           ExternalSource::vec_externalsource            vec_source;
   typedef FissionSource::SP_fissionsource               SP_fissionsource;
-  //
   typedef State::moments_type                           moments_type;
-  //
   typedef typename MGSolver<D>::SP_solver               SP_solver;
-  //
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
