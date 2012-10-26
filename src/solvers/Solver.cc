@@ -24,10 +24,12 @@ Solver<D>::Solver(SP_state                  state,
   , d_boundary(boundary)
   , d_externalsources(q_e)
   , d_fissionsource(q_f)
+  , d_number_groups(0)
   , d_maximum_iterations(100)
   , d_tolerance(1e-5)
   , d_print_level(2)
   , d_print_interval(10)
+  , d_adjoint(false)
 {
   // Preconditions
   Require(d_state);

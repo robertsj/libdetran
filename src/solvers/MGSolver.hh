@@ -96,6 +96,7 @@ protected:
   using Base::d_tolerance;
   using Base::d_print_level;
   using Base::d_print_interval;
+  using Base::d_adjoint;
 
   /// Turn off upscatter
   bool d_downscatter;

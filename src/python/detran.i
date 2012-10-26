@@ -37,6 +37,7 @@
 #include "callow/matrix/MatrixShell.hh"
 //
 #include "callow/solver/LinearSolverCreator.hh"
+#include "callow/solver/EigenSolverCreator.hh"
 #include "callow/solver/Richardson.hh"
 #include "callow/solver/Jacobi.hh"
 #include "callow/solver/GaussSeidel.hh"
@@ -92,6 +93,7 @@
 #include "Equation_SC_MOC.hh"
     
 // Boundary
+#include "BoundaryDiffusion.hh"
 #include "BoundarySN.hh"
 #include "BoundaryMOC.hh"
 
@@ -116,10 +118,10 @@
 #endif
 
 // Solvers
-#include "DiffusionFixedSourceSolver.hh"
-#include "DiffusionEigensolver.hh"
-#include "DiffusionLossOperator.hh"
-#include "DiffusionGainOperator.hh"
+//#include "DiffusionFixedSourceSolver.hh"
+//#include "DiffusionEigensolver.hh"
+//#include "DiffusionLossOperator.hh"
+//#include "DiffusionGainOperator.hh"
 #include "FixedSourceManager.hh"
 #include "EigenvalueManager.hh"
   

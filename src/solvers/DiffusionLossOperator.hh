@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   DiffusionLossOperator.hh
- * \brief  DiffusionLossOperator 
- * \author Jeremy Roberts
- * \date   Sep 10, 2012
+/**
+ *  @file   DiffusionLossOperator.hh
+ *  @brief  DiffusionLossOperator
+ *  @author Jeremy Roberts
+ *  @date   Sep 10, 2012
  */
 //---------------------------------------------------------------------------//
 
@@ -19,15 +19,15 @@
 namespace detran
 {
 
-/*!
- *  \class DiffusionLossOperator
- *  \brief Loss operator for multigroup diffusion problems
+/**
+ *  @class DiffusionLossOperator
+ *  @brief Loss operator for multigroup diffusion problems
  *
  *  The loss operator represents neutron losses through interactions
  *  and leakage from a volume.  In Detran, we employ a mesh-centered
  *  finite difference approximation.  Moreover, we use an energy
  *  block structure so that the diffusion operators match with the
- *  underlying transport structure, which is use for preconditioning
+ *  underlying transport structure, which is useful for preconditioning
  *  applications.
  *
  *  The loss operator can be constructed with or without a fission
@@ -43,9 +43,9 @@ class DiffusionLossOperator: public callow::Matrix
 
 public:
 
-  //---------------------------------------------------------------------------//
+  //-------------------------------------------------------------------------//
   // TYPEDEFS
-  //---------------------------------------------------------------------------//
+  //-------------------------------------------------------------------------//
 
   typedef callow::Matrix                                Base;
   typedef callow::MatrixBase::SP_matrix                 SP_matrix;
@@ -58,17 +58,17 @@ public:
   typedef detran_utilities::vec_dbl                     vec_dbl;
   typedef detran_utilities::vec2_dbl                    vec2_dbl;
 
-  //---------------------------------------------------------------------------//
+  //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
-  //---------------------------------------------------------------------------//
+  //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Constructor
-   *  \param input            Pointer to input parameters
-   *  \param material         Pointer to materials
-   *  \param mesh             Pointer to mesh
-   *  \param include_fission  Flag for including fission source implicitly
-   *  \param keff             Fission scaling factor
+  /**
+   *  @brief Constructor
+   *  @param input            Pointer to input parameters
+   *  @param material         Pointer to materials
+   *  @param mesh             Pointer to mesh
+   *  @param include_fission  Flag for including fission source implicitly
+   *  @param keff             Fission scaling factor
    */
   DiffusionLossOperator(SP_input      input,
                         SP_material   material,
@@ -77,28 +77,19 @@ public:
                         const bool    adjoint = false,
                         const double  keff = 1.0);
 
-  /// SP constructor
-  static SP_matrix Create(SP_input      input,
-                          SP_material   material,
-                          SP_mesh       mesh,
-                          const bool    include_fission,
-                          const bool    adjoint = false,
-                          const double  keff = 1.0)
-  {
-    SP_matrix p(new DiffusionLossOperator(input, material, mesh,
-                                          include_fission, adjoint, keff));
-    return p;
-  }
-
   //---------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
   //---------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Rebuild the matrix for a new fission scaling constant
+  /**
+   *  @brief Rebuild the matrix for a new fission scaling constant
    *
-   *  This allows the client to rebuild the matrix after
-   *  \param keff   Scaling parameter for fission source
+   *  This allows the client to rebuild the matrix after initial
+   *  construction.  This is useful for response function generation
+   *  as a function of keff or for time-dependent problems in which
+   *  the pseudo-coefficients changes with time.
+   *
+   *  @param keff   Scaling parameter for fission source
    */
   void construct(double keff = 1.0);
 

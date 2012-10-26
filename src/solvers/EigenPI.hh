@@ -95,7 +95,10 @@ protected:
   /// Expose base members
   using Base::d_input;
   using Base::d_state;
+  using Base::d_mesh;
+  using Base::d_material;
   using Base::d_fissionsource;
+  using Base::d_number_groups;
   using Base::d_maximum_iterations;
   using Base::d_tolerance;
   using Base::d_print_level;

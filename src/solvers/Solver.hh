@@ -91,6 +91,17 @@ public:
     d_maximum_iterations = max_iters;
   }
 
+  /**
+   *  @brief  Refresh the solver
+   *
+   *  This can be reimplemented by a subclass if internal structures must
+   *  be updated due to some change (e.g. material perturbation)
+   */
+  virtual void refresh()
+  {
+    /* ... */
+  }
+
 protected:
 
   //-------------------------------------------------------------------------//
@@ -112,7 +123,7 @@ protected:
   /// Fission source, if used
   SP_fissionsource d_fissionsource;
   /// Number of groups
-  int d_number_groups;
+  size_t d_number_groups;
   /// Maximum iterations
   size_t d_maximum_iterations;
   /// Convergence tolerance
@@ -121,6 +132,8 @@ protected:
   int d_print_level;
   /// Interval for print out
   int d_print_interval;
+  /// Adjoint flag
+  bool d_adjoint;
 
   //-------------------------------------------------------------------------//
   // IMPLEMENTATION
@@ -132,6 +145,7 @@ protected:
     , d_tolerance(1e-5)
     , d_print_level(2)
     , d_print_interval(10)
+    , d_adjoint(false)
   {/* ... */}
 
 };

@@ -99,6 +99,7 @@ private:
   using Base::d_tolerance;
   using Base::d_print_level;
   using Base::d_print_interval;
+  using Base::d_adjoint;
   using Base::d_wg_solver;
   using Base::d_multiply;
 

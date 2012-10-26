@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   State.cc
- * \author Jeremy Roberts
- * @date   Mar 25, 2012
- * \brief  State member definitions.
+/**
+ *  @file   State.cc
+ *  @author Jeremy Roberts
+ *  @date   Mar 25, 2012
+ *  @brief  State member definitions.
  */
 //---------------------------------------------------------------------------//
 
@@ -14,7 +14,7 @@
 namespace detran
 {
 
-// Constructor.
+//---------------------------------------------------------------------------//
 State::State(SP_input        input,
              SP_mesh         mesh,
              SP_quadrature   quadrature)
@@ -30,7 +30,6 @@ State::State(SP_input        input,
   // Preconditions
   Require(input);
   Require(mesh);
-  Require(quadrature);
   Require(d_number_groups > 0);
 
   // Allocate angular flux vectors if needed.
@@ -38,6 +37,7 @@ State::State(SP_input        input,
   if (input->check("store_angular_flux"))
   {
     store_psi = input->get<int>("store_angular_flux");
+    Insist(d_quadrature, "Angular flux requested but no quadrature given.");
   }
 
   if (store_psi > 0)
@@ -46,7 +46,7 @@ State::State(SP_input        input,
 
     for (int g = 0; g < d_number_groups; g++)
     {
-      d_angular_flux[g].resize(quadrature->number_angles(),
+      d_angular_flux[g].resize(d_quadrature->number_angles(),
                                vec_dbl(mesh->number_cells(), 0.0));
     }
 
@@ -54,22 +54,7 @@ State::State(SP_input        input,
 
 }
 
-// Constructor.
-State::State(SP_input        input,
-             SP_mesh         mesh)
-  : d_input(input)
-  , d_mesh(mesh)
-  , d_number_groups(input->get<int>("number_groups"))
-  , d_store_angular_flux(false)
-  , d_moments(d_number_groups, vec_dbl(mesh->number_cells(), 0.0))
-  , d_eigenvalue(0.0)
-{
-  // Preconditions
-  Require(input);
-  Require(mesh);
-  Require(d_number_groups > 0);
-}
-
+//---------------------------------------------------------------------------//
 void State::clear()
 {
   for (int g = 0; g < d_number_groups; ++g)
@@ -89,6 +74,7 @@ void State::clear()
 
 }
 
+//---------------------------------------------------------------------------//
 void State::display() const
 {
   using std::printf;

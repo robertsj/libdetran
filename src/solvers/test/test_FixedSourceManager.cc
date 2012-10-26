@@ -136,8 +136,8 @@ double compute_leakage(typename BoundarySN<D>::SP_boundary b,
             {
               for (int a = 0; a < q->number_angles_octant(); ++a)
               {
-                cout << " o = " << q->outgoing_octant(surface)[o]
-                     << " a = " << a << endl;
+                //cout << " o = " << q->outgoing_octant(surface)[o]
+                //     << " a = " << a << endl;
                 leakage +=
                   BV_T::value((*b)(surface, q->outgoing_octant(surface)[o], a, g),
                                ijk[dim1], ijk[dim2]) *
@@ -190,7 +190,7 @@ int test_FixedSourceManager_T()
   for (int i = 0; i < mesh->number_cells(); i++)
   {
     cout << state->phi(0)[i] << " " << endl;
-    gain += q_e->source(i, 0);
+    gain += q_e->source(i, 0) * mesh->volume(i);
     absorption += state->phi(0)[i] * mat->sigma_a(0, 0) * mesh->volume(i);
   }
 

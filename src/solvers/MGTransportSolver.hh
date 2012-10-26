@@ -56,13 +56,12 @@ public:
 
   /**
    *  @brief Constructor
-   *
    *  @param state             State vectors, etc.
    *  @param material          Material definitions.
-   *  @param quadrature        Angular mesh.
    *  @param boundary          Boundary fluxes.
    *  @param external_source   User-defined external source.
    *  @param fission_source    Fission source.
+   *  @param multiply          Flag for multiplying fixed source problem
    */
   MGTransportSolver(SP_state                  state,
                     SP_material               material,
@@ -101,6 +100,7 @@ protected:
   using Base::d_tolerance;
   using Base::d_print_level;
   using Base::d_print_interval;
+  using Base::d_adjoint;
   using Base::d_multiply;
 
   /// Angular mesh

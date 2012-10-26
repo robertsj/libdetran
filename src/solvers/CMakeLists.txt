@@ -18,6 +18,7 @@ SET(SRC
     MGTransportSolver.cc
     MGSolverGS.cc
     MGSolverGMRES.cc
+    MGDiffusionSolver.cc
     Eigensolver.cc
     EigenSLEPc.cc
     EigenPI.cc
@@ -25,8 +26,6 @@ SET(SRC
     PreconditionerMG.cc
     FixedSourceManager.cc
     EigenvalueManager.cc
-    DiffusionFixedSourceSolver.cc
-    DiffusionEigensolver.cc
     DiffusionGainOperator.cc
     DiffusionLossOperator.cc
 )

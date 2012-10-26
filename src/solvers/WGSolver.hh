@@ -139,16 +139,6 @@ public:
   // PUBLIC FUNCTIONS
   //-------------------------------------------------------------------------//
 
-  SP_mesh get_mesh() const
-  {
-    return d_mesh;
-  }
-
-  SP_state get_state() const
-  {
-    return d_state;
-  }
-
   SP_sweepsource get_sweepsource() const
   {
     return d_sweepsource;
@@ -182,6 +172,7 @@ protected:
   using Base::d_tolerance;
   using Base::d_print_level;
   using Base::d_print_interval;
+  using Base::d_adjoint;
 
   /// Angular mesh.
   SP_quadrature d_quadrature;

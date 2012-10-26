@@ -13,6 +13,7 @@
 namespace detran
 {
 
+//---------------------------------------------------------------------------//
 DiffusionLossOperator::DiffusionLossOperator(SP_input       input,
                                              SP_material    material,
                                              SP_mesh        mesh,
@@ -44,7 +45,7 @@ DiffusionLossOperator::DiffusionLossOperator(SP_input       input,
   // overwritten by the default boundary.
   d_albedo.resize(6,  vec_dbl(d_number_groups, 1.0));
 
-  // Nonzeros.  We have
+  // Nonzeros.  We have up to
   //   diagonal + 2*dim neighbors + num_groups coupling from scatter/fission
   vec_int nnz(d_m, 1 + 2 * d_dimension + d_number_groups);
 
@@ -85,6 +86,7 @@ DiffusionLossOperator::DiffusionLossOperator(SP_input       input,
 
 }
 
+//---------------------------------------------------------------------------//
 void DiffusionLossOperator::construct(const double keff)
 {
   d_keff = keff;
@@ -97,16 +99,7 @@ void DiffusionLossOperator::construct(const double keff)
 // IMPLEMENTATION
 //---------------------------------------------------------------------------//
 
-/*!
- *  \page mesh-centered-diffusion Mesh-Centered Finite-Difference Diffusion
- *
- *  In this note, we describe our implementation of finite difference
- *  diffusion.  We assume a Cartesian grid with cells in which the materials,
- *  flux, and source are taken to be constant.
- *
- *
- *
- */
+//---------------------------------------------------------------------------//
 void DiffusionLossOperator::build()
 {
 

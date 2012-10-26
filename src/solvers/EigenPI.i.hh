@@ -35,10 +35,17 @@ void EigenPI<D>::solve()
 
   // Initialize the fission density
   d_fissionsource->initialize();
+//
+//  d_state->clear();
+//  for (int g = 0; g < d_number_groups; ++g)
+//    for (int i = 0; i < d_state->get_mesh()->number_cells(); ++i)
+//      d_state->phi(g)[i] = 1.0;
+//  d_fissionsource->update();
 
   // Power iterations.
   int iteration;
   double error;
+  d_maximum_iterations = 200;
   for (iteration = 1; iteration <= d_maximum_iterations; iteration++)
   {
     // Reset the error.

@@ -82,6 +82,11 @@ InputDB::SP_input test_EigenvalueManager_input()
   InputDB::SP_input inp(new InputDB());
   inp->put<int>("number_groups", 1);
   inp->put<string>("problem_type", "eigenvalue");
+  inp->put<string>("equation", "diffusion");
+  inp->put<string>("bc_west", "reflect");
+  inp->put<string>("bc_east", "reflect");
+  inp->put<string>("bc_south", "reflect");
+  inp->put<string>("bc_north", "reflect");
   inp->put<double>("inner_tolerance", 1e-17);
   inp->put<int>("inner_print_level", 0);
   inp->put<int>("outer_print_level", 0);

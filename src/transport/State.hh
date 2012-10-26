@@ -84,34 +84,14 @@ public:
    */
   State(SP_input        input,
         SP_mesh         mesh,
-        SP_quadrature   quadrature);
-
-  /*!
-   *  @brief Constructor.
-   *
-   *  This variant has no quadrature and can be used in
-   *  diffusion problems.
-   *
-   *  @param    input       User input database.
-   *  @param    mesh        Cartesian mesh.
-   */
-  State(SP_input        input,
-        SP_mesh         mesh);
+        SP_quadrature   quadrature = SP_quadrature(0));
 
   /// SP constructor.
   static SP_state Create(SP_input      input,
                          SP_mesh       mesh,
-                         SP_quadrature quadrature)
+                         SP_quadrature quadrature = SP_quadrature(0))
   {
     SP_state p(new State(input, mesh, quadrature));
-    return p;
-  }
-
-  /// SP constructor with no quadrature.
-  static SP_state Create(SP_input input,
-                         SP_mesh  mesh)
-  {
-    SP_state p(new State(input, mesh));
     return p;
   }
 

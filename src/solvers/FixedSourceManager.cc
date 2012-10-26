@@ -17,6 +17,7 @@
 
 // Multigroup solvers
 #include "MGSolverGS.hh"
+#include "MGDiffusionSolver.hh"
 #ifdef DETRAN_ENABLE_PETSC
 #include "petsc.h"
 #include "MGSolverGMRES.hh"
@@ -103,11 +104,7 @@ void FixedSourceManager<D>::setup()
     d_boundary = new BoundaryDiffusion<D>(d_input, d_mesh);
 
   // Setup the state vector.
-  // \todo State needs only one constructor with optional quadrature arg
-  if (d_discretization == DIFF)
-    d_state = new State(d_input, d_mesh);
-  else
-    d_state = new State(d_input, d_mesh, d_quadrature);
+  d_state = new State(d_input, d_mesh, d_quadrature);
 
   //-------------------------------------------------------------------------//
   // FISSION SOURCE
@@ -153,11 +150,13 @@ bool FixedSourceManager<D>::set_solver()
 
   if (d_discretization == DIFF)
   {
-    THROW("NOT FOR DIFFUSION YET");
+    d_solver = new MGDiffusionSolver<D>(d_state, d_material, d_boundary,
+                                        d_sources, d_fissionsource,
+                                        d_multiply);
+    d_is_ready = true;
   }
   else
   {
-
     // Default solver is Gauss-Seidel
     std::string outer_solver = "GS";
     if (d_input->check("outer_solver"))

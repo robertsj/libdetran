@@ -25,6 +25,8 @@ Eigensolver<D>::Eigensolver(SP_mg_solver mg_solver)
   Require(d_input);
   Require(d_state);
   Require(d_fissionsource);
+  Require(d_input->check("number_groups"));
+  d_number_groups = d_input->template get<int>("number_groups");
 
   // Get relevant input parameters.
   if (d_input->check("eigen_max_iters"))
@@ -34,9 +36,7 @@ Eigensolver<D>::Eigensolver(SP_mg_solver mg_solver)
   if (d_input->check("eigen_print_level"))
     d_print_level = d_input->template get<int>("eigen_print_level");
   if (d_input->check("eigen_print_interval"))
-  {
     d_print_interval = d_input->template get<int>("eigen_print_interval");
-  }
 
 }
 
@@ -48,7 +48,9 @@ Eigensolver<D>::~Eigensolver()
 }
 
 //---------------------------------------------------------------------------//
-// Explicit instantiations
+// EXPLICIT INSTANTIATION
+//---------------------------------------------------------------------------//
+
 template class Eigensolver<_1D>;
 template class Eigensolver<_2D>;
 template class Eigensolver<_3D>;

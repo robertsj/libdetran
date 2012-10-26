@@ -182,10 +182,18 @@ public:
   inline SP<T>& operator=(const SP<X> spx_in);
 
   /// Access operator.
-  T* operator->() const { Require(p); return p; }
+  T* operator->() const
+  {
+    Require_msg(p, std::string(typeid(T).name()));
+    return p;
+  }
 
   /// Dereference operator.
-  T& operator*() const { Require(p); return *p; }
+  T& operator*() const
+  {
+    Require_msg(p, std::string(typeid(T).name()));
+    return *p;
+  }
 
   /// Get the base-class pointer; better know what you are doing.
   T* bp() const { return p; }
