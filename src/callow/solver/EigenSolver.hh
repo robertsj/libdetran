@@ -67,10 +67,12 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<EigenSolver>           SP_solver;
-  typedef typename MatrixBase::SP_matrix               SP_matrix;
-  typedef typename LinearSolver::SP_solver             SP_linearsolver;
-  typedef typename Vector::SP_vector                   SP_vector;
+  typedef detran_utilities::SP<EigenSolver>       SP_solver;
+  typedef typename MatrixBase::SP_matrix          SP_matrix;
+  typedef typename LinearSolver::SP_solver        SP_linearsolver;
+  typedef typename Vector::SP_vector              SP_vector;
+  typedef detran_utilities::InputDB::SP_input     SP_db;
+
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -92,11 +94,11 @@ public:
    *  This allows for the system
    *  @param A      left side operator
    *  @param B      optional right side operator (to be inverted)
-   *  @param type   optional solver type for inversion
+   *  @param db     optional database for solver and preconditioner options
    */
   virtual void set_operators(SP_matrix A,
                              SP_matrix B = SP_matrix(0),
-                             std::string type = "gmres");
+                             SP_db db = SP_db(0));
 
 
   /**
@@ -127,7 +129,7 @@ public:
   /**
    *  @brief Solve the eigenvalue problem
    *
-   *  Upon return, the initial gues is *not*
+   *  Upon return, the initial guess is *not*
    *  guaranteed to be unchanged, as it may be used
    *  as temporary storage.
    *

@@ -40,6 +40,7 @@ public:
   typedef detran_utilities::vec_int                 vec_int;
   typedef detran_utilities::size_t                  size_t;
   typedef State::moments_type                       moments_type;
+  typedef State::vec_moments_type                   vec_moments_type;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -191,9 +192,9 @@ private:
   /// Materials
   SP_material d_material;
   /// @f$ q_{fg} = norm \times \chi_g \sum_g \nu \Sigma_{fg} \phi_g @f$ .
-  State::moments_type d_source;
+  vec_moments_type d_source;
   /// @f$ d = \sum_g \nu \Sigma_{fg} \phi_g @f$ .
-  State::moments_type d_density;
+  moments_type d_density;
   /// Scaling factor
   double d_scale;
   /// Number of groups.

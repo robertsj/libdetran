@@ -10,10 +10,10 @@
 #ifndef LINEARSOLVER_I_HH_
 #define LINEARSOLVER_I_HH_
 
-
 namespace callow
 {
 
+//---------------------------------------------------------------------------//
 inline int LinearSolver::solve(const Vector &b, Vector &x)
 {
   Require(x.size() == b.size());

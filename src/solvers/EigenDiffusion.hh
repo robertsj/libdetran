@@ -1,56 +1,37 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   EigenPI.hh
- *  @author robertsj
- *  @date   Apr 10, 2012
- *  @brief  EigenPI class definition.
+ *  @file   EigenDiffusion.hh
+ *  @brief  EigenDiffusion class definition
+ *  @author Jeremy Roberts
+ *  @date   Oct 26, 2012
  */
 //---------------------------------------------------------------------------//
 
-#ifndef detran_EIGENPI_HH_
-#define detran_EIGENPI_HH_
+#ifndef detran_EIGENDIFFUSION_HH_
+#define detran_EIGENDIFFUSION_HH_
 
 #include "Eigensolver.hh"
+#include "DiffusionGainOperator.hh"
+#include "DiffusionLossOperator.hh"
+#include "callow/solver/EigenSolverCreator.hh"
 
 namespace detran
 {
 
-//---------------------------------------------------------------------------//
+
 /**
- *  @class EigenPI
- *  @brief Solves the eigenvalue problem via the power method.
+ *  @class EigenDiffusion
+ *  @brief Solves the diffusion eigenvalue directly
  *
- *  The eigenvalue problem can be cast in the form
- *  @f[
- *      \mathbf{A}d = kd \,
- *  @f]
- *  where \f$ d \f$ is the fission density and \f$ k \f$ is the
- *  eigenvalue.  See \ref Eigensolver for more details on this formulation.
- *
- *  The power method solves the eigenproblem using the iteration
- *  @f[
- *      d^{l+1} \leftarrow \mathbf{A} d^{l} / k^{l}
- *  @f]
- *  and
- *  @f[
- *      k^{l+1} \leftarrow || d^{l+1} || \, .
- *  @f]
- *  Traditionally, the norm used to define the updated eigenvalue
- *  is a fission-weighted sum of the group fluxes, which is
- *  equivalent to an L1 norm of the density if all the fluxes
- *  and fission cross sections are positive, true for all
- *  physical problems (and barring numerical issues due to
- *  discretization).  Here, we use the L1 norm, and begin
- *  with \f$ || d^{0} || = 1 \f$.
- *
- *  Note, this is a hand-coded power iteration implementation that
- *  can be used with nonlinear acceleration.
+ *  While the other eigensolvers can be used in conjuction with the
+ *  multigroup diffusion solver, in this eigensolver, both the loss
+ *  and gains operator are explicitly constructed for solution via
+ *  a generalized eigensolver.  Including this capability is mostly
+ *  for benchmarking the performance of the other approach.
  *
  */
-//---------------------------------------------------------------------------//
-
 template <class D>
-class EigenPI: public Eigensolver<D>
+class EigenDiffusion: public Eigensolver<D>
 {
 
 public:
@@ -68,6 +49,12 @@ public:
   typedef typename Base::SP_material                SP_material;
   typedef typename Base::SP_boundary                SP_boundary;
   typedef typename Base::SP_fissionsource           SP_fissionsource;
+  typedef DiffusionGainOperator::SP_gainoperator    SP_gainoperator;
+  typedef DiffusionLossOperator::SP_lossoperator    SP_lossoperator;
+  typedef callow::EigenSolverCreator                Creator_T;
+  typedef callow::EigenSolver::SP_solver            SP_eigensolver;
+  typedef callow::Vector::SP_vector                 SP_vector;
+  typedef detran_utilities::size_t                  size_t;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -77,7 +64,7 @@ public:
    *  @brief Constructor
    *  @param mg_solver         Multigroup solver
    */
-  EigenPI(SP_mg_solver mg_solver);
+  EigenDiffusion(SP_mg_solver mg_solver);
 
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL EIGENSOLVERS MUST IMPLEMENT
@@ -106,11 +93,18 @@ protected:
   using Base::d_adjoint;
   using Base::d_mg_solver;
 
-  /// Display Aitken extrapolation
-  bool d_aitken;
+  /// Gain operator
+  SP_gainoperator d_F;
 
-  /// Over-relaxation parameter
-  double d_omega;
+  /// Loss operator
+  SP_lossoperator d_M;
+
+  /// Working vectors
+  SP_vector d_phi;
+  SP_vector d_work;
+
+  /// Eigenvalue solver
+  SP_eigensolver d_eigensolver;
 
 };
 
@@ -120,6 +114,10 @@ protected:
 // INLINE FUNCTIONS
 //---------------------------------------------------------------------------//
 
-#include "EigenPI.i.hh"
+//#include "EigenDiffusion.i.hh"
 
-#endif /* detran_EIGENPI_HH_ */
+#endif // detran_EIGENDIFFUSION_HH_
+
+//---------------------------------------------------------------------------//
+//              end of file EigenDiffusion.hh
+//---------------------------------------------------------------------------//

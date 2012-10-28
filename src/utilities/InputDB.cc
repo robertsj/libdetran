@@ -13,7 +13,8 @@
 namespace detran_utilities
 {
 
-InputDB::InputDB()
+InputDB::InputDB(std::string name)
+  : d_name(name)
 {
   /* ... */
 }
@@ -90,6 +91,8 @@ int InputDB::size(int type) const
     value = d_data_vec_int.size();
   else if (type == VEC_DBL)
     value = d_data_vec_dbl.size();
+  else if (type == SPINPUT)
+    value = d_data_db.size();
   else
     THROW("Invalid type specifier.");
   return value;

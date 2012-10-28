@@ -66,6 +66,16 @@ inline bool InputDB::check(const std::string &key) const
     if (it5 != d_data_str.end())
       return true;
   }
+
+  // Check db
+  std::map<std::string, SP_input>::const_iterator it6;
+  if (d_data_db.size() > 0)
+  {
+    it6 = d_data_db.find(key);
+    if (it6 != d_data_db.end())
+      return true;
+  }
+
   return false;
 }
 
@@ -101,6 +111,13 @@ inline std::string InputDB::get<std::string>(const std::string &key) const
   Require_msg(check(key), key);
   return d_data_str.find(key)->second;
 }
+template <>
+inline InputDB::SP_input InputDB::get<InputDB::SP_input>(const std::string &key) const
+{
+  Require_msg(check(key), key);
+  return d_data_db.find(key)->second;
+}
+
 
 // Put
 
@@ -134,7 +151,12 @@ inline void InputDB::put(const std::string &key, const std::string value)
   d_data_str[key] = value;
   Ensure_msg(check(key), key);
 }
-
+template <>
+inline void InputDB::put(const std::string &key, const SP_input value)
+{
+  d_data_db[key] = value;
+  Ensure_msg(check(key), key);
+}
 // Get map
 
 template <class T>
@@ -161,6 +183,11 @@ template <>
 inline const std::map<std::string, vec_dbl>& InputDB::get_map<vec_dbl>()
 {
   return d_data_vec_dbl;
+}
+template <>
+inline const std::map<std::string, InputDB::SP_input>& InputDB::get_map<InputDB::SP_input>()
+{
+  return d_data_db;
 }
 
 } // end namespace detran_utilities

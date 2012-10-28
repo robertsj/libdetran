@@ -11,6 +11,7 @@ SET(SOLVER_SRC
   ${SRC_DIR}/SlepcSolver.cc
   ${SRC_DIR}/EigenSolver.cc
   ${SRC_DIR}/PowerIteration.cc
+  ${SRC_DIR}/EigenSolverCreator.cc
   PARENT_SCOPE
 )
 

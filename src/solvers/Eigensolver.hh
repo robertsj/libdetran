@@ -185,6 +185,7 @@ protected:
   using Base::d_tolerance;
   using Base::d_print_level;
   using Base::d_print_interval;
+  using Base::d_adjoint;
 
   // Multigroup solver
   SP_mg_solver d_mg_solver;

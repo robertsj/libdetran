@@ -107,6 +107,12 @@ public:
   /// Refresh the solver.
   void refresh();
 
+  /// Return the lossoperator
+  SP_lossoperator lossoperator()
+  {
+    return d_M;
+  }
+
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL MULTIGROUP SOLVERS MUST IMPLEMENT
   //-------------------------------------------------------------------------//

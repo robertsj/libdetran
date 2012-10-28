@@ -17,6 +17,7 @@
 
 // Eigenvalue solvers
 #include "EigenPI.hh"
+#include "EigenDiffusion.hh"
 #ifdef DETRAN_ENABLE_SLEPC
 #include "EigenSLEPc.hh"
 #endif
@@ -61,6 +62,17 @@ bool EigenvalueManager<D>::solve()
   if (eigen_solver == "PI")
   {
     d_solver = new EigenPI<D>(d_mg_solver);
+  }
+  else if (eigen_solver == "diffusion")
+  {
+    if (d_discretization != Fixed_T::DIFF)
+    {
+      std::cout <<
+        "Diffusion eigensolver requires  diffusion discretization." <<
+        std::endl;
+      return false;
+    }
+    d_solver = new EigenDiffusion<D>(d_mg_solver);
   }
   else if (eigen_solver == "SLEPc")
   {

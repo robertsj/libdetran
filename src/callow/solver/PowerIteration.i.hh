@@ -50,8 +50,6 @@ inline void PowerIteration::solve_impl(Vector &x, Vector &x0)
     lambda_0 = lambda;
     x_err_0  = x_err;
 
-    std::cout << " x0=" << x0[0] << std::endl;
-
     // compute x <-- A*x0
     d_A->multiply(x0, x);
 

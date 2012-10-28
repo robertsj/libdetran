@@ -79,6 +79,20 @@ int test_InputDB(int argc, char *argv[])
  string eq = db->get<string>("equation");
  TEST(eq=="dd");
 
+ // input db
+ InputDB::SP_input db2(new InputDB("DB2"));
+ db2->put<int>("testint", 99);
+ db2->put<double>("testdbl", 1.23);
+ db->put<InputDB::SP_input>("db2", db2);
+ TEST(db->check("db2"));
+ InputDB::SP_input db2check;
+ db2check = db->get<InputDB::SP_input>("db2");
+ TEST(db2check);
+ int testint = db2check->get<int>("testint");
+ TEST(testint == 99);
+ double testdbl = db2check->get<double>("testdbl");
+ TEST(soft_equiv(testdbl, 1.23));
+
  // Test that something is not there.
  TEST(!db->check("i_am_not_here"));
 

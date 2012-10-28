@@ -63,7 +63,8 @@ public:
     DBL,
     STR,
     VEC_INT,
-    VEC_DBL
+    VEC_DBL,
+    SPINPUT
   };
 
   typedef SP<InputDB> SP_input;
@@ -71,12 +72,12 @@ public:
   /*!
    *  \brief Constructor.
    */
-  InputDB();
+  InputDB(std::string name = "InputDB");
 
-  static SP_input Create()
+  static SP_input Create(std::string name = "InputDB")
   {
     SP_input p;
-    p = new InputDB();
+    p = new InputDB(name);
     return p;
   }
 
@@ -138,20 +139,20 @@ private:
   /// \name Data
   //\{
 
+  /// Name of the database
+  std::string d_name;
   /// Integer parameters.
   std::map<std::string, int> d_data_int;
-
   /// Double parameters.
   std::map<std::string, double> d_data_dbl;
-
   /// Integer vector parameters.
   std::map<std::string, vec_int> d_data_vec_int;
-
   /// Double vector parameters.
   std::map<std::string, vec_dbl> d_data_vec_dbl;
-
   /// String parameters.
   std::map<std::string, std::string> d_data_str;
+  /// InputDB parameters
+  std::map<std::string, SP_input> d_data_db;
 
   //\}
 
@@ -170,6 +171,7 @@ private:
     ar & d_data_vec_int;
     ar & d_data_vec_dbl;
     ar & d_data_str;
+    ar & d_data_db;
   }
 
 #endif

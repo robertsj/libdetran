@@ -47,8 +47,11 @@ int test_PowerIteration(int argc, char *argv[])
   Vector X(n, 0.0);
   Vector X0(n, 1.0);
   Matrix::SP_matrix A = test_matrix_1(n);
-  EigenSolver::SP_solver solver =
-    EigenSolverCreator::Create("power", tol, maxit);
+  EigenSolver::SP_db db(new detran_utilities::InputDB("test_PowerIteration"));
+  db->put<std::string>("eigen_solver_type", "power");
+  db->put<double>("eigen_solver_tol", 1e-10);
+  db->put<int>("eigen_solver_maxit", 1000);
+  EigenSolver::SP_solver solver = EigenSolverCreator::Create(db);
   solver->set_operators(test_matrix_1(n));
   solver->set_monitor_level(1);
   int status = solver->solve(X, X0);
@@ -61,8 +64,11 @@ int test_SlepcSolver(int argc, char *argv[])
   Vector X(n, 0.0);
   Vector X0(n, 1.0);
   Matrix::SP_matrix A = test_matrix_1(n);
-  EigenSolver::SP_solver solver =
-    EigenSolverCreator::Create("slepc", tol, maxit);
+  EigenSolver::SP_db db(new detran_utilities::InputDB("test_SlepcSolver"));
+  db->put<std::string>("eigen_solver_type", "slepc");
+  db->put<double>("eigen_solver_tol", 1e-10);
+  db->put<int>("eigen_solver_maxit", 1000);
+  EigenSolver::SP_solver solver = EigenSolverCreator::Create(db);
   solver->set_operators(test_matrix_1(n));
   solver->set_monitor_level(1);
   int status = solver->solve(X, X0);

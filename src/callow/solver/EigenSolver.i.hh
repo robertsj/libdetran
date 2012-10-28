@@ -18,11 +18,14 @@ namespace callow
 //---------------------------------------------------------------------------//
 inline void EigenSolver::set_operators(SP_matrix    A,
                                        SP_matrix    B,
-                                       std::string  type)
+                                       SP_db        db)
 {
+  // Preconditions
   Insist(A, "The operator A cannot be null");
   d_A = A;
   Ensure(d_A->number_rows() == d_A->number_columns());
+
+  // Setup linear system if this is a generalized eigenproblem
   if (B)
   {
     d_B = B;
@@ -31,11 +34,9 @@ inline void EigenSolver::set_operators(SP_matrix    A,
     // Create linear solver.  Defaults can be changed by
     // extracting the solver and resetting.  The same goes
     // for the preconditioner, which is null by default.
-    d_solver = LinearSolverCreator::
-               Create(type, d_tolerance, d_tolerance);
-    d_solver->set_operators(d_B);
-    d_A->print_matlab("A.out");
-    d_B->print_matlab("B.out");
+
+    d_solver = LinearSolverCreator::Create(db);
+    d_solver->set_operators(d_B, db);
   }
 }
 

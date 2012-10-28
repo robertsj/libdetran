@@ -35,7 +35,8 @@ FissionSource::FissionSource(SP_state state,
 
   d_number_groups = d_material->number_groups();
   d_density.assign(d_mesh->number_cells(), 0.0);
-  d_source.assign(d_mesh->number_cells(), 0.0);
+  d_source.resize(d_material->number_groups(),
+                  moments_type(mesh->number_cells(), 0.0));
 }
 
 //---------------------------------------------------------------------------//
@@ -70,11 +71,6 @@ void FissionSource::initialize()
   detran_utilities::vec_scale(d_density, 1.0/norm_density);
 }
 
-//---------------------------------------------------------------------------//
-void FissionSource::setup_outer(const double scale)
-{
-  d_scale = scale;
-}
 
 
 

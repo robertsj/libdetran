@@ -10,13 +10,7 @@
 #ifndef callow_EIGENSOLVERCREATOR_HH_
 #define callow_EIGENSOLVERCREATOR_HH_
 
-#include "callow/callow_config.hh"
 #include "EigenSolver.hh"
-// solvers
-#include "PowerIteration.hh"
-#include "SlepcSolver.hh"
-//
-#include <string>
 
 namespace callow
 {
@@ -35,38 +29,17 @@ public:
   //-------------------------------------------------------------------------//
 
   typedef detran_utilities::SP<EigenSolver>   SP_solver;
+  typedef detran_utilities::InputDB::SP_input SP_db;
 
   //-------------------------------------------------------------------------//
   // PUBLIC METHODS
   //-------------------------------------------------------------------------//
 
   /**
-   *  Create a solver
-   *
-   *  @param  tol     tolerance
-   *  @param  maxit   maximum number of iterations
+   *  @brief Create an eigensolver
+   *  @param  db  Pointer to parameter database
    */
-  static SP_solver Create(std::string  type,
-                          const double tol = 1e-5,
-                          const int    maxit = 100)
-  {
-    SP_solver solver;
-
-    if (type == "power")
-      solver = new PowerIteration(tol, maxit);
-    else if (type == "slepc")
-    {
-#ifdef CALLOW_ENABLE_SLEPC
-      solver = new SlepcSolver(tol,maxit);
-#else
-      THROW("SLEPc solvers not available with this build");
-#endif
-    }
-    else
-      THROW("Unsupported solver type requested");
-
-    return solver;
-  }
+  static SP_solver Create(SP_db db = SP_db(0));
 
 };
 

@@ -172,6 +172,7 @@ public:
   SP_quadrature quadrature() const { return d_quadrature; }
   SP_fissionsource fissionsource() const { return d_fissionsource; }
   int discretization() const { return d_discretization; }
+  SP_solver solver() const { return d_solver; }
   /// @}
 
 private:

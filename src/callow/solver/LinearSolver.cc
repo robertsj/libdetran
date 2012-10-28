@@ -8,6 +8,9 @@
 //---------------------------------------------------------------------------//
 
 #include "LinearSolver.hh"
+// preconditioners
+#include "PCILU0.hh"
+#include "PCJacobi.hh"
 
 namespace callow
 {
@@ -42,14 +45,32 @@ LinearSolver::LinearSolver(const double atol,
 
 void LinearSolver::
 set_operators(SP_matrix A,
-              SP_preconditioner P,
-              const int side)
+              SP_db db)
 {
+  // Preconditions
   Require(A);
   d_A = A;
   Ensure(d_A->number_rows() == d_A->number_columns());
-  if (P) d_P = P;
-  d_pc_side = side;
+
+  std::string pc_type = "";
+  int pc_side = LEFT;
+
+  if (db)
+  {
+    if(db->check("pc_type"))
+      pc_type = db->get<std::string>("pc_type");
+    if (pc_type == "ilu0")
+    {
+      d_P = new PCILU0(d_A);
+    }
+    else if (pc_type == "jacobi")
+    {
+      d_P = new PCJacobi(d_A);
+    }
+    if(db->check("pc_side"))
+      pc_side = db->get<int>("pc_side");
+  }
+
 }
 
 void LinearSolver::

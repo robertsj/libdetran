@@ -14,6 +14,7 @@
 #include "callow/utils/CallowDefinitions.hh"
 #include "callow/matrix/MatrixBase.hh"
 #include "callow/preconditioner/Preconditioner.hh"
+#include "utilities/InputDB.hh"
 #include "utilities/SP.hh"
 #include <cstdio>
 #include <string>
@@ -90,6 +91,7 @@ public:
   typedef typename MatrixBase::SP_matrix               SP_matrix;
   typedef typename Preconditioner::SP_preconditioner   SP_preconditioner;
   typedef typename Vector::SP_vector                   SP_vector;
+  typedef detran_utilities::InputDB::SP_input          SP_db;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -114,11 +116,20 @@ public:
    *  @param side   specifies on what side of A the preconditioner operates
    */
   virtual void set_operators(SP_matrix A,
-                             SP_preconditioner P = SP_preconditioner(0),
-                             const int side = LEFT);
+                             SP_db db = SP_db(0));
 
   /**
-   *  Get the preconditioner.  This allows the client to build, change, etc.
+   *  Set the preconditioner.  This allows the client to build, change, etc.
+   */
+  void set_preconditioner(SP_preconditioner P, const int side = LEFT)
+  {
+    d_P = P;
+    d_pc_side = side;
+  }
+
+  /**
+   *  Get the preconditioner.  This allows the client to build,
+   *  change the curent PC.s
    */
   SP_preconditioner preconditioner()
   {

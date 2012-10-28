@@ -34,12 +34,6 @@ MGDiffusionSolver<D>::MGDiffusionSolver(SP_state                  state,
   // Set the problem dimension
   d_problem_size = d_mesh->number_cells() * d_material->number_groups();
 
-  // Select solver type
-  if (d_input->check("outer_diffusion_solver"))
-  {
-    d_solver_type = d_input->template get<std::string>("outer_diffusion_solver");
-  }
-
   // Create vectors
   d_phi = new Vector_T(d_problem_size, 0.0);
   d_Q   = new Vector_T(d_problem_size, 0.0);
@@ -48,18 +42,15 @@ MGDiffusionSolver<D>::MGDiffusionSolver(SP_state                  state,
   d_M   = new DiffusionLossOperator(d_input, d_material, d_mesh,
                                     d_multiply, d_adjoint, 1.0);
 
-  // Create solver
-  d_solver = Creator_T::Create(d_solver_type,
-                               d_tolerance,    // atol
-                               d_tolerance,    // rtol (not using for now)
-                               d_maximum_iterations);
+  // Create solver and set operator.
+  SP_input db;
+  if (d_input->check("outer_callow_linear_solver_db"))
+  {
+    db = d_input->template get<SP_input>("outer_callow_linear_solver_db");
+  }
+  d_solver = Creator_T::Create(db);
+  d_solver->set_operators(d_M, db);
 
-  // Set monitor level
-  d_solver->set_monitor_level(d_print_level);
-
-  // For now, using ILU0 with built in GMRES as default.
-  d_P = new callow::PCILU0(d_M);
-  d_solver->set_operators(d_M, d_P);
 }
 
 //---------------------------------------------------------------------------//
@@ -316,13 +307,9 @@ void MGDiffusionSolver<D>::fill_boundary()
               ((2.0 * DC) * (*d_phi)[row] + (W - 4.0*DC) * Jinc) / (4.0 * DC + W);
 
           } // end group loop
-
         } // end dim2 loop
-
       } // end dim1 loop
-
     } // end dir loop
-
   } // end dim0 loop
 }
 

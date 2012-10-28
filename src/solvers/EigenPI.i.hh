@@ -45,7 +45,7 @@ void EigenPI<D>::solve()
   // Power iterations.
   int iteration;
   double error;
-  d_maximum_iterations = 200;
+
   for (iteration = 1; iteration <= d_maximum_iterations; iteration++)
   {
     // Reset the error.

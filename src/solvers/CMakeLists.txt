@@ -22,6 +22,7 @@ SET(SRC
     Eigensolver.cc
     EigenSLEPc.cc
     EigenPI.cc
+    EigenDiffusion.cc
     PreconditionerWG.cc
     PreconditionerMG.cc
     FixedSourceManager.cc

@@ -28,8 +28,11 @@ EigenPI<D>::EigenPI(SP_mg_solver mg_solver)
     d_omega = d_input->template get<double>("eigen_pi_omega");
 
 }
+
 //---------------------------------------------------------------------------//
 // EXPLICIT INSTANTIATIONS
+//---------------------------------------------------------------------------//
+
 template class EigenPI<_1D>;
 template class EigenPI<_2D>;
 template class EigenPI<_3D>;
