@@ -32,7 +32,7 @@ void EigenSLEPc<D>::solve()
   cout << "Starting EIGEN." << endl;
 
   // Initialize the fission density
-  b_fissionsource->initialize();
+  d_fissionsource->initialize();
 
   // Temporaries
   double lambda;
@@ -41,7 +41,7 @@ void EigenSLEPc<D>::solve()
   Vec    J_imag;
   int    ierr;
 
-  ierr = EPSSetTolerances(d_solver, b_tolerance, b_max_iters);
+  ierr = EPSSetTolerances(d_solver, d_tolerance, d_maximum_iterations);
   Insist(!ierr, "Error setting EPS tolerances.");
 
   ierr = EPSSolve(d_solver);
@@ -65,20 +65,20 @@ void EigenSLEPc<D>::solve()
   VecScale(J_real, 1.0/sum);
 
   // Copy the result into the fission source.
-  VecPlaceArray(J_imag, &(b_fissionsource->density()[0]));
+  VecPlaceArray(J_imag, &(d_fissionsource->density()[0]));
   VecCopy(J_real, J_imag);
   VecResetArray(J_imag);
 
   // To retrieve the correct flux moments, we need to do
   // one more solve with this new density.  This could
   // be a switched feature.
-  b_mg_solver->solve();
+  d_mg_solver->solve();
 
   // Free temporary
   VecDestroy(&J_imag);
   VecDestroy(&J_real);
 
-  b_state->set_eigenvalue(lambda);
+  d_state->set_eigenvalue(lambda);
   std::cout << "EIGEN done. keff = " << lambda <<  std::endl;
   std::cout << "Number MG solves = " << d_mg_solves <<  std::endl;
 }
@@ -90,7 +90,7 @@ inline PetscErrorCode EigenSLEPc<D>::apply_eigen(Mat A, Vec X, Vec Y)
   d_mg_solves++;
 
   // Temporarily swap Y's internal with the density.
-  VecPlaceArray(Y, &(b_fissionsource->density()[0]));
+  VecPlaceArray(Y, &(d_fissionsource->density()[0]));
 
   // Copy X into Y.  Now density has the right values.
   VecCopy(X, Y);
@@ -99,13 +99,13 @@ inline PetscErrorCode EigenSLEPc<D>::apply_eigen(Mat A, Vec X, Vec Y)
   VecResetArray(Y);
 
   // Solve the multigroup equations.
-  b_mg_solver->solve();
+  d_mg_solver->solve();
 
   // Update the density.
-  b_fissionsource->update();
+  d_fissionsource->update();
 
   // Temporarily swap Y's internal with the density.
-  VecPlaceArray(X, &(b_fissionsource->density()[0]));
+  VecPlaceArray(X, &(d_fissionsource->density()[0]));
 
   // Copy X into Y.  Now Y has the right values.
   VecCopy(X, Y);
@@ -115,11 +115,6 @@ inline PetscErrorCode EigenSLEPc<D>::apply_eigen(Mat A, Vec X, Vec Y)
 
   return 0;
 }
-
-// Explicit instantiations
-template class EigenSLEPc<_1D>;
-template class EigenSLEPc<_2D>;
-template class EigenSLEPc<_3D>;
 
 } // end namespace detran
 

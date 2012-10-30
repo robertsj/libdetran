@@ -54,55 +54,25 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<EigenSLEPc<D> >  SP_solver;
-  typedef Eigensolver<D>                        Base;
-  typedef typename Base::SP_solver              SP_base;
-  typedef typename Base::SP_mg_solver           SP_mg_solver;
-  typedef typename Base::SP_input               SP_input;
-  typedef typename Base::SP_state               SP_state;
-  typedef typename Base::SP_mesh                SP_mesh;
-  typedef typename Base::SP_material            SP_material;
-  typedef typename Base::SP_quadrature          SP_quadrature;
-  typedef typename Base::SP_boundary            SP_boundary;
-  typedef typename Base::SP_fissionsource       SP_fissionsource;
+  typedef Eigensolver<D>                            Base;
+  typedef typename Base::SP_solver                  SP_solver;
+  typedef typename Base::SP_mg_solver               SP_mg_solver;
+  typedef typename Base::SP_input                   SP_input;
+  typedef typename Base::SP_state                   SP_state;
+  typedef typename Base::SP_mesh                    SP_mesh;
+  typedef typename Base::SP_material                SP_material;
+  typedef typename Base::SP_boundary                SP_boundary;
+  typedef typename Base::SP_fissionsource           SP_fissionsource;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Constructor
-   *
-   *  \param input             Input database.
-   *  \param state             State vectors, etc.
-   *  \param mesh              Problem mesh.
-   *  \param mat               Material definitions.
-   *  \param quadrature        Angular mesh.
-   *  \param boundary          Boundary fluxes.
-   *  \param fission_source    Fission source.
+  /**
+   *  @brief Constructor
+   *  @param mg_solver         Multigroup solver
    */
-  EigenSLEPc(SP_input           input,
-             SP_state           state,
-             SP_mesh            mesh,
-             SP_material        material,
-             SP_quadrature      quadrature,
-             SP_boundary        boundary,
-             SP_fissionsource   q_f);
-
-  /// SP Constructor
-  static SP_solver
-  Create(SP_input           input,
-         SP_state           state,
-         SP_mesh            mesh,
-         SP_material        material,
-         SP_quadrature      quadrature,
-         SP_boundary        boundary,
-         SP_fissionsource   q_f)
-  {
-    SP_solver p(new EigenSLEPc(input, state, mesh, material,
-                               quadrature, boundary, q_f));
-    return p;
-  }
+  EigenSLEPc(SP_mg_solver mg_solver);
 
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL EIGENSOLVERS MUST IMPLEMENT
@@ -117,40 +87,34 @@ protected:
   // DATA
   //-------------------------------------------------------------------------//
 
-  using Base::b_input;
-  using Base::b_state;
-  using Base::b_mesh;
-  using Base::b_material;
-  using Base::b_quadrature;
-  using Base::b_boundary;
-  using Base::b_fissionsource;
-  using Base::b_mg_solver;
-  using Base::b_max_iters;
-  using Base::b_tolerance;
-  using Base::b_print_out;
-  using Base::b_print_interval;
+  /// Expose base members
+  using Base::d_input;
+  using Base::d_state;
+  using Base::d_mesh;
+  using Base::d_material;
+  using Base::d_fissionsource;
+  using Base::d_number_groups;
+  using Base::d_maximum_iterations;
+  using Base::d_tolerance;
+  using Base::d_print_level;
+  using Base::d_print_interval;
+  using Base::d_adjoint;
+  using Base::d_mg_solver;
 
   /// SLEPc eigensolver.
   EPS d_solver;
-
   /// Operator.
   Mat d_operator;
-
   /// PETSc vector for fission density.
   Vec d_density;
-
   /// System size
   int d_size;
-
   /// Number of multigroup solves.
   int d_mg_solves;
-
-  /// \}
 
   //-------------------------------------------------------------------------//
   // IMPLEMENTATION
   //-------------------------------------------------------------------------//
-
 
   /// Set the templated operator function.
   PetscErrorCode set_operation();

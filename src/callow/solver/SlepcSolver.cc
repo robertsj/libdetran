@@ -48,9 +48,10 @@ SlepcSolver::~SlepcSolver()
   EPSDestroy(&d_slepc_solver);
 }
 
-void SlepcSolver::set_operators(SP_matrix   A,
-                                SP_matrix   B,
-                                std::string type)
+
+void SlepcSolver::set_operators(SP_matrix    A,
+                                SP_matrix    B,
+                                SP_db        db)
 {
   // Preconditions
   Insist(A, "First operator cannot be null");

@@ -1,10 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   InnerGMRES.cc
- * \author robertsj
- * \date   Apr 4, 2012
- * \brief  InnerGMRES class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts.
+/**
+ *  @file   WGSolverGMRES.cc
+ *  @author robertsj
+ *  @date   Apr 4, 2012
+ *  @brief  WGSolverGMRES class definition.
  */
 //---------------------------------------------------------------------------//
 
@@ -12,37 +11,31 @@
 
 #ifdef DETRAN_ENABLE_PETSC
 
-#include "InnerGMRES.hh"
+#include "WGSolverGMRES.hh"
 
 namespace detran
 {
 
 //---------------------------------------------------------------------------//
 template <class D>
-InnerGMRES<D>::InnerGMRES(SP_state              state,
-                          SP_material           material,
-                          SP_quadrature         quadrature,
-                          SP_boundary           boundary,
-                          vec_externalsource   &q_e,
-                          SP_fissionsource  q_f)
-  :  InnerIteration<D>::InnerIteration(input,
-                                       state,
-                                       mesh,
-                                       material,
-                                       quadrature,
-                                       boundary,
-                                       q_e,
-                                       q_f)
-  , d_moments_size(0)
-  , d_boundary_size(0)
-  , d_use_pc(false)
+WGSolverGMRES<D>::WGSolverGMRES(SP_state                  state,
+                                SP_material               material,
+                                SP_quadrature             quadrature,
+                                SP_boundary               boundary,
+                                const vec_externalsource &q_e,
+                                SP_fissionsource          q_f,
+                                bool                      multiply)
+ : Base(state, material, quadrature, boundary, q_e, q_f, multiply)
+ , d_moments_size(0)
+ , d_boundary_size(0)
+ , d_use_pc(false)
 {
 
   // Error from PETSc calls.
   PetscErrorCode ierr;
 
   // Determine the sizes of the moments.
-  d_moments_size = mesh->number_cells();
+  d_moments_size = d_mesh->number_cells();
 
   // Determine the sizes of any reflected boundary fluxes.
   for (int side = 0; side < 2*D::dimension; side++)
@@ -88,11 +81,19 @@ InnerGMRES<D>::InnerGMRES(SP_state              state,
   // Set the operator.
   KSPSetOperators(d_solver, d_operator, d_operator, SAME_NONZERO_PATTERN);
 
-  // Preconditioner
+  //--------------------------------------------------------------------------//
+  // PRECONDITIONER
+  //--------------------------------------------------------------------------//
+
+  /*
+   *  Eventual Options:
+   *    1. fine mesh diffusion (= DSA)
+   *    2. coarse mesh diffusion (= CMDSA)
+   *    3. coarse mesh transport (= ~S2 on coarse grid)
+   */
   if (d_input->check("inner_use_pc"))
   {
-    // \todo Why do I get a compile error if I use d_input instead?
-    if (input->template get<int>("inner_use_pc"))
+    if (d_input->template get<int>("inner_use_pc"))
     {
       std::cout << "Using preconditioned GMRES." << std::endl;
       d_use_pc = true;
@@ -125,31 +126,35 @@ InnerGMRES<D>::InnerGMRES(SP_state              state,
 }
 
 template <class D>
-PetscErrorCode InnerGMRES<D>::set_operation()
+PetscErrorCode WGSolverGMRES<D>::set_operation()
 {
   return MatShellSetOperation(d_operator,
                               MATOP_MULT,
                               (void(*)(void)) apply_WGTO_3D);
 }
 template <>
-PetscErrorCode InnerGMRES<_2D>::set_operation()
+PetscErrorCode WGSolverGMRES<_2D>::set_operation()
 {
   return MatShellSetOperation(d_operator,
                               MATOP_MULT,
                               (void(*)(void)) apply_WGTO_2D);
 }
 template <>
-PetscErrorCode InnerGMRES<_1D>::set_operation()
+PetscErrorCode WGSolverGMRES<_1D>::set_operation()
 {
   return MatShellSetOperation(d_operator,
                               MATOP_MULT,
                               (void(*)(void)) apply_WGTO_1D);
 }
 
+template class WGSolverGMRES<_1D>;
+template class WGSolverGMRES<_2D>;
+template class WGSolverGMRES<_3D>;
+
 } // end namespace detran
 
 #endif
 
 //---------------------------------------------------------------------------//
-//              end of InnerGMRES.cc
+//              end of WGSolverGMRES.cc
 //---------------------------------------------------------------------------//

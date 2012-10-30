@@ -203,6 +203,7 @@ bool FixedSourceManager<D>::solve(const double keff)
   // Solve the problem
   d_solver->solve(keff);
 
+  return true;
 }
 
 //---------------------------------------------------------------------------//

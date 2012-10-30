@@ -224,13 +224,13 @@ int test_PetscSolver(int argc, char *argv[])
 #ifdef CALLOW_ENABLE_PETSC
   Vector X(n, 0.0);
   Vector B(n, 1.0);
-  PetscSolver solver(abstol, reltol, maxit);
-  solver.set_operators(test_matrix_1(n));
-  solver.set_monitor_level(2);
-  solver.set_monitor_diverge(false);
-  int status = solver.solve(B, X);
-  X.display();
-  //TEST(status == 0);
+  db = get_db();
+  db->put<std::string>("linear_solver_type", "petsc");
+  db->put<std::string>("pc_type", "ilu0");
+  solver = LinearSolverCreator::Create(db);
+  solver->set_operators(test_matrix_1(n), db);
+  int status = solver->solve(B, X);
+  TEST(status == 0);
   for (int i = 0; i < 20; ++i)
   {
     TEST(soft_equiv(X[i],  X_ref[i], 1e-9));

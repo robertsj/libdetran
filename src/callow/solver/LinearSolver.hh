@@ -121,7 +121,7 @@ public:
   /**
    *  Set the preconditioner.  This allows the client to build, change, etc.
    */
-  void set_preconditioner(SP_preconditioner P, const int side = LEFT)
+  virtual void set_preconditioner(SP_preconditioner P, const int side = LEFT)
   {
     d_P = P;
     d_pc_side = side;

@@ -95,9 +95,9 @@ InputDB::SP_input test_EigenvalueManager_input()
   inp->put<int>("outer_print_level",        2);
   inp->put<double>("outer_tolerance",       1e-14);
   inp->put<int>("eigen_print_level",        2);
-  inp->put<string>("eigen_solver",          "diffusion");
+  inp->put<string>("eigen_solver",          "PI");
   inp->put<double>("eigen_tolerance",       1e-12);
-  inp->put<int>("eigen_print_interval",     5);
+  inp->put<int>("eigen_print_interval",     10);
   inp->put<int>("eigen_max_iters",          5000);
   inp->put<int>("quad_number_polar_octant",   2);
   inp->put<int>("quad_number_azimuth_octant", 2);
@@ -112,7 +112,7 @@ InputDB::SP_input test_EigenvalueManager_input()
   callowdb->put<double>("linear_solver_rtol",       1e-10);
   callowdb->put<int>("linear_solver_maxit",         100);
   callowdb->put<int>("linear_solver_gmres_restart", 50);
-  callowdb->put<int>("linear_solver_monitor_level", 2);
+  callowdb->put<int>("linear_solver_monitor_level", 0);
   //
   inp->put<InputDB::SP_input>("eigen_callow_eigen_solver_db", callowdb);
   inp->put<InputDB::SP_input>("outer_callow_linear_solver_db", callowdb);

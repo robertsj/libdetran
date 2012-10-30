@@ -4,7 +4,6 @@
  * \author robertsj
  * \date   Apr 10, 2012
  * \brief  EigenSLEPc class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts.
  */
 //---------------------------------------------------------------------------//
 
@@ -12,10 +11,7 @@
 
 #ifdef DETRAN_ENABLE_SLEPC
 
-// Detran
 #include "EigenSLEPc.hh"
-
-// System
 #include <iostream>
 
 namespace detran
@@ -23,15 +19,9 @@ namespace detran
 
 // Constructor
 template <class D>
-EigenSLEPc<D>::EigenSLEPc(SP_input          input,
-                          SP_state          state,
-                          SP_mesh           mesh,
-                          SP_material       material,
-                          SP_quadrature     quadrature,
-                          SP_boundary       boundary,
-                          SP_fissionsource  q_f)
-  : Base(input, state, mesh, material, quadrature, boundary, q_f)
-  , d_size(mesh->number_cells())
+EigenSLEPc<D>::EigenSLEPc(SP_mg_solver mg_solver)
+  : Base(mg_solver)
+  , d_size(d_mesh->number_cells())
   , d_mg_solves(0)
 {
 
@@ -91,6 +81,11 @@ PetscErrorCode EigenSLEPc<_1D>::set_operation()
                               MATOP_MULT,
                               (void(*)(void)) apply_eigen_1D);
 }
+
+// Explicit instantiations
+template class EigenSLEPc<_1D>;
+template class EigenSLEPc<_2D>;
+template class EigenSLEPc<_3D>;
 
 } // end namespace detran
 

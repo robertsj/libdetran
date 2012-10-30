@@ -60,13 +60,13 @@ public:
 
   /**
    *  @brief Constructor
-   *
    *  @param state             State vectors, etc.
    *  @param mat               Material definitions.
    *  @param quadrature        Angular mesh.
    *  @param boundary          Boundary fluxes.
    *  @param external_source   User-defined external source.
    *  @param fission_source    Fission source.
+   *  @param multiply          Flag for fixed source multiplying problem
    */
   WGSolverSI(SP_state                   state,
              SP_material                material,
@@ -102,6 +102,8 @@ private:
   using Base::d_maximum_iterations;
   using Base::d_print_level;
   using Base::d_print_interval;
+  using Base::d_adjoint;
+  using Base::d_g;
 
 };
 

@@ -10,7 +10,7 @@
 #ifndef detran_MGSOLVERGMRES_HH_
 #define detran_MGSOLVERGMRES_HH_
 
-#include "InnerIteration.hh"
+#include "WGSolver.hh"
 #include "MGTransportSolver.hh"
 #include "Sweeper.hh"
 #include "PreconditionerMG.hh"
@@ -20,9 +20,9 @@ namespace detran
 {
 
 //---------------------------------------------------------------------------//
-/*!
- *  \class MGSolverGMRES
- *  \brief Solves the multigroup transport equation via GMRES.
+/**
+ *  @class MGSolverGMRES
+ *  @brief Solves the multigroup transport equation via GMRES.
  *
  * Traditionally, the Gauss-Seidel method has been used for multigroup
  * problems. For each group, the within-group equation is solved, and
@@ -97,10 +97,9 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef SolverTransportMG<D>                      Base;
+  typedef MGTransportSolver<D>                      Base;
   typedef typename Base::SP_solver                  SP_solver;
-  typedef typename Base::SP_solver                  SP_base;
-  typedef typename Base::SP_inner                   SP_inner;
+  typedef typename Base::SP_wg_solver               SP_wg_solver;
   typedef typename Base::SP_input                   SP_input;
   typedef typename Base::SP_state                   SP_state;
   typedef typename Base::SP_mesh                    SP_mesh;
@@ -108,6 +107,7 @@ public:
   typedef typename Base::SP_quadrature              SP_quadrature;
   typedef typename Base::SP_boundary                SP_boundary;
   typedef typename Base::SP_externalsource          SP_externalsource;
+  typedef typename Base::vec_externalsource         vec_externalsource;
   typedef typename Base::SP_fissionsource           SP_fissionsource;
   typedef typename Sweeper<D>::SP_sweeper           SP_sweeper;
   typedef typename SweepSource<D>::SP_sweepsource   SP_sweepsource;
@@ -118,24 +118,21 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Constructor
-   *
-   *  \param input             Input database.
-   *  \param state             State vectors, etc.
-   *  \param mesh              Problem mesh.
-   *  \param mat               Material definitions.
-   *  \param quadrature        Angular mesh.
-   *  \param boundary          Boundary fluxes.
-   *  \param external_source   User-defined external source.
-   *  \param fission_source    Fission source.
+  /**
+   *  @brief Constructor
+   *  @param state             State vectors, etc.
+   *  @param material          Material definitions.
+   *  @param boundary          Boundary fluxes.
+   *  @param q_e               Vector of user-defined external sources
+   *  @param q_f               Fission source.
+   *  @param multiply          Flag for a multiplying fixed source problem
    */
-  MGSolverGMRES(SP_state           state,
-                SP_material        material,
-                SP_quadrature      quadrature,
-                SP_boundary        boundary,
-                SP_externalsource  q_e,
-                SP_fissionsource   q_f);
+  MGSolverGMRES(SP_state                   state,
+                SP_material                material,
+                SP_boundary                boundary,
+                const vec_externalsource  &q_e,
+                SP_fissionsource           q_f,
+                bool                       multiply = false);
 
   /// Destructor
   ~MGSolverGMRES()
@@ -166,43 +163,37 @@ private:
   using Base::d_material;
   using Base::d_quadrature;
   using Base::d_boundary;
-  using Base::d_external_source;
+  using Base::d_externalsources;
   using Base::d_fissionsource;
   using Base::d_downscatter;
   using Base::d_number_groups;
-  using Base::d_max_iters;
+  using Base::d_maximum_iterations;
   using Base::d_tolerance;
   using Base::d_print_level;
   using Base::d_print_interval;
   using Base::d_adjoint;
   using Base::d_wg_solver;
+  using Base::d_multiply;
 
   /// Linear solver
   KSP d_solver;
-
   /// Operator "A" in "Ax = b"
   Mat d_operator;
-
   /// Solution vector
   Vec d_X;
-
   /// Right hand side
   Vec d_B;
-
   /// Size of the moments portion of d_X
   int d_moments_size;
-
   /// Size of the moments portion of d_X in a group
   int d_moments_size_group;
-
   /// Size of the boundary portion of d_X
   int d_boundary_size;
-
   /// Size of the boundary portion of d_X in a group
   int d_boundary_size_group;
 
-  /*!
-   *  \brief Only groups equal to or above this cutoff are
+  /**
+   *  @brief Only groups equal to or above this cutoff are
    *         subject to upscatter iterations.
    *
    *  While \ref Material has an upscatter cutoff that it computes
@@ -219,22 +210,16 @@ private:
    *
    */
   int d_upscatter_cutoff;
-
   /// Upscatter block size (number of groups in Krylov solve)
   int d_upscatter_size;
-
   /// Count of reflective solve iterations
   int d_reflective_solve_iterations;
-
   /// Sweeper
   SP_sweeper d_sweeper;
-
   /// Sweep source
   SP_sweepsource d_sweepsource;
-
   /// Preconditioner
   SP_pc d_pc;
-
   /// Preconditioner flag
   bool d_use_pc;
 
@@ -249,7 +234,7 @@ private:
   void build_rhs(State::vec_moments_type &B);
 
   //---------------------------------------------------------------------------//
-  /*!
+  /**
    * \brief A matrix-vector shell for the within-group transport operator.
    *
    * This is called by thin wrappers, since PETSc needs the matrix-vector

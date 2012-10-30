@@ -1,17 +1,15 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   InnerGMRES.i.hh
- * \author robertsj
- * \date   Apr 4, 2012
- * \brief  InnerGMRES inline member definitions.
- * \note   Copyright (C) 2012 Jeremy Roberts.
+/**
+ *  @file   WGSolverGMRES.i.hh
+ *  @author robertsj
+ *  @date   Apr 4, 2012
+ *  @brief  WGSolverGMRES inline member definitions.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef INNERGMRES_I_HH_
-#define INNERGMRES_I_HH_
+#ifndef detran_WGSOLVERGMRES_I_HH_
+#define detran_WGSOLVERGMRES_I_HH_
 
-// System
 #include <algorithm>
 #include <cstdio>
 #include <iostream>
@@ -21,7 +19,7 @@ namespace detran
 {
 
 template <class D>
-inline void InnerGMRES<D>::solve(const size_t g)
+inline void WGSolverGMRES<D>::solve(const size_t g)
 {
   using std::cout;
   using std::endl;
@@ -31,7 +29,7 @@ inline void InnerGMRES<D>::solve(const size_t g)
   // Set the group for this solve.
   d_g = g;
 
-  if (d_print_out > 0) std::cout << "    Starting GMRES." << std::endl;
+  if (d_print_level > 0) std::cout << "    Starting GMRES." << std::endl;
 
   // Set the preconditioner, if used.
   if (d_use_pc) d_pc->set_group(g);
@@ -67,11 +65,20 @@ inline void InnerGMRES<D>::solve(const size_t g)
   double *phi_a = &d_state->phi(g)[0];
   memcpy(phi_a, X_a, d_moments_size*sizeof(double));
 
-//  if (d_boundary->has_reflective())
-//  {
-//    // Set the incident boundary flux.
-//    d_boundary->set_incident(g, X_a + d_moments_size);
-//  }
+  if (d_boundary->has_reflective())
+  {
+    // Set the incident boundary flux.
+    d_boundary->set_incident(g, X_a + d_moments_size);
+  }
+
+  // Sweep again to pick up outgoing boundary fluxes.
+  moments_type phi_g = d_state->phi(g);
+  d_sweeper->set_update_boundary(true);
+  d_sweepsource->reset();
+  d_sweepsource->build_fixed_with_scatter(d_g);
+  d_sweepsource->build_within_group_scatter(d_g, phi_g);
+  d_sweeper->sweep(phi_g);
+  d_sweeper->sweep(phi_g);
 
   phi_a = NULL;
 
@@ -85,7 +92,7 @@ inline void InnerGMRES<D>::solve(const size_t g)
   ierr = KSPGetIterationNumber(d_solver, &iteration);
   Insist(!ierr, "Error getting iteration number.");
 
-  if (d_print_out > 0)
+  if (d_print_level > 0)
   {
     printf(" GMRES Final: Number Iters: %3i  Error: %12.9f  Sweeps: %6i \n",
            iteration, norm_residal, d_sweeper->number_sweeps());
@@ -94,7 +101,7 @@ inline void InnerGMRES<D>::solve(const size_t g)
   if (norm_residal > d_tolerance)
   {
     detran_utilities::warning(detran_utilities::SOLVER_CONVERGENCE,
-      "    InnerGMRES did not converge.");
+      "    WGSolverGMRES did not converge.");
   }
   // Replace the storage for B and X.
   //ierr = VecResetArray(d_B);
@@ -105,7 +112,7 @@ inline void InnerGMRES<D>::solve(const size_t g)
 }
 
 template <class D>
-inline void InnerGMRES<D>::build_rhs(State::moments_type &B)
+inline void WGSolverGMRES<D>::build_rhs(State::moments_type &B)
 {
   using detran_utilities::norm_residual;
 
@@ -170,7 +177,7 @@ inline void InnerGMRES<D>::build_rhs(State::moments_type &B)
 //---------------------------------------------------------------------------//
 
 template <class D>
-inline PetscErrorCode InnerGMRES<D>::apply_WGTO(Mat A, Vec X, Vec Y)
+inline PetscErrorCode WGSolverGMRES<D>::apply_WGTO(Mat A, Vec X, Vec Y)
 {
 
   using std::cout;
@@ -243,10 +250,6 @@ inline PetscErrorCode InnerGMRES<D>::apply_WGTO(Mat A, Vec X, Vec Y)
   return 0;
 }
 
-template class InnerGMRES<_1D>;
-template class InnerGMRES<_2D>;
-template class InnerGMRES<_3D>;
-
 } // namespace detran
 
 //---------------------------------------------------------------------------//
@@ -255,42 +258,42 @@ template class InnerGMRES<_3D>;
 
 inline PetscErrorCode apply_WGTO_1D(Mat A, Vec x, Vec y)
 {
-  // Get the context and cast as InnerGMRES pointer.
+  // Get the context and cast as WGSolverGMRES pointer.
   PetscErrorCode ierr;
   void *ctx;
   ierr = MatShellGetContext(A, &ctx); CHKERRQ(ierr);
-  detran::InnerGMRES<detran::_1D> *inner =
-    (detran::InnerGMRES<detran::_1D>*) ctx;
+  detran::WGSolverGMRES<detran::_1D> *inner =
+    (detran::WGSolverGMRES<detran::_1D>*) ctx;
   // Call the actual apply operator.
   return inner->apply_WGTO(A, x, y);
 }
 
 inline PetscErrorCode apply_WGTO_2D(Mat A, Vec x, Vec y)
 {
-  // Get the context and cast as InnerGMRES pointer.
+  // Get the context and cast as WGSolverGMRES pointer.
   PetscErrorCode ierr;
   void *ctx;
   ierr = MatShellGetContext(A, &ctx); CHKERRQ(ierr);
-  detran::InnerGMRES<detran::_2D> *inner =
-    (detran::InnerGMRES<detran::_2D>*) ctx;
+  detran::WGSolverGMRES<detran::_2D> *inner =
+    (detran::WGSolverGMRES<detran::_2D>*) ctx;
   // Call the actual apply operator.
   return inner->apply_WGTO(A, x, y);
 }
 
 inline PetscErrorCode apply_WGTO_3D(Mat A, Vec x, Vec y)
 {
-  // Get the context and cast as InnerGMRES pointer.
+  // Get the context and cast as WGSolverGMRES pointer.
   PetscErrorCode ierr;
   void *ctx;
   ierr = MatShellGetContext(A, &ctx); CHKERRQ(ierr);
-  detran::InnerGMRES<detran::_3D> *inner =
-    (detran::InnerGMRES<detran::_3D>*) ctx;
+  detran::WGSolverGMRES<detran::_3D> *inner =
+    (detran::WGSolverGMRES<detran::_3D>*) ctx;
   // Call the actual apply operator.
   return inner->apply_WGTO(A, x, y);
 }
 
-#endif /* INNERGMRES_I_HH_ */
+#endif /* detran_WGSOLVERGMRES_I_HH_ */
 
 //---------------------------------------------------------------------------//
-//              end of InnerGMRES.i.hh
+//              end of WGSolverGMRES.i.hh
 //---------------------------------------------------------------------------//

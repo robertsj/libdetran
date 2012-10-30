@@ -1,10 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   KrylovMG.cc
+ * \file   MGSolverGMRES.cc
  * \author robertsj
  * \date   Jun 19, 2012
  * \brief  GaussSeidelMG member definitions.
- * \note   Copyright (C) 2012 Jeremy Roberts.
  */
 //---------------------------------------------------------------------------//
 
@@ -12,10 +11,7 @@
 
 #ifdef DETRAN_ENABLE_PETSC
 
-// Detran
-#include "KrylovMG.hh"
-
-// System
+#include "MGSolverGMRES.hh"
 #include <iostream>
 
 namespace detran
@@ -23,15 +19,13 @@ namespace detran
 
 // Constructor
 template <class D>
-KrylovMG<D>::KrylovMG(SP_input          input,
-                      SP_state          state,
-                      SP_mesh           mesh,
-                      SP_material       material,
-                      SP_quadrature     quadrature,
-                      SP_boundary       boundary,
-                      SP_externalsource q_e,
-                      SP_fissionsource  q_f)
-  : Base(input, state, mesh, material, quadrature, boundary, q_e, q_f)
+MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
+                                SP_material               material,
+                                SP_boundary               boundary,
+                                const vec_externalsource &q_e,
+                                SP_fissionsource          q_f,
+                                bool                      multiply)
+  : Base(state, material, boundary, q_e, q_f, multiply)
   , d_moments_size(0)
   , d_moments_size_group(0)
   , d_boundary_size(0)
@@ -47,11 +41,11 @@ KrylovMG<D>::KrylovMG(SP_input          input,
   // portion.  The default is to use GS on the downscatter block and Krylov
   // on the upscatter block.
   d_upscatter_cutoff = material->upscatter_cutoff();
-  if (input->check("outer_upscatter_cutoff"))
+  if (d_input->check("outer_upscatter_cutoff"))
   {
-    d_upscatter_cutoff = input->template get<int>("outer_upscatter_cutoff");
+    d_upscatter_cutoff = d_input->template get<int>("outer_upscatter_cutoff");
     Insist((d_upscatter_cutoff >= 0) and
-           (d_upscatter_cutoff <= material->upscatter_cutoff()),
+           (d_upscatter_cutoff <= d_material->upscatter_cutoff()),
            "Upscatter cutoff must be >= 0 and <= material upscatter cutoff");
   }
   d_upscatter_size = d_number_groups - d_upscatter_cutoff;
@@ -78,8 +72,8 @@ KrylovMG<D>::KrylovMG(SP_input          input,
   // SETUP SWEEPER FOR MULTIGROUP OPERATOR
   //-------------------------------------------------------------------------//
 
-  d_sweeper = d_inner_solver->get_sweeper();
-  d_sweepsource = d_inner_solver->get_sweepsource();
+  d_sweeper = d_wg_solver->get_sweeper();
+  d_sweepsource = d_wg_solver->get_sweepsource();
 
   //-------------------------------------------------------------------------//
   // SETUP PETSC SOLVER
@@ -125,7 +119,7 @@ KrylovMG<D>::KrylovMG(SP_input          input,
   if (d_input->check("outer_use_pc"))
   {
     // \todo Why do I get a compile error if I use d_input instead?
-    if (input->template get<int>("outer_use_pc"))
+    if (d_input->template get<int>("outer_use_pc"))
     {
       std::cout << "Using preconditioned multigroup Krylov." << std::endl;
       d_use_pc = true;
@@ -151,7 +145,7 @@ KrylovMG<D>::KrylovMG(SP_input          input,
     int side = 0;
     if (d_input->check("outer_pc_side"))
     {
-      side = input->template get<int>("outer_pc_side");
+      side = d_input->template get<int>("outer_pc_side");
     }
     if (side)
       ierr = KSPSetPCSide(d_solver, PC_RIGHT);
@@ -172,32 +166,36 @@ KrylovMG<D>::KrylovMG(SP_input          input,
 }
 
 template <class D>
-PetscErrorCode KrylovMG<D>::set_operation()
+PetscErrorCode MGSolverGMRES<D>::set_operation()
 {
   return MatShellSetOperation(d_operator,
                               MATOP_MULT,
                               (void(*)(void)) apply_MGTO_3D);
 }
 template <>
-PetscErrorCode KrylovMG<_2D>::set_operation()
+PetscErrorCode MGSolverGMRES<_2D>::set_operation()
 {
   return MatShellSetOperation(d_operator,
                               MATOP_MULT,
                               (void(*)(void)) apply_MGTO_2D);
 }
 template <>
-PetscErrorCode KrylovMG<_1D>::set_operation()
+PetscErrorCode MGSolverGMRES<_1D>::set_operation()
 {
   return MatShellSetOperation(d_operator,
                               MATOP_MULT,
                               (void(*)(void)) apply_MGTO_1D);
 }
 
+// Explicit instantiations
+template class MGSolverGMRES<_1D>;
+template class MGSolverGMRES<_2D>;
+template class MGSolverGMRES<_3D>;
 
 } // end namespace detran
 
 #endif
 
 //---------------------------------------------------------------------------//
-//              end of KrylovMG.cc
+//              end of MGSolverGMRES.cc
 //---------------------------------------------------------------------------//

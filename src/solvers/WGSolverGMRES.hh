@@ -1,42 +1,39 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   InnerGMRES.hh
+ *  @file   WGSolverGMRES.hh
  *  @author robertsj
  *  @date   Apr 4, 2012
- *  @brief  InnerGMRES class definition.
+ *  @brief  WGSolverGMRES class definition.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef INNERGMRES_HH_
-#define INNERGMRES_HH_
+#ifndef detran_WGSOLVERGMRES_HH_
+#define detran_WGSOLVERGMRES_HH_
 
-// Detran
-#include "InnerIteration.hh"
+#include "WGSolver.hh"
 #include "PreconditionerWG.hh"
-
-// System
 #include "petsc.h"
 
 namespace detran
 {
 
 //---------------------------------------------------------------------------//
-/*!
- *  \class InnerGMRES
- *  \brief Solve the within-group problem with GMRES.
+/**
+ *  @class WGSolverGMRES
+ *  @brief Solve the within-group problem with GMRES.
  *
- *  From \ref InnerIteration, we know the within-group problem can be
+ *  From @ref WGSolver, we know the within-group problem can be
  *  written in operator notation as
- *  \f[
+ *  @f[
  *      (\mathbf{I} - \mathbf{D}\mathbf{L}^{-1}\mathbf{MS})\phi
  *      = \mathbf{D} \mathbf{L}^{-1} Q \, ,
- *  \f]
+ *  @f]
  *  or
- *  \f[
+ *  @f[
  *      \mathbf{A}x = b \, .
- *  \f]
+ *  @f]
  *
- *  This class couples with PETSc to make available its set of applicable
+ *  This class couples with callow to make available its set of applicable
  *  solvers, the default being GMRES.  Other solvers are selected
  *  by command line flags, e.g. -ksp_type bcgs uses a BiCongugate Gradient
  *  Stabilized algorithm.  Past experience suggests GMRES works best.
@@ -52,7 +49,7 @@ namespace detran
 //---------------------------------------------------------------------------//
 
 template <class D>
-class InnerGMRES: public InnerIteration<D>
+class WGSolverGMRES: public WGSolver<D>
 {
 
 public:
@@ -61,72 +58,54 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<InnerGMRES>        SP_inner;
-  typedef InnerIteration<D>                       Base;
-  typedef typename Base::SP_inner                 SP_base;
-  typedef typename Base::SP_input                 SP_input;
-  typedef typename Base::SP_state                 SP_state;
-  typedef typename Base::SP_mesh                  SP_mesh;
-  typedef typename Base::SP_material              SP_material;
-  typedef typename Base::SP_quadrature            SP_quadrature;
-  typedef typename Base::SP_boundary              SP_boundary;
-  typedef typename Base::SP_MtoD                  SP_MtoD;
-  typedef typename Base::SP_externalsource        SP_externalsource;
-  typedef typename Base::SP_fissionsource         SP_fissionsource;
-  typedef typename Base::SP_sweeper               SP_sweeper;
-  typedef typename Base::SP_sweepsource           SP_sweepsource;
-  typedef typename Base::moments_type             moments_type;
-  typedef PreconditionerWG::SP_pc                 SP_pc;
-  typedef detran_utilities::vec_dbl               vec_dbl;
+  typedef WGSolver<D>                           Base;
+  typedef typename Base::SP_solver              SP_solver;
+  typedef typename Base::SP_input               SP_input;
+  typedef typename Base::SP_state               SP_state;
+  typedef typename Base::SP_mesh                SP_mesh;
+  typedef typename Base::SP_material            SP_material;
+  typedef typename Base::SP_quadrature          SP_quadrature;
+  typedef typename Base::SP_boundary            SP_boundary;
+  typedef typename Base::SP_MtoD                SP_MtoD;
+  typedef typename Base::SP_externalsource      SP_externalsource;
+  typedef typename Base::vec_externalsource     vec_externalsource;
+  typedef typename Base::SP_fissionsource       SP_fissionsource;
+  typedef typename Base::SP_sweeper             SP_sweeper;
+  typedef typename Base::SP_sweepsource         SP_sweepsource;
+  typedef typename Base::moments_type           moments_type;
+  typedef typename Base::size_t                 size_t;
+  typedef PreconditionerWG::SP_pc               SP_pc;
+  typedef detran_utilities::vec_dbl             vec_dbl;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Constructor
-   *
-   *  \param input             Input database.
-   *  \param state             State vectors, etc.
-   *  \param mesh              Problem mesh.
-   *  \param mat               Material definitions.
-   *  \param quadrature        Angular mesh.
-   *  \param boundary          Boundary fluxes.
-   *  \param external_source   User-defined external source.
-   *  \param fission_source    Fission source.
+  /**
+   *  @brief Constructor
+   *  @param state             State vectors, etc.
+   *  @param mat               Material definitions.
+   *  @param quadrature        Angular mesh.
+   *  @param boundary          Boundary fluxes.
+   *  @param external_source   User-defined external source.
+   *  @param fission_source    Fission source.
+   *  @param multiply          Flag for fixed source multiplying problem
    */
-  InnerGMRES(SP_input           input,
-             SP_state           state,
-             SP_mesh            mesh,
-             SP_material        material,
-             SP_quadrature      quadrature,
-             SP_boundary        boundary,
-             SP_externalsource  q_e,
-             SP_fissionsource   q_f);
+  WGSolverGMRES(SP_state                   state,
+                SP_material                material,
+                SP_quadrature              quadrature,
+                SP_boundary                boundary,
+                const vec_externalsource  &q_e,
+                SP_fissionsource           q_f,
+                bool                       multiply);
 
   // Destructor
-  ~InnerGMRES()
+  ~WGSolverGMRES()
   {
     KSPDestroy(&d_solver);
     MatDestroy(&d_operator);
     VecDestroy(&d_X);
     VecDestroy(&d_B);
-  }
-
-  /// SP Constructor
-  static SP_inner
-  Create(SP_input           input,
-         SP_state           state,
-         SP_mesh            mesh,
-         SP_material        material,
-         SP_quadrature      quadrature,
-         SP_boundary        boundary,
-         SP_externalsource  q_e,
-         SP_fissionsource   q_f)
-  {
-    SP_inner p(new InnerGMRES(input, state, mesh, material,
-                              quadrature, boundary, q_e, q_f));
-    return p;
   }
 
   //-------------------------------------------------------------------------//
@@ -143,6 +122,10 @@ public:
 
 private:
 
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
+
   // Make inherited data visible
   using Base::d_input;
   using Base::d_state;
@@ -153,45 +136,32 @@ private:
   using Base::d_sweeper;
   using Base::d_sweepsource;
   using Base::d_tolerance;
-  using Base::d_max_iters;
-  using Base::d_print_out;
+  using Base::d_maximum_iterations;
+  using Base::d_print_level;
   using Base::d_print_interval;
   using Base::d_g;
-  //using Base::b_acceleration;
-
-  /// \name Private Data
-  /// \{
 
   /// Main linear solver
   KSP d_solver;
-
   /// Operator "A" in "Ax = b"
   Mat d_operator;
-
   /// Solution vector
   Vec d_X;
-
   /// Right hand side
   Vec d_B;
-
   /// Size of the moments portion of d_X
   int d_moments_size;
-
   /// Size of the boundary portion of d_X
   int d_boundary_size;
-
   int d_reflective_solve_iterations;
-
   /// Preconditioner flag
   bool d_use_pc;
-
   /// Diffusion preconditioner
   SP_pc d_pc;
 
-  /// \}
-
-  /// \name Implementation
-  /// \{
+  //-------------------------------------------------------------------------//
+  // IMPLEMENTATION
+  //-------------------------------------------------------------------------//
 
   /// Set the templated operator function.
   PetscErrorCode set_operation();
@@ -222,8 +192,6 @@ private:
 public:
   PetscErrorCode apply_WGTO(Mat A, Vec x, Vec y);
 
-  /// \}
-
 };
 
 } // namespace detran
@@ -240,10 +208,10 @@ PetscErrorCode apply_WGTO_3D(Mat A, Vec x, Vec y);
 // INLINE FUNCTIONS
 //---------------------------------------------------------------------------//
 
-#include "InnerGMRES.i.hh"
+#include "WGSolverGMRES.i.hh"
 
-#endif /* INNERGMRES_HH_ */
+#endif /* detran_WGSOLVERGMRES_HH_ */
 
 //---------------------------------------------------------------------------//
-//              end of InnerGMRES.hh
+//              end of WGSolverGMRES.hh
 //---------------------------------------------------------------------------//

@@ -49,16 +49,16 @@ public:
   //-------------------------------------------------------------------------//
 
   /**
-   *  @brief Sets the operators for the linear system to solve.
+   *  @brief Sets the operators for the problem.
    *
    *  This allows for the system
-   *  @param A      right side operator
-   *  @param B      left side operator
-   *  @param type
+   *  @param A      left side operator
+   *  @param B      optional right side operator (to be inverted)
+   *  @param db     optional database for solver and preconditioner options
    */
   virtual void set_operators(SP_matrix A,
                              SP_matrix B = SP_matrix(0),
-                             std::string type = "gmres");
+                             SP_db db = SP_db(0));
 
 
 private:

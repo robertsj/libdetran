@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
 /*!
- * \file   KrylovMG.i.hh
+ * \file   MGSolverGMRES.i.hh
  * \author robertsj
  * \date   Jun 19, 2012
- * \brief  KrylovMG inline member definitions.
+ * \brief  MGSolverGMRES inline member definitions.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef KRYLOVMG_I_HH_
-#define KRYLOVMG_I_HH_
+#ifndef detran_MGSOLVERGMRES_I_HH_
+#define detran_MGSOLVERGMRES_I_HH_
 
 #include "utilities/MathUtilities.hh"
 #include <algorithm>
@@ -22,7 +22,7 @@ namespace detran
 // Public Interface
 
 template <class D>
-inline void KrylovMG<D>::solve(const double keff)
+inline void MGSolverGMRES<D>::solve(const double keff)
 {
 
   using std::cout;
@@ -30,7 +30,7 @@ inline void KrylovMG<D>::solve(const double keff)
 
   PetscErrorCode ierr;
 
-//  cout << " KrylovMG solver... " << endl;
+//  cout << " MGSolverGMRES solver... " << endl;
 //  cout << " upscatter_cutoff = " << d_upscatter_cutoff << endl;
 //  cout << "    number_groups = " << d_number_groups << endl;
 //  cout << "   upscatter_size = " << d_upscatter_size << endl;
@@ -48,7 +48,7 @@ inline void KrylovMG<D>::solve(const double keff)
 
   for (int g = 0; g < d_upscatter_cutoff; g++)
   {
-    d_inner_solver->solve(g);
+    d_wg_solver->solve(g);
   }
   // Is there anything to say about the residual?
 
@@ -105,15 +105,15 @@ inline void KrylovMG<D>::solve(const double keff)
   }
 
   // Diagnostic output
-  if (d_print_out > 0)
+  if (d_print_level > 0)
   {
-    printf(" KrylovMG Final: Number Iters: %3i  Error: %12.9f  Sweeps: %6i \n",
+    printf(" MGSolverGMRES Final: Number Iters: %3i  Error: %12.9f  Sweeps: %6i \n",
            iteration, norm_resid, d_sweeper->number_sweeps());
   }
   if (norm_resid > d_tolerance)
   {
     detran_utilities::warning(detran_utilities::SOLVER_CONVERGENCE,
-      "    KrylovMG did not converge.");
+      "    MGSolverGMRES did not converge.");
   }
 
 
@@ -122,7 +122,7 @@ inline void KrylovMG<D>::solve(const double keff)
 // Implementation
 
 template <class D>
-inline void KrylovMG<D>::build_rhs(State::vec_moments_type &B)
+inline void MGSolverGMRES<D>::build_rhs(State::vec_moments_type &B)
 {
   using detran_utilities::norm_residual;
 
@@ -196,7 +196,7 @@ inline void KrylovMG<D>::build_rhs(State::vec_moments_type &B)
 }
 
 template <class D>
-inline PetscErrorCode KrylovMG<D>::apply_MGTO(Mat A, Vec X, Vec Y)
+inline PetscErrorCode MGSolverGMRES<D>::apply_MGTO(Mat A, Vec X, Vec Y)
 {
 
   using std::cout;
@@ -293,12 +293,6 @@ inline PetscErrorCode KrylovMG<D>::apply_MGTO(Mat A, Vec X, Vec Y)
 
 }
 
-// Explicit instantiations
-
-template class KrylovMG<_1D>;
-template class KrylovMG<_2D>;
-template class KrylovMG<_3D>;
-
 } // end namespace detran
 
 //---------------------------------------------------------------------------//
@@ -307,42 +301,42 @@ template class KrylovMG<_3D>;
 
 inline PetscErrorCode apply_MGTO_1D(Mat A, Vec x, Vec y)
 {
-  // Get the context and cast as KrylovMG pointer.
+  // Get the context and cast as MGSolverGMRES pointer.
   PetscErrorCode ierr;
   void *ctx;
   ierr = MatShellGetContext(A, &ctx); CHKERRQ(ierr);
-  detran::KrylovMG<detran::_1D> *outer =
-    (detran::KrylovMG<detran::_1D>*) ctx;
+  detran::MGSolverGMRES<detran::_1D> *outer =
+    (detran::MGSolverGMRES<detran::_1D>*) ctx;
   // Call the actual apply operator.
   return outer->apply_MGTO(A, x, y);
 }
 
 inline PetscErrorCode apply_MGTO_2D(Mat A, Vec x, Vec y)
 {
-  // Get the context and cast as KrylovMG pointer.
+  // Get the context and cast as MGSolverGMRES pointer.
   PetscErrorCode ierr;
   void *ctx;
   ierr = MatShellGetContext(A, &ctx); CHKERRQ(ierr);
-  detran::KrylovMG<detran::_2D> *outer =
-    (detran::KrylovMG<detran::_2D>*) ctx;
+  detran::MGSolverGMRES<detran::_2D> *outer =
+    (detran::MGSolverGMRES<detran::_2D>*) ctx;
   // Call the actual apply operator.
   return outer->apply_MGTO(A, x, y);
 }
 
 inline PetscErrorCode apply_MGTO_3D(Mat A, Vec x, Vec y)
 {
-  // Get the context and cast as KrylovMG pointer.
+  // Get the context and cast as MGSolverGMRES pointer.
   PetscErrorCode ierr;
   void *ctx;
   ierr = MatShellGetContext(A, &ctx); CHKERRQ(ierr);
-  detran::KrylovMG<detran::_3D> *outer =
-    (detran::KrylovMG<detran::_3D>*) ctx;
+  detran::MGSolverGMRES<detran::_3D> *outer =
+    (detran::MGSolverGMRES<detran::_3D>*) ctx;
   // Call the actual apply operator.
   return outer->apply_MGTO(A, x, y);
 }
 
-#endif /* KRYLOVMG_I_HH_ */
+#endif /* detran_MGSOLVERGMRES_I_HH_ */
 
 //---------------------------------------------------------------------------//
-//              end of KrylovMG.i.hh
+//              end of MGSolverGMRES.i.hh
 //---------------------------------------------------------------------------//

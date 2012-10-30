@@ -54,15 +54,12 @@ public:
 
   /**
    *  @brief Constructor
-   *
-   *  @param input             Input database.
    *  @param state             State vectors, etc.
-   *  @param mesh              Problem mesh.
-   *  @param mat               Material definitions.
-   *  @param quadrature        Angular mesh.
+   *  @param material          Material definitions.
    *  @param boundary          Boundary fluxes.
-   *  @param external_source   User-defined external source.
-   *  @param fission_source    Fission source.
+   *  @param q_e               Vector of user-defined external sources
+   *  @param q_f               Fission source.
+   *  @param multiply          Flag for a multiplying fixed source problem
    */
   MGSolverGS(SP_state                   state,
              SP_material                material,

@@ -57,8 +57,8 @@ SP_material test_FixedSourceManager_material()
   // Material (kinf = 1)
   SP_material mat(new Material(1, 1));
   mat->set_sigma_t(0, 0, 1.0);
-  mat->set_sigma_s(0, 0, 0, 0.5);
-  mat->set_sigma_f(0, 0, 0.5);
+  mat->set_sigma_s(0, 0, 0, 0*0.5);
+  mat->set_sigma_f(0, 0, 0*0.5);
   mat->set_chi(0, 0, 1.0);
   mat->set_diff_coef(0, 0, 0.33);
   mat->compute_sigma_a();
@@ -85,9 +85,13 @@ InputDB::SP_input test_FixedSourceManager_input()
   inp->put<int>("number_groups", 1);
   inp->put<string>("problem_type", "multiply");
   inp->put<double>("inner_tolerance", 1e-17);
+  inp->put<string>("inner_solver", "GMRES");
+  inp->put<int>("inner_use_pc", 0);
   inp->put<int>("inner_print_level", 0);
   inp->put<int>("outer_print_level", 0);
   inp->put<int>("quad_number_polar_octant", 2);
+  inp->put<string>("bc_west", "reflect");
+  inp->put<string>("bc_east", "vacuum");
   return inp;
 }
 
@@ -107,6 +111,7 @@ double compute_leakage(typename BoundarySN<D>::SP_boundary b,
   int &i = ijk[0];
   int &j = ijk[1];
   int &k = ijk[2];
+
   // Loop over all dimensions
   for (int dim0 = 0; dim0 < D::dimension; ++dim0)
   {
@@ -120,6 +125,7 @@ double compute_leakage(typename BoundarySN<D>::SP_boundary b,
     {
       // Surface index
       int surface = 2 * dim0 + dir;
+
       // Index and width along this direction
       ijk[dim0] = bound[dir];
       double W  = mesh->width(dim0, ijk[dim0]);
@@ -136,13 +142,20 @@ double compute_leakage(typename BoundarySN<D>::SP_boundary b,
             {
               for (int a = 0; a < q->number_angles_octant(); ++a)
               {
-                //cout << " o = " << q->outgoing_octant(surface)[o]
-                //     << " a = " << a << endl;
+                cout << " s = " << surface
+                     << " o = " << q->outgoing_octant(surface)[o]
+                     << " a = " << a
+                     << " val = " << BV_T::value((*b)(surface, q->outgoing_octant(surface)[o], a, g),
+                         ijk[dim1], ijk[dim2])
+                     << endl;
+                if (!b->is_reflective(surface))
+                {
                 leakage +=
                   BV_T::value((*b)(surface, q->outgoing_octant(surface)[o], a, g),
                                ijk[dim1], ijk[dim2]) *
                   q->cosines(dim0)[a] * q->weight(a) *
                   mesh->width(dim1, ijk[dim1]) * mesh->width(dim2, ijk[dim2]);
+                }
               } // end angle loop
             } // end octant loop
           } // end group loop
