@@ -95,7 +95,7 @@ InputDB::SP_input test_FixedSourceManager_input()
   InputDB::SP_input db(new InputDB("callow_linear_solver"));
   db->put<double>("linear_solver_atol", 1e-12);
   db->put<double>("linear_solver_rtol", 1e-12);
-  inp->put<InputDB::SP_input>("inner_callow_linear_solver_db", db);
+  inp->put<InputDB::SP_input>("inner_solver_db", db);
   return inp;
 }
 

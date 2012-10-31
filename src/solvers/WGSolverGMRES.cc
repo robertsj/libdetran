@@ -37,9 +37,9 @@ WGSolverGMRES<D>::WGSolverGMRES(SP_state                  state,
 
   // Get callow solver parameter database
   SP_input db;
-  if (d_input->check("inner_callow_linear_solver_db"))
+  if (d_input->check("inner_solver_db"))
   {
-    db = d_input->template get<SP_input>("inner_callow_linear_solver_db");
+    db = d_input->template get<SP_input>("inner_solver_db");
   }
   d_solver = callow::LinearSolverCreator::Create(db);
   Assert(d_solver);

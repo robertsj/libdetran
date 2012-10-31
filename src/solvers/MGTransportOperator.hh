@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   WGTransportOperator.hh
- *  @brief  WGTransportOperator
+ *  @file   MGTransportOperator.hh
+ *  @brief  MGTransportOperator
  *  @author Jeremy Roberts
- *  @date   Oct 30, 2012
+ *  @date   Oct 31, 2012
  */
 //---------------------------------------------------------------------------//
 
-#ifndef detran_WGTRANSPORTOPERATOR_HH_
-#define detran_WGTRANSPORTOPERATOR_HH_
+#ifndef detran_MGTRANSPORTOPERATOR_HH_
+#define detran_MGTRANSPORTOPERATOR_HH_
 
 #include "boundary/BoundaryBase.hh"
 #include "callow/matrix/MatrixShell.hh"
@@ -22,14 +22,14 @@ namespace detran
 {
 
 /**
- *  @class WGTransportOperator
- *  @brief Within-group transport operator
+ *  @class MGTransportOperator
+ *  @brief Multigroup transport operator
  *
- *  The within-group transport operator is the the left hand
- *  side operator in the equation for the scalar flux moments.
+ *  The multigroup transport operator is defined as
+ *  ... finish.
  */
 template <class D>
-class WGTransportOperator: public callow::MatrixShell
+class MGTransportOperator: public callow::MatrixShell
 {
 
 public:
@@ -39,7 +39,7 @@ public:
   //-------------------------------------------------------------------------//
 
   typedef MatrixShell                                 Base;
-  typedef WGTransportOperator<D>                      Operator_T;
+  typedef MGTransportOperator<D>                      Operator_T;
   typedef typename detran_utilities::SP<Operator_T>   SP_operator;
   typedef State::SP_state                             SP_state;
   typedef typename BoundaryBase<D>::SP_boundary       SP_boundary;
@@ -54,20 +54,17 @@ public:
   //-------------------------------------------------------------------------//
 
   // Constructor
-  WGTransportOperator(SP_state        state,
+  MGTransportOperator(SP_state        state,
                       SP_boundary     boundary,
                       SP_sweeper      sweeper,
                       SP_sweepsource  source);
 
   // Destructor
-  virtual ~WGTransportOperator(){}
+  virtual ~MGTransportOperator(){}
 
   //-------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
   //-------------------------------------------------------------------------//
-
-  // set the group
-  void set_group(const size_t g);
 
   // default shell display gives just the sizes
   virtual void display() const;
@@ -95,16 +92,21 @@ private:
   SP_boundary d_boundary;
   SP_sweeper d_sweeper;
   SP_sweepsource d_sweepsource;
+  /// Group index below which the operator is not applicable
+  size_t d_upscatter_cutoff;
+  /// Number of groups for which operator is applicable
+  size_t d_number_groups;
+  /// Size of a group moment vector
   size_t d_moments_size;
+  /// Size of a group boundary vector
   size_t d_boundary_size;
-  size_t d_g;
 
 };
 
 } // end namespace detran
 
-#endif // detran_WGTRANSPORTOPERATOR_HH_
+#endif // MGTRANSPORTOPERATOR_HH_ 
 
 //---------------------------------------------------------------------------//
-//              end of file WGTransportOperator.hh
+//              end of file MGTransportOperator.hh
 //---------------------------------------------------------------------------//
