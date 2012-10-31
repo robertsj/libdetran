@@ -12,7 +12,8 @@
 
 #include "WGSolver.hh"
 #include "PreconditionerWG.hh"
-#include "petsc.h"
+#include "WGTransportOperator.hh"
+#include "callow/solver/LinearSolver.hh"
 
 namespace detran
 {
@@ -35,15 +36,13 @@ namespace detran
  *
  *  This class couples with callow to make available its set of applicable
  *  solvers, the default being GMRES.  Other solvers are selected
- *  by command line flags, e.g. -ksp_type bcgs uses a BiCongugate Gradient
- *  Stabilized algorithm.  Past experience suggests GMRES works best.
+ *  by the parameter database for callow solvers.  PETSc solvers are available
+ *  through the callow interface as well.
  *
  *  For Krylov iterations to perform successfully, preconditioning
  *  is often required.  A good preconditioner $\f \mathbf{M} \f$
  *  is in some way "similar" to the operator $\f \mathbf{A} \f$, and
  *  applying its inverse $\f \mathbf{M}^{-1} $\f can be done cheaply.
- *  Currently, a diffusion preconditioner is available for within-group
- *  solvers; see \ref PreconditionerWG for a detailed description.
  *
  */
 //---------------------------------------------------------------------------//
@@ -76,6 +75,10 @@ public:
   typedef typename Base::size_t                 size_t;
   typedef PreconditionerWG::SP_pc               SP_pc;
   typedef detran_utilities::vec_dbl             vec_dbl;
+  typedef callow::LinearSolver::SP_solver       SP_linearsolver;
+  typedef WGTransportOperator<D>                Operator_T;
+  typedef typename Operator_T::SP_operator      SP_operator;
+  typedef callow::Vector::SP_vector             SP_vector;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -98,15 +101,6 @@ public:
                 const vec_externalsource  &q_e,
                 SP_fissionsource           q_f,
                 bool                       multiply);
-
-  // Destructor
-  ~WGSolverGMRES()
-  {
-    KSPDestroy(&d_solver);
-    MatDestroy(&d_operator);
-    VecDestroy(&d_X);
-    VecDestroy(&d_B);
-  }
 
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL WITHIN-GROUP SOLVERS MUST IMPLEMENT
@@ -142,22 +136,19 @@ private:
   using Base::d_g;
 
   /// Main linear solver
-  KSP d_solver;
+  SP_linearsolver d_solver;
   /// Operator "A" in "Ax = b"
-  Mat d_operator;
+  SP_operator d_operator;
   /// Solution vector
-  Vec d_X;
+  SP_vector d_x;
   /// Right hand side
-  Vec d_B;
-  /// Size of the moments portion of d_X
-  int d_moments_size;
-  /// Size of the boundary portion of d_X
-  int d_boundary_size;
+  SP_vector d_b;
+  ///
   int d_reflective_solve_iterations;
-  /// Preconditioner flag
-  bool d_use_pc;
-  /// Diffusion preconditioner
-  SP_pc d_pc;
+//  /// Preconditioner flag
+//  bool d_use_pc;
+//  /// Diffusion preconditioner
+//  SP_pc d_pc;
 
   //-------------------------------------------------------------------------//
   // IMPLEMENTATION

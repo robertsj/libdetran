@@ -50,11 +50,12 @@ public:
   MatrixShell(void* context, const int m, const int n);
   virtual ~MatrixShell();
 
-  void set_size(const int m, const int n)
+  void set_size(const int m, const int n = 0)
   {
-    Require(m > 0 and n > 0);
+    Require(m > 0);
     d_m = m;
     d_n = n;
+    if (!d_n) d_n = d_m;
     d_sizes_set = true;
 #ifdef DETRAN_ENABLE_PETSC
     PetscErrorCode ierr;
@@ -73,12 +74,12 @@ public:
   //---------------------------------------------------------------------------//
 
   // default shell assemble does nothing
-  void assemble()
+  virtual void assemble()
   {
     /* ... */
   }
   // default shell display gives just the sizes
-  void display() const
+  virtual void display() const
   {
     std::cout << "MatrixShell:" << std::endl
               << "  # rows = " << d_m << std::endl

@@ -95,7 +95,7 @@ public:
   typedef typename Base::SP_boundary                SP_boundary;
   typedef typename Base::SP_externalsource          SP_externalsource;
   typedef typename Base::vec_externalsource         vec_externalsource;
-  typedef typename Base::SP_fissionsource 		    SP_fissionsource;
+  typedef typename Base::SP_fissionsource 		      SP_fissionsource;
   typedef typename Sweeper<D>::SP_sweeper           SP_sweeper;
   typedef typename SweepSource<D>::SP_sweepsource   SP_sweepsource;
   typedef detran_angle::Quadrature::SP_quadrature   SP_quadrature;

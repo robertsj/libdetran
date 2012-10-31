@@ -57,8 +57,8 @@ SP_material test_FixedSourceManager_material()
   // Material (kinf = 1)
   SP_material mat(new Material(1, 1));
   mat->set_sigma_t(0, 0, 1.0);
-  mat->set_sigma_s(0, 0, 0, 0*0.5);
-  mat->set_sigma_f(0, 0, 0*0.5);
+  mat->set_sigma_s(0, 0, 0, 1*0.5);
+  mat->set_sigma_f(0, 0, 1*0.5);
   mat->set_chi(0, 0, 1.0);
   mat->set_diff_coef(0, 0, 0.33);
   mat->compute_sigma_a();
@@ -87,11 +87,15 @@ InputDB::SP_input test_FixedSourceManager_input()
   inp->put<double>("inner_tolerance", 1e-17);
   inp->put<string>("inner_solver", "GMRES");
   inp->put<int>("inner_use_pc", 0);
-  inp->put<int>("inner_print_level", 0);
+  inp->put<int>("inner_print_level", 2);
   inp->put<int>("outer_print_level", 0);
   inp->put<int>("quad_number_polar_octant", 2);
   inp->put<string>("bc_west", "reflect");
   inp->put<string>("bc_east", "vacuum");
+  InputDB::SP_input db(new InputDB("callow_linear_solver"));
+  db->put<double>("linear_solver_atol", 1e-12);
+  db->put<double>("linear_solver_rtol", 1e-12);
+  inp->put<InputDB::SP_input>("inner_callow_linear_solver_db", db);
   return inp;
 }
 

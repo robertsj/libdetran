@@ -13,13 +13,32 @@
 namespace callow
 {
 
-// Instantiations
+//---------------------------------------------------------------------------//
+MatrixShell::MatrixShell(void* context)
+  : d_context(context)
+{
+  /* ... */
+}
+
+//---------------------------------------------------------------------------//
+MatrixShell::MatrixShell(void* context, const int m, const int n)
+  : d_context(context)
+{
+  set_size(m, n);
+}
+
+//---------------------------------------------------------------------------//
+MatrixShell::~MatrixShell()
+{
+  if (d_is_ready)
+  {
 //#ifdef CALLOW_ENABLE_PETSC
-//template class MatrixShell<PetscScalar>;
-//#else
-//template class MatrixShell<float>;
-//template class MatrixShell<double>;
+//    // destroy the petsc matrix.  note, since we constructed it
+//    // using our own arrays, those still need to be deleted.
+//    MatDestroy(&d_petsc_matrix);
 //#endif
+  }
+}
 
 } // end namespace callow
 

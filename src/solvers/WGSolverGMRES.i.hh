@@ -18,21 +18,17 @@
 namespace detran
 {
 
+//---------------------------------------------------------------------------//
 template <class D>
 inline void WGSolverGMRES<D>::solve(const size_t g)
 {
   using std::cout;
   using std::endl;
 
-  PetscErrorCode ierr;
+  if (d_print_level > 0) std::cout << "    Starting GMRES." << std::endl;
 
   // Set the group for this solve.
   d_g = g;
-
-  if (d_print_level > 0) std::cout << "    Starting GMRES." << std::endl;
-
-  // Set the preconditioner, if used.
-  if (d_use_pc) d_pc->set_group(g);
 
   // Set the equations.
   d_sweeper->setup_group(g);
@@ -51,27 +47,22 @@ inline void WGSolverGMRES<D>::solve(const size_t g)
   // SOLVE THE TRANSPORT EQUATION
   //-------------------------------------------------------------------------//
 
-  ierr = KSPSolve(d_solver, d_B, d_X);
-  Insist(!ierr, "Error in KSPSolve.");
+  d_solver->solve(*d_b, *d_x);
 
   //-------------------------------------------------------------------------//
   // POSTPROCESS
   //-------------------------------------------------------------------------//
 
   // Copy the flux solution into state.
-  double *X_a;
-  VecGetArray(d_X, &X_a);
-  Insist(!ierr, "Error getting PETSc array.");
   double *phi_a = &d_state->phi(g)[0];
-  memcpy(phi_a, X_a, d_moments_size*sizeof(double));
+  memcpy(phi_a, &(*d_x)[0], d_state->moments_size()*sizeof(double));
 
+  // Set the incident boundary flux if applicable
   if (d_boundary->has_reflective())
-  {
-    // Set the incident boundary flux.
-    d_boundary->set_incident(g, X_a + d_moments_size);
-  }
+    d_boundary->set_incident(g, &(*d_x)[d_state->moments_size()]);
 
   // Sweep again to pick up outgoing boundary fluxes.
+  // \todo Add feature to boundary to update in reverse
   moments_type phi_g = d_state->phi(g);
   d_sweeper->set_update_boundary(true);
   d_sweepsource->reset();
@@ -82,35 +73,23 @@ inline void WGSolverGMRES<D>::solve(const size_t g)
 
   phi_a = NULL;
 
-  // Get the PETSc residual norm.
-  double norm_residal;
-  ierr = KSPGetResidualNorm(d_solver, &norm_residal);
-  Insist(!ierr, "Error getting residual norm.");
-
-  // Get the number of iterations.
-  int iteration;
-  ierr = KSPGetIterationNumber(d_solver, &iteration);
-  Insist(!ierr, "Error getting iteration number.");
-
   if (d_print_level > 0)
   {
     printf(" GMRES Final: Number Iters: %3i  Error: %12.9f  Sweeps: %6i \n",
-           iteration, norm_residal, d_sweeper->number_sweeps());
+           d_solver->number_iterations(),
+           d_solver->residual_norms()[d_solver->number_iterations()],
+           d_sweeper->number_sweeps());
   }
 
-  if (norm_residal > d_tolerance)
+  if (d_solver->residual_norms()[d_solver->number_iterations()] > d_tolerance)
   {
     detran_utilities::warning(detran_utilities::SOLVER_CONVERGENCE,
       "    WGSolverGMRES did not converge.");
   }
-  // Replace the storage for B and X.
-  //ierr = VecResetArray(d_B);
-  //Insist(!ierr, "Error resetting array.");
-  ierr = VecRestoreArray(d_X, &X_a);
-  Insist(!ierr, "Error restoring array.");
 
 }
 
+//---------------------------------------------------------------------------//
 template <class D>
 inline void WGSolverGMRES<D>::build_rhs(State::moments_type &B)
 {
@@ -132,7 +111,9 @@ inline void WGSolverGMRES<D>::build_rhs(State::moments_type &B)
   {
     d_sweeper->sweep(B);
   }
-  // Otherwise, solve the reflecting condition problem.
+  // Otherwise, solve the reflecting condition problem.  This
+  // needs to be redone more formally.  It performs poorly
+  // for problems with lots of opposing reflection.
   else
   {
     // Create dummy moment container for convergence.
@@ -141,7 +122,7 @@ inline void WGSolverGMRES<D>::build_rhs(State::moments_type &B)
     d_sweeper->set_update_boundary(true);
     int iteration;
     double error = 0;
-    for (iteration = 0; iteration < 1090; iteration++)
+    for (iteration = 0; iteration < 1000; iteration++)
     {
       // Update boundary.  This updates boundaries due to reflection, etc.
       d_boundary->update(d_g);
@@ -160,137 +141,15 @@ inline void WGSolverGMRES<D>::build_rhs(State::moments_type &B)
     d_sweeper->set_update_boundary(false);
   }
 
-  // Fill the PETSc Vec with B. Remember to replace it.
-  double *B_a;
-  VecSet(d_B, 0.0);
-  VecGetArray(d_B, &B_a);
-  for (int i = 0; i < d_moments_size; i++)
+  // Fill the source vector.
+  for (int i = 0; i < B.size(); i++)
   {
-    B_a[i] = B[i];
-  }
-  VecRestoreArray(d_B, &B_a);
-
-}
-
-//---------------------------------------------------------------------------//
-// SPECIALIZED OPERATORS
-//---------------------------------------------------------------------------//
-
-template <class D>
-inline PetscErrorCode WGSolverGMRES<D>::apply_WGTO(Mat A, Vec X, Vec Y)
-{
-
-  using std::cout;
-  using std::endl;
-  PetscErrorCode ierr;
-
-  // Get the array from the Krylov vector X.
-  double *X_a;
-  ierr = VecGetArray(X, &X_a); CHKERRQ(ierr);
-
-  // Assing array to phi_vac.
-  State::moments_type phi_original(d_moments_size, 0.0);
-  State::moments_type phi_update(d_moments_size, 0.0);
-
-  for (int i = 0; i < d_moments_size; i++)
-  {
-    phi_original[i] = X_a[i];
-    phi_update[i]   = X_a[i];
+    (*d_b)[i] = B[i];
   }
 
-  // Reset the source and place the original outgoing boundary flux.
-  d_boundary->clear(d_g);
-
-  if (d_boundary->has_reflective())
-  {
-    // *** SET THE INCIDENT BOUNDARY ***
-    d_boundary->set_incident(d_g, X_a + d_moments_size);
-  }
-
-  // Reset the source to zero.
-  d_sweepsource->reset();
-  d_sweepsource->build_within_group_scatter(d_g, phi_original);
-  // Sweep.  This gives X <-- D*inv(L)*M*S*X
-  d_sweeper->sweep(phi_update);
-
-  // ******** BUILD THE OUTGOING VECTOR
-
-  // Get the array for the outgoing vector.
-  double *Y_a;
-  ierr = VecGetArray(Y, &Y_a); CHKERRQ(ierr);
-
-  // Assign the moment values.  This gives X <- (I-D*inv(L)*M*S)*X
-  for (int i = 0; i < d_moments_size; i++)
-  {
-    Y_a[i] = phi_original[i] - phi_update[i];
-  }
-
-  if (d_boundary->has_reflective())
-  {
-    // Update the boundary and fetch.
-    d_boundary->update(d_g);
-    vec_dbl psi_update(d_boundary_size, 0.0);
-
-    // *** EXTRACT THE INCIDENT BOUNDARY ***
-    d_boundary->get_incident(d_g, &psi_update[0]);
-
-    // Add the boundary values.
-    for (int a = 0; a < d_boundary_size; a++)
-    {
-      ///  face, o, a, d_g  = psi_out;
-      Y_a[a + d_moments_size] =
-        X_a[a + d_moments_size] - psi_update[a];
-    }
-  }
-  // Restore the arrays.
-  ierr = VecRestoreArray(X, &X_a); CHKERRQ(ierr);
-  ierr = VecRestoreArray(Y, &Y_a); CHKERRQ(ierr);
-
-  // No error.
-  return 0;
 }
 
 } // namespace detran
-
-//---------------------------------------------------------------------------//
-// EXTERNAL WRAPPER FUNCTIONS
-//---------------------------------------------------------------------------//
-
-inline PetscErrorCode apply_WGTO_1D(Mat A, Vec x, Vec y)
-{
-  // Get the context and cast as WGSolverGMRES pointer.
-  PetscErrorCode ierr;
-  void *ctx;
-  ierr = MatShellGetContext(A, &ctx); CHKERRQ(ierr);
-  detran::WGSolverGMRES<detran::_1D> *inner =
-    (detran::WGSolverGMRES<detran::_1D>*) ctx;
-  // Call the actual apply operator.
-  return inner->apply_WGTO(A, x, y);
-}
-
-inline PetscErrorCode apply_WGTO_2D(Mat A, Vec x, Vec y)
-{
-  // Get the context and cast as WGSolverGMRES pointer.
-  PetscErrorCode ierr;
-  void *ctx;
-  ierr = MatShellGetContext(A, &ctx); CHKERRQ(ierr);
-  detran::WGSolverGMRES<detran::_2D> *inner =
-    (detran::WGSolverGMRES<detran::_2D>*) ctx;
-  // Call the actual apply operator.
-  return inner->apply_WGTO(A, x, y);
-}
-
-inline PetscErrorCode apply_WGTO_3D(Mat A, Vec x, Vec y)
-{
-  // Get the context and cast as WGSolverGMRES pointer.
-  PetscErrorCode ierr;
-  void *ctx;
-  ierr = MatShellGetContext(A, &ctx); CHKERRQ(ierr);
-  detran::WGSolverGMRES<detran::_3D> *inner =
-    (detran::WGSolverGMRES<detran::_3D>*) ctx;
-  // Call the actual apply operator.
-  return inner->apply_WGTO(A, x, y);
-}
 
 #endif /* detran_WGSOLVERGMRES_I_HH_ */
 

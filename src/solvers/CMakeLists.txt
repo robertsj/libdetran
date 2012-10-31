@@ -16,6 +16,7 @@ SET(SRC
     WGSolver.cc
     WGSolverSI.cc
     WGSolverGMRES.cc
+    WGTransportOperator.cc
     #
     MGSolver.cc
     MGTransportSolver.cc
