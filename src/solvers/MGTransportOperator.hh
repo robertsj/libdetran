@@ -57,7 +57,8 @@ public:
   MGTransportOperator(SP_state        state,
                       SP_boundary     boundary,
                       SP_sweeper      sweeper,
-                      SP_sweepsource  source);
+                      SP_sweepsource  source,
+                      size_t          lower = 0);
 
   // Destructor
   virtual ~MGTransportOperator(){}
@@ -88,12 +89,16 @@ private:
   // DATA
   //-------------------------------------------------------------------------//
 
+  /// State vector
   SP_state d_state;
+  /// Boundary flux container
   SP_boundary d_boundary;
+  /// Transport sweeper
   SP_sweeper d_sweeper;
+  /// Sweep source
   SP_sweepsource d_sweepsource;
   /// Group index below which the operator is not applicable
-  size_t d_upscatter_cutoff;
+  size_t d_lower;
   /// Number of groups for which operator is applicable
   size_t d_number_groups;
   /// Size of a group moment vector

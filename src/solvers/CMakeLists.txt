@@ -23,6 +23,7 @@ SET(SRC
     MGSolverGS.cc
     MGSolverGMRES.cc
     MGDiffusionSolver.cc
+    MGTransportOperator.cc
     #
     Eigensolver.cc
     EigenSLEPc.cc
