@@ -126,7 +126,7 @@ public:
     // If not database, we do not set the preconditioner, letting
     // PETSc do its default.
     {
-      /* ... */
+      PCSetType(pc, PCNONE);
     }
 
     // Set the operator.  Note, this structure really eliminates
@@ -137,7 +137,7 @@ public:
                            d_A->petsc_matrix(),
                            d_A->petsc_matrix(),
                            SAME_NONZERO_PATTERN);
-
+    KSPGMRESSetRestart(d_petsc_solver, 20);
     // Set the preconditioner side.
     if (pc_side == Base::LEFT)
       ierr = KSPSetPCSide(d_petsc_solver, PC_LEFT);

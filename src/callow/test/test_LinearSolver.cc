@@ -160,7 +160,8 @@ int test_GMRES(int argc, char *argv[])
   Vector B(n, 1.0);
   db = get_db();
   db->put<std::string>("linear_solver_type", "gmres");
-
+  db->put<int>("linear_solver_maxit", 50);
+  db->put<int>("linear_solver_gmres_restart", 16);
   // NO PC
   solver = LinearSolverCreator::Create(db);
   solver->set_operators(test_matrix_1(n));

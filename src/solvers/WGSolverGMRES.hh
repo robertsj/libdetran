@@ -109,11 +109,6 @@ public:
   /// Solve the within group equation.
   void solve(const size_t g);
 
-  // Friend functions for applying dimension-specific operator.
-  friend PetscErrorCode apply_WGTO_1D(Mat A, Vec x, Vec y);
-  friend PetscErrorCode apply_WGTO_2D(Mat A, Vec x, Vec y);
-  friend PetscErrorCode apply_WGTO_3D(Mat A, Vec x, Vec y);
-
 private:
 
   //-------------------------------------------------------------------------//
@@ -143,12 +138,10 @@ private:
   SP_vector d_x;
   /// Right hand side
   SP_vector d_b;
+  /// Initial outgoing flux
+  SP_vector d_uc_boundary_flux;
   ///
   int d_reflective_solve_iterations;
-//  /// Preconditioner flag
-//  bool d_use_pc;
-//  /// Diffusion preconditioner
-//  SP_pc d_pc;
 
   //-------------------------------------------------------------------------//
   // IMPLEMENTATION
@@ -160,40 +153,9 @@ private:
   /// Build the right hand side.
   void build_rhs(State::moments_type &B);
 
-  //---------------------------------------------------------------------------//
-  /*!
-   * \brief A matrix-vector shell for the within-group transport operator.
-   *
-   * Given a Krylov vector \f$ x \f$, this returns
-   * \f[
-   *    x' \leftarrow
-   *       (\mathbf{I} - \mathbf{DL}^{-1}\mathbf{MS})x \, .
-   * \f]
-   *
-   * This is called by thin wrappers, since PETSc needs the matrix-vector
-   * operation as a function pointer, which precludes a member function.
-   *
-   * \note This is public, since I haven't figured out a way to use friends
-   *       in this way---maybe there is no way.
-   *
-   * \param   A       PETSc shell matrix
-   * \param   x       Incoming PETSc vector
-   * \param   y       Outgoing PETSc vector
-   */
-public:
-  PetscErrorCode apply_WGTO(Mat A, Vec x, Vec y);
-
 };
 
 } // namespace detran
-
-//---------------------------------------------------------------------------//
-// EXTERNAL WRAPPER FUNCTIONS
-//---------------------------------------------------------------------------//
-
-PetscErrorCode apply_WGTO_1D(Mat A, Vec x, Vec y);
-PetscErrorCode apply_WGTO_2D(Mat A, Vec x, Vec y);
-PetscErrorCode apply_WGTO_3D(Mat A, Vec x, Vec y);
 
 //---------------------------------------------------------------------------//
 // INLINE FUNCTIONS

@@ -217,28 +217,37 @@ BoundarySN<_1D>::ordered_angle(const size_t side,
 
 // Incident condition setter and getter for Krylov solvers.
 
-template<class D>
-inline void BoundarySN<D>::set_incident(const size_t g, double *v)
+template <class D>
+inline void BoundarySN<D>::psi(const size_t g,
+                               double *v,
+                               const int inout,
+                               const int gs,
+                               bool onlyref)
 {
-  /* ... */
+  THROW("NOT IMPLEMENTED");
 }
 
-template<>
-inline void BoundarySN<_3D>::set_incident(const size_t g, double *v)
+template <>
+inline void BoundarySN<_3D>::psi(const size_t g,
+                                 double *v,
+                                 const int inout,
+                                 const int gs,
+                                 bool onlyref)
 {
-  // Incident octants for each side.
-  int io[6][4] = {0,3,4,7,  2,1,5,6,  0,4,1,5,  7,3,6,2,  1,0,2,3,  4,5,7,6};
 
   // Loop over all reflective sides and set the flux.
   for (int side = 0; side < 6; side++)
   {
-    if (d_is_reflective[side])
+    if ( (not onlyref) or (onlyref and d_is_reflective[side]) )
     {
       for (int o = 0; o < 4; o++)
       {
+        int octant = d_quadrature->incident_octant(side)[o];
+        if (inout == OUT) octant = d_quadrature->outgoing_octant(side)[o];
+
         for (int a = 0; a < d_quadrature->number_angles_octant(); a++)
         {
-          int angle = d_quadrature->index(io[side][o], a);
+          int angle = d_quadrature->index(octant, a);
           boundary_flux_type &bf = d_boundary_flux[side][g][angle];
           int n1 = bf.size();
           int n2 = bf[0].size();
@@ -256,22 +265,26 @@ inline void BoundarySN<_3D>::set_incident(const size_t g, double *v)
   }
 }
 
-template<>
-inline void BoundarySN<_2D>::set_incident(const size_t g, double *v)
+template <>
+inline void BoundarySN<_2D>::psi(const size_t g,
+                                 double *v,
+                                 const int inout,
+                                 const int gs,
+                                 bool onlyref)
 {
-  // Incident octants for each side.
-  int io[4][2] = {0,3,  2,1,  1,0,  3,2};
-
   // Loop over all reflective sides and set the flux.
   for (int side = 0; side < 4; side++)
   {
-    if (d_is_reflective[side])
+    if ( (not onlyref) or (onlyref and d_is_reflective[side]) )
     {
       for (int o = 0; o < 2; o++)
       {
+        int octant = d_quadrature->incident_octant(side)[o];
+        if (inout == OUT) octant = d_quadrature->outgoing_octant(side)[o];
+
         for (int a = 0; a < d_quadrature->number_angles_octant(); a++)
         {
-          int angle = d_quadrature->index(io[side][o], a);
+          int angle = d_quadrature->index(octant, a);
           boundary_flux_type &bf = d_boundary_flux[side][g][angle];
           int n1 = bf.size();
           for (int i = 0; i < n1; i++)
@@ -285,11 +298,13 @@ inline void BoundarySN<_2D>::set_incident(const size_t g, double *v)
   }
 }
 
-template<>
-inline void BoundarySN<_1D>::set_incident(const size_t g, double *v)
+template <>
+inline void BoundarySN<_1D>::psi(const size_t g,
+                                 double *v,
+                                 const int inout,
+                                 const int gs,
+                                 bool onlyref)
 {
-  using std::cout;
-  using std::endl;
 
   // Incident octants for each side.
   int io[2][1] = {0, 1};
@@ -297,113 +312,18 @@ inline void BoundarySN<_1D>::set_incident(const size_t g, double *v)
   // Loop over all reflective sides and set the flux.
   for (int side = 0; side < 2; side++)
   {
-    if (d_is_reflective[side])
+    if ( (not onlyref) or (onlyref and d_is_reflective[side]) )
     {
       for (int o = 0; o < 1; o++)
       {
+        int octant = d_quadrature->incident_octant(side)[o];
+        if (inout == OUT) octant = d_quadrature->outgoing_octant(side)[o];
+
         for (int a = 0; a < d_quadrature->number_angles_octant(); a++)
         {
 
-          int angle = d_quadrature->index(io[side][o], a);
+          int angle = d_quadrature->index(octant, a);
           d_boundary_flux[side][g][angle] = *v;
-          v++;
-        }
-      }
-    }
-  }
-}
-
-template<class D>
-inline void BoundarySN<D>::get_incident(const size_t g, double *v)
-{
-  THROW("NOT IMPLEMENTED");
-}
-
-/*
- *  Note, the following are not exactly optimal, and I think passing
- *  around a dumb pointer is, well, dumb.
- *
- */
-
-template<>
-inline void BoundarySN<_3D>::get_incident(const size_t g, double *v)
-{
-  // Incident octants for each side.
-  int io[6][4] = {0,3,4,7,  2,1,5,6,  0,4,1,5,  7,3,6,2,  1,0,2,3,  4,5,7,6};
-
-  // Loop over all reflective sides and set the flux.
-  for (int side = 0; side < 6; side++)
-  {
-    if (d_is_reflective[side])
-    {
-      for (int o = 0; o < 4; o++)
-      {
-        for (int a = 0; a < d_quadrature->number_angles_octant(); a++)
-        {
-          int angle = d_quadrature->index(io[side][o], a);
-          boundary_flux_type &bf = d_boundary_flux[side][g][angle];
-          int n1 = bf.size();
-          int n2 = bf[0].size();
-          for (int i = 0; i < n1; i++)
-          {
-            for (int j = 0; j < n2; j++)
-            {
-              *v = bf[i][j];
-              v++;
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
-template<>
-inline void BoundarySN<_2D>::get_incident(const size_t g, double *v)
-{
-  // Incident octants for each side.
-  int io[4][2] = {0,3,  2,1,  1,0,  3,2};
-
-  // Loop over all reflective sides and set the flux.
-  for (int side = 0; side < 4; side++)
-  {
-    if (d_is_reflective[side])
-    {
-      for (int o = 0; o < 2; o++)
-      {
-        for (int a = 0; a < d_quadrature->number_angles_octant(); a++)
-        {
-          int angle = d_quadrature->index(io[side][o], a);
-          boundary_flux_type &bf = d_boundary_flux[side][g][angle];
-          int n1 = bf.size();
-          for (int i = 0; i < n1; i++)
-          {
-            *v = bf[i];
-            v++;
-          }
-        }
-      }
-    }
-  }
-}
-
-template<>
-inline void BoundarySN<_1D>::get_incident(const size_t g, double *v)
-{
-  // Incident octants for each side.
-  int io[2][1] = {0, 1};
-
-  // Loop over all reflective sides and set the flux.
-  for (int side = 0; side < 2; side++)
-  {
-    if (d_is_reflective[side])
-    {
-      for (int o = 0; o < 1; o++)
-      {
-        for (int a = 0; a < d_quadrature->number_angles_octant(); a++)
-        {
-          int angle = d_quadrature->index(io[side][o], a);
-          *v = d_boundary_flux[side][g][angle];
           v++;
         }
       }

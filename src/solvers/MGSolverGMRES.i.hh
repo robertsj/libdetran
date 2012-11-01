@@ -246,7 +246,7 @@ inline PetscErrorCode MGSolverGMRES<D>::apply_MGTO(Mat A, Vec X, Vec Y)
     if (d_boundary->has_reflective())
     {
       // Set the incident boundary flux.
-      d_boundary->set_incident(g, X_a + b_offset);
+      //d_boundary->set_incident(g, X_a + b_offset);
     }
 
     // Reset the source to zero.
@@ -271,7 +271,7 @@ inline PetscErrorCode MGSolverGMRES<D>::apply_MGTO(Mat A, Vec X, Vec Y)
         // Update the boundary and fetch.
         d_boundary->update(g);
         vec_dbl psi_update(d_boundary_size_group, 0.0);
-        d_boundary->get_incident(g, &psi_update[0]);
+        //d_boundary->get_incident(g, &psi_update[0]);
 
         // Add the boundary values.
         for (int a = 0; a < d_boundary_size_group; a++)

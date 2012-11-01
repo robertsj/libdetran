@@ -71,7 +71,6 @@ void MGTransportOperator<D>::multiply(const Vector &x,  Vector &y)
 {
   using std::cout;
   using std::endl;
-  PetscErrorCode ierr;
 
   State::vec_moments_type phi_original(d_state->all_phi());
   State::vec_moments_type phi_update(d_state->all_phi());
@@ -109,39 +108,41 @@ void MGTransportOperator<D>::multiply(const Vector &x,  Vector &y)
     if (d_boundary->has_reflective())
     {
       // Set the incident boundary flux.
-      d_boundary->set_incident(g, const_cast<double*>(&x[0]) + b_offset);
+      d_boundary->psi(g, const_cast<double*>(&x[0]) + b_offset,
+                      BoundaryBase<D>::IN, BoundaryBase<D>::SET, true);
     }
 
-     // Reset the source to zero.
-     d_sweepsource->reset();
-     d_sweepsource->build_total_scatter(g, d_lower, phi_original);
+    // Reset the source to zero.
+    d_sweepsource->reset();
+    d_sweepsource->build_total_scatter(g, d_lower, phi_original);
 
-     // Set the sweeper and sweep.
-     d_sweeper->setup_group(g);
-     d_sweeper->sweep(phi_update[g]);
+    // Set the sweeper and sweep.
+    d_sweeper->setup_group(g);
+    d_sweeper->sweep(phi_update[g]);
 
-     // Update outgoing vector
-     {
-       // Assign the moment values.
-       for (int i = 0; i < d_moments_size; i++)
-       {
-         y[i + m_offset] = phi_original[g][i] - phi_update[g][i];
-       }
-       // Assign boundary fluxes, if applicable
-       if (d_boundary->has_reflective())
-       {
-         // Update the boundary and fetch.
-         d_boundary->update(g);
-         State::angular_flux_type psi_update(d_boundary_size, 0.0);
-         d_boundary->get_incident(g, &psi_update[0]);
+    // Update outgoing vector
+    {
+      // Assign the moment values.
+      for (int i = 0; i < d_moments_size; i++)
+      {
+        y[i + m_offset] = phi_original[g][i] - phi_update[g][i];
+      }
+      // Assign boundary fluxes, if applicable
+      if (d_boundary->has_reflective())
+      {
+        // Update the boundary and fetch.
+        d_boundary->update(g);
+        State::angular_flux_type psi_update(d_boundary_size, 0.0);
+        d_boundary->psi(g, &psi_update[0],
+                        BoundaryBase<D>::IN, BoundaryBase<D>::GET, true);
 
-         // Add the boundary values.
-         for (int a = 0; a < d_boundary_size; a++)
-         {
-           y[a + b_offset] = x[a + b_offset] - psi_update[a];
-         }
-       }
-     } // end update
+        // Add the boundary values.
+        for (int a = 0; a < d_boundary_size; a++)
+        {
+          y[a + b_offset] = x[a + b_offset] - psi_update[a];
+        }
+      }
+    } // end update
 
    }
 

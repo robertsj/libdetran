@@ -59,17 +59,29 @@ inline void WGSolverGMRES<D>::solve(const size_t g)
 
   // Set the incident boundary flux if applicable
   if (d_boundary->has_reflective())
-    d_boundary->set_incident(g, &(*d_x)[d_state->moments_size()]);
+  {
+    d_boundary->psi(g, &(*d_x)[d_state->moments_size()],
+                    BoundaryBase<D>::IN, BoundaryBase<D>::SET, true);
+  }
 
-  // Sweep again to pick up outgoing boundary fluxes.
-  // \todo Add feature to boundary to update in reverse
+  // Sweep once to pick up outgoing boundary fluxes.
   moments_type phi_g = d_state->phi(g);
   d_sweeper->set_update_boundary(true);
   d_sweepsource->reset();
   d_sweepsource->build_fixed_with_scatter(d_g);
   d_sweepsource->build_within_group_scatter(d_g, phi_g);
   d_sweeper->sweep(phi_g);
-  d_sweeper->sweep(phi_g);
+
+  // Fill temorary vector with outgoing boundary
+  callow::Vector b(d_uc_boundary_flux->size(), 0.0);
+  d_boundary->psi(g, &b[0],
+                  BoundaryBase<D>::OUT, BoundaryBase<D>::GET, false);
+  // Add uncollided component
+  //b.add(d_uc_boundary_flux);
+  // Set the boundary
+  d_boundary->psi(g, &b[0],
+                  BoundaryBase<D>::OUT, BoundaryBase<D>::SET, false);
+
 
   phi_a = NULL;
 
@@ -146,6 +158,11 @@ inline void WGSolverGMRES<D>::build_rhs(State::moments_type &B)
   {
     (*d_b)[i] = B[i];
   }
+
+  // Fill the uncollided boundary vector
+  d_boundary->psi(d_g, &((*d_uc_boundary_flux)[0]),
+                  BoundaryBase<D>::OUT, BoundaryBase<D>::GET, false);
+
 
 }
 

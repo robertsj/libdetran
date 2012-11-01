@@ -12,6 +12,7 @@
 namespace detran
 {
 
+//---------------------------------------------------------------------------//
 template <class D>
 WGTransportOperator<D>::WGTransportOperator(SP_state        state,
                                             SP_boundary     boundary,
@@ -73,7 +74,8 @@ void WGTransportOperator<D>::multiply(const Vector &x,  Vector &y)
   // vector, if applicable.
   d_boundary->clear(d_g);
   if (d_boundary->has_reflective())
-    d_boundary->set_incident(d_g, const_cast<double*>(&x[0]) + d_moments_size);
+    d_boundary->psi(d_g, const_cast<double*>(&x[0]) + d_moments_size,
+                    BoundaryBase<D>::IN, BoundaryBase<D>::SET, true);
 
   // Reset the source and build the scattering source (with no
   // fixed source contributions)
@@ -94,7 +96,8 @@ void WGTransportOperator<D>::multiply(const Vector &x,  Vector &y)
 
     // Extract the incident boundary
     State::moments_type psi_update(d_boundary_size, 0.0);
-    d_boundary->get_incident(d_g, &psi_update[0]);
+    d_boundary->psi(d_g, &psi_update[0],
+                    BoundaryBase<D>::IN, BoundaryBase<D>::GET, true);
 
     // Add the boundary values.  This gives X <-- I - B*X, where
     // B is the implicitly-defined boundary operator

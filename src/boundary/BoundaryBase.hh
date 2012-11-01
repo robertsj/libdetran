@@ -89,6 +89,13 @@ public:
       OUT
   };
 
+  /// Get or set
+  enum getset
+  {
+      GET,
+      SET
+  };
+
   //-------------------------------------------------------------------------//
   // TYPEDEFS
   //-------------------------------------------------------------------------//
@@ -188,17 +195,11 @@ public:
    *  \param g  Group of current sweep
    *  \param v  Pointer to data used in Krylov solve
    */
-  virtual void set_incident(const size_t g, double *v) = 0;
-
-  /*
-   *  \brief Get the entire group boundary flux for reflecting sides.
-   *
-   *  This is in support of Krylov solvers.
-   *
-   *  \param g  Group of current sweep
-   *  \param v  Pointer to data used in Krylov solve
-   */
-  virtual void get_incident(const size_t g, double *v) = 0;
+  virtual void psi(const size_t g,
+                   double *v,
+                   const int inout,
+                   const int gs,
+                   bool onlyref = true) = 0;
 
   //-------------------------------------------------------------------------//
   // PUBLIC INTERFACE

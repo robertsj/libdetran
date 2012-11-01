@@ -222,7 +222,6 @@ inline void GMRES::solve_impl(const Vector &b, Vector &x0)
     // reset the solution
     x.set(0.0);
     // update x = v[0]*y[0] + ...
-    x.set(0.0);
     for (int i = 0; i < k; ++i)
     {
       x.add_a_times_x(y[i], v[i]);
@@ -234,6 +233,9 @@ inline void GMRES::solve_impl(const Vector &b, Vector &x0)
     }
     // add the initial guess
     x.add(x0);
+
+    // This iterate becomes the new initial guess
+    x0.copy(x);
 
   } // end outers
 
