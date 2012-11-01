@@ -60,7 +60,7 @@ public:
 #ifdef DETRAN_ENABLE_PETSC
     PetscErrorCode ierr;
     ierr = MatCreate(PETSC_COMM_SELF, &d_petsc_matrix);
-    ierr = MatSetSizes(d_petsc_matrix, m, n, PETSC_DETERMINE, PETSC_DETERMINE);
+    ierr = MatSetSizes(d_petsc_matrix, d_m, d_n, PETSC_DETERMINE, PETSC_DETERMINE);
     ierr = MatSetType(d_petsc_matrix, MATSHELL);
     ierr = MatShellSetContext(d_petsc_matrix, d_context);
     Ensure(!ierr);
