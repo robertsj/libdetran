@@ -14,7 +14,6 @@
         FUNC(test_FixedSourceManager_3D)     \
         FUNC(test_FixedSourceManager_iterate)
 
-// Detran headers
 #include "TestDriver.hh"
 #include "FixedSourceManager.hh"
 #include "Mesh1D.hh"
@@ -24,8 +23,7 @@
 #include "callow/utils/Initialization.hh"
 #include "boundary/BoundaryTraits.hh"
 #include "boundary/BoundarySN.hh"
-
-// Setup
+//
 #include "angle/test/quadrature_fixture.hh"
 #include "geometry/test/mesh_fixture.hh"
 #include "material/test/material_fixture.hh"
@@ -55,15 +53,24 @@ int main(int argc, char *argv[])
 SP_material test_FixedSourceManager_material()
 {
   // Material (kinf = 1)
-  SP_material mat(new Material(1, 1));
-  mat->set_sigma_t(0, 0, 1.0);
-  mat->set_sigma_s(0, 0, 0, 1*0.5);
-  mat->set_sigma_f(0, 0, 1*0.5);
-  mat->set_chi(0, 0, 1.0);
-  mat->set_diff_coef(0, 0, 0.33);
+  SP_material mat(new Material(1, 2));
+  //
+  mat->set_sigma_t(0, 0,    1.0);
+  mat->set_sigma_s(0, 0, 0, 0*0.5);
+  mat->set_sigma_f(0, 0,    0*0.5);
+  mat->set_chi(0, 0,        1.0);
+  mat->set_diff_coef(0, 0,  0.33);
+  //
+  mat->set_sigma_t(0, 1,    1.0);
+  mat->set_sigma_s(0, 1, 0, 0*0.5);
+  mat->set_sigma_f(0, 1,    0*0.5);
+  mat->set_chi(0, 1,        0.0);
+  mat->set_diff_coef(0, 1,  0.33);
+
   mat->compute_sigma_a();
   mat->finalize();
-  return mat;
+  //return mat;
+  return mat;//material_fixture_2g();
 }
 
 SP_mesh test_FixedSourceManager_mesh(int d)
@@ -82,13 +89,13 @@ SP_mesh test_FixedSourceManager_mesh(int d)
 InputDB::SP_input test_FixedSourceManager_input()
 {
   InputDB::SP_input inp(new InputDB());
-  inp->put<int>("number_groups", 1);
-  inp->put<string>("problem_type", "multiply");
+  inp->put<string>("problem_type",    "fixed");
   inp->put<double>("inner_tolerance", 1e-17);
-  inp->put<string>("inner_solver", "GMRES");
-  inp->put<int>("inner_use_pc", 0);
-  inp->put<int>("inner_print_level", 2);
-  inp->put<int>("outer_print_level", 0);
+  inp->put<string>("inner_solver",    "GMRES");
+  inp->put<int>("inner_use_pc",       0);
+  inp->put<int>("inner_print_level",  2);
+  inp->put<int>("outer_print_level",  0);
+  inp->put<double>("outer_tolerance", 1e-12);
   inp->put<int>("quad_number_polar_octant", 2);
   inp->put<string>("bc_west", "reflect");
   inp->put<string>("bc_east", "vacuum");
@@ -180,14 +187,16 @@ int test_FixedSourceManager_T()
   // Input, materials, and mesh
   typename Manager_T::SP_input input = test_FixedSourceManager_input();
   SP_material mat = test_FixedSourceManager_material();
+  input->template put<int>("number_groups", mat->number_groups());
   SP_mesh mesh = test_FixedSourceManager_mesh(D::dimension);
 
   // Manager
-  Manager_T manager(input, mat, mesh);
+  Manager_T manager(input, mat, mesh, true);
   manager.setup();
 
   // Build source and set solver
-  ConstantSource::SP_externalsource q_e(new ConstantSource(1, mesh, 1.0));
+  ConstantSource::SP_externalsource
+    q_e(new ConstantSource(mat->number_groups(), mesh, 1.0));
   manager.set_source(q_e);
   manager.set_solver();
 
@@ -204,11 +213,20 @@ int test_FixedSourceManager_T()
   // compute total source and absorptions
   double gain = 0;
   double absorption = 0;
-  for (int i = 0; i < mesh->number_cells(); i++)
+  typename Manager_T::SP_fissionsource q_f = manager.fissionsource();
+  TEST(q_f);
+  // compute the fission source from the state
+  q_f->update();
+  q_f->setup_outer();
+  vec_int mt = mesh->mesh_map("MATERIAL");
+  for (int g = 0; g < mat->number_groups(); ++g)
   {
-    cout << state->phi(0)[i] << " " << endl;
-    gain += q_e->source(i, 0) * mesh->volume(i);
-    absorption += state->phi(0)[i] * mat->sigma_a(0, 0) * mesh->volume(i);
+    for (int i = 0; i < mesh->number_cells(); ++i)
+    {
+      cout << state->phi(g)[i] << " " << endl;
+      gain += (q_e->source(i, g) +  q_f->source(g)[i]) * mesh->volume(i);
+      absorption += state->phi(g)[i] * mat->sigma_a(mt[i], g) * mesh->volume(i);
+    }
   }
 
   typename Manager_T::SP_quadrature q;
@@ -243,6 +261,7 @@ int test_FixedSourceManager_3D(int argc, char *argv[])
   return test_FixedSourceManager_T<_3D>();
 }
 
+// Test fission source iteration
 int test_FixedSourceManager_iterate(int argc, char *argv[])
 {
 
@@ -260,7 +279,8 @@ int test_FixedSourceManager_iterate(int argc, char *argv[])
   manager.setup();
 
   // Build source and set solver.
-  ConstantSource::SP_externalsource q_e(new ConstantSource(1, mesh, 1.0));
+  ConstantSource::SP_externalsource
+    q_e(new ConstantSource(mat->number_groups(), mesh, 1.0));
   manager.set_source(q_e);
   manager.set_solver();
 

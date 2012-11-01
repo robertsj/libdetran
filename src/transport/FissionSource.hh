@@ -81,7 +81,7 @@ public:
    *
    *   @param scale     Scaling factor (typically 1/keff)
    */
-  void setup_outer(const double scale);
+  void setup_outer(const double scale = 1.0);
 
   /**
    *   @brief Return the fission source in a group.
