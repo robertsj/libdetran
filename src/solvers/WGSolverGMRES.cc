@@ -35,6 +35,12 @@ WGSolverGMRES<D>::WGSolverGMRES(SP_state                  state,
   d_x = new callow::Vector(d_operator->number_rows(), 0.0);
   d_b = new callow::Vector(d_operator->number_rows(), 0.0);
 
+  // Setup storage for uncollided boundary flux
+  size_t bsize = 0;
+  for (int side = 0; side < 2*D::dimension; ++side)
+    bsize += d_boundary->boundary_flux_size(side)/2;
+  d_uc_boundary_flux = new callow::Vector(bsize, 0.0);
+
   // Get callow solver parameter database
   SP_input db;
   if (d_input->check("inner_solver_db"))

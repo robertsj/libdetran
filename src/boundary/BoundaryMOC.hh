@@ -150,23 +150,12 @@ public:
    *  \param g  Group of current sweep
    *  \param v  Pointer to data used in Krylov solve
    */
-  void set_incident(const size_t g, double *v)
+  void psi(const size_t g, double *v, const int inout, const int gs,
+           bool onlyref = true)
   {
     THROW("IMPLEMENT ME");
   }
 
-  /*
-   *  \brief Get the entire group boundary flux for reflecting sides.
-   *
-   *  This is in support of Krylov solvers.
-   *
-   *  \param g  Group of current sweep
-   *  \param v  Pointer to data used in Krylov solve
-   */
-  void get_incident(const size_t g, double *v)
-  {
-    THROW("IMPLEMENT ME");
-  }
 
   //-------------------------------------------------------------------------//
   // BOUNDARY FLUX ACCESS

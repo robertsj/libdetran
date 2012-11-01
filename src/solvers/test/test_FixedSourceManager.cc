@@ -56,11 +56,11 @@ SP_material test_FixedSourceManager_material()
 {
   // Material (kinf = 1)
   SP_material mat(new Material(1, 1));
-  mat->set_sigma_t(0, 0, 1.0);
-  mat->set_sigma_s(0, 0, 0, 1*0.5);
-  mat->set_sigma_f(0, 0, 1*0.5);
-  mat->set_chi(0, 0, 1.0);
-  mat->set_diff_coef(0, 0, 0.33);
+  mat->set_sigma_t(0, 0,        1.0);
+  mat->set_sigma_s(0, 0, 0,     0.5);
+  mat->set_sigma_f(0, 0,        0.0);
+  mat->set_chi(0, 0,            1.0);
+  mat->set_diff_coef(0, 0,      0.33);
   mat->compute_sigma_a();
   mat->finalize();
   return mat;
@@ -69,7 +69,7 @@ SP_material test_FixedSourceManager_material()
 SP_mesh test_FixedSourceManager_mesh(int d)
 {
   vec_dbl cm(2, 0.0); cm[1] = 5.0;
-  vec_int fm(1, 10);
+  vec_int fm(1, 5);
   vec_int mat_map(1, 0);
   SP_mesh mesh;
   if (d == 1) mesh = new Mesh1D(fm, cm, mat_map);
@@ -89,12 +89,19 @@ InputDB::SP_input test_FixedSourceManager_input()
   inp->put<int>("inner_use_pc", 0);
   inp->put<int>("inner_print_level", 2);
   inp->put<int>("outer_print_level", 0);
-  inp->put<int>("quad_number_polar_octant", 2);
-  inp->put<string>("bc_west", "reflect");
+  inp->put<int>("quad_polar_octant", 2);
+  inp->put<int>("quad_azimuths_octant", 2);
+  inp->put<string>("bc_west", "vacuum");
   inp->put<string>("bc_east", "vacuum");
+  inp->put<string>("bc_south", "vacuum");
+  inp->put<string>("bc_north", "vacuum");
   InputDB::SP_input db(new InputDB("callow_linear_solver"));
   db->put<double>("linear_solver_atol", 1e-12);
   db->put<double>("linear_solver_rtol", 1e-12);
+  db->put<string>("linear_solver_type", "gmres");
+  db->put<int>("linear_solver_maxit", 50);
+  //db->put<int>("linear_solver_gmres_restart", 50);
+  db->put<int>("linear_solver_print_level", 2);
   inp->put<InputDB::SP_input>("inner_solver_db", db);
   return inp;
 }
@@ -146,12 +153,12 @@ double compute_leakage(typename BoundarySN<D>::SP_boundary b,
             {
               for (int a = 0; a < q->number_angles_octant(); ++a)
               {
-                cout << " s = " << surface
-                     << " o = " << q->outgoing_octant(surface)[o]
-                     << " a = " << a
-                     << " val = " << BV_T::value((*b)(surface, q->outgoing_octant(surface)[o], a, g),
-                         ijk[dim1], ijk[dim2])
-                     << endl;
+//                cout << " s = " << surface
+//                     << " o = " << q->outgoing_octant(surface)[o]
+//                     << " a = " << a
+//                     << " val = " << BV_T::value((*b)(surface, q->outgoing_octant(surface)[o], a, g),
+//                         ijk[dim1], ijk[dim2])
+//                     << endl;
                 if (!b->is_reflective(surface))
                 {
                 leakage +=
@@ -206,9 +213,17 @@ int test_FixedSourceManager_T()
   double absorption = 0;
   for (int i = 0; i < mesh->number_cells(); i++)
   {
-    cout << state->phi(0)[i] << " " << endl;
     gain += q_e->source(i, 0) * mesh->volume(i);
     absorption += state->phi(0)[i] * mat->sigma_a(0, 0) * mesh->volume(i);
+  }
+
+  for (int j = 0; j < mesh->number_cells_y(); j++)
+  {
+    for (int i=0; i < mesh->number_cells_x(); ++i)
+    {
+      cout << state->phi(0)[i + j*mesh->number_cells_x()] << " ";
+    }
+    cout << endl;
   }
 
   typename Manager_T::SP_quadrature q;
