@@ -53,8 +53,9 @@ inline void Sweeper1D<EQ>::sweep(moments_type &phi)
   typename Equation_T::face_flux_type psi_out = 0.0;
 
   // Sweep over all octants
-  for (int o = 0; o < 2; o++)
+  for (size_t oo = 0; oo < 2; oo++)
   {
+    size_t o = d_ordered_octants[oo];
 
     // Setup equation for this octant.
     equation.setup_octant(o);

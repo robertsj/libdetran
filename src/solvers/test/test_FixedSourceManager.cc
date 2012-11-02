@@ -92,18 +92,19 @@ InputDB::SP_input test_FixedSourceManager_input()
   InputDB::SP_input inp(new InputDB());
   inp->put<string>("problem_type",              "fixed");
   inp->put<string>("bc_west",                   "reflect");
-  inp->put<string>("bc_east",                   "reflect");
+  inp->put<string>("bc_east",                   "vacuum");
   inp->put<string>("bc_south",                  "reflect");
-  inp->put<string>("bc_north",                  "reflect");
+  inp->put<string>("bc_north",                  "vacuum");
+  inp->put<int>("store_angular_flux",           1);
   //
   inp->put<int>("quad_number_polar_octant",     1);
   inp->put<int>("quad_number_azimuth_octant",   1);
   //
   inp->put<double>("inner_tolerance",           1e-17);
-  inp->put<string>("inner_solver",              "SI");
+  inp->put<string>("inner_solver",              "GMRES");
   inp->put<int>("inner_use_pc",                 0);
   inp->put<int>("inner_max_iters",               100000);
-  inp->put<int>("inner_print_level",            2);
+  inp->put<int>("inner_print_level",            1);
   InputDB::SP_input db(new InputDB("callow_linear_solver"));
   db->put<double>("linear_solver_atol", 1e-17);
   db->put<double>("linear_solver_rtol", 1e-17);
@@ -206,7 +207,7 @@ int test_FixedSourceManager_T()
   SP_mesh mesh = test_FixedSourceManager_mesh(D::dimension);
 
   // Manager
-  Manager_T manager(input, mat, mesh, false);
+  Manager_T manager(input, mat, mesh, true);
   manager.setup();
 
   // Build source and set solver
@@ -241,23 +242,23 @@ int test_FixedSourceManager_T()
 
 
   // compute total source and absorptions
-//  double gain = 0;
-//  double absorption = 0;
-//  typename Manager_T::SP_fissionsource q_f = manager.fissionsource();
-//  TEST(q_f);
-//  // compute the fission source from the state
-//  q_f->update();
-//  q_f->setup_outer();
-//  vec_int mt = mesh->mesh_map("MATERIAL");
-//  for (int g = 0; g < mat->number_groups(); ++g)
-//  {
-//    for (int i = 0; i < mesh->number_cells(); ++i)
-//    {
-//      gain += (q_e->source(i, g) +  q_f->source(g)[i]) * mesh->volume(i);
-//      absorption += state->phi(g)[i] * mat->sigma_a(mt[i], g) * mesh->volume(i);
-//    }
-//
-//  }
+  double gain = 0;
+  double absorption = 0;
+  typename Manager_T::SP_fissionsource q_f = manager.fissionsource();
+  TEST(q_f);
+  // compute the fission source from the state
+  q_f->update();
+  q_f->setup_outer();
+  vec_int mt = mesh->mesh_map("MATERIAL");
+  for (int g = 0; g < mat->number_groups(); ++g)
+  {
+    for (int i = 0; i < mesh->number_cells(); ++i)
+    {
+      gain += (q_e->source(i, g) +  q_f->source(g)[i]) * mesh->volume(i);
+      absorption += state->phi(g)[i] * mat->sigma_a(mt[i], g) * mesh->volume(i);
+    }
+
+  }
 
   for (int k = 0; k < mesh->number_cells_z(); k++)
   {
@@ -272,20 +273,21 @@ int test_FixedSourceManager_T()
     }
     cout << endl;
   }
-  THROW("FUCK");
+ // state->display();
+
   typename Manager_T::SP_quadrature q;
   q = manager.quadrature();
   TEST(q);
 
-//  double leakage = compute_leakage<D>(boundary, q, mat, mesh);
-//
-//  // compute net balance (should be 0!!)
-//  double net = gain - (absorption+leakage);
-//  cout << "        gain = " << gain << endl;
-//  cout << "  absorption = " << absorption << endl;
-//  cout << "     leakage = " << leakage << endl;
-//  cout << " NET BALANCE = " << gain-(absorption+leakage) << endl;
-//  TEST(soft_equiv(net, 0.0, 1e-12));
+  double leakage = compute_leakage<D>(boundary, q, mat, mesh);
+
+  // compute net balance (should be 0!!)
+  double net = gain - (absorption+leakage);
+  cout << "        gain = " << gain << endl;
+  cout << "  absorption = " << absorption << endl;
+  cout << "     leakage = " << leakage << endl;
+  cout << " NET BALANCE = " << gain-(absorption+leakage) << endl;
+  TEST(soft_equiv(net, 0.0, 1e-12));
 
   return 0;
 }

@@ -54,8 +54,8 @@ inline void WGSolverGMRES<D>::solve(const size_t g)
   //-------------------------------------------------------------------------//
 
   // Copy the flux solution into state.
-  double *phi_a = &d_state->phi(g)[0];
-  memcpy(phi_a, &(*d_x)[0], d_state->moments_size()*sizeof(double));
+  memcpy(&d_state->phi(g)[0], &(*d_x)[0],
+         d_state->moments_size()*sizeof(double));
 
   // Set the incident boundary flux if applicable
   if (d_boundary->has_reflective())
@@ -64,16 +64,31 @@ inline void WGSolverGMRES<D>::solve(const size_t g)
                     BoundaryBase<D>::IN, BoundaryBase<D>::SET, true);
   }
 
-  // Sweep once to pick up outgoing boundary fluxes.
-  moments_type phi_g = d_state->phi(g);
-  d_sweeper->set_update_boundary(false);
-  d_sweepsource->reset();
-  d_sweepsource->build_fixed_with_scatter(d_g);
-  d_sweepsource->build_within_group_scatter(d_g, phi_g);
-  d_sweeper->sweep(phi_g);
-  d_boundary->update(d_g);
-
-  phi_a = NULL;
+  // Iterate to pick up outgoing boundary fluxes.  Only do this if
+  // there is at least one vacuum boundary.  Otherwise, the
+  // boundary fluxes are never going to be needed.
+  int num_vac = 0;
+  for (int side = 0; side < 2*D::dimension; ++side)
+    if (!d_boundary->is_reflective(side)) ++num_vac;
+  if (num_vac)
+  {
+    moments_type phi_g   = d_state->phi(g);
+    moments_type phi_g_o = d_state->phi(g);
+    d_sweeper->set_update_boundary(true);
+    d_sweepsource->reset();
+    d_sweepsource->build_fixed_with_scatter(d_g);
+    d_sweepsource->build_within_group_scatter(d_g, phi_g);
+    int iteration;
+    double error = 0;
+    for (iteration = 0; iteration < 1000; iteration++)
+    {
+      d_boundary->update(d_g);
+      std::swap(phi_g, phi_g_o);
+      d_sweeper->sweep(phi_g);
+      error = detran_utilities::norm_residual(phi_g_o, phi_g, "Linf");
+      if (error < 1e-9) break;
+    }
+  }
 
   if (d_print_level > 0)
   {

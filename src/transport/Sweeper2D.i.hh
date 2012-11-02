@@ -48,8 +48,9 @@ inline void Sweeper2D<EQ>::sweep(moments_type &phi)
   SweepSource<_2D>::sweep_source_type source(d_mesh->number_cells(), 0.0);
 
   // Sweep over all octants
-  for (size_t o = 0; o < 4; o++)
+  for (size_t oo = 0; oo < 4; oo++)
   {
+    size_t o = d_ordered_octants[oo];
 
     // Setup equation for this octant.
     equation.setup_octant(o);

@@ -48,8 +48,9 @@ inline void Sweeper3D<EQ>::sweep(moments_type &phi)
   SweepSource<_3D>::sweep_source_type source(d_mesh->number_cells(), 0.0);
 
   // Sweep over all octants
-  for (int o = 0; o < 8; o++)
+  for (size_t oo = 0; oo < 8; oo++)
   {
+    size_t o = d_ordered_octants[oo];
 
     equation.setup_octant(o);
 
@@ -66,7 +67,7 @@ inline void Sweeper3D<EQ>::sweep(moments_type &phi)
 
       // Get psi if update requested.
       State::angular_flux_type psi;
-      if (d_update_psi) psi = d_state->psi(o, a, d_g);
+      if (d_update_psi) psi = d_state->psi(d_g, o, a);
 
       // Update the boundary for this angle.
       if (d_update_boundary) d_boundary->update(d_g, o, a);

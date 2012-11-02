@@ -78,7 +78,51 @@ public:
   : Base(input,mesh,material,quadrature,
          state,sweepsource)
   , d_boundary(boundary)
-  {}
+  , d_ordered_octants(8, 0)
+  {
+    // Default order - staggered.  I've notices that
+    // doing cyclic sweeps (0->1->2->3) leads to anisotropic
+    // edge fluxes when they should be isotropic (thought the
+    // cell centered psi is fine)
+    d_ordered_octants[0] = 0;
+    d_ordered_octants[1] = 2;
+    d_ordered_octants[2] = 1;
+    d_ordered_octants[3] = 3;
+    d_ordered_octants[4] = 4;
+    d_ordered_octants[5] = 6;
+    d_ordered_octants[6] = 5;
+    d_ordered_octants[7] = 7;
+
+    // Order the octants so that vacuum conditions start first
+    vec_int count(8, 0);
+    for (int side = 0; side < 6; side++)
+    {
+      if (!d_boundary->is_reflective(side))
+      {
+        for (int o = 0; o < 2; o++)
+          ++count[d_quadrature->incident_octant(side)[o]];
+      }
+    }
+    for (int i = 0; i < 8; i++)
+    {
+      for (int j = 0; j < 8; j++)
+      {
+        if (count[j] < count[i])
+        {
+          int o = d_ordered_octants[j];
+          d_ordered_octants[j] = d_ordered_octants[i];
+          d_ordered_octants[i] = o;
+          o = count[j];
+          count[j] = count[i];
+          count[i] = o;
+        }
+      }
+    }
+    std::cout << " ORDERED OCTANTS: " << std::endl;
+    for (int o = 0; o < 8; o++)
+      std::cout << " o = " << d_ordered_octants[o] << std::endl;
+
+  }
 
   /// Virtual destructor
   virtual ~Sweeper3D(){}
@@ -118,7 +162,7 @@ private:
   //-------------------------------------------------------------------------//
 
   SP_boundary d_boundary;
-
+  vec_int d_ordered_octants;
 };
 
 } // end namespace detran

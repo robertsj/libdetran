@@ -78,8 +78,19 @@ public:
   : Base(input,mesh,material,quadrature,
          state,sweepsource)
   , d_boundary(boundary)
+  , d_ordered_octants(2, 0)
   {
     Require(boundary);
+
+    // Order the octants
+    d_ordered_octants[0] = 0;
+    d_ordered_octants[1] = 1;
+    if (d_boundary->is_reflective(0) and d_boundary->is_reflective(1))
+    {
+      d_ordered_octants[0] = 1;
+      d_ordered_octants[1] = 0;
+    }
+
   }
 
   /// Virtual destructor
@@ -120,6 +131,7 @@ private:
   //-------------------------------------------------------------------------//
 
   SP_boundary d_boundary;
+  vec_int d_ordered_octants;
 
 };
 
