@@ -1,54 +1,41 @@
 //----------------------------------*-C++-*----------------------------------//
-/**
- *  @file   WGSolverGMRES.hh
- *  @author robertsj
- *  @date   Apr 4, 2012
- *  @brief  WGSolverGMRES class definition.
+/*!
+ * \file   ReflectiveSolver.hh
+ * \brief  ReflectiveSolver 
+ * \author Jeremy Roberts
+ * \date   Nov 2, 2012
  */
 //---------------------------------------------------------------------------//
 
-#ifndef detran_WGSOLVERGMRES_HH_
-#define detran_WGSOLVERGMRES_HH_
+#ifndef REFLECTIVESOLVER_HH_
+#define REFLECTIVESOLVER_HH_
 
-#include "WGSolver.hh"
-#include "PreconditionerWG.hh"
-#include "WGTransportOperator.hh"
+#include "Solver.hh"
+#include "SweepOperator.hh"
 #include "callow/solver/LinearSolver.hh"
 
 namespace detran
 {
 
+
 //---------------------------------------------------------------------------//
 /**
- *  @class WGSolverGMRES
- *  @brief Solve the within-group problem with GMRES.
+ *  @class ReflectiveSolver
+ *  @brief Solve the reflective boundary condition problem
  *
- *  From @ref WGSolver, we know the within-group problem can be
- *  written in operator notation as
+ *  This solves
  *  @f[
- *      (\mathbf{I} - \mathbf{D}\mathbf{L}^{-1}\mathbf{MS})\phi
- *      = \mathbf{D} \mathbf{L}^{-1} Q \, ,
+ *     \mathbf{L}\psi = q \, ,
  *  @f]
- *  or
- *  @f[
- *      \mathbf{A}x = b \, .
- *  @f]
- *
- *  This class couples with callow to make available its set of applicable
- *  solvers, the default being GMRES.  Other solvers are selected
- *  by the parameter database for callow solvers.  PETSc solvers are available
- *  through the callow interface as well.
- *
- *  For Krylov iterations to perform successfully, preconditioning
- *  is often required.  A good preconditioner $\f \mathbf{M} \f$
- *  is in some way "similar" to the operator $\f \mathbf{A} \f$, and
- *  applying its inverse $\f \mathbf{M}^{-1} $\f can be done cheaply.
+ *  with @f$ \psi @f$ subject to reflective conditions.  In all but
+ *  pure reflection, this should take very few sweeps.  For pure
+ *  vacuum conditions, just one sweep is required.
  *
  */
 //---------------------------------------------------------------------------//
 
 template <class D>
-class WGSolverGMRES: public WGSolver<D>
+class ReflectiveSolver: public Solver<D>
 {
 
 public:
@@ -57,26 +44,19 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef WGSolver<D>                           Base;
+  typedef Solver<D>                             Base;
   typedef typename Base::SP_solver              SP_solver;
   typedef typename Base::SP_input               SP_input;
   typedef typename Base::SP_state               SP_state;
   typedef typename Base::SP_mesh                SP_mesh;
-  typedef typename Base::SP_material            SP_material;
-  typedef typename Base::SP_quadrature          SP_quadrature;
   typedef typename Base::SP_boundary            SP_boundary;
-  typedef typename Base::SP_MtoD                SP_MtoD;
-  typedef typename Base::SP_externalsource      SP_externalsource;
-  typedef typename Base::vec_externalsource     vec_externalsource;
-  typedef typename Base::SP_fissionsource       SP_fissionsource;
   typedef typename Base::SP_sweeper             SP_sweeper;
   typedef typename Base::SP_sweepsource         SP_sweepsource;
   typedef typename Base::moments_type           moments_type;
   typedef typename Base::size_t                 size_t;
-  typedef PreconditionerWG::SP_pc               SP_pc;
   typedef detran_utilities::vec_dbl             vec_dbl;
   typedef callow::LinearSolver::SP_solver       SP_linearsolver;
-  typedef WGTransportOperator<D>                Operator_T;
+  typedef SweepOperator<D>                      Operator_T;
   typedef typename Operator_T::SP_operator      SP_operator;
   typedef callow::Vector::SP_vector             SP_vector;
 
@@ -87,27 +67,21 @@ public:
   /**
    *  @brief Constructor
    *  @param state             State vectors, etc.
-   *  @param mat               Material definitions.
-   *  @param quadrature        Angular mesh.
    *  @param boundary          Boundary fluxes.
-   *  @param external_source   User-defined external source.
-   *  @param fission_source    Fission source.
-   *  @param multiply          Flag for fixed source multiplying problem
+   *  @param sweeper
+   *  @param source
    */
-  WGSolverGMRES(SP_state                   state,
-                SP_material                material,
-                SP_quadrature              quadrature,
-                SP_boundary                boundary,
-                const vec_externalsource  &q_e,
-                SP_fissionsource           q_f,
-                bool                       multiply);
+  ReflectiveSolver(SP_state        state,
+                   SP_boundary     boundary,
+                   SP_sweeper      sweeper,
+                   SP_sweepsource  source);
 
   //-------------------------------------------------------------------------//
-  // ABSTRACT INTERFACE -- ALL WITHIN-GROUP SOLVERS MUST IMPLEMENT
+  // PUBLIC FUNCTIONS
   //-------------------------------------------------------------------------//
 
-  /// Solve the within group equation.
-  void solve(const size_t g);
+  /// Solve the reflection equation given flux moments
+  void solve(SP_vector phi);
 
 private:
 
@@ -138,14 +112,13 @@ private:
   SP_vector d_x;
   /// Right hand side
   SP_vector d_b;
-  /// Initial outgoing flux
-  SP_vector d_uc_boundary_flux;
-  ///
-  int d_reflective_solve_iterations;
 
   //-------------------------------------------------------------------------//
   // IMPLEMENTATION
   //-------------------------------------------------------------------------//
+
+  /// Set the templated operator function.
+  PetscErrorCode set_operation();
 
   /// Build the right hand side.
   void build_rhs(State::moments_type &B);
@@ -158,10 +131,10 @@ private:
 // INLINE FUNCTIONS
 //---------------------------------------------------------------------------//
 
-#include "WGSolverGMRES.i.hh"
+//#include "ReflectiveSolver.i.hh"
 
-#endif /* detran_WGSOLVERGMRES_HH_ */
+#endif // REFLECTIVESOLVER_HH_ 
 
 //---------------------------------------------------------------------------//
-//              end of WGSolverGMRES.hh
+//              end of file ReflectiveSolver.hh
 //---------------------------------------------------------------------------//

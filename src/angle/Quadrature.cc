@@ -3,8 +3,7 @@
  * \file   Quadrature.cc
  * \author Jeremy Roberts
  * \date   Mar 23, 2012
- * \brief  
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+ * \brief  Quadrature class member definitions
  */
 //---------------------------------------------------------------------------//
 

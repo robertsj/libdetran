@@ -255,7 +255,10 @@ inline void BoundarySN<_3D>::psi(const size_t g,
           {
             for (int j = 0; j < n2; j++)
             {
-              bf[i][j] = *v;
+              if (gs == SET)
+                bf[i][j] = *v;
+              else
+                *v = bf[i][j];
               v++;
             }
           }
@@ -289,7 +292,10 @@ inline void BoundarySN<_2D>::psi(const size_t g,
           int n1 = bf.size();
           for (int i = 0; i < n1; i++)
           {
-            bf[i] = *v;
+            if (gs == SET)
+              bf[i] = *v;
+            else
+              *v = bf[i];
             v++;
           }
         }
@@ -306,9 +312,6 @@ inline void BoundarySN<_1D>::psi(const size_t g,
                                  bool onlyref)
 {
 
-  // Incident octants for each side.
-  int io[2][1] = {0, 1};
-
   // Loop over all reflective sides and set the flux.
   for (int side = 0; side < 2; side++)
   {
@@ -323,7 +326,10 @@ inline void BoundarySN<_1D>::psi(const size_t g,
         {
 
           int angle = d_quadrature->index(octant, a);
-          d_boundary_flux[side][g][angle] = *v;
+          if (gs == SET)
+            d_boundary_flux[side][g][angle] = *v;
+          else
+            *v = d_boundary_flux[side][g][angle];
           v++;
         }
       }

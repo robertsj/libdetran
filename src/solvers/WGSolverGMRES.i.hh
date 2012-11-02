@@ -66,22 +66,12 @@ inline void WGSolverGMRES<D>::solve(const size_t g)
 
   // Sweep once to pick up outgoing boundary fluxes.
   moments_type phi_g = d_state->phi(g);
-  d_sweeper->set_update_boundary(true);
+  d_sweeper->set_update_boundary(false);
   d_sweepsource->reset();
   d_sweepsource->build_fixed_with_scatter(d_g);
   d_sweepsource->build_within_group_scatter(d_g, phi_g);
   d_sweeper->sweep(phi_g);
-
-  // Fill temorary vector with outgoing boundary
-  callow::Vector b(d_uc_boundary_flux->size(), 0.0);
-  d_boundary->psi(g, &b[0],
-                  BoundaryBase<D>::OUT, BoundaryBase<D>::GET, false);
-  // Add uncollided component
-  //b.add(d_uc_boundary_flux);
-  // Set the boundary
-  d_boundary->psi(g, &b[0],
-                  BoundaryBase<D>::OUT, BoundaryBase<D>::SET, false);
-
+  d_boundary->update(d_g);
 
   phi_a = NULL;
 
@@ -106,6 +96,8 @@ template <class D>
 inline void WGSolverGMRES<D>::build_rhs(State::moments_type &B)
 {
   using detran_utilities::norm_residual;
+
+  d_b->set(0.0);
 
   // Clear the group boundary.  This is because the right hand side should
   // be based only on fixed boundaries.
@@ -153,16 +145,12 @@ inline void WGSolverGMRES<D>::build_rhs(State::moments_type &B)
     d_sweeper->set_update_boundary(false);
   }
 
-  // Fill the source vector.
+  // Fill the source vector.  The RHS corresponding to the
+  // boundaries is set to zero.
   for (int i = 0; i < B.size(); i++)
   {
     (*d_b)[i] = B[i];
   }
-
-  // Fill the uncollided boundary vector
-  d_boundary->psi(d_g, &((*d_uc_boundary_flux)[0]),
-                  BoundaryBase<D>::OUT, BoundaryBase<D>::GET, false);
-
 
 }
 

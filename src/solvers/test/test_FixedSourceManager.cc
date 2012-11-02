@@ -21,6 +21,7 @@
 #include "Mesh3D.hh"
 #include "external_source/ConstantSource.hh"
 #include "callow/utils/Initialization.hh"
+#include "callow/vector/Vector.hh"
 #include "boundary/BoundaryTraits.hh"
 #include "boundary/BoundarySN.hh"
 //
@@ -53,19 +54,19 @@ int main(int argc, char *argv[])
 SP_material test_FixedSourceManager_material()
 {
   // Material (kinf = 1)
-  SP_material mat(new Material(1, 2));
+  SP_material mat(new Material(1,1));
   //
   mat->set_sigma_t(0, 0,    1.0);
-  mat->set_sigma_s(0, 0, 0, 0*0.5);
+  mat->set_sigma_s(0, 0, 0, 0.99);
   mat->set_sigma_f(0, 0,    0*0.5);
   mat->set_chi(0, 0,        1.0);
   mat->set_diff_coef(0, 0,  0.33);
   //
-  mat->set_sigma_t(0, 1,    1.0);
-  mat->set_sigma_s(0, 1, 0, 0*0.5);
-  mat->set_sigma_f(0, 1,    0*0.5);
-  mat->set_chi(0, 1,        0.0);
-  mat->set_diff_coef(0, 1,  0.33);
+//  mat->set_sigma_t(0, 1,    1.0);
+//  mat->set_sigma_s(0, 1, 0, 0*0.5);
+//  mat->set_sigma_f(0, 1,    0*0.5);
+//  mat->set_chi(0, 1,        0.0);
+//  mat->set_diff_coef(0, 1,  0.33);
 
   mat->compute_sigma_a();
   mat->finalize();
@@ -89,27 +90,34 @@ SP_mesh test_FixedSourceManager_mesh(int d)
 InputDB::SP_input test_FixedSourceManager_input()
 {
   InputDB::SP_input inp(new InputDB());
-  inp->put<string>("problem_type",    "fixed");
-  inp->put<double>("inner_tolerance", 1e-17);
-  inp->put<string>("inner_solver",    "GMRES");
-  inp->put<int>("inner_use_pc",       0);
-  inp->put<int>("inner_print_level",  2);
-  inp->put<int>("outer_print_level",  0);
-  inp->put<double>("outer_tolerance", 1e-12);
-  inp->put<int>("quad_number_polar_octant", 2);
-  inp->put<string>("bc_west", "reflect");
-
-  inp->put<string>("bc_east", "vacuum");
-  inp->put<string>("bc_south", "vacuum");
-  inp->put<string>("bc_north", "vacuum");
+  inp->put<string>("problem_type",              "fixed");
+  inp->put<string>("bc_west",                   "reflect");
+  inp->put<string>("bc_east",                   "reflect");
+  inp->put<string>("bc_south",                  "reflect");
+  inp->put<string>("bc_north",                  "reflect");
+  //
+  inp->put<int>("quad_number_polar_octant",     1);
+  inp->put<int>("quad_number_azimuth_octant",   1);
+  //
+  inp->put<double>("inner_tolerance",           1e-17);
+  inp->put<string>("inner_solver",              "SI");
+  inp->put<int>("inner_use_pc",                 0);
+  inp->put<int>("inner_max_iters",               100000);
+  inp->put<int>("inner_print_level",            2);
   InputDB::SP_input db(new InputDB("callow_linear_solver"));
-  db->put<double>("linear_solver_atol", 1e-12);
-  db->put<double>("linear_solver_rtol", 1e-12);
+  db->put<double>("linear_solver_atol", 1e-17);
+  db->put<double>("linear_solver_rtol", 1e-17);
   db->put<string>("linear_solver_type", "gmres");
-  db->put<int>("linear_solver_maxit", 50);
+  db->put<int>("linear_solver_maxit",   500);
   //db->put<int>("linear_solver_gmres_restart", 50);
   db->put<int>("linear_solver_print_level", 2);
   inp->put<InputDB::SP_input>("inner_solver_db", db);
+  //
+  inp->put<int>("outer_print_level",  0);
+  inp->put<double>("outer_tolerance", 1e-12);
+
+
+
   return inp;
 }
 
@@ -160,12 +168,12 @@ double compute_leakage(typename BoundarySN<D>::SP_boundary b,
             {
               for (int a = 0; a < q->number_angles_octant(); ++a)
               {
-//                cout << " s = " << surface
-//                     << " o = " << q->outgoing_octant(surface)[o]
-//                     << " a = " << a
-//                     << " val = " << BV_T::value((*b)(surface, q->outgoing_octant(surface)[o], a, g),
-//                         ijk[dim1], ijk[dim2])
-//                     << endl;
+                cout << " s = " << surface
+                     << " o = " << q->outgoing_octant(surface)[o]
+                     << " a = " << a
+                     << " val = " << BV_T::value((*b)(surface, q->outgoing_octant(surface)[o], a, g),
+                         ijk[dim1], ijk[dim2])
+                     << endl;
                 if (!b->is_reflective(surface))
                 {
                 leakage +=
@@ -198,7 +206,7 @@ int test_FixedSourceManager_T()
   SP_mesh mesh = test_FixedSourceManager_mesh(D::dimension);
 
   // Manager
-  Manager_T manager(input, mat, mesh, true);
+  Manager_T manager(input, mat, mesh, false);
   manager.setup();
 
   // Build source and set solver
@@ -217,49 +225,67 @@ int test_FixedSourceManager_T()
   typename Manager_T::SP_state state;
   state = manager.state();
 
+  int sizeb = 0;
+  for (int s = 0; s < D::dimension * 2; ++s)
+    sizeb += boundary->boundary_flux_size(s)/2;
+  callow::Vector b(sizeb, 0.0);
+  boundary->psi(0, &b[0],
+                BoundaryBase<D>::OUT, BoundaryBase<D>::GET, false);
+  std::cout << "OUT PSI" << std::endl;
+  b.display();
+
+  boundary->psi(0, &b[0],
+                BoundaryBase<D>::IN, BoundaryBase<D>::GET, false);
+  std::cout << "IN PSI" << std::endl;
+  b.display();
+
+
   // compute total source and absorptions
-  double gain = 0;
-  double absorption = 0;
-  typename Manager_T::SP_fissionsource q_f = manager.fissionsource();
-  TEST(q_f);
-  // compute the fission source from the state
-  q_f->update();
-  q_f->setup_outer();
-  vec_int mt = mesh->mesh_map("MATERIAL");
-  for (int g = 0; g < mat->number_groups(); ++g)
+//  double gain = 0;
+//  double absorption = 0;
+//  typename Manager_T::SP_fissionsource q_f = manager.fissionsource();
+//  TEST(q_f);
+//  // compute the fission source from the state
+//  q_f->update();
+//  q_f->setup_outer();
+//  vec_int mt = mesh->mesh_map("MATERIAL");
+//  for (int g = 0; g < mat->number_groups(); ++g)
+//  {
+//    for (int i = 0; i < mesh->number_cells(); ++i)
+//    {
+//      gain += (q_e->source(i, g) +  q_f->source(g)[i]) * mesh->volume(i);
+//      absorption += state->phi(g)[i] * mat->sigma_a(mt[i], g) * mesh->volume(i);
+//    }
+//
+//  }
+
+  for (int k = 0; k < mesh->number_cells_z(); k++)
   {
-
-    for (int i = 0; i < mesh->number_cells(); ++i)
+    cout << " plane = " << k << endl;
+    for (int j = 0; j < mesh->number_cells_y(); j++)
     {
-      cout << state->phi(g)[i] << " " << endl;
-      gain += (q_e->source(i, g) +  q_f->source(g)[i]) * mesh->volume(i);
-      absorption += state->phi(g)[i] * mat->sigma_a(mt[i], g) * mesh->volume(i);
-    }
-
-  }
-
-  for (int j = 0; j < mesh->number_cells_y(); j++)
-  {
-    for (int i=0; i < mesh->number_cells_x(); ++i)
-    {
-      cout << state->phi(0)[i + j*mesh->number_cells_x()] << " ";
+      for (int i=0; i < mesh->number_cells_x(); ++i)
+      {
+        cout << state->phi(0)[i + j*mesh->number_cells_x()] << " ";
+      }
+      cout << endl;
     }
     cout << endl;
   }
-
+  THROW("FUCK");
   typename Manager_T::SP_quadrature q;
   q = manager.quadrature();
   TEST(q);
 
-  double leakage = compute_leakage<D>(boundary, q, mat, mesh);
-
-  // compute net balance (should be 0!!)
-  double net = gain - (absorption+leakage);
-  cout << "        gain = " << gain << endl;
-  cout << "  absorption = " << absorption << endl;
-  cout << "     leakage = " << leakage << endl;
-  cout << " NET BALANCE = " << gain-(absorption+leakage) << endl;
-  TEST(soft_equiv(net, 0.0, 1e-12));
+//  double leakage = compute_leakage<D>(boundary, q, mat, mesh);
+//
+//  // compute net balance (should be 0!!)
+//  double net = gain - (absorption+leakage);
+//  cout << "        gain = " << gain << endl;
+//  cout << "  absorption = " << absorption << endl;
+//  cout << "     leakage = " << leakage << endl;
+//  cout << " NET BALANCE = " << gain-(absorption+leakage) << endl;
+//  TEST(soft_equiv(net, 0.0, 1e-12));
 
   return 0;
 }

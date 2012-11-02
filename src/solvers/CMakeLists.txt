@@ -38,6 +38,8 @@ SET(SRC
     #
     DiffusionGainOperator.cc
     DiffusionLossOperator.cc
+    #
+    SweepOperator.cc
 )
 
 #-----------------------------------------------------------------------------#
