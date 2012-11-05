@@ -272,6 +272,7 @@ private:
   using Base::d_number_groups;
   using Base::d_has_reflective;
   using Base::d_is_reflective;
+  using Base::d_has_vacuum;
   using Base::d_boundary_flux_size;
 
   /// Quadrature

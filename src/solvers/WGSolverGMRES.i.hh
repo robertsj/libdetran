@@ -26,27 +26,30 @@ inline void WGSolverGMRES<D>::solve(const size_t g)
   using std::endl;
 
   if (d_print_level > 0) std::cout << "    Starting GMRES." << std::endl;
+  if (d_print_level > 0) std::cout << "      group " << g << std::endl;
 
   // Set the group for this solve.
   d_g = g;
-
-  // Set the equations.
   d_sweeper->setup_group(g);
+  d_operator->set_group(g);
 
   //-------------------------------------------------------------------------//
   // BUILD RIGHT HAND SIDE
   //-------------------------------------------------------------------------//
 
-  // Right hand side vector.
   State::moments_type B(d_mesh->number_cells(), 0.0);
-
-  // Build the right hand side.
   build_rhs(B);
+  double b_norm = d_b->norm(callow::L1);
+  Assert(b_norm > 1.0);
 
   //-------------------------------------------------------------------------//
   // SOLVE THE TRANSPORT EQUATION
   //-------------------------------------------------------------------------//
 
+  // Start with the uncollided flux as the initial guess
+  d_x->copy(d_b);
+
+  // Solve
   d_solver->solve(*d_b, *d_x);
 
   //-------------------------------------------------------------------------//
@@ -67,10 +70,7 @@ inline void WGSolverGMRES<D>::solve(const size_t g)
   // Iterate to pick up outgoing boundary fluxes.  Only do this if
   // there is at least one vacuum boundary.  Otherwise, the
   // boundary fluxes are never going to be needed.
-  int num_vac = 0;
-  for (int side = 0; side < 2*D::dimension; ++side)
-    if (!d_boundary->is_reflective(side)) ++num_vac;
-  if (num_vac)
+  if (d_boundary->has_vacuum())
   {
     moments_type phi_g   = d_state->phi(g);
     moments_type phi_g_o = d_state->phi(g);
@@ -88,6 +88,7 @@ inline void WGSolverGMRES<D>::solve(const size_t g)
       error = detran_utilities::norm_residual(phi_g_o, phi_g, "Linf");
       if (error < 1e-9) break;
     }
+    d_reflective_solve_iterations = iteration;
   }
 
   if (d_print_level > 0)
@@ -163,9 +164,7 @@ inline void WGSolverGMRES<D>::build_rhs(State::moments_type &B)
   // Fill the source vector.  The RHS corresponding to the
   // boundaries is set to zero.
   for (int i = 0; i < B.size(); i++)
-  {
     (*d_b)[i] = B[i];
-  }
 
 }
 

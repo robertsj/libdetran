@@ -119,6 +119,7 @@ public:
     , d_mesh(mesh)
     , d_has_reflective(false)
     , d_is_reflective(2*D::dimension, false)
+    , d_has_vacuum(true)
     , d_boundary_flux_size(2*D::dimension, 0)
     , d_g(0)
   {
@@ -224,6 +225,12 @@ public:
     return d_is_reflective[side];
   }
 
+  /// Does the boundary have any vacuum conditions?
+  bool has_vacuum() const
+  {
+    return d_has_vacuum;
+  }
+
   /// Number of boundary flux values in a group on a side
   size_t boundary_flux_size(const size_t side) const
   {
@@ -282,6 +289,9 @@ protected:
 
   /// Vector of is it reflective? (Krylov support)
   std::vector<bool> d_is_reflective;
+
+  /// Do I have any vacuum conditions? (Krylov support)
+  bool d_has_vacuum;
 
   /// Size of the boundary flux on a side in one group.
   detran_utilities::vec_int d_boundary_flux_size;

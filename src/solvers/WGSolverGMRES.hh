@@ -138,9 +138,7 @@ private:
   SP_vector d_x;
   /// Right hand side
   SP_vector d_b;
-  /// Initial outgoing flux
-  SP_vector d_uc_boundary_flux;
-  ///
+  /// Number of reflective iterations
   int d_reflective_solve_iterations;
 
   //-------------------------------------------------------------------------//

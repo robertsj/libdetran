@@ -10,11 +10,11 @@
 #ifndef detran_MGSOLVERGMRES_HH_
 #define detran_MGSOLVERGMRES_HH_
 
-#include "WGSolver.hh"
 #include "MGTransportSolver.hh"
-#include "Sweeper.hh"
 #include "PreconditionerMG.hh"
-#include "petsc.h"
+#include "MGTransportOperator.hh"
+#include "callow/solver/LinearSolver.hh"
+#include "transport/Sweeper.hh"
 
 namespace detran
 {
@@ -111,7 +111,11 @@ public:
   typedef typename Base::SP_fissionsource           SP_fissionsource;
   typedef typename Sweeper<D>::SP_sweeper           SP_sweeper;
   typedef typename SweepSource<D>::SP_sweepsource   SP_sweepsource;
-  typedef PreconditionerMG::SP_pc                   SP_pc;
+  typedef callow::LinearSolver::SP_solver           SP_linearsolver;
+  typedef MGTransportOperator<D>                    Operator_T;
+  typedef typename Operator_T::SP_operator          SP_operator;
+  typedef callow::Vector::SP_vector                 SP_vector;
+  //typedef PreconditionerMG::SP_pc                   SP_pc;
   typedef detran_utilities::vec_dbl                 vec_dbl;
 
   //-------------------------------------------------------------------------//
@@ -133,15 +137,6 @@ public:
                 const vec_externalsource  &q_e,
                 SP_fissionsource           q_f,
                 bool                       multiply = false);
-
-  /// Destructor
-  ~MGSolverGMRES()
-  {
-    KSPDestroy(&d_solver);
-    MatDestroy(&d_operator);
-    VecDestroy(&d_X);
-    VecDestroy(&d_B);
-  }
 
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL MULTIGROUP SOLVERS MUST IMPLEMENT
@@ -175,14 +170,14 @@ private:
   using Base::d_wg_solver;
   using Base::d_multiply;
 
-  /// Linear solver
-  KSP d_solver;
+  /// Main linear solver
+  SP_linearsolver d_solver;
   /// Operator "A" in "Ax = b"
-  Mat d_operator;
+  SP_operator d_operator;
   /// Solution vector
-  Vec d_X;
+  SP_vector d_x;
   /// Right hand side
-  Vec d_B;
+  SP_vector d_b;
   /// Size of the moments portion of d_X
   int d_moments_size;
   /// Size of the moments portion of d_X in a group
@@ -219,33 +214,31 @@ private:
   /// Sweep source
   SP_sweepsource d_sweepsource;
   /// Preconditioner
-  SP_pc d_pc;
+  //SP_pc d_pc;
   /// Preconditioner flag
-  bool d_use_pc;
+  //bool d_use_pc;
 
   //-------------------------------------------------------------------------//
   // IMPLEMENTATION
   //-------------------------------------------------------------------------//
 
-  /// Set the templated operator function.
-  PetscErrorCode set_operation();
-
   /// Build the right hand side.
   void build_rhs(State::vec_moments_type &B);
 
-  //---------------------------------------------------------------------------//
   /**
-   * \brief A matrix-vector shell for the within-group transport operator.
+   *  @brief Sweep through the upscatter block once
    *
-   * This is called by thin wrappers, since PETSc needs the matrix-vector
-   * operation as a function pointer, which precludes a member function.
+   *  For computing the right hand side (i.e. the uncollided flux), we
+   *  need to sweep through all the groups once.  Within a group, we need
+   *  to iterate on reflecting conditions.  This process is also need at
+   *  the end of a solve to pick up the boundary fluxes.
    *
-   * \param   A       PETSc shell matrix
-   * \param   x       Incoming PETSc vector
-   * \param   y       Outgoing PETSc vector
+   *  @param phi    multigroup fluxes to update
    */
-public:
-  PetscErrorCode apply_MGTO(Mat A, Vec x, Vec y);
+  void group_sweep(State::vec_moments_type &phi);
+
+  /// Solve the within-group reflection problem
+  void solve_wg_reflection(size_t g, State::moments_type &phi_g);
 
 };
 
@@ -256,14 +249,6 @@ public:
 //---------------------------------------------------------------------------//
 
 #include "MGSolverGMRES.i.hh"
-
-//---------------------------------------------------------------------------//
-// EXTERNAL WRAPPER FUNCTIONS
-//---------------------------------------------------------------------------//
-
-PetscErrorCode apply_MGTO_1D(Mat A, Vec x, Vec y);
-PetscErrorCode apply_MGTO_2D(Mat A, Vec x, Vec y);
-PetscErrorCode apply_MGTO_3D(Mat A, Vec x, Vec y);
 
 #endif /* detran_MGSOLVERGMRES_HH_ */
 

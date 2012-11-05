@@ -54,24 +54,26 @@ int main(int argc, char *argv[])
 SP_material test_FixedSourceManager_material()
 {
   // Material (kinf = 1)
-  SP_material mat(new Material(1,1));
+  SP_material mat(new Material(1, 2));
   //
   mat->set_sigma_t(0, 0,    1.0);
-  mat->set_sigma_s(0, 0, 0, 0.99);
+  mat->set_sigma_s(0, 0, 0, 0.5);
   mat->set_sigma_f(0, 0,    0*0.5);
   mat->set_chi(0, 0,        1.0);
   mat->set_diff_coef(0, 0,  0.33);
   //
-//  mat->set_sigma_t(0, 1,    1.0);
-//  mat->set_sigma_s(0, 1, 0, 0*0.5);
-//  mat->set_sigma_f(0, 1,    0*0.5);
-//  mat->set_chi(0, 1,        0.0);
-//  mat->set_diff_coef(0, 1,  0.33);
+  mat->set_sigma_t(0, 1,    1.0);
+  mat->set_sigma_s(0, 1, 0, 1*0.2);
+  mat->set_sigma_f(0, 1,    0*0.5);
+  mat->set_chi(0, 1,        0.0);
+  mat->set_diff_coef(0, 1,  0.33);
 
   mat->compute_sigma_a();
   mat->finalize();
-  //return mat;
-  return mat;//material_fixture_2g();
+  return mat;
+//  SP_material mat = material_fixture_2g();
+//  mat->compute_sigma_a();
+  return mat;
 }
 
 SP_mesh test_FixedSourceManager_mesh(int d)
@@ -91,7 +93,7 @@ InputDB::SP_input test_FixedSourceManager_input()
 {
   InputDB::SP_input inp(new InputDB());
   inp->put<string>("problem_type",              "fixed");
-  inp->put<string>("bc_west",                   "reflect");
+  inp->put<string>("bc_west",                   "vacuum");
   inp->put<string>("bc_east",                   "vacuum");
   inp->put<string>("bc_south",                  "reflect");
   inp->put<string>("bc_north",                  "vacuum");
@@ -99,25 +101,37 @@ InputDB::SP_input test_FixedSourceManager_input()
   //
   inp->put<int>("quad_number_polar_octant",     1);
   inp->put<int>("quad_number_azimuth_octant",   1);
-  //
+  // INNER
   inp->put<double>("inner_tolerance",           1e-17);
   inp->put<string>("inner_solver",              "GMRES");
   inp->put<int>("inner_use_pc",                 0);
   inp->put<int>("inner_max_iters",               100000);
   inp->put<int>("inner_print_level",            1);
-  InputDB::SP_input db(new InputDB("callow_linear_solver"));
-  db->put<double>("linear_solver_atol", 1e-17);
-  db->put<double>("linear_solver_rtol", 1e-17);
-  db->put<string>("linear_solver_type", "gmres");
-  db->put<int>("linear_solver_maxit",   500);
-  //db->put<int>("linear_solver_gmres_restart", 50);
-  db->put<int>("linear_solver_print_level", 2);
-  inp->put<InputDB::SP_input>("inner_solver_db", db);
-  //
-  inp->put<int>("outer_print_level",  0);
-  inp->put<double>("outer_tolerance", 1e-12);
-
-
+  {
+    InputDB::SP_input db(new InputDB("callow_linear_solver"));
+    db->put<double>("linear_solver_atol", 1e-17);
+    db->put<double>("linear_solver_rtol", 1e-17);
+    db->put<string>("linear_solver_type", "gmres");
+    db->put<int>("linear_solver_maxit",   500);
+    //db->put<int>("linear_solver_gmres_restart", 50);
+    db->put<int>("linear_solver_print_level", 2);
+    inp->put<InputDB::SP_input>("inner_solver_db", db);
+  }
+  // OUTER
+  inp->put<string>("outer_solver",              "GMRES");
+  inp->put<int>("outer_print_level",            1);
+  inp->put<double>("outer_tolerance",           1e-12);
+  inp->put<int>("outer_upscatter_cutoff",       0);
+  {
+    InputDB::SP_input db(new InputDB("callow_outer_solver"));
+    db->put<double>("linear_solver_atol", 1e-17);
+    db->put<double>("linear_solver_rtol", 1e-17);
+    db->put<string>("linear_solver_type", "gmres");
+    db->put<int>("linear_solver_maxit",   500);
+    //db->put<int>("linear_solver_gmres_restart", 50);
+    db->put<int>("linear_solver_print_level", 2);
+    inp->put<InputDB::SP_input>("outer_solver_db", db);
+  }
 
   return inp;
 }
@@ -207,7 +221,7 @@ int test_FixedSourceManager_T()
   SP_mesh mesh = test_FixedSourceManager_mesh(D::dimension);
 
   // Manager
-  Manager_T manager(input, mat, mesh, true);
+  Manager_T manager(input, mat, mesh, false);
   manager.setup();
 
   // Build source and set solver
@@ -245,35 +259,41 @@ int test_FixedSourceManager_T()
   double gain = 0;
   double absorption = 0;
   typename Manager_T::SP_fissionsource q_f = manager.fissionsource();
-  TEST(q_f);
-  // compute the fission source from the state
-  q_f->update();
-  q_f->setup_outer();
+  if (q_f)
+  {
+    q_f->update();
+    q_f->setup_outer();
+  }
   vec_int mt = mesh->mesh_map("MATERIAL");
   for (int g = 0; g < mat->number_groups(); ++g)
   {
     for (int i = 0; i < mesh->number_cells(); ++i)
     {
-      gain += (q_e->source(i, g) +  q_f->source(g)[i]) * mesh->volume(i);
+      gain += q_e->source(i, g) * mesh->volume(i);
+      if (q_f) gain += q_f->source(g)[i] * mesh->volume(i);
       absorption += state->phi(g)[i] * mat->sigma_a(mt[i], g) * mesh->volume(i);
     }
 
   }
 
-  for (int k = 0; k < mesh->number_cells_z(); k++)
-  {
-    cout << " plane = " << k << endl;
-    for (int j = 0; j < mesh->number_cells_y(); j++)
-    {
-      for (int i=0; i < mesh->number_cells_x(); ++i)
-      {
-        cout << state->phi(0)[i + j*mesh->number_cells_x()] << " ";
-      }
-      cout << endl;
-    }
-    cout << endl;
-  }
- // state->display();
+//  for (int g = 0; g <mat->number_groups(); ++g)
+//  {
+//    cout << " plane = " << k << endl;
+//  for (int k = 0; k < mesh->number_cells_z(); k++)
+//  {
+//    cout << " plane = " << k << endl;
+//    for (int j = 0; j < mesh->number_cells_y(); j++)
+//    {
+//      for (int i=0; i < mesh->number_cells_x(); ++i)
+//      {
+//        cout << state->phi(0)[i + j*mesh->number_cells_x()] << " ";
+//      }
+//      cout << endl;
+//    }
+//    cout << endl;
+//  }
+//  }
+  state->display();
 
   typename Manager_T::SP_quadrature q;
   q = manager.quadrature();

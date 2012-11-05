@@ -1,23 +1,19 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   MGSolverGMRES.cc
- * \author robertsj
- * \date   Jun 19, 2012
- * \brief  GaussSeidelMG member definitions.
+/**
+ *  @file   MGSolverGMRES.cc
+ *  @author robertsj
+ *  @date   Jun 19, 2012
+ *  @brief  MGSolverGMRES member definitions.
  */
 //---------------------------------------------------------------------------//
 
-#include "detran_config.hh"
-
-#ifdef DETRAN_ENABLE_PETSC
-
 #include "MGSolverGMRES.hh"
-#include <iostream>
+#include "callow/solver/LinearSolverCreator.hh"
 
 namespace detran
 {
 
-// Constructor
+//---------------------------------------------------------------------------//
 template <class D>
 MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
                                 SP_material               material,
@@ -30,7 +26,7 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
   , d_moments_size_group(0)
   , d_boundary_size(0)
   , d_boundary_size_group(0)
-  , d_use_pc(false)
+  , d_reflective_solve_iterations(0)
 {
 
   //-------------------------------------------------------------------------//
@@ -50,23 +46,6 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
   }
   d_upscatter_size = d_number_groups - d_upscatter_cutoff;
 
-  //-------------------------------------------------------------------------//
-  // SET UNKNOWN SIZES FOR KRYLOV SOLVE
-  //-------------------------------------------------------------------------//
-
-  d_moments_size_group = d_state->moments_size();
-  d_moments_size = d_upscatter_size * d_moments_size_group;
-
-  // Determine the sizes of any reflected boundary fluxes.
-  for (int side = 0; side < 2*D::dimension; side++)
-  {
-    if (boundary->is_reflective(side))
-    {
-      // We only need to store only half of the unknowns.
-      d_boundary_size_group += boundary->boundary_flux_size(side)/2;
-    }
-  }
-  d_boundary_size = d_upscatter_size * d_boundary_size_group;
 
   //-------------------------------------------------------------------------//
   // SETUP SWEEPER FOR MULTIGROUP OPERATOR
@@ -76,125 +55,60 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
   d_sweepsource = d_wg_solver->get_sweepsource();
 
   //-------------------------------------------------------------------------//
-  // SETUP PETSC SOLVER
+  // SETUP SOLVER
   //-------------------------------------------------------------------------//
 
-  // Total number of unknowns in block to be solved via Krylov
-  int number_unknowns = d_moments_size + d_boundary_size;
+  // Create operator
+  d_operator = new MGTransportOperator<D>(d_state,
+                                          d_boundary,
+                                          d_sweeper,
+                                          d_sweepsource,
+                                          d_upscatter_cutoff);
 
-  PetscErrorCode ierr;
+  // Create temporary unknown and right hand size vectors
+  d_x = new callow::Vector(d_operator->number_rows(), 0.0);
+  d_b = new callow::Vector(d_operator->number_rows(), 0.0);
 
-  ierr = MatCreateShell(PETSC_COMM_WORLD,
-                        number_unknowns,
-                        number_unknowns,
-                        number_unknowns,
-                        number_unknowns,
-                        this,
-                        &d_operator);
-  Insist(!ierr, "Error creating MR shell matrix.");
-
-  // Create the corresponding vectors.
-  ierr = VecCreateSeq(PETSC_COMM_WORLD,
-                      number_unknowns,
-                      &d_X);
-  ierr = VecCreateSeq(PETSC_COMM_WORLD,
-                      number_unknowns,
-                      &d_B);
-
-  VecSet(d_X, 0.0);
-  VecSet(d_B, 0.0);
-
-  // Set the operator.
-  ierr = set_operation();
-  Insist(!ierr, "Error setting matrix-vector operation.");
-
-  // Create the KSP object.
-  ierr = KSPCreate(PETSC_COMM_WORLD, &d_solver);
-  Insist(!ierr, "Error creating KSP object.");
-
-  // Set the operator.
-  KSPSetOperators(d_solver, d_operator, d_operator, SAME_NONZERO_PATTERN);
-
-  // Preconditioner
-  if (d_input->check("outer_use_pc"))
+  // Get callow solver parameter database
+  SP_input db;
+  if (d_input->check("outer_solver_db"))
   {
-    // \todo Why do I get a compile error if I use d_input instead?
-    if (d_input->template get<int>("outer_use_pc"))
-    {
-      std::cout << "Using preconditioned multigroup Krylov." << std::endl;
-      d_use_pc = true;
-    }
+    db = d_input->template get<SP_input>("outer_solver_db");
   }
-  if (d_use_pc)
-  {
-    // Set up the shell preconditioner
-    PC pc;
-    KSPGetPC(d_solver, &pc);
-    PCSetType(pc, PCSHELL);
+  d_solver = callow::LinearSolverCreator::Create(db);
+  Assert(d_solver);
 
-    // Create the preconditioner.
-    d_pc = new PreconditionerMG(d_input,
-                                d_material,
-                                d_mesh,
-                                d_sweepsource->get_scatter_source(),
-                                d_moments_size_group,
-                                d_boundary_size_group,
-                                d_upscatter_cutoff,
-                                pc);
+  // Set the transport operator.  Note, no second db argument
+  // is given, since that is for setting PC's.  We do that
+  // explicitly below.
+  d_solver->set_operators(d_operator);
 
-    int side = 0;
-    if (d_input->check("outer_pc_side"))
-    {
-      side = d_input->template get<int>("outer_pc_side");
-    }
-    if (side)
-      ierr = KSPSetPCSide(d_solver, PC_RIGHT);
-    else
-      ierr = KSPSetPCSide(d_solver, PC_LEFT);
-  }
+  d_moments_size_group = d_operator->moments_size();
+  d_moments_size = d_moments_size_group * d_number_groups;
+  d_boundary_size_group = d_operator->boundary_size();
+  d_boundary_size = d_boundary_size_group * d_number_groups;
+  //--------------------------------------------------------------------------//
+  // PRECONDITIONER
+  //--------------------------------------------------------------------------//
 
-  // Set tolerances.
-  ierr = KSPSetTolerances(d_solver,
-                          d_tolerance,
-                          PETSC_DEFAULT,
-                          PETSC_DEFAULT,
-                          PETSC_DEFAULT);
-
-  // Allow for command line flags.
-  ierr = KSPSetFromOptions(d_solver);
+  /*
+   *  Eventual Options:
+   *    1. fine mesh diffusion (= DSA)
+   *    2. coarse mesh diffusion (= CMDSA)
+   *    3. coarse mesh transport (= ~S2 on coarse grid)
+   */
 
 }
 
-template <class D>
-PetscErrorCode MGSolverGMRES<D>::set_operation()
-{
-  return MatShellSetOperation(d_operator,
-                              MATOP_MULT,
-                              (void(*)(void)) apply_MGTO_3D);
-}
-template <>
-PetscErrorCode MGSolverGMRES<_2D>::set_operation()
-{
-  return MatShellSetOperation(d_operator,
-                              MATOP_MULT,
-                              (void(*)(void)) apply_MGTO_2D);
-}
-template <>
-PetscErrorCode MGSolverGMRES<_1D>::set_operation()
-{
-  return MatShellSetOperation(d_operator,
-                              MATOP_MULT,
-                              (void(*)(void)) apply_MGTO_1D);
-}
+//---------------------------------------------------------------------------//
+// EXPLICIT INSTANTIATIONS
+//---------------------------------------------------------------------------//
 
-// Explicit instantiations
 template class MGSolverGMRES<_1D>;
 template class MGSolverGMRES<_2D>;
 template class MGSolverGMRES<_3D>;
 
 } // end namespace detran
-
-#endif
 
 //---------------------------------------------------------------------------//
 //              end of MGSolverGMRES.cc

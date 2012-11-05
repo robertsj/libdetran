@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
  *  @file   MGTransportOperator.cc
+ *  @brief  MGTransportOperator member definitions
  *  @author robertsj
  *  @date   Oct 31, 2012
- *  @brief  MGTransportOperator class definition.
  */
 //---------------------------------------------------------------------------//
 
@@ -23,16 +23,16 @@ MGTransportOperator<D>::MGTransportOperator(SP_state        state,
   , d_boundary(boundary)
   , d_sweeper(sweeper)
   , d_sweepsource(source)
+  , d_lower(lower)
   , d_moments_size(0)
   , d_boundary_size(0)
-  , d_lower(lower)
 {
   // Preconditions
   Require(d_state);
   Require(d_boundary);
   Require(d_sweeper);
   Require(d_sweepsource);
-  Require(d_state->get_mesh());
+  Require(d_lower < d_state->number_groups());
 
   // Determine the sizes of the moments.
   d_moments_size = d_state->moments_size();
@@ -59,10 +59,11 @@ MGTransportOperator<D>::MGTransportOperator(SP_state        state,
 template <class D>
 void MGTransportOperator<D>::display() const
 {
-  std::cout << "WITHIN-GROUP TRANSPORT OPERATOR" << std::endl;
-  std::cout << "     total size: " << d_m << std::endl;
-  std::cout << "   moments size: " << d_moments_size << std::endl;
-  std::cout << "  boundary size: " << d_boundary_size << std::endl;
+  std::cout << "MULTI-GROUP TRANSPORT OPERATOR" << std::endl;
+  std::cout << "       total size: " << d_m << std::endl;
+  std::cout << " number of groups: " << d_number_groups << std::endl;
+  std::cout << "     moments size: " << d_moments_size << std::endl;
+  std::cout << "    boundary size: " << d_boundary_size << std::endl;
 }
 
 //---------------------------------------------------------------------------//
@@ -72,79 +73,71 @@ void MGTransportOperator<D>::multiply(const Vector &x,  Vector &y)
   using std::cout;
   using std::endl;
 
-  State::vec_moments_type phi_original(d_state->all_phi());
-  State::vec_moments_type phi_update(d_state->all_phi());
-
-  // Fill temporary multigroup flux vector
+  // Fill a temporary flux vector with the Krylov vector.  The Krylov
+  // vector is  ordered as follows:
+  //   [phi(lower) phi(lower+1) ... phi(G-1) psi(lower+1) ...]
+  // where psi is the boundary angular flux, present only if there
+  // are reflective conditions
+  State::vec_moments_type phi(d_state->all_phi());
   for (int g = d_lower; g < d_number_groups; g++)
   {
-    int offset = (g - d_lower) * (d_moments_size + d_boundary_size);
+    int offset = (g - d_lower) * d_moments_size;
     for (int i = 0; i < d_moments_size; i++)
-    {
-      phi_original[g][i] = x[i + offset];
-      phi_update[g][i]   = x[i + offset];
-    }
+      phi[g][i] = x[i + offset];
   }
 
-  // \todo Switch indexing so that moments contiguous and
-  //       boundaries are tacked on the end.  This will make
-  //       diffusion preconditioning easier (I think).
-  //
-
-  // Sweep each applicable group
+  // sweep each applicable group
   for (int g = d_lower; g < d_number_groups; g++)
   {
-
+    // group index in applicable set
     int g_index  = g - d_lower;
-    int g_size   = d_moments_size + d_boundary_size;
-    // moment offset
-    int m_offset = g_index * g_size;
-    // boundary offset
-    int b_offset = m_offset + d_moments_size;
+    // moment offset, the starting moment index within the Krylov vector
+    int m_offset = g_index * d_moments_size;
+    // boundary offset, the starting boundary index within the Krylov vector
+    int b_offset = d_number_groups * d_moments_size + g_index * d_boundary_size;
 
-    // Reset the source and place the original outgoing boundary flux.
+    // reset the source and place the original outgoing boundary flux.
     d_boundary->clear(g);
 
     if (d_boundary->has_reflective())
     {
-      // Set the incident boundary flux.
+      // set the incident boundary flux.
       d_boundary->psi(g, const_cast<double*>(&x[0]) + b_offset,
                       BoundaryBase<D>::IN, BoundaryBase<D>::SET, true);
     }
 
-    // Reset the source to zero.
+    // reset the source to zero.
     d_sweepsource->reset();
-    d_sweepsource->build_total_scatter(g, d_lower, phi_original);
+    d_sweepsource->build_total_scatter(g, d_lower, phi);
 
-    // Set the sweeper and sweep.
+    // set the sweeper and sweep.
     d_sweeper->setup_group(g);
-    d_sweeper->sweep(phi_update[g]);
+    d_sweeper->sweep(phi[g]);
 
-    // Update outgoing vector
+    // update boundary component
     {
-      // Assign the moment values.
+      // assign the moment values.
       for (int i = 0; i < d_moments_size; i++)
-      {
-        y[i + m_offset] = phi_original[g][i] - phi_update[g][i];
-      }
-      // Assign boundary fluxes, if applicable
+        y[i + m_offset] = x[i + m_offset] - phi[g][i];
+
+      // assign boundary fluxes, if applicable
       if (d_boundary->has_reflective())
       {
-        // Update the boundary and fetch.
+        // update the boundary (redirect outgoing as incident)
         d_boundary->update(g);
+
+        // extract the incident boundary
         State::angular_flux_type psi_update(d_boundary_size, 0.0);
         d_boundary->psi(g, &psi_update[0],
                         BoundaryBase<D>::IN, BoundaryBase<D>::GET, true);
 
-        // Add the boundary values.
+        // add the boundary values.
         for (int a = 0; a < d_boundary_size; a++)
-        {
           y[a + b_offset] = x[a + b_offset] - psi_update[a];
-        }
       }
-    } // end update
+    } // end boundary
 
-   }
+  } // end groups
 
 }
 

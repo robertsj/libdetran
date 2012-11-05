@@ -52,6 +52,7 @@ BoundarySN<D>::BoundarySN(SP_input        input,
     if (type == "vacuum")
     {
       d_bc[side] = new Vacuum<D>((*this), side, d_input, d_mesh, d_quadrature);
+      d_has_vacuum = true;
     }
     else if (type == "reflect")
     {

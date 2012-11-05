@@ -53,6 +53,14 @@ WGTransportOperator<D>::WGTransportOperator(SP_state        state,
 
 //---------------------------------------------------------------------------//
 template <class D>
+void WGTransportOperator<D>::set_group(const size_t g)
+{
+  d_g = g;
+}
+
+
+//---------------------------------------------------------------------------//
+template <class D>
 void WGTransportOperator<D>::display() const
 {
   std::cout << "WITHIN-GROUP TRANSPORT OPERATOR" << std::endl;
@@ -99,13 +107,9 @@ void WGTransportOperator<D>::multiply(const Vector &x,  Vector &y)
     d_boundary->psi(d_g, &psi_update[0],
                     BoundaryBase<D>::IN, BoundaryBase<D>::GET, true);
 
-    // Add the boundary values.  This gives X <-- I - B*X, where
-    // B is the implicitly-defined boundary operator
+    // Add the boundary values
     for (int a = 0; a < d_boundary_size; ++a)
-    {
-      ///  face, o, a, d_g  = psi_out;
       y[a + d_moments_size] = x[a + d_moments_size] - psi_update[a];
-    }
   }
 
 }

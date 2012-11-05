@@ -53,7 +53,13 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  // Constructor
+  /**
+   *  @brief Constructor
+   *  @param state      state vector
+   *  @param sweeper    transport sweeper
+   *  @param source     sweep source
+   *  @param lower      lowest group included in operator
+   */
   MGTransportOperator(SP_state        state,
                       SP_boundary     boundary,
                       SP_sweeper      sweeper,
@@ -69,6 +75,9 @@ public:
 
   // default shell display gives just the sizes
   virtual void display() const;
+
+  size_t moments_size() const { return d_moments_size; }
+  size_t boundary_size() const { return d_boundary_size; }
 
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL MATRICES MUST IMPLEMENT THESE
@@ -110,7 +119,7 @@ private:
 
 } // end namespace detran
 
-#endif // MGTRANSPORTOPERATOR_HH_ 
+#endif // detran_MGTRANSPORTOPERATOR_HH_
 
 //---------------------------------------------------------------------------//
 //              end of file MGTransportOperator.hh
