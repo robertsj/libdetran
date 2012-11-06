@@ -58,13 +58,13 @@ public:
    *  @param state      state vector
    *  @param sweeper    transport sweeper
    *  @param source     sweep source
-   *  @param lower      lowest group included in operator
+   *  @param cutoff     lowest group included in operator
    */
   MGTransportOperator(SP_state        state,
                       SP_boundary     boundary,
                       SP_sweeper      sweeper,
                       SP_sweepsource  source,
-                      size_t          lower = 0);
+                      size_t          cutoff = 0);
 
   // Destructor
   virtual ~MGTransportOperator(){}
@@ -106,10 +106,12 @@ private:
   SP_sweeper d_sweeper;
   /// Sweep source
   SP_sweepsource d_sweepsource;
-  /// Group index below which the operator is not applicable
-  size_t d_lower;
-  /// Number of groups for which operator is applicable
+  /// Total number of groups
   size_t d_number_groups;
+  /// Number of groups for which operator is applicable
+  size_t d_number_active_groups;
+  /// Group index below which the operator is not applicable
+  size_t d_upscatter_cutoff;
   /// Size of a group moment vector
   size_t d_moments_size;
   /// Size of a group boundary vector

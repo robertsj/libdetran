@@ -87,6 +87,7 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
   d_moments_size = d_moments_size_group * d_number_groups;
   d_boundary_size_group = d_operator->boundary_size();
   d_boundary_size = d_boundary_size_group * d_number_groups;
+
   //--------------------------------------------------------------------------//
   // PRECONDITIONER
   //--------------------------------------------------------------------------//

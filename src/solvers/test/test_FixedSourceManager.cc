@@ -54,25 +54,27 @@ int main(int argc, char *argv[])
 SP_material test_FixedSourceManager_material()
 {
   // Material (kinf = 1)
-  SP_material mat(new Material(1, 2));
-  //
-  mat->set_sigma_t(0, 0,    1.0);
-  mat->set_sigma_s(0, 0, 0, 0.5);
-  mat->set_sigma_f(0, 0,    0*0.5);
-  mat->set_chi(0, 0,        1.0);
-  mat->set_diff_coef(0, 0,  0.33);
-  //
-  mat->set_sigma_t(0, 1,    1.0);
-  mat->set_sigma_s(0, 1, 0, 1*0.2);
-  mat->set_sigma_f(0, 1,    0*0.5);
-  mat->set_chi(0, 1,        0.0);
-  mat->set_diff_coef(0, 1,  0.33);
-
-  mat->compute_sigma_a();
-  mat->finalize();
-  return mat;
-//  SP_material mat = material_fixture_2g();
+//  SP_material mat(new Material(1, 2, false));
+//  //
+//  mat->set_sigma_t(0, 0,    1.0);
+//  mat->set_sigma_s(0, 0, 0, 0.5);
+//  mat->set_sigma_s(0, 1, 0, 0.1);
+//  mat->set_sigma_f(0, 0,    0.0);
+//  mat->set_chi(0, 0,        1.0);
+//  mat->set_diff_coef(0, 0,  0.33);
+//  //
+//  mat->set_sigma_t(0, 1,    1.0);
+//  mat->set_sigma_s(0, 1, 1, 0.5);
+//  mat->set_sigma_s(0, 0, 1, 0.01);
+//  mat->set_sigma_f(0, 1,    0.0);
+//  mat->set_chi(0, 1,        0.0);
+//  mat->set_diff_coef(0, 1,  0.33);
+//
 //  mat->compute_sigma_a();
+//  mat->finalize();
+//  return mat;
+  SP_material mat = material_fixture_7g();
+  mat->compute_sigma_a();
   return mat;
 }
 
@@ -103,10 +105,10 @@ InputDB::SP_input test_FixedSourceManager_input()
   inp->put<int>("quad_number_azimuth_octant",   1);
   // INNER
   inp->put<double>("inner_tolerance",           1e-17);
-  inp->put<string>("inner_solver",              "GMRES");
+  inp->put<string>("inner_solver",              "SI");
   inp->put<int>("inner_use_pc",                 0);
   inp->put<int>("inner_max_iters",               100000);
-  inp->put<int>("inner_print_level",            1);
+  inp->put<int>("inner_print_level",            0);
   {
     InputDB::SP_input db(new InputDB("callow_linear_solver"));
     db->put<double>("linear_solver_atol", 1e-17);
@@ -121,7 +123,8 @@ InputDB::SP_input test_FixedSourceManager_input()
   inp->put<string>("outer_solver",              "GMRES");
   inp->put<int>("outer_print_level",            1);
   inp->put<double>("outer_tolerance",           1e-12);
-  inp->put<int>("outer_upscatter_cutoff",       0);
+  //inp->put<int>("outer_upscatter_cutoff",       0);
+  inp->put<int>("outer_print_level",            1);
   {
     InputDB::SP_input db(new InputDB("callow_outer_solver"));
     db->put<double>("linear_solver_atol", 1e-17);

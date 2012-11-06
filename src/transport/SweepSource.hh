@@ -251,6 +251,9 @@ public:
               const size_t a,
               sweep_source_type& s);
 
+  const moments_type& fixed_group_source()   const { return d_fixed_group_source; }
+  const moments_type& scatter_group_source() const { return d_scatter_group_source; }
+
 private:
 
   /// Problem state vector

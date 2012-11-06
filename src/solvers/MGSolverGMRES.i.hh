@@ -70,7 +70,7 @@ inline void MGSolverGMRES<D>::solve(const double keff)
     {
       int offset = (g - d_upscatter_cutoff) * d_moments_size_group;
       memcpy(&d_state->phi(g)[0],
-             &(*d_x)[offset],
+             &((*d_x)[offset]),
              d_moments_size_group*sizeof(double));
     }
 

@@ -70,7 +70,7 @@ build_downscatter_source(const size_t g,
   // Add downscatter.
   for (int gp = d_material->lower(g); gp < g_cutoff; gp++) //
   {
-    moments_type phi = d_state->phi(gp);
+    moments_type &phi = d_state->phi(gp);
     for (int cell = 0; cell < d_mesh->number_cells(); cell++)
     {
       source[cell] += phi[cell] * d_material->sigma_s(d_mat_map[cell], g, gp);

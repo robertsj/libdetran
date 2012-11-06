@@ -57,9 +57,6 @@ typedef std::vector<std::vector<std::vector<std::vector<size_t> > > > vec4_size_
 //typedef vec3_T<size_t>::value_type     vec3_size_t;
 //typedef vec4_T<size_t>::value_type     vec4_size_t;
 
-
-
 } // end namespace detran_utilities
-
 
 #endif // DETRAN_UTILS_DEFINITIONS_HH_
