@@ -261,20 +261,19 @@ private:
 
 #include "SP.i.hh"
 
+//---------------------------------------------------------------------------//
+// SP CONSTRUCTOR MACRO
+//---------------------------------------------------------------------------//
+
+#define SPCREATE(class_name, return_type, types, vals)  \
+static return_type CREATE types                         \
+{                                                       \
+  return_type p(new class_name vals) ;                  \
+  return p;                                             \
+};
+
 #endif // SP_HH_
 
-// SP constructor macro
-#define SPCREATE(class_name, args)                                \
-static detran_utilities::SP<class_name> Create args               \
-{                                                                 \
-  detran_utilities::SP<class_name> p new class_name args;         \
-  return p;                                                       \
-};
-// Example.  Using
-//   CREATE(Material, int nm, int ng, bool flag=false)
-// yields the code
-//   static SP_material Create(int nm, int ng, bool flag=false)
-//   { /* ... */}
 //---------------------------------------------------------------------------//
 //              end of SP.hh
 //---------------------------------------------------------------------------//

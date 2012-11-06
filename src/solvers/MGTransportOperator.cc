@@ -26,7 +26,7 @@ MGTransportOperator<D>::MGTransportOperator(SP_state        state,
   , d_sweepsource(source)
   , d_number_groups(0)
   , d_number_active_groups(0)
-  , d_upscatter_cutoff(cutoff)
+  , d_krylov_group_cutoff(cutoff)
   , d_moments_size(0)
   , d_boundary_size(0)
 {
@@ -35,7 +35,7 @@ MGTransportOperator<D>::MGTransportOperator(SP_state        state,
   Require(d_boundary);
   Require(d_sweeper);
   Require(d_sweepsource);
-  Require(d_upscatter_cutoff < d_state->number_groups());
+  Require(d_krylov_group_cutoff <= d_state->number_groups());
 
   // Determine the sizes of the moments.
   d_moments_size = d_state->moments_size();
@@ -53,11 +53,10 @@ MGTransportOperator<D>::MGTransportOperator(SP_state        state,
   // Total number of groups
   d_number_groups = d_state->number_groups();
   // Number of active groups
-  d_number_active_groups = d_number_groups - d_upscatter_cutoff;
+  d_number_active_groups = d_number_groups - d_krylov_group_cutoff;
 
   // Set the operator size
   set_size(d_number_active_groups * (d_moments_size + d_boundary_size));
-
 }
 
 //---------------------------------------------------------------------------//
@@ -68,7 +67,7 @@ void MGTransportOperator<D>::display() const
   std::cout << "              total size: " << d_m << std::endl;
   std::cout << "  total number of groups: " << d_number_groups << std::endl;
   std::cout << " number of active groups: " << d_number_active_groups << std::endl;
-  std::cout << "        upscatter cutoff: " << d_upscatter_cutoff;
+  std::cout << "        upscatter cutoff: " << d_krylov_group_cutoff << std::endl;
   std::cout << "      group moments size: " << d_moments_size << std::endl;
   std::cout << "     group boundary size: " << d_boundary_size << std::endl;
 }
@@ -86,19 +85,18 @@ void MGTransportOperator<D>::multiply(const Vector &x,  Vector &y)
   // where psi is the boundary angular flux, present only if there
   // are reflective conditions
   State::vec_moments_type phi(d_state->all_phi());
-  for (int g = d_upscatter_cutoff; g < d_number_groups; g++)
+  for (int g = 0; g < d_number_active_groups; g++)
   {
-    int g_index = g - d_upscatter_cutoff;
-    int offset = g_index * d_moments_size;
+    int offset = g * d_moments_size;
     for (int i = 0; i < d_moments_size; i++)
-      phi[g_index][i] = x[i + offset];
+      phi[g + d_krylov_group_cutoff][i] = x[i + offset];
   }
 
   // sweep each applicable group
-  for (int g = d_upscatter_cutoff; g < d_number_groups; g++)
+  for (int g = d_krylov_group_cutoff; g < d_number_groups; g++)
   {
     // group index in applicable set
-    int g_index  = g - d_upscatter_cutoff;
+    int g_index  = g - d_krylov_group_cutoff;
     // moment offset, the starting moment index within the Krylov vector
     int m_offset = g_index * d_moments_size;
     // boundary offset, the starting boundary index within the Krylov vector
@@ -117,7 +115,7 @@ void MGTransportOperator<D>::multiply(const Vector &x,  Vector &y)
 
     // reset the source to zero.
     d_sweepsource->reset();
-    d_sweepsource->build_total_scatter(g, d_upscatter_cutoff, phi);
+    d_sweepsource->build_total_scatter(g, d_krylov_group_cutoff, phi);
 
     // copy group flux for sweep
     typename State::moments_type phi_g(phi[g]);

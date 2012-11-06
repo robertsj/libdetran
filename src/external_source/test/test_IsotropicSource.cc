@@ -64,14 +64,16 @@ int test_IsotropicSource(int argc, char *argv[])
   vec_int map(mesh->number_cells(), 0);
   map[0] = 1;
 
-  IsotropicSource q_e(num_groups, mesh, spectra, map, quad);
+  //IsotropicSource q_e(num_groups, mesh, spectra, map, quad);
+  IsotropicSource::SP_externalsource q_e;
+  q_e = IsotropicSource::CREATE(num_groups, mesh, spectra, map, quad);
 
-  TEST(soft_equiv(q_e.source(0, 0),    1.0));
-  TEST(soft_equiv(q_e.source(0, 0, 0), 1.0*inv_four_pi));
-  TEST(soft_equiv(q_e.source(0, 1),    2.0));
-  TEST(soft_equiv(q_e.source(0, 1, 0), 2.0*inv_four_pi));
-  TEST(soft_equiv(q_e.source(1, 0),    0.0));
-  TEST(soft_equiv(q_e.source(1, 0, 0), 0.0));
+  TEST(soft_equiv(q_e->source(0, 0),    1.0));
+  TEST(soft_equiv(q_e->source(0, 0, 0), 1.0*inv_four_pi));
+  TEST(soft_equiv(q_e->source(0, 1),    2.0));
+  TEST(soft_equiv(q_e->source(0, 1, 0), 2.0*inv_four_pi));
+  TEST(soft_equiv(q_e->source(1, 0),    0.0));
+  TEST(soft_equiv(q_e->source(1, 0, 0), 0.0));
 
   return 0;
 }

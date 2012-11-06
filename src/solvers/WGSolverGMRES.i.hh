@@ -40,7 +40,6 @@ inline void WGSolverGMRES<D>::solve(const size_t g)
   State::moments_type B(d_mesh->number_cells(), 0.0);
   build_rhs(B);
   double b_norm = d_b->norm(callow::L1);
-  Assert(b_norm > 1.0);
 
   //-------------------------------------------------------------------------//
   // SOLVE THE TRANSPORT EQUATION
@@ -50,7 +49,7 @@ inline void WGSolverGMRES<D>::solve(const size_t g)
   d_x->copy(d_b);
 
   // Solve
-  d_solver->solve(*d_b, *d_x);
+  if (b_norm > 0.0) d_solver->solve(*d_b, *d_x);
 
   //-------------------------------------------------------------------------//
   // POSTPROCESS

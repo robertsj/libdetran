@@ -67,12 +67,9 @@ public:
   }
 
   // SP constructor
-  SPCREATE(IsotropicSource,
-         size_t number_groups,
-         SP_mesh mesh,
-         spectra_type &spectra,
-         vec_int &map,
-         SP_quadrature quadrature = SP_quadrature(0));
+  SPCREATE(IsotropicSource, SP_externalsource,
+           (size_t a, SP_mesh b, spectra_type& c, vec_int& d, SP_quadrature e),
+           (a, b, c, d, e = SP_quadrature(0)) );
 
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL EXTERNAL SOURCES MUST IMPLEMENT THESE

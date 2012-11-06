@@ -363,7 +363,7 @@ void Material::display()
     {
       printf("%13.10f ", sigma_t(m, g));
     }
-    printf("\n  absorption  ");
+    printf("\n  absrb  ");
     // Total
     for (size_t g = 0; g < d_number_groups; g++)
     {

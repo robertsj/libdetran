@@ -36,16 +36,15 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
   // Set the bounds for the downscatter GS portion and upscatter Krylov
   // portion.  The default is to use GS on the downscatter block and Krylov
   // on the upscatter block.
-  d_upscatter_cutoff = material->upscatter_cutoff();
+  d_krylov_group_cutoff = material->upscatter_cutoff();
   if (d_input->check("outer_upscatter_cutoff"))
   {
-    d_upscatter_cutoff = d_input->template get<int>("outer_upscatter_cutoff");
-    Insist((d_upscatter_cutoff >= 0) and
-           (d_upscatter_cutoff <= d_material->upscatter_cutoff()),
+    d_krylov_group_cutoff = d_input->template get<int>("outer_krylov_group_cutoff");
+    Insist((d_krylov_group_cutoff >= 0) and
+           (d_krylov_group_cutoff <= d_material->upscatter_cutoff()),
            "Upscatter cutoff must be >= 0 and <= material upscatter cutoff");
   }
-  d_upscatter_size = d_number_groups - d_upscatter_cutoff;
-
+  d_number_active_groups = d_number_groups - d_krylov_group_cutoff;
 
   //-------------------------------------------------------------------------//
   // SETUP SWEEPER FOR MULTIGROUP OPERATOR
@@ -58,36 +57,46 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
   // SETUP SOLVER
   //-------------------------------------------------------------------------//
 
-  // Create operator
-  d_operator = new MGTransportOperator<D>(d_state,
-                                          d_boundary,
-                                          d_sweeper,
-                                          d_sweepsource,
-                                          d_upscatter_cutoff);
-
-  // Create temporary unknown and right hand size vectors
-  d_x = new callow::Vector(d_operator->number_rows(), 0.0);
-  d_b = new callow::Vector(d_operator->number_rows(), 0.0);
-
-  // Get callow solver parameter database
-  SP_input db;
-  if (d_input->check("outer_solver_db"))
+  if (d_number_active_groups)
   {
-    db = d_input->template get<SP_input>("outer_solver_db");
+    // Create operator
+    d_operator = new MGTransportOperator<D>(d_state,
+                                            d_boundary,
+                                            d_sweeper,
+                                            d_sweepsource,
+                                            d_krylov_group_cutoff);
+
+    // Create temporary unknown and right hand size vectors
+    d_x = new callow::Vector(d_operator->number_rows(), 0.0);
+    d_b = new callow::Vector(d_operator->number_rows(), 0.0);
+
+    // Get callow solver parameter database
+    SP_input db;
+    if (d_input->check("outer_solver_db"))
+    {
+      db = d_input->template get<SP_input>("outer_solver_db");
+    }
+    d_solver = callow::LinearSolverCreator::Create(db);
+    Assert(d_solver);
+
+    // Set the transport operator.  Note, no second db argument
+    // is given, since that is for setting PC's.  We do that
+    // explicitly below.
+    d_solver->set_operators(d_operator);
+
+    d_moments_size_group  = d_operator->moments_size();
+    d_moments_size        = d_moments_size_group * d_number_groups;
+    d_boundary_size_group = d_operator->boundary_size();
+    d_boundary_size       = d_boundary_size_group * d_number_groups;
+
+//    std::cout << " MG GMRES " << std::endl;
+//    std::cout << "   active groups: " << d_number_active_groups << std::endl;
+//    std::cout << "   d_moments_size_group: " << d_moments_size_group << std::endl;
+//    std::cout << "   d_moments_size: " << d_moments_size << std::endl;
+//    std::cout << "   d_boundary_size_group: " << d_boundary_size_group << std::endl;
+//    std::cout << "   d_boundary_size: " << d_boundary_size << std::endl;
+
   }
-  d_solver = callow::LinearSolverCreator::Create(db);
-  Assert(d_solver);
-
-  // Set the transport operator.  Note, no second db argument
-  // is given, since that is for setting PC's.  We do that
-  // explicitly below.
-  d_solver->set_operators(d_operator);
-
-  d_moments_size_group = d_operator->moments_size();
-  d_moments_size = d_moments_size_group * d_number_groups;
-  d_boundary_size_group = d_operator->boundary_size();
-  d_boundary_size = d_boundary_size_group * d_number_groups;
-
   //--------------------------------------------------------------------------//
   // PRECONDITIONER
   //--------------------------------------------------------------------------//

@@ -31,26 +31,26 @@ inline void MGSolverGMRES<D>::solve(const double keff)
   int iteration = 0;
 
   //-------------------------------------------------------------------------//
-  // DOWNSCATTER BLOCK
+  // GAUSS-SEIDEL BLOCK
   //-------------------------------------------------------------------------//
 
-  for (int g = 0; g < d_upscatter_cutoff; g++)
+  for (int g = 0; g < d_krylov_group_cutoff; g++)
   {
     d_wg_solver->solve(g);
   }
 
   //-------------------------------------------------------------------------//
-  // UPSCATTER BLOCK
+  // KRYLOV BLOCK
   //-------------------------------------------------------------------------//
 
-  if (d_upscatter_size > 0)
+  if (d_number_active_groups)
   {
 
     //-----------------------------------------------------------------------//
     // BUILD RIGHT HAND SIDE
     //-----------------------------------------------------------------------//
 
-    State::vec_moments_type B(d_upscatter_size,
+    State::vec_moments_type B(d_number_active_groups,
                               State::moments_type(d_moments_size_group, 0.0));
     build_rhs(B);
 
@@ -66,21 +66,22 @@ inline void MGSolverGMRES<D>::solve(const double keff)
     //-----------------------------------------------------------------------//
 
     // Copy the flux solution into state.
-    for (int g = d_upscatter_cutoff; g < d_number_groups; g++)
+    for (int g = d_krylov_group_cutoff; g < d_number_groups; g++)
     {
-      int offset = (g - d_upscatter_cutoff) * d_moments_size_group;
+      int offset = (g - d_krylov_group_cutoff) * d_moments_size_group;
       memcpy(&d_state->phi(g)[0],
              &((*d_x)[offset]),
              d_moments_size_group*sizeof(double));
     }
 
     // Set the incident boundary flux if applicable
+    d_x->display();
     if (d_boundary->has_reflective())
     {
-      for (int g = d_upscatter_cutoff; g < d_number_groups; g++)
+      for (int g = d_krylov_group_cutoff; g < d_number_groups; g++)
       {
-        int offset = (g - d_upscatter_cutoff) *
-                      d_boundary_size_group + d_moments_size;
+        int offset = (g - d_krylov_group_cutoff) * d_boundary_size_group +
+                     d_moments_size_group * d_number_active_groups;
         d_boundary->psi(g, &(*d_x)[offset],
                         BoundaryBase<D>::IN, BoundaryBase<D>::SET, true);
       }
@@ -91,7 +92,7 @@ inline void MGSolverGMRES<D>::solve(const double keff)
     // boundary fluxes are never going to be needed.
     if (d_boundary->has_vacuum())
     {
-      for (int g = d_upscatter_cutoff; g < d_number_groups; g++)
+      for (int g = d_krylov_group_cutoff; g < d_number_groups; g++)
       {
         State::moments_type phi_g = d_state->phi(g);
         d_sweeper->setup_group(g);
@@ -102,7 +103,7 @@ inline void MGSolverGMRES<D>::solve(const double keff)
       }
     }
 
-  }
+  } // end krylov block
 
   // Diagnostic output
   if (d_print_level > 0)
@@ -127,7 +128,7 @@ inline void MGSolverGMRES<D>::build_rhs(State::vec_moments_type &B)
   group_sweep(B);
 
   // Fill the source vector
-  for (int g = 0; g < d_upscatter_size; g++)
+  for (int g = 0; g < d_number_active_groups; g++)
   {
     int offset = g * d_moments_size_group;
     for (int i = 0; i < d_moments_size_group; i++)
@@ -140,9 +141,9 @@ template <class D>
 inline void MGSolverGMRES<D>::
 group_sweep(State::vec_moments_type &phi)
 {
-  for (int g = d_upscatter_cutoff; g < d_number_groups; g++)
+  for (int g = d_krylov_group_cutoff; g < d_number_groups; g++)
   {
-    int g_index = g - d_upscatter_cutoff;
+    int g_index = g - d_krylov_group_cutoff;
 
     // Setup the sweeper.
     d_sweeper->setup_group(g);
@@ -156,7 +157,7 @@ group_sweep(State::vec_moments_type &phi)
     // solved by Gauss-Seidel.  For eigenproblems, fission is
     // also included.
     d_sweepsource->reset();
-    d_sweepsource->build_fixed_with_downscatter(g, d_upscatter_cutoff);
+    d_sweepsource->build_fixed_with_downscatter(g, d_krylov_group_cutoff);
 
     // If no reflective, one sweep and out. Otherwise, iterate.
     if (!d_boundary->has_reflective())

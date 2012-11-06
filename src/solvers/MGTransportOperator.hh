@@ -111,7 +111,7 @@ private:
   /// Number of groups for which operator is applicable
   size_t d_number_active_groups;
   /// Group index below which the operator is not applicable
-  size_t d_upscatter_cutoff;
+  size_t d_krylov_group_cutoff;
   /// Size of a group moment vector
   size_t d_moments_size;
   /// Size of a group boundary vector

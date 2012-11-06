@@ -167,7 +167,7 @@ void Vector::display() const
   printf("      number rows = %5i \n\n", d_size);
   if (d_size > 100)
   {
-    printf("  *** vector not printed for size > 20 *** ");
+    printf("  *** vector not printed for size > 100 *** \n");
     return;
   }
   for (int i = 0; i < d_size; i++)

@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
 
 SP_material test_FixedSourceManager_material()
 {
-  // Material (kinf = 1)
+//  // Material (kinf = 1)
 //  SP_material mat(new Material(1, 2, false));
 //  //
 //  mat->set_sigma_t(0, 0,    1.0);
@@ -65,16 +65,19 @@ SP_material test_FixedSourceManager_material()
 //  //
 //  mat->set_sigma_t(0, 1,    1.0);
 //  mat->set_sigma_s(0, 1, 1, 0.5);
-//  mat->set_sigma_s(0, 0, 1, 0.01);
+//  mat->set_sigma_s(0, 0, 1, 0.00);
 //  mat->set_sigma_f(0, 1,    0.0);
 //  mat->set_chi(0, 1,        0.0);
 //  mat->set_diff_coef(0, 1,  0.33);
 //
 //  mat->compute_sigma_a();
 //  mat->finalize();
+//
+//
 //  return mat;
   SP_material mat = material_fixture_7g();
   mat->compute_sigma_a();
+  mat->display();
   return mat;
 }
 
@@ -94,46 +97,49 @@ SP_mesh test_FixedSourceManager_mesh(int d)
 InputDB::SP_input test_FixedSourceManager_input()
 {
   InputDB::SP_input inp(new InputDB());
-  inp->put<string>("problem_type",              "fixed");
-  inp->put<string>("bc_west",                   "vacuum");
-  inp->put<string>("bc_east",                   "vacuum");
-  inp->put<string>("bc_south",                  "reflect");
-  inp->put<string>("bc_north",                  "vacuum");
-  inp->put<int>("store_angular_flux",           1);
-  //
-  inp->put<int>("quad_number_polar_octant",     1);
-  inp->put<int>("quad_number_azimuth_octant",   1);
+  inp->put<string>("problem_type",                  "fixed");
+  inp->put<string>("bc_west",                       "reflect");
+  inp->put<string>("bc_east",                       "vacuum");
+  inp->put<string>("bc_south",                      "reflect");
+  inp->put<string>("bc_north",                      "vacuum");
+  inp->put<int>("store_angular_flux",               1);
+
+  // QUADRATURE
+  inp->put<int>("quad_number_polar_octant",         1);
+  inp->put<int>("quad_number_azimuth_octant",       1);
+
   // INNER
-  inp->put<double>("inner_tolerance",           1e-17);
-  inp->put<string>("inner_solver",              "SI");
-  inp->put<int>("inner_use_pc",                 0);
-  inp->put<int>("inner_max_iters",               100000);
-  inp->put<int>("inner_print_level",            0);
+  inp->put<double>("inner_tolerance",               1e-17);
+  inp->put<string>("inner_solver",                  "GMRES");
+  inp->put<int>("inner_use_pc",                     0);
+  inp->put<int>("inner_max_iters",                  100000);
+  inp->put<int>("inner_print_level",                0);
   {
     InputDB::SP_input db(new InputDB("callow_linear_solver"));
-    db->put<double>("linear_solver_atol", 1e-17);
-    db->put<double>("linear_solver_rtol", 1e-17);
-    db->put<string>("linear_solver_type", "gmres");
-    db->put<int>("linear_solver_maxit",   500);
-    //db->put<int>("linear_solver_gmres_restart", 50);
-    db->put<int>("linear_solver_print_level", 2);
-    inp->put<InputDB::SP_input>("inner_solver_db", db);
+    db->put<double>("linear_solver_atol",               1e-17);
+    db->put<double>("linear_solver_rtol",               1e-17);
+    db->put<string>("linear_solver_type",               "gmres");
+    db->put<int>("linear_solver_maxit",                 500);
+    db->put<int>("linear_solver_gmres_restart",         20);
+    db->put<int>("linear_solver_monitor_level",         2);
+    inp->put<InputDB::SP_input>("inner_solver_db",      db);
   }
+
   // OUTER
   inp->put<string>("outer_solver",              "GMRES");
   inp->put<int>("outer_print_level",            1);
-  inp->put<double>("outer_tolerance",           1e-12);
-  //inp->put<int>("outer_upscatter_cutoff",       0);
-  inp->put<int>("outer_print_level",            1);
+  inp->put<double>("outer_tolerance",           1e-15);
+  inp->put<int>("outer_krylov_group_cutoff",    0);
+  inp->put<int>("outer_print_level",            2);
   {
     InputDB::SP_input db(new InputDB("callow_outer_solver"));
-    db->put<double>("linear_solver_atol", 1e-17);
-    db->put<double>("linear_solver_rtol", 1e-17);
-    db->put<string>("linear_solver_type", "gmres");
-    db->put<int>("linear_solver_maxit",   500);
-    //db->put<int>("linear_solver_gmres_restart", 50);
-    db->put<int>("linear_solver_print_level", 2);
-    inp->put<InputDB::SP_input>("outer_solver_db", db);
+    db->put<double>("linear_solver_atol",               1e-17);
+    db->put<double>("linear_solver_rtol",               1e-17);
+    db->put<string>("linear_solver_type",               "gmres");
+    db->put<int>("linear_solver_maxit",                 500);
+    db->put<int>("linear_solver_gmres_restart",         20);
+    db->put<int>("linear_solver_monitor_level",         2);
+    inp->put<InputDB::SP_input>("outer_solver_db",      db);
   }
 
   return inp;
@@ -227,9 +233,23 @@ int test_FixedSourceManager_T()
   Manager_T manager(input, mat, mesh, false);
   manager.setup();
 
+  // Quadrature
+  typename Manager_T::SP_quadrature q;
+  q = manager.quadrature();
+  TEST(q);
+
   // Build source and set solver
-  ConstantSource::SP_externalsource
-    q_e(new ConstantSource(mat->number_groups(), mesh, 1.0));
+//  ConstantSource::SP_externalsource
+//    q_e(new ConstantSource(mat->number_groups(), mesh, 1.0));
+
+  // Isotropic source in groups 0,1, and 2.
+
+  vec2_dbl spectra(1, vec_dbl(7, 1.0));
+  //spectra[0][2] = 1.0;
+  vec_int source_map(mesh->number_cells(), 0);
+  IsotropicSource::SP_externalsource
+    q_e(new IsotropicSource(7, mesh, spectra, source_map, q));
+
   manager.set_source(q_e);
   manager.set_solver();
 
@@ -297,10 +317,6 @@ int test_FixedSourceManager_T()
 //  }
 //  }
   state->display();
-
-  typename Manager_T::SP_quadrature q;
-  q = manager.quadrature();
-  TEST(q);
 
   double leakage = compute_leakage<D>(boundary, q, mat, mesh);
 

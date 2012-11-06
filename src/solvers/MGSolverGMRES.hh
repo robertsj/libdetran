@@ -189,7 +189,7 @@ private:
 
   /**
    *  @brief Only groups equal to or above this cutoff are
-   *         subject to upscatter iterations.
+   *         subject to Krylov iterations.
    *
    *  While \ref Material has an upscatter cutoff that it computes
    *  internally based on the data, the user can set this cutoff
@@ -204,9 +204,9 @@ private:
    *  Material cutoff, since that would be a different problem.
    *
    */
-  int d_upscatter_cutoff;
-  /// Upscatter block size (number of groups in Krylov solve)
-  int d_upscatter_size;
+  int d_krylov_group_cutoff;
+  /// Krylov block size (number of groups in Krylov portion of solve)
+  int d_number_active_groups;
   /// Count of reflective solve iterations
   int d_reflective_solve_iterations;
   /// Sweeper
