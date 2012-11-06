@@ -66,7 +66,7 @@ int test_IsotropicSource(int argc, char *argv[])
 
   //IsotropicSource q_e(num_groups, mesh, spectra, map, quad);
   IsotropicSource::SP_externalsource q_e;
-  q_e = IsotropicSource::CREATE(num_groups, mesh, spectra, map, quad);
+  q_e = IsotropicSource::Create(num_groups, mesh, spectra, map, quad);
 
   TEST(soft_equiv(q_e->source(0, 0),    1.0));
   TEST(soft_equiv(q_e->source(0, 0, 0), 1.0*inv_four_pi));

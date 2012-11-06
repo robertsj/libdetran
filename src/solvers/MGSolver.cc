@@ -22,6 +22,7 @@ MGSolver<D>::MGSolver(SP_state                  state,
                       bool                      multiply)
   : Base(state, material, boundary, q_e, q_f)
   , d_multiply(multiply)
+  , d_downscatter(false)
 {
 
   // Get relevant input parameters.

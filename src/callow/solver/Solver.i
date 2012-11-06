@@ -10,13 +10,9 @@
 %include "preconditioner/Preconditioner.i"
 
 %include "LinearSolver.hh"
-%include "Jacobi.hh"
-%include "GaussSeidel.hh"
-%include "GMRES.hh"
-%include "Richardson.hh"
-
 %include "EigenSolver.hh"
-%include "PowerIteration.hh"
+%include "LinearSolverCreator.hh"
+%include "EigenSolverCreator.hh"
 
 %template(LinearSolverSP) detran_utilities::SP<callow::LinearSolver>;
 %template(EigenSolverSP)  detran_utilities::SP<callow::EigenSolver>;

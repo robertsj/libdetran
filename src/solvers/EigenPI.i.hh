@@ -68,10 +68,11 @@ void EigenPI<D>::solve()
     State::moments_type fd(d_fissionsource->density());
 
     // Overrelaxation
-    for (int i = 0; i < fd.size(); ++i)
-      fd[i] = d_omega * fd[i] + (1.0 - d_omega) * fd_old[i];
-
-
+    if (d_omega != 1.0)
+    {
+      for (int i = 0; i < fd.size(); ++i)
+        fd[i] = d_omega * fd[i] + (1.0 - d_omega) * fd_old[i];
+    }
     keff_2 = keff_1;
     keff_1 = keff;
     keff = keff_1 * norm(fd, "L1") / norm(fd_old, "L1");

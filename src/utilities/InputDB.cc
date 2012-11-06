@@ -24,7 +24,9 @@ void InputDB::display() const
   using std::cout;
   using std::endl;
   using std::string;
-  cout << "Detran Input" << endl;
+  cout << "--------------------------------------------" << endl;
+  cout << "Detran Database: " << d_name << endl;
+  cout << "--------------------------------------------" << endl;
   {
     // Integers
     cout << "  Integer data: " << endl;
@@ -74,6 +76,15 @@ void InputDB::display() const
       vec_dbl v = (*it).second;
       for (u_int i = 0; i < v.size(); i++) cout << v[i] << " ";
       cout << endl;
+    }
+  }
+  {
+    // DB data
+    cout << "  Database data: " << endl;
+    std::map<string, SP_input>::const_iterator it = d_data_db.begin();
+    for (; it != d_data_db.end(); it++)
+    {
+      (*it).second->display();
     }
   }
 }

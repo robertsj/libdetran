@@ -14,8 +14,8 @@
 
 #include "LinearSolver.hh"
 // preconditioners
-#include "PCILU0.hh"
-#include "PCJacobi.hh"
+#include "callow/preconditioner/PCILU0.hh"
+#include "callow/preconditioner/PCJacobi.hh"
 
 namespace callow
 {

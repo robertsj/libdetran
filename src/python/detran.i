@@ -38,19 +38,8 @@
 //
 #include "callow/solver/LinearSolverCreator.hh"
 #include "callow/solver/EigenSolverCreator.hh"
-#include "callow/solver/Richardson.hh"
-#include "callow/solver/Jacobi.hh"
-#include "callow/solver/GaussSeidel.hh"
-#include "callow/solver/GMRES.hh"
-#ifdef CALLOW_ENABLE_PETSC
-#include "callow/solver/PetscSolver.hh"
-#endif
 //
 #include "callow/preconditioner/Preconditioner.hh"
-#include "callow/preconditioner/PCIdentity.hh"
-#include "callow/preconditioner/PCJacobi.hh"
-#include "callow/preconditioner/PCILU0.hh"
-#include "callow/preconditioner/PCShell.hh"
 
 // Angle
 #include "angle/detran_angle.hh"
@@ -118,10 +107,6 @@
 #endif
 
 // Solvers
-//#include "DiffusionFixedSourceSolver.hh"
-//#include "DiffusionEigensolver.hh"
-//#include "DiffusionLossOperator.hh"
-//#include "DiffusionGainOperator.hh"
 #include "FixedSourceManager.hh"
 #include "EigenvalueManager.hh"
   

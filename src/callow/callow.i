@@ -66,4 +66,3 @@ void callow_finalize();
 %include "preconditioner/Preconditioner.i"
 %include "solver/Solver.i"
 
-

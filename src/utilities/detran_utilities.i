@@ -76,11 +76,13 @@ namespace std
 %template(get_vec_int)  detran_utilities::InputDB::get<detran_utilities::vec_int>;
 %template(get_vec_dbl)  detran_utilities::InputDB::get<detran_utilities::vec_dbl>;
 %template(get_str)      detran_utilities::InputDB::get<std::string>;
+%template(get_spdb)     detran_utilities::InputDB::get<detran_utilities::InputDB::SP_input>;
 %template(put_int)      detran_utilities::InputDB::put<int>;
 %template(put_dbl)      detran_utilities::InputDB::put<double>;
 %template(put_vec_int)  detran_utilities::InputDB::put<detran_utilities::vec_int>;
 %template(put_vec_dbl)  detran_utilities::InputDB::put<detran_utilities::vec_dbl>;
 %template(put_str)      detran_utilities::InputDB::put<std::string>;
+%template(put_spdb)     detran_utilities::InputDB::put<detran_utilities::InputDB::SP_input>;
 
 // Anyhere in C/C++ that we need (argc, argv), 
 %typemap(in) (int argc, char *argv[]) 

@@ -41,7 +41,7 @@ Execute::Execute(StupidParser &parser)
   int d_number_groups = d_input->get<int>("number_groups");
 
   // Postconditions
-  Ensure(d_dimension);
+  Ensure(d_dimension > 0 and d_dimension < 4);
 }
 
 template<class D>
@@ -183,6 +183,8 @@ void Execute::solve()
     {
       silo.write_angular_flux(d_state, q);
     }
+
+    silo.finalize();
 #else
     std::cout << "Silo output requested, but Silo is unavaible." << std::endl;
 #endif
