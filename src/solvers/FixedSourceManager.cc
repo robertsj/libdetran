@@ -14,16 +14,12 @@
 #include "boundary/BoundaryMOC.hh"
 #include "boundary/BoundarySN.hh"
 #include "geometry/Tracker.hh"
-
 // Multigroup solvers
 #include "MGSolverGS.hh"
 #include "MGDiffusionSolver.hh"
-#ifdef DETRAN_ENABLE_PETSC
-#include "petsc.h"
 #include "MGSolverGMRES.hh"
-#endif
-
 #include <string>
+
 
 namespace detran
 {
@@ -169,13 +165,8 @@ bool FixedSourceManager<D>::set_solver()
     }
     else if (outer_solver == "GMRES")
     {
-      #ifdef DETRAN_ENABLE_PETSC
-        d_solver = new MGSolverGMRES<D>(d_state, d_material, d_boundary,
-                                        d_sources, d_fissionsource, d_multiply);
-      #else
-        std::cout << "MGSolverGMRES is unavailable since PETSc is not enabled."
-                  << std::endl;
-      #endif
+      d_solver = new MGSolverGMRES<D>(d_state, d_material, d_boundary,
+                                      d_sources, d_fissionsource, d_multiply);
     }
     else
     {
@@ -265,6 +256,8 @@ double FixedSourceManager<D>::iterate(const int generation)
 
 //---------------------------------------------------------------------------//
 // Explicit instantiations
+//---------------------------------------------------------------------------//
+
 template class FixedSourceManager<_1D>;
 template class FixedSourceManager<_2D>;
 template class FixedSourceManager<_3D>;

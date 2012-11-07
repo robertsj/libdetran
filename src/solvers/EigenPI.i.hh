@@ -54,7 +54,7 @@ void EigenPI<D>::solve()
     // Save current density.
     State::moments_type fd_old(d_fissionsource->density());
 
-    // Setup outer iteration.
+    // Setup outer iteration.  This precomputes the group sources.
     d_fissionsource->setup_outer(1/keff);
 
     // Solve the multigroup equations.
@@ -75,7 +75,7 @@ void EigenPI<D>::solve()
     }
     keff_2 = keff_1;
     keff_1 = keff;
-    keff = keff_1 * norm(fd, "L1") / norm(fd_old, "L1");
+    keff   = keff_1 * norm(fd, "L1") / norm(fd_old, "L1");
 
     // Compute error in fission density.
     error = norm_residual(fd, fd_old, "L1");

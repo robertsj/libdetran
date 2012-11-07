@@ -57,8 +57,10 @@ bool EigenvalueManager<D>::solve()
 
   std::string eigen_solver = "PI";
   if (d_mg_solver->input()->check("eigen_solver"))
-    eigen_solver = d_mg_solver->input()->template get<std::string>("eigen_solver");
-
+  {
+    eigen_solver =
+      d_mg_solver->input()->template get<std::string>("eigen_solver");
+  }
   if (eigen_solver == "PI")
   {
     d_solver = new EigenPI<D>(d_mg_solver);
@@ -67,9 +69,8 @@ bool EigenvalueManager<D>::solve()
   {
     if (d_discretization != Fixed_T::DIFF)
     {
-      std::cout <<
-        "Diffusion eigensolver requires  diffusion discretization." <<
-        std::endl;
+      std::cout << "Diffusion eigensolver requires diffusion discretization."
+                << std::endl;
       return false;
     }
     d_solver = new EigenDiffusion<D>(d_mg_solver);
@@ -95,7 +96,10 @@ bool EigenvalueManager<D>::solve()
 
 }
 
+//---------------------------------------------------------------------------//
 // Explicit instantiations
+//---------------------------------------------------------------------------//
+
 template class EigenvalueManager<_1D>;
 template class EigenvalueManager<_2D>;
 template class EigenvalueManager<_3D>;
