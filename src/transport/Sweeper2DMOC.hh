@@ -1,15 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Sweeper2DMOC.hh
- * \author Jeremy Roberts
- * @date   Mar 24, 2012
- * \brief  Sweeper2DMOC class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts.
+/**
+ *  @file   Sweeper2DMOC.hh
+ *  @author Jeremy Roberts
+ *  @date   Mar 24, 2012
+ *  @brief  Sweeper2DMOC class definition.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef SWEEPER2DMOC_HH_
-#define SWEEPER2DMOC_HH_
+#ifndef detran_SWEEPER2DMOC_HH_
+#define detran_SWEEPER2DMOC_HH_
 
 #include "Sweeper.hh"
 #include "angle/QuadratureMOC.hh"
@@ -21,14 +20,11 @@
 namespace detran
 {
 
-//---------------------------------------------------------------------------//
-/*!
- * \class Sweeper2DMOC
- * \brief Sweeper for 2D MOC problems.
- *
- * \todo An option would be to have a mesh tracked in sweep constructor
+/**
+ *  @class Sweeper2DMOC
+ *  @brief Sweeper for 2D MOC problems.
  */
-//---------------------------------------------------------------------------//
+
 template <class EQ>
 class Sweeper2DMOC: public Sweeper<_2D>
 {
@@ -64,9 +60,8 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Constructor.
-   *
+  /**
+   *  @brief Constructor.
    *  @param    input       User input database.
    *  @param    mesh        Tracked mesh.
    *  @param    material    Material database.
@@ -81,13 +76,7 @@ public:
                SP_quadrature quadrature,
                SP_state state,
                SP_boundary boundary,
-               SP_sweepsource sweepsource)
-  : Base(input,mesh,material,quadrature,
-         state,sweepsource)
-  , d_boundary(boundary)
-  {
-    d_tracks = mesh->tracks();
-  }
+               SP_sweepsource sweepsource);
 
   /// Virtual destructor
   virtual ~Sweeper2DMOC(){}
@@ -100,12 +89,7 @@ public:
          SP_quadrature  quadrature,
          SP_state       state,
          SP_boundary    boundary,
-         SP_sweepsource sweepsource)
-  {
-    SP_sweeper p(new Sweeper2DMOC(input, mesh, material, quadrature,
-                                  state, boundary, sweepsource));
-    return p;
-  }
+         SP_sweepsource sweepsource);
 
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL SWEEPERS MUST IMPLEMENT THESE
@@ -114,20 +98,15 @@ public:
   /// Sweep.
   inline void sweep(moments_type &phi);
 
-  /// Setup the equations for the group
-  void setup_group(const size_t g)
-  {
-    d_g = g;
-  }
-
 private:
 
   //-------------------------------------------------------------------------//
   // DATA
   //-------------------------------------------------------------------------//
 
+  // MOC boundary
   SP_boundary d_boundary;
-
+  // Track database
   SP_trackdb d_tracks;
 
 };
@@ -140,4 +119,4 @@ private:
 
 #include "Sweeper2DMOC.i.hh"
 
-#endif /* SWEEPER2DMOC_HH_ */
+#endif /* detran_SWEEPER2DMOC_HH_ */

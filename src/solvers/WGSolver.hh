@@ -13,9 +13,6 @@
 #include "Solver.hh"
 #include "angle/MomentToDiscrete.hh"
 #include "transport/Sweeper.hh"
-#include "transport/Sweeper1D.hh"
-#include "transport/Sweeper2D.hh"
-#include "transport/Sweeper3D.hh"
 #include "transport/Sweeper2DMOC.hh"
 #include "transport/SweepSource.hh"
 #include "utilities/MathUtilities.hh"
@@ -187,20 +184,14 @@ protected:
   /// Flag for multiplying fixed source
   bool d_multiply;
 
-
-  /// Low order acceleration
- // SP_acceleration b_acceleration;
-
 private:
 
   /// Setup the templated sweeper
-  inline bool set_sweep(std::string equation);
+  bool set_sweep(std::string equation);
 
 };
 
 } // end namespace detran
-
-#include "WGSolver.t.hh"
 
 #endif /* detran_WGSOLVER_HH_ */
 

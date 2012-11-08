@@ -11,7 +11,6 @@
 #ifndef EQUATION_SC_MOC_I_HH_
 #define EQUATION_SC_MOC_I_HH_
 
-// System
 #include <iostream>
 
 namespace detran

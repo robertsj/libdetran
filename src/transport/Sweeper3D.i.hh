@@ -47,6 +47,9 @@ inline void Sweeper3D<EQ>::sweep(moments_type &phi)
   // Initialize discrete sweep source vector.
   SweepSource<_3D>::sweep_source_type source(d_mesh->number_cells(), 0.0);
 
+  // Reference to boundary to simplify clutter.
+  Boundary_T &b = *d_boundary;
+
   // Sweep over all octants
   for (size_t oo = 0; oo < 8; oo++)
   {
@@ -70,38 +73,37 @@ inline void Sweeper3D<EQ>::sweep(moments_type &phi)
       if (d_update_psi) psi = d_state->psi(d_g, o, a);
 
       // Update the boundary for this angle.
-      if (d_update_boundary) d_boundary->update(d_g, o, a);
+      if (d_update_boundary) b.update(d_g, o, a);
 
       // Get boundary fluxes.
-      boundary_flux_type psi_yz = (*d_boundary)
-        (d_face_index[o][Mesh::YZ][Boundary_T::IN], o, a, d_g);
-      boundary_flux_type psi_xz = (*d_boundary)
-        (d_face_index[o][Mesh::XZ][Boundary_T::IN], o, a, d_g);
-      boundary_flux_type psi_xy = (*d_boundary)
-        (d_face_index[o][Mesh::XY][Boundary_T::IN], o, a, d_g);
+      bf_type psi_yz = b(d_face_index[o][Mesh::YZ][Boundary_T::IN], o, a, d_g);
+      bf_type psi_xz = b(d_face_index[o][Mesh::XZ][Boundary_T::IN], o, a, d_g);
+      bf_type psi_xy = b(d_face_index[o][Mesh::XY][Boundary_T::IN], o, a, d_g);
 
       // Temporary edge fluxes.
       Equation<_3D>::face_flux_type psi_in  = { 0.0, 0.0, 0.0 };
       Equation<_3D>::face_flux_type psi_out = { 0.0, 0.0, 0.0 };
 
       // Sweep over all z
-      for (int kk = 0; kk < d_mesh->number_cells_z(); kk++)
+      int k  = d_space_ranges[o][2][0];
+      int dk = d_space_ranges[o][2][1];
+      for (int kk = 0; kk < d_mesh->number_cells_z(); ++kk, k += dk)
       {
-        // Get actual index.
-        int k = index(o, 3, kk);
 
         // Sweep over all y
-        for (int jj = 0; jj < d_mesh->number_cells_y(); jj++)
+        int j  = d_space_ranges[o][1][0];
+        int dj = d_space_ranges[o][1][1];
+        for (int jj = 0; jj < d_mesh->number_cells_y(); ++jj, j += dj)
         {
-          // Get actual index.
-          int j = index(o, 2, jj);
 
           psi_out[Mesh::YZ] = psi_yz[k][j];
 
-          for (int ii = 0; ii < d_mesh->number_cells_x(); ii++)
+          // Sweep over all x
+          int i  = d_space_ranges[o][0][0];
+          int di = d_space_ranges[o][0][1];
+          for (int ii = 0; ii < d_mesh->number_cells_x(); ++ii, i += di)
           {
-            // Get actual index.
-            int i = index(o, 1, ii);
+            std::cout << "i j k = " << i << j << k << std::endl;
 
             psi_in[Mesh::YZ] = psi_out[Mesh::YZ];
             psi_in[Mesh::XZ] = psi_xz[k][i];
@@ -125,12 +127,9 @@ inline void Sweeper3D<EQ>::sweep(moments_type &phi)
       } // end z loop
 
       // Update boundary
-      (*d_boundary)
-        (d_face_index[o][Mesh::YZ][Boundary_T::OUT], o, a, d_g) = psi_yz;
-      (*d_boundary)
-        (d_face_index[o][Mesh::XZ][Boundary_T::OUT], o, a, d_g) = psi_xz;
-      (*d_boundary)
-        (d_face_index[o][Mesh::XY][Boundary_T::OUT], o, a, d_g) = psi_xy;
+      b(d_face_index[o][Mesh::YZ][Boundary_T::OUT], o, a, d_g) = psi_yz;
+      b(d_face_index[o][Mesh::XZ][Boundary_T::OUT], o, a, d_g) = psi_xz;
+      b(d_face_index[o][Mesh::XY][Boundary_T::OUT], o, a, d_g) = psi_xy;
 
       // Angular flux update
       if (d_update_psi) d_state->psi(d_g, o, a) = psi;
@@ -139,6 +138,8 @@ inline void Sweeper3D<EQ>::sweep(moments_type &phi)
 
   } // end octant loop
 
+  std::cout << phi.size() << " " <<  phi_local.size() << std::endl;
+  Assert(phi.size() == phi_local.size());
 #ifdef DETRAN_ENABLE_OPENMP
   // Sum local thread fluxes.
   #pragma omp critical
@@ -159,11 +160,6 @@ inline void Sweeper3D<EQ>::sweep(moments_type &phi)
   }
   return;
 }
-
-// Instantiate
-//template class Sweeper3D<Equation_SD_3D>;
-template class Sweeper3D<Equation_DD_3D>;
-//template class Sweeper3D<Equation_SC_3D>;
 
 } // end namespace detran
 

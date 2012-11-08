@@ -10,9 +10,7 @@
 #include "detran_config.hh"
 #include "MGTransportSolver.hh"
 #include "WGSolverSI.hh"
-#ifdef DETRAN_ENABLE_PETSC
 #include "WGSolverGMRES.hh"
-#endif
 
 namespace detran
 {
@@ -46,13 +44,9 @@ MGTransportSolver<D>::MGTransportSolver(SP_state                  state,
   }
   else if (wg_solver == "GMRES")
   {
-#ifdef DETRAN_ENABLE_PETSC
     d_wg_solver = new WGSolverGMRES<D>(d_state, d_material, d_quadrature,
                                        d_boundary, d_externalsources,
                                        d_fissionsource, d_multiply);
-#else
-    THROW("InnerGMRES is not available because PETSc is not enabled.");
-#endif
   }
   else
   {
@@ -60,6 +54,10 @@ MGTransportSolver<D>::MGTransportSolver(SP_state                  state,
   }
 
 }
+
+//---------------------------------------------------------------------------//
+// EXPLICIT INSTANTIATIONS
+//---------------------------------------------------------------------------//
 
 template class MGTransportSolver<_1D>;
 template class MGTransportSolver<_2D>;

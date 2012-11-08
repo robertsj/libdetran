@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   Equation_SD_1D.hh
+ *  @file   Equation_SC_1D.hh
  *  @author robertsj
  *  @date   Jun 9, 2012
- *  @brief  Equation_SD_1D class definition.
+ *  @brief  Equation_SC_1D class definition.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef EQUATION_SD_1D_HH_
-#define EQUATION_SD_1D_HH_
+#ifndef detran_EQUATION_SC_1D_HH_
+#define detran_EQUATION_SC_1D_HH_
 
 #include "Equation.hh"
 
@@ -16,24 +16,35 @@ namespace detran
 {
 
 /**
- *  @class Equation_SD_1D
- *  @brief Step difference discretization in one dimension.
+ *  @class Equation_SC_1D
+ *  @brief Step characteristic discretization in one dimension.
  *
- *  The step difference approximation defines
- *  @f[
- *      \psi_{i,n} = \left\{
- *        \begin{array}{l l}
- *          \psi_{i+1/2,n}      & \quad \text{if $\mu_n > 0$} \\
- *          \psi_{i-1/2,n}      & \quad \text{if $\mu_n < 0$} \\
- *        \end{array} \right\}
- *  @f]
+ *  In 1D, the step characteristic approximation is the same for
+ *  discrete ordinates and MOC.  The outgoing flux is defined
+ *  \f[
+ *      \psi_{out} = A\psi_{in}  + B Q   \, ,
+ *  \f]
+ *  and the average segment flux is
+ *  \f[
+ *      \bar{\psi} = \frac{1}{l} \Big ( B \psi_{in} +  C Q \Big )  \, ,
+ *  \f]
+ *  where
+ *  \f[
+ *      A = e^{-\Sigma_t \tau} \, ,
+ *  \f]
+ *  \f[
+ *      B = \frac{1}{\Sigma_t} ( 1- A ) \, ,
+ *  \f]
+ *  and
+ *  \f[
+ *      C = \frac{l}{\Sigma_t} \Big( 1- \frac{1-A}{\tau} \Big ) \, ,
+ *  \f]
+ *  where \f$ l \f$ is the step length and
+ *  \f$ \tau = \Sigma_t l  \f$ is optical path length.
  *
- *  This is a first order method, but is strictly positive.
- *  Moreover, it essentially defines a "flat flux" within
- *  the cell, and so it is consistent for DGM.
- *
+ *  @sa Equation_SC_MOC
  */
-class Equation_SD_1D : public Equation<_1D>
+class Equation_SC_1D : public Equation<_1D>
 {
 
 public:
@@ -54,10 +65,8 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  /**
-   *  @brief Constructor
-   */
-  Equation_SD_1D(SP_mesh mesh,
+  /// Constructor
+  Equation_SC_1D(SP_mesh mesh,
                  SP_material material,
                  SP_quadrature quadrature,
                  bool update_psi);
@@ -68,9 +77,9 @@ public:
   //-------------------------------------------------------------------------//
 
   /**
-   *   \brief Solve for the cell-center and outgoing edge fluxes.
+   *  @brief Solve for the cell-center and outgoing edge fluxes.
    *
-   *   See \ref Equation for full description.
+   *  See @ref Equation for full description.
    */
   inline void solve(const size_t i,
                     const size_t j,
@@ -102,8 +111,8 @@ public:
 
 private:
 
-  /// X-directed coefficient, \f$ 2|\mu|/\Delta_x \f$.
-  detran_utilities::vec_dbl d_coef_x;
+  /// Cosine
+  double d_mu;
 
 };
 
@@ -113,10 +122,10 @@ private:
 // INLINE FUNCTIONS
 //---------------------------------------------------------------------------//
 
-#include "Equation_SD_1D.i.hh"
+#include "Equation_SC_1D.i.hh"
 
-#endif /* EQUATION_SD_1D_HH_ */
+#endif /* detran_EQUATION_SC_1D_HH_ */
 
 //---------------------------------------------------------------------------//
-//              end of Equation_SD_1D.hh
+//              end of Equation_SC_1D.hh
 //---------------------------------------------------------------------------//

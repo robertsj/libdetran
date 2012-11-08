@@ -19,7 +19,7 @@
 namespace detran
 {
 
-// Sweep.
+//---------------------------------------------------------------------------//
 template <class EQ>
 inline void Sweeper2DMOC<EQ>::sweep(moments_type &phi)
 {
@@ -55,8 +55,9 @@ inline void Sweeper2DMOC<EQ>::sweep(moments_type &phi)
   SP_quadrature q = d_quadrature;
 
   // Sweep over all octants.
-  for (int o = 0; o < 4; o++)
+  for (int oo = 0; oo < 4; oo++)
   {
+    size_t o = d_ordered_octants[oo];
     //cout << "OCTANT: " << o << endl;
 
     // Setup equation for this octant.
@@ -202,9 +203,6 @@ inline void Sweeper2DMOC<EQ>::sweep(moments_type &phi)
   }
   return;
 }
-
-// Instantiate
-template class Sweeper2DMOC<Equation_SC_MOC>;
 
 } // end namespace detran
 

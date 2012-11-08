@@ -19,6 +19,10 @@
 #include <boost/archive/text_oarchive.hpp>
 #endif
 
+#include <iostream>
+#include <string>
+#include <typeinfo>
+
 namespace detran_utilities
 {
  

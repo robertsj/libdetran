@@ -17,6 +17,11 @@ SET(SRC
     FissionSource.cc
     ScatterSource.cc
     State.cc
+    Sweeper.cc
+    Sweeper1D.cc
+    Sweeper2D.cc
+    Sweeper3D.cc
+    Sweeper2DMOC.cc
 )
 
 #-----------------------------------------------------------------------------#

@@ -70,11 +70,12 @@ public:
   typedef detran_geometry::Mesh::SP_mesh            SP_mesh;
   typedef detran_angle::Quadrature::SP_quadrature   SP_quadrature;
   typedef BoundaryBase<D>                           Boundary_T;
+  typedef typename Boundary_T::SP_boundary          SP_boundary;
   typedef typename SweepSource<D>::SP_sweepsource   SP_sweepsource;
   typedef State::moments_type                       moments_type;
   typedef State::angular_flux_type                  angular_flux_type;
-  typedef CurrentTally<D>                           CurrentTally_T;
-  typedef typename CurrentTally_T::SP_tally  SP_tally;
+  typedef CurrentTally<D>                           Tally_T;
+  typedef typename Tally_T::SP_tally                SP_tally;
   typedef detran_utilities::vec_int                 vec_int;
   typedef detran_utilities::vec2_int                vec2_int;
   typedef detran_utilities::vec3_int                vec3_int;
@@ -101,6 +102,7 @@ public:
           SP_material material,
           SP_quadrature quadrature,
           SP_state state,
+          SP_boundary boundary,
           SP_sweepsource sweepsource);
 
   /// Virtual destructor
@@ -113,66 +115,40 @@ public:
   /**
    *  @brief Sweep over all angles and space.
    *
-   *  Note, if the angular flux is to be updated,
-   *  it is done directly to via State.  Having
-   *  sweep take the flux as an explicit argument
-   *  allows various input types (e.g. Krylov
-   *  vectors) without having to go through State.
+   *  Note, if the angular flux is to be updated, it is done directly to
+   *  via State.  Having sweep take the flux as an explicit argument
+   *  allows various input types (e.g. Krylov vectors) without having to go
+   *  through State.  The angular flux will never be a direct unknown.
    *
-   *  Note, here the source is limited to a moments-based
-   *  one.  We may want a discrete source later; that can
-   *  be added with a third argument of psi type.
-   *
+   *  @param phi    reference to moments vector to be updated
    */
-  virtual void sweep(moments_type &phi) = 0;
-
-  /// Setup the equations for the group
-  virtual void setup_group(const size_t g) = 0;
+  virtual void sweep(moments_type &phi) __attribute__((always_inline)) = 0;
 
   //-------------------------------------------------------------------------//
-  // PUBLIC INTERFACE
+  // PUBLIC FUNCTIONS
   //-------------------------------------------------------------------------//
+
+  /// Setup the equations for the group.  Default sets only the group index.
+  virtual void setup_group(const size_t g);
 
   /// Allows the psi update to occur whenever needed
-  void set_update_psi(const bool v)
-  {
-    d_update_psi = v;
-  }
+  void set_update_psi(const bool v);
 
   /// Switch on-the-fly boundary updates on or off
-  void set_update_boundary(const bool v)
-  {
-    d_update_boundary = v;
-  }
+  void set_update_boundary(const bool v);
 
-  bool update_boundary() const
-  {
-    return d_update_boundary;
-  }
+  bool update_boundary() const;
 
-  size_t number_sweeps() const
-  {
-    return d_number_sweeps;
-  }
+  size_t number_sweeps() const;
 
   /// Set adjoint
-  void set_adjoint(const bool adjoint)
-  {
-    d_adjoint = adjoint;
-  }
+  void set_adjoint(const bool adjoint);
 
   /// Is adjoint?
-  bool is_adjoint() const
-  {
-    return d_adjoint;
-  }
+  bool is_adjoint() const;
 
-  /// Set a current tally.
-  void set_current(SP_tally current)
-  {
-    Require(current);
-    d_current = current;
-  }
+  /// Set a boundary flux tally.
+  void set_tally(SP_tally tally);
 
 protected:
 
@@ -205,7 +181,11 @@ protected:
   /// Update the boundary on the fly?  Can't be used for Krylov.
   bool d_update_boundary;
   /// Current tally
-  SP_tally d_current;
+  SP_tally d_tally;
+  /// Spatial index ranges
+  vec3_int d_space_ranges;
+  /// Ordered octant indices
+  vec_int d_ordered_octants;
 
   //-------------------------------------------------------------------------//
   // IMPLEMENTATION
@@ -214,17 +194,14 @@ protected:
   /// Allocate template-specific items.
   void setup();
 
-  /// Mesh sweeper indices. \todo Allow adjoint.
-  inline size_t index(const size_t o, const size_t dim, const size_t ijk);
+  /// Setup spatial sweep indices.  Avoids functions and handles the adjoint.
+  void setup_spatial_indices();
+
+  /// Setup octant sweep indices.
+  void setup_octant_indices(SP_boundary);
 
 };
 
 } // end namespace detran
-
-//---------------------------------------------------------------------------//
-// INLINE MEMBER DEFINITIONS
-//---------------------------------------------------------------------------//
-
-#include "Sweeper.t.hh"
 
 #endif /* SWEEPER_HH_ */

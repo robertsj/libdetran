@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Sweeper2D.i.hh
- * \author Jeremy Roberts
- * @date   Mar 24, 2012
- * \brief  Sweeper2D inline member definitions.
+/**
+ *  @file   Sweeper2D.i.hh
+ *  @author Jeremy Roberts
+ *  @date   Mar 24, 2012
+ *  @brief  Sweeper2D inline member definitions.
  */
 //---------------------------------------------------------------------------//
 #ifndef SWEEPER2D_I_HH_
@@ -20,7 +20,6 @@
 namespace detran
 {
 
-// Sweep.
 template <class EQ>
 inline void Sweeper2D<EQ>::sweep(moments_type &phi)
 {
@@ -46,6 +45,9 @@ inline void Sweeper2D<EQ>::sweep(moments_type &phi)
 
   // Initialize discrete sweep source vector.
   SweepSource<_2D>::sweep_source_type source(d_mesh->number_cells(), 0.0);
+
+  // Reference to boundary to simplify clutter.
+  Boundary_T &b = *d_boundary;
 
   // Sweep over all octants
   for (size_t oo = 0; oo < 4; oo++)
@@ -77,32 +79,30 @@ inline void Sweeper2D<EQ>::sweep(moments_type &phi)
       if (d_update_psi) psi = d_state->psi(d_g, o, a);
 
       // Update the boundary for this angle.
-      if (d_update_boundary) d_boundary->update(d_g, o, a);
+      if (d_update_boundary) b.update(d_g, o, a);
 
       // Get boundary fluxes.
-      boundary_flux_type psi_v = (*d_boundary)(face_V_i, o, a, d_g);
-      boundary_flux_type psi_h = (*d_boundary)(face_H_i, o, a, d_g);
+      bf_type psi_v = b(face_V_i, o, a, d_g);
+      bf_type psi_h = b(face_H_i, o, a, d_g);
 
       // Temporary edge fluxes.
       Equation<_2D>::face_flux_type psi_in  = {0.0, 0.0};
       Equation<_2D>::face_flux_type psi_out = {0.0, 0.0};
 
       // Sweep over all y.
-      for (int jj = 0; jj < d_mesh->number_cells_y(); jj++)
+      int j  = d_space_ranges[o][1][0]; // actual index
+      int dj = d_space_ranges[o][1][1]; // decrement
+      for (int jj = 0; jj < d_mesh->number_cells_y(); ++jj, j += dj)
       {
-        // Get actual index.
-        int j = index(o, 2, jj);
-
         // Note the index: incident boundaries are access from
         // "left to right" w/r to self.
         psi_out[Mesh::VERT] = psi_v[j];
 
         // Sweep over all x.
-        for (int ii = 0; ii < d_mesh->number_cells_x(); ii++)
+        int i  = d_space_ranges[o][0][0]; // actual index
+        int di = d_space_ranges[o][0][1]; // decrement
+        for (int ii = 0; ii < d_mesh->number_cells_x(); ++ii, i += di)
         {
-          // Get actual index.
-          int i = index(o, 1, ii);
-
           // Set the incident cell surface fluxes.
           psi_in[Mesh::HORZ] = psi_h[i];
           psi_in[Mesh::VERT] = psi_out[Mesh::VERT];
@@ -123,8 +123,8 @@ inline void Sweeper2D<EQ>::sweep(moments_type &phi)
       } // end y loop
 
       // Update boundary
-      (*d_boundary)(face_V_o, o, a, d_g) = psi_v;
-      (*d_boundary)(face_H_o, o, a, d_g) = psi_h;
+      b(face_V_o, o, a, d_g) = psi_v;
+      b(face_H_o, o, a, d_g) = psi_h;
 
       // Update the angular flux.
       if (d_update_psi) d_state->psi(d_g, o, a) = psi;
@@ -151,13 +151,7 @@ inline void Sweeper2D<EQ>::sweep(moments_type &phi)
   {
     d_number_sweeps++;
   }
-  return;
 }
-
-// Instantiate
-template class Sweeper2D<Equation_DD_2D>;
-template class Sweeper2D<Equation_SC_2D>;
-template class Sweeper2D<Equation_SD_2D>;
 
 } // end namespace detran
 

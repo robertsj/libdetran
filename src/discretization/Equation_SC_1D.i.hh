@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   Equation_SD_1D.i.hh
+ *  @file   Equation_SC_1D.i.hh
  *  @author robertsj
  *  @date   Jun 9, 2012
- *  @brief  Equation_SD_1D.i class definition.
+ *  @brief  Equation_SC_1D.i class definition.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef EQUATION_SD_1D_I_HH_
-#define EQUATION_SD_1D_I_HH_
+#ifndef EQUATION_SC_1D_I_HH_
+#define EQUATION_SC_1D_I_HH_
 
 #include <iostream>
 
@@ -16,20 +16,14 @@ namespace detran
 {
 
 //---------------------------------------------------------------------------//
-inline void Equation_SD_1D::setup_angle(const size_t angle)
+inline void Equation_SC_1D::setup_angle(const size_t angle)
 {
   Require(angle < d_quadrature->number_angles_octant());
-  d_angle = angle;
-  double mu  = d_quadrature->mu(0, d_angle);
-  for (int i = 0; i < d_mesh->number_cells_x(); i++)
-  {
-    d_coef_x[i] = mu / d_mesh->dx(i);
-  }
-
+  d_mu = d_quadrature->mu(0, d_angle);
 }
 
 //---------------------------------------------------------------------------//
-inline void Equation_SD_1D::solve(const size_t i,
+inline void Equation_SC_1D::solve(const size_t i,
                                   const size_t j,
                                   const size_t k,
                                   moments_type &source,
@@ -41,28 +35,33 @@ inline void Equation_SD_1D::solve(const size_t i,
   // Preconditions.  (The client *must* set group and angles.)
   Require(j == 0);
   Require(k == 0);
+  Require(d_mu > 0.0);
 
   // Compute cell-center angular flux.
-  int cell = d_mesh->index(i);
-  double coef = 1.0 /
-                (d_material->sigma_t(d_mat_map[cell], d_g) + d_coef_x[i]);
-  double psi_center = coef * (source[cell] + d_coef_x[i] * psi_in);
+  double sigma = d_material->sigma_t(d_mat_map[i], d_g);
+  double tau   = sigma * d_mesh->dx(i) / d_mu;
+  double A     = std::exp(-tau);
+  double q     = source[i];
+
+  // Cell average flux
+  double psi_avg = psi_in * (1.0 - A) / tau +
+                   q * (A - 1.0 + tau) / ( sigma * tau);
 
   // Compute outgoing fluxes.
-  psi_out = psi_center;
+  psi_out = A * psi_in + q * (1.0 - A) / sigma;
 
   // Compute flux moments.
-  phi[cell] += d_quadrature->weight(d_angle) * psi_center;
+  phi[i] += d_quadrature->weight(d_angle) * psi_avg;
 
   // Store angular flux if needed.
-  if (d_update_psi) psi[cell] = psi_center;
+  if (d_update_psi) psi[i] = psi_avg;
 
 }
 
 } // end namespace detran
 
-#endif /* EQUATION_SD_1D_I_HH_ */
+#endif /* EQUATION_SC_1D_I_HH_ */
 
 //---------------------------------------------------------------------------//
-//              end of Equation_SD_1D.i.hh
+//              end of Equation_SC_1D.i.hh
 //---------------------------------------------------------------------------//

@@ -11,7 +11,7 @@
 #define detran_WGSOLVERGMRES_HH_
 
 #include "WGSolver.hh"
-#include "PreconditionerWG.hh"
+//#include "PreconditionerWG.hh"
 #include "WGTransportOperator.hh"
 #include "callow/solver/LinearSolver.hh"
 
@@ -73,7 +73,7 @@ public:
   typedef typename Base::SP_sweepsource         SP_sweepsource;
   typedef typename Base::moments_type           moments_type;
   typedef typename Base::size_t                 size_t;
-  typedef PreconditionerWG::SP_pc               SP_pc;
+  //typedef PreconditionerWG::SP_pc               SP_pc;
   typedef detran_utilities::vec_dbl             vec_dbl;
   typedef callow::LinearSolver::SP_solver       SP_linearsolver;
   typedef WGTransportOperator<D>                Operator_T;

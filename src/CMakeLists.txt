@@ -24,7 +24,7 @@ SET(DETRAN_ENABLE_PYTHON NO CACHE BOOL
 )
 
 # Options for OpenMP directives. On or Off.
-SET(DETRAN_ENABLE_OPENMC NO CACHE BOOL
+SET(DETRAN_ENABLE_OPENMP NO CACHE BOOL
     "Enable OpenMP for multithreaded solves."
 )
 
@@ -175,40 +175,40 @@ endif()
 
 OPTION ( USE_TESTING "Build testing" ON )
 if ( DETRAN_ENABLE_TEST )
-    SET ( CTEST_INITIAL_CACHE "
-      COVERAGE_COMMAND:FILEPATH=/usr/bin/gcov
-    " )
-    # need for coverage -- probably a cleaner way to set this up.
-    SET( CMAKE_CXX_FLAGS_DEBUG        
-         "-g -O0  -fprofile-arcs -ftest-coverage" CACHE STRING 
-         "Choose"
-         FORCE
-    )
-    SET( CMAKE_CXX_FLAGS        
-         "-g -O0  -fprofile-arcs -ftest-coverage" CACHE STRING
-         "Choose"
-         FORCE
-    )
-    SET( CMAKE_C_FLAGS_DEBUG          
-         "-g -O0  -fprofile-arcs -ftest-coverage" CACHE STRING
-         "Choose"
-         FORCE
-    )
-    SET( CMAKE_EXE_LINKER_FLAGS 
-         "-g -O0  -fprofile-arcs -ftest-coverage" CACHE STRING
-         "Choose"
-         FORCE
-    )
-    SET( CTEST_MEMORYCHECK_COMMAND 
-       /usr/bin/valgrind CACHE STRING 
-       "Set the memory checking command."
-       FORCE
-    )
-    SET( CTEST_MEMORYCHECK_COMMAND_OPTIONS 
-       "--tool=memcheck --leak-check=full" CACHE STRING 
-       "Set the memory checking command options."
-       FORCE
-    ) 
+#    SET ( CTEST_INITIAL_CACHE "
+#      COVERAGE_COMMAND:FILEPATH=/usr/bin/gcov
+#    " )
+#    # need for coverage -- probably a cleaner way to set this up.
+#    SET( CMAKE_CXX_FLAGS_DEBUG        
+#         "-g -O0  -fprofile-arcs -ftest-coverage" CACHE STRING 
+#         "Choose"
+#         FORCE
+#    )
+#    SET( CMAKE_CXX_FLAGS        
+#         "-g -O0  -fprofile-arcs -ftest-coverage" CACHE STRING
+#         "Choose"
+#         FORCE
+#    )
+#    SET( CMAKE_C_FLAGS_DEBUG          
+#         "-g -O0  -fprofile-arcs -ftest-coverage" CACHE STRING
+#         "Choose"
+#         FORCE
+#    )
+#    SET( CMAKE_EXE_LINKER_FLAGS 
+#         "-g -O0  -fprofile-arcs -ftest-coverage" CACHE STRING
+#         "Choose"
+#         FORCE
+#    )
+#    SET( CTEST_MEMORYCHECK_COMMAND 
+#       /usr/bin/valgrind CACHE STRING 
+#       "Set the memory checking command."
+#       FORCE
+#    )
+#    SET( CTEST_MEMORYCHECK_COMMAND_OPTIONS 
+#       "--tool=memcheck --leak-check=full" CACHE STRING 
+#       "Set the memory checking command options."
+#       FORCE
+#    ) 
     ENABLE_TESTING()
     INCLUDE(CTest)
     # is there a better way?
@@ -293,15 +293,15 @@ endif()
 # OUTPUT
 #------------------------------------------------------------------------------#
 
-message("---------------------------------------------------------------")
+message("---------------------------------------------------------------------")
 message("              SUMMARY OF CMAKE CONFIGURATION")
-message("---------------------------------------------------------------")
+message("---------------------------------------------------------------------")
 message("++++ System:      ${CMAKE_SYSTEM} ${CMAKE_SYSTEM_PROCESSOR}")
 message("++++ CXX:         ${CMAKE_CXX_COMPILER}")
 message("++++ Build type:  ${CMAKE_BUILD_TYPE}")
 message("++++ Install:     ${CMAKE_INSTALL_PREFIX}")
 
-message("---------------------------------------------------------------")
+message("---------------------------------------------------------------------")
 if( DETRAN_ENABLE_PYTHON )
 message("++++ Python:      enabled")
 else()
@@ -347,11 +347,11 @@ message("++++ Testing:     enabled")
 else()
 message("++++ Testing:     disabled")
 endif()
-message("---------------------------------------------------------------")
+message("---------------------------------------------------------------------")
 message("To use, remember to add:")
 message("    ${CMAKE_INSTALL_PREFIX}/bin    to PATH")
 message("    ${CMAKE_INSTALL_PREFIX}/lib    to LD_LIBRARY_PATH")
 message("    ${CMAKE_INSTALL_PREFIX}/python to PYTHONPATH")
-message("---------------------------------------------------------------")
+message("---------------------------------------------------------------------")
 
 

@@ -111,19 +111,37 @@ template <class D>
 inline void SweepSource<D>::
 source(const size_t g, const size_t o, const size_t a, sweep_source_type &s)
 {
-  for (int cell = 0; cell < d_mesh->number_cells(); cell++)
-    s[cell] = 0.0;
 
-  // Add moment contributions.
+  double *s_a = &s[0];
+  double *fixed_a = &d_fixed_group_source[0];
+  double *scatter_a = &d_scatter_group_source[0];
+  double mtod = (*d_MtoD)(o, a, 0, 0);
+
+//  // Add fixed contributions
+//  for (int cell = 0; cell < d_mesh->number_cells(); cell++)
+//    s_a[cell] = fixed_a[cell] * mtod;
+//
+//  for (int cell = 0; cell < d_mesh->number_cells(); cell++)
+//    s_a[cell] += scatter_a[cell] * mtod;
+
+  // Add fixed contributions
   for (int cell = 0; cell < d_mesh->number_cells(); cell++)
-  {
-    // Add fixed contribution
-    s[cell] += d_fixed_group_source[cell] *
-                      (*d_MtoD)(o, a, 0, 0);
-    // Add scatter contribution
-    s[cell] += d_scatter_group_source[cell] *
-                      (*d_MtoD)(o, a, 0, 0);
-  }
+    s_a[cell] = (fixed_a[cell] + scatter_a[cell])* mtod;
+//
+//  for (int cell = 0; cell < d_mesh->number_cells(); cell++)
+//    s[cell] = 0.0;
+//
+//
+//  // Add moment contributions.
+//  for (int cell = 0; cell < d_mesh->number_cells(); cell++)
+//  {
+//    // Add fixed contribution
+//    s[cell] += d_fixed_group_source[cell] *
+//                      (*d_MtoD)(o, a, 0, 0);
+//    // Add scatter contribution
+//    s[cell] += d_scatter_group_source[cell] *
+//                      (*d_MtoD)(o, a, 0, 0);
+//  }
 
   // Add discrete contributions if present.
   for (int i = 0; i < d_discrete_external_sources.size(); i++)

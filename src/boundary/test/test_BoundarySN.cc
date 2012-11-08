@@ -14,8 +14,7 @@
 // Detran headers
 #include "TestDriver.hh"
 #include "boundary/BoundarySN.hh"
-#include "angle/GaussLegendre.hh"
-#include "angle/QuadrupleRange.hh"
+#include "angle/QuadratureFactory.hh"
 #include "geometry/Mesh1D.hh"
 #include "geometry/Mesh2D.hh"
 #include "geometry/Mesh3D.hh"
@@ -53,7 +52,10 @@ int test_BoundarySN(int argc, char *argv[])
     inp->put<string>("bc_west",  "reflect");
     inp->put<string>("bc_left",  "vacuum");
     // Quadrature
-    Boundary_T::SP_quadrature q(new GaussLegendre(2));
+    inp->put<int>("quad_number_polar_octant", 2);
+    Boundary_T::SP_quadrature q;
+    detran_angle::QuadratureFactory qf;
+    qf.build(q, inp, 1);
     // Mesh
     vec_dbl cm(2, 0.0); cm[1] = 1.0;
     vec_int fm(1, 10);
@@ -61,6 +63,12 @@ int test_BoundarySN(int argc, char *argv[])
     Boundary_T::SP_mesh mesh(new Mesh1D(fm, cm, mt));
     // Boundary
     Boundary_T::SP_boundary b(new Boundary_T(inp, mesh, q));
+    // Tests
+    TEST(b->is_reflective(0));
+    TEST(!b->is_reflective(1));
+    TEST(b->has_reflective());
+    TEST(b->boundary_flux_size(0) == 4);
+    TEST(b->boundary_flux_size(1) == 4);
 
   }
 
@@ -75,7 +83,11 @@ int test_BoundarySN(int argc, char *argv[])
     inp->put<string>("bc_south", "reflect");
     inp->put<string>("bc_north", "vacuum");
     // Quadrature
-    Boundary_T::SP_quadrature q(new QuadrupleRange(2, 2));
+    inp->put<int>("quad_number_polar_octant", 2);
+    inp->put<int>("quad_number_azimuth_octant", 2);
+    Boundary_T::SP_quadrature q;
+    detran_angle::QuadratureFactory qf;
+    qf.build(q, inp, 2);
     // Mesh
     vec_dbl cm(2, 0.0); cm[1] = 1.0;
     vec_int fm(1, 10);
@@ -83,7 +95,16 @@ int test_BoundarySN(int argc, char *argv[])
     Boundary_T::SP_mesh mesh(new Mesh2D(fm, fm, cm, cm, mt));
     // Boundary
     Boundary_T::SP_boundary b(new Boundary_T(inp, mesh, q));
-
+    // Tests
+    TEST(b->is_reflective(0));
+    TEST(!b->is_reflective(1));
+    TEST(b->is_reflective(2));
+    TEST(!b->is_reflective(3));
+    TEST(b->has_reflective());
+    TEST(b->boundary_flux_size(0) == 4*2*2*10);
+    TEST(b->boundary_flux_size(1) == 4*2*2*10);
+    TEST(b->boundary_flux_size(2) == 4*2*2*10);
+    TEST(b->boundary_flux_size(3) == 4*2*2*10);
   }
 
   // 3-D test
@@ -99,7 +120,11 @@ int test_BoundarySN(int argc, char *argv[])
     inp->put<string>("bc_bottom", "reflect");
     inp->put<string>("bc_top",    "vacuum");
     // Quadrature
-    Boundary_T::SP_quadrature q(new QuadrupleRange(2, 3));
+    inp->put<int>("quad_number_polar_octant",   2);
+    inp->put<int>("quad_number_azimuth_octant", 2);
+    Boundary_T::SP_quadrature q;
+    detran_angle::QuadratureFactory qf;
+    qf.build(q, inp, 3);
     // Mesh
     vec_dbl cm(2, 0.0); cm[1] = 1.0;
     vec_int fm(1, 10);
@@ -107,7 +132,20 @@ int test_BoundarySN(int argc, char *argv[])
     Boundary_T::SP_mesh mesh(new Mesh3D(fm, fm, fm, cm, cm, cm, mt));
     // Boundary
     Boundary_T::SP_boundary b(new Boundary_T(inp, mesh, q));
-
+    // Tests
+    TEST(b->is_reflective(0));
+    TEST(!b->is_reflective(1));
+    TEST(b->is_reflective(2));
+    TEST(!b->is_reflective(3));
+    TEST(b->is_reflective(4));
+    TEST(!b->is_reflective(5));
+    TEST(b->has_reflective());
+    TEST(b->boundary_flux_size(0) == 8*2*2*10*10);
+    TEST(b->boundary_flux_size(1) == 8*2*2*10*10);
+    TEST(b->boundary_flux_size(2) == 8*2*2*10*10);
+    TEST(b->boundary_flux_size(3) == 8*2*2*10*10);
+    TEST(b->boundary_flux_size(4) == 8*2*2*10*10);
+    TEST(b->boundary_flux_size(5) == 8*2*2*10*10);
   }
 
 

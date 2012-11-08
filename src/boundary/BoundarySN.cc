@@ -49,6 +49,7 @@ BoundarySN<D>::BoundarySN(SP_input        input,
       // Ugh, this "template" addition is a sneaky thing!
       type = d_input->template get<std::string>(names[side]);
     }
+    std::cout << " BOUNDARY, SIDE " << side << " IS TYPE " << type << std::endl;
     if (type == "vacuum")
     {
       d_bc[side] = new Vacuum<D>((*this), side, d_input, d_mesh, d_quadrature);

@@ -1,59 +1,35 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Sweeper.t.hh
- * \author Jeremy Roberts
+/**
+ * @file   Sweeper.t.hh
+ * @author Jeremy Roberts
  * @date   Apr 22, 2012
- * \brief  Sweeper inline member definitions
+ * @brief  Sweeper template member definitions
  */
 //---------------------------------------------------------------------------//
 
 #ifndef SWEEPER_T_HH_
 #define SWEEPER_T_HH_
 
+#include "Sweeper.hh"
+
 namespace detran
 {
 
-// Constructor
-template <class D>
-Sweeper<D>::Sweeper(SP_input input,
-                    SP_mesh mesh,
-                    SP_material material,
-                    SP_quadrature quadrature,
-                    SP_state state,
-                    SP_sweepsource sweepsource)
-  : d_input(input)
-  , d_mesh(mesh)
-  , d_material(material)
-  , d_quadrature(quadrature)
-  , d_state(state)
-  , d_sweepsource(sweepsource)
-  , d_update_psi(false)
-  , d_adjoint(false)
-  , d_number_sweeps(0)
-  , d_update_boundary(false)
-{
-  Require(d_input);
-  Require(d_mesh);
-  Require(d_material);
-  Require(d_quadrature);
-  Require(d_state);
-  Require(d_sweepsource);
-  setup();
-  // Check whether we keep psi.
-  if (d_input->check("store_angular_flux"))
-  {
-    d_update_psi = d_input->get<int>("store_angular_flux");
-  }
-}
-
-// 3D Setup
+//---------------------------------------------------------------------------//
+// Default setup
 template <class D>
 inline void Sweeper<D>::setup()
 {
+  THROW("NOT IMPLEMENTED");
+}
 
+//---------------------------------------------------------------------------//
+// 3D Setup
+template <>
+inline void Sweeper<_3D>::setup()
+{
   // Set up face/octant map.
   d_face_index.resize(8, vec2_size_t(3, vec_size_t(2, 0)));
-
   int inc[8][3] =
   {{0, 2, 4}, {1, 2, 4}, {1, 3, 4}, {0, 3, 4},
    {0, 2, 5}, {1, 2, 5}, {1, 3, 5}, {0, 3, 5}};
@@ -72,8 +48,9 @@ inline void Sweeper<D>::setup()
   }
 }
 
+//---------------------------------------------------------------------------//
 // 2D Setup
-template<>
+template <>
 inline void Sweeper<_2D>::setup()
 {
   // Set up face/octant map.
@@ -92,6 +69,7 @@ inline void Sweeper<_2D>::setup()
   }
 }
 
+//---------------------------------------------------------------------------//
 // 1D Setup
 template <>
 inline void Sweeper<_1D>::setup()
@@ -105,34 +83,7 @@ inline void Sweeper<_1D>::setup()
   d_face_index[1][Mesh::VERT][Boundary_T::OUT] = Mesh::WEST;
 }
 
-// Mesh sweeper indices
-template <class D>
-inline detran_utilities::size_t Sweeper<D>::index(const size_t o,
-                                                  const size_t dim,
-                                                  const size_t ijk)
-{
-  if (dim == 1)
-  {
-    if ((o == 0 or o == 3 or o == 4 or o == 7) and !d_adjoint)
-      return ijk;
-    else
-      return d_mesh->number_cells_x() - ijk - 1;
-  }
-  if (dim == 2)
-  {
-    if ((o == 0 or o == 1 or o == 4 or o == 5) and !d_adjoint)
-      return ijk;
-    else
-      return d_mesh->number_cells_y() - ijk - 1;
-  }
-  if (dim == 3)
-  {
-    if ((o == 0 or o == 1 or o == 2 or o == 3) and !d_adjoint)
-      return ijk;
-    else
-      return d_mesh->number_cells_z() - ijk - 1;
-  }
-}
+
 
 } // end namespace detran
 

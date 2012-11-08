@@ -83,7 +83,7 @@ int test_Sweeper3D_basic(int argc, char *argv[])
   Sweeper_T sweeper(input, mesh, mat, quad, state, bound, source);
 
   // Sweep
-  State::moments_type phi(mesh->number_cells(0), 0.0);
+  State::moments_type phi(mesh->number_cells(), 0.0);
   sweeper.setup_group(0);
   sweeper.sweep(phi);
   state->set_moments(0, phi);

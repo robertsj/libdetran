@@ -45,66 +45,60 @@
 #include "angle/detran_angle.hh"
 
 // Geometry
-#include "Assembly.hh"
-#include "Core.hh"
-#include "Mesh.hh"
-#include "MeshMOC.hh"
-#include "Mesh1D.hh" 
-#include "Mesh2D.hh" 
-#include "Mesh3D.hh"   
-#include "PinCell.hh"
-#include "Segment.hh"
-#include "Track.hh"
-#include "TrackDB.hh"
-#include "Tracker.hh"
+#include "geometry/Assembly.hh"
+#include "geometry/Core.hh"
+#include "geometry/Mesh.hh"
+#include "geometry/MeshMOC.hh"
+#include "geometry/Mesh1D.hh" 
+#include "geometry/Mesh2D.hh" 
+#include "geometry/Mesh3D.hh"   
+#include "geometry/PinCell.hh"
+#include "geometry/Segment.hh"
+#include "geometry/Track.hh"
+#include "geometry/TrackDB.hh"
+#include "geometry/Tracker.hh"
 
 // Material
-#include "Material.hh"
+#include "material/Material.hh"
 
 // External source
-#include "ExternalSource.hh"
-#include "ConstantSource.hh"
-#include "DiscreteSource.hh"
-#include "IsotropicSource.hh"
+#include "external_source/ExternalSource.hh"
+#include "external_source/ConstantSource.hh"
+#include "external_source/DiscreteSource.hh"
+#include "external_source/IsotropicSource.hh"
 
 //---------------------------------------------------------------------------//
 // LEVEL 2 
 //---------------------------------------------------------------------------//  
 
 // Discretization
-#include "DimensionTraits.hh"
-#include "Equation_DD_1D.hh"
-#include "Equation_DD_2D.hh"
-#include "Equation_DD_3D.hh"
-#include "Equation_SC_2D.hh"
-#include "Equation_SD_1D.hh"
-#include "Equation_SD_2D.hh"
-#include "Equation_SC_MOC.hh"
+#include "discretization/DimensionTraits.hh"
+//#include "Equation_DD_1D.hh"
+//#include "Equation_DD_2D.hh"
+//#include "Equation_DD_3D.hh"
+//#include "Equation_SC_2D.hh"
+//#include "Equation_SD_1D.hh"
+//#include "Equation_SD_2D.hh"
+//#include "Equation_SC_MOC.hh"
     
 // Boundary
-#include "BoundaryDiffusion.hh"
-#include "BoundarySN.hh"
-#include "BoundaryMOC.hh"
+#include "boundary/BoundaryDiffusion.hh"
+#include "boundary/BoundarySN.hh"
+#include "boundary/BoundaryMOC.hh"
 
 // Transport
-#include "FissionSource.hh"
-#include "State.hh"
-#include "SweepSource.hh"
-#include "Sweeper.hh"
-#include "Sweeper1D.hh"
-#include "Sweeper2D.hh"
-#include "Sweeper3D.hh"
-#include "Sweeper2DMOC.hh"
+#include "transport/FissionSource.hh"
+#include "transport/State.hh"
+#include "transport/SweepSource.hh"
+//#include "Sweeper.hh"
+//#include "Sweeper1D.hh"
+//#include "Sweeper2D.hh"
+//#include "Sweeper3D.hh"
+//#include "Sweeper2DMOC.hh"
 
 //---------------------------------------------------------------------------//
 // LEVEL 3 
 //---------------------------------------------------------------------------//  
-
-// Diffusion
-#ifdef DETRAN_ENABLE_PETSC
-#include "GainOperator.hh"
-#include "LossOperator.hh"
-#endif
 
 // Solvers
 #include "FixedSourceManager.hh"
@@ -163,7 +157,7 @@
 // LEVEL 3
 
 // Diffusion
-%include "detran_diffusion.i"
+//%include "detran_diffusion.i"
 
 // Transport
 %include "detran_solvers.i"

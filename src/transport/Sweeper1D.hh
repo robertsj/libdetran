@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Sweeper1D.hh
- * \author Jeremy Roberts
- * @date   Mar 24, 2012
- * \brief  Sweeper1D class definition.
+/**
+ *  @file   Sweeper1D.hh
+ *  @author Jeremy Roberts
+ *  @date   Mar 24, 2012
+ *  @brief  Sweeper1D class definition.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef SWEEPER1D_HH_
-#define SWEEPER1D_HH_
+#ifndef detran_SWEEPER1D_HH_
+#define detran_SWEEPER1D_HH_
 
 #include "Sweeper.hh"
 #include "boundary/BoundarySN.hh"
@@ -16,12 +16,10 @@
 namespace detran
 {
 
-//---------------------------------------------------------------------------//
-/*!
- *  \class Sweeper1D
- *  \brief Sweeper for 1D discrete ordinates problems.
+/**
+ *  @class Sweeper1D
+ *  @brief Sweeper for 1D discrete ordinates problems.
  */
-//---------------------------------------------------------------------------//
 template <class EQ>
 class Sweeper1D: public Sweeper<_1D>
 {
@@ -43,7 +41,7 @@ public:
   typedef typename Base::SP_sweepsource             SP_sweepsource;
   typedef typename Base::moments_type               moments_type;
   typedef typename Base::angular_flux_type          angular_flux_type;
-  typedef typename Base::SP_tally                   SP_currenttally;
+  typedef typename Base::SP_tally                   SP_tally;
   typedef typename Base::vec_int                    vec_int;
   typedef typename Base::vec2_int                   vec2_int;
   typedef typename Base::vec3_int                   vec3_int;
@@ -57,9 +55,8 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Constructor.
-   *
+  /**
+   *  @brief Constructor.
    *  @param    input       User input database.
    *  @param    mesh        Cartesian mesh.
    *  @param    material    Material database.
@@ -74,24 +71,7 @@ public:
             SP_quadrature quadrature,
             SP_state state,
             SP_boundary boundary,
-            SP_sweepsource sweepsource)
-  : Base(input,mesh,material,quadrature,
-         state,sweepsource)
-  , d_boundary(boundary)
-  , d_ordered_octants(2, 0)
-  {
-    Require(boundary);
-
-    // Order the octants
-    d_ordered_octants[0] = 0;
-    d_ordered_octants[1] = 1;
-    if (d_boundary->is_reflective(0) and d_boundary->is_reflective(1))
-    {
-      d_ordered_octants[0] = 1;
-      d_ordered_octants[1] = 0;
-    }
-
-  }
+            SP_sweepsource sweepsource);
 
   /// Virtual destructor
   virtual ~Sweeper1D(){}
@@ -104,12 +84,7 @@ public:
          detran_angle::Quadrature::SP_quadrature    quadrature,
          State::SP_state                            state,
          BoundaryBase<_1D>::SP_boundary             boundary,
-         SweepSource<_1D>::SP_sweepsource           sweepsource)
-  {
-    SP_sweeper p(new Sweeper1D(input, mesh, material, quadrature,
-                               state, boundary, sweepsource));
-    return p;
-  }
+         SweepSource<_1D>::SP_sweepsource           sweepsource);
 
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL SWEEPERS MUST IMPLEMENT THESE
@@ -118,20 +93,14 @@ public:
   /// Sweep.
   inline void sweep(State::moments_type &phi);
 
-  /// Setup the equations for the group
-  void setup_group(const detran_utilities::size_t g)
-  {
-    d_g = g;
-  }
-
 private:
 
   //-------------------------------------------------------------------------//
   // DATA
   //-------------------------------------------------------------------------//
 
+  // SN boundary
   SP_boundary d_boundary;
-  vec_int d_ordered_octants;
 
 };
 
@@ -143,4 +112,4 @@ private:
 
 #include "Sweeper1D.i.hh"
 
-#endif /* SWEEPER1D_HH_ */
+#endif /* detran_SWEEPER1D_HH_ */
