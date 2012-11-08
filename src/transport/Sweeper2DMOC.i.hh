@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Sweeper2DMOC.i.hh
- * \author Jeremy Roberts
- * @date   Jun 22, 2012
- * \brief  Sweeper2DMOC inline member definitions.
+/**
+ *  @file   Sweeper2DMOC.i.hh
+ *  @author Jeremy Roberts
+ *  @date   Jun 22, 2012
+ *  @brief  Sweeper2DMOC inline member definitions.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef SWEEPER2DMOC_I_HH_
-#define SWEEPER2DMOC_I_HH_
+#ifndef detran_SWEEPER2DMOC_I_HH_
+#define detran_SWEEPER2DMOC_I_HH_
 
 #include "discretization/Equation_SC_MOC.hh"
 #include <iostream>
@@ -206,4 +206,4 @@ inline void Sweeper2DMOC<EQ>::sweep(moments_type &phi)
 
 } // end namespace detran
 
-#endif /* SWEEPER2DMOC_I_HH_ */
+#endif /* detran_SWEEPER2DMOC_I_HH_ */

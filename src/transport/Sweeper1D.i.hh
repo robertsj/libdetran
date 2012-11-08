@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Sweeper1D.i.hh
- * \author Jeremy Roberts
- * @date   Mar 24, 2012
- * \brief  Sweeper1D inline member definitions.
+/**
+ *  @file   Sweeper1D.i.hh
+ *  @author Jeremy Roberts
+ *  @date   Mar 24, 2012
+ *  @brief  Sweeper1D inline member definitions.
  */
 //---------------------------------------------------------------------------//
-#ifndef SWEEPER1D_I_HH_
-#define SWEEPER1D_I_HH_
 
+#ifndef detran_SWEEPER1D_I_HH_
+#define detran_SWEEPER1D_I_HH_
 
 #include <iostream>
 #ifdef DETRAN_ENABLE_OPENMP
@@ -18,7 +18,7 @@
 namespace detran
 {
 
-// Sweep.
+//---------------------------------------------------------------------------//
 template <class EQ>
 inline void Sweeper1D<EQ>::sweep(moments_type &phi)
 {
@@ -135,8 +135,6 @@ inline void Sweeper1D<EQ>::sweep(moments_type &phi)
   return;
 }
 
-
-
 } // end namespace detran
 
-#endif /* SWEEPER1D_I_HH_ */
+#endif /* detran_SWEEPER1D_I_HH_ */

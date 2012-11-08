@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   SweepSource.hh
- * \author robertsj
- * @date   Apr 4, 2012
- * \brief  SweepSource class definition.
+/**
+ *  @file   SweepSource.hh
+ *  @author robertsj
+ *  @date   Apr 4, 2012
+ *  @brief  SweepSource class definition.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef SWEEPSOURCE_HH_
-#define SWEEPSOURCE_HH_
+#ifndef detran_SWEEPSOURCE_HH_
+#define detran_SWEEPSOURCE_HH_
 
 #include "FissionSource.hh"
 #include "ScatterSource.hh"
@@ -291,7 +291,7 @@ private:
 
 #include "SweepSource.i.hh"
 
-#endif /* SWEEPSOURCE_HH_ */
+#endif /* detran_SWEEPSOURCE_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of SweepSource.hh

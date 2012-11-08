@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   ScatterSource.hh
- * \author robertsj
- * @date   Apr 4, 2012
- * \brief  ScatterSource class definition.
+/**
+ *  @file   ScatterSource.hh
+ *  @author robertsj
+ *  @date   Apr 4, 2012
+ *  @brief  ScatterSource class definition.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef SCATTERSOURCE_HH_
-#define SCATTERSOURCE_HH_
+#ifndef detran_SCATTERSOURCE_HH_
+#define detran_SCATTERSOURCE_HH_
 
 #include "State.hh"
 #include "material/Material.hh"
@@ -21,10 +21,10 @@ namespace detran
 {
 
 //---------------------------------------------------------------------------//
-/*!
- *  \class ScatterSource
- *  \brief Methods for constructing various scattering sources.
- *  \todo  Implement something in group bounds for adjoint
+/**
+ *  @class ScatterSource
+ *  @brief Methods for constructing various scattering sources.
+ *  @todo  Implement something in group bounds for adjoint
  */
 //---------------------------------------------------------------------------//
 
@@ -151,13 +151,10 @@ protected:
 
   /// Mesh
   SP_mesh d_mesh;
-
   /// Material
   SP_material d_material;
-
   /// State
   SP_state d_state;
-
   /// Material map
   vec_int d_mat_map;
 
@@ -171,7 +168,7 @@ protected:
 
 #include "ScatterSource.i.hh"
 
-#endif /* SCATTERSOURCE_HH_ */
+#endif /* detran_SCATTERSOURCE_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of ScatterSource.hh

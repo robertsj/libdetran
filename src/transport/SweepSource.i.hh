@@ -7,8 +7,8 @@
  */
 //---------------------------------------------------------------------------//
 
-#ifndef SWEEPSOURCE_I_HH_
-#define SWEEPSOURCE_I_HH_
+#ifndef detran_SWEEPSOURCE_I_HH_
+#define detran_SWEEPSOURCE_I_HH_
 
 #include <iostream>
 #include <omp.h>
@@ -165,14 +165,17 @@ void SweepSource<D>::reset()
   }
 }
 
-// Explicit instantiations
+//---------------------------------------------------------------------------//
+// EXPLICIT INSTANTIATIONS
+//---------------------------------------------------------------------------//
+
 template class SweepSource<_1D>;
 template class SweepSource<_2D>;
 template class SweepSource<_3D>;
 
 } // namespace detran
 
-#endif /* SWEEPSOURCE_I_HH_ */
+#endif /* detran_SWEEPSOURCE_I_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of SweepSource.i.hh

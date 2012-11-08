@@ -1,13 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Sweeper3D.i.hh
- * \author Jeremy Roberts
- * @date   Mar 24, 2012
- * \brief  Sweeper3D inline member definitions.
+/**
+ *  @file   Sweeper3D.i.hh
+ *  @author Jeremy Roberts
+ *  @date   Mar 24, 2012
+ *  @brief  Sweeper3D inline member definitions.
  */
 //---------------------------------------------------------------------------//
-#ifndef SWEEPER3D_I_HH_
-#define SWEEPER3D_I_HH_
+
+#ifndef detran_SWEEPER3D_I_HH_
+#define detran_SWEEPER3D_I_HH_
 
 #include "discretization/Equation_DD_3D.hh"
 #include <iostream>
@@ -18,7 +19,7 @@
 namespace detran
 {
 
-// Sweep.
+//---------------------------------------------------------------------------//
 template <class EQ>
 inline void Sweeper3D<EQ>::sweep(moments_type &phi)
 {

@@ -7,8 +7,8 @@
  */
 //---------------------------------------------------------------------------//
 
-#ifndef STATE_HH_
-#define STATE_HH_
+#ifndef detran_STATE_HH_
+#define detran_STATE_HH_
 
 #include "angle/Quadrature.hh"
 #include "geometry/Mesh.hh"
@@ -245,7 +245,7 @@ private:
 
 #include "State.i.hh"
 
-#endif /* STATE_HH_ */
+#endif /* detran_STATE_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of State.hh

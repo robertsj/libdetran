@@ -6,8 +6,9 @@
  *  @brief  Sweeper2D inline member definitions.
  */
 //---------------------------------------------------------------------------//
-#ifndef SWEEPER2D_I_HH_
-#define SWEEPER2D_I_HH_
+
+#ifndef detran_SWEEPER2D_I_HH_
+#define detran_SWEEPER2D_I_HH_
 
 #include "discretization/Equation_SD_2D.hh"
 #include "discretization/Equation_DD_2D.hh"
@@ -20,6 +21,7 @@
 namespace detran
 {
 
+//---------------------------------------------------------------------------//
 template <class EQ>
 inline void Sweeper2D<EQ>::sweep(moments_type &phi)
 {
@@ -155,4 +157,4 @@ inline void Sweeper2D<EQ>::sweep(moments_type &phi)
 
 } // end namespace detran
 
-#endif /* SWEEPER2D_I_HH_ */
+#endif /* detran_SWEEPER2D_I_HH_ */
