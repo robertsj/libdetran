@@ -139,8 +139,7 @@ double SphericalHarmonics::get_Y_lm(const int    l,
       return norm * boost::math::spherical_harmonic_i(l,-m, theta, phi);
 #else
     // Degree not implemented.
-    THROW("l too large; maximum Legendre order is 3. " +
-          " For higher orders, enable Boost.");
+    THROW("Maximum Legendre order is 3. For higher orders, enable Boost.");
 
 #endif
   }

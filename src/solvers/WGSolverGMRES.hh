@@ -140,6 +140,8 @@ private:
   SP_vector d_b;
   /// Number of reflective iterations
   int d_reflective_solve_iterations;
+  /// Flag to update the outgoing fluxes (default: false)
+  bool d_update_boundary_flux;
 
   //-------------------------------------------------------------------------//
   // IMPLEMENTATION

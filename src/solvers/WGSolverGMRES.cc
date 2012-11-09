@@ -23,7 +23,10 @@ WGSolverGMRES<D>::WGSolverGMRES(SP_state                  state,
                                 SP_fissionsource          q_f,
                                 bool                      multiply)
  : Base(state, material, quadrature, boundary, q_e, q_f, multiply)
+ , d_update_boundary_flux(false)
 {
+  Require(d_input);
+  d_input->display();
 
   // Create operator
   d_operator = new WGTransportOperator<D>(d_state,
@@ -41,6 +44,8 @@ WGSolverGMRES<D>::WGSolverGMRES(SP_state                  state,
   {
     db = d_input->template get<SP_input>("inner_solver_db");
   }
+  Assert(db);
+  db->display();
   d_solver = callow::LinearSolverCreator::Create(db);
   Assert(d_solver);
 
@@ -48,6 +53,14 @@ WGSolverGMRES<D>::WGSolverGMRES(SP_state                  state,
   // is given, since that is for setting PC's.  We do that
   // explicitly below.
   d_solver->set_operators(d_operator);
+
+  // Check for boundary update.  In GMRES, this is not the
+  // default, since it implies extra sweeps that may not be needed.
+  if (d_input->check("compute_boundary_flux"))
+  {
+    d_update_boundary_flux =
+      d_input->template get<int>("compute_boundary_flux");
+  }
 
   //--------------------------------------------------------------------------//
   // PRECONDITIONER

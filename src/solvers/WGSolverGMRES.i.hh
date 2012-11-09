@@ -66,10 +66,8 @@ inline void WGSolverGMRES<D>::solve(const size_t g)
                     BoundaryBase<D>::IN, BoundaryBase<D>::SET, true);
   }
 
-  // Iterate to pick up outgoing boundary fluxes.  Only do this if
-  // there is at least one vacuum boundary.  Otherwise, the
-  // boundary fluxes are never going to be needed.
-  if (d_boundary->has_vacuum())
+  // Iterate to pick up outgoing boundary fluxes if requested.
+  if (d_update_boundary_flux)
   {
     moments_type phi_g   = d_state->phi(g);
     moments_type phi_g_o = d_state->phi(g);
@@ -157,7 +155,7 @@ inline void WGSolverGMRES<D>::build_rhs(State::moments_type &B)
         break;
       }
     }
-    std::cout << " ref its " << d_reflective_solve_iterations << std::endl;
+    //std::cout << " ref its " << d_reflective_solve_iterations << std::endl;
     d_sweeper->set_update_boundary(false);
   }
 

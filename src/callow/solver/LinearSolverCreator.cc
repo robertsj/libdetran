@@ -65,6 +65,12 @@ LinearSolverCreator::Create(SP_db db)
     }
   }
 
+//  std::cout << " CALLOW:" << std::endl;
+//  std::cout << "  solver_type = " << solver_type << std::endl;
+//  std::cout << "         atol = " << atol << std::endl;
+//  std::cout << "         rtol = " << rtol << std::endl;
+//  std::cout << "        maxit = " << maxit << std::endl;
+
   //---------------------------------------------------------------------------//
   if (solver_type == "richardson")
   {

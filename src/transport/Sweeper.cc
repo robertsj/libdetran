@@ -156,14 +156,15 @@ void Sweeper<D>::setup_octant_indices(SP_boundary boundary)
   int no = d_quadrature->number_octants();
 
   // Initialize the ordered octants in a staggered pattern.  This
-  // is the default for pure vacuum and pure reflect.
+  // is the default for pure vacuum and pure reflection.
   for (int i = 0; i < no/2; ++i)
   {
     d_ordered_octants[2*i    ] = i;
     d_ordered_octants[2*i + 1] = no/2 + i;
   }
 
-  if (boundary->has_reflective() and !boundary->has_vacuum())
+  // Sort the octants if their are mixed conditions
+  if (boundary->has_reflective() and boundary->has_vacuum())
   {
     // Reset to cyclic for ordering.
     for (int i = 0; i < no; ++i)
@@ -190,15 +191,25 @@ void Sweeper<D>::setup_octant_indices(SP_boundary boundary)
         }
   } // end reflective
 
+  // Overwrite with user-specified order (useful to show effect of order)
+  if (d_input->check("sweeper_ordered_octants"))
+  {
+    vec_int oo = d_input->get<vec_int>("sweeper_ordered_octants");
+    Insist(oo.size() == no, "Wrong number of ordered octants.");
+    d_ordered_octants = oo;
+  }
+
   if (d_input->check("sweeper_print_octants"))
   {
     if (d_input->get<int>("sweeper_print_octants"))
     {
-      std::cout << " SWEEPER ORDERED OCTANTS: " << std::endl;
-      for (int o = 0; o < no; o++)
-        std::cout << " o = " << d_ordered_octants[o] << std::endl;
+      std::cout << " SWEEPER ORDERED OCTANTS: ";
+      for (int o = 0; o < no; o++) std::cout << " " << d_ordered_octants[o];
+      std::cout << std::endl;
     }
   }
+
+
 }
 
 //---------------------------------------------------------------------------//

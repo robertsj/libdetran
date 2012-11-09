@@ -23,6 +23,7 @@ using boost::math::spherical_harmonic_i;
 using boost::math::factorial;
 #endif
 #include "utilities/Constants.hh"
+#include "cstdio"
 // Setup
 /* ... */
 
@@ -31,6 +32,7 @@ using namespace detran_utilities;
 using namespace detran_test;
 using std::cout;
 using std::endl;
+using std::printf;
 
 int main(int argc, char *argv[])
 {
@@ -85,8 +87,6 @@ int test_SphericalHarmonics_integration(int argc, char *argv[])
   QuadratureFactory::SP_quadrature Q;
   qf.build(Q, inp, 3);
 
-//  printf("   l   m      reference           computed            rel err (%)     \n");
-//  printf("----------------------------------------------------------------------\n");
   int L = 6;
 
   vec2_dbl err(L + 1, vec_dbl(L + 1, 0.0));
@@ -123,14 +123,10 @@ int test_SphericalHarmonics_integration(int argc, char *argv[])
           double mu  = Q->mu(o, a);
           double eta = Q->eta(o, a);
           double xi  = Q->xi(o, a);
-//          printf(" %3i %3i %19.13f %19.13f %19.13f \n",
-//                 o, a, mu, eta, xi);
           val += Q->weight(a) * std::pow(mu, m) * std::pow(xi, l);
         }
       }
       err[ll][mm] = 100.0*(val-ref)/ref;
-//      printf(" %3i %3i %19.13f %19.13f %19.13f \n",
-//             l, m, ref, val, err[ll][mm]);
     }
   }
 
