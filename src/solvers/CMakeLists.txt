@@ -26,9 +26,10 @@ SET(SRC
     MGTransportOperator.cc
     #
     Eigensolver.cc
-    EigenSLEPc.cc
+    EigenArnoldi.cc
     EigenPI.cc
     EigenDiffusion.cc
+    EnergyIndependentEigenOperator.cc
     #
     PreconditionerWG.cc
     PreconditionerMG.cc

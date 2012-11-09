@@ -12,6 +12,7 @@
 namespace callow
 {
 
+//---------------------------------------------------------------------------//
 EigenSolver::EigenSolver(const double    tol,
                          const int       maxit,
                          std::string     name)

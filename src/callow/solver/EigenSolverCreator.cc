@@ -32,7 +32,7 @@ EigenSolverCreator::Create(SP_db db)
   // Set defaults
   std::string solver_type = "power";
   double tol = 1e-5;
-  int maxit   = 100;
+  int maxit  = 100;
   int monitor_level = 0;
 
   // Check database for parameters--easily add new ones here.
@@ -53,7 +53,7 @@ EigenSolverCreator::Create(SP_db db)
   else if (solver_type == "slepc")
   {
 #ifdef CALLOW_ENABLE_SLEPC
-    solver = new SlepcSolver(tol,maxit);
+    solver = new SlepcSolver(tol, maxit);
 #else
     THROW("SLEPc solvers not available with this build");
 #endif

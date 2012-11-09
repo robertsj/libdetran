@@ -33,6 +33,8 @@ inline void SlepcSolver::solve_impl(Vector &x, Vector &x0)
                          x.petsc_vector(), x0.petsc_vector());
   Insist(!ierr, "Error getting eigenpair.");
 
+  std::cout << " LAMBDA = " << lambda << std::endl;
+
   // Scale the result by its sum.  This points it in the positive
   // direction and gives the L1 normalization we're using in PI.
   PetscScalar sign = 1;

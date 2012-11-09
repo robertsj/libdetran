@@ -18,9 +18,7 @@
 // Eigenvalue solvers
 #include "EigenPI.hh"
 #include "EigenDiffusion.hh"
-#ifdef DETRAN_ENABLE_SLEPC
-#include "EigenSLEPc.hh"
-#endif
+#include "EigenArnoldi.hh"
 
 #include <string>
 
@@ -75,14 +73,9 @@ bool EigenvalueManager<D>::solve()
     }
     d_solver = new EigenDiffusion<D>(d_mg_solver);
   }
-  else if (eigen_solver == "SLEPc")
+  else if (eigen_solver == "arnoldi")
   {
-    #ifdef DETRAN_ENABLE_SLEPC
-      d_solver = new EigenSLEPc<D>(d_mg_solver);
-    #else
-      std::cout << "MGSolverGMRES is unavailable since PETSc is not enabled."
-                << std::endl;
-    #endif
+      d_solver = new EigenArnoldi<D>(d_mg_solver);
   }
   else
   {

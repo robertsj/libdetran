@@ -60,11 +60,11 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
   if (d_number_active_groups)
   {
     // Create operator
-    d_operator = new MGTransportOperator<D>(d_state,
-                                            d_boundary,
-                                            d_sweeper,
-                                            d_sweepsource,
-                                            d_krylov_group_cutoff);
+    d_operator = new Operator_T(d_state,
+                                d_boundary,
+                                d_sweeper,
+                                d_sweepsource,
+                                d_krylov_group_cutoff);
 
     // Create temporary unknown and right hand size vectors
     d_x = new callow::Vector(d_operator->number_rows(), 0.0);
@@ -89,14 +89,8 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
     d_boundary_size_group = d_operator->boundary_size();
     d_boundary_size       = d_boundary_size_group * d_number_groups;
 
-//    std::cout << " MG GMRES " << std::endl;
-//    std::cout << "   active groups: " << d_number_active_groups << std::endl;
-//    std::cout << "   d_moments_size_group: " << d_moments_size_group << std::endl;
-//    std::cout << "   d_moments_size: " << d_moments_size << std::endl;
-//    std::cout << "   d_boundary_size_group: " << d_boundary_size_group << std::endl;
-//    std::cout << "   d_boundary_size: " << d_boundary_size << std::endl;
-
   }
+
   //--------------------------------------------------------------------------//
   // PRECONDITIONER
   //--------------------------------------------------------------------------//

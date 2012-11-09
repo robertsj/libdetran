@@ -121,38 +121,38 @@ InputDB::SP_input test_EigenvalueManager_input()
   inp->put<int>("quad_number_polar_octant",   2);
   inp->put<int>("quad_number_azimuth_octant", 2);
   // INNER
-  inp->put<string>("inner_solver",            "GMRES");
+  inp->put<string>("inner_solver",            "SI");
   inp->put<double>("inner_tolerance",         1e-9);
-  inp->put<int>("inner_print_level",          1);
+  inp->put<int>("inner_print_level",          0);
   inp->put<double>("inner_tolerance",         1e-9);
   inp->put<int>("inner_max_iters",            10000);
 
   // OUTER
-  inp->put<string>("outer_solver",            "GMRES");
-  inp->put<int>("outer_print_level",          2);
-  inp->put<int>("outer_max_iters",            0);
+  inp->put<string>("outer_solver",            "GS");
+  inp->put<int>("outer_print_level",          0);
+  inp->put<int>("outer_max_iters",            1000);
   inp->put<int>("outer_krylov_group_cutoff",  0);
   inp->put<double>("outer_tolerance",         1e-9);
   // EIGEN
   inp->put<int>("eigen_print_level",          2);
-  inp->put<string>("eigen_solver",            "PI");
+  inp->put<string>("eigen_solver",            "arnoldi");
   inp->put<double>("eigen_tolerance",         1e-8);
   inp->put<int>("eigen_print_interval",       1);
   inp->put<int>("eigen_max_iters",            10);
   // CALLOW DATABASE (APPLIED TO ALL)
   {
     InputDB::SP_input callowdb(new InputDB("callowdb"));
-    callowdb->put<std::string>("eigen_solver_type",               "power");
+    callowdb->put<std::string>("eigen_solver_type",               "slepc");
     callowdb->put<int>("eigen_solver_monitor_level",              1000);
     callowdb->put<int>("eigen_solver_maxit",                      4000);
     callowdb->put<double>("eigen_solver_tol",                     1e-10);
     callowdb->put<std::string>("linear_solver_type",              "gmres");
-
     callowdb->put<double>("linear_solver_atol",                   1e-12);
     callowdb->put<double>("linear_solver_rtol",                   1e-12);
     callowdb->put<int>("linear_solver_maxit",                     4000);
     callowdb->put<int>("linear_solver_gmres_restart",             80);
     callowdb->put<int>("linear_solver_monitor_level",             2);
+    callowdb->put<int>("eigen_solver_monitor_level",              2);
     inp->put<InputDB::SP_input>("eigen_solver_db",  callowdb);
     inp->put<InputDB::SP_input>("outer_solver_db",  callowdb);
     inp->put<InputDB::SP_input>("inner_solver_db",  callowdb);
