@@ -104,8 +104,6 @@ inline void Sweeper3D<EQ>::sweep(moments_type &phi)
           int di = d_space_ranges[o][0][1];
           for (int ii = 0; ii < d_mesh->number_cells_x(); ++ii, i += di)
           {
-            std::cout << "i j k = " << i << j << k << std::endl;
-
             psi_in[Mesh::YZ] = psi_out[Mesh::YZ];
             psi_in[Mesh::XZ] = psi_xz[k][i];
             psi_in[Mesh::XY] = psi_xy[j][i];
@@ -139,8 +137,6 @@ inline void Sweeper3D<EQ>::sweep(moments_type &phi)
 
   } // end octant loop
 
-  std::cout << phi.size() << " " <<  phi_local.size() << std::endl;
-  Assert(phi.size() == phi_local.size());
 #ifdef DETRAN_ENABLE_OPENMP
   // Sum local thread fluxes.
   #pragma omp critical

@@ -122,6 +122,13 @@ protected:
   /// Polar weights
   vec_dbl d_polar_weight;
 
+  //-------------------------------------------------------------------------//
+  // IMPLEMENTATION
+  //-------------------------------------------------------------------------//
+
+  /// Build the product quadrature parameters from polar and azimuth values
+  void build_product_quadrature();
+
 };
 
 } // end namespace detran_angle

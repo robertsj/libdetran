@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   BoundaryConditionMOC.hh
- * \brief  BoundaryConditionMOC 
- * \author Jeremy Roberts
- * \date   Jun 26, 2012
+/**
+ *  @file   BoundaryConditionMOC.hh
+ *  @brief  BoundaryConditionMOC
+ *  @author Jeremy Roberts
+ *  @date   Jun 26, 2012
  */
 //---------------------------------------------------------------------------//
 
-#ifndef BOUNDARYCONDITIONMOC_HH_
-#define BOUNDARYCONDITIONMOC_HH_
+#ifndef detran_BOUNDARYCONDITIONMOC_HH_
+#define detran_BOUNDARYCONDITIONMOC_HH_
 
 #include "BoundaryMOC.hh"
 
@@ -19,9 +19,9 @@ namespace detran
 template <class D> class BoundaryMOC;
 
 //---------------------------------------------------------------------------//
-/*!
- * \class BoundaryCondition
- * \brief Boundary condition for a surface.
+/**
+ *  @class BoundaryCondition
+ *  @brief Boundary condition for a surface.
  */
 //---------------------------------------------------------------------------//
 
@@ -90,16 +90,12 @@ protected:
 
   /// Boundary flux container. \todo Is there a way around using a reference?
   Boundary_T& d_boundary;
-
   /// My surface.
   const size_t d_side;
-
   /// Input
   SP_input d_input;
-
   /// Cartesian mesh.
   SP_mesh d_mesh;
-
   /// Angular quadrature.
   SP_quadrature d_quadrature;
 
@@ -107,7 +103,7 @@ protected:
 
 } // end namespace detran
 
-#endif // BOUNDARYCONDITIONMOC_HH_ 
+#endif // detran_BOUNDARYCONDITIONMOC_HH_
 
 //---------------------------------------------------------------------------//
 //              end of file BoundaryConditionMOC.hh

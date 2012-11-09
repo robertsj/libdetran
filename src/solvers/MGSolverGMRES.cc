@@ -37,7 +37,7 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
   // portion.  The default is to use GS on the downscatter block and Krylov
   // on the upscatter block.
   d_krylov_group_cutoff = material->upscatter_cutoff();
-  if (d_input->check("outer_upscatter_cutoff"))
+  if (d_input->check("outer_krylov_group_cutoff"))
   {
     d_krylov_group_cutoff = d_input->template get<int>("outer_krylov_group_cutoff");
     Insist((d_krylov_group_cutoff >= 0) and

@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   VacuumMOC.hh
- * \brief  VacuumMOC class definition.
- * \author Jeremy Roberts
- * \date   Jun 26, 2012
+/**
+ *  @file   VacuumMOC.hh
+ *  @brief  VacuumMOC class definition.
+ *  @author Jeremy Roberts
+ *  @date   Jun 26, 2012
  */
 //---------------------------------------------------------------------------//
 
-#ifndef VACUUMMOC_HH_
-#define VACUUMMOC_HH_
+#ifndef detran_VACUUMMOC_HH_
+#define detran_VACUUMMOC_HH_
 
 #include "BoundaryConditionMOC.hh"
 
@@ -16,9 +16,9 @@ namespace detran
 {
 
 //---------------------------------------------------------------------------//
-/*!
- * \class VacuumMOC
- * \brief Vacuum boundary condition for MOC
+/**
+ *  @class VacuumMOC
+ *  @brief Vacuum boundary condition for MOC
  */
 //---------------------------------------------------------------------------//
 
@@ -74,7 +74,7 @@ private:
 
 } // end namespace detran
 
-#endif // VACUUMMOC_HH_ 
+#endif // detran_VACUUMMOC_HH_
 
 //---------------------------------------------------------------------------//
 //              end of file VacuumMOC.hh

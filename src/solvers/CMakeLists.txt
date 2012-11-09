@@ -58,7 +58,7 @@ TARGET_LINK_LIBRARIES(${LIB_NAME}
                       material
                       geometry
                       utilities
-                      ${Callow_LIBRARIES}
+                      ioutils
 )
 
 INSTALL_FILES(/include/${LIB_NAME} .hh)

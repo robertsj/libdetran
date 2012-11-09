@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   BoundaryCondition.hh
- * \author robertsj
- * \date   Apr 9, 2012
- * \brief  BoundaryCondition class definition.
+/**
+ *  @file   BoundaryCondition.hh
+ *  @author robertsj
+ *  @date   Apr 9, 2012
+ *  @brief  BoundaryCondition class definition.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef BOUNDARYCONDITION_HH_
-#define BOUNDARYCONDITION_HH_
+#ifndef detran_BOUNDARYCONDITION_HH_
+#define detran_BOUNDARYCONDITION_HH_
 
 #include "BoundarySN.hh"
 
@@ -20,9 +20,9 @@ template <class D> class BoundarySN;
 template <class D> class BoundaryTraits;
 
 //---------------------------------------------------------------------------//
-/*!
- * \class BoundaryCondition
- * \brief Boundary condition for a surface.
+/**
+ *  @class BoundaryCondition
+ *  @brief Boundary condition for a surface.
  */
 //---------------------------------------------------------------------------//
 
@@ -92,16 +92,12 @@ protected:
 
   /// Boundary flux container. \todo Is there a way around using a reference?
   Boundary_T& d_boundary;
-
   /// My surface.
   const size_t d_side;
-
   /// Input
   SP_input d_input;
-
   /// Cartesian mesh.
   SP_mesh d_mesh;
-
   /// Angular quadrature.
   SP_quadrature d_quadrature;
 
@@ -109,4 +105,4 @@ protected:
 
 } // end namespace detran
 
-#endif /* BOUNDARYCONDITION_HH_ */
+#endif /* detranBOUNDARYCONDITION_HH_ */

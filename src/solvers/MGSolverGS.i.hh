@@ -10,6 +10,7 @@
 #ifndef detran_MGSolverGS_I_HH_
 #define detran_MGSolverGS_I_HH_
 
+#include "ioutils/StdOutUtils.hh"
 #include "utilities/MathUtilities.hh"
 #include "utilities/Warning.hh"
 #include <algorithm>

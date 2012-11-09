@@ -64,7 +64,6 @@ UniformEqual::UniformEqual(size_t order, size_t dim)
 
   // Uniform weight
   double wt = detran_utilities::four_pi / d_number_angles;
-  if (dim == 3) wt *= 0.5;
 
   // compute mu and eta
   size_t k = 0;

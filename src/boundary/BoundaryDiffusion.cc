@@ -1,10 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   BoundaryDiffusion.cc
- * \author robertsj
- * \date   Sep 11, 2012
- * \brief  BoundaryDiffusion class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+/**
+ *  @file   BoundaryDiffusion.cc
+ *  @author robertsj
+ *  @date   Sep 11, 2012
+ *  @brief  BoundaryDiffusion class definition.
  */
 //---------------------------------------------------------------------------//
 
@@ -13,28 +12,39 @@
 namespace detran
 {
 
+//---------------------------------------------------------------------------/
 template <class D>
 BoundaryDiffusion<D>::BoundaryDiffusion(SP_input        input,
                                         SP_mesh         mesh)
   : Base(input, mesh)
-  , d_boundary_flux(2,
-                    vec2_boundary_flux(2*D::dimension))
+  , d_boundary_flux(2, vec2_boundary_flux(2*D::dimension))
 {
-
   // Size the boundaries
   initialize();
+}
+
+//---------------------------------------------------------------------------/
+template <class D>
+typename BoundaryDiffusion<D>::SP_base
+BoundaryDiffusion<D>::Create(SP_input         input,
+                             SP_mesh          mesh)
+{
+  SP_boundary p(new BoundaryDiffusion(input, mesh));
+  return p;
 }
 
 //---------------------------------------------------------------------------//
 // Implementation
 //---------------------------------------------------------------------------//
 
+//---------------------------------------------------------------------------/
 template <class D>
 void BoundaryDiffusion<D>::initialize()
 {
   THROW("NOT IMPLEMENTED");
 }
 
+//---------------------------------------------------------------------------/
 template <>
 void BoundaryDiffusion<_3D>::initialize()
 {
@@ -46,19 +56,19 @@ void BoundaryDiffusion<_3D>::initialize()
   {
     // yz planes
     d_boundary_flux[inout][Mesh::WEST].resize(
-      ng, boundary_flux_type(nz, vec_dbl(ny, 0.0)));
+      ng, bf_type(nz, vec_dbl(ny, 0.0)));
     d_boundary_flux[inout][Mesh::EAST].resize(
-      ng, boundary_flux_type(nz, vec_dbl(ny, 0.0)));
+      ng, bf_type(nz, vec_dbl(ny, 0.0)));
     // xz planes
     d_boundary_flux[inout][Mesh::SOUTH].resize(
-      ng, boundary_flux_type(nz, vec_dbl(nx, 0.0)));
+      ng, bf_type(nz, vec_dbl(nx, 0.0)));
     d_boundary_flux[inout][Mesh::NORTH].resize(
-      ng, boundary_flux_type(nz, vec_dbl(nx, 0.0)));
+      ng, bf_type(nz, vec_dbl(nx, 0.0)));
     // xy planes
     d_boundary_flux[inout][Mesh::BOTTOM].resize(
-      ng, boundary_flux_type(ny, vec_dbl(nx, 0.0)));
+      ng, bf_type(ny, vec_dbl(nx, 0.0)));
     d_boundary_flux[inout][Mesh::TOP].resize(
-      ng, boundary_flux_type(ny, vec_dbl(nx, 0.0)));
+      ng, bf_type(ny, vec_dbl(nx, 0.0)));
   }
   d_boundary_flux_size[Mesh::WEST]   = ny * nz;
   d_boundary_flux_size[Mesh::EAST]   = ny * nz;
@@ -68,7 +78,7 @@ void BoundaryDiffusion<_3D>::initialize()
   d_boundary_flux_size[Mesh::TOP]    = nx * ny;
 }
 
-
+//---------------------------------------------------------------------------/
 template <>
 void BoundaryDiffusion<_2D>::initialize()
 {
@@ -78,11 +88,11 @@ void BoundaryDiffusion<_2D>::initialize()
   for (int inout = 0; inout < 2; inout++)
   {
     // vertical sides
-    d_boundary_flux[inout][Mesh::WEST].resize(ng, boundary_flux_type(ny, 0.0));
-    d_boundary_flux[inout][Mesh::EAST].resize(ng, boundary_flux_type(ny, 0.0));
+    d_boundary_flux[inout][Mesh::WEST].resize(ng, bf_type(ny, 0.0));
+    d_boundary_flux[inout][Mesh::EAST].resize(ng, bf_type(ny, 0.0));
     // horizontal sides
-    d_boundary_flux[inout][Mesh::SOUTH].resize(ng, boundary_flux_type(nx, 0.0));
-    d_boundary_flux[inout][Mesh::NORTH].resize(ng, boundary_flux_type(nx, 0.0));
+    d_boundary_flux[inout][Mesh::SOUTH].resize(ng, bf_type(nx, 0.0));
+    d_boundary_flux[inout][Mesh::NORTH].resize(ng, bf_type(nx, 0.0));
   }
   d_boundary_flux_size[Mesh::WEST]  = ny;
   d_boundary_flux_size[Mesh::EAST]  = ny;
@@ -90,6 +100,7 @@ void BoundaryDiffusion<_2D>::initialize()
   d_boundary_flux_size[Mesh::NORTH] = nx;
 }
 
+//---------------------------------------------------------------------------//
 template <>
 void BoundaryDiffusion<_1D>::initialize()
 {
@@ -103,6 +114,14 @@ void BoundaryDiffusion<_1D>::initialize()
   d_boundary_flux_size[Mesh::WEST]  = 1;
   d_boundary_flux_size[Mesh::EAST]  = 1;
 }
+
+//---------------------------------------------------------------------------//
+// EXPLICIT INSTANTIATIONS
+//---------------------------------------------------------------------------//
+
+template class BoundaryDiffusion<_1D>;
+template class BoundaryDiffusion<_2D>;
+template class BoundaryDiffusion<_3D>;
 
 
 } // end namespace detran

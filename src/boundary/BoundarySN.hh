@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   BoundarySN.hh
- * \author Jeremy Roberts
- * \date   Mar 24, 2012
- * \brief  BoundarySN class definition.
+/**
+ *  @file   BoundarySN.hh
+ *  @author Jeremy Roberts
+ *  @date   Mar 24, 2012
+ *  @brief  BoundarySN class definition.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef BOUNDARYSN_HH_
-#define BOUNDARYSN_HH_
+#ifndef detran_BOUNDARYSN_HH_
+#define detran_BOUNDARYSN_HH_
 
 #include "BoundaryBase.hh"
 #include "BoundaryTraits.hh"
@@ -19,38 +19,9 @@ namespace detran
 {
 
 //---------------------------------------------------------------------------//
-/*!
- * \class BoundarySN
- * \brief Boundary flux container for SN problems.
- *
- * Since arbitrary boundary functions are integral to the response matrix
- * method, it helps to have a really easy interface for handling boundary
- * information.  The Boundary classSN contains all boundary fluxes (incident
- * and outgoing) for each surface.  The exact type of a boundary flux
- * is templated. For example, a 1-D boundary flux (for an angle and group) is
- * just a double, whereas for a 3-D problem, it is a 2-D array.
- *
- * Keeping the fundamental type templated should allow this to be used in
- * all the SN stuff and potentially MOC applications. 
- *
- * All boundary fluxes are stored as follows: side->energy->angle->space^D
- *
- * Moreover, the angles are ordered in the same order as the quadrature,
- * i.e. octants->angles.
- *
- * To facilitate response generation somewhat, it is assumed that the
- * boundary fluxes are stored spatial in a way that allows fluxes to be
- * read from left to right, from bottom up on a face.  That means that
- * a sweeper can sweep over ii=0..I-1, jj= ..., selecte i, j, and k for
- * the octant (i.e. does it reverse?), but the boundaries are read using
- * the ii, jj, and kk.  What this allows for is that an incident boundary
- * condition can be inserted in a left to right, bottom up orientation
- * for any face.
- *
- * Unfortunately, the angular orientation isn't so easy.  Ideally, we'd
- * like phi=0..2-pi, theta=0..pi with respect to a surface, but that
- * would
- *
+/**
+ *  @class BoundarySN
+ *  @brief Boundary flux container for SN problems.
  */
 //---------------------------------------------------------------------------//
 template <class D>
@@ -69,11 +40,11 @@ public:
   typedef typename Base::SP_input                   SP_input;
   typedef typename Base::SP_mesh                    SP_mesh;
   typedef detran_angle::Quadrature::SP_quadrature   SP_quadrature;
-  typedef typename BoundaryTraits<D>::value_type    boundary_flux_type;
-  typedef typename BoundaryCondition<D>::SP_bc      SP_bc;
-  typedef typename std::vector<boundary_flux_type>  vec_boundary_flux;
+  typedef typename BoundaryTraits<D>::value_type    bf_type;
+  typedef typename std::vector<bf_type>             vec_boundary_flux;
   typedef typename std::vector<vec_boundary_flux>   vec2_boundary_flux;
   typedef typename std::vector<vec2_boundary_flux>  vec3_boundary_flux;
+  typedef typename BoundaryCondition<D>::SP_bc      SP_bc;
   typedef detran_geometry::Mesh                     Mesh;
   typedef detran_utilities::vec_dbl                 vec_dbl;
   typedef detran_utilities::size_t                  size_t;
@@ -85,12 +56,12 @@ public:
   // CONSTRUCTORS & DESTRUCTORS
   //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Constructor.
+  /**
+   *  @brief Constructor.
    *
-   *  \param    input       User input database.
-   *  \param    mesh        Cartesian mesh.
-   *  \param    quadrature  Angular quadrature.
+   *  @param    input       User input database.
+   *  @param    mesh        Cartesian mesh.
+   *  @param    quadrature  Angular quadrature.
    */
   BoundarySN(SP_input        input,
              SP_mesh         mesh,
@@ -100,143 +71,56 @@ public:
   static SP_base
   Create(SP_input         input,
          SP_mesh          mesh,
-         SP_quadrature    quadrature)
-  {
-    SP_boundary p(new BoundarySN(input, mesh, quadrature));
-    return p;
-  }
+         SP_quadrature    quadrature);
 
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL BOUNDARY TYPES MUST IMPLEMENT THESE
   //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Set the boundaries for a within-group solve.
-   *
-   *  This sets any boundaries that must be fixed for
-   *  a solve, such as any external boundary source.
-   *
-   *  \param  g   Group of current solve
-   */
+  /// Set the boundaries for a within-group solve.
   void set(const size_t g);
 
-  /*!
-   *  \brief Update the boundaries for each sweep.
-   *
-   *  This updates all incident boundary fluxes
-   *  using the current outgoing boundary fluxes
-   *  in a group.  What happens in the update is
-   *  a function of the underlying boundary
-   *  condition.
-   *
-   *  \param  g   Group of current solve
-   */
+  /// Update the boundaries for each sweep.
   void update(const size_t g);
 
-  /*!
-   *  \brief Update the boundaries for a single angle.
-   *
-   *  This is an alternative update that only updates
-   *  the incident boundary flux for a particular
-   *  angle.  When called within a sweep, this allows
-   *  the most recent boundary fluxes to be used,
-   *  in effect producing a Gauss-Seidel iteration.
-   *
-   *  \note This cannot be used for Krylov solvers.
-   *
-   *  \param  g   Group of current solve
-   *  \param  o   Octant being swept
-   *  \param  a   Angle within octant being swept
-   */
+  /// Update the boundaries for a single angle.
   void update(const size_t g, const size_t o, const size_t a);
 
-  /*!
-   *  \brief Clear the boundary container for a group.
-   *
-   *  In some cases, a client might require homogeneous
-   *  boundaries, perhaps after a fixed boundary has
-   *  been used to construct a right hand side for a
-   *  Krylov solve.
-   *
-   *  \param  g   Group of current solve
-   */
+  /// Clear the boundary container for a group.
   void clear(const size_t g);
 
-  /*
-   *  \brief Set the entire group boundary flux for reflecting sides.
-   *
-   *  This is is support of Krylov solvers.
-   *
-   *  \param g  Group of current sweep
-   *  \param v  Pointer to data used in Krylov solve
-   */
+  /// Set the entire group boundary flux for reflecting sides.
   void psi(const size_t g, double *v, const int inout, const int gs,
            bool onlyref = true);
 
-
   //-------------------------------------------------------------------------//
-  // BOUNDARY FLUX ACCES
+  // BOUNDARY FLUX ACCESS
   //-------------------------------------------------------------------------//
 
-  /*
-   *  \brief Const access to a boundary flux using cardinal indices.
+  /**
+   *  @brief Const access to a boundary flux using cardinal indices.
    *
    *  This (and the mutable version) interface is for use
    *  in sweeping, where octants and angles are cycled.
    *
-   *  \param    side  Side index.
-   *  \param    o     Octant index.
-   *  \param    a     Angle index (within octant).
-   *  \param    g     Energy group.
-   *  \return         Constant reference to boundary flux.
+   *  @param    side  Side index.
+   *  @param    o     Octant index.
+   *  @param    a     Angle index (within octant).
+   *  @param    g     Energy group.
+   *  @return         Constant reference to boundary flux.
    */
-  const boundary_flux_type&
-  operator()(const size_t side, const size_t o, const size_t a, const size_t g) const;
+  const bf_type&
+  operator()(const size_t side,
+             const size_t o,
+             const size_t a,
+             const size_t g) const;
 
-  /*
-   *  \brief Mutable access to boundary flux using cardinal indices.
-   */
-  boundary_flux_type&
-  operator()(const size_t side, const size_t o, const size_t a, const size_t g);
-
-  /*
-   *  \brief Const access to ordered incident flux.
-   */
-  const boundary_flux_type&
-  incident(const size_t side, const size_t angle, const size_t g) const;
-
-  /*
-   *  \brief Mutable access to ordered incident boundary flux.
-   */
-  boundary_flux_type&
-  incident(const size_t side, const size_t angle, const size_t g);
-
-  /*
-   *  \brief Const access to ordered outgoing flux.
-   */
-  const boundary_flux_type&
-  outgoing(const size_t side, const size_t angle, const size_t g) const;
-
-  /*
-   *  \brief Mutable access to ordered outgoing boundary flux.
-   */
-  boundary_flux_type&
-  outgoing(const size_t side, const size_t angle, const size_t g);
-
-  /*!
-   *  \brief  Map the local index to cardinal index.
-   *
-   *  In some cases, we need the boundary in its local order,
-   *  e.g. left to right in space and angle.
-   *
-   *  \param  side    Side of interest
-   *  \param  angle   Cardinal
-   *  \param  inout
-   *
-   */
-  size_t ordered_angle(const size_t side,
-                       const size_t angle,
-                       const size_t inout) const;
+  /// Mutable access to boundary flux using cardinal indices.
+  bf_type&
+  operator()(const size_t side,
+             const size_t o,
+             const size_t a,
+             const size_t g);
 
   //-------------------------------------------------------------------------//
   // GETTERS
@@ -277,10 +161,8 @@ private:
 
   /// Quadrature
   SP_quadrature d_quadrature;
-
   /// Boundary flux (side, energy, angle).(space^D)
   vec3_boundary_flux d_boundary_flux;
-
   /// Vector of boundary conditions.
   std::vector<SP_bc> d_bc;
 
@@ -301,7 +183,7 @@ private:
 
 #include "BoundarySN.i.hh"
 
-#endif /* BOUNDARYSN_HH_ */
+#endif /* detran_BOUNDARYSN_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of BoundarySN.hh

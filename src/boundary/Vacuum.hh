@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Vacuum.hh
- * \author robertsj
- * \date   Apr 9, 2012
- * \brief  Vacuum class definition.
+/**
+ *  @file   Vacuum.hh
+ *  @author robertsj
+ *  @date   Apr 9, 2012
+ *  @brief  Vacuum class definition.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef VACUUM_HH_
-#define VACUUM_HH_
+#ifndef detran_VACUUM_HH_
+#define detran_VACUUM_HH_
 
 #include "BoundaryCondition.hh"
 
@@ -16,9 +16,9 @@ namespace detran
 {
 
 //---------------------------------------------------------------------------//
-/*!
- * \class Vacuum
- * \brief Vacuum boundary condition for SN calculations
+/**
+ *  @class Vacuum
+ *  @brief Vacuum boundary condition for SN calculations
  */
 //---------------------------------------------------------------------------//
 
@@ -49,10 +49,14 @@ public:
          SP_input input,
          SP_mesh mesh,
          SP_quadrature quadrature)
-    : BoundaryCondition<D>(boundary, side, input, mesh, quadrature)
+    : Base(boundary, side, input, mesh, quadrature)
   {
     /* ... */
   }
+
+  //-------------------------------------------------------------------------//
+  // ABSTRACT INTERFACE -- ALL BOUNDARY CONDITIONS MUST IMPLEMENT THESE
+  //-------------------------------------------------------------------------//
 
   /// Set initial and/or fixed boundary condition. Vacuum does nothing.
   void set(const size_t g){}
@@ -66,10 +70,6 @@ public:
 private:
 
 };
-
-//template class Vacuum<_1D>;
-//template class Vacuum<_2D>;
-//template class Vacuum<_3D>;
 
 } // end namespace detran
 

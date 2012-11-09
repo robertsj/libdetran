@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   BoundaryMOC.cc
- * \brief  BoundaryMOC member definitions.
- * \author Jeremy Roberts
- * \date   Jun 26, 2012
+/**
+ *  @file   BoundaryMOC.cc
+ *  @brief  BoundaryMOC member definitions.
+ *  @author Jeremy Roberts
+ *  @date   Jun 26, 2012
  */
 //---------------------------------------------------------------------------//
 
@@ -15,7 +15,7 @@
 namespace detran
 {
 
-// Constructor.
+//---------------------------------------------------------------------------//
 template <class D>
 BoundaryMOC<D>::BoundaryMOC(SP_input        input,
                             SP_mesh         mesh,
@@ -75,6 +75,7 @@ BoundaryMOC<D>::BoundaryMOC(SP_input        input,
 
 }
 
+//---------------------------------------------------------------------------//
 template <>
 BoundaryMOC<_1D>::BoundaryMOC(SP_input        input,
                               SP_mesh         mesh,
@@ -84,6 +85,7 @@ BoundaryMOC<_1D>::BoundaryMOC(SP_input        input,
   THROW("MOC unavailable in 1D.");
 }
 
+//---------------------------------------------------------------------------//
 template <>
 BoundaryMOC<_3D>::BoundaryMOC(SP_input        input,
                               SP_mesh         mesh,
@@ -94,9 +96,22 @@ BoundaryMOC<_3D>::BoundaryMOC(SP_input        input,
 }
 
 //---------------------------------------------------------------------------//
+template <class D>
+typename BoundaryMOC<D>::SP_base
+BoundaryMOC<D>::Create(SP_input       input,
+                       SP_mesh        mesh,
+                       SP_quadrature  quadrature)
+{
+  SP_boundary p(new BoundaryMOC(input, mesh, quadrature));
+  return p;
+}
+
+
+//---------------------------------------------------------------------------//
 // IMPLEMENTATION
 //---------------------------------------------------------------------------//
 
+//---------------------------------------------------------------------------//
 template<class D>
 void BoundaryMOC<D>::initialize()
 {
@@ -125,6 +140,7 @@ void BoundaryMOC<D>::initialize()
 
 }
 
+//---------------------------------------------------------------------------//
 // \todo This is really ugly.  If time, clean up.
 template<class D>
 void BoundaryMOC<D>::setup_indices()
@@ -236,6 +252,7 @@ void BoundaryMOC<D>::setup_indices()
 
 }
 
+//---------------------------------------------------------------------------//
 // \todo I need refactoring!
 template<class D>
 void BoundaryMOC<D>::setup_side_indices()
@@ -384,11 +401,16 @@ void BoundaryMOC<D>::setup_side_indices()
         d_side_index[side].push_back(triplet);
       }
     }
-
-
   } // side loop 2
 
 }
+
+//---------------------------------------------------------------------------//
+// EXPLICIT INSTANTIATIONS
+//---------------------------------------------------------------------------//
+
+template class BoundaryMOC<_2D>;
+
 
 } // end namespace detran
 

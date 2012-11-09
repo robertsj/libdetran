@@ -75,7 +75,6 @@ inline void MGSolverGMRES<D>::solve(const double keff)
     }
 
     // Set the incident boundary flux if applicable
-    d_x->display();
     if (d_boundary->has_reflective())
     {
       for (int g = d_krylov_group_cutoff; g < d_number_groups; g++)

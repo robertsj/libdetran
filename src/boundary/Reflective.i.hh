@@ -1,21 +1,21 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Reflective.i.hh
- * \author robertsj
- * \date   Apr 10, 2012
- * \brief  Reflective inline member definitions.
+/**
+ *  @file   Reflective.i.hh
+ *  @author robertsj
+ *  @date   Apr 10, 2012
+ *  @brief  Reflective inline member definitions.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef REFLECTIVE_I_HH_
-#define REFLECTIVE_I_HH_
+#ifndef detran_REFLECTIVE_I_HH_
+#define detran_REFLECTIVE_I_HH_
 
-// System
 #include <iostream>
 
 namespace detran
 {
 
+//---------------------------------------------------------------------------//
 template <class D>
 void Reflective<D>::update(const size_t g)
 {
@@ -30,6 +30,7 @@ void Reflective<D>::update(const size_t g)
   }
 }
 
+//---------------------------------------------------------------------------//
 // \todo This is not the most elegant solution
 template <class D>
 void Reflective<D>::update(const size_t g, const size_t o, const size_t a)
@@ -66,12 +67,14 @@ void Reflective<D>::update(const size_t g, const size_t o, const size_t a)
 // -y  -->  +/- z --> -/+ x  : 6, 7, 2, 3
 // +z  -->  -/+ x --> -/+ y  : 2, 3, 1, 0
 // -z  -->  +/- x --> -/+ y  : 7, 6, 4, 5
-
-//(x->y->z, y->z->x, z->x->y) and the normal
+//
+// (x->y->z, y->z->x, z->x->y) and the normal
 // right hand rule.  For example, if I'm
 // incident on the left face, I am looking along the +x, my left is
 // oriented along +y, and above me is +z.  If I'm incident on the south
 // face, I'm looking along +z, my left is -x
+
+//---------------------------------------------------------------------------//
 template <class D>
 void Reflective<D>::setup_octant()
 {
@@ -155,6 +158,7 @@ void Reflective<D>::setup_octant()
   }
 }
 
+//---------------------------------------------------------------------------//
 template <>
 void Reflective<_2D>::setup_octant()
 {
@@ -190,7 +194,7 @@ void Reflective<_2D>::setup_octant()
   }
 }
 
-
+//---------------------------------------------------------------------------//
 template <>
 void Reflective<_1D>::setup_octant()
 {
@@ -213,4 +217,4 @@ void Reflective<_1D>::setup_octant()
 
 } // end namespace detran
 
-#endif /* REFLECTIVE_I_HH_ */
+#endif /* detran_REFLECTIVE_I_HH_ */

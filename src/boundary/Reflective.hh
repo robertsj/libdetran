@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Reflective.hh
- * \author robertsj
- * \date   Apr 9, 2012
- * \brief  Reflective class definition.
+/**
+ *  @file   Reflective.hh
+ *  @author robertsj
+ *  @date   Apr 9, 2012
+ *  @brief  Reflective class definition.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef REFLECTIVE_HH_
-#define REFLECTIVE_HH_
+#ifndef detran_REFLECTIVE_HH_
+#define detran_REFLECTIVE_HH_
 
 #include "BoundaryCondition.hh"
 
@@ -16,12 +16,9 @@ namespace detran
 {
 
 //---------------------------------------------------------------------------//
-/*!
- *  \class Reflective
- *  \brief Reflective boundary condition so SN problems.
- *
- *  Because the quadratures used in Detran are symmetric, implementing
- *  reflection is straightforward.
+/**
+ *  @class Reflective
+ *  @brief Reflective boundary condition so SN problems.
  */
 //---------------------------------------------------------------------------//
 
@@ -63,6 +60,10 @@ public:
   {
     setup_octant();
   }
+
+  //-------------------------------------------------------------------------//
+  // ABSTRACT INTERFACE -- ALL BOUNDARY CONDITIONS MUST IMPLEMENT THESE
+  //-------------------------------------------------------------------------//
 
   /// Set initial and/or fixed boundary condition.  Reflective does nothing.
   void set(const size_t g){};
@@ -106,4 +107,4 @@ template class Reflective<_3D>;
 
 #include "Reflective.i.hh"
 
-#endif /* REFLECTIVE_HH_ */
+#endif /* detran_REFLECTIVE_HH_ */

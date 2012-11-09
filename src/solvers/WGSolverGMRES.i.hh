@@ -88,6 +88,7 @@ inline void WGSolverGMRES<D>::solve(const size_t g)
       if (error < 1e-9) break;
     }
     d_reflective_solve_iterations = iteration;
+    d_sweeper->set_update_boundary(false);
   }
 
   if (d_print_level > 0)
@@ -96,12 +97,11 @@ inline void WGSolverGMRES<D>::solve(const size_t g)
            d_solver->number_iterations(),
            d_solver->residual_norms()[d_solver->number_iterations()],
            d_sweeper->number_sweeps());
-  }
-
-  if (d_solver->residual_norms()[d_solver->number_iterations()] > d_tolerance)
-  {
-    detran_utilities::warning(detran_utilities::SOLVER_CONVERGENCE,
-      "    WGSolverGMRES did not converge.");
+    if (d_solver->residual_norms()[d_solver->number_iterations()] > d_tolerance)
+    {
+      detran_utilities::warning(detran_utilities::SOLVER_CONVERGENCE,
+        "    WGSolverGMRES did not converge.");
+    }
   }
 
 }
@@ -157,6 +157,7 @@ inline void WGSolverGMRES<D>::build_rhs(State::moments_type &B)
         break;
       }
     }
+    std::cout << " ref its " << d_reflective_solve_iterations << std::endl;
     d_sweeper->set_update_boundary(false);
   }
 
@@ -164,7 +165,6 @@ inline void WGSolverGMRES<D>::build_rhs(State::moments_type &B)
   // boundaries is set to zero.
   for (int i = 0; i < B.size(); i++)
     (*d_b)[i] = B[i];
-
 }
 
 } // namespace detran

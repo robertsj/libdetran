@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   ReflectiveMOC.hh
- * \brief  ReflectiveMOC class definition.
- * \author Jeremy Roberts
- * \date   Jun 26, 2012
+/**
+ *  @file   ReflectiveMOC.hh
+ *  @brief  ReflectiveMOC class definition.
+ *  @author Jeremy Roberts
+ *  @date   Jun 26, 2012
  */
 //---------------------------------------------------------------------------//
 
-#ifndef REFLECTIVEMOC_HH_
-#define REFLECTIVEMOC_HH_
+#ifndef detran_REFLECTIVEMOC_HH_
+#define detran_REFLECTIVEMOC_HH_
 
 #include "BoundaryConditionMOC.hh"
 
@@ -16,9 +16,9 @@ namespace detran
 {
 
 //---------------------------------------------------------------------------//
-/*!
- * \class ReflectiveMOC
- * \brief Reflective boundary condition for MOC
+/**
+ *  @class ReflectiveMOC
+ *  @brief Reflective boundary condition for MOC
  */
 //---------------------------------------------------------------------------//
 
@@ -92,7 +92,7 @@ private:
 
 #include "ReflectiveMOC.i.hh"
 
-#endif // REFLECTIVEMOC_HH_ 
+#endif // detran_REFLECTIVEMOC_HH_
 
 //---------------------------------------------------------------------------//
 //              end of file ReflectiveMOC.hh

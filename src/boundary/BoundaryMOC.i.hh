@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   BoundaryMOC.i.hh
- * \brief  BoundaryMOC inline member definitions.
- * \author Jeremy Roberts
- * \date   Jun 26, 2012
+/**
+ *  @file   BoundaryMOC.i.hh
+ *  @brief  BoundaryMOC inline member definitions.
+ *  @author Jeremy Roberts
+ *  @date   Jun 26, 2012
  */
 //---------------------------------------------------------------------------//
 
@@ -19,33 +19,31 @@ namespace detran
 // INHERITED INTERFACE
 //---------------------------------------------------------------------------//
 
+//---------------------------------------------------------------------------//
 template <class D>
 inline void BoundaryMOC<D>::set(const size_t g)
 {
   for(int side = 0; side < 2*D::dimension; side++)
-  {
     d_bc[side]->set(g);
-  }
 }
 
+//---------------------------------------------------------------------------//
 template <class D>
 inline void BoundaryMOC<D>::update(const size_t g)
 {
   for(int side = 0; side < 2*D::dimension; side++)
-  {
-    d_bc[side]->set(g);
-  }
+    d_bc[side]->update(g);
 }
 
+//---------------------------------------------------------------------------//
 template <class D>
 inline void BoundaryMOC<D>::update(const size_t g, const size_t o, const size_t a)
 {
   for(int side = 0; side < 2*D::dimension; side++)
-  {
     d_bc[side]->update(g, o, a);
-  }
 }
 
+//---------------------------------------------------------------------------//
 template <class D>
 inline void BoundaryMOC<D>::clear(const size_t g)
 {
@@ -56,6 +54,7 @@ inline void BoundaryMOC<D>::clear(const size_t g)
 // BOUNDARY FLUX ACCESS
 //---------------------------------------------------------------------------//
 
+//---------------------------------------------------------------------------//
 template <class D>
 inline const double&
 BoundaryMOC<D>::operator()(const size_t g, const size_t o, const size_t a,
@@ -71,6 +70,7 @@ BoundaryMOC<D>::operator()(const size_t g, const size_t o, const size_t a,
   return d_boundary_flux[g][angle][inout][t];
 }
 
+//---------------------------------------------------------------------------//
 template <class D>
 inline double&
 BoundaryMOC<D>::operator()(const size_t g, const size_t o, const size_t a,
@@ -88,6 +88,7 @@ BoundaryMOC<D>::operator()(const size_t g, const size_t o, const size_t a,
 // INDEXING
 //---------------------------------------------------------------------------//
 
+//---------------------------------------------------------------------------//
 template <class D>
 inline void
 BoundaryMOC<D>::feed_into(const size_t  o1, const size_t  a1, const size_t  t1,
@@ -102,6 +103,7 @@ BoundaryMOC<D>::feed_into(const size_t  o1, const size_t  a1, const size_t  t1,
   t2 = d_feed_into[o1][a1][t1][2];
 }
 
+//---------------------------------------------------------------------------//
 template <class D>
 inline void
 BoundaryMOC<D>::feed_from(const size_t  o1, const size_t  a1, const size_t  t1,
@@ -115,14 +117,6 @@ BoundaryMOC<D>::feed_from(const size_t  o1, const size_t  a1, const size_t  t1,
   a2 = d_feed_from[o1][a1][t1][1];
   t2 = d_feed_from[o1][a1][t1][2];
 }
-
-//---------------------------------------------------------------------------//
-// EXPLICIT INSTANTIATIONS
-//---------------------------------------------------------------------------//
-
-// only 2d for now
-template class BoundaryMOC<_2D>;
-
 
 } // end namespace detran
 

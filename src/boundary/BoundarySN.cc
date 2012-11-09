@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   BoundarySN.cc
- * \author Jeremy Roberts
- * \date   Mar 25, 2012
- * \brief  Boundary member definitions.
+/**
+ *  @file   BoundarySN.cc
+ *  @author Jeremy Roberts
+ *  @date   Mar 25, 2012
+ *  @brief  Boundary member definitions.
  */
 //---------------------------------------------------------------------------//
 
@@ -15,7 +15,7 @@
 namespace detran
 {
 
-// Constructor.
+//---------------------------------------------------------------------------/
 template<class D>
 BoundarySN<D>::BoundarySN(SP_input        input,
                           SP_mesh         mesh,
@@ -45,11 +45,8 @@ BoundarySN<D>::BoundarySN(SP_input        input,
     // Vacuum is default.
     std::string type = "vacuum";
     if (input->check(names[side]))
-    {
-      // Ugh, this "template" addition is a sneaky thing!
       type = d_input->template get<std::string>(names[side]);
-    }
-    std::cout << " BOUNDARY, SIDE " << side << " IS TYPE " << type << std::endl;
+
     if (type == "vacuum")
     {
       d_bc[side] = new Vacuum<D>((*this), side, d_input, d_mesh, d_quadrature);
@@ -68,19 +65,31 @@ BoundarySN<D>::BoundarySN(SP_input        input,
       break;
     }
   }
-
 }
 
 //---------------------------------------------------------------------------//
-// Implementation
+template<class D>
+typename BoundarySN<D>::SP_base
+BoundarySN<D>::Create(SP_input         input,
+                      SP_mesh          mesh,
+                      SP_quadrature    quadrature)
+{
+  SP_boundary p(new BoundarySN(input, mesh, quadrature));
+  return p;
+}
+
+//---------------------------------------------------------------------------//
+// IMPLEMENTATION
 //---------------------------------------------------------------------------//
 
+//---------------------------------------------------------------------------//
 template <class D>
 void BoundarySN<D>::initialize()
 {
   THROW("NOT IMPLEMENTED");
 }
 
+//---------------------------------------------------------------------------//
 template <>
 void BoundarySN<_3D>::initialize()
 {
@@ -94,19 +103,19 @@ void BoundarySN<_3D>::initialize()
     {
         // yz planes
         d_boundary_flux[Mesh::WEST][g].resize(na,
-          boundary_flux_type(nz, vec_dbl(ny, 0.0)));
+          bf_type(nz, vec_dbl(ny, 0.0)));
         d_boundary_flux[Mesh::EAST][g].resize(na,
-          boundary_flux_type(nz, vec_dbl(ny, 0.0)));
+          bf_type(nz, vec_dbl(ny, 0.0)));
         // zx planes
         d_boundary_flux[Mesh::SOUTH][g].resize(na,
-          boundary_flux_type(nz, vec_dbl(nx, 0.0)));
+          bf_type(nz, vec_dbl(nx, 0.0)));
         d_boundary_flux[Mesh::NORTH][g].resize(na,
-          boundary_flux_type(nz, vec_dbl(nx, 0.0)));
+          bf_type(nz, vec_dbl(nx, 0.0)));
         // xy planes
         d_boundary_flux[Mesh::BOTTOM][g].resize(na,
-          boundary_flux_type(ny, vec_dbl(nx, 0.0)));
+          bf_type(ny, vec_dbl(nx, 0.0)));
         d_boundary_flux[Mesh::TOP][g].resize(na,
-          boundary_flux_type(ny, vec_dbl(nx, 0.0)));
+          bf_type(ny, vec_dbl(nx, 0.0)));
     }
   }
   d_boundary_flux_size[Mesh::WEST]   = na * nz * ny;
@@ -117,7 +126,7 @@ void BoundarySN<_3D>::initialize()
   d_boundary_flux_size[Mesh::TOP]    = na * ny * nx;
 }
 
-
+//---------------------------------------------------------------------------//
 template <>
 void BoundarySN<_2D>::initialize()
 {
@@ -130,14 +139,14 @@ void BoundarySN<_2D>::initialize()
     {
         // vertical sides
         d_boundary_flux[Mesh::WEST][g].resize(na,
-          boundary_flux_type(ny, 0.0));
+          bf_type(ny, 0.0));
         d_boundary_flux[Mesh::EAST][g].resize(na,
-          boundary_flux_type(ny, 0.0));
+          bf_type(ny, 0.0));
         // horizontal sides
         d_boundary_flux[Mesh::SOUTH][g].resize(na,
-          boundary_flux_type(nx, 0.0));
+          bf_type(nx, 0.0));
         d_boundary_flux[Mesh::NORTH][g].resize(na,
-          boundary_flux_type(nx, 0.0));
+          bf_type(nx, 0.0));
     }
   }
   d_boundary_flux_size[Mesh::WEST]  = na * ny;
@@ -146,6 +155,7 @@ void BoundarySN<_2D>::initialize()
   d_boundary_flux_size[Mesh::NORTH] = na * nx;
 }
 
+//---------------------------------------------------------------------------//
 template <>
 void BoundarySN<_1D>::initialize()
 {
@@ -163,8 +173,17 @@ void BoundarySN<_1D>::initialize()
   d_boundary_flux_size[Mesh::EAST] = na;
 }
 
+//---------------------------------------------------------------------------//
+// EXPLICIT INSTANTIATIONS
+//---------------------------------------------------------------------------//
+
+template class BoundarySN<_1D>;
+template class BoundarySN<_2D>;
+template class BoundarySN<_3D>;
+
+
 } // end namespace detran
 
 //---------------------------------------------------------------------------//
-//              end of Boundary.cc
+//              end of BoundarySN.cc
 //---------------------------------------------------------------------------//

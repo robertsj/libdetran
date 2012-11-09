@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   ReflectiveMOC.i.hh
- * \brief  ReflectiveMOC inline member definitions
- * \author Jeremy Roberts
- * \date   Jun 27, 2012
+/**
+ *  @file   ReflectiveMOC.i.hh
+ *  @brief  ReflectiveMOC inline member definitions
+ *  @author Jeremy Roberts
+ *  @date   Jun 27, 2012
  */
 //---------------------------------------------------------------------------//
 
-#ifndef REFLECTIVEMOC_I_HH_
-#define REFLECTIVEMOC_I_HH_
+#ifndef detran_REFLECTIVEMOC_I_HH_
+#define detran_REFLECTIVEMOC_I_HH_
 
 #include <iostream>
 
@@ -78,7 +78,7 @@ template class ReflectiveMOC<_2D>;
 
 } // end namespace detran
 
-#endif // REFLECTIVEMOC_I_HH_ 
+#endif // detran_REFLECTIVEMOC_I_HH_
 
 //---------------------------------------------------------------------------//
 //              end of file ReflectiveMOC.i.hh
