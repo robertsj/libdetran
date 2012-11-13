@@ -15,6 +15,7 @@
 #include "transport/ScatterSource.hh"
 #include "callow/solver/LinearSolver.hh"
 #include "callow/preconditioner/Preconditioner.hh"
+#include "callow/matrix/MatrixShell.hh"
 
 namespace detran
 {
@@ -40,7 +41,7 @@ namespace detran
  *  efficacy of diffusion-based multigroup preconditioning.
  */
 
-class MGDSA: public MGPreconditioner
+class MGDSA: public callow::MatrixShell, public MGPreconditioner
 {
 
 public:
@@ -88,6 +89,20 @@ public:
 
   /// solve Px = b
   void apply(Vector &b, Vector &x);
+
+  // the client must implement the action y <-- A * x
+  void multiply(const Vector &x,  Vector &y)
+  {
+    Vector b(x.size(), 0.0);
+    b.copy(x);
+    apply(b, y);
+  }
+
+  // the client must implement the action y <-- A' * x
+  void multiply_transpose(const Vector &x, Vector &y)
+  {
+    THROW("NOT IMPLEMENTED");
+  }
 
 private:
 

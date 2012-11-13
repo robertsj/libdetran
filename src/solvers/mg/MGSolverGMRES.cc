@@ -28,6 +28,7 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
   , d_boundary_size(0)
   , d_boundary_size_group(0)
   , d_reflective_solve_iterations(0)
+  , d_update_boundary_flux(false)
 {
 
   //-------------------------------------------------------------------------//
@@ -67,6 +68,8 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
                                 d_sweepsource,
                                 d_krylov_group_cutoff);
 
+    d_operator->compute_explicit("MGTO.out");
+
     // Create temporary unknown and right hand size vectors
     d_x = new callow::Vector(d_operator->number_rows(), 0.0);
     d_b = new callow::Vector(d_operator->number_rows(), 0.0);
@@ -99,7 +102,7 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
     {
       pc_type = d_input->template get<std::string>("outer_pc_type");
     }
-    std::cout << "Using MG-GMRES with PC-" << pc_type;
+    std::cout << "Using MG-GMRES with PC-" << pc_type << std::endl;
 
     size_t pc_side = callow::LinearSolver::LEFT;
     if (d_input->check("outer_pc_side"))
@@ -121,7 +124,16 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
 
   }
 
-
+  // Check for boundary update.  In GMRES, this is not the
+  // default, since it implies extra sweeps that may not be needed.
+  if (d_input->check("compute_boundary_flux"))
+  {
+    if (d_input->template get<int>("compute_boundary_flux"))
+    {
+      d_update_boundary_flux =
+        d_input->template get<int>("compute_boundary_flux");
+    }
+  }
 
 }
 

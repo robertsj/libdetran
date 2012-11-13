@@ -27,7 +27,6 @@ WGSolverGMRES<D>::WGSolverGMRES(SP_state                  state,
  , d_update_boundary_flux(false)
 {
   Require(d_input);
-  d_input->display();
 
   // Create operator
   d_operator = new WGTransportOperator<D>(d_state,
@@ -46,7 +45,7 @@ WGSolverGMRES<D>::WGSolverGMRES(SP_state                  state,
     db = d_input->template get<SP_input>("inner_solver_db");
   }
   Assert(db);
-  db->display();
+
   d_solver = callow::LinearSolverCreator::Create(db);
   Assert(d_solver);
 
@@ -65,7 +64,7 @@ WGSolverGMRES<D>::WGSolverGMRES(SP_state                  state,
         d_input->template get<int>("compute_boundary_flux");
     }
   }
-
+ // d_operator->compute_explicit("WGTO.out");
   //--------------------------------------------------------------------------//
   // PRECONDITIONER
   //--------------------------------------------------------------------------//

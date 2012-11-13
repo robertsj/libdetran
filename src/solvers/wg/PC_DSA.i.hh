@@ -16,6 +16,7 @@ namespace detran
 //---------------------------------------------------------------------------//
 inline void PC_DSA::apply(Vector &V_in, Vector &V_out)
 {
+  if (d_group == 1) d_operator[d_group]->print_matlab("wg.out");
 
   // Currently, DSA is only used on the flux moments,
   // not on the boundaries.

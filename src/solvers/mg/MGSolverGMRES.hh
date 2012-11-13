@@ -215,6 +215,8 @@ private:
   SP_sweeper d_sweeper;
   /// Sweep source
   SP_sweepsource d_sweepsource;
+  /// Flag to update the outgoing fluxes (default: false)
+  bool d_update_boundary_flux;
 
   //-------------------------------------------------------------------------//
   // IMPLEMENTATION

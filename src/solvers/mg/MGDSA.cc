@@ -9,6 +9,7 @@
 
 #include "MGDSA.hh"
 #include "callow/solver/LinearSolverCreator.hh"
+#include "ioutils/StdOutUtils.hh"
 
 namespace detran
 {
@@ -20,7 +21,8 @@ MGDSA::MGDSA(SP_input input,
              SP_scattersource source,
              size_t cutoff,
              bool include_fission)
-  : Base(input, material, mesh, cutoff, "MG-DSA")
+  : callow::MatrixShell(this)
+  , Base(input, material, mesh, cutoff, "MG-DSA")
   , d_scattersource(source)
 {
   // Preconditions
@@ -43,7 +45,7 @@ MGDSA::MGDSA(SP_input input,
                               d_group_cutoff,
                               false, // adjoint
                               1.0);  // keff
-
+  d_operator->compute_explicit("mgdiff.out");
   // Create the linear solver for this group.
   d_solver = callow::LinearSolverCreator::Create(db);
 
@@ -51,11 +53,18 @@ MGDSA::MGDSA(SP_input input,
   // to set the preconditioner parameters for the diffusion solves.
   d_solver->set_operators(d_operator, db);
 
+  set_size(d_operator->number_columns());
+  compute_explicit("mgdsa.out");
+  d_operator->print_matlab("mg.out");
 }
 
 //---------------------------------------------------------------------------//
 void MGDSA::apply(Vector &V_in, Vector &V_out)
 {
+
+//  V_out.copy(V_in);
+//  return;
+
   // Currently, DSA is only used on the flux moments,
   // not on the boundaries.
   size_t size_moments = d_mesh->number_cells();
@@ -69,27 +78,29 @@ void MGDSA::apply(Vector &V_in, Vector &V_out)
 
   // Create the total group source, and copy into temporary Z
   Vector Z(size_moments * d_number_active_groups, 0.0);
-  State::moments_type source(size_moments, 0.0);
   for (int g = d_group_cutoff; g < d_number_groups; g++)
   {
+    State::moments_type source(size_moments, 0.0);
     d_scattersource->build_total_group_source(g, d_group_cutoff, phi, source);
+    //detran_ioutils::print_vec(source);
     for (int i = 0; i < size_moments; i++)
       Z[(g - d_group_cutoff) * size_moments + i] = source[i];
   }
-
+//  Z.print_matlab("Z.out");
   //-------------------------------------------------------------------------//
   // OPERATE: V2 <-- inv(C)*V1 = inv(C)*S*V0.
   //-------------------------------------------------------------------------//
   Vector Z_out(size_moments * d_number_active_groups, 0.0);
   d_solver->solve(Z, Z_out);
-
+//  Z_out.print_matlab("Z2.out");
+//  THROW("lala");
   //-------------------------------------------------------------------------//
   // OPERATE: V3 <-- V0 + V2 = V0 + inv(C)*S*V0 = (I + inv(C)*S)*V0
   //-------------------------------------------------------------------------//
 
   // \todo Implement an interface for swapping internal pointers a la PETSc
   V_out.copy(V_in);
-  for (int i = 0; i < size_moments; ++i)
+  for (int i = 0; i < size_moments * d_number_active_groups; ++i)
     V_out[i] += Z_out[i];
 
 }

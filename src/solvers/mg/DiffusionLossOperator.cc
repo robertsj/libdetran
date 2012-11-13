@@ -114,9 +114,9 @@ void DiffusionLossOperator::build()
 
   bool db = false;
 
-  for (int i = 0; i < d_number_active_groups; i++)
+  for (int gg = 0; gg < d_number_active_groups; gg++)
   {
-    int g = i + d_group_cutoff;
+    int g = gg + d_group_cutoff;
 
     // Loop over all cells.
     for (int cell = 0; cell < d_group_size; cell++)
@@ -124,7 +124,7 @@ void DiffusionLossOperator::build()
       if (db) cout << "  cell = " << cell << endl;
 
       // Compute row index.
-      int row = cell + i * d_group_size;
+      int row = cell + gg * d_group_size;
 
       if (db) cout << "    row = " << row << endl;
 
@@ -192,9 +192,9 @@ void DiffusionLossOperator::build()
         if (bound[leak] == nxyz[xyz_idx][dir_idx])
         {
 
-          dtilde = ( 2.0 * cell_dc * (1.0 - d_albedo[leak][g]) ) /
-                   ( 4.0 * cell_dc * (1.0 + d_albedo[leak][g]) +
-                    (1.0 - d_albedo[leak][g]) * cell_hxyz[xyz_idx] );
+          dtilde = ( 2.0 * cell_dc * (1.0 - d_albedo[leak][gg]) ) /
+                   ( 4.0 * cell_dc * (1.0 + d_albedo[leak][gg]) +
+                    (1.0 - d_albedo[leak][gg]) * cell_hxyz[xyz_idx] );
 
         }
         else // not a boundary
@@ -217,9 +217,9 @@ void DiffusionLossOperator::build()
 
           // Compute and set the off-diagonal matrix value.
           double val = - dtilde / cell_hxyz[xyz_idx];
-          int neig_row = neig_cell + g * d_group_size;
+          int neig_row = neig_cell + gg * d_group_size;
 
-          if (db) cout << "      col = " << neig_row << endl;
+          if (db) cout << "      col = " << neig_row << " " << neig_cell << endl;
 
           flag = insert(row, neig_row, val, INSERT);
           Assert(flag);
@@ -237,35 +237,39 @@ void DiffusionLossOperator::build()
 
      // Compute and set the diagonal matrix value.
      double val = jnet + cell_sr;
-     if (db) cout << "      col = " << row << endl;
+     //val = 1.0;
+     if (db) cout << "      col = " << row << " " << gg <<  endl;
+    // cout << " jnet=" << jnet << " cellsr=" << cell_sr << endl;
      flag = insert(row, row, val, INSERT);
      Assert(flag);
 
-     // Add downscatter component.
-     for (int gp = d_material->lower(g); gp < g; gp++)
-     {
-       int col = cell + (gp - d_group_cutoff) * d_group_size;
-       if (db) cout << "      col = " << col << endl;
-       double val = -d_material->sigma_s(m, g, gp);
-       if (!d_adjoint)
-         flag = insert(row, col, val, INSERT);
-       else
-         flag = insert(col, row, val, INSERT);
-       Assert(flag);
-     }
-
-     // Add upscatter component.
-     for (int gp = g + 1; gp <= d_material->upper(g); gp++)
-     {
-       int col = cell + (gp - d_group_cutoff) * d_group_size;
-       double val = -d_material->sigma_s(m, g, gp);
-       if (db) cout << "      col = " << col << endl;
-       if (!d_adjoint)
-         flag = insert(row, col, val, INSERT);
-       else
-         flag = insert(col, row, val, INSERT);
-       Assert(flag);
-     }
+//     // Add downscatter component.
+//     int lower = d_material->lower(g);
+//     if (d_group_cutoff > lower) lower = d_group_cutoff;
+//     for (int gp = lower; gp < g; gp++)
+//     {
+//       int col = cell + (gp - d_group_cutoff) * d_group_size;
+//       if (db) cout << "  ds  col = " << col << endl;
+//       double val = -d_material->sigma_s(m, g, gp);
+//       if (!d_adjoint)
+//         flag = insert(row, col, val, INSERT);
+//       else
+//         flag = insert(col, row, val, INSERT);
+//       Assert(flag);
+//     }
+//
+//     // Add upscatter component.
+//     for (int gp = g + 1; gp <= d_material->upper(g); gp++)
+//     {
+//       int col = cell + (gp - d_group_cutoff) * d_group_size;
+//       double val = -d_material->sigma_s(m, g, gp);
+//       if (db) cout << "  us  col = " << col << endl;
+//       if (!d_adjoint)
+//         flag = insert(row, col, val, INSERT);
+//       else
+//         flag = insert(col, row, val, INSERT);
+//       Assert(flag);
+//     }
 
     } // row loop
 

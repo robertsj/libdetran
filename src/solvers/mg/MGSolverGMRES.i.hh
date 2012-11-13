@@ -89,7 +89,7 @@ inline void MGSolverGMRES<D>::solve(const double keff)
     // Iterate to pick up outgoing boundary fluxes.  Only do this if
     // there is at least one vacuum boundary.  Otherwise, the
     // boundary fluxes are never going to be needed.
-    if (d_boundary->has_vacuum())
+    if (d_update_boundary_flux)
     {
       for (int g = d_krylov_group_cutoff; g < d_number_groups; g++)
       {
