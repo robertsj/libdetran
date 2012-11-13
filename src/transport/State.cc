@@ -37,11 +37,12 @@ State::State(SP_input        input,
   if (input->check("store_angular_flux"))
   {
     store_psi = input->get<int>("store_angular_flux");
-    Insist(d_quadrature, "Angular flux requested but no quadrature given.");
   }
 
   if (store_psi > 0)
   {
+    Insist(d_quadrature, "Angular flux requested but no quadrature given.");
+
     d_store_angular_flux = true;
 
     for (int g = 0; g < d_number_groups; g++)

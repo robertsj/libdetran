@@ -15,13 +15,12 @@
 namespace callow
 {
 
-/*!
- *  \class PCShell
- *  \brief Applies a shell preconditioner
+/**
+ *  @class PCShell
+ *  @brief Applies a shell preconditioner
  *
  *  A shell preconditioner allows the user to define their own
  *  preconditioning processes that are potentially matrix free.
- *
  */
 
 class PCShell: public Preconditioner
@@ -42,7 +41,7 @@ public:
   //-------------------------------------------------------------------------//
 
   /// Construct a shell preconditioner
-  PCShell(std::string name = "shell preconditioner");
+  PCShell(std::string name = "PCShell");
 
   /// Virtual destructor
   virtual ~PCShell(){};

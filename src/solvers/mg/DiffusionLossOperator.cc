@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   DiffusionLossOperator.cc
- * \brief  DiffusionLossOperator 
- * \author Jeremy Roberts
- * \date   Sep 10, 2012
+/**
+ *  @file   DiffusionLossOperator.cc
+ *  @brief  DiffusionLossOperator
+ *  @author Jeremy Roberts
+ *  @date   Sep 10, 2012
  */
 //---------------------------------------------------------------------------//
 
@@ -18,12 +18,14 @@ DiffusionLossOperator::DiffusionLossOperator(SP_input       input,
                                              SP_material    material,
                                              SP_mesh        mesh,
                                              const bool     include_fission,
+                                             const size_t   cutoff,
                                              const bool     adjoint,
                                              const double   keff)
   : d_input(input)
   , d_material(material)
   , d_mesh(mesh)
   , d_include_fission(include_fission)
+  , d_group_cutoff(cutoff)
   , d_adjoint(adjoint)
   , d_keff(keff)
 {
@@ -35,19 +37,20 @@ DiffusionLossOperator::DiffusionLossOperator(SP_input       input,
   // Set the dimension and group count
   d_dimension = d_mesh->dimension();
   d_number_groups = d_material->number_groups();
+  d_number_active_groups = d_number_groups - d_group_cutoff;
   d_group_size    = d_mesh->number_cells();
 
   // Set matrix dimensions
-  Base::set_size(d_number_groups*d_group_size,
-                 d_number_groups*d_group_size);
+  Base::set_size(d_number_active_groups*d_group_size,
+                 d_number_active_groups*d_group_size);
 
   // Default albedos to 1.0.  For dimensions in play, this will be
   // overwritten by the default boundary.
-  d_albedo.resize(6,  vec_dbl(d_number_groups, 1.0));
+  d_albedo.resize(6,  vec_dbl(d_number_active_groups, 1.0));
 
   // Nonzeros.  We have up to
   //   diagonal + 2*dim neighbors + num_groups coupling from scatter/fission
-  vec_int nnz(d_m, 1 + 2 * d_dimension + d_number_groups);
+  vec_int nnz(d_m, 1 + 2 * d_dimension + d_number_active_groups);
 
   // Preallocate the matrix.  Note, PETSc documentation suggests getting
   // this right is extremely important.
@@ -69,14 +72,14 @@ DiffusionLossOperator::DiffusionLossOperator(SP_input       input,
     boundary_name[Mesh::NORTH]  = "bc_north";
     boundary_name[Mesh::BOTTOM] = "bc_bottom";
     boundary_name[Mesh::TOP]    = "bc_top";
-    for (int g = 0; g < d_material->number_groups(); g++)
+    for (int g = d_group_cutoff; g < d_number_groups; g++)
     {
       for (int b = 0; b < d_mesh->dimension() * 2; b++)
       {
-        d_albedo[b][g] = 0.0;
+        d_albedo[b][g - d_group_cutoff] = 0.0;
         if (d_input->check(boundary_name[b]))
           if (d_input->get<std::string>(boundary_name[b]) == "reflect")
-            d_albedo[b][g] = 1.0;
+            d_albedo[b][g - d_group_cutoff] = 1.0;
       }
     }
   }
@@ -111,9 +114,9 @@ void DiffusionLossOperator::build()
 
   bool db = false;
 
-  for (int g = 0; g < d_number_groups; g++)
+  for (int i = 0; i < d_number_active_groups; i++)
   {
-    if (db) cout << "group = " << g << endl;
+    int g = i + d_group_cutoff;
 
     // Loop over all cells.
     for (int cell = 0; cell < d_group_size; cell++)
@@ -121,7 +124,7 @@ void DiffusionLossOperator::build()
       if (db) cout << "  cell = " << cell << endl;
 
       // Compute row index.
-      int row = cell + g * d_group_size;
+      int row = cell + i * d_group_size;
 
       if (db) cout << "    row = " << row << endl;
 
@@ -218,7 +221,6 @@ void DiffusionLossOperator::build()
 
           if (db) cout << "      col = " << neig_row << endl;
 
-
           flag = insert(row, neig_row, val, INSERT);
           Assert(flag);
         }
@@ -242,7 +244,7 @@ void DiffusionLossOperator::build()
      // Add downscatter component.
      for (int gp = d_material->lower(g); gp < g; gp++)
      {
-       int col = cell + gp * d_group_size;
+       int col = cell + (gp - d_group_cutoff) * d_group_size;
        if (db) cout << "      col = " << col << endl;
        double val = -d_material->sigma_s(m, g, gp);
        if (!d_adjoint)
@@ -255,7 +257,7 @@ void DiffusionLossOperator::build()
      // Add upscatter component.
      for (int gp = g + 1; gp <= d_material->upper(g); gp++)
      {
-       int col = cell + gp * d_group_size;
+       int col = cell + (gp - d_group_cutoff) * d_group_size;
        double val = -d_material->sigma_s(m, g, gp);
        if (db) cout << "      col = " << col << endl;
        if (!d_adjoint)
@@ -272,13 +274,13 @@ void DiffusionLossOperator::build()
   if (d_include_fission)
   {
     // Loop over all groups
-    for (int g = 0; g < d_number_groups; g++)
+    for (int g = d_group_cutoff; g < d_number_groups; g++)
     {
       // Loop over all cells.
       for (int cell = 0; cell < d_group_size; cell++)
       {
         // Compute row index.
-        int row = cell + g * d_group_size;
+        int row = cell + (g - d_group_cutoff) * d_group_size;
 
         // Define the data for this cell.
         int m = mat_map[cell];
@@ -289,10 +291,10 @@ void DiffusionLossOperator::build()
         int k = d_mesh->cell_to_k(cell);
 
         // Loop through source group.
-        for (int gp = 0; gp < d_number_groups; gp++)
+        for (int gp = d_group_cutoff; gp < d_number_groups; gp++)
         {
           // Compute column index.
-          int col = cell + gp * d_group_size;
+          int col = cell + (gp - d_group_cutoff) * d_group_size;
           if (db) cout << "      col = " << col << endl;
           // Fold the fission density with the spectrum.  Note that
           // we scale by keff and take the negative, since it's on the

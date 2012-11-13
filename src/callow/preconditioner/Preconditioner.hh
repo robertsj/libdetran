@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Preconditioner.hh
- * \brief  Preconditioner 
- * \author Jeremy Roberts
- * \date   Sep 18, 2012
+/**
+ *  @file   Preconditioner.hh
+ *  @brief  Preconditioner
+ *  @author Jeremy Roberts
+ *  @date   Sep 18, 2012
  */
 //---------------------------------------------------------------------------//
 
@@ -17,9 +17,9 @@
 namespace callow
 {
 
-/*!
- *  \class Preconditioner
- *  \brief Defines a preconditioner for linear solves
+/**
+ *  @class Preconditioner
+ *  @brief Defines a preconditioner for linear solves
  *
  *  Consider the linear system
  *  \f[
@@ -69,7 +69,11 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  Preconditioner(std::string name = "preconditioner"){};
+  Preconditioner(std::string name)
+    : d_name(name)
+  {
+    /* ... */
+  };
 
   virtual ~Preconditioner(){};
 
@@ -83,6 +87,9 @@ public:
   /// return petsc preconditioner
   PC petsc_pc() {return d_petsc_pc;}
 #endif
+
+  /// Return the PC name
+  std::string name() const {return d_name;}
 
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL PRECONDITIONERS MUST IMPLEMENT THIS

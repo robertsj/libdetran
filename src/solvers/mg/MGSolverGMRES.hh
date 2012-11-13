@@ -11,8 +11,8 @@
 #define detran_MGSOLVERGMRES_HH_
 
 #include "MGTransportSolver.hh"
-//#include "PreconditionerMG.hh"
 #include "MGTransportOperator.hh"
+#include "MGPreconditioner.hh"
 #include "callow/solver/LinearSolver.hh"
 #include "transport/Sweeper.hh"
 
@@ -115,7 +115,7 @@ public:
   typedef MGTransportOperator<D>                    Operator_T;
   typedef typename Operator_T::SP_operator          SP_operator;
   typedef callow::Vector::SP_vector                 SP_vector;
-  //typedef PreconditionerMG::SP_pc                   SP_pc;
+  typedef MGPreconditioner::SP_preconditioner       SP_preconditioner;
   typedef detran_utilities::vec_dbl                 vec_dbl;
 
   //-------------------------------------------------------------------------//
@@ -172,6 +172,8 @@ private:
 
   /// Main linear solver
   SP_linearsolver d_solver;
+  /// Preconditioner
+  SP_preconditioner d_pc;
   /// Operator "A" in "Ax = b"
   SP_operator d_operator;
   /// Solution vector
@@ -213,10 +215,6 @@ private:
   SP_sweeper d_sweeper;
   /// Sweep source
   SP_sweepsource d_sweepsource;
-  /// Preconditioner
-  //SP_pc d_pc;
-  /// Preconditioner flag
-  //bool d_use_pc;
 
   //-------------------------------------------------------------------------//
   // IMPLEMENTATION

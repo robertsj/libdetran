@@ -146,6 +146,7 @@ bool FixedSourceManager<D>::set_solver()
 
   if (d_discretization == DIFF)
   {
+    // Only option is explicit matrix construction
     d_solver = new MGDiffusionSolver<D>(d_state, d_material, d_boundary,
                                         d_sources, d_fissionsource,
                                         d_multiply);

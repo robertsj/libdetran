@@ -39,8 +39,13 @@ MGDiffusionSolver<D>::MGDiffusionSolver(SP_state                  state,
   d_Q   = new Vector_T(d_problem_size, 0.0);
 
   // Create multigroup diffusion operator
-  d_M   = new DiffusionLossOperator(d_input, d_material, d_mesh,
-                                    d_multiply, d_adjoint, 1.0);
+  d_M   = new DiffusionLossOperator(d_input,
+                                    d_material,
+                                    d_mesh,
+                                    d_multiply,
+                                    0,          // Full energy spectrum
+                                    d_adjoint,
+                                    1.0);       // Default to k=1
 
   // Create solver and set operator.
   SP_input db;
@@ -304,7 +309,8 @@ void MGDiffusionSolver<D>::fill_boundary()
             // Compute the outgoing partial current
             BoundaryValue<D>::value
             (J(surface, g, Boundary_T::OUT), ijk[dim1], ijk[dim2]) =
-              ((2.0 * DC) * (*d_phi)[row] + (W - 4.0*DC) * Jinc) / (4.0 * DC + W);
+              ((2.0 * DC) * (*d_phi)[row] + (W - 4.0*DC) * Jinc) /
+                (4.0 * DC + W);
 
           } // end group loop
         } // end dim2 loop

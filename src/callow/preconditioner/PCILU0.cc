@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   PCILU0.cc
- * \brief  PCILU0 
- * \author Jeremy Roberts
- * \date   Sep 18, 2012
+/**
+ *  @file   PCILU0.cc
+ *  @brief  PCILU0
+ *  @author Jeremy Roberts
+ *  @date   Sep 18, 2012
  */
 //---------------------------------------------------------------------------//
 
@@ -14,6 +14,7 @@ namespace callow
 
 //---------------------------------------------------------------------------//
 PCILU0::PCILU0(SP_matrix A)
+  : Base("PCILU0")
 {
   // preconditions
   Require(A);

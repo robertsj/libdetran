@@ -71,6 +71,8 @@ set_operators(SP_matrix A,
       pc_side = db->get<int>("pc_side");
   }
 
+  std::cout << " SET OP:  PC=" << pc_type << " SIDE=" << pc_side << std::endl;
+
 }
 
 void LinearSolver::

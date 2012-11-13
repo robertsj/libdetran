@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Richardson.i.hh
- * \author robertsj
- * \date   Sep 13, 2012
- * \brief  Richardson inline member definitions
+/**
+ *  @file   Richardson.i.hh
+ *  @author robertsj
+ *  @date   Sep 13, 2012
+ *  @brief  Richardson inline member definitions
  */
 //---------------------------------------------------------------------------//
 
@@ -33,6 +33,7 @@ inline void Richardson::solve_impl(const Vector &b, Vector &x)
   Vector* x0 = &x;
   Vector* x1 = &temp;
   Vector* swap;
+  Vector res(x.size(), 0.0);
 
   // compute initial residual w(Ax - b) and its norm
   d_A->multiply((*x0), (*x1));

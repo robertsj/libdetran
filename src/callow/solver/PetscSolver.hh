@@ -10,7 +10,7 @@
 #ifndef callow_PETSCSOLVER_HH_
 #define callow_PETSCSOLVER_HH_
 
-#ifdef CALLOW_ENABLE_PETSC
+#ifdef DETRAN_ENABLE_PETSC
 
 #include "LinearSolver.hh"
 // preconditioners
@@ -125,6 +125,7 @@ public:
     }
     // If not database, we do not set the preconditioner, letting
     // PETSc do its default.
+    else
     {
       PCSetType(pc, PCNONE);
     }
@@ -220,6 +221,6 @@ PetscErrorCode petsc_ksp_monitor(KSP ksp, PetscInt it,
 // Inline member definitions
 #include "PetscSolver.i.hh"
 
-#endif // CALLOW_ENANLE_PETSC
+#endif // DETRAN_ENABLE_PETSC
 
 #endif /* callow_PETSCSOLVER_HH_ */

@@ -8,6 +8,7 @@
 //---------------------------------------------------------------------------//
 
 #include "MGSolverGMRES.hh"
+#include "MGDSA.hh"
 #include "callow/solver/LinearSolverCreator.hh"
 
 namespace detran
@@ -53,12 +54,12 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
   d_sweeper = d_wg_solver->get_sweeper();
   d_sweepsource = d_wg_solver->get_sweepsource();
 
-  //-------------------------------------------------------------------------//
-  // SETUP SOLVER
-  //-------------------------------------------------------------------------//
-
   if (d_number_active_groups)
   {
+    //-----------------------------------------------------------------------//
+    // SETUP SOLVER
+    //-----------------------------------------------------------------------//
+
     // Create operator
     d_operator = new Operator_T(d_state,
                                 d_boundary,
@@ -89,18 +90,38 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
     d_boundary_size_group = d_operator->boundary_size();
     d_boundary_size       = d_boundary_size_group * d_number_groups;
 
+    //------------------------------------------------------------------------//
+    // PRECONDITIONER
+    //------------------------------------------------------------------------//
+
+    std::string pc_type = "none";
+    if (d_input->check("outer_pc_type"))
+    {
+      pc_type = d_input->template get<std::string>("outer_pc_type");
+    }
+    std::cout << "Using MG-GMRES with PC-" << pc_type;
+
+    size_t pc_side = callow::LinearSolver::LEFT;
+    if (d_input->check("outer_pc_side"))
+      pc_side = d_input->template get<int>("outer_pc_side");
+
+    if (pc_type == "mgdsa")
+    {
+      Assert(d_sweepsource->get_scatter_source());
+      d_pc = new MGDSA(d_input,
+                       d_material,
+                       d_mesh,
+                       d_sweepsource->get_scatter_source(),
+                       d_krylov_group_cutoff,
+                       d_multiply);
+    }
+
+    if (d_pc)
+      d_solver->set_preconditioner(d_pc, pc_side);
+
   }
 
-  //--------------------------------------------------------------------------//
-  // PRECONDITIONER
-  //--------------------------------------------------------------------------//
 
-  /*
-   *  Eventual Options:
-   *    1. fine mesh diffusion (= DSA)
-   *    2. coarse mesh diffusion (= CMDSA)
-   *    3. coarse mesh transport (= ~S2 on coarse grid)
-   */
 
 }
 

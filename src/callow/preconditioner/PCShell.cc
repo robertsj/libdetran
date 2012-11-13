@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   PCShell.cc
- * \author robertsj
- * \date   Sep 20, 2012
- * \brief  PCShell class definition.
+/**
+ *  @file   PCShell.cc
+ *  @author robertsj
+ *  @date   Sep 20, 2012
+ *  @brief  PCShell class definition.
  */
 //---------------------------------------------------------------------------//
 
@@ -12,16 +12,12 @@
 namespace callow
 {
 
+//---------------------------------------------------------------------------//
 PCShell::PCShell(std::string name)
-  : Preconditioner(name)
+  : Base(name)
 {
   /* ... */
 }
 
 } // end namespace callow
-
-
-
-
-
 

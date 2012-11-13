@@ -7,8 +7,8 @@
  */
 //---------------------------------------------------------------------------//
 
-#ifndef DIFFUSIONLOSSOPERATOR_HH_
-#define DIFFUSIONLOSSOPERATOR_HH_
+#ifndef detran_DIFFUSIONLOSSOPERATOR_HH_
+#define detran_DIFFUSIONLOSSOPERATOR_HH_
 
 #include "material/Material.hh"
 #include "geometry/Mesh.hh"
@@ -68,12 +68,15 @@ public:
    *  @param material         Pointer to materials
    *  @param mesh             Pointer to mesh
    *  @param include_fission  Flag for including fission source implicitly
+   *  @param cutoff           Lowest group to include in the operator
+   *  @param adjoint          Adjoint flag
    *  @param keff             Fission scaling factor
    */
   DiffusionLossOperator(SP_input      input,
                         SP_material   material,
                         SP_mesh       mesh,
                         const bool    include_fission,
+                        const size_t  cutoff = 0,
                         const bool    adjoint = false,
                         const double  keff = 1.0);
 
@@ -111,6 +114,10 @@ private:
   vec2_dbl d_albedo;
   /// Energy groups
   size_t d_number_groups;
+  /// Cutoff
+  size_t d_group_cutoff;
+  /// Active groups
+  size_t d_number_active_groups;
   /// One group spatial size
   size_t d_group_size;
   /// Including fission?
@@ -124,14 +131,14 @@ private:
   // IMPLEMENTATION
   //---------------------------------------------------------------------------//
 
-  // All matrix operator need this.  Here, we have the client call construct.
+  // All matrix operators need this.  Here, we have the client call construct.
   void build();
 
 };
 
 } // end namespace detran
 
-#endif // DIFFUSIONLOSSOPERATOR_HH_ 
+#endif // detran_DIFFUSIONLOSSOPERATOR_HH_
 
 //---------------------------------------------------------------------------//
 //              end of file DiffusionLossOperator.hh

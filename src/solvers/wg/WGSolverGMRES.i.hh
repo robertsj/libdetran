@@ -32,6 +32,7 @@ inline void WGSolverGMRES<D>::solve(const size_t g)
   d_g = g;
   d_sweeper->setup_group(g);
   d_operator->set_group(g);
+  if (d_pc) d_pc->set_group(g);
 
   //-------------------------------------------------------------------------//
   // BUILD RIGHT HAND SIDE

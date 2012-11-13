@@ -8,6 +8,7 @@
 //---------------------------------------------------------------------------//
 
 #include "WGSolverGMRES.hh"
+#include "PC_DSA.hh"
 #include "callow/solver/LinearSolverCreator.hh"
 
 namespace detran
@@ -58,8 +59,11 @@ WGSolverGMRES<D>::WGSolverGMRES(SP_state                  state,
   // default, since it implies extra sweeps that may not be needed.
   if (d_input->check("compute_boundary_flux"))
   {
-    d_update_boundary_flux =
-      d_input->template get<int>("compute_boundary_flux");
+    if (d_input->template get<int>("compute_boundary_flux"))
+    {
+      d_update_boundary_flux =
+        d_input->template get<int>("compute_boundary_flux");
+    }
   }
 
   //--------------------------------------------------------------------------//
@@ -68,10 +72,37 @@ WGSolverGMRES<D>::WGSolverGMRES(SP_state                  state,
 
   /*
    *  Eventual Options:
+   *    0. none
    *    1. fine mesh diffusion (= DSA)
    *    2. coarse mesh diffusion (= CMDSA)
    *    3. coarse mesh transport (= ~S2 on coarse grid)
    */
+
+  std::string pc_type = "none";
+  if (d_input->check("inner_pc_type"))
+  {
+    pc_type = d_input->template get<std::string>("inner_pc_type");
+  }
+  std::cout << "Using WG-GMRES with PC-" << pc_type;
+
+  size_t pc_side = callow::LinearSolver::LEFT;
+  if (d_input->check("inner_pc_side"))
+  {
+    pc_side = d_input->template get<int>("inner_pc_side");
+  }
+
+  if (pc_type == "DSA")
+  {
+    d_pc = new PC_DSA(d_input,
+                      d_material,
+                      d_mesh,
+                      d_sweepsource->get_scatter_source());
+  }
+
+  if (d_pc)
+  {
+    d_solver->set_preconditioner(d_pc, pc_side);
+  }
 
 }
 

@@ -10,7 +10,7 @@
 #ifndef detran_EIGENVALUEMANAGER_HH_
 #define detran_EIGENVALUEMANAGER_HH_
 
-#include "Eigensolver.hh"
+#include "eigen/Eigensolver.hh"
 
 namespace detran
 {

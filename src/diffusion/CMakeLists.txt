@@ -12,7 +12,7 @@ SET(SRC
     BaseOperator.cc
     GainOperator.cc
     LossOperator.cc
-    OneGroupLossOperator.cc
+#   OneGroupLossOperator.cc
 )
 
 #-------------------------------------#

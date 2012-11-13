@@ -14,6 +14,7 @@ namespace callow
 
 //---------------------------------------------------------------------------//
 PCJacobi::PCJacobi(SP_matrix A)
+  : Base("PCJacobi")
 {
   // preconditions
   Require(A);

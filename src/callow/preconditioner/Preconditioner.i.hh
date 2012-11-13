@@ -1,21 +1,21 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Preconditioner.i.hh
- * \brief  Preconditioner.i 
- * \author Jeremy Roberts
- * \date   Sep 20, 2012
+/**
+ *  @file   Preconditioner.i.hh
+ *  @brief  Preconditioner.i
+ *  @author Jeremy Roberts
+ *  @date   Sep 20, 2012
  */
 //---------------------------------------------------------------------------//
 
-#ifndef PRECONDITIONER_I_HH_
-#define PRECONDITIONER_I_HH_
-
+#ifndef callow_PRECONDITIONER_I_HH_
+#define callow_PRECONDITIONER_I_HH_
 
 namespace callow
 {
 
 #ifdef DETRAN_ENABLE_PETSC
-/// set the PETSc preconditioner
+
+//---------------------------------------------------------------------------//
 inline void Preconditioner::set_petsc_pc(PC pc)
 {
   // save the pc object
@@ -36,9 +36,8 @@ inline void Preconditioner::set_petsc_pc(PC pc)
 
   Ensure(!ierr);
 }
-#endif
 
-#ifdef DETRAN_ENABLE_PETSC
+//---------------------------------------------------------------------------//
 inline PetscErrorCode pc_apply_wrapper(PC pc, Vec b, Vec x)
 {
   // get the context and cast
@@ -53,10 +52,12 @@ inline PetscErrorCode pc_apply_wrapper(PC pc, Vec b, Vec x)
   foo->apply(B, X);
   return ierr;
 }
+
 #endif
+
 } // end namespace detran
 
-#endif // PRECONDITIONER_I_HH_ 
+#endif // callow_PRECONDITIONER_I_HH_
 
 //---------------------------------------------------------------------------//
 //              end of file Preconditioner.i.hh

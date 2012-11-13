@@ -42,7 +42,8 @@ public:
 
   /// Constructor
   PCIdentity(double factor = 1.0)
-    : d_factor(factor)
+    : Base("PCIdentity")
+    , d_factor(factor)
   {/* ... */}
 
   /// SP constructor

@@ -1,106 +1,100 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   OneGroupLossOperator.cc
- * \brief  OneGroupLossOperator 
- * \author Jeremy Roberts
- * \date   Jul 25, 2012
+/**
+ *  @file   WGDiffusionLossOperator.cc
+ *  @brief  WGDiffusionLossOperator
+ *  @author Jeremy Roberts
+ *  @date   Jul 25, 2012
  */
 //---------------------------------------------------------------------------//
 
-// Configuration
-#include "config/detran_config.hh"
-
-#ifdef DETRAN_ENABLE_PETSC
-
-// Detran
-#include "OneGroupLossOperator.hh"
-
-// System
+#include "WGDiffusionLossOperator.hh"
 #include <string>
 #include <cmath>
 #include <iostream>
 
-namespace detran_diffusion
+namespace detran
 {
 
-OneGroupLossOperator::OneGroupLossOperator(SP_input    input,
-                                           SP_material material,
-                                           SP_mesh     mesh,
-                                           int         group)
-  : BaseOperator(input, material, mesh)
-  , d_albedo(6, 1.0)
+//---------------------------------------------------------------------------//
+WGDiffusionLossOperator::WGDiffusionLossOperator(SP_input    input,
+                                                 SP_material material,
+                                                 SP_mesh     mesh,
+                                                 size_t      group)
+  : d_input(input)
+  , d_material(material)
+  , d_mesh(mesh)
   , d_group(group)
+  , d_albedo(6, 1.0)
 {
   // Preconditions
-  Require(d_group >= 0);
+  Require(d_input);
+  Require(d_material);
+  Require(d_mesh);
   Require(d_group < d_material->number_groups());
 
-  using std::string;
+  // Set the dimension and group count
+  d_dimension = d_mesh->dimension();
 
-  // Set the albedo.  First, check if the input has an albedo
-  // entry.  If it does, this is the default way to set the
-  // condition.  Otherwise, check the boundary conditions.
-  if (d_input->check("albedo"))
+  // Set matrix dimensions
+  Base::set_size(d_mesh->number_cells(), d_mesh->number_cells());
+
+  // Nonzeros.  We have up to (diagonal + 2*dim neighbors) cells
+  vec_int nnz(d_m, 1 + 2 * d_dimension);
+
+  // Preallocate the matrix.
+  preallocate(&nnz[0]);
+
+  // Set the albedo based only on boundary condition.
+  std::vector<std::string> boundary_name(6, "");
+  boundary_name[Mesh::WEST]   = "bc_west";
+  boundary_name[Mesh::EAST]   = "bc_east";
+  boundary_name[Mesh::SOUTH]  = "bc_south";
+  boundary_name[Mesh::NORTH]  = "bc_north";
+  boundary_name[Mesh::BOTTOM] = "bc_bottom";
+  boundary_name[Mesh::TOP]    = "bc_top";
+  for (int b = 0; b < d_mesh->dimension() * 2; b++)
   {
-    vec_dbl albedo = d_input->get<vec_dbl>("albedo");
-    Insist(albedo.size() == d_albedo.size(),
-      "The user-defined albedo vector is the wrong size.");
-    d_albedo = albedo;
-  }
-  else
-  {
-    std::vector<std::string> boundary_name(6, "");
-    boundary_name[Mesh::WEST]   = "bc_west";
-    boundary_name[Mesh::EAST]   = "bc_east";
-    boundary_name[Mesh::SOUTH]  = "bc_south";
-    boundary_name[Mesh::NORTH]  = "bc_north";
-    boundary_name[Mesh::BOTTOM] = "bc_bottom";
-    boundary_name[Mesh::TOP]    = "bc_top";
-    for (int b = 0; b < d_mesh->dimension() * 2; b++)
-    {
-      // Set the default to zero if it is an active boundary.  For 1/2-D problems,
-      // we leave the "infinite" boundaries as reflective.
-      d_albedo[b] = 0.0;
-      if (d_input->check(boundary_name[b]))
-        if (d_input->get<string>(boundary_name[b]) == "reflect")
-          d_albedo[b] = 1.0;
-    }
+    // Set the default to zero if it is an active boundary.  For 1/2-D problems,
+    // we leave the "infinite" boundaries as reflective.
+    d_albedo[b] = 0.0;
+    if (d_input->check(boundary_name[b]))
+      if (d_input->get<std::string>(boundary_name[b]) == "reflect")
+        d_albedo[b] = 1.0;
   }
 
-  // Construct the matrix.
-  construct();
+  // Build the matrix.
+  build();
 
 }
 
+//---------------------------------------------------------------------------//
+void WGDiffusionLossOperator::construct()
+{
+  build();
+}
 
-// IMPLEMENTATION
-
-//
-void OneGroupLossOperator::construct()
+//---------------------------------------------------------------------------//
+void WGDiffusionLossOperator::build()
 {
   using std::cout;
   using std::endl;
 
   // The matrix dimension is the total number of cells.
-  d_size = d_mesh->number_cells();
-
-  // Create the matrix.
-  MatCreate(PETSC_COMM_SELF, &d_operator);
-  MatSetType(d_operator, MATAIJ);
-  MatSetSizes(d_operator, PETSC_DECIDE, PETSC_DECIDE, d_size, d_size);
+  size_t size = d_mesh->number_cells();
 
   // Get the material map.
   vec_int mat_map = d_mesh->mesh_map("MATERIAL");
 
+  // Error flag
+  bool flag;
+
   // Loop over all matrix rows, which, because of the ordering,
   // is the same as the cell index.
-  for (int row = 0; row < d_size; row++)
+  for (int row = 0; row < size; row++)
   {
-    //cout << " row = " << row << endl;
 
     // Define the data for this cell.
     int m = mat_map[row];
-    //cout << " m = " << m << " g = " << d_group << endl;
 
     double cell_dc = d_material->diff_coef(m, d_group);
     Assert(cell_dc > 0.0);
@@ -183,7 +177,7 @@ void OneGroupLossOperator::construct()
 
         // Compute and set the off-diagonal matrix value.
         double val = - dtilde / cell_hxyz[xyz_idx];
-        MatSetValue(d_operator, row, neig_row, val, INSERT_VALUES);
+        flag = insert(row, neig_row, val, INSERT);
 
       }
 
@@ -199,20 +193,17 @@ void OneGroupLossOperator::construct()
 
    // Compute and set the diagonal matrix value.
    double val = jnet + cell_sr;
-   MatSetValue(d_operator, row, row, val, INSERT_VALUES);
+   flag = insert(row, row, val, INSERT);
 
   } // row loop
 
   // Assemble.
-  MatAssemblyBegin(d_operator, MAT_FINAL_ASSEMBLY);
-  MatAssemblyEnd(d_operator, MAT_FINAL_ASSEMBLY);
+  assemble();
 
 }
 
 } // end namespace detran
 
-#endif
-
 //---------------------------------------------------------------------------//
-//              end of file OneGroupLossOperator.cc
+//              end of file WGDiffusionLossOperator.cc
 //---------------------------------------------------------------------------//

@@ -10,7 +10,7 @@
 #ifndef detran_FIXEDSOURCEMANAGER_HH_
 #define detran_FIXEDSOURCEMANAGER_HH_
 
-#include "MGSolver.hh"
+#include "mg/MGSolver.hh"
 #include "angle/Quadrature.hh"
 
 namespace detran

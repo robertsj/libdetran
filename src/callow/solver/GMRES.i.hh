@@ -26,7 +26,6 @@ namespace callow
 
 inline void GMRES::solve_impl(const Vector &b, Vector &x0)
 {
-
   int restart = d_restart;
   if (restart >= d_A->number_rows()) restart = d_A->number_rows();
 
@@ -68,6 +67,7 @@ inline void GMRES::solve_impl(const Vector &b, Vector &x0)
     d_A->multiply(x, r);
     r.subtract(b);
     r.scale(-1);
+
     //   apply left preconditioner
     if (d_P and d_pc_side == Base::LEFT)
     {

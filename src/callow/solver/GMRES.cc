@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   GMRES.cc
- * \author robertsj
- * \date   Sep 14, 2012
- * \brief  GMRES class definition.
+/**
+ *  @file   GMRES.cc
+ *  @author robertsj
+ *  @date   Sep 14, 2012
+ *  @brief  GMRES class definition.
  */
 //---------------------------------------------------------------------------//
 
@@ -13,13 +13,10 @@ namespace callow
 {
 
 //---------------------------------------------------------------------------//
-// CONSTRUCTOR & DESTRUCTOR
-//---------------------------------------------------------------------------//
-
 GMRES::GMRES(const double  atol,
-                const double  rtol,
-                const int     maxit,
-                const int     restart)
+             const double  rtol,
+             const int     maxit,
+             const int     restart)
   : LinearSolver(atol, rtol, maxit, "solver_gmres")
   , d_restart(restart)
   , d_c(restart+1, 0.0)
@@ -38,7 +35,7 @@ GMRES::GMRES(const double  atol,
 //  d_s.resize(restart + 1);
 }
 
-
+//---------------------------------------------------------------------------//
 GMRES::~GMRES()
 {
   for (int i = 0; i <= d_restart; i++)
@@ -49,6 +46,3 @@ GMRES::~GMRES()
 }
 
 } // end namespace callow
-
-
-
