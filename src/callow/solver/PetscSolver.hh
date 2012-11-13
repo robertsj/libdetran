@@ -179,6 +179,9 @@ public:
     Ensure(!ierr);
   }
 
+  /// Get the KSP object
+  KSP petsc_solver(){return d_petsc_solver;}
+
 private:
 
   //-------------------------------------------------------------------------//

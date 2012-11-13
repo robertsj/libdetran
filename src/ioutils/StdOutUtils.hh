@@ -30,7 +30,7 @@ inline void print_vec(const detran_utilities::vec_dbl &v,
 {
   std::cout << " vec_dbl: " << name << std::endl;
   for (int i = 0; i < v.size(); ++i)
-    printf(" %4i   %16.8f", i, v[i]);
+    printf(" %4i   %16.8f \n", i, v[i]);
 }
 
 

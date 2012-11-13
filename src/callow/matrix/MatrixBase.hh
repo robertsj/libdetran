@@ -91,6 +91,19 @@ public:
     multiply_transpose(*x, *y);
   }
 
+  // compute and print the explicit operator (even if shell)
+  virtual void compute_explicit(std::string filename = "matrix.out")
+  {
+#ifdef CALLOW_ENABLE_PETSC
+  Mat A;
+  MatComputeExplicitOperator(d_petsc_matrix, &A);
+  PetscViewer viewer;
+  PetscViewerBinaryOpen(PETSC_COMM_SELF, filename.c_str(), FILE_MODE_WRITE, &viewer);
+  MatView(A, viewer);
+  PetscViewerDestroy(&viewer);
+#endif
+  }
+
   //---------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL MATRICES MUST IMPLEMENT
   //---------------------------------------------------------------------------//
