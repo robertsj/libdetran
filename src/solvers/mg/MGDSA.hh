@@ -39,6 +39,10 @@ namespace detran
  *  small systems.  A coarse mesh version is under development, but
  *  this implementation will server as the upper bound for the
  *  efficacy of diffusion-based multigroup preconditioning.
+ *
+ *  @note This inherits from the shell matrix (for now) so that the
+ *        action can be used to construct an explicit operator for
+ *        detailed numerical studies
  */
 
 class MGDSA: public callow::MatrixShell, public MGPreconditioner
@@ -89,6 +93,10 @@ public:
 
   /// solve Px = b
   void apply(Vector &b, Vector &x);
+
+  //-------------------------------------------------------------------------//
+  // ABSTRACT INTERFACE -- ALL SHELL MATRICES MUST IMPLEMENT THIS
+  //-------------------------------------------------------------------------//
 
   // the client must implement the action y <-- A * x
   void multiply(const Vector &x,  Vector &y)

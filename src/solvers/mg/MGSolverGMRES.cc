@@ -68,7 +68,7 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
                                 d_sweepsource,
                                 d_krylov_group_cutoff);
 
-    d_operator->compute_explicit("MGTO.out");
+    //d_operator->compute_explicit("MGTO.out");
 
     // Create temporary unknown and right hand size vectors
     d_x = new callow::Vector(d_operator->number_rows(), 0.0);

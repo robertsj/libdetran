@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
 
 SP_material test_FixedSourceManager_material()
 {
-//  // Material (kinf = 1)
+  // Material (kinf = 1)
 //  SP_material mat(new Material(1, 2, false));
 //  //
 //  mat->set_sigma_t(0, 0,    1.0);
@@ -84,7 +84,7 @@ SP_material test_FixedSourceManager_material()
 
 SP_mesh test_FixedSourceManager_mesh(int d)
 {
-  vec_dbl cm(2, 0.0); cm[1] = 20.0;
+  vec_dbl cm(2, 0.0); cm[1] = 30.0;
   vec_dbl cc(2, 0.0); cc[1] = 0.1;
   vec_int fm(1, 40);
   vec_int ff(1, 1);
@@ -104,9 +104,9 @@ InputDB::SP_input test_FixedSourceManager_input()
   InputDB::SP_input inp(new InputDB());
   inp->put<string>("problem_type",                  "fixed");
   inp->put<string>("equation",                      "dd");
-  inp->put<string>("bc_west",                       "vacuum");
+  inp->put<string>("bc_west",                       "reflect");
   inp->put<string>("bc_east",                       "vacuum");
-  inp->put<string>("bc_south",                      "vacuum");
+  inp->put<string>("bc_south",                      "reflect");
   inp->put<string>("bc_north",                      "vacuum");
   inp->put<string>("bc_bottom",                     "reflect");
   inp->put<string>("bc_top",                        "reflect");
@@ -154,11 +154,11 @@ InputDB::SP_input test_FixedSourceManager_input()
   //--------------------------------------------------------------------------//
   // OUTER
   inp->put<string>("outer_solver",                      "GMRES");
-  inp->put<string>("outer_pc_type",                     "s");
+  inp->put<string>("outer_pc_type",                     "mgdsa");
   inp->put<int>("outer_pc_side",                        2);
   inp->put<int>("outer_print_level",                    1);
   inp->put<double>("outer_tolerance",                   1e-15);
-  inp->put<int>("outer_krylov_group_cutoff",            0);
+  //inp->put<int>("outer_krylov_group_cutoff",            0);
   inp->put<int>("outer_print_level",                    2);
   inp->put<int>("outer_max_iters",                      1000);
   {
@@ -303,7 +303,7 @@ int test_FixedSourceManager_T()
 
   typename Manager_T::SP_state state;
   state = manager.state();
-  state->display();
+  //state->display();
 
   return 0;
   // Get the state and boundary

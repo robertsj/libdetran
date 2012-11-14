@@ -45,7 +45,8 @@ MGDSA::MGDSA(SP_input input,
                               d_group_cutoff,
                               false, // adjoint
                               1.0);  // keff
-  d_operator->compute_explicit("mgdiff.out");
+
+
   // Create the linear solver for this group.
   d_solver = callow::LinearSolverCreator::Create(db);
 
@@ -54,8 +55,11 @@ MGDSA::MGDSA(SP_input input,
   d_solver->set_operators(d_operator, db);
 
   set_size(d_operator->number_columns());
-  compute_explicit("mgdsa.out");
-  d_operator->print_matlab("mg.out");
+
+  // DEBUG
+  // d_operator->compute_explicit("mgdiff.out");
+  // compute_explicit("mgdsa.out");
+  // d_operator->print_matlab("mg.out");
 }
 
 //---------------------------------------------------------------------------//

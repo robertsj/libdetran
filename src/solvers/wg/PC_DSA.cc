@@ -40,7 +40,7 @@ PC_DSA::PC_DSA(SP_input input,
 
     // Create the loss operator for this group
     d_operator[g] = new Operator_T(d_input, d_material, d_mesh, g);
-    d_operator[g]->compute_explicit("dsa.out");
+
     // Create the linear solver for this group.
     d_solver[g] = callow::LinearSolverCreator::Create(db);
 
