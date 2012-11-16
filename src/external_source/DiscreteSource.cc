@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   DiscreteSource.cc
- * \brief  DiscreteSource member definitions
- * \author Jeremy Roberts
- * \date   Sep 6, 2012
+/**
+ *  @file   DiscreteSource.cc
+ *  @brief  DiscreteSource member definitions
+ *  @author Jeremy Roberts
+ *  @date   Sep 6, 2012
  */
 //---------------------------------------------------------------------------//
 
@@ -12,6 +12,7 @@
 namespace detran_external_source
 {
 
+//---------------------------------------------------------------------------//
 DiscreteSource::DiscreteSource(size_t         number_groups,
                                SP_mesh        mesh,
                                vec3_dbl       spectra,
@@ -29,8 +30,6 @@ DiscreteSource::DiscreteSource(size_t         number_groups,
 
   d_mesh->add_mesh_map("DISCRETESOURCE", d_source_map);
 }
-
-
 
 } // end namespace detran_external_source
 

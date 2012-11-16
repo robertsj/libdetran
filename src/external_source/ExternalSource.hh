@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   ExternalSource.hh
- * \author robertsj
- * \date   Apr 4, 2012
- * \brief  ExternalSource class definition.
+/**
+ *  @file   ExternalSource.hh
+ *  @author robertsj
+ *  @date   Apr 4, 2012
+ *  @brief  ExternalSource class definition.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef EXTERNALSOURCE_HH_
-#define EXTERNALSOURCE_HH_
+#ifndef detran_external_source_EXTERNALSOURCE_HH_
+#define detran_external_source_EXTERNALSOURCE_HH_
 
 #include "geometry/Mesh.hh"
 #include "angle/Quadrature.hh"
@@ -21,22 +21,22 @@ namespace detran_external_source
 {
 
 //---------------------------------------------------------------------------//
-/*!
- *  \class ExternalSource
- *  \brief Base volume source class
+/**
+ *  @class ExternalSource
+ *  @brief Base volume source class
  *
  *  Consider the general transport equation in operator form:
- *  \f[
+ *  @f[
  *      \mathcal{L}_g \psi(\vec{r}, \hat{\Omega}, E_g)
  *        = Q(\vec{r}, \hat{\Omega}, E_g) \, .
- *  \f]
+ *  @f]
  *  The source \f$ Q \f$ is a function of space, angle, and energy.  Because
  *  sources will be used in different ways throughout Detran, a useful
  *  interface allows a client to get discrete angular sources (for use in
  *  SN or MOC calculations) and moment sources (for use in diffusion).  For
  *  the latter, only the isotropic component is available.
  *
- *  \note Source representation in moment form is limited to isotropic
+ *  @note Source representation in moment form is limited to isotropic
  */
 //---------------------------------------------------------------------------//
 
@@ -59,11 +59,11 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Constructor
-   *  \param number_groups  Number of energy groups
-   *  \param mesh           Pointer to mesh
-   *  \param quadrature     Pointer to angular quadrature
+  /**
+   *  @brief Constructor
+   *  @param number_groups  Number of energy groups
+   *  @param mesh           Pointer to mesh
+   *  @param quadrature     Pointer to angular quadrature
    */
   ExternalSource(size_t number_groups,
                  SP_mesh mesh,
@@ -89,25 +89,25 @@ public:
   // ABSTRACT INTERFACE -- ALL EXTERNAL SOURCES MUST IMPLEMENT THESE
   //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Get moments source for cell.
+  /**
+   *  @brief Get moments source for cell.
    *
    *  Units are n/cc-sec
    *
-   *  \param cell   Mesh cell
-   *  \param group  Energy group
+   *  @param cell   Mesh cell
+   *  @param group  Energy group
    */
   virtual double source(const size_t cell,
                         const size_t group) = 0;
 
-  /*!
-   *  \brief Get discrete source for cell and cardinal angle.
+  /**
+   *  @brief Get discrete source for cell and cardinal angle.
    *
    *  Units are n/cc-ster-sec
    *
-   *  \param cell   Mesh cell
-   *  \param group  Energy group
-   *  \param angle  Cardinal angle index
+   *  @param cell   Mesh cell
+   *  @param group  Energy group
+   *  @param angle  Cardinal angle index
    */
   virtual double source(const size_t cell,
                         const size_t group,
@@ -121,16 +121,12 @@ protected:
 
   /// Cartesian mesh.
   SP_mesh d_mesh;
-
   /// Quadrature
   SP_quadrature d_quadrature;
-
   /// Number of groups.
   const size_t d_number_groups;
-
   /// Number of angles
   size_t d_number_angles;
-
   /// Am I ready?
   int d_initialized;
 
@@ -138,7 +134,7 @@ protected:
 
 } // end namespace detran_external_source
 
-#endif /* EXTERNALSOURCE_HH_ */
+#endif /* detran_external_sourceEXTERNALSOURCE_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of ExternalSource.hh

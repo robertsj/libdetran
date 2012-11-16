@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   IsotropicSource.cc
- * \brief  IsotropicSource 
- * \author Jeremy Roberts
- * \date   Sep 6, 2012
+/**
+ *  @file   IsotropicSource.cc
+ *  @brief  IsotropicSource
+ *  @author Jeremy Roberts
+ *  @date   Sep 6, 2012
  */
 //---------------------------------------------------------------------------//
 
@@ -12,6 +12,7 @@
 namespace detran_external_source
 {
 
+//---------------------------------------------------------------------------//
 IsotropicSource::IsotropicSource(size_t number_groups,
                                  SP_mesh mesh,
                                  spectra_type &spectra,

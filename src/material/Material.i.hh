@@ -1,96 +1,90 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Material.i.hh
- * \author Jeremy Roberts
- * \brief  Material class inline member definitions.
+/**
+ *  @file   Material.i.hh
+ *  @author Jeremy Roberts
+ *  @brief  Material class inline member definitions.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef MATERIAL_I_HH_
-#define MATERIAL_I_HH_
+#ifndef detran_material_MATERIAL_I_HH_
+#define detran_material_MATERIAL_I_HH_
 
 namespace detran_material
 {
 
-double Material::sigma_t(size_t m, size_t g) const
+//---------------------------------------------------------------------------//
+inline double Material::sigma_t(size_t m, size_t g) const
 {
-  Require(m >= 0);
   Require(m < d_number_materials);
-  Require(g >= 0);
   Require(g < d_number_groups);
   return d_sigma_t[g][m];
 }
 
-double Material::sigma_a(size_t m, size_t g) const
+//---------------------------------------------------------------------------//
+inline double Material::sigma_a(size_t m, size_t g) const
 {
-  Require(m >= 0);
   Require(m < d_number_materials);
-  Require(g >= 0);
   Require(g < d_number_groups);
   return d_sigma_a[g][m];
 }
 
-double Material::nu_sigma_f(size_t m, size_t g) const
+//---------------------------------------------------------------------------//
+inline double Material::nu_sigma_f(size_t m, size_t g) const
 {
-  Require(m >= 0);
   Require(m < d_number_materials);
-  Require(g >= 0);
   Require(g < d_number_groups);
   return d_nu_sigma_f[g][m];
 }
 
-double Material::sigma_f(size_t m, size_t g) const
+//---------------------------------------------------------------------------//
+inline double Material::sigma_f(size_t m, size_t g) const
 {
-  Require(m >= 0);
   Require(m < d_number_materials);
-  Require(g >= 0);
   Require(g < d_number_groups);
   return d_sigma_f[g][m];
 }
 
-double Material::nu(size_t m, size_t g) const
+//---------------------------------------------------------------------------//
+inline double Material::nu(size_t m, size_t g) const
 {
-  Require(m >= 0);
   Require(m < d_number_materials);
-  Require(g >= 0);
   Require(g < d_number_groups);
   return d_nu[g][m];
 }
 
-double Material::chi(size_t m, size_t g) const
+//---------------------------------------------------------------------------//
+inline double Material::chi(size_t m, size_t g) const
 {
-  Require(m >= 0);
   Require(m < d_number_materials);
-  Require(g >= 0);
   Require(g < d_number_groups);
   return d_chi[g][m];
 }
 
-double Material::sigma_s(size_t m, size_t g, size_t gp) const
+//---------------------------------------------------------------------------//
+inline double Material::sigma_s(size_t m, size_t g, size_t gp) const
 {
-  Require(m >= 0);
   Require(m < d_number_materials);
-  Require(g >= 0);
   Require(g < d_number_groups);
-  Require(gp >= 0);
   Require(gp < d_number_groups);
   return d_sigma_s[g][gp][m];
 }
 
-double Material::diff_coef(size_t m, size_t g) const
+//---------------------------------------------------------------------------//
+inline double Material::diff_coef(size_t m, size_t g) const
 {
-  Require(m >= 0);
   Require(m < d_number_materials);
-  Require(g >= 0);
   Require(g < d_number_groups);
   return d_diff_coef[g][m];
 }
 
-// Vectorized
+// Vectorized.  Since we store with material on the
+// outer index, we actual have to copy the materials
+// to a new vector.  These are largely implemented to
+// help in I/O of material data.
 
-Material::vec_dbl Material::sigma_t(size_t m) const
+//---------------------------------------------------------------------------//
+inline Material::vec_dbl Material::sigma_t(size_t m) const
 {
-  Require(m >= 0);
   Require(m < d_number_materials);
   vec_dbl v(d_number_groups, 0.0);
   for (size_t g = 0; g < d_number_groups; g++)
@@ -98,9 +92,9 @@ Material::vec_dbl Material::sigma_t(size_t m) const
   return v;
 }
 
-Material::vec_dbl Material::sigma_a(size_t m) const
+//---------------------------------------------------------------------------//
+inline Material::vec_dbl Material::sigma_a(size_t m) const
 {
-  Require(m >= 0);
   Require(m < d_number_materials);
   vec_dbl v(d_number_groups, 0.0);
   for (size_t g = 0; g < d_number_groups; g++)
@@ -108,9 +102,9 @@ Material::vec_dbl Material::sigma_a(size_t m) const
   return v;
 }
 
-Material::vec_dbl Material::nu_sigma_f(size_t m) const
+//---------------------------------------------------------------------------//
+inline Material::vec_dbl Material::nu_sigma_f(size_t m) const
 {
-  Require(m >= 0);
   Require(m < d_number_materials);
   vec_dbl v(d_number_groups, 0.0);
   for (size_t g = 0; g < d_number_groups; g++)
@@ -118,9 +112,9 @@ Material::vec_dbl Material::nu_sigma_f(size_t m) const
   return v;
 }
 
-Material::vec_dbl Material::sigma_f(size_t m) const
+//---------------------------------------------------------------------------//
+inline Material::vec_dbl Material::sigma_f(size_t m) const
 {
-  Require(m >= 0);
   Require(m < d_number_materials);
   vec_dbl v(d_number_groups, 0.0);
   for (size_t g = 0; g < d_number_groups; g++)
@@ -128,9 +122,9 @@ Material::vec_dbl Material::sigma_f(size_t m) const
   return v;
 }
 
-Material::vec_dbl Material::nu(size_t m) const
+//---------------------------------------------------------------------------//
+inline Material::vec_dbl Material::nu(size_t m) const
 {
-  Require(m >= 0);
   Require(m < d_number_materials);
   vec_dbl v(d_number_groups, 0.0);
   for (size_t g = 0; g < d_number_groups; g++)
@@ -138,9 +132,9 @@ Material::vec_dbl Material::nu(size_t m) const
   return v;
 }
 
-Material::vec_dbl Material::chi(size_t m) const
+//---------------------------------------------------------------------------//
+inline Material::vec_dbl Material::chi(size_t m) const
 {
-  Require(m >= 0);
   Require(m < d_number_materials);
   vec_dbl v(d_number_groups, 0.0);
   for (size_t g = 0; g < d_number_groups; g++)
@@ -148,9 +142,9 @@ Material::vec_dbl Material::chi(size_t m) const
   return v;
 }
 
-Material::vec2_dbl Material::sigma_s(size_t m) const
+//---------------------------------------------------------------------------//
+inline Material::vec2_dbl Material::sigma_s(size_t m) const
 {
-  Require(m >= 0);
   Require(m < d_number_materials);
   vec2_dbl v(d_number_groups, vec_dbl(d_number_groups, 0.0));
   for (size_t g = 0; g < d_number_groups; g++)
@@ -159,9 +153,9 @@ Material::vec2_dbl Material::sigma_s(size_t m) const
   return v;
 }
 
-Material::vec_dbl Material::diff_coef(size_t m) const
+//---------------------------------------------------------------------------//
+inline Material::vec_dbl Material::diff_coef(size_t m) const
 {
-  Require(m >= 0);
   Require(m < d_number_materials);
   vec_dbl v(d_number_groups, 0.0);
   for (size_t g = 0; g < d_number_groups; g++)
@@ -171,4 +165,4 @@ Material::vec_dbl Material::diff_coef(size_t m) const
 
 } // end namespace detran
 
-#endif /* MATERIAL_I_HH_ */
+#endif /* detran_material_MATERIAL_I_HH_ */

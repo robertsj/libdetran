@@ -169,6 +169,14 @@ public:
 
   /**
    *  @brief Set an external discrete source.
+   *
+   *  There really is no difference between a moment and discrete
+   *  source in representation (the functions are the same), but
+   *  the sweep source adds the discrete portion of the source
+   *  before giving the client the source.  This way, the moment
+   *  sources can be done once and the discrete component can
+   *  be built as needed.
+   *
    *  @param source  Smart pointer to external source
    */
   void set_discrete_source(SP_externalsource source)
@@ -251,8 +259,17 @@ public:
               const size_t a,
               sweep_source_type& s);
 
-  const moments_type& fixed_group_source()   const { return d_fixed_group_source; }
-  const moments_type& scatter_group_source() const { return d_scatter_group_source; }
+  /// Return the fixed source for the current group
+  const moments_type& fixed_group_source() const
+  {
+    return d_fixed_group_source;
+  }
+
+  /// Return the scatter source for the current group
+  const moments_type& scatter_group_source() const
+  {
+    return d_scatter_group_source;
+  }
 
 private:
 
@@ -270,7 +287,7 @@ private:
   moments_type d_fixed_group_source;
   /// Within group scattering applicable to all angles in this group.
   moments_type d_scatter_group_source;
-  /// A container of external moments sources.
+  /// A container of external moments sources
   std::vector<SP_externalsource> d_moment_external_sources;
   /// A container of external discrete sources
   std::vector<SP_externalsource> d_discrete_external_sources;

@@ -1,10 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   test_Material.cc
- * \author Jeremy Roberts
- * \date   Apr 1, 2012
- * \brief  Test of Material class.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+/**
+ *  @file   test_Material.cc
+ *  @author Jeremy Roberts
+ *  @date   Apr 1, 2012
+ *  @brief  Test of Material class.
  */
 //---------------------------------------------------------------------------//
 

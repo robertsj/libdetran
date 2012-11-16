@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   DiscreteSource.hh
- * \author robertsj
- * \date   Apr 4, 2012
- * \brief  DiscreteSource class definition.
+/**
+ *  @file   DiscreteSource.hh
+ *  @author robertsj
+ *  @date   Apr 4, 2012
+ *  @brief  DiscreteSource class definition.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef DISCRETESOURCE_HH_
-#define DISCRETESOURCE_HH_
+#ifndef detran_external_source_DISCRETESOURCE_HH_
+#define detran_external_source_DISCRETESOURCE_HH_
 
 #include "ExternalSource.hh"
 
@@ -16,9 +16,9 @@ namespace detran_external_source
 {
 
 //---------------------------------------------------------------------------//
-/*!
- *  \class DiscreteSource
- *  \brief Discrete source definition
+/**
+ *  @class DiscreteSource
+ *  @brief Discrete source definition
  */
 //---------------------------------------------------------------------------//
 
@@ -38,14 +38,14 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Constructor
-   *  \param number_groups  Number of energy groups
-   *  \param mesh           Pointer to mesh
-   *  \param spectra        Angle-dependent spectra,
+  /**
+   *  @brief Constructor
+   *  @param number_groups  Number of energy groups
+   *  @param mesh           Pointer to mesh
+   *  @param spectra        Angle-dependent spectra,
    *                          size = [#spectra][#groups][#angle]
-   *  \param map            Map of where spectra are located, size = [#cells]
-   *  \param quadrature     Quadrature
+   *  @param map            Map of where spectra are located, size = [#cells]
+   *  @param quadrature     Quadrature
    */
   DiscreteSource(size_t         number_groups,
                  SP_mesh        mesh,
@@ -105,7 +105,6 @@ private:
 
   /// Angle-dependent source spectra
   vec3_dbl d_source_spectra;
-
   /// Fine mesh source map
   vec_int d_source_map;
 

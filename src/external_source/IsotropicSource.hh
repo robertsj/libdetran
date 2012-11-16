@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   IsotropicSource.hh
- * \author robertsj
- * \date   Apr 4, 2012
- * \brief  IsotropicSource class definition.
+/**
+ *  @file   IsotropicSource.hh
+ *  @author robertsj
+ *  @date   Apr 4, 2012
+ *  @brief  IsotropicSource class definition.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef ISOTROPICSOURCE_HH_
-#define ISOTROPICSOURCE_HH_
+#ifndef detran_external_source_ISOTROPICSOURCE_HH_
+#define detran_external_source_ISOTROPICSOURCE_HH_
 
 #include "ExternalSource.hh"
 
@@ -16,9 +16,9 @@ namespace detran_external_source
 {
 
 //---------------------------------------------------------------------------//
-/*!
- *  \class IsotropicSource
- *  \brief Isotropic volume source.
+/**
+ *  @class IsotropicSource
+ *  @brief Isotropic volume source.
  */
 //---------------------------------------------------------------------------//
 
@@ -38,14 +38,14 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Constructor
-   *  \param number_groups  Number of energy groups
-   *  \param mesh           Pointer to mesh
-   *  \param spectra        Vector of spectra, size = [#spectra][#groups].  The
+  /**
+   *  @brief Constructor
+   *  @param number_groups  Number of energy groups
+   *  @param mesh           Pointer to mesh
+   *  @param spectra        Vector of spectra, size = [#spectra][#groups].  The
    *                        unit is n/cc-sec.
-   *  \param map            Map of where spectra are located, size = [#cells]
-   *  \param quadrature     Pointer to quadrature (optional)
+   *  @param map            Map of where spectra are located, size = [#cells]
+   *  @param quadrature     Pointer to quadrature (optional)
    */
   IsotropicSource(size_t number_groups,
                   SP_mesh mesh,
@@ -104,10 +104,8 @@ private:
 
   /// Source spectra
   spectra_type d_source_spectra;
-
   /// Fine mesh source map
   vec_int d_source_map;
-
   /// Angular norm
   double d_norm;
 
@@ -115,7 +113,7 @@ private:
 
 } // end namespace detran
 
-#endif /* ISOTROPICSOURCE_HH_ */
+#endif /* detran_external_source_ISOTROPICSOURCE_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of IsotropicSource.hh
