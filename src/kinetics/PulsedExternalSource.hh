@@ -1,29 +1,41 @@
 //----------------------------------*-C++-*----------------------------------//
-/*
- *  @file   LinearExternalSource.hh
- *  @brief  LinearExternalSource
+/**
+ *  @file   PulsedExternalSource.hh
+ *  @brief  PulsedExternalSource
  *  @author Jeremy Roberts
- *  @date   Nov 15, 2012
+ *  @date   Nov 16, 2012
  */
 //---------------------------------------------------------------------------//
 
-#ifndef detran_LINEAREXTERNALSOURCE_HH_
-#define detran_LINEAREXTERNALSOURCE_HH_
+#ifndef detran_PULSEDEXTERNALSOURCE_HH_
+#define detran_PULSEDEXTERNALSOURCE_HH_
 
 #include "TimeDependentExternalSource.hh"
 
 namespace detran
 {
 
+
 /**
- *  @class LinearExternalSource
- *  @brief Base class for time-dependent external sources
+ *  @class PulsedExternalSource
+ *  @brief External source with Gaussian dependence in time
  *
- *  The only addition beyond the base external source class is to
- *  specify a time at which the source will be evaluated during the
- *  transport solve for the current step.
+ *  Given an external source, a Gaussian shape factor in time is
+ *  applied.  The Gaussian shape is defined as
+ *  @f[
+ *      f(t) = e^{- \frac{(t - t_{\text{peak}})^2}{2\sigma^2}}
+ *  @f]
+ *  where the
+ *  @f[
+ *      \sigma = \frac{FWHM}{2\sqrt{2 \ln{2}}} \approx 2.23482 \sigma \, .
+ *  @f]
+ *  The user supplies the time at peak, @f$ t_{\text{peak}} @f$ and
+ *  the full width at half maximum, @f$ FWHM @f$.
+ *
+ *  This shape should be relatively good for modeling pulsed
+ *  sources.
  */
-class LinearExternalSource: public TimeDependentExternalSource
+class PulsedExternalSource: public TimeDependentExternalSource
 {
 
 public:
@@ -33,8 +45,6 @@ public:
   //-------------------------------------------------------------------------//
 
   typedef TimeDependentExternalSource        Base;
-  typedef std::vector<SP_externalsource>     vec_source;
-  typedef detran_utilities::vec_dbl          vec_dbl;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -44,21 +54,23 @@ public:
    *  @brief Constructor
    *  @param number_groups  Number of energy groups
    *  @param mesh           Pointer to mesh
-   *  @param quadrature     Pointer to angular quadrature
+   *  @param fixed_source   Fixed source representing peak pulse
    */
-  LinearExternalSource(const size_t   number_groups,
-                       SP_mesh        mesh,
-                       vec_dbl        times,
-                       vec_source     sources);
+  PulsedExternalSource(const size_t       number_groups,
+                       SP_mesh            mesh,
+                       SP_externalsource  fixed_source,
+                       const double       peak_time,
+                       const double       fwhm);
 
   /// SP constructor
-  static SP_externalsource Create(const size_t   number_groups,
-                                  SP_mesh        mesh,
-                                  vec_dbl        times,
-                                  vec_source     sources);
+  static SP_externalsource Create(const size_t       number_groups,
+                                  SP_mesh            mesh,
+                                  SP_externalsource  fixed_source,
+                                  const double       peak_time,
+                                  const double       fwhm);
 
   /// Virtual destructor
-  virtual ~LinearExternalSource(){}
+  virtual ~PulsedExternalSource(){}
 
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL EXTERNAL SOURCES MUST IMPLEMENT THESE
@@ -100,26 +112,14 @@ protected:
   // DATA
   //-------------------------------------------------------------------------//
 
-  /// Discrete times at which sources are defined
-  vec_dbl d_times;
-
-  /// Number of times
-  double d_number_times;
-
-  /// Sources at each time
-  vec_source d_sources;
-
-  /// Index of first source
-  size_t d_ia;
-
-  /// Interpolation factor for first source
-  double d_fa;
-
-  /// Index of second source
-  size_t d_ib;
-
-  /// Interpolation factor for second source
-  double d_fb;
+  /// Fixed source
+  SP_externalsource d_fixed_source;
+  /// Peak time
+  double d_peak_time;
+  /// Full width at half maximum
+  double d_fwhm;
+  /// Pulse factor
+  double d_factor;
 
 };
 
@@ -129,10 +129,10 @@ protected:
 // INLINE MEMBER DEFINITINS
 //---------------------------------------------------------------------------/
 
-#include "LinearExternalSource.i.hh"
+#include "PulsedExternalSource.i.hh"
 
-#endif // LINEAREXTERNALSOURCE_HH_ 
+#endif // detran_PULSEDEXTERNALSOURCE_HH_
 
 //---------------------------------------------------------------------------//
-//              end of file LinearExternalSource.hh
+//              end of file PulsedExternalSource.hh
 //---------------------------------------------------------------------------//

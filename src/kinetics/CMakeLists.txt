@@ -18,6 +18,8 @@ SET(SRC
     SyntheticSource.cc
     SyntheticMomentSource.cc
     SyntheticDiscreteSource.cc
+    LinearExternalSource.cc
+    PulsedExternalSource.cc
 )
 
 #-----------------------------------------------------------------------------#

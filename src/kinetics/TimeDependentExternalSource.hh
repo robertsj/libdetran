@@ -15,6 +15,14 @@
 namespace detran
 {
 
+/**
+ *  @class TimeDependentExternalSource
+ *  @brief Base class for time-dependent external sources
+ *
+ *  The only addition beyond the base external source class is to
+ *  specify a time at which the source will be evaluated during the
+ *  transport solve for the current step.
+ */
 class TimeDependentExternalSource: public detran_external_source::ExternalSource
 {
 
@@ -36,8 +44,8 @@ public:
    *  @param mesh           Pointer to mesh
    *  @param quadrature     Pointer to angular quadrature
    */
-  TimeDependentExternalSource(size_t number_groups,
-                              SP_mesh mesh,
+  TimeDependentExternalSource(size_t        number_groups,
+                              SP_mesh       mesh,
                               SP_quadrature quadrature)
     : Base(number_groups, mesh, quadrature)
     , d_time(0.0)

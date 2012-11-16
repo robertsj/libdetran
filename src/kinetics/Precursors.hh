@@ -95,7 +95,6 @@ private:
 
 #include "Precursors.i.hh"
 
-
 #endif // detran_PRECURSORS_HH_
 
 //---------------------------------------------------------------------------//
