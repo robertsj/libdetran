@@ -20,6 +20,7 @@
 #include "boundary/BoundaryTraits.hh"
 #include "boundary/BoundarySN.hh"
 #include "kinetics/LinearExternalSource.hh"
+#include "kinetics/LinearMaterial.hh"
 //
 #include "angle/test/quadrature_fixture.hh"
 #include "geometry/test/mesh_fixture.hh"
@@ -51,19 +52,28 @@ int main(int argc, char *argv[])
  *  1D time dependent SN problem with a TD source and no
  *  fission.  Constant source from 0:1.  Final time 10.
  */
-int test_TimeStepper()
+int test_TimeStepper(int argc, char *argv[])
 {
+
+  typedef TimeStepper<_1D> TS_1D;
+
   //-------------------------------------------------------------------------//
   // INPUT
   //-------------------------------------------------------------------------//
 
   InputDB::SP_input inp(new InputDB("time stepper test"));
-  inp->put<int>("dimension",          1);
-  inp->put<int>("number_groups",      1);
-  inp->put<double>("ts_final_time",   10.0);
-  inp->put<double>("ts_step_size",    1.0);
-  inp->put<int>("ts_scheme",          BDF1);
-  inp->put<int>("ts_discrete",        1);
+  inp->put<int>("dimension",            1);
+  inp->put<int>("number_groups",        1);
+  inp->put<std::string>("equation",     "dd");
+  inp->put<double>("ts_final_time",     40);
+  inp->put<double>("ts_step_size",      0.1);
+  inp->put<int>("ts_max_steps",         1000);
+  inp->put<int>("ts_scheme",            TS_1D::BDF1);
+  inp->put<int>("ts_discrete",          1);
+  inp->put<int>("ts_output",            1);
+  inp->put<int>("store_angular_flux",   1);
+  inp->put<int>("inner_print_level",    0);
+  inp->put<int>("outer_print_level",    0);
 
   //-------------------------------------------------------------------------//
   // MATERIAL
@@ -76,17 +86,19 @@ int test_TimeStepper()
   KineticsMaterial::SP_material
     kinmat(new KineticsMaterial(1, 1, 0, "base material"));
   kinmat->set_sigma_t(0, 0,    1.0);
-  kinmat->set_sigma_s(0, 0, 0, 1.0);
+  kinmat->set_sigma_s(0, 0, 0, 0.0);
+  kinmat->set_velocity(0,      0.1);
+  kinmat->finalize();
   LinearMaterial::vec_material materials(1, kinmat);
   LinearMaterial::vec_dbl      times(1, 0.0);
-  LinearMaterial::SP_material linmat(new LinearMaterial(times, materials));
+  LinearMaterial::SP_material  linmat(new LinearMaterial(times, materials));
 
   //-------------------------------------------------------------------------//
   // MESH
   //-------------------------------------------------------------------------//
 
-  vec_int fm(1, 10);
-  vec_dbl cm(2, 0.0); cm[1] = 10;
+  vec_int fm(1, 100);
+  vec_dbl cm(2, 0.0); cm[1] = 1;
   vec_int mt(1, 0);
   Mesh1D::SP_mesh mesh(new Mesh1D(fm, cm, mt));
 
@@ -113,23 +125,41 @@ int test_TimeStepper()
     q_e2(new IsotropicSource(1, mesh, spectra, source_map));
   //
   // Linear source
-  vec_dbl source_times(2, 1.0); source_times[1] = 1.1;
-  LinearExternalSource::vec_source sources(2);
+  double time_off = 100.0;
+  vec_dbl source_times(2, time_off); source_times[1] = time_off + 0.0;
+  LinearExternalSource::vec_source sources;
   sources.push_back(q_e1);
   sources.push_back(q_e2);
   LinearExternalSource::SP_tdsource
     q_td(new LinearExternalSource(1, mesh, source_times, sources));
 
   //-------------------------------------------------------------------------//
+  // INITIAL CONDITION
+  //-------------------------------------------------------------------------//
+
+  // Here, we want the flux due to the source being "on" for all time
+  // before t = 0.  This means we need to solve the fixed source problem
+  // using that initial source.
+
+  FixedSourceManager<_1D> manager(inp, kinmat, mesh);
+  manager.setup();
+  manager.set_source(q_e1);
+  manager.set_solver();
+  manager.solve();
+
+  State::SP_state ic = manager.state();
+  ic->display();
+
+  //-------------------------------------------------------------------------//
   // TIME STEPPER
   //-------------------------------------------------------------------------//
 
-  typedef TimeStepper<_1D>            TS_T;
 
+  TS_1D stepper(inp, linmat, mesh, false);
 
-  TS_T stepper(inp, linmat, mesh, false);
+  stepper.add_source(q_td);
 
-  stepper.solve();
+  stepper.solve(ic);
 
   return 0;
 }

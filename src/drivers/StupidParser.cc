@@ -223,8 +223,8 @@ StupidParser::parse_material_text()
   }
   Require(number_materials > 0);
 
-  d_material = new detran_material::
-    Material(number_materials, number_groups, downscatter);
+  d_material = new detran_material::Material(number_materials, number_groups);
+  d_material->set_downscatter(downscatter);
 
   // Fill the rest.
   d_file.clear();

@@ -17,10 +17,8 @@ TimeDependentMaterial::
 TimeDependentMaterial(const size_t number_materials,
                       const size_t number_energy_groups,
                       const size_t number_precursor_groups,
-                      SP_state     state,
                       std::string  name)
   : Base(number_materials, number_energy_groups, number_precursor_groups, name)
-  , d_state(state)
   , d_t(0.0)
   , d_dt(0.0)
   , d_kcrit(1.0)

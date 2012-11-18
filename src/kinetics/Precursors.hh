@@ -78,9 +78,9 @@ public:
 private:
 
   /// Number of precursor groups
-  const size_t d_number_precursor_groups;
+  size_t d_number_precursor_groups;
   /// Number of spatial cells
-  const size_t d_number_cells;
+  size_t d_number_cells;
   /// Precursor concentrations [npc][ncells]
   vec2_dbl d_C;
 

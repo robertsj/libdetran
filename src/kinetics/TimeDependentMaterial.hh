@@ -58,7 +58,6 @@ public:
   TimeDependentMaterial(const size_t number_materials,
                         const size_t number_energy_groups,
                         const size_t number_precursor_groups,
-                        SP_state     state,
                         std::string  name = "TimeDependentMaterial");
 
   /// Virtual destructor
@@ -72,6 +71,11 @@ public:
   {
     Require(keff > 0.0);
     d_kcrit = keff;
+  }
+
+  void set_state(SP_state s)
+  {
+    d_state = s;
   }
 
   //-------------------------------------------------------------------------//

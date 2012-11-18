@@ -44,7 +44,7 @@ public:
   // ENUMERATION
   //-------------------------------------------------------------------------//
 
-  enum time_schemses
+  enum time_schemes
   {
     IMP, BDF1, BDF2, BDF3, BDF4, BDF5, BDF6, END_TIME_SCHEMES
   };
@@ -62,8 +62,8 @@ public:
   typedef detran_utilities::size_t                        size_t;
   typedef FixedSourceManager<D>                           Fixed_T;
   typedef typename Fixed_T::SP_manager                    SP_mg_solver;
-  typedef TimeDependentExternalSource::SP_externalsource  SP_externalsource;
-  typedef std::vector<SP_externalsource>                  vec_source;
+  typedef TimeDependentExternalSource::SP_tdsource        SP_tdsource;
+  typedef std::vector<SP_tdsource>                        vec_source;
   typedef SyntheticSource::SP_externalsource              SP_syntheticsource;
   typedef SyntheticSource::vec_states                     vec_states;
   typedef SyntheticSource::SP_precursors                  SP_precursors;
@@ -91,7 +91,7 @@ public:
   //-------------------------------------------------------------------------//
 
   /// Add a time-dependent external source
-  void add_source(SP_externalsource source);
+  void add_source(SP_tdsource source);
 
   /// Solve
   void solve(SP_state initial_state);
@@ -126,8 +126,12 @@ private:
 
   /// Working state.  This is initially assigned the initial condition.
   SP_state d_state;
+  /// Working precursor vector.
+  SP_precursors d_precursor;
   /// Time step size
   double d_dt;
+  /// Step factor (for IMP)
+  double d_step_factor;
   /// Final time
   double d_final_time;
   /// Number of time steps
@@ -136,7 +140,8 @@ private:
   size_t d_scheme;
   /// Number of previous steps kept
   size_t d_number_previous;
-
+  /// Order of method.
+  size_t d_order;
 
   vec_states d_states;
   vec_precursors d_precursors;
@@ -147,12 +152,18 @@ private:
 
   SP_mg_solver d_solver;
 
+  /// IMP negative flux fixup.
+  bool d_fixup;
+
   //-------------------------------------------------------------------------//
   // IMPLEMENTATION
   //-------------------------------------------------------------------------//
 
   /// Given the initial fluxes, compute the precursor concentration.
   void initialize_precursors();
+
+  /// Given the new state and previous precursor vectors, compute new precursor
+  void update_precursors();
 
   /**
    *  @brief Cycle the states and precursors.
@@ -161,11 +172,11 @@ private:
    */
   void cycle_states_precursors();
 
-  /// Solve the multigroup problem, update precursors, and cycle.
-  void solve(const double dt);
+  /// Update the synthetic and any external sources
+  void update_sources(const double t, const double dt);
 
-  void update_external(){}
-  void update_synthetic(){}
+  /// Extrapolate for IMP
+  void extrapolate();
 
 };
 

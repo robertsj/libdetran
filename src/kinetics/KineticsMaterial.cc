@@ -28,8 +28,7 @@ KineticsMaterial::KineticsMaterial(const size_t num_materials,
                      vec_dbl(number_materials(), 0.0)))
   , d_verified(false)
 {
-  // Preconditions
-  Require(d_number_precursor_groups);
+  /* ... */
 }
 
 //---------------------------------------------------------------------------//
@@ -51,7 +50,7 @@ KineticsMaterial::Create(const size_t number_materials,
 //---------------------------------------------------------------------------//
 void KineticsMaterial::set_velocity(const size_t g, const double v)
 {
-  Require(g < d_number_precursor_groups);
+  Require(g < d_number_groups);
   Require(v > 0.0);
   d_velocity[g] = v;
 }
@@ -97,8 +96,9 @@ void KineticsMaterial::set_chi_d(const size_t m,
 }
 
 //---------------------------------------------------------------------------//
-void KineticsMaterial::check()
+void KineticsMaterial::finalize()
 {
+  Material::finalize();
   for (int i = 0; i < d_number_precursor_groups; ++i)
   {
     Insist(d_lambda[i] > 0.0, "Decay constants must be greater than zero.");
@@ -109,7 +109,7 @@ void KineticsMaterial::check()
   }
   // Note, beta is not checked, since we don't do anything special for
   // non fissile fuel.
-  d_verified = true;
+  d_finalized = true;
 }
 
 //---------------------------------------------------------------------------//
@@ -154,7 +154,6 @@ void KineticsMaterial::kinetics_display()
     printf("TOTAL %16.8f \n", beta_total(m));
     printf("\n");
   } // end material loop
-
 }
 
 } // end detran

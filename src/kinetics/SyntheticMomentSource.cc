@@ -17,6 +17,7 @@ SyntheticMomentSource::SyntheticMomentSource(const size_t number_groups,
                                              SP_mesh mesh,
                                              SP_material material)
   : Base(number_groups, mesh, SP_quadrature(0), material)
+  , d_source(d_number_groups, vec_dbl(d_mesh->number_cells(), 0.0))
 {
   /* ... */
 }

@@ -54,6 +54,7 @@ public:
   typedef std::vector<SP_state>                   vec_states;
   typedef Precursors::SP_precursors               SP_precursors;
   typedef std::vector<SP_precursors>              vec_precursors;
+  typedef detran_utilities::vec_dbl               vec_dbl;
   typedef detran_utilities::vec2_dbl              vec2_dbl;
   typedef detran_utilities::vec3_dbl              vec3_dbl;
 

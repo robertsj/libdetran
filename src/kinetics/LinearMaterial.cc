@@ -19,7 +19,6 @@ LinearMaterial::LinearMaterial(const vec_dbl      &times,
   : Base(materials[0]->number_materials(),
          materials[0]->number_groups(),
          materials[0]->number_precursor_groups(),
-         SP_state(0),
          name)
   , d_times(times)
   , d_materials(materials)
@@ -133,7 +132,7 @@ void LinearMaterial::update_material(const size_t iA,
       d_diff_coef[g][m]  = cA*A->diff_coef(m, g)  + cB*B->diff_coef(m, g);
       for (int gp = 0; gp < A->number_groups(); ++gp)
       {
-        std::cout << " m=" << m << " g=" << g << " gp=" << gp << std::endl;
+        //std::cout << " m=" << m << " g=" << g << " gp=" << gp << std::endl;
         d_sigma_s[g][gp][m] = cA*A->sigma_s(m, g, gp) + cB*B->sigma_s(m, g, gp);
       }
       double chiA = 0;

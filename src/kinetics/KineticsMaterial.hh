@@ -110,7 +110,7 @@ public:
   size_t number_precursor_groups() const;
 
   /// Check that all values are positive, etc.
-  void check();
+  void finalize();
 
   /// Display
   void display();

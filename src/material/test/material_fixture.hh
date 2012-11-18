@@ -1,10 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   material_fixture.hh
- * \author Jeremy Roberts
- * \date   Apr 1, 2012
- * \brief  Materials for testing.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+/**
+ *  @file   material_fixture.hh
+ *  @author Jeremy Roberts
+ *  @date   Apr 1, 2012
+ *  @brief  Materials for testing.
  */
 //---------------------------------------------------------------------------//
 
@@ -34,7 +33,7 @@ static SP_material material_fixture_1g()
   // Create the new database.
   SP_material mat;
   // 1 group, 3 materials.
-  mat = new detran_material::Material(3, 1, false);
+  mat = new detran_material::Material(3, 1, "fixtured_1g");
 
   // ---------------------------
   // Material 0: strong scatter
@@ -87,7 +86,7 @@ static SP_material material_fixture_2g()
   SP_material mat;
   // 2 groups, 4 materials, and we don't turn off upscatter explicitly
   // (though there happens to be no upscatter in this data)
-  mat = new detran_material::Material(4, 2, false);
+  mat = new detran_material::Material(4, 2, "fixtured_2g");
 
   // ---------------------------
   // Material 0: Water
@@ -196,7 +195,7 @@ static SP_material material_fixture_7g()
   // Create the new database.
   SP_material mat;
   // 7 groups, 4 materials, and we don't turn off upscatter.
-  mat = new detran_material::Material(7, 7, false);
+  mat = new detran_material::Material(7, 7, "fixtured_7g");
 
   // --------------------------------------------
   // Material 0: UO2 fuel-clad

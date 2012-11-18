@@ -18,8 +18,8 @@ inline double SyntheticDiscreteSource::source(const size_t cell,
                                               const size_t group)
 {
   // Preconditions
-  Require(group < d_number_groups);
-  Require(cell  < d_source[0].size());
+  Require(group < d_source.size());
+  Require(cell  < d_source[group][0].size());
 
   // Integrate over angle
   double value = 0;
@@ -28,7 +28,7 @@ inline double SyntheticDiscreteSource::source(const size_t cell,
     for (int a = 0; a < d_quadrature->number_angles_octant(); ++a)
     {
       int angle = d_quadrature->index(o, a);
-      value += d_source[cell][group][angle] * d_quadrature->weight(a);
+      value += d_source[group][angle][cell] * d_quadrature->weight(a);
     }
   }
   return value;
@@ -41,7 +41,8 @@ inline double SyntheticDiscreteSource::source(const size_t cell,
 {
   // Preconditions
   Require(group < d_source.size());
-  Require(cell  < d_source[0].size());
+  Require(angle < d_source[group].size());
+  Require(cell  < d_source[group][angle].size());
 
   return d_source[group][angle][cell];
 }
@@ -100,7 +101,8 @@ inline void SyntheticDiscreteSource::build(const double dt,
           for (int cell = 0; cell < d_mesh->number_cells(); ++cell)
           {
             d_source[g][angle][cell] =
-                psi_factor * states[o]->psi(g, o, a)[cell];
+                psi_factor * states[j]->psi(g, o, a)[cell];
+            std::cout << " psi = " << states[j]->psi(g, o, a)[cell] << std::endl;
           }
 
           // Add the precursor concentration, if applicable

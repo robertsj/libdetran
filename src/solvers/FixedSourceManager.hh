@@ -162,6 +162,12 @@ public:
    */
   double iterate(const int generation);
 
+  /// Update operators, etc.
+  void update()
+  {
+    // finish me
+  }
+
   /// @name Getters
   /// @{
   SP_input input() const { return d_input; }
