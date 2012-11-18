@@ -78,18 +78,8 @@ int test_LinearMaterial(int argc, char *argv[])
     materials[m]->finalize();
   }
 
-  // Create a state
-  vec_int fm(1, 10);
-  vec_dbl cm(2, 0.0); cm[1] = 1.0;
-  vec_int mt(1, 0);
-  detran_geometry::Mesh1D::SP_mesh mesh =
-    detran_geometry::Mesh1D::Create(fm, cm, mt);
-  InputDB::SP_input inp(new InputDB());
-  inp->put<int>("number_groups", 2);
-  detran::State::SP_state state = detran::State::Create(inp, mesh);
-
   // Get the 1g KineticsParameters.
-  LinearMaterial poo(1, 2, 2, state, times, materials, "combo");
+  LinearMaterial poo(times, materials, "combo");
 
   materials[0]->display();
   materials[1]->display();
@@ -97,7 +87,7 @@ int test_LinearMaterial(int argc, char *argv[])
   poo.update(5.0, 0.1);
   poo.display();
   LinearMaterial::SP_material
-    mat(new LinearMaterial(1, 2, 2, state, times, materials));
+    mat(new LinearMaterial(times, materials));
 
   return 0;
 }

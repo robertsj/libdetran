@@ -64,14 +64,17 @@ public:
    *  @param number_groups  Number of energy groups
    *  @param mesh           Pointer to mesh
    *  @param quadrature     Pointer to angular quadrature
+   *  @param discrete       Flag for discrete sources
    */
-  ExternalSource(size_t number_groups,
-                 SP_mesh mesh,
-                 SP_quadrature quadrature)
+  ExternalSource(size_t         number_groups,
+                 SP_mesh        mesh,
+                 SP_quadrature  quadrature,
+                 bool           discrete = false)
     : d_number_groups(number_groups)
     , d_mesh(mesh)
     , d_quadrature(quadrature)
     , d_number_angles(-1)
+    , d_discrete(discrete)
   {
     // Preconditions
     Require(number_groups > 0);
@@ -84,6 +87,13 @@ public:
 
   /// Virtual destructor
   virtual ~ExternalSource(){}
+
+  //-------------------------------------------------------------------------//
+  // PUBLIC FUNCTIONS
+  //-------------------------------------------------------------------------//
+
+  size_t number_groups() const { return d_number_groups; }
+  bool   is_discrete() const { return d_discrete; }
 
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL EXTERNAL SOURCES MUST IMPLEMENT THESE
@@ -129,6 +139,8 @@ protected:
   size_t d_number_angles;
   /// Am I ready?
   int d_initialized;
+  /// Discrete flag
+  bool d_discrete;
 
 };
 

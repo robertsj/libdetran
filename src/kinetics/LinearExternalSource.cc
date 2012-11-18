@@ -16,8 +16,9 @@ namespace detran
 LinearExternalSource::LinearExternalSource(const size_t   number_groups,
                                            SP_mesh        mesh,
                                            vec_dbl        times,
-                                           vec_source     sources)
-  : Base(number_groups, mesh, SP_quadrature(0))
+                                           vec_source     sources,
+                                           bool           discrete)
+  : Base(number_groups, mesh, SP_quadrature(0), discrete)
   , d_times(times)
   , d_sources(sources)
 {
@@ -29,14 +30,15 @@ LinearExternalSource::LinearExternalSource(const size_t   number_groups,
 }
 
 //---------------------------------------------------------------------------//
-LinearExternalSource::SP_externalsource
+LinearExternalSource::SP_tdsource
 LinearExternalSource::Create(const size_t   number_groups,
                              SP_mesh        mesh,
                              vec_dbl        times,
-                             vec_source     sources)
+                             vec_source     sources,
+                             bool           discrete)
 {
-  SP_externalsource p(new LinearExternalSource(number_groups, mesh,
-                                               times, sources));
+  SP_tdsource p(new LinearExternalSource(number_groups, mesh,
+                                         times, sources, discrete));
   return p;
 }
 

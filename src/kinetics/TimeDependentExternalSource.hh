@@ -32,7 +32,9 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_external_source::ExternalSource        Base;
+  typedef detran_external_source::ExternalSource            Base;
+  typedef Base::SP_externalsource                           SP_base;
+  typedef detran_utilities::SP<TimeDependentExternalSource> SP_tdsource;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -43,11 +45,13 @@ public:
    *  @param number_groups  Number of energy groups
    *  @param mesh           Pointer to mesh
    *  @param quadrature     Pointer to angular quadrature
+   *  @param discrete       Flag to indicate treatment as moment or discrete
    */
   TimeDependentExternalSource(size_t        number_groups,
                               SP_mesh       mesh,
-                              SP_quadrature quadrature)
-    : Base(number_groups, mesh, quadrature)
+                              SP_quadrature quadrature,
+                              bool          discrete)
+    : Base(number_groups, mesh, quadrature, discrete)
     , d_time(0.0)
   {
     /* ... */

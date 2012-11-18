@@ -55,19 +55,24 @@ public:
    *  @param number_groups  Number of energy groups
    *  @param mesh           Pointer to mesh
    *  @param fixed_source   Fixed source representing peak pulse
+   *  @param peak_time      Time of pulse peak
+   *  @param fwhm           Full width at half maximum of peak
+   *  @param discrete       Flag to indicate treatment as moment or discrete
    */
   PulsedExternalSource(const size_t       number_groups,
                        SP_mesh            mesh,
                        SP_externalsource  fixed_source,
                        const double       peak_time,
-                       const double       fwhm);
+                       const double       fwhm,
+                       bool               discrete = false);
 
   /// SP constructor
-  static SP_externalsource Create(const size_t       number_groups,
-                                  SP_mesh            mesh,
-                                  SP_externalsource  fixed_source,
-                                  const double       peak_time,
-                                  const double       fwhm);
+  static SP_tdsource Create(const size_t       number_groups,
+                            SP_mesh            mesh,
+                            SP_externalsource  fixed_source,
+                            const double       peak_time,
+                            const double       fwhm,
+                            bool               discrete = false);
 
   /// Virtual destructor
   virtual ~PulsedExternalSource(){}

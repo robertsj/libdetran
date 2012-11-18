@@ -67,10 +67,16 @@ WGSolver<D>::WGSolver(SP_state                  state,
   if (q_f) d_sweepsource->set_fission_source(q_f);
   Assert(!multiply or (multiply and q_f));
 
-  // \todo Allow for discrete sources
+  // Add any moment and discrete sources present.
   for (int i = 0; i < q_e.size(); ++i)
   {
-    if (q_e[i]) d_sweepsource->set_moment_source(q_e[i]);
+    if (q_e[i])
+    {
+      if (!q_e[i]->is_discrete())
+        d_sweepsource->set_moment_source(q_e[i]);
+      else
+        d_sweepsource->set_discrete_source(q_e[i]);
+    }
   }
 
   //-------------------------------------------------------------------------//

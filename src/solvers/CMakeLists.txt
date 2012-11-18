@@ -15,9 +15,11 @@ include_directories(${SRC_DIR})
 include_directories(wg)
 include_directories(mg)
 include_directories(eigen)
+include_directories(time)
 add_subdirectory(wg)
 add_subdirectory(mg)
 add_subdirectory(eigen)
+add_subdirectory(time)
 set(SRC
     FixedSourceManager.cc
     EigenvalueManager.cc
@@ -35,6 +37,7 @@ ADD_LIBRARY(${LIB_NAME}
             ${WG_SRC}
             ${MG_SRC}
             ${EIGEN_SRC}
+            ${TIME_SRC}
 )
 TARGET_LINK_LIBRARIES(${LIB_NAME}
                       callow
@@ -45,6 +48,7 @@ TARGET_LINK_LIBRARIES(${LIB_NAME}
                       geometry
                       utilities
                       ioutils
+                      kinetics
 )
 
 INSTALL_FILES(/include/${LIB_NAME} .hh)

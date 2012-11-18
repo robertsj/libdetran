@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   SiloOutput.cc
- * \brief  SiloOutput 
- * \author Jeremy Roberts
- * \date   Jul 27, 2012
+/**
+ *  @file   SiloOutput.cc
+ *  @brief  SiloOutput
+ *  @author Jeremy Roberts
+ *  @date   Jul 27, 2012
  */
 //---------------------------------------------------------------------------//
 
@@ -21,6 +21,7 @@
 namespace detran_ioutils
 {
 
+//---------------------------------------------------------------------------//
 SiloOutput::SiloOutput(SP_mesh mesh)
   : d_mesh(mesh)
   , d_initialized(false)
@@ -29,11 +30,13 @@ SiloOutput::SiloOutput(SP_mesh mesh)
   Require(d_mesh);
 }
 
+//---------------------------------------------------------------------------//
 SiloOutput::~SiloOutput()
 {
   if(d_initialized) finalize();
 }
 
+//---------------------------------------------------------------------------//
 bool SiloOutput::initialize(std::string filename)
 {
   // Simply return if already initialized.
@@ -95,6 +98,7 @@ bool SiloOutput::initialize(std::string filename)
   return true;
 }
 
+//---------------------------------------------------------------------------//
 void SiloOutput::finalize()
 {
   if (d_initialized)
@@ -104,6 +108,7 @@ void SiloOutput::finalize()
   }
 }
 
+//---------------------------------------------------------------------------//
 bool SiloOutput::write_mesh_map(const std::string &key)
 {
   using std::cout;
@@ -131,6 +136,7 @@ bool SiloOutput::write_mesh_map(const std::string &key)
   return true;
 }
 
+//---------------------------------------------------------------------------//
 bool SiloOutput::write_scalar_flux(SP_state state)
 {
   // Preconditions
@@ -161,6 +167,7 @@ bool SiloOutput::write_scalar_flux(SP_state state)
   return true;
 }
 
+//---------------------------------------------------------------------------//
 bool SiloOutput::write_angular_flux(SP_state state, SP_quadrature quad)
 {
   // Preconditions
@@ -201,6 +208,40 @@ bool SiloOutput::write_angular_flux(SP_state state, SP_quadrature quad)
 
   return true;
 }
+
+//---------------------------------------------------------------------------//
+bool SiloOutput::write_time_flux(const int step,
+                                 SP_state  state,
+                                 bool      do_psi)
+{
+  // Preconditions
+  Require(state);
+  SP_quadrature q;
+  if (do_psi)
+  {
+    Require(state->store_angular_flux());
+    q = state->get_quadrature();
+    Require(q);
+  }
+
+  // Example: step000001
+  char buffer[10];
+  sprintf(buffer, "step%i", step);
+  std::string buffer_str(buffer);
+
+  // Initialize
+  bool flag = initialize(buffer_str);
+
+  // Write fluxes
+  flag = write_scalar_flux(state);
+  if (do_psi) flag = write_angular_flux(state, q);
+
+  // Finalize
+  finalize();
+
+  return flag;
+}
+
 
 } // end namespace detran_ioutils
 

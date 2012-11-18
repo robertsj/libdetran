@@ -1,5 +1,5 @@
 //----------------------------------*-C++-*----------------------------------//
-/*
+/**
  *  @file   LinearExternalSource.hh
  *  @brief  LinearExternalSource
  *  @author Jeremy Roberts
@@ -44,18 +44,22 @@ public:
    *  @brief Constructor
    *  @param number_groups  Number of energy groups
    *  @param mesh           Pointer to mesh
-   *  @param quadrature     Pointer to angular quadrature
+   *  @param times          Times at which sources are defined
+   *  @param sources        Sources at each time
+   *  @param discrete       Flag to indicate treatment as moment or discrete
    */
   LinearExternalSource(const size_t   number_groups,
                        SP_mesh        mesh,
                        vec_dbl        times,
-                       vec_source     sources);
+                       vec_source     sources,
+                       bool           discrete = false);
 
   /// SP constructor
-  static SP_externalsource Create(const size_t   number_groups,
-                                  SP_mesh        mesh,
-                                  vec_dbl        times,
-                                  vec_source     sources);
+  static SP_tdsource Create(const size_t   number_groups,
+                            SP_mesh        mesh,
+                            vec_dbl        times,
+                            vec_source     sources,
+                            bool           discrete = false);
 
   /// Virtual destructor
   virtual ~LinearExternalSource(){}

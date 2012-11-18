@@ -21,17 +21,14 @@ namespace detran
  *  @brief Base class for time-dependent materials
  *
  *  This implementation allows for arbitrary time-dependent materials
- *  to be defined as a function of state.
+ *  to be defined, possibly as a function of state.
  *
  *  The client must implement the private implementation of update,
  *  which defines the normal cross section values.  This private
  *  function is called in update, which then adjusts the cross sections
- *  for the time step (i.e it produces pseudo cross sections that
+ *  for the time step (i.e. it produces synthetic cross sections that
  *  are dependent on the time increment)
  *
- *  Note, this implementation is limited to first order implicit time
- *  stepping, though this could be in the framework of direct solution of
- *  the TE or within a quasi-static method.
  */
 class TimeDependentMaterial: public KineticsMaterial
 {
@@ -73,6 +70,7 @@ public:
 
   void set_eigenvalue(const double keff)
   {
+    Require(keff > 0.0);
     d_kcrit = keff;
   }
 

@@ -25,8 +25,7 @@ TimeDependentMaterial(const size_t number_materials,
   , d_dt(0.0)
   , d_kcrit(1.0)
 {
-  // Preconditions
-  Require(d_state);
+  /* ... */
 }
 
 } // end namespace detran

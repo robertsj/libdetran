@@ -13,17 +13,13 @@ namespace detran
 {
 
 //---------------------------------------------------------------------------//
-LinearMaterial::LinearMaterial(const size_t       number_materials,
-                               const size_t       number_energy_groups,
-                               const size_t       number_precursor_groups,
-                               SP_state           state,
-                               const vec_dbl      &times,
+LinearMaterial::LinearMaterial(const vec_dbl      &times,
                                const vec_material &materials,
                                std::string        name)
-  : Base(number_materials,
-         number_energy_groups,
-         number_precursor_groups,
-         state,
+  : Base(materials[0]->number_materials(),
+         materials[0]->number_groups(),
+         materials[0]->number_precursor_groups(),
+         SP_state(0),
          name)
   , d_times(times)
   , d_materials(materials)
@@ -61,17 +57,11 @@ LinearMaterial::LinearMaterial(const size_t       number_materials,
 
 //-------------------------------------------------------------------------//
 LinearMaterial::SP_material
-LinearMaterial::Create(const size_t       number_materials,
-                       const size_t       number_energy_groups,
-                       const size_t       number_precursor_groups,
-                       SP_state           state,
-                       const vec_dbl      &times,
+LinearMaterial::Create(const vec_dbl      &times,
                        const vec_material &materials,
                        std::string        name)
 {
-  SP_material p(new LinearMaterial(number_materials, number_energy_groups,
-                                   number_precursor_groups, state, times,
-                                   materials, name));
+  SP_material p(new LinearMaterial(times, materials, name));
   return p;
 }
 

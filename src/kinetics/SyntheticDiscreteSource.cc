@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   SyntheticDiscreteSource.cc
- * \brief  SyntheticDiscreteSource 
- * \author Jeremy Roberts
- * \date   Nov 15, 2012
+/**
+ *  @file   SyntheticDiscreteSource.cc
+ *  @brief  SyntheticDiscreteSource
+ *  @author Jeremy Roberts
+ *  @date   Nov 15, 2012
  */
 //---------------------------------------------------------------------------//
 
@@ -17,7 +17,7 @@ SyntheticDiscreteSource::SyntheticDiscreteSource(const size_t number_groups,
                                                  SP_mesh mesh,
                                                  SP_quadrature quadrature,
                                                  SP_material material)
-  : Base(number_groups, mesh, quadrature, material)
+  : Base(number_groups, mesh, quadrature, material, true)
 {
   /* ... */
 }

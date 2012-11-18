@@ -47,6 +47,8 @@ public:
   //-------------------------------------------------------------------------//
 
   typedef detran_external_source::ExternalSource  Base;
+  typedef Base::SP_externalsource                 SP_base;
+  typedef detran_utilities::SP<SyntheticSource>   SP_externalsource;
   typedef KineticsMaterial::SP_material           SP_material;
   typedef State::SP_state                         SP_state;
   typedef std::vector<SP_state>                   vec_states;
@@ -65,11 +67,13 @@ public:
    *  @param mesh           Mesh
    *  @param quadrature     Angular mesh
    *  @param material       Material
+   *  @param discrete       Flag for discrete source
    */
-  SyntheticSource(const size_t number_groups,
-                  SP_mesh mesh,
+  SyntheticSource(const size_t  number_groups,
+                  SP_mesh       mesh,
                   SP_quadrature quadrature,
-                  SP_material material);
+                  SP_material   material,
+                  bool          discrete = false);
 
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL SYNTHETIC SOURCES MUST IMPLEMENT THESE

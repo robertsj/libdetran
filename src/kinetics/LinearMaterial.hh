@@ -49,28 +49,16 @@ public:
 
   /**
    *  @brief Constructor
-   *  @param number_materials           Number of materials
-   *  @param number_energy_groups       Number of energy groups
-   *  @param number_precursor_groups    Number of precursor groups
-   *  @param state                      State vector
    *  @param times                      Times at which materials are defined
    *  @param materials                  Materials defined at discrete times
    *  @note The first time *must* be zero
    */
-  LinearMaterial(const size_t       number_materials,
-                 const size_t       number_energy_groups,
-                 const size_t       number_precursor_groups,
-                 SP_state           state,
-                 const vec_dbl      &times,
+  LinearMaterial(const vec_dbl      &times,
                  const vec_material &materials,
                  std::string        name = "LinearMaterial");
 
   /// SP constructor
-  static SP_material Create(const size_t       number_materials,
-                            const size_t       number_energy_groups,
-                            const size_t       number_precursor_groups,
-                            SP_state           state,
-                            const vec_dbl      &times,
+  static SP_material Create(const vec_dbl      &times,
                             const vec_material &materials,
                             std::string        name = "LinearMaterials");
 

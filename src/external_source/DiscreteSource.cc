@@ -18,7 +18,7 @@ DiscreteSource::DiscreteSource(size_t         number_groups,
                                vec3_dbl       spectra,
                                vec_int        map,
                                SP_quadrature  quadrature)
-  : ExternalSource(number_groups, mesh, quadrature)
+  : ExternalSource(number_groups, mesh, quadrature, true)
   , d_source_spectra(spectra)
   , d_source_map(map)
 {

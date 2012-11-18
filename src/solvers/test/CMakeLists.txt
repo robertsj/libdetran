@@ -30,6 +30,8 @@ TARGET_LINK_LIBRARIES(test_FixedSourceManager   solvers)
 ADD_EXECUTABLE(test_EigenvalueManager           test_EigenvalueManager.cc)
 TARGET_LINK_LIBRARIES(test_EigenvalueManager    solvers)
 
+ADD_EXECUTABLE(test_TimeStepper           		test_TimeStepper.cc)
+TARGET_LINK_LIBRARIES(test_TimeStepper    		solvers)
 
 #------------------------------------------------------------------------------#
 # Define tests
