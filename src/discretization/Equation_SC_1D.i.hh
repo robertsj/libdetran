@@ -19,6 +19,7 @@ namespace detran
 inline void Equation_SC_1D::setup_angle(const size_t angle)
 {
   Require(angle < d_quadrature->number_angles_octant());
+  d_angle = angle;
   d_mu = d_quadrature->mu(0, d_angle);
 }
 
@@ -45,7 +46,8 @@ inline void Equation_SC_1D::solve(const size_t i,
 
   // Cell average flux
   double psi_avg = psi_in * (1.0 - A) / tau +
-                   q * (A - 1.0 + tau) / ( sigma * tau);
+                   q * (sigma * d_mesh->dx(i) + d_mu * (A - 1.0)) /
+                       (sigma * sigma * d_mesh->dx(i));
 
   // Compute outgoing fluxes.
   psi_out = A * psi_in + q * (1.0 - A) / sigma;
