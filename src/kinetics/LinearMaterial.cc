@@ -54,7 +54,7 @@ LinearMaterial::LinearMaterial(const vec_dbl      &times,
   d_number_times = d_times.size();
 }
 
-//-------------------------------------------------------------------------//
+//---------------------------------------------------------------------------//
 LinearMaterial::SP_material
 LinearMaterial::Create(const vec_dbl      &times,
                        const vec_material &materials,
@@ -64,12 +64,15 @@ LinearMaterial::Create(const vec_dbl      &times,
   return p;
 }
 
-//-------------------------------------------------------------------------//
-void LinearMaterial::update(const double t, const double dt)
+
+//---------------------------------------------------------------------------//
+// IMPLEMENTATION
+//---------------------------------------------------------------------------//
+
+
+//---------------------------------------------------------------------------//
+void LinearMaterial::update_impl()
 {
-  // Save current time and time step
-  d_t  = t;
-  d_dt = dt;
 
   // Determine which materials to interpolate and the interpolation,
   // factors, i.e. sigma = A*sigma_0 + B*sigma_1
@@ -103,14 +106,9 @@ void LinearMaterial::update(const double t, const double dt)
   // Fill internal material
   update_material(index_A, index_B, A, B);
 
-  // Finalize
-  finalize();
 }
 
 //---------------------------------------------------------------------------//
-// IMPLEMENTATION
-//---------------------------------------------------------------------------//
-
 void LinearMaterial::update_material(const size_t iA,
                                      const size_t iB,
                                      const double cA,
@@ -123,31 +121,21 @@ void LinearMaterial::update_material(const size_t iA,
   {
     for (int g = 0; g < A->number_groups(); ++g)
     {
-      // synthetic total cross section
-      d_sigma_t[g][m]    = cA*A->sigma_t(m, g) + cB*B->sigma_t(m, g)
-                         + 1.0/(d_velocity[g]*d_dt);
+
+      d_sigma_t[g][m]    = cA*A->sigma_t(m, g) + cB*B->sigma_t(m, g);
       d_sigma_a[g][m]    = cA*A->sigma_a(m, g) + cB*B->sigma_a(m, g);
       d_sigma_f[g][m]    = cA*A->sigma_f(m, g) + cB*B->sigma_f(m, g);
       d_nu[g][m]         = cA*A->nu(m, g) + cB*B->nu(m, g);
       d_diff_coef[g][m]  = cA*A->diff_coef(m, g)  + cB*B->diff_coef(m, g);
+
       for (int gp = 0; gp < A->number_groups(); ++gp)
-      {
-        //std::cout << " m=" << m << " g=" << g << " gp=" << gp << std::endl;
         d_sigma_s[g][gp][m] = cA*A->sigma_s(m, g, gp) + cB*B->sigma_s(m, g, gp);
-      }
-      double chiA = 0;
-      double chiB = 0;
+
       for (int i = 0; i < d_number_precursor_groups; ++i)
-      {
-        double den = 1.0 + d_dt * d_lambda[i];
-        chiA += (A->lambda(i) * A->beta(m, i) * A->chi_d(m, i, g) * d_dt) / den;
-        chiB += (B->lambda(i) * B->beta(m, i) * B->chi_d(m, i, g) * d_dt) / den;
         d_chi_d[m][i][g] = cA*A->chi_d(m, i, g)  + cB*B->chi_d(m, i, g);
-      }
-      chiA += (1.0 - A->beta_total(m)) * A->chi(m, g);
-      chiB += (1.0 - B->beta_total(m)) * B->chi(m, g);
-      // synthetic chi spectrum
-      d_chi[g][m] += (cA * chiA + cB * chiB) / d_kcrit;
+
+      d_chi[g][m] = cA * A->chi(m, g) + cB * B->chi(m, g);
+
     } // end groups
 
     for (int i = 0; i < d_number_precursor_groups; ++i)

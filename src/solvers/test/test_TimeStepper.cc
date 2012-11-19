@@ -67,17 +67,21 @@ int test_TimeStepper(int argc, char *argv[])
   inp->put<std::string>("equation",         "dd");
   inp->put<std::string>("bc_west",          "reflect");
   inp->put<std::string>("bc_east",          "reflect");
-  inp->put<double>("ts_final_time",         0.1); // 0.6321205588
-  inp->put<double>("ts_step_size",          0.01);
-  inp->put<int>("ts_max_steps",             10000);
-  inp->put<int>("ts_scheme",                TS_1D::BDF1);
+  inp->put<double>("ts_final_time",         1.0); // 0.95162581964040427
+  inp->put<double>("ts_step_size",          0.0001);
+  inp->put<int>("ts_max_steps",             1000000);
+  inp->put<int>("ts_scheme",                TS_1D::IMP);
   inp->put<int>("ts_discrete",              1);
-  inp->put<int>("ts_output",                1);
+  inp->put<int>("ts_output",                0);
   inp->put<int>("store_angular_flux",       1);
   inp->put<int>("inner_print_level",        0);
   inp->put<int>("outer_print_level",        0);
-  inp->put<int>("quad_number_polar_octant", 10);
-  inp->put<double>("inner_tolerance",       1e-8);
+  inp->put<int>("quad_number_polar_octant", 1);
+  inp->put<double>("inner_tolerance",       1e-16);
+  inp->put<int>("inner_max_iters",          1e7);
+  inp->put<int>("compute_boundary_flux",    1);
+
+
 
   //-------------------------------------------------------------------------//
   // MATERIAL
@@ -101,8 +105,8 @@ int test_TimeStepper(int argc, char *argv[])
   // MESH
   //-------------------------------------------------------------------------//
 
-  vec_int fm(1, 100.0);
-  vec_dbl cm(2, 0.0); cm[1] = 10.0;
+  vec_int fm(1, 3);
+  vec_dbl cm(2, 0.0); cm[1] = 2.0;
   vec_int mt(1, 0);
   Mesh1D::SP_mesh mesh(new Mesh1D(fm, cm, mt));
 
@@ -164,9 +168,12 @@ int test_TimeStepper(int argc, char *argv[])
 
   stepper.solve(ic);
 
+  printf(" %20.16f %20.16f ", ic->phi(0)[0], ic->phi(0)[1]);
+  std::cout << std::endl;
+
   State::SP_state final = stepper.state();
 
-  printf(" %20.16f %20.16f ", final->phi(0)[2], final->phi(0)[5]);
+  printf(" %20.16f %20.16f ", final->phi(0)[0], final->phi(0)[1]);
   std::cout << std::endl;
 
 

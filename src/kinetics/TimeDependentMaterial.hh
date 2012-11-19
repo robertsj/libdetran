@@ -78,16 +78,15 @@ public:
     d_state = s;
   }
 
-  //-------------------------------------------------------------------------//
-  // ABSTRACT INTERFACE -- ALL TIME DEPENDENT MATERIALS MUST IMPLEMENT THESE
-  //-------------------------------------------------------------------------//
-
   /**
    *  @brief Update the materials
    *  @param t      New time (in seconds)
    *  @param dt     Time step (in seconds)
+   *  @param order  BDF order
    */
-  virtual void update(const double t, const double dt) = 0;
+  void update(const double t,
+              const double dt,
+              const size_t order = 1);
 
 protected:
 
@@ -101,14 +100,24 @@ protected:
   double d_t;
   /// Time step
   double d_dt;
+  /// BDF order
+  size_t d_order;
   /// Eigenvalue (for scaling fission)
   double d_kcrit;
 
   //-------------------------------------------------------------------------//
-  // IMPLEMENTATION
+  // ABSTRACT INTERFACE -- ALL TIME DEPENDENT MATERIALS MUST IMPLEMENT THESE
   //-------------------------------------------------------------------------//
 
-  /* ... */
+  /*
+   *  @brief User-defined material update
+   *
+   *  This routine is called from within update.  This fills the
+   *  internal cross section vectors with their actual values.  The
+   *  update function then adds the synthetic components.
+   *
+   */
+  virtual void update_impl() = 0;
 
 };
 

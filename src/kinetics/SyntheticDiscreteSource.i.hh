@@ -72,7 +72,14 @@ inline void SyntheticDiscreteSource::build(const double dt,
   const detran_utilities::vec_int &mt = d_mesh->mesh_map("MATERIAL");
 
   // Leading coefficient
-  double a_0 = bdf_coefs[order-1][0];
+  double a_0 = bdf_coefs[order - 1][0];
+
+  // Clear the source
+  for (int g = 0; g < d_material->number_groups(); ++g)
+    for (int o = 0; o < d_quadrature->number_octants(); ++o)
+      for (int a = 0; a < d_quadrature->number_angles_octant(); ++a)
+        for (int cell = 0; cell < d_mesh->number_cells(); ++cell)
+          d_source[g][d_quadrature->index(o, a)][cell] = 0.0;
 
   // Add all backward terms
   for (int j = 0; j < order; ++j)
@@ -84,7 +91,7 @@ inline void SyntheticDiscreteSource::build(const double dt,
     }
 
     // Skip the first entry, which is for the (n+1) term
-    double a_j = bdf_coefs[order-1][j + 1];
+    double a_j = bdf_coefs[order - 1][j + 1];
 
     for (int g = 0; g < d_material->number_groups(); ++g)
     {
@@ -100,9 +107,9 @@ inline void SyntheticDiscreteSource::build(const double dt,
           // Add flux
           for (int cell = 0; cell < d_mesh->number_cells(); ++cell)
           {
-            d_source[g][angle][cell] =
+            d_source[g][angle][cell] +=
                 psi_factor * states[j]->psi(g, o, a)[cell];
-            //std::cout << " psi = " << states[j]->psi(g, o, a)[cell] << std::endl;
+            //std::cout << " j = " << j << " psi = " << states[j]->psi(g, o, a)[cell] << std::endl;
           }
 
           // Add the precursor concentration, if applicable
@@ -114,7 +121,7 @@ inline void SyntheticDiscreteSource::build(const double dt,
                                 (a_0 + dt * d_material->lambda(i));
               for (int cell = 0; cell < d_mesh->number_cells(); ++cell)
               {
-                d_source[g][angle][cell] = C_factor *
+                d_source[g][angle][cell] += C_factor *
                   d_material->chi_d(mt[cell], i, g) *
                     precursors[j]->C(i)[cell];
               }

@@ -65,17 +65,6 @@ public:
   /// Virtual destructor
   virtual ~LinearMaterial(){};
 
-  //-------------------------------------------------------------------------//
-  // ABSTRACT INTERFACE -- ALL TIME DEPENDENT MATERIALS MUST IMPLEMENT THESE
-  //-------------------------------------------------------------------------//
-
-  /**
-   *  @brief Update the materials
-   *  @param t      New time (in seconds)
-   *  @param dt     Time step (in seconds)
-   */
-  void update(const double t, const double dt);
-
 private:
 
   //-------------------------------------------------------------------------//
@@ -90,6 +79,13 @@ private:
   vec_material d_materials;
   /// Temporary material container for interpolated values
   SP_kineticsmaterial d_temporary;
+
+  //-------------------------------------------------------------------------//
+  // ABSTRACT INTERFACE -- ALL TIME DEPENDENT MATERIALS MUST IMPLEMENT THESE
+  //-------------------------------------------------------------------------//
+
+  /// Linearly interpolate materials
+  void update_impl();
 
   //-------------------------------------------------------------------------//
   // IMPLEMENTATION

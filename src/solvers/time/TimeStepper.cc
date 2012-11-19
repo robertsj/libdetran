@@ -102,7 +102,7 @@ TimeStepper<D>::TimeStepper(SP_input       input,
   if (d_input->check("ts_max_steps"))
   {
    int max_steps = d_input->template get<int>("ts_max_steps");
-   Assert(max_steps > 1);
+   Assert(max_steps > 0);
    if (d_number_steps > max_steps) d_number_steps = max_steps;
   }
 
@@ -188,27 +188,17 @@ void TimeStepper<D>::solve(SP_state initial_state)
 
   // Fill previous states with backward Euler steps if required.
 
-
-
-  for (int i = 0; i < 10; i++)
-    std::cout << d_state->phi(0)[i] << " ";
-  std::cout << std::endl;
-
   // Perform time steps
   double t = 0.0;
   for (int i = 0; i < d_number_steps; ++i)
   {
     t += d_step_factor * d_dt;
 
-    //std::cout << " time =  " << t << std::endl;
-
     size_t iteration = 0;
     for (; iteration < 1; ++iteration)
     {
       // Update the material, sources, and solver
-
-      d_material->update(t, d_dt);
-      //d_material->display();
+      d_material->update(t, d_dt, d_order);
       update_sources(t, d_dt);
       d_solver->update();
 
@@ -229,7 +219,6 @@ void TimeStepper<D>::solve(SP_state initial_state)
     } // end iterations
 
     // Output the initial state
-    Assert(d_do_output);
     if (d_do_output) d_silooutput->write_time_flux(i+1, d_state, true);
 
   } // end time steps
@@ -340,6 +329,12 @@ void TimeStepper<D>::cycle_states_precursors()
    *
    */
 
+//  for (int i = 0; i < d_states.size(); ++i)
+//  {
+//    std::cout << " BEFORE STATE " << i << std::endl;
+//    d_states[i]->display();
+//  }
+
   // Save the first element.
   tmp_state = d_states[0];
   if (d_precursors.size())tmp_precursors = d_precursors[0];
@@ -351,6 +346,12 @@ void TimeStepper<D>::cycle_states_precursors()
   }
   d_states[d_order - 1] = tmp_state;
   if (d_precursors.size()) d_precursors[d_order - 1] = tmp_precursors;
+
+//  for (int i = 0; i < d_states.size(); ++i)
+//  {
+//    std::cout << " AFTER STATE " << i << std::endl;
+//    d_states[i]->display();
+//  }
 
 }
 
