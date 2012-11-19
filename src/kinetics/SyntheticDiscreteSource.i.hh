@@ -102,7 +102,7 @@ inline void SyntheticDiscreteSource::build(const double dt,
           {
             d_source[g][angle][cell] =
                 psi_factor * states[j]->psi(g, o, a)[cell];
-            std::cout << " psi = " << states[j]->psi(g, o, a)[cell] << std::endl;
+            //std::cout << " psi = " << states[j]->psi(g, o, a)[cell] << std::endl;
           }
 
           // Add the precursor concentration, if applicable

@@ -90,7 +90,6 @@ public:
                     moments_type &phi,
                     angular_flux_type &psi);
 
-
   /**
    *  @brief Setup the equations for a group.
    *  @param g     Current group.

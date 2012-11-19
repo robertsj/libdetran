@@ -10,8 +10,6 @@
 #ifndef detran_WGSOLVER_T_HH
 #define detran_WGSOLVER_T_HH
 
-
-
 namespace detran
 {
 

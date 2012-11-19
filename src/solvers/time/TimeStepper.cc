@@ -173,11 +173,12 @@ void TimeStepper<D>::solve(SP_state initial_state)
   // Preconditions
   Require(initial_state);
 
-  // Set the state and initialize the precursors if necessary.
+  // Set the state and initialize the precursors if necessary.  For
+  // now, we assume steady state for the first order steps.  This
   d_state = initial_state;
-  d_state->display();
   initialize_precursors();
-  *d_states[0] = *d_state;
+  for (size_t j = 0; j < d_order - 1; ++j)
+    *d_states[j] = *d_state;
 
   // Output the initial state
   if (d_do_output) d_silooutput->write_time_flux(0, d_state, true);
@@ -186,14 +187,20 @@ void TimeStepper<D>::solve(SP_state initial_state)
   d_solver->set_solver();
 
   // Fill previous states with backward Euler steps if required.
-  std::cout << " phi=" << d_state->phi(0)[0] << std::endl;
+
+
+
+  for (int i = 0; i < 10; i++)
+    std::cout << d_state->phi(0)[i] << " ";
+  std::cout << std::endl;
+
   // Perform time steps
   double t = 0.0;
   for (int i = 0; i < d_number_steps; ++i)
   {
     t += d_step_factor * d_dt;
 
-    std::cout << " time =  " << t << std::endl;
+    //std::cout << " time =  " << t << std::endl;
 
     size_t iteration = 0;
     for (; iteration < 1; ++iteration)
@@ -201,15 +208,14 @@ void TimeStepper<D>::solve(SP_state initial_state)
       // Update the material, sources, and solver
 
       d_material->update(t, d_dt);
-      d_material->display();
+      //d_material->display();
       update_sources(t, d_dt);
       d_solver->update();
 
       // Solve the MG problem for the new state and update the precursors
       d_solver->solve();
       d_state = d_solver->state();
-      //d_state->display();
-      std::cout << " phi=" << d_state->phi(0)[0] << std::endl;
+
       update_precursors();
       if (d_scheme == IMP) extrapolate();
 
@@ -253,13 +259,16 @@ void TimeStepper<D>::initialize_precursors()
 
   const vec_int &mt = d_mesh->mesh_map("MATERIAL");
 
-  for (int i = 0; i < d_material->number_precursor_groups(); ++i)
+  for (int j = 0; j < d_order - 1; ++j)
   {
-    double inv_lambda = 1.0 / d_material->lambda(i);
-    for (int cell = 0; cell < d_mesh->number_cells(); ++cell)
+    for (int i = 0; i < d_material->number_precursor_groups(); ++i)
     {
-      d_precursors[0]->C(i)[cell] =
-        inv_lambda * d_material->beta(mt[cell], i) * fd[cell];
+      double inv_lambda = 1.0 / d_material->lambda(i);
+      for (int cell = 0; cell < d_mesh->number_cells(); ++cell)
+      {
+        d_precursors[j]->C(i)[cell] =
+          inv_lambda * d_material->beta(mt[cell], i) * fd[cell];
+      }
     }
   }
 
@@ -351,11 +360,11 @@ void TimeStepper<D>::update_sources(const double t, const double dt)
 {
   // Update the synthetic source.
   d_syntheticsource->build(dt, d_states, d_precursors, d_order);
-  for (int cell = 0; cell < d_mesh->number_cells(); ++cell)
-  {
-    std::cout << " q[" << cell << "]=" << d_syntheticsource->source(cell, 0, 0)
-              << std::endl;
-  }
+//  for (int cell = 0; cell < d_mesh->number_cells(); ++cell)
+//  {
+//    std::cout << " q[" << cell << "]=" << d_syntheticsource->source(cell, 0, 0)
+//              << std::endl;
+//  }
   // Update the external sources.
   for (int i = 0; i < d_sources.size(); ++i)
   {

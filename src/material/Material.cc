@@ -317,11 +317,11 @@ void Material::finalize()
   // downscatter-only flag.
   if (d_upscatter_cutoff == d_number_groups)
   {
-    if (d_downscatter == false)
-    {
-      detran_utilities::warning(detran_utilities::USER_INPUT,
-        "Upscatter is being turned off since no upscatter exists in the data.");
-    }
+//    if (d_downscatter == false)
+//    {
+//      detran_utilities::warning(detran_utilities::USER_INPUT,
+//        "Upscatter is being turned off since no upscatter exists in the data.");
+//    }
     d_downscatter = true;
   }
 

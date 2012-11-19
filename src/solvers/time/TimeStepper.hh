@@ -96,6 +96,8 @@ public:
   /// Solve
   void solve(SP_state initial_state);
 
+  SP_state state() {return d_state;}
+
 private:
 
   //-------------------------------------------------------------------------//

@@ -180,6 +180,13 @@ inline bool WGSolver<_1D>::set_sweep(std::string       equation)
       d_sweepsource);
     return true;
   }
+  else if (equation == "sc")
+  {
+    d_sweeper = new Sweeper1D<Equation_SC_1D>(
+      d_input, d_mesh, d_material, d_quadrature, d_state, d_boundary,
+      d_sweepsource);
+    return true;
+  }
   return false;
 }
 

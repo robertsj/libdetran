@@ -62,18 +62,22 @@ int test_TimeStepper(int argc, char *argv[])
   //-------------------------------------------------------------------------//
 
   InputDB::SP_input inp(new InputDB("time stepper test"));
-  inp->put<int>("dimension",            1);
-  inp->put<int>("number_groups",        1);
-  inp->put<std::string>("equation",     "dd");
-  inp->put<double>("ts_final_time",     40);
-  inp->put<double>("ts_step_size",      0.1);
-  inp->put<int>("ts_max_steps",         1000);
-  inp->put<int>("ts_scheme",            TS_1D::BDF1);
-  inp->put<int>("ts_discrete",          1);
-  inp->put<int>("ts_output",            1);
-  inp->put<int>("store_angular_flux",   1);
-  inp->put<int>("inner_print_level",    0);
-  inp->put<int>("outer_print_level",    0);
+  inp->put<int>("dimension",                1);
+  inp->put<int>("number_groups",            1);
+  inp->put<std::string>("equation",         "dd");
+  inp->put<std::string>("bc_west",          "reflect");
+  inp->put<std::string>("bc_east",          "reflect");
+  inp->put<double>("ts_final_time",         0.1); // 0.6321205588
+  inp->put<double>("ts_step_size",          0.01);
+  inp->put<int>("ts_max_steps",             10000);
+  inp->put<int>("ts_scheme",                TS_1D::BDF1);
+  inp->put<int>("ts_discrete",              1);
+  inp->put<int>("ts_output",                1);
+  inp->put<int>("store_angular_flux",       1);
+  inp->put<int>("inner_print_level",        0);
+  inp->put<int>("outer_print_level",        0);
+  inp->put<int>("quad_number_polar_octant", 10);
+  inp->put<double>("inner_tolerance",       1e-8);
 
   //-------------------------------------------------------------------------//
   // MATERIAL
@@ -87,7 +91,7 @@ int test_TimeStepper(int argc, char *argv[])
     kinmat(new KineticsMaterial(1, 1, 0, "base material"));
   kinmat->set_sigma_t(0, 0,    1.0);
   kinmat->set_sigma_s(0, 0, 0, 0.0);
-  kinmat->set_velocity(0,      0.1);
+  kinmat->set_velocity(0,      1.0);
   kinmat->finalize();
   LinearMaterial::vec_material materials(1, kinmat);
   LinearMaterial::vec_dbl      times(1, 0.0);
@@ -97,8 +101,8 @@ int test_TimeStepper(int argc, char *argv[])
   // MESH
   //-------------------------------------------------------------------------//
 
-  vec_int fm(1, 100);
-  vec_dbl cm(2, 0.0); cm[1] = 1;
+  vec_int fm(1, 100.0);
+  vec_dbl cm(2, 0.0); cm[1] = 10.0;
   vec_int mt(1, 0);
   Mesh1D::SP_mesh mesh(new Mesh1D(fm, cm, mt));
 
@@ -112,7 +116,7 @@ int test_TimeStepper(int argc, char *argv[])
   //
   // Static source
   vec_int source_map(mesh->number_cells(), 0);
-  for (int i = 0; i < mesh->number_cells()/2; ++i)
+  for (int i = 0; i < mesh->number_cells(); ++i)
     source_map[i] = 1;
   IsotropicSource::spectra_type spectra(2, vec_dbl(1, 0.0));
   // "on"
@@ -126,7 +130,7 @@ int test_TimeStepper(int argc, char *argv[])
   //
   // Linear source
   double time_off = 100.0;
-  vec_dbl source_times(2, time_off); source_times[1] = time_off + 0.0;
+  vec_dbl source_times(2, time_off); source_times[1] = time_off + 0.1;
   LinearExternalSource::vec_source sources;
   sources.push_back(q_e1);
   sources.push_back(q_e2);
@@ -145,10 +149,9 @@ int test_TimeStepper(int argc, char *argv[])
   manager.setup();
   manager.set_source(q_e1);
   manager.set_solver();
-  manager.solve();
+  //manager.solve();
 
   State::SP_state ic = manager.state();
-  ic->display();
 
   //-------------------------------------------------------------------------//
   // TIME STEPPER
@@ -160,6 +163,12 @@ int test_TimeStepper(int argc, char *argv[])
   stepper.add_source(q_td);
 
   stepper.solve(ic);
+
+  State::SP_state final = stepper.state();
+
+  printf(" %20.16f %20.16f ", final->phi(0)[2], final->phi(0)[5]);
+  std::cout << std::endl;
+
 
   return 0;
 }
