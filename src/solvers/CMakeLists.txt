@@ -41,7 +41,6 @@ ADD_LIBRARY(${LIB_NAME}
 )
 TARGET_LINK_LIBRARIES(${LIB_NAME}
                       callow
-                      diffusion
                       transport
                       angle
                       material

@@ -156,9 +156,6 @@
 //------------------------------------//
 // LEVEL 3
 
-// Diffusion
-//%include "detran_diffusion.i"
-
 // Transport
 %include "detran_solvers.i"
 
