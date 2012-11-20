@@ -96,6 +96,7 @@ public:
   /// Solve
   void solve(SP_state initial_state);
 
+  /// Getters
   SP_state state() {return d_state;}
 
 private:
@@ -124,8 +125,6 @@ private:
   vec_source d_sources;
   /// Fission source
   SP_fissionsource d_fissionsource;
-
-
   /// Working state.  This is initially assigned the initial condition.
   SP_state d_state;
   /// Working precursor vector.
@@ -140,20 +139,18 @@ private:
   size_t d_number_steps;
   /// Integration scheme
   size_t d_scheme;
-  /// Number of previous steps kept
-  size_t d_number_previous;
   /// Order of method.
   size_t d_order;
-
+  /// Vector of previous states
   vec_states d_states;
+  /// Vector of previous precursor concentrations
   vec_precursors d_precursors;
-
   /// Flag to write out time-dependent fluxes
   bool d_do_output;
+  /// SILO output
   SP_silooutput d_silooutput;
-
+  /// Fixed source solver
   SP_mg_solver d_solver;
-
   /// IMP negative flux fixup.
   bool d_fixup;
 

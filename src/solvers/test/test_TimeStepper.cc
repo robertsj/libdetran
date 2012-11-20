@@ -69,8 +69,8 @@ int test_TimeStepper(int argc, char *argv[])
   inp->put<std::string>("bc_east",          "reflect");
   inp->put<double>("ts_final_time",         1.0); // 0.95162581964040427
   inp->put<double>("ts_step_size",          0.1);
-  inp->put<int>("ts_max_steps",             10);
-  inp->put<int>("ts_scheme",                TS_1D::IMP);
+  inp->put<int>("ts_max_steps",             6);
+  inp->put<int>("ts_scheme",                TS_1D::BDF6);
   inp->put<int>("ts_discrete",              1);
   inp->put<int>("ts_output",                1);
   inp->put<int>("store_angular_flux",       1);
@@ -175,6 +175,15 @@ int test_TimeStepper(int argc, char *argv[])
   printf(" %20.16f %20.16f ", final->phi(0)[0], final->phi(0)[1]);
   std::cout << std::endl;
 
+  // Reference results
+  //  BDF1 0.1 0.9090909090909091
+  //  IMP  0.1 0.9047619047619050
+  //  BDF2 0.2 0.8184523809523810
+  //  BDF2 0.3 0.7403273809523807
+  //  BDF3 0.3 0.7404556650246303
+  //  BDF4 0.4 0.6699914764537027
+  //  BDF5 0.5 0.6062522850493363
+  //  BDF6 0.6 0.5485489911896624
 
   return 0;
 }
