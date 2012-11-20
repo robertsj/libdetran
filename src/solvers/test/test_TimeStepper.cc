@@ -64,15 +64,15 @@ int test_TimeStepper(int argc, char *argv[])
   InputDB::SP_input inp(new InputDB("time stepper test"));
   inp->put<int>("dimension",                1);
   inp->put<int>("number_groups",            1);
-  inp->put<std::string>("equation",         "dd");
+  inp->put<std::string>("equation",         "sc");
   inp->put<std::string>("bc_west",          "reflect");
   inp->put<std::string>("bc_east",          "reflect");
   inp->put<double>("ts_final_time",         1.0); // 0.95162581964040427
-  inp->put<double>("ts_step_size",          0.0001);
-  inp->put<int>("ts_max_steps",             1000000);
+  inp->put<double>("ts_step_size",          0.1);
+  inp->put<int>("ts_max_steps",             10);
   inp->put<int>("ts_scheme",                TS_1D::IMP);
   inp->put<int>("ts_discrete",              1);
-  inp->put<int>("ts_output",                0);
+  inp->put<int>("ts_output",                1);
   inp->put<int>("store_angular_flux",       1);
   inp->put<int>("inner_print_level",        0);
   inp->put<int>("outer_print_level",        0);
@@ -80,8 +80,6 @@ int test_TimeStepper(int argc, char *argv[])
   inp->put<double>("inner_tolerance",       1e-16);
   inp->put<int>("inner_max_iters",          1e7);
   inp->put<int>("compute_boundary_flux",    1);
-
-
 
   //-------------------------------------------------------------------------//
   // MATERIAL
@@ -106,7 +104,7 @@ int test_TimeStepper(int argc, char *argv[])
   //-------------------------------------------------------------------------//
 
   vec_int fm(1, 3);
-  vec_dbl cm(2, 0.0); cm[1] = 2.0;
+  vec_dbl cm(2, 0.0); cm[1] = 1.0;
   vec_int mt(1, 0);
   Mesh1D::SP_mesh mesh(new Mesh1D(fm, cm, mt));
 
@@ -133,8 +131,8 @@ int test_TimeStepper(int argc, char *argv[])
     q_e2(new IsotropicSource(1, mesh, spectra, source_map));
   //
   // Linear source
-  double time_off = 100.0;
-  vec_dbl source_times(2, time_off); source_times[1] = time_off + 0.1;
+  double time_off = 0.0;
+  vec_dbl source_times(2, time_off); source_times[1] = time_off + 0.0;
   LinearExternalSource::vec_source sources;
   sources.push_back(q_e1);
   sources.push_back(q_e2);
@@ -153,9 +151,10 @@ int test_TimeStepper(int argc, char *argv[])
   manager.setup();
   manager.set_source(q_e1);
   manager.set_solver();
-  //manager.solve();
+  manager.solve();
 
   State::SP_state ic = manager.state();
+  //ic->display();
 
   //-------------------------------------------------------------------------//
   // TIME STEPPER

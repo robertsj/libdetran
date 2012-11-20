@@ -165,20 +165,26 @@ private:
   void initialize_precursors();
 
   /// Given the new state and previous precursor vectors, compute new precursor
-  void update_precursors();
+  void update_precursors(const double dt);
 
   /**
    *  @brief Cycle the states and precursors.
    *
    *  The first term gets a copy of the initial state.
    */
-  void cycle_states_precursors();
+  void cycle_states_precursors(const size_t order);
 
   /// Update the synthetic and any external sources
-  void update_sources(const double t, const double dt);
+  void update_sources(const double t, const double dt, const size_t order);
 
   /// Extrapolate for IMP
   void extrapolate();
+
+  /// Perform a step
+  void step(const double t,
+            const double dt,
+            const size_t order,
+            const bool   flag);
 
 };
 
