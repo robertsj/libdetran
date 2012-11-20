@@ -44,7 +44,6 @@ WGSolverGMRES<D>::WGSolverGMRES(SP_state                  state,
   {
     db = d_input->template get<SP_input>("inner_solver_db");
   }
-  Assert(db);
 
   d_solver = callow::LinearSolverCreator::Create(db);
   Assert(d_solver);
