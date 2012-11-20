@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   ConstantSource.hh
- * \author robertsj
- * \date   Apr 4, 2012
- * \brief  ConstantSource class definition.
+/**
+ *  @file   ConstantSource.hh
+ *  @author robertsj
+ *  @date   Apr 4, 2012
+ *  @brief  ConstantSource class definition.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef CONSTANTSOURCE_HH_
-#define CONSTANTSOURCE_HH_
+#ifndef detran_external_source_CONSTANTSOURCE_HH_
+#define detran_external_source_CONSTANTSOURCE_HH_
 
 #include "ExternalSource.hh"
 
@@ -16,9 +16,9 @@ namespace detran_external_source
 {
 
 //---------------------------------------------------------------------------//
-/*!
- * \class ConstantSource
- * \brief Defines a single isotropic source everywhere.
+/**
+ *  @class ConstantSource
+ *  @brief Defines a single isotropic source everywhere.
  */
 //---------------------------------------------------------------------------//
 
@@ -28,21 +28,16 @@ class ConstantSource: public ExternalSource
 public:
 
   //-------------------------------------------------------------------------//
-  // TYPEDEFS
-  //-------------------------------------------------------------------------//
-
-
-  //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Constructor
-   *  \param number_groups  Number of energy groups
-   *  \param mesh           Pointer to mesh
-   *  \param strength       Source strength in all groups and all space;
+  /**
+   *  @brief Constructor
+   *  @param number_groups  Number of energy groups
+   *  @param mesh           Pointer to mesh
+   *  @param strength       Source strength in all groups and all space;
    *                        the unit is n/cc-sec
-   *  \param quadrature     Pointer to quadrature (optional)
+   *  @param quadrature     Pointer to quadrature (optional)
    */
   ConstantSource(size_t number_groups,
                  SP_mesh mesh,
@@ -96,7 +91,7 @@ private:
 
 } // end namespace detran_external_source
 
-#endif /* CONSTANTSOURCE_HH_ */
+#endif /* detran_external_source_CONSTANTSOURCE_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of ConstantSource.hh

@@ -1,16 +1,15 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Equation_MOC.hh
- * \brief  Equation_MOC 
- * \author Jeremy Roberts
- * \date   Jun 23, 2012
+/**
+ *  @file   Equation_MOC.hh
+ *  @brief  Equation_MOC
+ *  @author Jeremy Roberts
+ *  @date   Jun 23, 2012
  */
 //---------------------------------------------------------------------------//
 
-#ifndef EQUATION_MOC_HH_
-#define EQUATION_MOC_HH_
+#ifndef detran_EQUATION_MOC_HH_
+#define detran_EQUATION_MOC_HH_
 
-// Detran
 #include "DimensionTraits.hh"
 #include "angle/QuadratureMOC.hh"
 #include "material/Material.hh"
@@ -24,9 +23,9 @@ namespace detran
 {
 
 //---------------------------------------------------------------------------//
-/*!
- * \class Equation_MOC
- * \brief Method of characteristics equation base.
+/**
+ *  @class Equation_MOC
+ *  @brief Method of characteristics equation base.
  */
 //---------------------------------------------------------------------------//
 
@@ -51,8 +50,8 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Constructor
+  /**
+   *  @brief Constructor
    */
   Equation_MOC(SP_mesh mesh,
                SP_material material,
@@ -80,16 +79,16 @@ public:
   // ABSTRACT INTERFACE -- ALL MOC EQUATION TYPES MUST IMPLEMENT THESE
   //-------------------------------------------------------------------------//
 
-  /*!
-   *   \brief Solve for the cell-center and outgoing edge fluxes.
+  /**
+   *  @brief Solve for the cell-center and outgoing edge fluxes.
    *
-   *   \param   region      Flat source region (cardinal mesh index)
-   *   \param   length      Segment length
-   *   \param   source      Reference to sweep source vector for this group
-   *   \param   psi_in      Incident flux for this cell
-   *   \param   psi_out     Outgoing flux from this cell
-   *   \param   phi         Reference to flux moments for this group
-   *   \param   psi         Reference to angular flux for this group
+   *  @param   region      Flat source region (cardinal mesh index)
+   *  @param   length      Segment length
+   *  @param   source      Reference to sweep source vector for this group
+   *  @param   psi_in      Incident flux for this cell
+   *  @param   psi_out     Outgoing flux from this cell
+   *  @param   phi         Reference to flux moments for this group
+   *  @param   psi         Reference to angular flux for this group
    */
   virtual inline void solve(const size_t region,
                             const double length,
@@ -99,27 +98,27 @@ public:
                             moments_type &phi,
                             angular_flux_type &psi) = 0;
 
-  /*!
-   *  \brief Setup the equations for a group.
-   *  \param g     Current group.
+  /**
+   *  @brief Setup the equations for a group.
+   *  @param g     Current group.
    */
   virtual void setup_group(const size_t g) = 0;
 
-  /*!
-   *  \brief Setup the equations for an octant.
-   *  \param o    Current octant index.
+  /**
+   *  @brief Setup the equations for an octant.
+   *  @param o    Current octant index.
    */
   virtual void setup_octant(const size_t o) = 0;
 
-  /*!
-   *  \brief Setup the equations for an azimuth.
-   *  \param a    Azimuth within octant.
+  /**
+   *  @brief Setup the equations for an azimuth.
+   *  @param a    Azimuth within octant.
    */
   virtual void setup_azimuth(const size_t a) = 0;
 
-  /*!
-   *  \brief Setup the equations for a polar angle.
-   *  \param p    Polar index.
+  /**
+   *  @brief Setup the equations for a polar angle.
+   *  @param p    Polar index.
    */
   virtual void setup_polar(const size_t p) = 0;
 
@@ -131,49 +130,34 @@ protected:
 
   /// Problem mesh
   SP_mesh d_mesh;
-
   /// Tracking data
   SP_trackdb d_tracks;
-
   /// Material definitions
   SP_material d_material;
-
   /// MOC Quadrature
   SP_quadrature d_quadrature;
-
   /// Current mu value
   double d_mu;
-
   /// current eta value
   double d_eta;
-
   /// Current ksi value
   double d_xi;
-
   /// Current track spacing
   double d_spacing;
-
   /// Inverse of the polar sine
   double d_inv_sin;
-
   /// Material map
   detran_utilities::vec_int d_mat_map;
-
   /// Update the angular flux?
   bool d_update_psi;
-
   /// Current group
   size_t d_g;
-
   /// Current octant index.
   size_t d_octant;
-
   /// Current angle index.
   size_t d_angle;
-
   /// Current azimuth.
   size_t d_azimuth;
-
   /// Current polar.
   size_t d_polar;
 
@@ -182,7 +166,7 @@ protected:
 
 } // end namespace detran
 
-#endif // EQUATION_MOC_HH_ 
+#endif // detran_EQUATION_MOC_HH_
 
 //---------------------------------------------------------------------------//
 //              end of file Equation_MOC.hh

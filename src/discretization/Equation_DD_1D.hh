@@ -1,31 +1,37 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Equation_DD_1D.hh
- * \author Jeremy Roberts
- * \date   Mar 31, 2012
- * \brief  Equation_DD_1D class definition.
+/**
+ *  @file   Equation_DD_1D.hh
+ *  @author Jeremy Roberts
+ *  @date   Mar 31, 2012
+ *  @brief  Equation_DD_1D class definition.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef EQUATION_DD_1D_HH_
-#define EQUATION_DD_1D_HH_
+#ifndef detran_EQUATION_DD_1D_HH_
+#define detran_EQUATION_DD_1D_HH_
 
 #include "Equation.hh"
 
 namespace detran
 {
 
-/*!
- *  \class Equation_DD_1D
- *  \brief Diamond difference discretization in one dimension.
+/**
+ *  @class Equation_DD_1D
+ *  @brief Diamond difference discretization in one dimension.
  *
- *   See \ref Equation_DD_3D for a general description of the
- *   diamond difference approximation.
+ *  See \ref Equation_DD_3D for a general description of the
+ *  diamond difference approximation.
  */
 class Equation_DD_1D : public Equation<_1D>
 {
 
 public:
+
+  /// Number of unknowns per cell
+  static const int number_cell_unknowns = 1;
+
+  /// Number of unknowns per surface
+  static const int number_surface_unknowns = 1;
 
   //-------------------------------------------------------------------------//
   // TYPEDEFS
@@ -43,9 +49,7 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Constructor
-   */
+  /// Constructor
   Equation_DD_1D(SP_mesh mesh,
                  SP_material material,
                  SP_quadrature quadrature,
@@ -55,11 +59,7 @@ public:
   // ABSTRACT INTERFACE -- ALL EQUATION TYPES MUST IMPLEMENT THESE
   //-------------------------------------------------------------------------//
 
-  /*!
-   *   \brief Solve for the cell-center and outgoing edge fluxes.
-   *
-   *   See \ref Equation for full description.
-   */
+  /// Solve for the cell-center and outgoing edge fluxes.
   inline void solve(const size_t i,
                     const size_t j,
                     const size_t k,
@@ -70,25 +70,20 @@ public:
                     angular_flux_type &psi);
 
 
-  /*!
-   *  \brief Setup the equations for a group.
-   *  \param g     Current group.
-   */
+  /// Setup the equations for a group.
   void setup_group(const size_t g);
 
-  /*!
-   *  \brief Setup the equations for an octant.
-   *  \param octant    Current octant.
-   */
+  /// Setup the equations for an octant.
   void setup_octant(const size_t octant);
 
-  /*!
-   *  \brief Setup the equations for an angle.
-   *  \param angle  Angle index within octant.
-   */
+  /// Setup the equations for an angle.
   void setup_angle(const size_t angle);
 
 private:
+
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   /// X-directed coefficient, \f$ 2|\mu|/\Delta_x \f$.
   detran_utilities::vec_dbl d_coef_x;
@@ -103,7 +98,7 @@ private:
 
 #include "Equation_DD_1D.i.hh"
 
-#endif /* EQUATION_DD_1D_HH_ */
+#endif /* detran_EQUATION_DD_1D_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of Equation_DD_1D.hh

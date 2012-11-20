@@ -1,21 +1,21 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Equation_SC_MOC.i.hh
- * \author Jeremy Roberts
- * \date   Mar 31, 2012
- * \brief  Equation_SC_MOC inline member definitions.
- * \note   Copyright (C) 2012 Jeremy Roberts.
+/**
+ *  @file   Equation_SC_MOC.i.hh
+ *  @author Jeremy Roberts
+ *  @date   Mar 31, 2012
+ *  @brief  Equation_SC_MOC inline member definitions.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef EQUATION_SC_MOC_I_HH_
-#define EQUATION_SC_MOC_I_HH_
+#ifndef detran_EQUATION_SC_MOC_I_HH_
+#define detran_EQUATION_SC_MOC_I_HH_
 
 #include <iostream>
 
 namespace detran
 {
 
+//---------------------------------------------------------------------------//
 inline void Equation_SC_MOC::solve(const size_t region,
                                    const double length,
                                    moments_type &source,
@@ -88,7 +88,7 @@ inline void Equation_SC_MOC::solve(const size_t region,
 
 } // end namespace detran
 
-#endif /* EQUATION_SC_MOC_I_HH_ */
+#endif /* detran_EQUATION_SC_MOC_I_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of Equation_SC_MOC.i.hh

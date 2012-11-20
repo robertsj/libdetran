@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Equation_SC_2D.i.hh
- * \author robertsj
- * \date   Apr 10, 2012
- * \brief  Equation_SC_2D inline member definitions.
+/**
+ *  @file   Equation_SC_2D.i.hh
+ *  @author robertsj
+ *  @date   Apr 10, 2012
+ *  @brief  Equation_SC_2D inline member definitions.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef EQUATION_SC_2D_I_HH_
-#define EQUATION_SC_2D_I_HH_
+#ifndef detran_EQUATION_SC_2D_I_HH_
+#define detran_EQUATION_SC_2D_I_HH_
 
 // System
 #include <cmath>
@@ -17,6 +17,7 @@
 namespace detran
 {
 
+//---------------------------------------------------------------------------//
 inline void Equation_SC_2D::solve(const size_t i,
                                   const size_t j,
                                   const size_t k,
@@ -68,10 +69,8 @@ inline void Equation_SC_2D::solve(const size_t i,
   phi[cell] += d_quadrature->weight(d_angle) * psi_center;
 
   // Store angular flux if needed.
-  if (d_update_psi)
-  {
-    psi[cell] = psi_center;
-  }
+  if (d_update_psi) psi[cell] = psi_center;
+
 }
 
 /// \todo It might be worth finding a faster exponential.
@@ -87,7 +86,7 @@ inline double Equation_SC_2D::exp_appx(double x)
 
 } // end namespace detran
 
-#endif /* EQUATION_SC_2D_I_HH_ */
+#endif /* detran_EQUATION_SC_2D_I_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of Equation_SC_2D.i.hh

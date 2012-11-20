@@ -1,10 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Equation_DD_1D.cc
- * \author Jeremy Roberts
- * \date   Mar 31, 2012
- * \brief  Equation_DD_1D member definitions.
- * \note   Copyright (C) 2012 Jeremy Roberts.
+/**
+ *  @file   Equation_DD_1D.cc
+ *  @author Jeremy Roberts
+ *  @date   Mar 31, 2012
+ *  @brief  Equation_DD_1D member definitions.
  */
 //---------------------------------------------------------------------------//
 
@@ -13,6 +12,7 @@
 namespace detran
 {
 
+//---------------------------------------------------------------------------//
 Equation_DD_1D::Equation_DD_1D(SP_mesh mesh,
                                SP_material material,
                                SP_quadrature quadrature,
@@ -23,6 +23,7 @@ Equation_DD_1D::Equation_DD_1D(SP_mesh mesh,
   /* ... */
 }
 
+//---------------------------------------------------------------------------//
 void Equation_DD_1D::setup_group(const size_t g)
 {
   Require(g >= 0);
@@ -30,6 +31,7 @@ void Equation_DD_1D::setup_group(const size_t g)
   d_g = g;
 }
 
+//---------------------------------------------------------------------------//
 void Equation_DD_1D::setup_octant(const size_t octant)
 {
   Require(octant >= 0);

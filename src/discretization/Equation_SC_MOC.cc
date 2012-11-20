@@ -1,18 +1,18 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Equation_SC_MOC.cc
- * \brief  Equation_SC_MOC 
- * \author Jeremy Roberts
- * \date   Jun 23, 2012
+/**
+ *  @file   Equation_SC_MOC.cc
+ *  @brief  Equation_SC_MOC
+ *  @author Jeremy Roberts
+ *  @date   Jun 23, 2012
  */
 //---------------------------------------------------------------------------//
 
-// Detran
 #include "Equation_SC_MOC.hh"
 
 namespace detran
 {
 
+//---------------------------------------------------------------------------//
 Equation_SC_MOC::Equation_SC_MOC(SP_mesh mesh,
                                  SP_material material,
                                  SP_quadrature quadrature,
@@ -27,18 +27,21 @@ Equation_SC_MOC::Equation_SC_MOC(SP_mesh mesh,
   }
 }
 
+//---------------------------------------------------------------------------//
 void Equation_SC_MOC::setup_group(const size_t g)
 {
   Require(g < d_material->number_groups());
   d_g = g;
 }
 
+//---------------------------------------------------------------------------//
 void Equation_SC_MOC::setup_octant(const size_t octant)
 {
   Require(octant < 4);
   d_octant = octant;
 }
 
+//---------------------------------------------------------------------------//
 void Equation_SC_MOC::setup_azimuth(const size_t a)
 {
   Require(a < d_quadrature->number_azimuths_octant());
@@ -51,6 +54,7 @@ void Equation_SC_MOC::setup_azimuth(const size_t a)
   }
 }
 
+//---------------------------------------------------------------------------//
 void Equation_SC_MOC::setup_polar(const size_t p)
 {
   Require(p < d_quadrature->number_polar_octant());

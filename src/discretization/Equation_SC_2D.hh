@@ -1,5 +1,5 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
+/**
  * \file   Equation_SC_2D.hh
  * \author robertsj
  * \date   Apr 10, 2012
@@ -15,9 +15,9 @@
 namespace detran
 {
 
-/*!
- *  \class Equation_SC_2D
- *  \brief Step characteristic discretization in two dimensions.
+/**
+ *  @class Equation_SC_2D
+ *  @brief Step characteristic discretization in two dimensions.
  *
  *  Reference: Lathrop, K. D. "Spatial differencing of the Transport
  *             Equation: Positivity vs. Accuracy", J. Comp. Phys. 4,
@@ -45,9 +45,7 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Constructor
-   */
+  /// Constructor
   Equation_SC_2D(SP_mesh mesh,
                  SP_material material,
                  SP_quadrature quadrature,
@@ -57,11 +55,7 @@ public:
   // ABSTRACT INTERFACE -- ALL EQUATION TYPES MUST IMPLEMENT THESE
   //-------------------------------------------------------------------------//
 
-  /*!
-   *   \brief Solve for the cell-center and outgoing edge fluxes.
-   *
-   *   See \ref Equation for full description.
-   */
+  /// Solve for the cell-center and outgoing edge fluxes.
   inline void solve(const size_t i,
                     const size_t j,
                     const size_t k,
@@ -72,27 +66,21 @@ public:
                     angular_flux_type &psi);
 
 
-  /*!
-   *  \brief Setup the equations for a group.
-   *  \param g     Current group.
-   */
+  /// Setup the equations for a group.
   void setup_group(const size_t g);
 
-  /*!
-   *  \brief Setup the equations for an octant.
-   *  \param octant    Current octant.
-   */
+  /// Setup the equations for an octant.
   void setup_octant(const size_t octant);
 
-  /*!
-   *  \brief Setup the equations for an angle.
-   *  \param angle  Angle index within octant.
-   */
+  /// Setup the equations for an angle.
   void setup_angle(const size_t angle);
 
-  /// \}
 
 private:
+
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   /// X-directed coefficient, \f$ \Delta_x / |\mu| \f$.
   detran_utilities::vec_dbl d_alpha;
@@ -100,7 +88,7 @@ private:
   /// Y-directed coefficient, \f$ \Delta_y / |\eta|  \f$.
   detran_utilities::vec_dbl d_beta;
 
-  /*!
+  /**
    *  \brief Approximate exponential.
    *
    *  For SC, Denovo uses a 7th order truncate expansion for

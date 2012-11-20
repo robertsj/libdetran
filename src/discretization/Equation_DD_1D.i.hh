@@ -1,21 +1,21 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Equation_DD_1D.i.hh
- * \author Jeremy Roberts
- * \date   Mar 31, 2012
- * \brief  Equation_DD_1D inline member definitions.
- * \note   Copyright (C) 2012 Jeremy Roberts.
+/**
+ *  @file   Equation_DD_1D.i.hh
+ *  @author Jeremy Roberts
+ *  @date   Mar 31, 2012
+ *  @brief  Equation_DD_1D inline member definitions.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef EQUATION_DD_1D_I_HH_
-#define EQUATION_DD_1D_I_HH_
+#ifndef detran_EQUATION_DD_1D_I_HH_
+#define detran_EQUATION_DD_1D_I_HH_
 
 #include <iostream>
 
 namespace detran
 {
 
+//---------------------------------------------------------------------------//
 inline void Equation_DD_1D::setup_angle(const size_t angle)
 {
   Require(angle < d_quadrature->number_angles_octant());
@@ -27,6 +27,7 @@ inline void Equation_DD_1D::setup_angle(const size_t angle)
   d_angle = angle;
 }
 
+//---------------------------------------------------------------------------//
 inline void Equation_DD_1D::solve(const size_t i,
                                   const size_t j,
                                   const size_t k,
@@ -59,7 +60,7 @@ inline void Equation_DD_1D::solve(const size_t i,
 
 } // end namespace detran
 
-#endif /* EQUATION_DD_1D_I_HH_ */
+#endif /* detran_EQUATION_DD_1D_I_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of Equation_DD_1D.i.hh

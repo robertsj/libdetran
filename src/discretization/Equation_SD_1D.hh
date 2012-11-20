@@ -7,8 +7,8 @@
  */
 //---------------------------------------------------------------------------//
 
-#ifndef EQUATION_SD_1D_HH_
-#define EQUATION_SD_1D_HH_
+#ifndef detran_EQUATION_SD_1D_HH_
+#define detran_EQUATION_SD_1D_HH_
 
 #include "Equation.hh"
 
@@ -54,9 +54,7 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  /**
-   *  @brief Constructor
-   */
+  /// Constructor
   Equation_SD_1D(SP_mesh mesh,
                  SP_material material,
                  SP_quadrature quadrature,
@@ -67,11 +65,7 @@ public:
   // ABSTRACT INTERFACE -- ALL EQUATION TYPES MUST IMPLEMENT THESE
   //-------------------------------------------------------------------------//
 
-  /**
-   *   \brief Solve for the cell-center and outgoing edge fluxes.
-   *
-   *   See \ref Equation for full description.
-   */
+  /// Solve for the cell-center and outgoing edge fluxes.
   inline void solve(const size_t i,
                     const size_t j,
                     const size_t k,
@@ -82,25 +76,21 @@ public:
                     angular_flux_type &psi);
 
 
-  /**
-   *  @brief Setup the equations for a group.
-   *  @param g     Current group.
-   */
+  /// Setup the equations for a group.
+
   void setup_group(const size_t g);
 
-  /**
-   *  @brief Setup the equations for an octant.
-   *  @param octant    Current octant.
-   */
+  /// Setup the equations for an octant.
   void setup_octant(const size_t octant);
 
-  /**
-   *  @brief Setup the equations for an angle.
-   *  @param angle  Angle index within octant.
-   */
+  /// Setup the equations for an angle.
   void setup_angle(const size_t angle);
 
 private:
+
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   /// X-directed coefficient, \f$ 2|\mu|/\Delta_x \f$.
   detran_utilities::vec_dbl d_coef_x;
@@ -115,7 +105,7 @@ private:
 
 #include "Equation_SD_1D.i.hh"
 
-#endif /* EQUATION_SD_1D_HH_ */
+#endif /* detran_EQUATION_SD_1D_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of Equation_SD_1D.hh

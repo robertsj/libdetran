@@ -1,10 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Equation_SC_2D.cc
- * \author Jeremy Roberts
- * \date   Mar 31, 2012
- * \brief  Equation_SC_2D member definitions.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+/**
+ *  @file   Equation_SC_2D.cc
+ *  @author Jeremy Roberts
+ *  @date   Mar 31, 2012
+ *  @brief  Equation_SC_2D member definitions.
  */
 //---------------------------------------------------------------------------//
 
@@ -13,6 +12,7 @@
 namespace detran
 {
 
+//---------------------------------------------------------------------------//
 Equation_SC_2D::Equation_SC_2D(SP_mesh mesh,
                                SP_material material,
                                SP_quadrature quadrature,
@@ -24,6 +24,7 @@ Equation_SC_2D::Equation_SC_2D(SP_mesh mesh,
   /* ... */
 }
 
+//---------------------------------------------------------------------------//
 void Equation_SC_2D::setup_group(const size_t g)
 {
   Require(g >= 0);
@@ -31,6 +32,7 @@ void Equation_SC_2D::setup_group(const size_t g)
   d_g = g;
 }
 
+//---------------------------------------------------------------------------//
 void Equation_SC_2D::setup_octant(const size_t octant)
 {
   Require(octant >= 0);
@@ -38,6 +40,7 @@ void Equation_SC_2D::setup_octant(const size_t octant)
   d_octant = octant;
 }
 
+//---------------------------------------------------------------------------//
 void Equation_SC_2D::setup_angle(const size_t angle)
 {
   Require(angle < d_quadrature->number_angles_octant());

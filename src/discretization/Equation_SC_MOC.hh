@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Equation_SC_MOC.hh
- * \author Jeremy Roberts
- * \date   Mar 31, 2012
- * \brief  Equation_SC_MOC class definition.
+/**
+ *  @file   Equation_SC_MOC.hh
+ *  @author Jeremy Roberts
+ *  @date   Mar 31, 2012
+ *  @brief  Equation_SC_MOC class definition.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef EQUATION_SC_MOC_HH_
-#define EQUATION_SC_MOC_HH_
+#ifndef detran_EQUATION_SC_MOC_HH_
+#define detran_EQUATION_SC_MOC_HH_
 
 #include "Equation_MOC.hh"
 
@@ -16,33 +16,33 @@ namespace detran
 {
 
 //---------------------------------------------------------------------------//
-/*!
- *  \class Equation_SC_MOC
- *  \brief Step characteristic discretization for MOC
+/**
+ *  @class Equation_SC_MOC
+ *  @brief Step characteristic discretization for MOC
  *
  *  In the method of characteristics, the flux is solved for along a
  *  track assuming a flat source.  For a given incident flux into
  *  a track segment, we can define the outgoing segment flux
- *  \f[
+ *  @f[
  *      \psi_{out} = A\psi_{in}  + B Q   \, ,
- *  \f]
+ *  @f]
  *  and average segment flux
- *  \f[
+ *  @f[
  *      \bar{\psi} = \frac{1}{l} \Big ( B \psi_{in} +  C Q \Big )  \, ,
- *  \f]
+ *  @f]
  *  where
- *  \f[
+ *  @f[
  *      A = e^{-\Sigma_t \tau} \, ,
- *  \f]
- *  \f[
+ *  @f]
+ *  @f[
  *      B = \frac{1}{\Sigma_t} ( 1- A ) \, ,
- *  \f]
+ *  @f]
  *  and
- *  \f[
+ *  @f[
  *      C = \frac{l}{\Sigma_t} \Big( 1- \frac{1-A}{\tau} \Big ) \, ,
- *  \f]
+ *  @f]
  *  where \f$ l \f$ is the segment length and
- *  \f$ \tau = \Sigma_t l  \f$ is optical path length.
+ *  @f$ \tau = \Sigma_t l  \f$ is optical path length.
  *
  *  The step characteristic method is positive but only first-order
  *  accurate in space.
@@ -69,9 +69,7 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Constructor
-   */
+  /// Constructor
   Equation_SC_MOC(SP_mesh mesh,
                   SP_material material,
                   SP_quadrature quadrature,
@@ -81,11 +79,7 @@ public:
   // ABSTRACT INTERFACE -- ALL MOC EQUATION TYPES MUST IMPLEMENT THESE
   //-------------------------------------------------------------------------//
 
-  /*!
-   *   \brief Solve for the cell-center and outgoing edge fluxes.
-   *
-   *   See \ref Equation for full description.
-   */
+  /// Solve for the cell-center and outgoing edge fluxes.
   inline void solve(const size_t region,
                     const double length,
                     moments_type &source,
@@ -95,28 +89,16 @@ public:
                     angular_flux_type &psi);
 
 
-  /*!
-   *  \brief Setup the equations for a group.
-   *  \param g     Current group.
-   */
+  /// Setup the equations for a group.
   void setup_group(const size_t g);
 
-  /*!
-   *  \brief Setup the equations for an octant.
-   *  \param o    Current octant index.
-   */
+  /// Setup the equations for an octant.
   void setup_octant(const size_t o);
 
-  /*!
-   *  \brief Setup the equations for an azimuth.
-   *  \param a    Azimuth within octant.
-   */
+  /// Setup the equations for an azimuth.
   void setup_azimuth(const size_t a);
 
-  /*!
-   *  \brief Setup the equations for a polar angle.
-   *  \param p    Polar index.
-   */
+  /// Setup the equations for a polar angle.
   void setup_polar(const size_t p);
 
 private:
@@ -141,7 +123,7 @@ private:
 
 #include "Equation_SC_MOC.i.hh"
 
-#endif /* EQUATION_SC_MOC_HH_ */
+#endif /* detran_EQUATION_SC_MOC_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of Equation_SC_MOC.hh

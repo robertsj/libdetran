@@ -1,19 +1,19 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Equation_DD_3D.i.hh
- * \author Jeremy Roberts
- * \date   Mar 31, 2012
- * \brief  Equation_DD_3D inline member definitions.
- * \note   Copyright (C) 2012 Jeremy Roberts.
+/**
+ *  @file   Equation_DD_3D.i.hh
+ *  @author Jeremy Roberts
+ *  @date   Mar 31, 2012
+ *  @brief  Equation_DD_3D inline member definitions.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef EQUATION_DD_3D_I_HH_
-#define EQUATION_DD_3D_I_HH_
+#ifndef detran_EQUATION_DD_3D_I_HH_
+#define detran_EQUATION_DD_3D_I_HH_
 
 namespace detran
 {
 
+//---------------------------------------------------------------------------//
 inline void Equation_DD_3D::solve(const size_t i,
                                   const size_t j,
                                   const size_t k,
@@ -49,7 +49,7 @@ inline void Equation_DD_3D::solve(const size_t i,
 
 } // end namespace detran
 
-#endif /* EQUATION_DD_3D_I_HH_ */
+#endif /* detran_EQUATION_DD_3D_I_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of Equation_DD_3D.i.hh

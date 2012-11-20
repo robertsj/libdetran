@@ -7,8 +7,8 @@
  */
 //---------------------------------------------------------------------------//
 
-#ifndef EQUATION_SD_1D_I_HH_
-#define EQUATION_SD_1D_I_HH_
+#ifndef detran_EQUATION_SD_1D_I_HH_
+#define detran_EQUATION_SD_1D_I_HH_
 
 #include <iostream>
 
@@ -61,7 +61,7 @@ inline void Equation_SD_1D::solve(const size_t i,
 
 } // end namespace detran
 
-#endif /* EQUATION_SD_1D_I_HH_ */
+#endif /* detran_EQUATION_SD_1D_I_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of Equation_SD_1D.i.hh

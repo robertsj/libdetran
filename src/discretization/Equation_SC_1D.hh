@@ -76,11 +76,7 @@ public:
   // ABSTRACT INTERFACE -- ALL EQUATION TYPES MUST IMPLEMENT THESE
   //-------------------------------------------------------------------------//
 
-  /**
-   *  @brief Solve for the cell-center and outgoing edge fluxes.
-   *
-   *  See @ref Equation for full description.
-   */
+  /// Solve for the cell-center and outgoing edge fluxes.
   inline void solve(const size_t i,
                     const size_t j,
                     const size_t k,
@@ -90,25 +86,20 @@ public:
                     moments_type &phi,
                     angular_flux_type &psi);
 
-  /**
-   *  @brief Setup the equations for a group.
-   *  @param g     Current group.
-   */
+  /// Setup the equations for a group.
   void setup_group(const size_t g);
 
-  /**
-   *  @brief Setup the equations for an octant.
-   *  @param octant    Current octant.
-   */
+  /// Setup the equations for an octant.
   void setup_octant(const size_t octant);
 
-  /**
-   *  @brief Setup the equations for an angle.
-   *  @param angle  Angle index within octant.
-   */
+  /// Setup the equations for an angle.
   void setup_angle(const size_t angle);
 
 private:
+
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   /// Cosine
   double d_mu;

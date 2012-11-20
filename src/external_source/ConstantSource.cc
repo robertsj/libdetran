@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   ConstantSource.cc
- * \brief  ConstantSource 
- * \author Jeremy Roberts
- * \date   Sep 6, 2012
+/**
+ *  @file   ConstantSource.cc
+ *  @brief  ConstantSource
+ *  @author Jeremy Roberts
+ *  @date   Sep 6, 2012
  */
 //---------------------------------------------------------------------------//
 
@@ -12,6 +12,7 @@
 namespace detran_external_source
 {
 
+//---------------------------------------------------------------------------//
 ConstantSource::ConstantSource(size_t number_groups,
                                SP_mesh mesh,
                                double source,

@@ -1,8 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   detran_external_source.i
- * \author Jeremy Roberts
- * \brief  Python interface for detran external source.
+/**
+ *  @file   detran_external_source.i
+ *  @author Jeremy Roberts
+ *  @brief  Python interface for detran external source.
  */
 //---------------------------------------------------------------------------//
 

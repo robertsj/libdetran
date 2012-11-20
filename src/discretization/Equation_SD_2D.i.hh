@@ -1,21 +1,21 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Equation_SD_2D.i.hh
- * \author Jeremy Roberts
- * \date   Jun 08, 2012
- * \brief  Equation_SD_2D inline member definitions.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+/**
+ *  @file   Equation_SD_2D.i.hh
+ *  @author Jeremy Roberts
+ *  @date   Jun 08, 2012
+ *  @brief  Equation_SD_2D inline member definitions.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef EQUATION_SD_2D_I_HH_
-#define EQUATION_SD_2D_I_HH_
+#ifndef detran_EQUATION_SD_2D_I_HH_
+#define detran_EQUATION_SD_2D_I_HH_
 
 #include <iostream>
 
 namespace detran
 {
 
+//---------------------------------------------------------------------------//
 inline void Equation_SD_2D::solve(const size_t i,
                                   const size_t j,
                                   const size_t k,
@@ -45,15 +45,13 @@ inline void Equation_SD_2D::solve(const size_t i,
   phi[cell] += d_quadrature->weight(d_angle) * psi_center;
 
   // Store angular flux if needed.
-  if (d_update_psi)
-  {
-    psi[cell] = psi_center;
-  }
+  if (d_update_psi) psi[cell] = psi_center;
+
 }
 
 } // end namespace detran
 
-#endif /* EQUATION_SD_2D_I_HH_ */
+#endif /* detran_EQUATION_SD_2D_I_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of Equation_SD_2D.i.hh
