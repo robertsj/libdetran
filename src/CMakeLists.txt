@@ -101,7 +101,7 @@ IF( DETRAN_ENABLE_PYTHON )
   find_package(PythonLibs REQUIRED)
   include_directories(${PYTHON_INCLUDE_PATH})
   include_directories(${PROJECT_BINARY_DIR}/config)
-  set(CMAKE_SWIG_FLAGS "")
+  set(CMAKE_SWIG_FLAGS "-v")
 ENDIF()
 
 IF( DETRAN_ENABLE_OPENMP )

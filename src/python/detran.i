@@ -73,13 +73,6 @@
 
 // Discretization
 #include "discretization/DimensionTraits.hh"
-//#include "Equation_DD_1D.hh"
-//#include "Equation_DD_2D.hh"
-//#include "Equation_DD_3D.hh"
-//#include "Equation_SC_2D.hh"
-//#include "Equation_SD_1D.hh"
-//#include "Equation_SD_2D.hh"
-//#include "Equation_SC_MOC.hh"
     
 // Boundary
 #include "boundary/BoundaryDiffusion.hh"
@@ -90,11 +83,16 @@
 #include "transport/FissionSource.hh"
 #include "transport/State.hh"
 #include "transport/SweepSource.hh"
-//#include "Sweeper.hh"
-//#include "Sweeper1D.hh"
-//#include "Sweeper2D.hh"
-//#include "Sweeper3D.hh"
-//#include "Sweeper2DMOC.hh"
+  
+// Kinetics
+//   material
+#include "kinetics/KineticsMaterial.hh"
+#include "kinetics/TimeDependentMaterial.hh"
+#include "kinetics/LinearMaterial.hh"
+//   source
+#include "kinetics/TimeDependentExternalSource.hh"
+#include "kinetics/LinearExternalSource.hh"
+#include "kinetics/PulsedExternalSource.hh"
 
 //---------------------------------------------------------------------------//
 // LEVEL 3 
@@ -158,6 +156,9 @@
 
 // Transport
 %include "detran_solvers.i"
+
+// Kinetics
+%include "detran_kinetics.i"
 
 //------------------------------------//
 // LEVEL 4

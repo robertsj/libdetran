@@ -132,7 +132,7 @@ void LinearMaterial::update_material(const size_t iA,
         d_sigma_s[g][gp][m] = cA*A->sigma_s(m, g, gp) + cB*B->sigma_s(m, g, gp);
 
       for (int i = 0; i < d_number_precursor_groups; ++i)
-        d_chi_d[m][i][g] = cA*A->chi_d(m, i, g)  + cB*B->chi_d(m, i, g);
+        d_chi_d[g][i][m] = cA*A->chi_d(m, i, g)  + cB*B->chi_d(m, i, g);
 
       d_chi[g][m] = cA * A->chi(m, g) + cB * B->chi(m, g);
 

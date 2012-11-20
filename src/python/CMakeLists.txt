@@ -15,7 +15,7 @@ SWIG_LINK_LIBRARIES(pydetran
                     discretization
                     boundary
                     transport
-                    diffusion
+                    kinetics
                     solvers
                     ioutils
                     postprocess)
