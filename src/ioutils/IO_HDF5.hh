@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   IO_HDF5.hh
- * \brief  IO_HDF5
- * \author Jeremy Roberts
- * \date   Jul 29, 2012
+/**
+ *  @file   IO_HDF5.hh
+ *  @brief  IO_HDF5
+ *  @author Jeremy Roberts
+ *  @date   Jul 29, 2012
  */
 //---------------------------------------------------------------------------//
 
-#ifndef IO_HDF5_HH_
-#define IO_HDF5_HH_
+#ifndef detran_ioutils_IO_HDF5_HH_
+#define detran_ioutils_IO_HDF5_HH_
 
 #include "detran_config.hh"
 #include "material/Material.hh"
@@ -25,14 +25,14 @@
 namespace detran_ioutils
 {
 
-/*!
- *  \class IO_HDF5
- *  \brief Maps an HDF5 database to an InputDB and vice versa.
+/**
+ *  @class IO_HDF5
+ *  @brief Maps an HDF5 database to an InputDB and vice versa.
  *
  *  A problem can be specified completely using the input,
  *  a material definition, and the mesh definition, all of
  *  which can actually live in the InputDB (as done in
- *  \ref StupidParser).  By mapping an HDF5 file to an
+ *  @ref StupidParser).  By mapping an HDF5 file to an
  *  input object, we can eliminate the fickle text processing,
  *  using Python or another interface to construct the HDF5
  *  file.  Then, the executable detran can be used, which is
@@ -62,9 +62,9 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Constructor
-   *  \param filename HDF5 filename
+  /**
+   *  @brief Constructor
+   *  @param filename HDF5 filename
    */
   IO_HDF5(std::string filename);
 
@@ -75,21 +75,21 @@ public:
   /// Open HDF5 file for writing.  This replaces old content.
   void open();
 
-  /*!
-   *  \brief Write the input database into an HDF5 file.
-   *  \param input    Input database to be written
+  /**
+   *  @brief Write the input database into an HDF5 file.
+   *  @param input    Input database to be written
    */
   void write(SP_input input);
 
-  /*!
-   *  \brief Write the material database into an HDF5 file.
-   *  \param mat    Material database to be written
+  /**
+   *  @brief Write the material database into an HDF5 file.
+   *  @param mat    Material database to be written
    */
   void write(SP_material mat);
 
-  /*!
-   *  \brief Write the material database into an HDF5 file.
-   *  \param mat    Material database to be written
+  /**
+   *  @brief Write the material database into an HDF5 file.
+   *  @param mat    Material database to be written
    */
   void write(SP_mesh mesh);
 
@@ -115,25 +115,25 @@ private:
 
   /// HDF5 file id
   hid_t d_file_id;
-
   /// HDF5 filename
   std::string d_filename;
-
   /// HDF5 is open
   bool d_open;
-
+  /// Input
   SP_input d_input;
+  /// Material
   SP_material d_material;
+  /// Mesh
   SP_mesh d_mesh;
 
   //-------------------------------------------------------------------------//
   // IMPLEMENTATION
   //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Fill a temporary compound type container and write to file
-   *  \param input  User input database
-   *  \param data   Pointer to compound type array
+  /**
+   *  @brief Fill a temporary compound type container and write to file
+   *  @param input  User input database
+   *  @param data   Pointer to compound type array
    */
   template <class T>
   bool read_data(SP_input input, hid_t group, std::string name);
@@ -196,7 +196,7 @@ private:
 #include "IO_HDF5.t.hh"
 #endif
 
-#endif // IO_HDF5_HH_
+#endif // detran_ioutils_IO_HDF5_HH_
 
 //---------------------------------------------------------------------------//
 //              end of file IO_HDF5.hh

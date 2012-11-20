@@ -1,15 +1,15 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   IO_HDF5.cc
- * \brief  IO_HDF5 
- * \author Jeremy Roberts
- * \date   Jul 29, 2012
- * \todo   There is a lot of error checking that could be done more smoothly
- * \todo   There is a lot of refactoring to do to reduce bulk
+/**
+ *  @file   IO_HDF5.cc
+ *  @brief  IO_HDF5
+ *  @author Jeremy Roberts
+ *  @date   Jul 29, 2012
+ *  @todo   There is a lot of error checking that could be done more smoothly
+ *  @todo   There is a lot of refactoring to do to reduce bulk
+ *  @todo   The input reader doesn't read/write nested DB's
  */
 //---------------------------------------------------------------------------//
 
-// Configuration
 #include "detran_config.hh"
 
 #ifdef DETRAN_ENABLE_HDF5
@@ -23,6 +23,7 @@
 namespace detran_ioutils
 {
 
+//---------------------------------------------------------------------------//
 IO_HDF5::IO_HDF5(std::string filename)
   : d_filename(filename)
   , d_open(false)
@@ -30,6 +31,7 @@ IO_HDF5::IO_HDF5(std::string filename)
   /* ... */
 }
 
+//---------------------------------------------------------------------------//
 void IO_HDF5::open()
 {
   // Open the HDF5 file
@@ -40,6 +42,7 @@ void IO_HDF5::open()
   d_open = true;
 }
 
+//---------------------------------------------------------------------------//
 void IO_HDF5::write(SP_input input)
 {
   // Preconditions
@@ -62,6 +65,7 @@ void IO_HDF5::write(SP_input input)
   herr_t status = H5Gclose(group);
 }
 
+//---------------------------------------------------------------------------//
 void IO_HDF5::write(SP_material mat)
 {
   // Preconditions
@@ -190,6 +194,7 @@ void IO_HDF5::write(SP_material mat)
 
 }
 
+//---------------------------------------------------------------------------//
 void IO_HDF5::write(SP_mesh mesh)
 {
   // Preconditions
@@ -223,6 +228,7 @@ void IO_HDF5::write(SP_mesh mesh)
   Assert(status);
 }
 
+//---------------------------------------------------------------------------//
 void IO_HDF5::close()
 {
   // If not open, ignore.
@@ -233,6 +239,7 @@ void IO_HDF5::close()
   d_open = false;
 }
 
+//---------------------------------------------------------------------------//
 detran_utilities::InputDB::SP_input IO_HDF5::read_input()
 {
   // Preconditions
@@ -271,6 +278,7 @@ detran_utilities::InputDB::SP_input IO_HDF5::read_input()
   return input;
 }
 
+//---------------------------------------------------------------------------//
 detran_material::Material::SP_material IO_HDF5::read_material()
 {
   // Preconditions
@@ -311,7 +319,7 @@ detran_material::Material::SP_material IO_HDF5::read_material()
   //-------------------------------------------------------------------------//
 
   // Create the material object.
-  mat = new detran_material::Material(nm, ng, false);
+  mat = new detran_material::Material(nm, ng, d_filename+"_material");
 
   hid_t dset;
   hid_t space;
@@ -380,6 +388,7 @@ detran_material::Material::SP_material IO_HDF5::read_material()
   return mat;
 }
 
+//---------------------------------------------------------------------------//
 detran_geometry::Mesh::SP_mesh IO_HDF5::read_mesh()
 {
   // Preconditions
@@ -459,7 +468,6 @@ detran_geometry::Mesh::SP_mesh IO_HDF5::read_mesh()
 
   return mesh;
 }
-
 
 } // end namespace detran_ioutils
 

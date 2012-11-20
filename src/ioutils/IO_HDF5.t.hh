@@ -1,18 +1,19 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   IO_HDF5.t.hh
- * \author robertsj
- * \date   Aug 1, 2012
- * \brief  IO_HDF5 template definitions.
+/**
+ *  @file   IO_HDF5.t.hh
+ *  @author robertsj
+ *  @date   Aug 1, 2012
+ *  @brief  IO_HDF5 template definitions.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef IO_HDF5_T_HH_
-#define IO_HDF5_T_HH_
+#ifndef detran_ioutils_IO_HDF5_T_HH_
+#define detran_ioutils_IO_HDF5_T_HH_
 
 namespace detran_ioutils
 {
 
+//---------------------------------------------------------------------------//
 template <class T>
 hid_t IO_HDF5::set_memtype()
 {
@@ -38,6 +39,7 @@ hid_t IO_HDF5::set_memtype()
   return memtype;
 }
 
+//---------------------------------------------------------------------------//
 template <class T>
 hid_t IO_HDF5::set_filetype()
 {
@@ -65,6 +67,7 @@ hid_t IO_HDF5::set_filetype()
   return filetype;
 }
 
+//---------------------------------------------------------------------------//
 template <class T>
 bool IO_HDF5::read_data(SP_input input,
                         hid_t group,
@@ -120,6 +123,7 @@ bool IO_HDF5::read_data(SP_input input,
   return true;
 }
 
+//---------------------------------------------------------------------------//
 template <class T>
 bool IO_HDF5::write_map(hid_t group,
                         const char *name,
@@ -177,6 +181,7 @@ bool IO_HDF5::write_map(hid_t group,
   return true;
 }
 
+//---------------------------------------------------------------------------//
 template <class T>
 bool IO_HDF5::read_map(hid_t group,
                        const char *name,
@@ -227,6 +232,7 @@ bool IO_HDF5::read_map(hid_t group,
   return true;
 }
 
+//---------------------------------------------------------------------------//
 template <class T>
 bool IO_HDF5::write_vec(hid_t group, const char* name, const std::vector<T> &source)
 {
@@ -250,6 +256,7 @@ bool IO_HDF5::write_vec(hid_t group, const char* name, const std::vector<T> &sou
   return true;
 }
 
+//---------------------------------------------------------------------------//
 template <class T>
 bool IO_HDF5::read_vec(hid_t group, const char* name, std::vector<T> &target)
 {
@@ -278,6 +285,7 @@ bool IO_HDF5::read_vec(hid_t group, const char* name, std::vector<T> &target)
   return true;
 }
 
+//---------------------------------------------------------------------------//
 /// Write a scalar (int or double) attribute
 template <class T>
 bool IO_HDF5::write_scalar_attribute
@@ -297,6 +305,7 @@ bool IO_HDF5::write_scalar_attribute
   return true;
 }
 
+//---------------------------------------------------------------------------//
 /// Read a scalar (int or double) attribute
 template <class T>
 bool  IO_HDF5::read_scalar_attribute
