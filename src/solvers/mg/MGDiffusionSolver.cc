@@ -46,12 +46,12 @@ MGDiffusionSolver<D>::MGDiffusionSolver(SP_state                  state,
                                     0,          // Full energy spectrum
                                     d_adjoint,
                                     1.0);       // Default to k=1
-
+  d_M->print_matlab("M.out");
   // Create solver and set operator.
   SP_input db;
-  if (d_input->check("outer_callow_linear_solver_db"))
+  if (d_input->check("outer_solver_db"))
   {
-    db = d_input->template get<SP_input>("outer_callow_linear_solver_db");
+    db = d_input->template get<SP_input>("outer_solver_db");
   }
   d_solver = Creator_T::Create(db);
   d_solver->set_operators(d_M, db);

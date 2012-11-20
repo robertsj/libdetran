@@ -83,7 +83,7 @@ SP_material test_EigenvalueManager_material()
   //SP_material mat = material_fixture_2g();
 // mat->compute_diff_coef();
   // kinf =  0.738135984663063
-  SP_material mat = material_fixture_7g();
+  SP_material mat = material_fixture_2g();
   mat->compute_sigma_a();
   mat->compute_diff_coef();
   return mat;
@@ -95,7 +95,7 @@ SP_mesh test_EigenvalueManager_mesh(int d)
   vec_dbl cc(2, 0.0); cc[1] = 0.1;
   vec_int fm(1, 4);
   vec_int ff(1, 1);
-  vec_int mat_map(1, 0);
+  vec_int mat_map(1, 1);
   SP_mesh mesh;
   if (d == 1) mesh = new Mesh1D(fm, cm, mat_map);
   if (d == 2) mesh = new Mesh2D(fm, ff, cm, cc, mat_map);
@@ -135,14 +135,14 @@ InputDB::SP_input test_EigenvalueManager_input()
   inp->put<double>("outer_tolerance",         1e-9);
   // EIGEN
   inp->put<int>("eigen_print_level",          2);
-  inp->put<string>("eigen_solver",            "arnoldi");
+  inp->put<string>("eigen_solver",            "PI");
   inp->put<double>("eigen_tolerance",         1e-8);
   inp->put<int>("eigen_print_interval",       1);
-  inp->put<int>("eigen_max_iters",            10);
+  inp->put<int>("eigen_max_iters",            100);
   // CALLOW DATABASE (APPLIED TO ALL)
   {
     InputDB::SP_input callowdb(new InputDB("callowdb"));
-    callowdb->put<std::string>("eigen_solver_type",               "slepc");
+    callowdb->put<std::string>("eigen_solver_type",               "power");
     callowdb->put<int>("eigen_solver_monitor_level",              1000);
     callowdb->put<int>("eigen_solver_maxit",                      4000);
     callowdb->put<double>("eigen_solver_tol",                     1e-10);

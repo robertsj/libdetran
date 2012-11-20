@@ -26,6 +26,34 @@
 
 %template(vec_material)         std::vector<detran_utilities::SP<detran::KineticsMaterial> >;
 
+
+// Downcasts and Upcasts for generic routines
+%inline
+{
+  
+  // Kinetics -> Base
+  detran_utilities::SP<detran_material::Material> 
+  downcast(detran_utilities::SP<detran::KineticsMaterial>* p)
+  {
+    return detran_utilities::SP<detran_material::Material>(*p);
+  } 
+  
+  // TD -> Base
+  detran_utilities::SP<detran_material::Material> 
+  downcast(detran_utilities::SP<detran::TimeDependentMaterial>* p)
+  {
+    return detran_utilities::SP<detran_material::Material>(*p);
+  } 
+  
+//  // Base -> Kinetics
+//  detran_utilities::SP<detran::KineticsMaterial> 
+//  downcast(detran_utilities::SP<detran_material::Material>* p)
+//  {
+//    return detran_utilities::SP<detran::KineticsMaterial>(*p);
+//  } 
+  
+}
+
 //---------------------------------------------------------------------------//
 //              end of detran_material.i
 //---------------------------------------------------------------------------//

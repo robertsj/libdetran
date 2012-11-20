@@ -53,40 +53,40 @@ int main(int argc, char *argv[])
 
 SP_material test_FixedSourceManager_material()
 {
- // Material (kinf = 1)
-  SP_material mat(new Material(1, 1, "test"));
-  //
-  mat->set_sigma_t(0, 0,    1.0);
-  mat->set_sigma_s(0, 0, 0, 0.0);
-  //mat->set_sigma_s(0, 1, 0, 0.15);
-  mat->set_sigma_f(0, 0,    0.0);
-  mat->set_chi(0, 0,        1.0);
-  mat->set_diff_coef(0, 0,  1./3.);
-  //
-//  mat->set_sigma_t(0, 1,    1.0);
-//  mat->set_sigma_s(0, 1, 1, 0.9);
-//  mat->set_sigma_s(0, 0, 1, 0.1);
-//  mat->set_sigma_f(0, 1,    0.0);
-//  mat->set_chi(0, 1,        0.0);
-//  mat->set_diff_coef(0, 1,  1./3.);
-//
-  mat->compute_sigma_a();
-  mat->finalize();
-  mat->display();
-  return mat;
-
-//  SP_material mat = material_fixture_7g();
+// // Material (kinf = 1)
+//  SP_material mat(new Material(1, 1, "test"));
+//  //
+//  mat->set_sigma_t(0, 0,    1.0);
+//  mat->set_sigma_s(0, 0, 0, 0.0);
+//  //mat->set_sigma_s(0, 1, 0, 0.15);
+//  mat->set_sigma_f(0, 0,    0.0);
+//  mat->set_chi(0, 0,        1.0);
+//  mat->set_diff_coef(0, 0,  1./3.);
+//  //
+////  mat->set_sigma_t(0, 1,    1.0);
+////  mat->set_sigma_s(0, 1, 1, 0.9);
+////  mat->set_sigma_s(0, 0, 1, 0.1);
+////  mat->set_sigma_f(0, 1,    0.0);
+////  mat->set_chi(0, 1,        0.0);
+////  mat->set_diff_coef(0, 1,  1./3.);
+////
 //  mat->compute_sigma_a();
-//  mat->compute_diff_coef();
+//  mat->finalize();
 //  mat->display();
 //  return mat;
+
+  SP_material mat = material_fixture_7g();
+  mat->compute_sigma_a();
+  mat->compute_diff_coef();
+  mat->display();
+  return mat;
 }
 
 SP_mesh test_FixedSourceManager_mesh(int d)
 {
   vec_dbl cm(2, 0.0); cm[1] = 10.0;
   vec_dbl cc(2, 0.0); cc[1] = 0.1;
-  vec_int fm(1, 10);
+  vec_int fm(1, 100);
   vec_int ff(1, 1);
   vec_int mat_map(1, 0);
   SP_mesh mesh;
@@ -105,7 +105,7 @@ InputDB::SP_input test_FixedSourceManager_input()
   inp->put<string>("problem_type",                  "fixed");
   inp->put<string>("equation",                      "sc");
   inp->put<string>("bc_west",                       "reflect");
-  inp->put<string>("bc_east",                       "reflect");
+  inp->put<string>("bc_east",                       "vacuum");
   inp->put<string>("bc_south",                      "reflect");
   inp->put<string>("bc_north",                      "vacuum");
   inp->put<string>("bc_bottom",                     "reflect");
@@ -121,7 +121,7 @@ InputDB::SP_input test_FixedSourceManager_input()
   //--------------------------------------------------------------------------//
   // INNER
   inp->put<double>("inner_tolerance",                     1e-17);
-  inp->put<string>("inner_solver",                        "SI");
+  inp->put<string>("inner_solver",                        "GMRES");
   inp->put<string>("inner_pc_type",                       "DSA");
   inp->put<int>("inner_pc_side",                          1);
   inp->put<int>("inner_max_iters",                        100000);
@@ -129,8 +129,8 @@ InputDB::SP_input test_FixedSourceManager_input()
   {
     // inner gmres parameters
     InputDB::SP_input db(new InputDB("inner_solver_db"));
-    db->put<double>("linear_solver_atol",                 1e-12);
-    db->put<double>("linear_solver_rtol",                 1e-12);
+    db->put<double>("linear_solver_atol",                 1e-8);
+    db->put<double>("linear_solver_rtol",                 1e-8);
     db->put<string>("linear_solver_type",                 "gmres");
     db->put<int>("linear_solver_maxit",                   2000);
     db->put<int>("linear_solver_gmres_restart",           20);
@@ -153,20 +153,20 @@ InputDB::SP_input test_FixedSourceManager_input()
 
   //--------------------------------------------------------------------------//
   // OUTER
-  inp->put<string>("outer_solver",                      "GS");
+  inp->put<string>("outer_solver",                      "GMRES");
   inp->put<string>("outer_pc_type",                     "mgdsa");
   inp->put<int>("outer_pc_side",                        2);
   inp->put<int>("outer_print_level",                    1);
   inp->put<double>("outer_tolerance",                   1e-15);
-  //inp->put<int>("outer_krylov_group_cutoff",            0);
+  inp->put<int>("outer_krylov_group_cutoff",            0);
   inp->put<int>("outer_print_level",                    2);
   inp->put<int>("outer_max_iters",                      1000);
   {
     // outer gmres parameters
     InputDB::SP_input db(new InputDB("outer_solver_db"));
-    db->put<double>("linear_solver_atol",               1e-12);
-    db->put<double>("linear_solver_rtol",               1e-12);
-    db->put<string>("linear_solver_type",               "petsc");
+    db->put<double>("linear_solver_atol",               1e-8);
+    db->put<double>("linear_solver_rtol",               1e-8);
+    db->put<string>("linear_solver_type",               "gmres");
     db->put<int>("linear_solver_maxit",                 5000);
     db->put<int>("linear_solver_gmres_restart",         20);
     db->put<int>("linear_solver_monitor_level",         2);
@@ -175,9 +175,9 @@ InputDB::SP_input test_FixedSourceManager_input()
     InputDB::SP_input db2(new InputDB("outer_pc_db"));
     db2->put<double>("linear_solver_atol",              1e-14);
     db2->put<double>("linear_solver_rtol",              1e-14);
-    db2->put<string>("linear_solver_type",              "petsc");
+    db2->put<string>("linear_solver_type",              "gmres");
     db2->put<int>("pc_side",                            1);
-    db2->put<string>("pc_type",                         "petsc_pc");
+    db2->put<string>("pc_type",                         "ilu0");
     db2->put<string>("petsc_pc_type",                   "ilu");
     db2->put<int>("petsc_pc_factor_levels",             4);
     db2->put<int>("linear_solver_maxit",                100000);
@@ -303,7 +303,7 @@ int test_FixedSourceManager_T()
 
   typename Manager_T::SP_state state;
   state = manager.state();
-  state->display();
+  //state->display();
 
   return 0;
   // Get the state and boundary

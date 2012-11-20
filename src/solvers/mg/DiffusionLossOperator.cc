@@ -243,33 +243,33 @@ void DiffusionLossOperator::build()
      flag = insert(row, row, val, INSERT);
      Assert(flag);
 
-//     // Add downscatter component.
-//     int lower = d_material->lower(g);
-//     if (d_group_cutoff > lower) lower = d_group_cutoff;
-//     for (int gp = lower; gp < g; gp++)
-//     {
-//       int col = cell + (gp - d_group_cutoff) * d_group_size;
-//       if (db) cout << "  ds  col = " << col << endl;
-//       double val = -d_material->sigma_s(m, g, gp);
-//       if (!d_adjoint)
-//         flag = insert(row, col, val, INSERT);
-//       else
-//         flag = insert(col, row, val, INSERT);
-//       Assert(flag);
-//     }
-//
-//     // Add upscatter component.
-//     for (int gp = g + 1; gp <= d_material->upper(g); gp++)
-//     {
-//       int col = cell + (gp - d_group_cutoff) * d_group_size;
-//       double val = -d_material->sigma_s(m, g, gp);
-//       if (db) cout << "  us  col = " << col << endl;
-//       if (!d_adjoint)
-//         flag = insert(row, col, val, INSERT);
-//       else
-//         flag = insert(col, row, val, INSERT);
-//       Assert(flag);
-//     }
+     // Add downscatter component.
+     int lower = d_material->lower(g);
+     if (d_group_cutoff > lower) lower = d_group_cutoff;
+     for (int gp = lower; gp < g; gp++)
+     {
+       int col = cell + (gp - d_group_cutoff) * d_group_size;
+       if (db) cout << "  ds  col = " << col << endl;
+       double val = -d_material->sigma_s(m, g, gp);
+       if (!d_adjoint)
+         flag = insert(row, col, val, INSERT);
+       else
+         flag = insert(col, row, val, INSERT);
+       Assert(flag);
+     }
+
+     // Add upscatter component.
+     for (int gp = g + 1; gp <= d_material->upper(g); gp++)
+     {
+       int col = cell + (gp - d_group_cutoff) * d_group_size;
+       double val = -d_material->sigma_s(m, g, gp);
+       if (db) cout << "  us  col = " << col << endl;
+       if (!d_adjoint)
+         flag = insert(row, col, val, INSERT);
+       else
+         flag = insert(col, row, val, INSERT);
+       Assert(flag);
+     }
 
     } // row loop
 
