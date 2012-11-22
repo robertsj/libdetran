@@ -59,6 +59,7 @@ void TimeDependentMaterial::update(const double t,
         double den = a_0 + d_dt * d_lambda[i];
         chi += d_lambda[i] * d_chi_d[g][i][m] * dt * d_beta[i][m];
       }
+      // note scaling by the eigenvalue
       d_chi[g][m] = chi / d_kcrit;
 
     } // end groups

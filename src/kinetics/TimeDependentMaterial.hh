@@ -73,9 +73,16 @@ public:
     d_kcrit = keff;
   }
 
+  /// Set the state vector.
   void set_state(SP_state s)
   {
     d_state = s;
+  }
+
+  /// Get the state vector.
+  SP_state state()
+  {
+    return d_state;
   }
 
   /**

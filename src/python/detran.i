@@ -1,12 +1,12 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   detran.i
- * \author Jeremy Roberts
- * \brief  Python interface for detran library.
+/**
+ *  @file   detran.i
+ *  @author Jeremy Roberts
+ *  @brief  Python interface for detran library.
  */
 //---------------------------------------------------------------------------//
 
-%module pydetran
+%module(directors="1") pydetran
 %{
 
 //---------------------------------------------------------------------------//
@@ -88,6 +88,7 @@
 //   material
 #include "kinetics/KineticsMaterial.hh"
 #include "kinetics/TimeDependentMaterial.hh"
+#include "kinetics/PyTimeDependentMaterial.hh"
 #include "kinetics/LinearMaterial.hh"
 //   source
 #include "kinetics/TimeDependentExternalSource.hh"
