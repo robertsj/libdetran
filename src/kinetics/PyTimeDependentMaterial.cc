@@ -32,10 +32,12 @@ PyTimeDependentMaterial::Create(const size_t number_materials,
                                 const size_t number_precursor_groups,
                                 std::string  name)
 {
+  std::cout << " start PYTD create" << std::endl;
   SP_material p(new PyTimeDependentMaterial(number_materials,
                                             number_energy_groups,
                                             number_precursor_groups,
                                             name));
+  std::cout << " end PYTD create" << std::endl;
   return p;
 }
 
@@ -51,6 +53,7 @@ void PyTimeDependentMaterial::set_update_impl(callback_ptr f, void* data)
 //---------------------------------------------------------------------------//
 void PyTimeDependentMaterial::update_impl()
 {
+  std::cout << "C++ calling implementation" << std::endl;
   Require(d_update_impl);
   d_update_impl(d_update_impl_data);
 }

@@ -8,11 +8,24 @@
    
 %include "detran_utilities.i"
 %include "detran_material.i"
+%include std_string.i
+%include callback.i 
 
-// Include callback macros
-%include callback.i
-setCallbackMethod(1, PyTimeDependentMaterial, set_update_impl, (void* data), (), (), 1)
+// Set the callback setter for python-based time-dependent materials
+setCallbackMethod(1, // this is a *unique* identifier
+                  detran::PyTimeDependentMaterial, 
+                  set_update_impl, 
+                  (void* data), (), (), 1)
 
+//// Following construction of a Python material, set the callback function
+//%feature("pythonappend") 
+//detran::PyTimeDependentMaterial::
+//PyTimeDependentMaterial(size_t,size_t,size_t,std::string) 
+//%{
+//   # the client *must* define update_impl
+//   print "PYTHON setting implementation"
+//   self.set_update_impl(self.update_material)
+//%}
 
 // Sources
 %include "TimeDependentExternalSource.hh"
@@ -49,29 +62,57 @@ setCallbackMethod(1, PyTimeDependentMaterial, set_update_impl, (void* data), (),
     return detran_utilities::SP<detran_material::Material>(*p);
   } 
   
-//  // Base -> Kinetics
-//  detran_utilities::SP<detran::KineticsMaterial> 
-//  downcast(detran_utilities::SP<detran_material::Material>* p)
-//  {
-//    return detran_utilities::SP<detran::KineticsMaterial>(*p);
-//  } 
+  // TD -> PyTD
+  detran_utilities::SP<detran::PyTimeDependentMaterial> 
+  upcast(detran_utilities::SP<detran::TimeDependentMaterial>* p)
+  {
+    return detran_utilities::SP<detran::PyTimeDependentMaterial>(*p);
+  } 
   
 }
 
-// Following construction of a Python material, set the 
-// callback function
-//%feature("pythonappend") detran::PyTimeDependentMaterial(const detran_utilities::size_t number_materials,
-//                                                         const detran_utilities::size_t number_energy_groups,
-//                                                         const detran_utilities::size_t number_precursor_groups,
-//                                                         std::string  name) 
-//%{
-//   # the client *must* define update_impl
-//   print "PYTHON setting implementation"
-//   self.set_update_impl(self.update_impl)
-//%}
-
-// Set Python material update
-//setCallbackMethod(1, PyTimeDependentMaterial, set_update_impl, (void* data), (), (), 1)
+%pythoncode
+{
+  class UserMaterial(object) :
+    ''' User-defined time-dependent material.
+        
+        Users should inherit from this, making sure to
+        perform the base construction as well via
+          super(UserClass, self).__init__(nm, ng, np, name)
+    '''
+    
+    def __init__(self, nm, ng, np, name="UserTDMaterial") :
+      ''' Constructor
+    
+          Parameters:
+            nm(int) -- number of materials
+            ng(int) -- number of groups
+            np(int) -- number of precursors
+      '''
+      
+      # Create a material smart pointer.  It is returned as a TDMat.
+      mat = PyTimeDependentMaterial.Create(nm, ng, np, name)
+      self.d_material = mat
+      
+      # Set the material update function (the user *must* implement this).
+      # Note, we need to upcast to PYTDMat to do so.
+      upcast(self.d_material).set_update_impl(self.update_material)
+  
+    def material(self) :
+      ''' Return the material object
+      '''
+      return self.d_material
+          
+    def update(self, t, dt, order) :
+      ''' Update the material for this time, step, and order
+      ''' 
+      self.d_material.update(t, dt, order)
+          
+    def update_material(self) :
+      ''' User-defined update function
+      '''
+      raise NotImplementedError   
+}
 
 //---------------------------------------------------------------------------//
 //              end of detran_material.i

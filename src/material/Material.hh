@@ -195,7 +195,7 @@ public:
   /// Pretty print the material database.
   virtual void display();
 
-public:
+protected:
 
   //-------------------------------------------------------------------------//
   // DATA

@@ -37,6 +37,8 @@ TimeStepper<D>::TimeStepper(SP_input       input,
   , d_scheme(BDF1)
   , d_do_output(false)
   , d_fixup(false)
+  , d_residual_norm(0.0)
+  , d_monitor(NULL)
 {
   // Preconditions
   Require(d_input);
@@ -50,9 +52,12 @@ TimeStepper<D>::TimeStepper(SP_input       input,
   d_solver = new Fixed_T(d_input, d_material, d_mesh, d_multiply);
   d_solver->setup();
 
-  // Extract the quadrature
+  // Extract the quadrature, state, and fission.  This lets us fill the
+  // state without necessarily building a separate solver.
   d_quadrature = d_solver->quadrature();
-  Ensure(d_quadrature);
+  d_state = d_solver->state();
+  d_fissionsource = d_solver->fissionsource();
+  Ensure(d_state);
 
   // Set the material state.
   d_material->set_state(d_solver->state());
@@ -98,7 +103,6 @@ TimeStepper<D>::TimeStepper(SP_input       input,
 
   // Compute the number of steps.  May result in longer time than requested!
   d_number_steps = std::ceil(d_final_time / d_dt);
-
   if (d_input->check("ts_max_steps"))
   {
    int max_steps = d_input->template get<int>("ts_max_steps");
@@ -135,8 +139,11 @@ TimeStepper<D>::TimeStepper(SP_input       input,
   }
 
   //-------------------------------------------------------------------------//
-  // SETUP OUTPUT
+  // SETUP MONITOR AND OUTPUT
   //-------------------------------------------------------------------------//
+
+  // Default monitor
+  set_monitor(ts_default_monitor<D>, NULL);
 
   if (d_input->check("ts_output"))
   {
@@ -198,20 +205,18 @@ void TimeStepper<D>::solve(SP_state initial_state)
     dt = d_dt;
     if (flag) dt = 0.5 * d_dt;
 
-    std::cout << " dt=" << dt << " order=" << order << " i=" << i << " flag=" << flag << std::endl;
-
-    size_t iteration = 0;
-    for (; iteration < 1; ++iteration)
+    size_t iteration = 1;
+    for (; iteration < 2; ++iteration)
     {
       // Perform the time step
       step(t, dt, order, flag);
 
       // >>> check convergence <<<
 
-    } // end iterations
+      // Call the monitor, if present.
+      if (d_monitor) d_monitor(d_monitor_data, this, i, t, dt, iteration);
 
-    printf("%8.4f %20.16f %20.16f \n",
-           t, d_state->phi(0)[0], d_state->phi(0)[1]);
+    } // end iterations
 
     // Output the initial state
     if (d_do_output) d_silooutput->write_time_flux(i+1, d_state, true);
@@ -339,11 +344,6 @@ void TimeStepper<D>::cycle_states_precursors(const size_t order)
   SP_state      tmp_state;
   SP_precursors tmp_precursors;
 
-  for (int i = 0; i < d_order; ++i)
-  {
-    std::cout << " BEFORE STATE " << i << " " << d_states[i]->phi(0)[0] << std::endl;
-  }
-
   // Save the first element.
   tmp_state = d_states[d_order - 1];
   if (d_precursors.size()) tmp_precursors = d_precursors[d_order - 1];
@@ -357,11 +357,6 @@ void TimeStepper<D>::cycle_states_precursors(const size_t order)
   d_states[0] = tmp_state;
   if (d_precursors.size()) d_precursors[0] = tmp_precursors;
 
-  for (int i = 0; i < d_order; ++i)
-  {
-    std::cout << " AFTER STATE " << i << " " << d_states[i]->phi(0)[0] << std::endl;
-  }
-
 }
 
 //---------------------------------------------------------------------------//
@@ -372,11 +367,11 @@ void TimeStepper<D>::update_sources(const double t,
 {
   // Update the synthetic source.
   d_syntheticsource->build(dt, d_states, d_precursors, order);
-  for (int cell = 0; cell < d_mesh->number_cells(); ++cell)
-  {
-    std::cout << " q[" << cell << "]=" << d_syntheticsource->source(cell, 0, 0)
-              << std::endl;
-  }
+//  for (int cell = 0; cell < d_mesh->number_cells(); ++cell)
+//  {
+//    std::cout << " q[" << cell << "]=" << d_syntheticsource->source(cell, 0, 0)
+//              << std::endl;
+//  }
   // Update the external sources.
   for (int i = 0; i < d_sources.size(); ++i)
   {
@@ -436,6 +431,25 @@ void TimeStepper<D>::extrapolate()
     // update precursors
   }
 
+}
+
+//---------------------------------------------------------------------------//
+template <class D>
+void ts_default_monitor(void* data,
+                        TimeStepper<D>* ts,
+                        int step,
+                        double t,
+                        double dt,
+                        int it)
+{
+  Require(ts);
+  if (step == 0 and it == 1)
+  {
+    printf(" step        t       dt   iter \n");
+    printf("-------------------------------\n");
+  }
+  //            0   0.1000   0.0500      1
+  printf(" %4i %8.4f %8.4f   %4i \n", step, t, dt, it);
 }
 
 //---------------------------------------------------------------------------//

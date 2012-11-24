@@ -85,6 +85,21 @@ public:
     return d_state;
   }
 
+  double time() const
+  {
+    return d_t;
+  }
+
+  double dt() const
+  {
+    return d_dt;
+  }
+
+  size_t order() const
+  {
+    return d_order;
+  }
+
   /**
    *  @brief Update the materials
    *  @param t      New time (in seconds)

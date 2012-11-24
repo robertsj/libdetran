@@ -6,7 +6,7 @@
  */
 //---------------------------------------------------------------------------//
 
-%module(directors="1") pydetran
+%module(directors="1", allprotected="1") pydetran
 %{
 
 //---------------------------------------------------------------------------//
@@ -102,6 +102,7 @@
 // Solvers
 #include "FixedSourceManager.hh"
 #include "EigenvalueManager.hh"
+#include "time/TimeStepper.hh"
   
 //---------------------------------------------------------------------------//
 // LEVEL 4 
@@ -134,7 +135,7 @@
 // LEVEL 1
 
 // Callow
-%include "callow.i"
+//%include "callow.i"
 // Angle
 %include "detran_angle.i"
 // Geometry
@@ -146,7 +147,7 @@
 
 //------------------------------------//
 // LEVEL 2
-
+//
 // Transport
 %include "detran_discretization.i"
 %include "detran_boundary.i"

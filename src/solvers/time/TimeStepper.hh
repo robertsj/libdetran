@@ -21,6 +21,7 @@
 #include "utilities/SP.hh"
 #include "transport/State.hh"
 #include "kinetics/BDFCoefficients.hh"
+#include <cstdio>
 
 namespace detran
 {
@@ -71,6 +72,8 @@ public:
   typedef FissionSource::SP_fissionsource                 SP_fissionsource;
   typedef detran_utilities::vec_int                       vec_int;
   typedef detran_ioutils::SiloOutput::SP_silooutput       SP_silooutput;
+  typedef void (*function_pointer)
+               (void*, TimeStepper<D>*, int, double, double, int);
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -86,6 +89,9 @@ public:
               SP_mesh       mesh,
               bool          multiply);
 
+  /// Virtual destructor
+  virtual ~TimeStepper(){}
+
   //-------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
   //-------------------------------------------------------------------------//
@@ -98,6 +104,14 @@ public:
 
   /// Getters
   SP_state state() {return d_state;}
+
+  /// Set a user-defined monitor function.
+  void set_monitor(function_pointer monitor, void* monitor_data = NULL)
+  {
+    Require(monitor);
+    d_monitor = monitor;
+    d_monitor_data = monitor_data;
+  }
 
 private:
 
@@ -153,6 +167,14 @@ private:
   SP_mg_solver d_solver;
   /// IMP negative flux fixup.
   bool d_fixup;
+  /// Iteration count for nonlinear problems
+  size_t d_iteration;
+  /// Residual norm
+  double d_residual_norm;
+  /// Time step monitor
+  function_pointer d_monitor;
+  /// Monitor data
+  void* d_monitor_data;
 
   //-------------------------------------------------------------------------//
   // IMPLEMENTATION
@@ -185,6 +207,23 @@ private:
 
 };
 
-} // end namespace detran_kinetics
+/**
+ *  @brief Default time step monitor
+ *  @param  data  Pointer to arbitrary user data
+ *  @param  ts    TimeStepper pointer
+ *  @param  step  Current time step
+ *  @param  t     Time at step
+ *  @param  dt    Step size
+ *  @param  it    Iteration count (for nonlinear problems)
+ */
+template <class D>
+void ts_default_monitor(void* data,
+                        TimeStepper<D>* ts,
+                        int step,
+                        double t,
+                        double dt,
+                        int it);
+
+} // end namespace detran
 
 #endif /* detran_TIMESTEPPER_HH_ */

@@ -54,7 +54,6 @@ public:
                             const size_t number_precursor_groups,
                             std::string  name = "PyTimeDependentMaterial");
 
-
   /// Virtual destructor
   virtual ~PyTimeDependentMaterial(){}
 

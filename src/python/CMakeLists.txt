@@ -18,7 +18,8 @@ SWIG_LINK_LIBRARIES(pydetran
                     kinetics
                     solvers
                     ioutils
-                    postprocess)
+                    postprocess
+                    )
 
 # Install the module and library
 INSTALL(FILES ${CMAKE_BINARY_DIR}/python/pydetran.py
