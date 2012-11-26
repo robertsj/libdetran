@@ -63,7 +63,7 @@ void TimeDependentMaterial::update(const double t,
           chi += d_lambda[i] * d_chi_d[g][i][m] * dt * d_beta[i][m] / den;
         }
         d_chi[g][m] = chi;
-        // synthetic fission source
+        // synthetic fission cross section
         d_sigma_f[g][m] /= d_kcrit;
       } // end groups
     } // end materials

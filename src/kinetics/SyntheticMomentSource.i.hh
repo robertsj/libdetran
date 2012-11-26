@@ -26,8 +26,8 @@ inline double SyntheticMomentSource::source(const size_t cell,
 
 //---------------------------------------------------------------------------//
 inline double SyntheticMomentSource::source(const size_t cell,
-                                      const size_t group,
-                                      const size_t angle)
+                                            const size_t group,
+                                            const size_t angle)
 {
   // Preconditions
   Require(group < d_source.size());
@@ -64,6 +64,11 @@ inline void SyntheticMomentSource::build(const double dt,
   // Leading coefficient
   double a_0 = bdf_coefs[order-1][0];
 
+  // Clear the source
+  for (int g = 0; g < d_material->number_groups(); ++g)
+    for (int cell = 0; cell < d_mesh->number_cells(); ++cell)
+      d_source[g][cell] = 0.0;
+
   // Add all backward terms
   for (int j = 0; j < order; ++j)
   {
@@ -93,15 +98,22 @@ inline void SyntheticMomentSource::build(const double dt,
                             (a_0 + dt * d_material->lambda(i));
           for (int cell = 0; cell < d_mesh->number_cells(); ++cell)
           {
-            d_source[g][cell] = C_factor * d_material->chi_d(mt[cell], i, g) *
-                                precursors[j]->C(i)[cell];
+
+            d_source[g][cell] += C_factor *
+                                 d_material->chi_d(mt[cell], i, g) *
+                                 precursors[j]->C(i)[cell];
+//            std::cout << " C=" << precursors[j]->C(i)[cell]
+//                      << " chid = " << d_material->chi_d(mt[cell], i, g)
+//                      << " q= " << d_source[g][cell]
+//                      << std::endl;
           }
         }
       }
 
     } // end groups
   } // end backward terms
-
+//  std::cout << " source = " << this->source(0, 0) << "  " << this->source(1, 0) << std::endl;
+//  std::cout << " source = " << this->source(0, 0, 0) << "  " << this->source(1, 0, 0) << std::endl;
 }
 
 } // end namespace detran

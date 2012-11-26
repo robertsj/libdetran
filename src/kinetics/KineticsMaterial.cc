@@ -8,6 +8,7 @@
 //---------------------------------------------------------------------------//
 
 #include "KineticsMaterial.hh"
+#include "utilities/SoftEquivalence.hh"
 #include <cstdio>
 
 namespace detran
@@ -68,7 +69,7 @@ void KineticsMaterial::set_beta(const size_t m, const size_t i, const double v)
 {
   Require(m < number_materials());
   Require(i < d_number_precursor_groups);
-  Require(v > 0.0);
+  //Require(v > 0.0);
   d_beta[i][m] = v;
 }
 
@@ -76,7 +77,7 @@ void KineticsMaterial::set_beta(const size_t m, const size_t i, const double v)
 void KineticsMaterial::set_beta(const size_t i, const double v)
 {
   Require(i < d_number_precursor_groups);
-  Require(v > 0.0);
+  //Require(v > 0.0);
   for (int m = 0; m < number_materials(); ++m)
     d_beta[i][m] = v;
 }
@@ -90,7 +91,6 @@ void KineticsMaterial::set_chi_d(const size_t m,
   Require(m < number_materials());
   Require(i < d_number_precursor_groups);
   Require(g < number_groups());
-  Require(v > 0.0);
   for (int m = 0; m < number_materials(); ++m)
     d_chi_d[g][i][m] = v;
 }
@@ -107,6 +107,30 @@ void KineticsMaterial::finalize()
   {
     Insist(d_velocity[g] > 0.0, "Velocities must be greater than zero.");
   }
+
+  // Check that chi's add to 1
+  for (int m = 0; m < number_materials(); ++m)
+  {
+    bool has_fission = false;
+    double v = 0;
+    for (int g = 0; g < number_groups(); ++g)
+    {
+      if (d_sigma_f[g][m] > 0.0) has_fission = true;
+      v += d_chi[g][m];
+    }
+    Assert(v > 0.0 or !has_fission);
+
+    for (int i = 0; i < d_number_precursor_groups; ++i)
+    {
+      v = 0;
+      for (int g = 0; g < number_groups(); ++g)
+      {
+        v += d_chi_d[g][i][m];
+      }
+      Assert(v > 0.0 or !has_fission);
+    }
+  }
+
   // Note, beta is not checked, since we don't do anything special for
   // non fissile fuel.
   d_finalized = true;

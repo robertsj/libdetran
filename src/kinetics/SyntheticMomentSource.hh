@@ -87,9 +87,6 @@ private:
   /// Moment source [group][space]
   vec2_dbl d_source;
 
-  /// Angular norm
-  double d_norm;
-
 };
 
 } // end namespace detran

@@ -127,7 +127,9 @@ inline void SyntheticDiscreteSource::build(const double dt,
 //                        << " nrm=" << d_norm << std::endl;
               for (int cell = 0; cell < d_mesh->number_cells(); ++cell)
               {
-                //std::cout << " C=" <<precursors[j]->C(i)[cell] <<std::endl;
+//                std::cout << " C=" <<precursors[j]->C(i)[cell]
+//                          << " chid = " << d_material->chi_d(mt[cell], i, g)
+//                          << std::endl;
                 d_source[g][angle][cell] += C_factor *
                   d_material->chi_d(mt[cell], i, g) *
                     precursors[j]->C(i)[cell];

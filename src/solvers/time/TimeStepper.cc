@@ -289,7 +289,7 @@ void TimeStepper<D>::initialize_precursors()
    *  fission source
    */
 
-
+  d_fissionsource->update();
   const State::moments_type &fd = d_fissionsource->density();
   const vec_int &mt = d_mesh->mesh_map("MATERIAL");
 
@@ -300,7 +300,7 @@ void TimeStepper<D>::initialize_precursors()
     {
       d_precursor->C(i)[cell] =
         inv_lambda * d_material->beta(mt[cell], i) * fd[cell];
-      printf("%16.9f %16.9f %16.9f %16.9f \n", fd[cell], inv_lambda, d_material->beta(mt[cell], i), d_precursor->C(i)[cell]);
+      //printf("%16.9f %16.9f %16.9f %16.9f \n", fd[cell], inv_lambda, d_material->beta(mt[cell], i), d_precursor->C(i)[cell]);
     }
   }
 
@@ -341,13 +341,12 @@ void TimeStepper<D>::update_precursors(const double t,
     {
       // Add flux contribution
       double value = 0.0;
-      for (size_t g = 0; g < d_material->number_groups(); ++g)
-      {
-        value +=  A * d_material->beta(mt[cell], i) * fd[cell];
-      }
+      value +=  A * d_material->beta(mt[cell], i) * fd[cell];
+
       // Add previous time step contributions
       for (size_t j = 1; j <= order; ++j)
       {
+        //std::cout << " C cont " << d_precursors[j-1]->C(i)[cell] <<  " " << (A / dt) * bdf_coefs[order-1][j] * d_precursors[j-1]->C(i)[cell] << std::endl;
         value += (A / dt) * bdf_coefs[order-1][j] *
                  d_precursors[j-1]->C(i)[cell];
       }
