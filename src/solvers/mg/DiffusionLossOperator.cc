@@ -112,6 +112,8 @@ void DiffusionLossOperator::build()
   // Get the material map.
   vec_int mat_map = d_mesh->mesh_map("MATERIAL");
 
+  d_material->display();
+
   bool db = false;
 
   for (int gg = 0; gg < d_number_active_groups; gg++)
@@ -132,6 +134,7 @@ void DiffusionLossOperator::build()
       size_t m = mat_map[cell];
 
       double cell_dc = d_material->diff_coef(m, g);
+      std::cout << " m=" << m << " g=" << g << " dc=" << cell_dc << std::endl;
       Assert(cell_dc > 0.0);
       double cell_sr = d_material->sigma_t(m, g) -
                        d_material->sigma_s(m, g, g);

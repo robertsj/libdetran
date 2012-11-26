@@ -62,8 +62,11 @@ MGDiffusionSolver<D>::MGDiffusionSolver(SP_state                  state,
 template <class D>
 void MGDiffusionSolver<D>::refresh()
 {
+  // Easiest approach for now is simply to rebuild the operator.  This
+  // may be less than ideal, but the cost of building a diffusion operator
+  // should almost always be a small fraction of the solver cost.
   d_M = new DiffusionLossOperator(d_input, d_material, d_mesh,
-                                  d_multiply, d_adjoint, d_keff);
+                                  d_multiply, 0, d_adjoint, d_keff);
 }
 
 //---------------------------------------------------------------------------//
@@ -83,6 +86,8 @@ void MGDiffusionSolver<D>::solve(const double keff)
   d_Q->set(0.0);
   build_volume_source();
   build_boundary_source();
+
+  d_Q->print_matlab("Q.out");
 
   // Solve the problem
   d_solver->solve(*d_Q, *d_phi);

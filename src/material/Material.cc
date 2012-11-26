@@ -394,6 +394,10 @@ void Material::material_display()
     for (size_t g = 0; g < d_number_groups; g++)
       printf("%13.10f ", chi(m, g));
 
+    printf("\n  dc     ");
+    for (size_t g = 0; g < d_number_groups; g++)
+      printf("%13.10f ", diff_coef(m, g));
+
     printf("\n");
     for (size_t gp = 0; gp < d_number_groups; gp++)
     {

@@ -165,7 +165,11 @@ public:
   /// Update operators, etc.
   void update()
   {
-    // finish me
+    // Preconditions
+    Require(d_solver);
+
+    // Refresh the solver
+    d_solver->refresh();
   }
 
   /// @name Getters

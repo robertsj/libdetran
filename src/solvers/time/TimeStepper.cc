@@ -319,6 +319,9 @@ void TimeStepper<D>::update_precursors(const double t,
   // Update the materials to eliminate the synthetic component.
   d_material->update(t, dt, order, false);
 
+  // Update the solver
+  d_solver->update();
+
   // Update the fission density.
   d_fissionsource->update();
   const State::moments_type &fd = d_fissionsource->density();
