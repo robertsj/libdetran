@@ -67,7 +67,7 @@ public:
   typedef std::vector<SP_tdsource>                        vec_source;
   typedef SyntheticSource::SP_externalsource              SP_syntheticsource;
   typedef SyntheticSource::vec_states                     vec_states;
-  typedef SyntheticSource::SP_precursors                  SP_precursors;
+  typedef Precursors::SP_precursors                       SP_precursors;
   typedef SyntheticSource::vec_precursors                 vec_precursors;
   typedef FissionSource::SP_fissionsource                 SP_fissionsource;
   typedef detran_utilities::vec_int                       vec_int;
@@ -104,6 +104,10 @@ public:
 
   /// Getters
   SP_state state() {return d_state;}
+  SP_quadrature quadrature() {return d_quadrature;}
+  size_t monitor_level() const {return d_monitor_level;}
+  SP_precursors precursor() {return d_precursor;}
+  SP_fissionsource fissionsource() {return d_fissionsource;}
 
   /// Set a user-defined monitor function.
   void set_monitor(function_pointer monitor, void* monitor_data = NULL)
@@ -112,6 +116,7 @@ public:
     d_monitor = monitor;
     d_monitor_data = monitor_data;
   }
+
 
 private:
 
@@ -167,6 +172,8 @@ private:
   SP_mg_solver d_solver;
   /// IMP negative flux fixup.
   bool d_fixup;
+  /// No extrapolation flag (for first steps of high order BDF)
+  bool d_no_extrapolation;
   /// Iteration count for nonlinear problems
   size_t d_iteration;
   /// Residual norm
@@ -175,6 +182,8 @@ private:
   function_pointer d_monitor;
   /// Monitor data
   void* d_monitor_data;
+  /// Monitor level (only on or off right now)
+  size_t d_monitor_level;
 
   //-------------------------------------------------------------------------//
   // IMPLEMENTATION
@@ -184,7 +193,7 @@ private:
   void initialize_precursors();
 
   /// Given the new state and previous precursor vectors, compute new precursor
-  void update_precursors(const double dt);
+  void update_precursors(const double t, const double dt, const size_t order);
 
   /**
    *  @brief Cycle the states and precursors.

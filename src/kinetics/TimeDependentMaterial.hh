@@ -102,13 +102,15 @@ public:
 
   /**
    *  @brief Update the materials
-   *  @param t      New time (in seconds)
-   *  @param dt     Time step (in seconds)
-   *  @param order  BDF order
+   *  @param t          New time (in seconds)
+   *  @param dt         Time step (in seconds)
+   *  @param order      BDF order
+   *  @paral synthetic  Flag for creating a synthetic material
    */
   void update(const double t,
               const double dt,
-              const size_t order = 1);
+              const size_t order,
+              const bool flag = true);
 
 protected:
 

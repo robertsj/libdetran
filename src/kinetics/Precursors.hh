@@ -75,6 +75,8 @@ public:
     return d_number_cells;
   }
 
+  void display() const;
+
 private:
 
   /// Number of precursor groups

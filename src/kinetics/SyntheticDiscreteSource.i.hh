@@ -108,7 +108,7 @@ inline void SyntheticDiscreteSource::build(const double dt,
           for (int cell = 0; cell < d_mesh->number_cells(); ++cell)
           {
             d_source[g][angle][cell] +=
-                psi_factor * states[j]->psi(g, o, a)[cell];
+              psi_factor * states[j]->psi(g, o, a)[cell];
             //std::cout << " j = " << j << " psi = " << states[j]->psi(g, o, a)[cell] << std::endl;
           }
 
@@ -117,10 +117,17 @@ inline void SyntheticDiscreteSource::build(const double dt,
           {
             for (int i = 0; i < np; ++i)
             {
-              double C_factor = a_j * d_norm * d_material->lambda(i) /
+              double C_factor =  a_j * d_norm * d_material->lambda(i) /
                                 (a_0 + dt * d_material->lambda(i));
+//              std::cout << " Cfactor=" << C_factor
+//                        << " den=" << a_0 + dt * d_material->lambda(i)
+//                        << " num=" << a_j * d_norm * d_material->lambda(i)
+//                        << " aj=" << a_j
+//                        << " lam=" << d_material->lambda(i)
+//                        << " nrm=" << d_norm << std::endl;
               for (int cell = 0; cell < d_mesh->number_cells(); ++cell)
               {
+                //std::cout << " C=" <<precursors[j]->C(i)[cell] <<std::endl;
                 d_source[g][angle][cell] += C_factor *
                   d_material->chi_d(mt[cell], i, g) *
                     precursors[j]->C(i)[cell];

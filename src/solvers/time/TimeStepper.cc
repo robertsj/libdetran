@@ -37,8 +37,10 @@ TimeStepper<D>::TimeStepper(SP_input       input,
   , d_scheme(BDF1)
   , d_do_output(false)
   , d_fixup(false)
+  , d_no_extrapolation(false)
   , d_residual_norm(0.0)
   , d_monitor(NULL)
+  , d_monitor_level(1)
 {
   // Preconditions
   Require(d_input);
@@ -106,7 +108,7 @@ TimeStepper<D>::TimeStepper(SP_input       input,
   if (d_input->check("ts_max_steps"))
   {
    int max_steps = d_input->template get<int>("ts_max_steps");
-   Assert(max_steps > 0);
+   Assert(max_steps >= 0);
    if (d_number_steps > max_steps) d_number_steps = max_steps;
   }
 
@@ -116,6 +118,9 @@ TimeStepper<D>::TimeStepper(SP_input       input,
   Require(d_scheme < END_TIME_SCHEMES);
   d_order = d_scheme;
   if (d_scheme == 0) d_order++;
+
+  if (d_input->check("ts_no_extrapolation") and d_scheme != IMP)
+    d_no_extrapolation = d_input->template get<int>("ts_no_extrapolation");
 
   //-------------------------------------------------------------------------//
   // SETUP STATE AND PRECURSOR VECTORS
@@ -128,14 +133,14 @@ TimeStepper<D>::TimeStepper(SP_input       input,
     d_states[i] = new State(d_input, d_mesh, d_quadrature);
     if (d_multiply)
     {
-      d_precursors[i] = new Precursors(d_mesh->number_cells(),
-                                       d_material->number_precursor_groups());
+      d_precursors[i] = new Precursors(d_material->number_precursor_groups(),
+                                       d_mesh->number_cells());
     }
   }
   if (d_multiply)
   {
-    d_precursor = new Precursors(d_mesh->number_cells(),
-                                 d_material->number_precursor_groups());
+    d_precursor = new Precursors(d_material->number_precursor_groups(),
+                                 d_mesh->number_cells());
   }
 
   //-------------------------------------------------------------------------//
@@ -144,6 +149,11 @@ TimeStepper<D>::TimeStepper(SP_input       input,
 
   // Default monitor
   set_monitor(ts_default_monitor<D>, NULL);
+
+  if (d_input->check("ts_monitor_level"))
+  {
+    d_monitor_level = d_input->template get<int>("ts_monitor_level");
+  }
 
   if (d_input->check("ts_output"))
   {
@@ -175,15 +185,23 @@ void TimeStepper<D>::solve(SP_state initial_state)
 
   // Set the state and initialize the precursors if necessary.  For
   // now, we assume steady state for the first order steps.
+  // Update the material, sources, and solver
+  d_material->update(0.0, 0, 1, false);
   d_state = initial_state;
+  *d_solver->state() = *d_state;
+
   initialize_precursors();
   *d_states[0] = *d_state;
+  if (d_precursors.size()) *d_precursors[0] = *d_precursor;
 
   // Output the initial state
   if (d_do_output) d_silooutput->write_time_flux(0, d_state, true);
 
   // Set the solver
   d_solver->set_solver();
+
+  // Call the monitor, if present.
+  if (d_monitor_level) d_monitor(d_monitor_data, this, 0, 0.0, d_dt, 1);
 
   // Perform time steps
   double  t = 0.0;
@@ -197,9 +215,11 @@ void TimeStepper<D>::solve(SP_state initial_state)
     if (i + 1 < d_order) order = i + 1;
 
     // Determine extrapolation flag.  By default, we extrapolate
-    // if doing the first step of a higher order BDF method.
+    // if doing the first step of a higher order BDF method.  The
+    // user can explicitly turn extrapolation off.
     bool flag = false;
     if (d_scheme == IMP or (order == 1 and d_order > 1)) flag = true;
+    if (d_no_extrapolation) flag = false;
 
     // Set the temporary time step
     dt = d_dt;
@@ -214,7 +234,7 @@ void TimeStepper<D>::solve(SP_state initial_state)
       // >>> check convergence <<<
 
       // Call the monitor, if present.
-      if (d_monitor) d_monitor(d_monitor_data, this, i, t, dt, iteration);
+      if (d_monitor_level) d_monitor(d_monitor_data, this, i, t, dt, iteration);
 
     } // end iterations
 
@@ -233,14 +253,14 @@ void TimeStepper<D>::step(const double t,
                           const bool   flag)
 {
   // Update the material, sources, and solver
-  d_material->update(t, dt, order);
+  d_material->update(t, dt, order, true);
   update_sources(t, dt, order);
   d_solver->update();
 
   // Solve the MG problem for the new state and update the precursors
   d_solver->solve();
   d_state = d_solver->state();
-  update_precursors(dt);
+  update_precursors(t, dt, order);
   if (flag) extrapolate();
 
   // Cycle the previous iterates and copy the current solution
@@ -257,8 +277,8 @@ void TimeStepper<D>::initialize_precursors()
   // Preconditions
   Require(d_state);
 
-  // Skip if we have no multiplication
-  if (!d_multiply) return;
+  // Skip if we have no multiplication or if we have no precursors
+  if (!d_multiply or !d_material->number_precursor_groups()) return;
   Assert(d_precursors.size() > 0);
 
   /*
@@ -268,35 +288,41 @@ void TimeStepper<D>::initialize_precursors()
    *  The easiest way to accomplish this is with the
    *  fission source
    */
-  d_fissionsource->update();
-  const State::moments_type &fd = d_fissionsource->density();
 
+
+  const State::moments_type &fd = d_fissionsource->density();
   const vec_int &mt = d_mesh->mesh_map("MATERIAL");
 
-  for (int j = 0; j < d_order - 1; ++j)
+  for (int i = 0; i < d_material->number_precursor_groups(); ++i)
   {
-    for (int i = 0; i < d_material->number_precursor_groups(); ++i)
+    double inv_lambda = 1.0 / d_material->lambda(i);
+    for (int cell = 0; cell < d_mesh->number_cells(); ++cell)
     {
-      double inv_lambda = 1.0 / d_material->lambda(i);
-      for (int cell = 0; cell < d_mesh->number_cells(); ++cell)
-      {
-        d_precursors[j]->C(i)[cell] =
-          inv_lambda * d_material->beta(mt[cell], i) * fd[cell];
-      }
+      d_precursor->C(i)[cell] =
+        inv_lambda * d_material->beta(mt[cell], i) * fd[cell];
+      printf("%16.9f %16.9f %16.9f %16.9f \n", fd[cell], inv_lambda, d_material->beta(mt[cell], i), d_precursor->C(i)[cell]);
     }
   }
+
 
 }
 
 //---------------------------------------------------------------------------//
 template <class D>
-void TimeStepper<D>::update_precursors(const double dt)
+void TimeStepper<D>::update_precursors(const double t,
+                                       const double dt,
+                                       const size_t order)
 {
   // Skip if we have no multiplication
-  if (!d_multiply) return;
+  if (!d_multiply or !d_material->number_precursor_groups()) return;
+
+  // Update the materials to eliminate the synthetic component.
+  d_material->update(t, dt, order, false);
 
   // Update the fission density.
   d_fissionsource->update();
+  const State::moments_type &fd = d_fissionsource->density();
+  const vec_int &mt = d_mesh->mesh_map("MATERIAL");
 
   /*
    *  The precursors are defined via
@@ -306,12 +332,10 @@ void TimeStepper<D>::update_precursors(const double dt)
    *   (a_j/Delta + lambda)*C_i(n+1) = -(1/Delta) sum_{j=1}^{m} a_J * C_i(n+j+1) + beta_i * sum_g X_ig F_g phi_g
    */
 
-  const detran_utilities::vec_int &mt = d_mesh->mesh_map("MATERIAL");
-
   for (size_t i = 0; i < d_material->number_precursor_groups(); ++i)
   {
     double lambda = d_material->lambda(i);
-    double A = 1.0 / (bdf_coefs[d_order-1][0] / dt + lambda);
+    double A = dt / (bdf_coefs[order-1][0]  + dt * lambda);
 
     for (int cell = 0; cell < d_mesh->number_cells(); ++cell)
     {
@@ -319,13 +343,12 @@ void TimeStepper<D>::update_precursors(const double dt)
       double value = 0.0;
       for (size_t g = 0; g < d_material->number_groups(); ++g)
       {
-        value += A * d_material->beta(mt[cell], i) *
-                 d_material->chi_d(mt[cell], i, g);
+        value +=  A * d_material->beta(mt[cell], i) * fd[cell];
       }
       // Add previous time step contributions
-      for (size_t j = 1; j <= d_order; ++j)
+      for (size_t j = 1; j <= order; ++j)
       {
-        value += (-A / dt) * bdf_coefs[d_order-1][j] *
+        value += (A / dt) * bdf_coefs[order-1][j] *
                  d_precursors[j-1]->C(i)[cell];
       }
       d_precursor->C(i)[cell] = value;
@@ -369,9 +392,9 @@ void TimeStepper<D>::update_sources(const double t,
   d_syntheticsource->build(dt, d_states, d_precursors, order);
 //  for (int cell = 0; cell < d_mesh->number_cells(); ++cell)
 //  {
-//    std::cout << " q[" << cell << "]=" << d_syntheticsource->source(cell, 0, 0)
-//              << std::endl;
+//    printf(" q[%3i]= %16.12f \n", cell, d_syntheticsource->source(cell, 0, 0));
 //  }
+
   // Update the external sources.
   for (int i = 0; i < d_sources.size(); ++i)
   {
@@ -426,9 +449,18 @@ void TimeStepper<D>::extrapolate()
     } // end group
   }
 
-  if (d_multiply)
+  // We extrapolate the precursors.  It may be better to
+  // recompute the precursors directly from the extrapolated
+  // flux.
+  if (d_multiply and d_precursor->number_precursor_groups())
   {
-    // update precursors
+    for (size_t i = 0; i < d_precursor->number_precursor_groups(); ++i)
+    {
+      Precursors::vec_dbl &C = d_precursor->C(i);
+      const Precursors::vec_dbl &C0 = d_precursors[0]->C(i);
+      for (size_t i = 0; i < d_mesh->number_cells(); ++i)
+        C[i] = 2.0 * C[i] - C0[i];
+    } // end group
   }
 
 }
@@ -443,6 +475,7 @@ void ts_default_monitor(void* data,
                         int it)
 {
   Require(ts);
+  if (!ts->monitor_level()) return;
   if (step == 0 and it == 1)
   {
     printf(" step        t       dt   iter \n");

@@ -84,7 +84,7 @@ int test_LinearMaterial(int argc, char *argv[])
   materials[0]->display();
   materials[1]->display();
 
-  poo.update(5.0, 0.1);
+  poo.update(5.0, 0.1, 1, true);
   poo.display();
   LinearMaterial::SP_material
     mat(new LinearMaterial(times, materials));

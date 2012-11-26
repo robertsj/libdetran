@@ -179,6 +179,9 @@ public:
                                 const State::vec_moments_type &phi,
                                 State::moments_type &source);
 
+  /// Get the state
+  SP_state state() {return d_state;}
+
 private:
 
   //-------------------------------------------------------------------------//

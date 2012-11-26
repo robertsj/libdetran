@@ -39,10 +39,12 @@ setCallbackMethod(1, // this is a *unique* identifier
 %include "TimeDependentMaterial.hh"
 %include "PyTimeDependentMaterial.hh"
 %include "LinearMaterial.hh"
+%include "Precursors.hh"
 %template(KineticsMaterialSP)   detran_utilities::SP<detran::KineticsMaterial>;
 %template(TDMaterialSP)         detran_utilities::SP<detran::TimeDependentMaterial>;
 %template(PYTDMaterialSP)       detran_utilities::SP<detran::PyTimeDependentMaterial>;
 %template(vec_material)         std::vector<detran_utilities::SP<detran::KineticsMaterial> >;
+%template(PrecursorsSP)         detran_utilities::SP<detran::Precursors>;
 
 // Downcasts and Upcasts for generic routines
 %inline

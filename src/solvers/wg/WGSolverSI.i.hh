@@ -79,11 +79,11 @@ void WGSolverSI<D>::solve(const size_t g)
            iteration, error, d_sweeper->number_sweeps());
   }
 
-  if (error > d_tolerance)
-  {
-    detran_utilities::warning(detran_utilities::SOLVER_CONVERGENCE,
-      "    WGSolverSI did not converge.");
-  }
+//  if (error > d_tolerance)
+//  {
+//    detran_utilities::warning(detran_utilities::SOLVER_CONVERGENCE,
+//      "    WGSolverSI did not converge.");
+//  }
 
   // Update the state with the new flux.
   d_state->phi(g) = phi;

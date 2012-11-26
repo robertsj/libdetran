@@ -29,6 +29,8 @@ namespace detran
  *      (\mathbf{I} - \mathbf{C}^{-1} \mathbf{S}) \, ,
  *  @f]
  *  where \f$ \mathbf{C} \f$ is the one group diffusion operator.
+ *
+ *  @todo Include fission if treated like scatter
  */
 
 class PC_DSA: public WGPreconditioner

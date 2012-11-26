@@ -49,8 +49,8 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Constructor
+  /**
+   *  @brief Constructor
    *  @param mesh           Pointer to mesh
    *  @param material       Pointer to material
    *  @param state          Pointer to state vector
@@ -61,13 +61,13 @@ public:
   // PUBLIC INTERFACE
   //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Build the within group scattering source.
+  /**
+   *  @brief Build the within group scattering source.
    *
    *  This constructs
-   *  \f[
+   *  @f[
    *      q_g = \mathbf{S}_{gg} \phi_g \, .
-   *  \f]
+   *  @f]
    *
    *  @param   g        Group for this problem
    *  @param   phi      Const reference to group flux.
@@ -78,13 +78,13 @@ public:
                                  const moments_type &phi,
                                  moments_type &source);
 
-  /*!
-   *  \brief Build the in-scatter source.
+  /**
+   *  @brief Build the in-scatter source.
    *
    *  This constructs
-   *  \f[
+   *  @f[
    *      q_g = \sum^G_{g',g\ne g'} \mathbf{S}_{gg'}\phi_{g'} \, .
-   *  \f]
+   *  @f]
    *
    *  This *assumes* the state is up-to-date.
    *
@@ -96,13 +96,13 @@ public:
    */
   void build_in_scatter_source(const size_t g,
                                moments_type &source);
-  /*!
-   *  \brief Build the downscatter source.
+  /**
+   *  @brief Build the downscatter source.
    *
    *  This constructs
-   *  \f[
+   *  @f[
    *      q_g = \sum^{g_{cutoff}_{g'} \mathbf{S}_{gg'}\phi_{g'} \, .
-   *  \f]
+   *  @f]
    *
    *  This \e assumes the state is up-to-date.
    *
@@ -118,15 +118,15 @@ public:
                                 const size_t g_cutoff,
                                 moments_type &source);
 
-  /*!
-   *  \brief Build the total scatter source.
+  /**
+   *  @brief Build the total scatter source.
    *
    *  In some cases, including all scattering is required, as is the case
    *  when performing multigroup Krylov solves.  This constructs
    *
-   *  \f[
+   *  @f[
    *      q_g = \sum^G_{g'} \mathbf{S}_{gg'}\phi_{g'} \, .
-   *  \f]
+   *  @f]
    *
    *  Because Gauss-Seidell can be used to solve downscatter blocks,
    *  a cutoff group is passed to exclude the solved portion of

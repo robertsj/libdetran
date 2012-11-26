@@ -30,7 +30,8 @@ TimeDependentMaterial(const size_t number_materials,
 //---------------------------------------------------------------------------//
 void TimeDependentMaterial::update(const double t,
                                    const double dt,
-                                   const size_t order)
+                                   const size_t order,
+                                   const bool synthetic)
 {
   // Store time step data
   d_t     = t;
@@ -45,25 +46,42 @@ void TimeDependentMaterial::update(const double t,
   double a_0 = bdf_coefs[order - 1][0];
 
   // Add synthetic components
-  for (int m = 0; m < number_materials(); ++m)
+  if (synthetic)
   {
-    for (int g = 0; g < number_groups(); ++g)
+    for (int m = 0; m < number_materials(); ++m)
     {
-      // synthetic total cross section
-      d_sigma_t[g][m] += a_0 / (d_velocity[g] * d_dt);
-
-      // synthetic prompt chi spectrum
-      double chi = (1.0 - beta_total(m)) * d_chi[g][m];
-      for (int i = 0; i < d_number_precursor_groups; ++i)
+      for (int g = 0; g < number_groups(); ++g)
       {
-        double den = a_0 + d_dt * d_lambda[i];
-        chi += d_lambda[i] * d_chi_d[g][i][m] * dt * d_beta[i][m];
-      }
-      // note scaling by the eigenvalue
-      d_chi[g][m] = chi / d_kcrit;
+        // synthetic total cross section
+        d_sigma_t[g][m] += a_0 / (d_velocity[g] * dt);
 
-    } // end groups
-  } // end materials
+        // synthetic prompt chi spectrum
+        double chi = (1.0 - beta_total(m)) * d_chi[g][m];
+        for (int i = 0; i < d_number_precursor_groups; ++i)
+        {
+          double den = a_0 + dt * d_lambda[i];
+          chi += d_lambda[i] * d_chi_d[g][i][m] * dt * d_beta[i][m] / den;
+        }
+        d_chi[g][m] = chi;
+        // synthetic fission source
+        d_sigma_f[g][m] /= d_kcrit;
+      } // end groups
+    } // end materials
+  }
+  else
+  {
+    // Just scale by the eigenvalue.  This must be done
+    // to get the right precursor concentration for initial
+    // conditions.
+    for (int m = 0; m < number_materials(); ++m)
+    {
+      for (int g = 0; g < number_groups(); ++g)
+      {
+        d_sigma_f[g][m] /= d_kcrit;
+        //d_chi[g][m] *= (1.0 - beta_total(m));
+      }
+    }
+  }
 
   // Finalize
   finalize();
