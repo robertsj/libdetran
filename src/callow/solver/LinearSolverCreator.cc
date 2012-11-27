@@ -26,13 +26,13 @@ LinearSolverCreator::Create(SP_db db)
 
   // Set defaults
   std::string solver_type = "gmres";
-  double atol = 1e-5;
-  double rtol = 1e-5;
+  double atol = 1e-8;
+  double rtol = 1e-8;
   int maxit   = 100;
   int monitor_level = 0;
   bool monitor_diverge = false;
   double omega = 1.0;
-  int restart = 20;
+  int restart = 30;
 
   if (db)
   {

@@ -94,21 +94,21 @@ setCallbackMethod(1, // this is a *unique* identifier
       
       # Create a material smart pointer.  It is returned as a TDMat.
       mat = PyTimeDependentMaterial.Create(nm, ng, np, name)
-      self.d_material = mat
+      self.material = mat
       
       # Set the material update function (the user *must* implement this).
       # Note, we need to upcast to PYTDMat to do so.
-      upcast(self.d_material).set_update_impl(self.update_material)
+      upcast(self.material).set_update_impl(self.update_material)
   
     def material(self) :
       ''' Return the material object
       '''
-      return self.d_material
+      return self.material
           
     def update(self, t, dt, order) :
       ''' Update the material for this time, step, and order
       ''' 
-      self.d_material.update(t, dt, order)
+      self.material.update(t, dt, order)
           
     def update_material(self) :
       ''' User-defined update function

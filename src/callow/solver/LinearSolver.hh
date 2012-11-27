@@ -191,20 +191,32 @@ protected:
   // DATA
   //-------------------------------------------------------------------------//
 
+  /// Solver name (e.g. richardson)
   std::string d_name;
+  /// Absolute tolerance on residual norm
   double d_absolute_tolerance;
+  /// Relative tolerance on residual norm
   double d_relative_tolerance;
+  /// Maximum number of iterations
   int d_maximum_iterations;
+  /// Vector of residual norms at each iteration
   std::vector<double> d_residual;
+  /// Number of iterations performed
   int d_number_iterations;
+  /// Linear operator
   SP_matrix d_A;
-  /// preconditioner
+  /// Preconditioner
   SP_preconditioner d_P;
-  /// preconditioner side (one only, and left by default)
+  /// Preconditioner side (one only, and left by default)
   int d_pc_side;
+  /// Monitor level (0 = none, higher yields more output)
   int d_monitor_level;
+  /// Check whether the residuals grow
   bool d_monitor_diverge;
+  /// Which vector norm to use?
   int d_norm_type;
+  /// Parameter database
+  SP_db d_db;
 
   //-------------------------------------------------------------------------//
   // IMPLEMENTATION

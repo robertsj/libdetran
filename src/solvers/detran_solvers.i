@@ -7,6 +7,7 @@
 //---------------------------------------------------------------------------//
 
 %include "detran_kinetics.i"
+%include "detran_utilities.i"
 %include callback.i 
 
 // Set the callback setter for time stepping manager.
@@ -33,7 +34,7 @@ setCallbackMethod(4,
                   (ts, step, t, dt, it), 
                   1)
                   
-                  
+%include "TransportManager.hh"                  
 
 %include "FixedSourceManager.hh"
 %template(Fixed1D) detran::FixedSourceManager<detran::_1D>;

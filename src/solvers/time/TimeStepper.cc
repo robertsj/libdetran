@@ -206,13 +206,13 @@ void TimeStepper<D>::solve(SP_state initial_state)
   // Perform time steps
   double  t = 0.0;
   double dt = 0.0;
-  for (size_t i = 0; i < d_number_steps; ++i)
+  for (size_t i = 1; i <= d_number_steps; ++i)
   {
     t += d_dt;
 
     // Determine the order.
     size_t order = d_order;
-    if (i + 1 < d_order) order = i + 1;
+    if (i < d_order) order = i;
 
     // Determine extrapolation flag.  By default, we extrapolate
     // if doing the first step of a higher order BDF method.  The

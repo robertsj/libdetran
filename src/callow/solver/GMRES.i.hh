@@ -154,7 +154,7 @@ inline void GMRES::solve_impl(const Vector &b, Vector &x0)
         //  A*v[k], then information might be lost so reorthogonalize.  the
         //  delta of 0.001 is what kelley uses in his test code.
 
-        cout << " reorthog ... " << endl;
+        if (d_monitor_level > 1) cout << " reorthog ... " << endl;
         for (int j = 0; j < k; ++j)
         {
           double hr = v[j].dot(v[k+1]);

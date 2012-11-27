@@ -52,13 +52,17 @@ set_operators(SP_matrix A,
   d_A = A;
   Ensure(d_A->number_rows() == d_A->number_columns());
 
+  // Set the db, if present.  Otherwise, d_db is unchanged, which
+  // lets us set new operators but maintain old parameters.
+  if (db) d_db = db;
+
   std::string pc_type = "";
   int pc_side = LEFT;
 
-  if (db)
+  if (d_db)
   {
-    if(db->check("pc_type"))
-      pc_type = db->get<std::string>("pc_type");
+    if(d_db->check("pc_type"))
+      pc_type = d_db->get<std::string>("pc_type");
     if (pc_type == "ilu0")
     {
       d_P = new PCILU0(d_A);
@@ -67,8 +71,8 @@ set_operators(SP_matrix A,
     {
       d_P = new PCJacobi(d_A);
     }
-    if(db->check("pc_side"))
-      pc_side = db->get<int>("pc_side");
+    if(d_db->check("pc_side"))
+      pc_side = d_db->get<int>("pc_side");
   }
 
 }

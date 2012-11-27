@@ -26,6 +26,30 @@ namespace detran
 
 //---------------------------------------------------------------------------//
 template <class D>
+FixedSourceManager<D>::FixedSourceManager(int argc,
+                                          char *argv[],
+                                          SP_input    input,
+                                          SP_material material,
+                                          SP_mesh     mesh,
+                                          bool        multiply,
+                                          bool        fission)
+  : TransportManager(argc, argv)
+  , d_input(input)
+  , d_material(material)
+  , d_mesh(mesh)
+  , d_multiply(multiply)
+  , d_fission(multiply or fission)
+  , d_is_setup(false)
+  , d_is_ready(false)
+{
+  // Preconditions
+  Require(d_input);
+  Require(d_material);
+  Require(d_mesh);
+}
+
+//---------------------------------------------------------------------------//
+template <class D>
 FixedSourceManager<D>::FixedSourceManager(SP_input    input,
                                           SP_material material,
                                           SP_mesh     mesh,
@@ -43,9 +67,8 @@ FixedSourceManager<D>::FixedSourceManager(SP_input    input,
   Require(d_input);
   Require(d_material);
   Require(d_mesh);
-
-  // Postconditions
 }
+
 
 //---------------------------------------------------------------------------//
 template <class D>

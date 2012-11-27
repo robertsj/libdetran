@@ -27,6 +27,31 @@ namespace detran
 
 //---------------------------------------------------------------------------//
 template <class D>
+EigenvalueManager<D>::EigenvalueManager(int argc,
+                                        char *argv[],
+                                        SP_input    input,
+                                        SP_material material,
+                                        SP_mesh     mesh)
+  : TransportManager(argc, argv)
+  , d_discretization(0)
+{
+  // Preconditions
+  Require(input);
+  Require(material);
+  Require(mesh);
+
+  /// Create the fixed source manager
+  d_mg_solver = new FixedSourceManager<D>(input, material, mesh, false, true);
+  d_mg_solver->setup();
+  d_mg_solver->set_solver();
+  d_discretization = d_mg_solver->discretization();
+
+  // Postconditions
+  Ensure(d_mg_solver);
+}
+
+//---------------------------------------------------------------------------//
+template <class D>
 EigenvalueManager<D>::EigenvalueManager(SP_input    input,
                                         SP_material material,
                                         SP_mesh     mesh)

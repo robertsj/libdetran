@@ -10,6 +10,7 @@
 #ifndef detran_FIXEDSOURCEMANAGER_HH_
 #define detran_FIXEDSOURCEMANAGER_HH_
 
+#include "TransportManager.hh"
 #include "mg/MGSolver.hh"
 #include "angle/Quadrature.hh"
 
@@ -29,7 +30,7 @@ namespace detran
  *  expand solutions in fission generation series.
  */
 template <class D>
-class FixedSourceManager
+class FixedSourceManager: TransportManager
 {
 
 public:
@@ -76,16 +77,31 @@ public:
 
   /**
    *  @brief Constructor
+   *  @param argc       command line count
+   *  @param argv       command line values
    *  @param input      parameter database
    *  @param material   material database
    *  @param mesh       mesh definition
    *  @param multiply   flag for multiplying fixed source problem
+   *  @param fission    ensure a fission source is built (e.g. for eigen)
    */
+  FixedSourceManager(int argc,
+                     char *argv[],
+                     SP_input    input,
+                     SP_material material,
+                     SP_mesh     mesh,
+                     bool        multiply = false,
+                     bool        fission = false);
+
+  /// Constructor (without command line)
   FixedSourceManager(SP_input    input,
                      SP_material material,
                      SP_mesh     mesh,
                      bool        multiply = false,
                      bool        fission = false);
+
+  /// Virtual destructor
+  virtual ~FixedSourceManager(){}
 
   //-------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS

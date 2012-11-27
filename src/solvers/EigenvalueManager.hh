@@ -10,6 +10,7 @@
 #ifndef detran_EIGENVALUEMANAGER_HH_
 #define detran_EIGENVALUEMANAGER_HH_
 
+#include "TransportManager.hh"
 #include "eigen/Eigensolver.hh"
 
 namespace detran
@@ -20,7 +21,7 @@ namespace detran
  *  @brief Manage solution of a multigroup eigenvalue problem
  */
 template <class D>
-class EigenvalueManager
+class EigenvalueManager: public TransportManager
 {
 
 public:
@@ -47,13 +48,25 @@ public:
 
   /**
    *  @brief Constructor
+   *  @param argc       command line count
+   *  @param argv       command line values
    *  @param input      parameter database
    *  @param material   material database
    *  @param mesh       mesh definition
    */
+  EigenvalueManager(int argc,
+                    char *argv[],
+                    SP_input    input,
+                    SP_material material,
+                    SP_mesh     mesh);
+
+  /// Constructor (without command line)
   EigenvalueManager(SP_input    input,
                     SP_material material,
                     SP_mesh     mesh);
+
+  /// Virtual destructor
+  virtual ~EigenvalueManager(){}
 
   //-------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS

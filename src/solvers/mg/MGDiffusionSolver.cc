@@ -46,7 +46,7 @@ MGDiffusionSolver<D>::MGDiffusionSolver(SP_state                  state,
                                     0,          // Full energy spectrum
                                     d_adjoint,
                                     1.0);       // Default to k=1
-  d_M->print_matlab("M.out");
+
   // Create solver and set operator.
   SP_input db;
   if (d_input->check("outer_solver_db"))
@@ -67,34 +67,39 @@ void MGDiffusionSolver<D>::refresh()
   // should almost always be a small fraction of the solver cost.
   d_M = new DiffusionLossOperator(d_input, d_material, d_mesh,
                                   d_multiply, 0, d_adjoint, d_keff);
+  d_solver->set_operators(d_M);
+
 }
 
 //---------------------------------------------------------------------------//
 template <class D>
 void MGDiffusionSolver<D>::solve(const double keff)
 {
-
+  // Note, if keff is new, the client is responsible to refresh
+  // the solver.
   d_keff = keff;
-
-  // Update the operator.
-  // \todo Is there an easy way to avoid building the matrix again?  Does it
-  //       matter?
-  //d_M = new DiffusionLossOperator(d_input, d_material, d_mesh,
-  //                                d_multiply, d_adjoint, keff);
 
   // Reset and build the right hand side.
   d_Q->set(0.0);
   build_volume_source();
   build_boundary_source();
 
-  d_Q->print_matlab("Q.out");
-
   // Solve the problem
   d_solver->solve(*d_Q, *d_phi);
+//  d_M->print_matlab("M.out");
+//  d_phi->print_matlab("phi.out");
+//  d_M->display();
+//  d_Q->display();
+//  d_phi->display();
+//  d_M->multiply(*d_phi, *d_Q);
+//  d_Q->display();
 
+//  THROW("done");
   // Fill the state and boundary
   fill_state();
   fill_boundary();
+
+  //d_state->display();
 }
 
 //---------------------------------------------------------------------------//

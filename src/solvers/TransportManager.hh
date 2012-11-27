@@ -11,9 +11,6 @@
 #define detran_TRANSPORTMANAGER_HH_
 
 #include "callow/utils/Initialization.hh"
-#include "utilities/InputDB.hh"
-#include "material/Material.hh"
-#include "geometry/Mesh.hh"
 
 namespace detran
 {
@@ -31,29 +28,18 @@ class TransportManager
 public:
 
   //-------------------------------------------------------------------------//
-  // ENUMERATION
-  //-------------------------------------------------------------------------//
-
-  // Basic spatial discretization categories
-  enum EQTYPES
-  {
-    SN, MOC, DIFF, END_EQTYPES
-  };
-
-  //-------------------------------------------------------------------------//
-  // TYPEDEFS
-  //-------------------------------------------------------------------------//
-
-  typedef detran_utilities::InputDB::SP_input           SP_input;
-  typedef detran_geometry::Mesh::SP_mesh                SP_mesh;
-  typedef detran_material::Material::SP_material        SP_material;
-
-  //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  /// Constructor.  This initializes all external libraries.
-  TransportManager(int argc, char** argv)
+  /**
+   *  @brief Constructor
+   *
+   *  Initializes external libraries
+   *
+   *  @param argc       command line count
+   *  @param argv       command line values
+   */
+  TransportManager(int argc, char *argv[])
     : d_flag(true)
   {
     callow_initialize(argc, argv);
@@ -76,12 +62,6 @@ private:
 
   /// Flag for initialization.
   bool d_flag;
-  /// User input
-  SP_input d_input;
-  /// Material database
-  SP_material d_material;
-  /// Mesh
-  SP_mesh d_mesh;
 
 };
 

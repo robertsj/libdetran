@@ -77,6 +77,8 @@ DiffusionEigensolver<D>::DiffusionEigensolver(SP_input    input,
   d_F = new DiffusionGainOperator(d_input, d_material, d_mesh, d_adjoint);
   d_M = new DiffusionLossOperator(d_input, d_material, d_mesh,
                                   false, d_adjoint);
+  d_F->print_matlab("eigF.out");
+  d_M->print_matlab("eigM.out");
 
   // Create solver
   d_solver = Creator_T::Create(d_solver_type,

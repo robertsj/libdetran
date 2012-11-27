@@ -70,24 +70,33 @@ int test_TimeStepper(int argc, char *argv[])
   InputDB::SP_input inp(new InputDB("time stepper test"));
   inp->put<int>("dimension",                1);
   inp->put<int>("number_groups",            1);
-  inp->put<std::string>("equation",         "sc");
+  inp->put<std::string>("equation",         "dd");
   inp->put<std::string>("bc_west",          "reflect");
   inp->put<std::string>("bc_east",          "reflect");
   inp->put<double>("ts_final_time",         1.0); // 0.95162581964040427
   inp->put<double>("ts_step_size",          0.1);
   inp->put<int>("ts_max_steps",             10);
   inp->put<int>("ts_scheme",                TS_1D::BDF1);
-  inp->put<int>("ts_discrete",              1);
+  inp->put<int>("ts_discrete",              0);
   inp->put<int>("ts_output",                0);
   inp->put<int>("ts_monitor_level",         1);
-  inp->put<int>("store_angular_flux",       1);
+  inp->put<int>("store_angular_flux",       0);
   inp->put<int>("inner_print_level",        0);
   inp->put<int>("outer_print_level",        0);
   inp->put<int>("quad_number_polar_octant", 1);
   inp->put<double>("inner_tolerance",       1e-19);
   inp->put<int>("inner_max_iters",          1e7);
   inp->put<int>("compute_boundary_flux",    1);
-
+  // inner gmres parameters
+  InputDB::SP_input db(new InputDB("inner_solver_db"));
+  db->put<double>("linear_solver_atol",                 1e-12);
+  db->put<double>("linear_solver_rtol",                 1e-12);
+  db->put<string>("linear_solver_type",                 "gmres");
+  db->put<int>("linear_solver_maxit",                   2000);
+  db->put<int>("linear_solver_gmres_restart",           20);
+  db->put<int>("linear_solver_monitor_level",           0);
+  inp->put<InputDB::SP_input>("inner_solver_db",        db);
+  inp->put<InputDB::SP_input>("outer_solver_db",        db);
   //-------------------------------------------------------------------------//
   // MATERIAL
   //-------------------------------------------------------------------------//
@@ -99,6 +108,7 @@ int test_TimeStepper(int argc, char *argv[])
   KineticsMaterial::SP_material
     kinmat(new KineticsMaterial(1, 1, 1, "base material"));
   kinmat->set_sigma_t(0, 0,    1.0);
+  kinmat->set_diff_coef(0, 0,  1.0/3.0);
   //kinmat->set_sigma_s(0, 0, 0, 0.5);
   kinmat->set_sigma_f(0, 0,    0.5);
   kinmat->set_velocity(0,      1.0);
@@ -175,18 +185,24 @@ int test_TimeStepper(int argc, char *argv[])
   TS_1D stepper(inp, linmat, mesh, true);
   stepper.set_monitor(test_monitor);
 
+//  // Initial condition (constant psi = 1/2)
+//  for (int o = 0; o < stepper.quadrature()->number_octants(); ++o)
+//  {
+//    for (int a = 0; a < stepper.quadrature()->number_angles_octant(); ++a)
+//    {
+//      for (int i = 0; i < mesh->number_cells(); ++i)
+//      {
+//        ic->phi(0)[i] = 1.0;
+//        ic->psi(0, o, a)[i] = 0.5;
+//      }
+//    }
+//  }
   // Initial condition (constant psi = 1/2)
-  for (int o = 0; o < stepper.quadrature()->number_octants(); ++o)
+  for (int i = 0; i < mesh->number_cells(); ++i)
   {
-    for (int a = 0; a < stepper.quadrature()->number_angles_octant(); ++a)
-    {
-      for (int i = 0; i < mesh->number_cells(); ++i)
-      {
-        ic->phi(0)[i] = 1.0;
-        ic->psi(0, o, a)[i] = 0.5;
-      }
-    }
+    ic->phi(0)[i] = 1.0;
   }
+
   //stepper.add_source(q_td);
 
   stepper.solve(ic);

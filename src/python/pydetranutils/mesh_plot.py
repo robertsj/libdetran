@@ -27,7 +27,8 @@ def plot_mesh_function(mesh, f, colormap = "hot", edges = False) :
             plt.pcolor(X, Y, f, cmap=colormap)
         plt.axis("scaled") 
         cbar = plt.colorbar()
-        
+        plt.xlabel("x [cm]")
+        plt.ylabel("y [cm]")
     else :
         print "not ready for 3d"
         return
@@ -54,7 +55,9 @@ def plot_mesh_map(mesh, key, edges = False) :
         map = map.reshape(mesh.number_cells_x(), mesh.number_cells_y())
         
     # Choose a random color map for 2D plots
-    colormap = matplotlib.colors.ListedColormap(np.random.rand(10000, 3))
+    unique_elements = np.unique(map)
+    num_unique_elements = len(unique_elements)
+    colormap = matplotlib.colors.ListedColormap(np.random.rand(num_unique_elements, 3))
     
     # Plot
     plot_mesh_function(mesh, map, colormap, edges)
