@@ -42,9 +42,11 @@ using std::endl;
 
 int main(int argc, char *argv[])
 {
+  START_PROFILER();
   callow_initialize(argc, argv);
   RUN(argc, argv);
   callow_finalize();
+  STOP_PROFILER();
 }
 
 //----------------------------------------------//
@@ -91,14 +93,14 @@ SP_material test_EigenvalueManager_material()
 
 SP_mesh test_EigenvalueManager_mesh(int d)
 {
-  vec_dbl cm(2, 0.0); cm[1] = 4.0;
+  vec_dbl cm(2, 0.0); cm[1] = 100.0;
   vec_dbl cc(2, 0.0); cc[1] = 0.1;
-  vec_int fm(1, 4);
+  vec_int fm(1, 100);
   vec_int ff(1, 1);
   vec_int mat_map(1, 1);
   SP_mesh mesh;
   if (d == 1) mesh = new Mesh1D(fm, cm, mat_map);
-  if (d == 2) mesh = new Mesh2D(fm, ff, cm, cc, mat_map);
+  if (d == 2) mesh = new Mesh2D(fm, fm, cm, cm, mat_map);
   if (d == 3) mesh = new Mesh3D(fm, ff, ff, cm, cc, cc, mat_map);
   Assert(mesh);
   return mesh;
@@ -109,11 +111,11 @@ InputDB::SP_input test_EigenvalueManager_input()
   InputDB::SP_input inp(new InputDB());
   // BASIC INPUT
   inp->put<string>("problem_type",            "eigenvalue");
-  inp->put<string>("equation",                "dd");
+  inp->put<string>("equation",                "diffusion");
   inp->put<string>("bc_west",                 "reflect");
-  inp->put<string>("bc_east",                 "reflect");
+  inp->put<string>("bc_east",                 "vacuum");
   inp->put<string>("bc_south",                "reflect");
-  inp->put<string>("bc_north",                "reflect");
+  inp->put<string>("bc_north",                "vacuum");
   inp->put<string>("bc_bottom",               "reflect");
   inp->put<string>("bc_top",                  "reflect");
   inp->put<int>("sweeper_print_octants", 1);
@@ -135,23 +137,26 @@ InputDB::SP_input test_EigenvalueManager_input()
   inp->put<double>("outer_tolerance",         1e-9);
   // EIGEN
   inp->put<int>("eigen_print_level",          2);
-  inp->put<string>("eigen_solver",            "PI");
+  inp->put<string>("eigen_solver",            "diffusion");
   inp->put<double>("eigen_tolerance",         1e-8);
   inp->put<int>("eigen_print_interval",       1);
   inp->put<int>("eigen_max_iters",            100);
   // CALLOW DATABASE (APPLIED TO ALL)
   {
     InputDB::SP_input callowdb(new InputDB("callowdb"));
-    callowdb->put<std::string>("eigen_solver_type",               "power");
+    callowdb->put<std::string>("eigen_solver_type",               "slepc");
     callowdb->put<int>("eigen_solver_monitor_level",              1000);
     callowdb->put<int>("eigen_solver_maxit",                      4000);
     callowdb->put<double>("eigen_solver_tol",                     1e-10);
-    callowdb->put<std::string>("linear_solver_type",              "gmres");
+    callowdb->put<std::string>("linear_solver_type",              "petsc");
     callowdb->put<double>("linear_solver_atol",                   1e-12);
     callowdb->put<double>("linear_solver_rtol",                   1e-12);
     callowdb->put<int>("linear_solver_maxit",                     4000);
     callowdb->put<int>("linear_solver_gmres_restart",             80);
-    callowdb->put<int>("linear_solver_monitor_level",             2);
+    callowdb->put<int>("linear_solver_monitor_level",             0);
+    callowdb->put<std::string>("pc_type",                         "petsc_pc");
+    callowdb->put<std::string>("petsc_pc_type",                   "lu");
+    callowdb->put<int>("petsc_pc_factor_levels",                  4);
     callowdb->put<int>("eigen_solver_monitor_level",              2);
     inp->put<InputDB::SP_input>("eigen_solver_db",  callowdb);
     inp->put<InputDB::SP_input>("outer_solver_db",  callowdb);
@@ -180,7 +185,7 @@ int test_EigenvalueManager_T()
   TEST(flag);
 
   typename Manager_T::SP_state state = manager.state();
-  state->display();
+  //state->display();
 
   return 0;
 }

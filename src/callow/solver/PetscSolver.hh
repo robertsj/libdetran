@@ -93,8 +93,11 @@ public:
           d_P = new PCJacobi(d_A);
         }
         // Set callow pc as a shell and set the shell operator
-        ierr = PCSetType(pc, PCSHELL);
-        d_P->set_petsc_pc(pc);
+        if (d_P)
+        {
+          ierr = PCSetType(pc, PCSHELL);
+          d_P->set_petsc_pc(pc);
+        }
       }
       // Check for a PETSc pc type
       else
@@ -113,6 +116,13 @@ public:
           PCFactorSetLevels(pc, levels);
           // Fill zeros on the diagonal, even if they wouldn't be
           PCFactorSetAllowDiagonalFill(pc);
+        }
+        // LU
+        else if (petsc_pc_type == "lu")
+        {
+          PCSetType(pc, PCLU);
+          PCFactorSetReuseOrdering(pc, PETSC_TRUE);
+          PCFactorSetReuseFill(pc, PETSC_TRUE);
         }
         // Add more options, like hypre etc.
         else

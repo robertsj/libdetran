@@ -43,8 +43,8 @@ EigenDiffusion<D>::EigenDiffusion(SP_mg_solver mg_solver)
 
   // Create callow eigensolver and set operators
   SP_input db;
-  if (d_input->check("eigen_callow_eigen_solver_db"))
-    db = d_input->template get<SP_input>("eigen_callow_eigen_solver_db");
+  if (d_input->check("eigen_solver_db"))
+    db = d_input->template get<SP_input>("eigen_solver_db");
   d_eigensolver = Creator_T::Create(db);
   d_eigensolver->set_operators(d_F, d_M, db);
 }
