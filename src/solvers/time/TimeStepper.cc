@@ -195,7 +195,7 @@ void TimeStepper<D>::solve(SP_state initial_state)
   if (d_precursors.size()) *d_precursors[0] = *d_precursor;
 
   // Output the initial state
-  if (d_do_output) d_silooutput->write_time_flux(0, d_state, true);
+  if (d_do_output) d_silooutput->write_time_flux(0, d_state, d_discrete);
 
   // Set the solver
   d_solver->set_solver();

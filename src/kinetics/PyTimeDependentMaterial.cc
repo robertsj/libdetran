@@ -45,7 +45,7 @@ PyTimeDependentMaterial::Create(const size_t number_materials,
 //---------------------------------------------------------------------------//
 void PyTimeDependentMaterial::set_update_impl(callback_ptr f, void* data)
 {
-  std::cout << "C++ setting implementation" << std::endl;
+  //std::cout << "C++ setting implementation" << std::endl;
   d_update_impl = f;
   d_update_impl_data = data;
 }
@@ -53,7 +53,7 @@ void PyTimeDependentMaterial::set_update_impl(callback_ptr f, void* data)
 //---------------------------------------------------------------------------//
 void PyTimeDependentMaterial::update_impl()
 {
-  std::cout << "C++ calling implementation" << std::endl;
+  //std::cout << "C++ calling implementation" << std::endl;
   Require(d_update_impl);
   d_update_impl(d_update_impl_data);
 }

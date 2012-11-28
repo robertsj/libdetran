@@ -81,7 +81,7 @@ WGSolverGMRES<D>::WGSolverGMRES(SP_state                  state,
   {
     pc_type = d_input->template get<std::string>("inner_pc_type");
   }
-  std::cout << "Using WG-GMRES with PC-" << pc_type;
+  //std::cout << "Using WG-GMRES with PC-" << pc_type;
 
   size_t pc_side = callow::LinearSolver::LEFT;
   if (d_input->check("inner_pc_side"))
