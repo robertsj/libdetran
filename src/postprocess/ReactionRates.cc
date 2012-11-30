@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   ReactionRates.cc
- * \author robertsj
- * \date   May 24, 2012
- * \brief  ReactionRates member definitions
+/**
+ *  @file   ReactionRates.cc
+ *  @author robertsj
+ *  @date   May 24, 2012
+ *  @brief  ReactionRates member definitions
  */
 //---------------------------------------------------------------------------//
 
@@ -15,7 +15,7 @@
 namespace detran_postprocess
 {
 
-// Constructor.
+//---------------------------------------------------------------------------//
 ReactionRates::ReactionRates(SP_material material,
                              SP_mesh mesh,
                              SP_state state)
@@ -26,6 +26,7 @@ ReactionRates::ReactionRates(SP_material material,
   /* ... */
 }
 
+//---------------------------------------------------------------------------//
 detran_utilities::vec_dbl
 ReactionRates::region_power(std::string key, double scale)
 {
@@ -88,6 +89,50 @@ ReactionRates::region_power(std::string key, double scale)
   }
   return power;
 }
+
+//---------------------------------------------------------------------------//
+detran_utilities::vec_dbl
+ReactionRates::edit(std::string key,
+                    const vec_dbl &fine_mesh_function,
+                    bool mean)
+{
+  // Make sure the mesh has what we need.
+  Insist(b_mesh->mesh_map_exists(key),
+      "The mesh map " + key + " does not exist.");
+
+  // Get the region map of interest.
+  vec_int map = b_mesh->mesh_map(key);
+
+  // Number of unique regions.  This *assumes* sequential numbering,
+  int number = 1 + *std::max_element(map.begin(), map.end());
+
+  vec_dbl edit_region_function(number, 0.0);
+  vec_dbl edit_region_volume(number, 0.0);
+
+  for (int k = 0; k < b_mesh->number_cells_z(); k++)
+  {
+    for (int j = 0; j < b_mesh->number_cells_y(); j++)
+    {
+      for (int i = 0; i < b_mesh->number_cells_x(); i++)
+      {
+        // Define the mesh cell and volume
+        int cell = b_mesh->index(i, j, k);
+        double volume = b_mesh->dx(i) * b_mesh->dy(j) * b_mesh->dz(k);
+
+        // Add contribution to this edit region
+        edit_region_function[map[cell]] += volume * fine_mesh_function[cell];
+        edit_region_volume[map[cell]] += volume;
+      }
+    }
+  }
+
+  if (mean)
+    for (int cell = 0; cell < number; ++cell)
+      edit_region_function[map[cell]] /= edit_region_volume[map[cell]];
+
+  return edit_region_function;
+}
+
 
 } // end namespace detran_postprocess
 

@@ -13,6 +13,7 @@
 #include "TimeStepper.hh"
 #include "kinetics/SyntheticDiscreteSource.hh"
 #include "kinetics/SyntheticMomentSource.hh"
+#include "utilities/MathUtilities.hh"
 #include <cmath>
 
 namespace detran
@@ -41,6 +42,8 @@ TimeStepper<D>::TimeStepper(SP_input       input,
   , d_residual_norm(0.0)
   , d_monitor(NULL)
   , d_monitor_level(1)
+  , d_maximum_iterations(1)
+  , d_tolerance(1e-4)
 {
   // Preconditions
   Require(d_input);
@@ -121,6 +124,10 @@ TimeStepper<D>::TimeStepper(SP_input       input,
 
   if (d_input->check("ts_no_extrapolation") and d_scheme != IMP)
     d_no_extrapolation = d_input->template get<int>("ts_no_extrapolation");
+
+  // Get the convergence criteria
+  if (d_input->check("ts_max_iters"))
+    d_maximum_iterations = d_input->template get<int>("ts_max_iters");
 
   //-------------------------------------------------------------------------//
   // SETUP STATE AND PRECURSOR VECTORS
@@ -226,12 +233,12 @@ void TimeStepper<D>::solve(SP_state initial_state)
     if (flag) dt = 0.5 * d_dt;
 
     size_t iteration = 1;
-    for (; iteration < 2; ++iteration)
+    for (; iteration <= d_maximum_iterations; ++iteration)
     {
       // Perform the time step
       step(t, dt, order, flag);
 
-      // >>> check convergence <<<
+      bool converged = check_convergence();
 
       // Call the monitor, if present.
       if (d_monitor_level) d_monitor(d_monitor_data, this, i, t, dt, iteration);
@@ -464,6 +471,26 @@ void TimeStepper<D>::extrapolate()
         C[i] = 2.0 * C[i] - C0[i];
     } // end group
   }
+
+}
+
+//---------------------------------------------------------------------------//
+template <class D>
+bool TimeStepper<D>::check_convergence()
+{
+  // compare new phi to old phi
+  double d_residual_norm = 0.0;
+  for (size_t g = 0; g < d_material->number_groups(); ++g)
+  {
+    double nr_g = detran_utilities::
+      norm_relative_residual(d_state->phi(g), d_states[0]->phi(g));
+    d_residual_norm += nr_g*nr_g;
+  }
+  d_residual_norm = std::sqrt(d_residual_norm);
+
+  if (d_residual_norm < d_tolerance)
+    return true;
+  return false;
 
 }
 

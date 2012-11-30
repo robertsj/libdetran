@@ -46,6 +46,9 @@ setCallbackMethod(1, // this is a *unique* identifier
 %template(vec_material)         std::vector<detran_utilities::SP<detran::KineticsMaterial> >;
 %template(PrecursorsSP)         detran_utilities::SP<detran::Precursors>;
 
+%include "LRA.hh"
+%template(LRASP) detran_utilities::SP<detran_user::LRA>;
+
 // Downcasts and Upcasts for generic routines
 %inline
 {
@@ -69,6 +72,13 @@ setCallbackMethod(1, // this is a *unique* identifier
   upcast(detran_utilities::SP<detran::TimeDependentMaterial>* p)
   {
     return detran_utilities::SP<detran::PyTimeDependentMaterial>(*p);
+  } 
+  
+  // TD -> LRA
+  detran_utilities::SP<detran_user::LRA> 
+  as_lra(detran_utilities::SP<detran::TimeDependentMaterial>* p)
+  {
+    return detran_utilities::SP<detran_user::LRA>(*p);
   } 
   
 }

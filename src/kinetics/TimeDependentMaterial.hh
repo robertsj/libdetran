@@ -100,6 +100,11 @@ public:
     return d_order;
   }
 
+  double kcrit() const
+  {
+    return d_kcrit;
+  }
+
   /**
    *  @brief Update the materials
    *  @param t          New time (in seconds)

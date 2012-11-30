@@ -108,6 +108,7 @@ public:
   size_t monitor_level() const {return d_monitor_level;}
   SP_precursors precursor() {return d_precursor;}
   SP_fissionsource fissionsource() {return d_fissionsource;}
+  double residual_norm() {return d_residual_norm;}
 
   /// Set a user-defined monitor function.
   void set_monitor(function_pointer monitor, void* monitor_data = NULL)
@@ -184,6 +185,10 @@ private:
   void* d_monitor_data;
   /// Monitor level (only on or off right now)
   size_t d_monitor_level;
+  /// Tolerance for nonlinear iterations
+  double d_tolerance;
+  /// Maximum nonlinear iterations
+  size_t d_maximum_iterations;
 
   //-------------------------------------------------------------------------//
   // IMPLEMENTATION
@@ -213,6 +218,9 @@ private:
             const double dt,
             const size_t order,
             const bool   flag);
+
+  /// Check convergence
+  bool check_convergence();
 
 };
 

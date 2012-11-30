@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   ReactionRates.hh
- * \author robertsj
- * \date   May 24, 2012
- * \brief  ReactionRates class definition.
+/**
+ *  @file   ReactionRates.hh
+ *  @author robertsj
+ *  @date   May 24, 2012
+ *  @brief  ReactionRates class definition.
  */
 //---------------------------------------------------------------------------//
 
@@ -22,14 +22,14 @@
 namespace detran_postprocess
 {
 
-/*!
- *  \class ReactionRates
- *  \brief Computes various reaction rates based on the state.
+/**
+ *  @class ReactionRates
+ *  @brief Computes various reaction rates based on the state.
  *
- * Once the problem is solved, several quantities are often
- * required for analysis.  These include global net gains and
- * losses, reaction rates in edit regions such as pins or
- * assemblies, and so on.
+ *  Once the problem is solved, several quantities are often
+ *  required for analysis.  These include global net gains and
+ *  losses, reaction rates in edit regions such as pins or
+ *  assemblies, and so on.
  *
  */
 class ReactionRates
@@ -52,12 +52,12 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Constructor.
+  /**
+   *  @brief Constructor.
    *
-   *  \param    material    Pin cell pitch (assumed square)
-   *  \param    mesh        Vector of fuel pin radii (can be zero length)
-   *  \param    state       Region material map (cell-center outward)
+   *  @param    material    Pin cell pitch (assumed square)
+   *  @param    mesh        Vector of fuel pin radii (can be zero length)
+   *  @param    state       Region material map (cell-center outward)
    */
   ReactionRates(SP_material material, SP_mesh mesh, SP_state state);
 
@@ -77,8 +77,8 @@ public:
   // PUBLIC FUNCTIONS
   //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Relative power of an edit region.
+  /**
+   *  @brief Relative power of an edit region.
    *
    *  Note, the region powers are returned as a vector
    *  in the same order as the regions are indexed.  That means
@@ -89,10 +89,26 @@ public:
    *  is natural, following the same x then y then z ordering
    *  as used in \ref Mesh.
    *
-   *  \param key    String identifier for the edit region
-   *  \param scale  Total power used for normalization
+   *  @param key    String identifier for the edit region
+   *  @param scale  Total power used for normalization
    */
   vec_dbl region_power(std::string key, double scale = 1.0);
+
+  /**
+   *  @brief Edit mesh function
+   *
+   *  Given a function defined on the fine mesh, return the
+   *  function defined within an edit regions defined by the key.
+   *  The user can optionally average the value (rather than
+   *  just integrate it)
+   *
+   *  @param key                String identifier for the edit region
+   *  @param fine_mesh_function Fine mesh function
+   *  @param mean               Compute the mean in the edit region
+   */
+  vec_dbl edit(std::string key,
+               const vec_dbl &fine_mesh_function,
+               bool mean = false);
 
 private:
 

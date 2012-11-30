@@ -90,6 +90,7 @@
 #include "kinetics/TimeDependentMaterial.hh"
 #include "kinetics/PyTimeDependentMaterial.hh"
 #include "kinetics/LinearMaterial.hh"
+#include "kinetics/LRA.hh"
 //   source
 #include "kinetics/TimeDependentExternalSource.hh"
 #include "kinetics/LinearExternalSource.hh"
