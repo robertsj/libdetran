@@ -32,6 +32,8 @@ const double B  = 0.0001;
 const double ALPHA = 3.830e-11;
 const double GAMMA = 2.034e-3;
 const double KAPPA = 3.204e-11;
+const int ROD = 5;
+const int REFLECTOR = 4;
 
 //---------------------------------------------------------------------------//
 LRA::LRA(SP_mesh mesh, bool flag, bool steady)
@@ -95,7 +97,7 @@ void LRA::initialize_materials()
     }
     else
     {
-      set_sigma_t(i, 0,     A1[m] + S21[m]  + B*D1[m]) ;
+      set_sigma_t(i, 0,     A1[m] + S21[m]  + B*D1[m]);
       set_sigma_t(i, 1,     A2[m] + B*D2[m]          );
     }
     set_sigma_s(i, 1, 0,  S21[m]);
@@ -133,9 +135,9 @@ void LRA::update_impl()
   if (d_steady) return;
 
   // Thermal cross section perturbation
-  double sigma_a2 = 0.878763 * A2[2];
-  if (d_t <= 2.0) sigma_a2 = A2[2] * (1.0 - 0.0606184 * d_t);
-  double delta_2 = sigma_a2 - A2[2];
+  double sigma_a2 = 0.878763 * A2[ROD];
+  if (d_t <= 2.0) sigma_a2 = A2[ROD] * (1.0 - 0.0606184 * d_t);
+  double delta_2 = sigma_a2 - A2[ROD];
 
   for (int i = 0; i < d_mesh->number_cells(); ++i)
   {
@@ -143,7 +145,12 @@ void LRA::update_impl()
 
     // update the THERMAL cross section
     double sa = A2[m];
-    if (m == 5) sa = sigma_a2;
+    double del = 0.0;
+    if (m == ROD)
+    {
+      sa = sigma_a2;
+      del = delta_2;
+    }
     if (d_flag)
     {
       // transport
@@ -158,7 +165,9 @@ void LRA::update_impl()
     }
 
     // update the FAST cross section
-    double sigma_a1 = A1[m] * (1.0 + time());//GAMMA * (std::sqrt(d_T[i]) - std::sqrt(300.0)));
+    double sigma_a1 = A1[m];
+    if (m != REFLECTOR) // only FUEL has feedback
+      sigma_a1 = A1[m] * (1.0 + GAMMA * (std::sqrt(d_T[i]) - std::sqrt(300.0)));
     double delta_1  = sigma_a1 - A1[m];
 
     if (d_flag)
@@ -168,8 +177,8 @@ void LRA::update_impl()
     }
     else
     {
-      set_sigma_t(i, 0, sigma_a1 + S21[m] + B * D1[m]);
-      set_sigma_a(i, 0, sigma_a1 + B * D1[m]);
+      set_sigma_t(i, 0, sigma_a1 + B * D1[m] + S21[m]);
+      set_sigma_a(i, 0, sigma_a1 + B * D1[m]         );
     }
 
     // chi and fission
@@ -205,7 +214,7 @@ void LRA::update_P_and_T(double t)
   // Compute power and temperature.  Note, we "unscale" by keff.
   for (size_t i = 0; i < d_mesh->number_cells(); ++i)
   {
-    double F = sigma_f(0, 0) * phi0[i] + sigma_f(0, 1) * phi1[i];
+    double F = sigma_f(i, 0) * phi0[i] + sigma_f(i, 1) * phi1[i];
     d_P[i] = KAPPA * F * kcrit();
     if (d_t > 0.0) d_T[i] = d_T[i] + d_dt * ALPHA * F;
     if (step) d_T_old[i] = d_T[i];

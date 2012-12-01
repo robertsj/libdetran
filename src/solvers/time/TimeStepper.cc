@@ -189,6 +189,8 @@ void TimeStepper<D>::solve(SP_state initial_state)
 {
   // Preconditions
   Require(initial_state);
+//  initial_state->display();
+//  THROW("done");
 
   // Set the state and initialize the precursors if necessary.  For
   // now, we assume steady state for the first order steps.

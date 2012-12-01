@@ -85,7 +85,8 @@ void TimeDependentMaterial::update(const double t,
 
   // Finalize
   finalize();
-
+//  d_state->display();
+//  display();
 }
 
 } // end namespace detran

@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   MomentToDiscrete.hh
- * \author Jeremy Roberts
- * \date   Jul 1, 2011
- * \brief  MomentToDiscrete class definition.
+/**
+ *  @file   MomentToDiscrete.hh
+ *  @author Jeremy Roberts
+ *  @date   Jul 1, 2011
+ *  @brief  MomentToDiscrete class definition.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef MOMENT_TO_DISCRETE_HH_
-#define MOMENT_TO_DISCRETE_HH_
+#ifndef detran_angle_MOMENT_TO_DISCRETE_HH_
+#define detran_angle_MOMENT_TO_DISCRETE_HH_
 
 #include "Quadrature.hh"
 #include "utilities/Definitions.hh"
@@ -19,12 +19,12 @@ namespace detran_angle
 {
 
 //---------------------------------------------------------------------------//
-/*!
- * \class MomentToDiscrete
- * \brief Converts moment-valued unknowns to discrete angle values
+/**
+ *  @class MomentToDiscrete
+ *  @brief Converts moment-valued unknowns to discrete angle values
  *
  * This class defines the operator
- * \f[
+ *  @f[
    \mathbf{M} =
    \left(\begin{array}{llllllll}
      \frac{1}{4\pi}Y^{0}_{0}(\Omega_1)         &
@@ -54,18 +54,18 @@ namespace detran_angle
      \frac{2L+1}{4\pi}Y^{L-1}_{L}(\Omega_{N_n})&
      \frac{2L+1}{4\pi}Y^{L}_{L}(\Omega_{N_n})  \\
    \end{array}\right) \, .
- * \f]
+ *  @f]
  *
  * Then, for instance, the angular flux in a particular direction
  * for a particular cell and group can be approximated by the dot
  * product of the corresponding row of \f$\mathbf{M}\f$ with the
  * vector of flux moments for that cell and group, i.e.
- * \f[
+ *  @f[
  *    \psi_{i,n} \approx \frac{1}{4\pi} Y^{0}_{0}(\Omega_n)\phi^{0}_{0}    +
  *                       \frac{3}{4\pi} Y^{-1}_{1}(\Omega_n)\phi^{-1}_{1}  +
  *                       \ldots                                            +
  *                       \frac{2L+1}{4\pi} Y^{L}_{L}(\Omega_n)\phi^L_L  \, ,
- * \f]
+ *  @f]
  * for cell \f$i\f$ and angle \f$n\f$.  For a purely isotropic flux, we
  * have \f$\phi=\phi^{0}_{0}\f$ and \f$\psi_n = \phi/4\pi\f$ as we expect
  * (since \f$ Y^{0}_{0} = 1 \f$).
@@ -76,23 +76,23 @@ namespace detran_angle
  * all values with odd polar order vanish.
  *
  * For 1-d problems and scattering order \f$L\f$, this reduces to
- * \f$ N_L = (L+1) \f$ and a subsequent simplification of \f$\mathbf{M}\f$
+ *  @f$ N_L = (L+1) \f$ and a subsequent simplification of \f$\mathbf{M}\f$
  * into terms only of Legendre polynomials (and a normalization of
- * \f$ (2l+1)/2 \f$ instead of \f$(2l+1)/4\pi \f$.
+ *  @f$ (2l+1)/2 \f$ instead of \f$(2l+1)/4\pi \f$.
  *
  * The number of rows \f$ N_n \f$ is determined by the number of angles,
  * which is defined by the quadrature and its order.
  *
  * The moments of an expanded function are organized as a row of
- * \f$\mathbf{M}\f$, in an array, and one can easily index into
+ *  @f$\mathbf{M}\f$, in an array, and one can easily index into
  * that array for a given \f$l\f$ and \f$m\f$ using the
- * \ref Moments::index of appropriated dimension.
+ *  @ref Moments::index of appropriated dimension.
  *
- * \sa Spherical_Harmonics
+ *  @sa Spherical_Harmonics
  *
  */
-/*!
- * \example test/test_MomentToDiscrete.cc
+/**
+ *  @example test/test_MomentToDiscrete.cc
  *
  * Test of MomentToDiscrete.
  */
@@ -116,10 +116,10 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  /*!
-   * \brief Constructor.
+  /**
+   *  @brief Constructor.
    *
-   * \param legendre_order   Legendre order of moments expansion.
+   *  @param legendre_order   Legendre order of moments expansion.
    *
    * Note, this will be greater than or equal to the flux moments
    * order, since we can optionally keep higher order moments.
@@ -138,7 +138,7 @@ public:
   // PUBLIC INTERFACE
   //-------------------------------------------------------------------------//
 
-  /*!
+  /**
    *  \brief Build the moments-to-discrete operator.
    *
    *  Keeping the actual construction outside the constructor allows
@@ -151,44 +151,44 @@ public:
    */
   void build(SP_quadrature q);
 
-  /*!
-   * \brief Return an element from \f$ M\f$.
+  /**
+   *  @brief Return an element from \f$ M\f$.
    *
-   * \param     angle       Angle i.e. row.
-   * \param     moment      Moment cardinal index, i.e. column.
-   * \return                Element of operator.
+   *  @param     angle       Angle i.e. row.
+   *  @param     moment      Moment cardinal index, i.e. column.
+   *  @return                Element of operator.
    */
   const double& operator()(const size_t angle, const size_t moment) const;
 
-  /*!
-   * \brief Return an element from \f$ M\f$.
+  /**
+   *  @brief Return an element from \f$ M\f$.
    *
-   * \param     angle       Angle i.e. row.
-   * \param     l           Legendre degree.
-   * \param     m           Legendre order.
-   * \return                Element of operator.
+   *  @param     angle       Angle i.e. row.
+   *  @param     l           Legendre degree.
+   *  @param     m           Legendre order.
+   *  @return                Element of operator.
    */
   const double& operator()(const size_t angle,
                            const size_t l,
                            const size_t m) const;
 
-  /*!
-   * \brief Return an element from \f$ M\f$.
+  /**
+   *  @brief Return an element from \f$ M\f$.
    *
-   * \param     o           Octant index.
-   * \param     a           Angle index (within octant).
-   * \param     l           Legendre degree.
-   * \param     m           Legendre order.
-   * \return                Element of operator.
+   *  @param     o           Octant index.
+   *  @param     a           Angle index (within octant).
+   *  @param     l           Legendre degree.
+   *  @param     m           Legendre order.
+   *  @return                Element of operator.
    */
   const double& operator()(const size_t o, const size_t a,
                            const size_t l, const size_t m) const;
 
-  /*!
-   * \brief Return a row of the operator.
+  /**
+   *  @brief Return a row of the operator.
    *
-   * \param     angle       Angle i.e. row index.
-   * \return                A row.
+   *  @param     angle       Angle i.e. row index.
+   *  @return                A row.
    */
   const M_Row& get_row(const size_t angle) const
   {
@@ -224,16 +224,12 @@ private:
 
   /// Legendre order of anisotropic scattering.
   const size_t d_legendre_order;
-
   /// Number of angular moments.
   const size_t d_number_moments;
-
   /// Angular mesh.
   SP_quadrature d_quadrature;
-
   /// Number of angles (not const so that we can change angular meshes)
   size_t d_number_angles;
-
   /// Moments-to-discrete operator \f$\mathbf{M}\f$.
   Operator_M d_M;
 
@@ -241,11 +237,11 @@ private:
   // IMPLEMENTATION
   //-------------------------------------------------------------------------//
 
-  /*!
-   * \brief Calculate one row of \f$\mathbf{M}\f$.
+  /**
+   *  @brief Calculate one row of \f$\mathbf{M}\f$.
    *
-   * \param o   Octant index.
-   * \param a   Angle index.
+   *  @param o   Octant index.
+   *  @param a   Angle index.
    */
   void calc_row_1d(const size_t o, const size_t a);
   void calc_row_2d(const size_t o, const size_t a);
@@ -261,7 +257,7 @@ private:
 
 #include "MomentToDiscrete.i.hh"
 
-#endif /* MOMENT_TO_DISCRETE_HH_ */
+#endif /* detran_angle_MOMENT_TO_DISCRETE_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of MomentToDiscrete.hh

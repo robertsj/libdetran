@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   MomentToDiscrete.i.hh
- * \author Jeremy Roberts
- * \date   Sep 6, 2011
- * \brief  MomentToDiscrete inline member definitions.
+/**
+ *  @file   MomentToDiscrete.i.hh
+ *  @author Jeremy Roberts
+ *  @date   Sep 6, 2011
+ *  @brief  MomentToDiscrete inline member definitions.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef MOMENT_TO_DISCRETE_I_HH_
-#define MOMENT_TO_DISCRETE_I_HH_
+#ifndef detran_angle_MOMENT_TO_DISCRETE_I_HH_
+#define detran_angle_MOMENT_TO_DISCRETE_I_HH_
 
 #include "SphericalHarmonics.hh"
 #include "utilities/Constants.hh"
@@ -20,7 +20,7 @@
 namespace detran_angle
 {
 
-// Build the operator.
+//---------------------------------------------------------------------------//
 inline void MomentToDiscrete::build(SP_quadrature q)
 {
   Require(q);
@@ -56,6 +56,7 @@ inline void MomentToDiscrete::build(SP_quadrature q)
 
 }
 
+//---------------------------------------------------------------------------//
 // 3-d
 inline void MomentToDiscrete::calc_row_3d(const size_t o, const size_t a)
 {
@@ -85,6 +86,7 @@ inline void MomentToDiscrete::calc_row_3d(const size_t o, const size_t a)
   }
 }
 
+//---------------------------------------------------------------------------//
 // 2-d
 inline void MomentToDiscrete::calc_row_2d(const size_t o, const size_t a)
 {
@@ -110,6 +112,7 @@ inline void MomentToDiscrete::calc_row_2d(const size_t o, const size_t a)
   }
 }
 
+//---------------------------------------------------------------------------//
 // 1-d
 inline void MomentToDiscrete::calc_row_1d(const size_t o, const size_t a)
 {
@@ -162,4 +165,4 @@ operator()(const size_t o, const size_t a,
 
 } // end namespace detran_angle
 
-#endif /* MOMENT_TO_DISCRETE_I_HH_ */
+#endif /* detran_angle_MOMENT_TO_DISCRETE_I_HH_ */

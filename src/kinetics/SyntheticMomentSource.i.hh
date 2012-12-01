@@ -87,7 +87,12 @@ inline void SyntheticMomentSource::build(const double dt,
       // Add the flux term
       double phi_factor = a_j / dt / d_material->velocity(g);
       for (int cell = 0; cell < d_mesh->number_cells(); ++cell)
+      {
+//        std::cout << " phi factor=" << phi_factor
+//                  << " phi = " << states[j]->phi(g)[cell]
+//                  << " source = " << d_source[g][cell] << std::endl;
         d_source[g][cell] = phi_factor * states[j]->phi(g)[cell];
+      }
 
       // Add the precursor concentration, if applicable
       if (size_precursor)

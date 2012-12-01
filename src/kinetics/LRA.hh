@@ -51,6 +51,7 @@ public:
   vec_dbl T() {return d_T;}
   vec_dbl P() {return d_P;}
   double area() {return d_A;}
+  void set_area(double a) {d_A = a;}
 
   //-------------------------------------------------------------------------//
   // DATA
