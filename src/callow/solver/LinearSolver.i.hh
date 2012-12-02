@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   LinearSolver.i.hh
- * \brief  LinearSolver inline member definitions
- * \author Jeremy Roberts
- * \date   Sep 26, 2012
+/**
+ *  @file   LinearSolver.i.hh
+ *  @brief  LinearSolver inline member definitions
+ *  @author Jeremy Roberts
+ *  @date   Sep 26, 2012
  */
 //---------------------------------------------------------------------------//
 
-#ifndef LINEARSOLVER_I_HH_
-#define LINEARSOLVER_I_HH_
+#ifndef callow_LINEARSOLVER_I_HH_
+#define callow_LINEARSOLVER_I_HH_
 
 namespace callow
 {
@@ -34,7 +34,7 @@ inline int LinearSolver::solve(const Vector &b, Vector &x)
 
 } // end namespace callow
 
-#endif // LINEARSOLVER_I_HH_ 
+#endif // callow_LINEARSOLVER_I_HH_
 
 //---------------------------------------------------------------------------//
 //              end of file LinearSolver.i.hh

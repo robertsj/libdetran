@@ -29,6 +29,7 @@ MGDiffusionSolver<D>::MGDiffusionSolver(SP_state                  state,
   : Base(state, material, boundary, q_e, q_f, multiply)
   , d_solver_type("gmres")
   , d_keff(1.0)
+  , d_fill_boundary(false)
 {
 
   // Set the problem dimension
@@ -53,8 +54,15 @@ MGDiffusionSolver<D>::MGDiffusionSolver(SP_state                  state,
   {
     db = d_input->template get<SP_input>("outer_solver_db");
   }
+  Require(db);
   d_solver = Creator_T::Create(db);
   d_solver->set_operators(d_M, db);
+
+  // Check whether we need boundary currents
+  if (d_input->check("compute_boundary_flux"))
+  {
+    d_fill_boundary = d_input->template get<int>("compute_boundary_flux");
+  }
 
 }
 
@@ -97,7 +105,7 @@ void MGDiffusionSolver<D>::solve(const double keff)
 //  THROW("done");
   // Fill the state and boundary
   fill_state();
-  fill_boundary();
+  if (d_fill_boundary) fill_boundary();
 
   //d_state->display();
 }

@@ -46,6 +46,7 @@ DiffusionGainOperator::DiffusionGainOperator(SP_input      input,
 
   // Build the matrix with the initial keff guess.
   build();
+
 }
 
 //---------------------------------------------------------------------------//

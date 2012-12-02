@@ -161,6 +161,8 @@ private:
   SP_linearsolver d_solver;
   /// Scaling factor for fission source
   double d_keff;
+  /// Boundary fill flag
+  bool d_fill_boundary;
 
   //-------------------------------------------------------------------------//
   // IMPLEMENTATION

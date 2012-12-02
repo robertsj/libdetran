@@ -189,8 +189,6 @@ void TimeStepper<D>::solve(SP_state initial_state)
 {
   // Preconditions
   Require(initial_state);
-//  initial_state->display();
-//  THROW("done");
 
   // Set the state and initialize the precursors if necessary.  For
   // now, we assume steady state for the first order steps.
@@ -240,7 +238,7 @@ void TimeStepper<D>::solve(SP_state initial_state)
       // Perform the time step
       step(t, dt, order, flag);
 
-      bool converged = check_convergence();
+      //bool converged = check_convergence();
 
       // Call the monitor, if present.
       if (d_monitor_level) d_monitor(d_monitor_data, this, i, t, dt, iteration);
