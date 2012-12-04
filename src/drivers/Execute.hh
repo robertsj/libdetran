@@ -27,7 +27,6 @@
 
 #include "detran_config.hh"
 #include "StupidParser.hh"
-#include "discretization/DimensionTraits.hh"
 #include "external_source/ExternalSource.hh"
 #include "external_source/ConstantSource.hh"
 #include "external_source/DiscreteSource.hh"
@@ -36,6 +35,7 @@
 #include "material/Material.hh"
 #include "solvers/FixedSourceManager.hh"
 #include "solvers/EigenvalueManager.hh"
+#include "transport/DimensionTraits.hh"
 #include "transport/State.hh"
 #include "utilities/DBC.hh"
 #include "utilities/InputDB.hh"

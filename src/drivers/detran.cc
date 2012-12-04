@@ -1,16 +1,16 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   detran.cc
- * \author robertsj
- * \date   Apr 11, 2012
- * \brief  detran executable driver.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+/**
+ *  @file   detran.cc
+ *  @author robertsj
+ *  @date   Apr 11, 2012
+ *  @brief  detran executable driver.
  */
 //---------------------------------------------------------------------------//
 
 // Config
 #include "detran_config.hh"
 #include "StupidParser.hh"
+#include "Manager.hh"
 #include "Execute.hh"
 #include "utilities/Timer.hh"
 #include "utilities/Profiler.hh"
@@ -18,12 +18,6 @@
 // System
 #include <iostream>
 #include <ctime>
-#ifdef DETRAN_ENABLE_PETSC
-#include "petsc.h"
-#endif
-#ifdef DETRAN_ENABLE_SLEPC
-#include "slepc.h"
-#endif
 
 void print_welcome();
 
@@ -32,14 +26,7 @@ int main(int argc, char **argv)
 
   START_PROFILER();
 
-#ifdef DETRAN_ENABLE_PETSC
-  // Start PETSc.
-  PetscInitialize(&argc, &argv, PETSC_NULL, PETSC_NULL);
-#endif
-#ifdef DETRAN_ENABLE_SLEPC
-  // Start SLEPc.
-  SlepcInitialize(&argc, &argv, PETSC_NULL, PETSC_NULL);
-#endif
+  detran::Manager::initialize(argc, argv);
 
   // Print the welcome header.
   print_welcome();
@@ -66,12 +53,7 @@ int main(int argc, char **argv)
 
   timer.toc(true);
 
-#ifdef DETRAN_ENABLE_PETSC
-  PetscFinalize();
-#endif
-#ifdef DETRAN_ENABLE_SLEPC
-  SlepcFinalize(); // is this safe?
-#endif
+  detran::Manager::finalize();
 
   STOP_PROFILER();
 
@@ -89,7 +71,10 @@ void print_welcome()
   std::cout << " _|    _|  _|          _|      _|        _|    _|  _|    _|  " << std::endl;
   std::cout << "   _|_|_|    _|_|_|      _|_|  _|          _|_|_|  _|    _|  " << std::endl;
   std::cout << " a DETerministic TRANsport tool" << std::endl;
-  std::cout << " Run on: " << std::ctime(&t);
+  std::cout << " Built on: " << DETRAN_COMPILED_M << "/"
+                             << DETRAN_COMPILED_D << "/"
+                             << DETRAN_COMPILED_Y << std::endl;
+  std::cout << "   Run on: " << std::ctime(&t);
   std::cout << std::endl << std::endl;
 }
 

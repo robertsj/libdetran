@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Manager.hh
- * \brief  Manager for external libraries.
- * \author Jeremy Roberts
- * \date   Jul 26, 2012
+/**
+ *  @file   Manager.hh
+ *  @brief  Manager for external libraries.
+ *  @author Jeremy Roberts
+ *  @date   Jul 26, 2012
  */
 //---------------------------------------------------------------------------//
 
-#ifndef Manager_HH_
-#define Manager_HH_
+#ifndef detran_MANAGER_HH_
+#define detran_MANAGER_HH_
 
 // Configuration
 #include "detran_config.hh"
@@ -47,7 +47,7 @@ public:
 
 } // end namespace detran
 
-#endif // MANAGER_HH_
+#endif // detran_MANAGER_HH_
 
 //---------------------------------------------------------------------------//
 //              end of file Manager.hh

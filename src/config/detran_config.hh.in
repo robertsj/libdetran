@@ -1,8 +1,8 @@
 //-----------------------------------*-C-*-----------------------------------//
-/*!
- * \file   detran_config.hh.in
- * \author Jeremy Roberts 
- * \brief  Definitions for DETRAN packages.
+/**
+ *  @file   detran_config.hh.in
+ *  @author Jeremy Roberts 
+ *  @brief  Definitions for DETRAN packages.
  */
 //---------------------------------------------------------------------------//
 
@@ -25,7 +25,9 @@
 #cmakedefine DETRAN_ENABLE_BOOST
 
 // Date of Compilation
-#cmakedefine DETRAN_COMPILED_DATE
+#cmakedefine DETRAN_COMPILED_M ${DETRAN_COMPILED_M}
+#cmakedefine DETRAN_COMPILED_D ${DETRAN_COMPILED_D}
+#cmakedefine DETRAN_COMPILED_Y ${DETRAN_COMPILED_Y}
 
 #endif // DETRAN_CONFIG_HH 
 
