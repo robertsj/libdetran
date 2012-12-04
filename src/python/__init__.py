@@ -17,7 +17,20 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-from pydetran import *
+__all__ = ["utilities",         \
+           "angle",             \
+           "callow",            \
+           "geometry",          \
+           "material",          \
+           "external_source",   \
+           "boundary",          \
+           "transport",         \
+           "ioutils",           \
+           "kinetics",          \
+           "solvers",           \
+           "postprocess"        ]
+
 from pydetranutils import *
+
 import numpy as np
 

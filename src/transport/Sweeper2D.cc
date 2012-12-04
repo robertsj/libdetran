@@ -8,9 +8,9 @@
 //---------------------------------------------------------------------------//
 
 #include "Sweeper2D.hh"
-#include "discretization/Equation_DD_2D.hh"
-#include "discretization/Equation_SD_2D.hh"
-#include "discretization/Equation_SC_2D.hh"
+#include "Equation_DD_2D.hh"
+#include "Equation_SD_2D.hh"
+#include "Equation_SC_2D.hh"
 
 namespace detran
 {

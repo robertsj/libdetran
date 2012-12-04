@@ -1,12 +1,17 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   detran_materials.i
- * \author Jeremy Roberts
- * \brief  Python interface for detran materials.
+/**
+ *  @file   detran_material.i
+ *  @author Jeremy Roberts
+ *  @brief  Python interface for detran materials.
  */
 //---------------------------------------------------------------------------//
-   
-%include "utilities/detran_utilities.i"
+
+%module(package="pydetran") material
+%{
+#include "material/detran_material.hh"
+%}
+
+%import "utilities/detran_utilities.i"
 
 %include "Material.hh"
 

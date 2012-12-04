@@ -8,7 +8,7 @@
 //---------------------------------------------------------------------------//
 
 #include "Sweeper2DMOC.hh"
-#include "discretization/Equation_SC_MOC.hh"
+#include "Equation_SC_MOC.hh"
 
 namespace detran
 {

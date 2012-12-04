@@ -10,7 +10,6 @@
 #ifndef detran_SWEEPER2DMOC_I_HH_
 #define detran_SWEEPER2DMOC_I_HH_
 
-#include "discretization/Equation_SC_MOC.hh"
 #include <iostream>
 #ifdef DETRAN_ENABLE_OPENMP
 #include <omp.h>

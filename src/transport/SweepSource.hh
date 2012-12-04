@@ -10,12 +10,12 @@
 #ifndef detran_SWEEPSOURCE_HH_
 #define detran_SWEEPSOURCE_HH_
 
+#include "DimensionTraits.hh"
 #include "FissionSource.hh"
 #include "ScatterSource.hh"
 #include "State.hh"
 #include "angle/MomentToDiscrete.hh"
 #include "angle/Quadrature.hh"
-#include "discretization/DimensionTraits.hh"
 #include "external_source/ExternalSource.hh"
 #include "geometry/Mesh.hh"
 #include "material/Material.hh"

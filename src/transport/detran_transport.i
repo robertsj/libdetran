@@ -1,10 +1,26 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   detran_transport.i
- * \author Jeremy Roberts
- * \brief  Python interface for detran transport.
+/**
+ *  @file   detran_transport.i
+ *  @author Jeremy Roberts
+ *  @brief  Python interface for detran transport.
  */
 //---------------------------------------------------------------------------//
+
+%module(package="pydetran") transport
+%{
+#include "transport/DimensionTraits.hh"
+#include "transport/FissionSource.hh"
+#include "transport/State.hh"
+#include "transport/SweepSource.hh"
+%}
+
+%import "detran_utilities.i"
+%import "detran_material.i"
+%import "detran_angle.i"
+%import "detran_geometry.i"
+%import "detran_external_source.i"
+
+%include "DimensionTraits.hh"
 
 %include "State.hh"
 %include "FissionSource.hh"
@@ -12,6 +28,9 @@
 %template(StateSP)          detran_utilities::SP<detran::State>;
 %template(FissionSourceSP)  detran_utilities::SP<detran::FissionSource>;
 %template(ScatterSourceSP)  detran_utilities::SP<detran::ScatterSource>;
+
+// We can optionally compile the sweepers again in the future
+// if it turns out we want to script some algorithms.
 
 //%include "SweepSource.hh"
 //%template(SweepSource1D)    detran::SweepSource<detran::_1D>;

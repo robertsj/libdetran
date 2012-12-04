@@ -12,11 +12,11 @@
 
 #include "detran_config.hh"
 #include "CurrentTally.hh"
+#include "Equation.hh"
 #include "State.hh"
 #include "SweepSource.hh"
 #include "angle/Quadrature.hh"
 #include "boundary/BoundaryBase.hh"
-#include "discretization/Equation.hh"
 #include "geometry/Mesh.hh"
 #include "material/Material.hh"
 #include "utilities/DBC.hh"

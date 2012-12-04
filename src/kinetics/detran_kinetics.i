@@ -1,13 +1,37 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   detran_materials.i
+ *  @file   detran_kinetics.i
  *  @author Jeremy Roberts
  *  @brief  Python interface for detran kinetics.
  */
 //---------------------------------------------------------------------------//
    
-%include "detran_utilities.i"
-%include "detran_material.i"
+%module(directors="1", allprotected="1", package="pydetran") kinetics
+%{
+// material
+#include "kinetics/KineticsMaterial.hh"
+#include "kinetics/TimeDependentMaterial.hh"
+#include "kinetics/PyTimeDependentMaterial.hh"
+#include "kinetics/LinearMaterial.hh"
+#include "kinetics/LRA.hh"
+#include "kinetics/Precursors.hh"
+// source
+#include "external_source/ExternalSource.hh"
+#include "external_source/ConstantSource.hh"
+#include "external_source/DiscreteSource.hh"
+#include "external_source/IsotropicSource.hh"
+#include "kinetics/TimeDependentExternalSource.hh"
+#include "kinetics/LinearExternalSource.hh"
+#include "kinetics/PulsedExternalSource.hh"
+%}
+
+%import "detran_utilities.i"
+%import "detran_material.i"
+%import "detran_angle.i"
+%import "detran_geometry.i"
+%import "detran_external_source.i"
+%import "detran_transport.i"
+
 %include std_string.i
 %include callback.i 
 
@@ -32,7 +56,6 @@ setCallbackMethod(1, // this is a *unique* identifier
 %include "LinearExternalSource.hh"
 %include "PulsedExternalSource.hh"
 %template(TDSourceSP) detran_utilities::SP<detran::TimeDependentExternalSource>;
-%template(vec_source) std::vector<detran_utilities::SP<detran_external_source::ExternalSource> >;
 
 // Materials
 %include "KineticsMaterial.hh"

@@ -10,7 +10,7 @@
 #ifndef detran_BOUNDARYBASE_HH_
 #define detran_BOUNDARYBASE_HH_
 
-#include "discretization/DimensionTraits.hh"
+#include "transport/DimensionTraits.hh"
 #include "geometry/Mesh.hh"
 #include "utilities/DBC.hh"
 #include "utilities/InputDB.hh"

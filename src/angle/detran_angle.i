@@ -6,7 +6,12 @@
  */
 //---------------------------------------------------------------------------//
 
-%include "utilities/detran_utilities.i"
+%module(directors="1", allprotected="1", package="pydetran") angle
+%{
+#include "angle/detran_angle.hh"
+%}
+
+%import "utilities/detran_utilities.i"
 
 // Base angle classes and utilities
 %include "Quadrature.hh"
@@ -37,7 +42,9 @@ cast_base_to_moc(detran_utilities::SP<detran_angle::Quadrature>* q)
   return detran_utilities::SP<detran_angle::QuadratureMOC>(*q);
 } 
 
-}
+} // end inline
+
+
 
 //---------------------------------------------------------------------------//
 //              end of detran_angle.i

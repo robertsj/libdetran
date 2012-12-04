@@ -6,8 +6,16 @@
  */
 //---------------------------------------------------------------------------//
 
-%include "detran_kinetics.i"
-%include "detran_utilities.i"
+%module(directors="1", allprotected="1", package="pydetran") solvers
+%{
+#include "FixedSourceManager.hh"
+#include "EigenvalueManager.hh"
+#include "time/TimeStepper.hh"
+%}
+
+%import "detran_kinetics.i"
+%import "detran_transport.i"
+
 %include callback.i 
 
 // Set the callback setter for time stepping manager.

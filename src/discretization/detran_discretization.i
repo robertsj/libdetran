@@ -1,8 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   detran_discretization.i
- * \author Jeremy Roberts
- * \brief  Python interface for detran discretization.
+/**
+ *  @file   detran_discretization.i
+ *  @author Jeremy Roberts
+ *  @brief  Python interface for detran discretization.
  */
 //---------------------------------------------------------------------------//
 

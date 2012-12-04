@@ -1,10 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   test_Sweeper3D.cc
- * \author Jeremy Roberts
- * @date   Apr 1, 2012
- * \brief  Test of test_Sweeper3D
- * \note   Copyright (C) 2012 Jeremy Roberts.
+/**
+ *  @file   test_Sweeper3D.cc
+ *  @author Jeremy Roberts
+ *  @date   Apr 1, 2012
+ *  @brief  Test of test_Sweeper3D
  */
 //---------------------------------------------------------------------------//
 
@@ -14,6 +13,8 @@
 
 #include "utilities/TestDriver.hh"
 #include "Sweeper3D.hh"
+#include "Equation_DD_3D.hh"
+
 #include "angle/LevelSymmetric.hh"
 #include "external_source/ConstantSource.hh"
 #include "geometry/Mesh3D.hh"

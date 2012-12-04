@@ -8,7 +8,7 @@
 //---------------------------------------------------------------------------//
 
 #include "Sweeper3D.hh"
-#include "discretization/Equation_DD_3D.hh"
+#include "Equation_DD_3D.hh"
 //#include "discretization/Equation_SD_3D.hh"
 //#include "discretization/Equation_SC_3D.hh"
 

@@ -8,9 +8,9 @@
 //---------------------------------------------------------------------------//
 
 #include "Sweeper1D.hh"
-#include "discretization/Equation_DD_1D.hh"
-#include "discretization/Equation_SD_1D.hh"
-#include "discretization/Equation_SC_1D.hh"
+#include "Equation_DD_1D.hh"
+#include "Equation_SD_1D.hh"
+#include "Equation_SC_1D.hh"
 
 namespace detran
 {

@@ -10,7 +10,6 @@
 #ifndef detran_SWEEPER3D_I_HH_
 #define detran_SWEEPER3D_I_HH_
 
-#include "discretization/Equation_DD_3D.hh"
 #include <iostream>
 #ifdef DETRAN_ENABLE_OPENMP
 #include <omp.h>

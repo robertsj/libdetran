@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   test_Sweeper2D.cc
- * \author Jeremy Roberts
- * @date   Apr 1, 2012
- * \brief  Test of test_Sweeper2D
+/**
+ *  @file   test_Sweeper2D.cc
+ *  @author Jeremy Roberts
+ *  @date   Apr 1, 2012
+ *  @brief  Test of test_Sweeper2D
  */
 //---------------------------------------------------------------------------//
 
@@ -14,6 +14,9 @@
 // Detran headers
 #include "utilities/TestDriver.hh"
 #include "Sweeper2D.hh"
+#include "Equation_DD_2D.hh"
+#include "Equation_SD_2D.hh"
+#include "Equation_SC_2D.hh"
 
 // Setup
 #include "geometry/test/mesh_fixture.hh"

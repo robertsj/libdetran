@@ -10,9 +10,6 @@
 #ifndef detran_SWEEPER2D_I_HH_
 #define detran_SWEEPER2D_I_HH_
 
-#include "discretization/Equation_SD_2D.hh"
-#include "discretization/Equation_DD_2D.hh"
-#include "discretization/Equation_SC_2D.hh"
 #include <iostream>
 #ifdef DETRAN_ENABLE_OPENMP
 #include <omp.h>

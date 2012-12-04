@@ -11,9 +11,9 @@
 #define detran_BOUNDARYTALLY_HH_
 
 #include "CoarseMesh.hh"
+#include "DimensionTraits.hh"
+#include "Equation.hh"
 #include "angle/Quadrature.hh"
-#include "discretization/Equation.hh"
-#include "discretization/DimensionTraits.hh"
 #include "utilities/Definitions.hh"
 #include "utilities/SP.hh"
 #include <vector>

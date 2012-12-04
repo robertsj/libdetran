@@ -1,10 +1,20 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   detran_utilities.i
- * \author Jeremy Roberts
- * \brief  Python interface for detran utilities.
+/**
+ *  @file   detran_utilities.i
+ *  @author Jeremy Roberts
+ *  @brief  Python interface for detran utilities.
  */
 //---------------------------------------------------------------------------//
+
+%module(package="pydetran") utilities
+%{
+#include "utilities/Definitions.hh"
+#include "utilities/DBC.hh"
+#include "utilities/InputDB.hh"
+#include "utilities/MathUtilities.hh"
+#include "utilities/Point.hh"
+#include "utilities/SP.hh"
+%}
 
 // STL
 %include std_map.i

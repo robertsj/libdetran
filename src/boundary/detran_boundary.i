@@ -1,12 +1,21 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   detran_boundary.i
- * \author Jeremy Roberts
- * \brief  Python interface for detran boundary.
+/**
+ *  @file   detran_boundary.i
+ *  @author Jeremy Roberts
+ *  @brief  Python interface for detran boundary.
  */
 //---------------------------------------------------------------------------//
 
-%include "detran_utilities.i"
+%module(package="pydetran") boundary
+%{
+#include "boundary/BoundaryDiffusion.hh"
+#include "boundary/BoundarySN.hh"
+#include "boundary/BoundaryMOC.hh"
+%}
+
+%import "detran_utilities.i"
+%import "detran_geometry.i"
+%import "detran_angle.i"
 
 %include "BoundaryTraits.hh"
 %template(BT1) detran::BoundaryTraits<detran::_1D>;
@@ -123,9 +132,6 @@
 %include "BoundaryMOC.hh"
 %template(BoundMOC3D)      detran::BoundaryMOC<detran::_2D>;
 %template(BoundMOC3DSP)    detran_utilities::SP<detran::BoundaryMOC<detran::_2D> >;
-
-
-
 
 %inline
 {

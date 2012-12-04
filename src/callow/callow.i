@@ -1,12 +1,26 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   callow.i
- * \author Jeremy Roberts
- * \brief  Python interface for callow library.
+/**
+ *  @file   callow.i
+ *  @author Jeremy Roberts
+ *  @brief  Python interface for callow library.
  */
 //---------------------------------------------------------------------------//
 
-%include "detran_utilities.i"
+%module(directors="1", allprotected="1", package="pydetran") callow
+%{
+#include "callow/callow_config.hh"
+#include "callow/utils/Initialization.hh"
+#include "callow/utils/Typedefs.hh"
+#include "callow/vector/Vector.hh"
+#include "callow/matrix/MatrixBase.hh"
+#include "callow/matrix/Matrix.hh"
+#include "callow/matrix/MatrixShell.hh"
+#include "callow/solver/LinearSolverCreator.hh"
+#include "callow/solver/EigenSolverCreator.hh"
+#include "callow/preconditioner/Preconditioner.hh"
+%}
+
+%import "detran_utilities.i"
 %include "callow_config.hh"
 
 //---------------------------------------------------------------------------//
