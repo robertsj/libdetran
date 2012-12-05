@@ -14,6 +14,7 @@
 #include "external_source/IsotropicSource.hh"
 %}
 
+%include <pycontainer.swg>
 %import "detran_utilities.i"
 %import "detran_geometry.i"
 %import "detran_angle.i"

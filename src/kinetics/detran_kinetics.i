@@ -25,12 +25,14 @@
 #include "kinetics/PulsedExternalSource.hh"
 %}
 
+%include <pycontainer.swg>
 %import "detran_utilities.i"
 %import "detran_material.i"
 %import "detran_angle.i"
 %import "detran_geometry.i"
 %import "detran_external_source.i"
 %import "detran_transport.i"
+
 
 %include std_string.i
 %include callback.i 
