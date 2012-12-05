@@ -16,7 +16,9 @@
 #include "material/Material.hh"
 #include "transport/State.hh"
 #include "utilities/InputDB.hh"
+#ifdef DETRAN_ENABLE_SILO
 #include "silo.h"
+#endif
 
 namespace detran_ioutils
 {
@@ -119,7 +121,9 @@ private:
   /// Material database
   SP_material d_material;
   /// Silo file.
+#ifdef DETRAN_ENABLE_SILO
   DBfile *d_silofile;
+#endif
   /// The Silo file is created
   bool d_initialized;
   /// Problem dimension

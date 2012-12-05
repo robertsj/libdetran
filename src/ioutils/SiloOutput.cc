@@ -7,11 +7,7 @@
  */
 //---------------------------------------------------------------------------//
 
-// Configuration
 #include "detran_config.hh"
-
-#ifdef DETRAN_ENABLE_SILO
-
 #include "SiloOutput.hh"
 #include "utilities/DBC.hh"
 #include "utilities/Definitions.hh"
@@ -20,6 +16,8 @@
 
 namespace detran_ioutils
 {
+
+#ifdef DETRAN_ENABLE_SILO
 
 //---------------------------------------------------------------------------//
 SiloOutput::SiloOutput(SP_mesh mesh)
@@ -242,11 +240,27 @@ bool SiloOutput::write_time_flux(const int step,
   return flag;
 }
 
+#else
 
-} // end namespace detran_ioutils
+SiloOutput::SiloOutput(SP_mesh mesh)
+{
+  THROW("SILO NOT ENABLED");
+}
+SiloOutput::~SiloOutput(){}
+void SiloOutput::finalize(){}
+bool SiloOutput::write_mesh_map(const std::string &key)
+{return false;}
+bool SiloOutput::write_scalar_flux(SP_state state)
+{return false;}
+bool SiloOutput::write_angular_flux(SP_state state, SP_quadrature quad)
+{return false;}
+bool SiloOutput::write_time_flux(const int step, SP_state state, bool do_psi)
+{return false;}
 
 
 #endif // DETRAN_ENABLE_SILO
+
+} // end namespace detran_ioutils
 
 //---------------------------------------------------------------------------//
 //              end of file SiloOutput.cc
