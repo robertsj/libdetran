@@ -44,6 +44,7 @@ TARGET_LINK_LIBRARIES(${LIB_NAME}
 )
 
 INSTALL_FILES(/include/${LIB_NAME} .hh)
+INSTALL_FILES(/include/${LIB_NAME} .i)
 INSTALL_TARGETS(/lib ${LIB_NAME})
 
 #-----------------------------------------------------------------------------#

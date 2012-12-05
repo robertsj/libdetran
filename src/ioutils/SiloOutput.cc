@@ -248,6 +248,7 @@ SiloOutput::SiloOutput(SP_mesh mesh)
 }
 SiloOutput::~SiloOutput(){}
 void SiloOutput::finalize(){}
+bool SiloOutput::initialize(std::string filename){}
 bool SiloOutput::write_mesh_map(const std::string &key)
 {return false;}
 bool SiloOutput::write_scalar_flux(SP_state state)

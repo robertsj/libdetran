@@ -8,6 +8,7 @@
 
 %module(directors="1", allprotected="1", package="pydetran") callow
 %{
+#include <stddef.h>
 #include "callow/callow_config.hh"
 #include "callow/utils/Initialization.hh"
 #include "callow/utils/Typedefs.hh"
