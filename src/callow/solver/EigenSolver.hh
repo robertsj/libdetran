@@ -68,9 +68,9 @@ public:
   //-------------------------------------------------------------------------//
 
   typedef detran_utilities::SP<EigenSolver>       SP_solver;
-  typedef typename MatrixBase::SP_matrix          SP_matrix;
-  typedef typename LinearSolver::SP_solver        SP_linearsolver;
-  typedef typename Vector::SP_vector              SP_vector;
+  typedef MatrixBase::SP_matrix                   SP_matrix;
+  typedef LinearSolver::SP_solver                 SP_linearsolver;
+  typedef Vector::SP_vector                       SP_vector;
   typedef detran_utilities::InputDB::SP_input     SP_db;
 
 

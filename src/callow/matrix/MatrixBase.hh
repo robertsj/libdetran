@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   MatrixBase.hh
- * \author robertsj
- * \date   Sep 13, 2012
- * \brief  MatrixBase class definition.
+/**
+ *  @file   MatrixBase.hh
+ *  @author robertsj
+ *  @date   Sep 13, 2012
+ *  @brief  MatrixBase class definition.
  */
 //---------------------------------------------------------------------------//
 
@@ -26,8 +26,8 @@ public:
   // TYPEDEFS
   //---------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<MatrixBase >    SP_matrix;
-  typedef typename Vector::SP_vector           SP_vector;
+  typedef detran_utilities::SP<MatrixBase >     SP_matrix;
+  typedef Vector::SP_vector                     SP_vector;
 
   //---------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR

@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   LinearSolverCreator.hh
- * \brief  LinearSolverCreator
- * \author Jeremy Roberts
- * \date   Sep 21, 2012
+/**
+ *  @file   LinearSolverCreator.hh
+ *  @brief  LinearSolverCreator
+ *  @author Jeremy Roberts
+ *  @date   Sep 21, 2012
  */
 //---------------------------------------------------------------------------//
 
@@ -31,8 +31,8 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef typename LinearSolver::SP_solver    SP_solver;
-  typedef detran_utilities::InputDB::SP_input SP_db;
+  typedef LinearSolver::SP_solver               SP_solver;
+  typedef detran_utilities::InputDB::SP_input   SP_db;
 
   //-------------------------------------------------------------------------//
   // PUBLIC METHODS

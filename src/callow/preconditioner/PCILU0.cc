@@ -1,7 +1,7 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
  *  @file   PCILU0.cc
- *  @brief  PCILU0
+ *  @brief  PCILU0 member definitions
  *  @author Jeremy Roberts
  *  @date   Sep 18, 2012
  */

@@ -26,7 +26,7 @@ inline void Jacobi::solve_impl(const Vector &b, Vector &x)
 
   Insist(dynamic_cast<Matrix*>(d_A.bp()),
     "Need an explicit matrix for use with Jacobi iteration");
-  typename Matrix::SP_matrix A = d_A;
+  Matrix::SP_matrix A = d_A;
 
   // temporary storage and pointers for swapping
   Vector temp(x.size(), 0.0);

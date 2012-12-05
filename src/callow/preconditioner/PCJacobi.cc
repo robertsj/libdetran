@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   PCJacobi.cc
- * \brief  PCJacobi 
- * \author Jeremy Roberts
- * \date   Sep 18, 2012
+/**
+ *  @file   PCJacobi.cc
+ *  @brief  PCJacobi member definitions
+ *  @author Jeremy Roberts
+ *  @date   Sep 18, 2012
  */
 //---------------------------------------------------------------------------//
 

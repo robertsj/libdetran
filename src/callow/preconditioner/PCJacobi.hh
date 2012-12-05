@@ -41,11 +41,11 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef Preconditioner                   Base;
-  typedef typename Base::SP_preconditioner SP_preconditioner;
-  typedef typename MatrixBase::SP_matrix   SP_matrix;
-  typedef typename Matrix::SP_matrix       SP_matrixfull;
-  typedef typename Vector::SP_vector       SP_vector;
+  typedef Preconditioner                    Base;
+  typedef Base::SP_preconditioner           SP_preconditioner;
+  typedef MatrixBase::SP_matrix             SP_matrix;
+  typedef Matrix::SP_matrix                 SP_matrixfull;
+  typedef Vector::SP_vector                 SP_vector;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR

@@ -1,7 +1,7 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
  *  @file   Preconditioner.i.hh
- *  @brief  Preconditioner.i
+ *  @brief  Preconditioner inline member definitions
  *  @author Jeremy Roberts
  *  @date   Sep 20, 2012
  */

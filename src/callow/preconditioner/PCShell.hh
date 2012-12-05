@@ -32,9 +32,9 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef Preconditioner                   Base;
-  typedef typename Base::SP_preconditioner SP_preconditioner;
-  typedef typename Vector::SP_vector       SP_vector;
+  typedef Preconditioner                Base;
+  typedef Base::SP_preconditioner       SP_preconditioner;
+  typedef Vector::SP_vector             SP_vector;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR

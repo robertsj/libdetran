@@ -30,10 +30,10 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef EigenSolver          Base;
-  typedef typename Base::SP_matrix          SP_matrix;
-  typedef typename Base::SP_solver          SP_solver;
-  typedef typename Base::SP_vector          SP_vector;
+  typedef EigenSolver               Base;
+  typedef Base::SP_matrix           SP_matrix;
+  typedef Base::SP_solver           SP_solver;
+  typedef Base::SP_vector           SP_vector;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR

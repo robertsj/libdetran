@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Matrix.i.hh
- * \author robertsj
- * \date   Sep 13, 2012
- * \brief  Matrix.i class definition.
+/**
+ *  @file   Matrix.i.hh
+ *  @author robertsj
+ *  @date   Sep 13, 2012
+ *  @brief  Matrix.i class definition.
  */
 //---------------------------------------------------------------------------//
 
@@ -74,7 +74,7 @@ inline void Matrix::assemble()
   Insist(!d_is_ready, "This matrix must not have been assembled already.");
   Insist(d_allocated, "This matrix must be allocated before assembling.");
 
-  typedef typename std::vector<triplet_T>::iterator it_T;
+  typedef std::vector<triplet_T>::iterator it_T;
 
   // sort the coo structure
   d_nnz = 0;

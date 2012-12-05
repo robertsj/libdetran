@@ -26,7 +26,7 @@ inline void GaussSeidel::solve_impl(const Vector &b, Vector &x)
 
   Insist(dynamic_cast< Matrix* >(d_A.bp()),
     "Need an explicit matrix for use with GaussSeidel iteration");
-  typename Matrix::SP_matrix A = d_A;
+  Matrix::SP_matrix A = d_A;
 
   typedef Vector Vec;
 

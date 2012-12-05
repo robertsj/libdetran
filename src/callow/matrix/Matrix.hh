@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Matrix.hh
- * \author robertsj
- * \date   Sep 13, 2012
- * \brief  Matrix class definition.
+/**
+ *  @file   Matrix.hh
+ *  @author robertsj
+ *  @date   Sep 13, 2012
+ *  @brief  Matrix class definition.
  */
 //---------------------------------------------------------------------------//
 

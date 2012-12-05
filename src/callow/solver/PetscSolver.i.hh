@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   PetscSolver.i.hh
- * \author robertsj
- * \date   Sep 20, 2012
- * \brief  PetscSolver.i class definition.
+/**
+ *  @file   PetscSolver.i.hh
+ *  @author robertsj
+ *  @date   Sep 20, 2012
+ *  @brief  PetscSolver inline member definitions
  */
 //---------------------------------------------------------------------------//
 

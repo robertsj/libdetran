@@ -87,11 +87,11 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<LinearSolver>           SP_solver;
-  typedef typename MatrixBase::SP_matrix               SP_matrix;
-  typedef typename Preconditioner::SP_preconditioner   SP_preconditioner;
-  typedef typename Vector::SP_vector                   SP_vector;
-  typedef detran_utilities::InputDB::SP_input          SP_db;
+  typedef detran_utilities::SP<LinearSolver>        SP_solver;
+  typedef MatrixBase::SP_matrix                     SP_matrix;
+  typedef Preconditioner::SP_preconditioner         SP_preconditioner;
+  typedef Vector::SP_vector                         SP_vector;
+  typedef detran_utilities::InputDB::SP_input       SP_db;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
