@@ -8,6 +8,7 @@
 
 %module(package="pydetran") boundary
 %{
+#include <stddef.h>
 #include "boundary/BoundaryDiffusion.hh"
 #include "boundary/BoundarySN.hh"
 #include "boundary/BoundaryMOC.hh"

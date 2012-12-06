@@ -8,6 +8,7 @@
 
 %module(directors="1", allprotected="1", package="pydetran") postprocess
 %{
+#include <stddef.h>
 #include "postprocess/ReactionRates.hh"
 %}
 

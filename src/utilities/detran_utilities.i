@@ -8,6 +8,7 @@
 
 %module(package="pydetran") utilities
 %{
+#include <stddef.h>
 #include "utilities/Definitions.hh"
 #include "utilities/DBC.hh"
 #include "utilities/InputDB.hh"

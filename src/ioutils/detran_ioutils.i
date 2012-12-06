@@ -8,6 +8,7 @@
 
 %module(directors="1", allprotected="1", package="pydetran") ioutils
 %{
+#include <stddef.h>
 #include "ioutils/IO_HDF5.hh"
 #include "ioutils/SiloOutput.hh"
 %}

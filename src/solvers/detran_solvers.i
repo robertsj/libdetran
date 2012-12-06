@@ -8,6 +8,7 @@
 
 %module(directors="1", allprotected="1", package="pydetran") solvers
 %{
+#include <stddef.h>
 #include "FixedSourceManager.hh"
 #include "EigenvalueManager.hh"
 #include "time/TimeStepper.hh"

@@ -8,6 +8,7 @@
 
 %module(directors="1", allprotected="1", package="pydetran") external_source
 %{
+#include <stddef.h>
 #include "external_source/ExternalSource.hh"
 #include "external_source/ConstantSource.hh"
 #include "external_source/DiscreteSource.hh"

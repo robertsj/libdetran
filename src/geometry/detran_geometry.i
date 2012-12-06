@@ -8,6 +8,7 @@
 
 %module(directors="1", allprotected="1", package="pydetran") geometry
 %{
+#include <stddef.h>
 #include "utilities/SP.hh"
 #include "geometry/Assembly.hh"
 #include "geometry/Core.hh"

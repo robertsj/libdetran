@@ -8,6 +8,7 @@
 
 %module(package="pydetran") transport
 %{
+#include <stddef.h>
 #include "transport/DimensionTraits.hh"
 #include "transport/FissionSource.hh"
 #include "transport/State.hh"

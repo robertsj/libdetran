@@ -8,6 +8,7 @@
 
 %module(directors="1", allprotected="1", package="pydetran") angle
 %{
+#include <stddef.h>
 #include "angle/detran_angle.hh"
 %}
 

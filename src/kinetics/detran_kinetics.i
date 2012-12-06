@@ -8,6 +8,7 @@
    
 %module(directors="1", allprotected="1", package="pydetran") kinetics
 %{
+#include <stddef.h>
 // material
 #include "kinetics/KineticsMaterial.hh"
 #include "kinetics/TimeDependentMaterial.hh"

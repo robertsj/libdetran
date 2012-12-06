@@ -8,6 +8,7 @@
 
 %module(package="pydetran") material
 %{
+#include <stddef.h>
 #include "material/detran_material.hh"
 %}
 
