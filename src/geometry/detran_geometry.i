@@ -6,7 +6,7 @@
  */
 //---------------------------------------------------------------------------//
 
-%module(directors="1", allprotected="1", package="pydetran") geometry
+%module(directors="1", allprotected="1", package="detran") geometry
 %{
 #include <stddef.h>
 #include "utilities/SP.hh"

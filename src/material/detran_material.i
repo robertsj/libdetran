@@ -6,7 +6,7 @@
  */
 //---------------------------------------------------------------------------//
 
-%module(package="pydetran") material
+%module(package="detran") material
 %{
 #include <stddef.h>
 #include "material/detran_material.hh"

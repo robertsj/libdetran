@@ -7,15 +7,12 @@
  */
 //---------------------------------------------------------------------------//
 
-// Config
 #include "detran_config.hh"
 #include "StupidParser.hh"
-#include "Manager.hh"
 #include "Execute.hh"
+#include "solvers/Manager.hh"
 #include "utilities/Timer.hh"
 #include "utilities/Profiler.hh"
-
-// System
 #include <iostream>
 #include <ctime>
 
