@@ -101,7 +101,7 @@ protected:
   size_t d_number_groups;
   /// Vector of linear solvers for applying the inverse operator
   vec_solver d_solver;
-  /// Vector of diffusion loss operators for each group
+  /// Vector of one group operators for each group
   vec_operator d_operator;
   /// Group of within group solve
   size_t d_group;

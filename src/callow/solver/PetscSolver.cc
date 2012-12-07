@@ -115,6 +115,8 @@ void PetscSolver::set_operators(SP_matrix A, SP_db db)
         PCSetType(pc, PCLU);
         PCFactorSetReuseOrdering(pc, PETSC_TRUE);
         PCFactorSetReuseFill(pc, PETSC_TRUE);
+//        PCFactorSetMatOrderingType(pc, MATORDERINGND);
+//        PCFactorSetMatSolverPackage(pc, MATSOLVERSUPERLU);
       }
       // Add more options, like hypre etc.
       else

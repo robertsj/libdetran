@@ -166,7 +166,7 @@ inline double Vector::norm_residual(SP_vector x, const int type)
 //---------------------------------------------------------------------------//
 inline void Vector::set(const double v)
 {
-#ifdef CALLOW_ENABLE_PETSC_OPS
+#ifdef CALLOW_ENABLE_PETSC_OPS2
   VecSet(d_petsc_vector, v);
 #else
   for (int i = 0; i < d_size; i++)
@@ -227,7 +227,7 @@ inline void Vector::add(SP_vector x)
 inline void Vector::add_a_times_x(const double a, const Vector& x)
 {
   Require(x.size() == d_size);
-#ifdef CALLOW_ENABLE_PETSC_OPS
+#ifdef CALLOW_ENABLE_PETSC_OPS2
   VecAXPY(d_petsc_vector, a, const_cast<Vector* >(&x)->petsc_vector());
 #else
   for (int i = 0; i < d_size; i++)

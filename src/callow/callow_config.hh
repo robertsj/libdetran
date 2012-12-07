@@ -1,8 +1,8 @@
 //-----------------------------------*-C-*-----------------------------------//
-/*!
- * \file   callow_config.hh
- * \author Jeremy Roberts 
- * \brief  Definitions for callow packages.
+/**
+ *  @file   callow_config.hh
+ *  @author Jeremy Roberts
+ *  @brief  Definitions for callow packages.
  */
 //---------------------------------------------------------------------------//
 
@@ -41,6 +41,8 @@
 #define CALLOW_ENABLE_SLEPC
 #include "slepc.h"
 #endif
+
+//#define CALLOW_ENABLE_PETSC_OPS
 
 /// Provides linear algebra support for detran
 namespace callow

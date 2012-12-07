@@ -58,6 +58,12 @@ int test_Vector(int argc, char *argv[])
   }
   cout << val2 << endl;
   TEST(soft_equiv(val, 20.0));
+
+  v.set(1.23);
+  TEST(soft_equiv(v[0], 1.23));
+  v.scale(2.0);
+  TEST(soft_equiv(v[0], 2.46));
+
   return 0;
 }
 

@@ -19,7 +19,7 @@ namespace callow
 inline void PCILU0::apply(Vector &b, Vector &x)
 {
   // solve LUx = x --> x = inv(U)*inv(L)*x
-  THROW("DONE");
+
   // forward substitution
   //   for i = 0:m-1
   //     x[i] = 1/L[i,i] * ( b[i] - sum(k=0:i-1, L[i,k]*y[k]) )

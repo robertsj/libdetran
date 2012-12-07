@@ -98,8 +98,16 @@ void WGDiffusionLossOperator::build()
 
     double cell_dc = d_material->diff_coef(m, d_group);
     Assert(cell_dc > 0.0);
+
+
     double cell_sr = d_material->sigma_t(m, d_group) -
                      d_material->sigma_s(m, d_group, d_group);
+//    double cell_sr = d_material->sigma_a(m, d_group);
+//    for (size_t g = 0; g < d_material->number_groups(); ++g)
+//    {
+//      if (g == d_group) continue;
+//      cell_sr += d_material->sigma_s(m, g, d_group);
+//    }
 
     // Get the directional indices.
     int i = d_mesh->cell_to_i(row);
