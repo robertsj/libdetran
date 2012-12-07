@@ -1,15 +1,15 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   IO_HDF5_Traits.hh
- * \author robertsj
- * \date   Aug 1, 2012
- * \brief  IO_HDF5_Traits class definition.
- * \todo   It may be good to extract the classes and such.
+/**
+ *  @file   IO_HDF5_Traits.hh
+ *  @author robertsj
+ *  @date   Aug 1, 2012
+ *  @brief  IO_HDF5_Traits class definition.
+ *  @todo   It may be good to extract the classes and such.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef IO_HDF5_TRAITS_HH_
-#define IO_HDF5_TRAITS_HH_
+#ifndef detran_ioutils_IO_HDF5_TRAITS_HH_
+#define detran_ioutils_IO_HDF5_TRAITS_HH_
 
 #include "utilities/DBC.hh"
 #include <iostream>
@@ -24,9 +24,9 @@ namespace detran_ioutils
 // COMPOUND TYPE AND TRAITS
 //---------------------------------------------------------------------------//
 
-/*!
- *  \class compound_type_traits
- *  \brief Define the value type for the value of a map key/value pair
+/**
+ *  @class compound_type_traits
+ *  @brief Define the value type for the value of a map key/value pair
  *
  *  To map std::map to HDF5, we employ a compound type that stores both
  *  the key and value together.  These traits help reduce code volume.
@@ -52,9 +52,9 @@ struct compound_type_traits<std::vector<double> >
   typedef hvl_t value_type;
 };
 
-/*!
- *  \class compound_type
- *  \brief Store contents of map key/value pair
+/**
+ *  @class compound_type
+ *  @brief Store contents of map key/value pair
  */
 template <class T>
 struct compound_type
@@ -68,11 +68,11 @@ struct compound_type
 // VALUE SETTERS AND GETTERS
 //---------------------------------------------------------------------------//
 
-/*!
- *  \brief Set the value to be sent to file given the value in memory.
+/**
+ *  @brief Set the value to be sent to file given the value in memory.
  *
- *  \param value_in     The value as stored in memory
- *  \param value_out    The value to be written to file
+ *  @param value_in     The value as stored in memory
+ *  @param value_out    The value to be written to file
  */
 template <class T>
 inline void
@@ -105,10 +105,10 @@ set_value(const std::vector<double> &value_in,
   value_out.p   = (void *) &value_in[0];
 }
 
-/*!
- *  \brief Get the value to be stored in memory.
- *  \param value_out     The value to be stored in memory
- *  \param value_in    The value as stored in th efile
+/**
+ *  @brief Get the value to be stored in memory.
+ *  @param value_out     The value to be stored in memory
+ *  @param value_in    The value as stored in th efile
  */
 template <class T>
 inline void
@@ -163,9 +163,9 @@ get_value(std::vector<double> &value_out,
 // HDF5 TYPES FOR STORAGE IN MEMORY AND FILE
 //---------------------------------------------------------------------------//
 
-/*!
- *  \class HDF5_MemoryType
- *  \brief Create the memory type for the map entry value as stored in memory.
+/**
+ *  @class HDF5_MemoryType
+ *  @brief Create the memory type for the map entry value as stored in memory.
  *
  *  It would be nice to use traits for this, but HDF5 types can be dynamic,
  *  and so we go with a persistent container to hold that type, which also
@@ -230,9 +230,9 @@ inline hid_t HDF5_MemoryType::type<std::vector<double> >()
   return d_type;
 }
 
-/*!
- *  \class HDF5_MemoryType
- *  \brief Create the memory type for the map entry value as stored on disk.
+/**
+ *  @class HDF5_MemoryType
+ *  @brief Create the memory type for the map entry value as stored on disk.
  */
 class HDF5_FileType
 {
@@ -292,4 +292,4 @@ inline hid_t HDF5_FileType::type<std::vector<double> >()
 
 } // end namespace detran_ioutils
 
-#endif /* IO_HDF5_TRAITS_HH_ */
+#endif /* detran_ioutils_IO_HDF5_TRAITS_HH_ */

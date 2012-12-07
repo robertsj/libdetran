@@ -1,15 +1,15 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   InputDB.i.hh
- * \author Jeremy Roberts
- * \date   Mar 25, 2012
- * \brief  InputDB inline member definitions
+/**
+ *  @file   InputDB.i.hh
+ *  @author Jeremy Roberts
+ *  @date   Mar 25, 2012
+ *  @brief  InputDB inline member definitions
  */
 //---------------------------------------------------------------------------//
 
 
-#ifndef INPUTDB_I_HH_
-#define INPUTDB_I_HH_
+#ifndef detran_utilities_INPUTDB_I_HH_
+#define detran_utilities_INPUTDB_I_HH_
 
 #include <iostream>
 
@@ -192,7 +192,7 @@ inline const std::map<std::string, InputDB::SP_input>& InputDB::get_map<InputDB:
 
 } // end namespace detran_utilities
 
-#endif /* INPUTDB_I_HH_ */
+#endif /* detran_utilities_INPUTDB_I_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of InputDB.i.hh

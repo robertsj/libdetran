@@ -1,20 +1,17 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   InputDB.hh
- * \author Jeremy Roberts
- * \brief  InputDB class definition.
+/**
+ *  @file   InputDB.hh
+ *  @author Jeremy Roberts
+ *  @brief  InputDB class definition.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef INPUTDB_HH_
-#define INPUTDB_HH_
+#ifndef detran_utilities_INPUTDB_HH_
+#define detran_utilities_INPUTDB_HH_
 
-// Utilities
 #include "DBC.hh"
 #include "Definitions.hh"
 #include "SP.hh"
-
-// System headers
 #include <string>
 #include <map>
 #ifdef DETRAN_ENABLE_BOOST
@@ -31,7 +28,7 @@ namespace detran_utilities
 {
 
 //===========================================================================//
-/*!
+/**
  * \class InputDB
  * \brief Flexible storage for user input.
  *
@@ -57,6 +54,10 @@ class InputDB
 
 public:
 
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
+
   enum INPUT_TYPES
   {
     INT,
@@ -69,9 +70,11 @@ public:
 
   typedef SP<InputDB> SP_input;
 
-  /*!
-   *  \brief Constructor.
-   */
+  //-------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //-------------------------------------------------------------------------//
+
+  /// Constructor with optional name
   InputDB(std::string name = "InputDB");
 
   static SP_input Create(std::string name = "InputDB")
@@ -81,14 +84,15 @@ public:
     return p;
   }
 
-  /// \name Accessors
-  //\{
+  //-------------------------------------------------------------------------//
+  // PUBLIC FUNCTIONS
+  //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Return value of key
-   *  \param    key     Name of the parameter.
-   *  \param    value   Reference to which parameter value is assigned.
-   *  \return           Check whether key is found.
+  /**
+   *  @brief Return value of key
+   *  @param    key     Name of the parameter.
+   *  @param    value   Reference to which parameter value is assigned.
+   *  @return           Check whether key is found.
    */
   template <class T>
   inline T get(const std::string &key) const
@@ -96,33 +100,31 @@ public:
 
   }
 
-  /*!
-   *  \brief Check if the key is in a  map.
+  /**
+   *  @brief Check if the key is in a  map.
    *
    *  Note, if used consistently, this will prevent the
    *  same key being used for different value types.
    *  Maybe there's a better way to do this input
    *  structure.
    *
-   *  \param    key     Name of the parameter.
-   *  \return           True if exists; false otherwise.
+   *  @param    key     Name of the parameter.
+   *  @return           True if exists; false otherwise.
    */
   inline bool check(const std::string &key) const;
 
-  /*!
-   *  \brief Put a key and value in the database.
-   *  \param    key         Name of the parameter.
-   *  \param    value       Reference to which parameter value is assigned.
-   *  \param    replace     Can we replace a current value?
-   *  \return               Check whether key is found.
+  /**
+   *  @brief Put a key and value in the database.
+   *  @param    key         Name of the parameter.
+   *  @param    value       Reference to which parameter value is assigned.
+   *  @param    replace     Can we replace a current value?
+   *  @return               Check whether key is found.
    */
   template <class T>
   inline void put(const std::string &key, const T value)
   {
 
   }
-
-  //\}
 
   /// Return a map
   template <class T>
@@ -136,8 +138,9 @@ public:
 
 private:
 
-  /// \name Data
-  //\{
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   /// Name of the database
   std::string d_name;
@@ -154,10 +157,9 @@ private:
   /// InputDB parameters
   std::map<std::string, SP_input> d_data_db;
 
-  //\}
-
-  /// \name Serialize
-  /// \{
+  //-------------------------------------------------------------------------//
+  // IMPLEMENTATION
+  //-------------------------------------------------------------------------//
 
 #ifdef DETRAN_ENABLE_BOOST
 
@@ -176,8 +178,6 @@ private:
 
 #endif
 
-  /// \}
-
 };
 
 } // end namespace detran_utilities
@@ -188,7 +188,7 @@ private:
 
 #include "InputDB.i.hh"
 
-#endif /* INPUTDB_HH_ */
+#endif /* detran_utilities_INPUTDB_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of InputDB.hh

@@ -1,8 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   InputDB.c
- * \author Jeremy Roberts
- * \brief  InputDB class member definitions
+/**
+ *  @file   InputDB.c
+ *  @author Jeremy Roberts
+ *  @brief  InputDB class member definitions
  */
 //---------------------------------------------------------------------------//
 
@@ -13,12 +13,14 @@
 namespace detran_utilities
 {
 
+//---------------------------------------------------------------------------//
 InputDB::InputDB(std::string name)
   : d_name(name)
 {
   /* ... */
 }
 
+//---------------------------------------------------------------------------//
 void InputDB::display() const
 {
   using std::cout;
@@ -89,6 +91,7 @@ void InputDB::display() const
   }
 }
 
+//---------------------------------------------------------------------------//
 int InputDB::size(int type) const
 {
   int value = 0;
