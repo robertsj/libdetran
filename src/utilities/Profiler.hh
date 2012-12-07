@@ -1,10 +1,10 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Profiler.hh
- * \author Jeremy Roberts
- * \date   Apr 19, 2012
- * \brief  Wrapper for gperftools profiler.
- * \todo   Fix this so it's not a fixed header location
+/**
+ *  @file   Profiler.hh
+ *  @author Jeremy Roberts
+ *  @date   Apr 19, 2012
+ *  @brief  Wrapper for gperftools profiler.
+ *  @todo   Fix this so it's not a fixed header location
  */
 //---------------------------------------------------------------------------//
 

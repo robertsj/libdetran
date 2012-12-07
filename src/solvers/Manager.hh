@@ -10,17 +10,16 @@
 #ifndef detran_MANAGER_HH_
 #define detran_MANAGER_HH_
 
-// Configuration
 #include "detran_config.hh"
-// Callow
+#include "utilities/Profiler.hh"
 #include "callow/utils/Initialization.hh"
 
 namespace detran
 {
 
-/*!
- *  \class Manager
- *  \brief Manager for initializing and finalizing external libraries.
+/**
+ *  @class Manager
+ *  @brief Manager for initializing and finalizing external libraries.
  *
  *  This is useful if the user wants finer control on using
  *  detran classes than PyExecute affords but still requires
@@ -34,6 +33,7 @@ public:
   /// Initialize libraries (PETSc/SLEPc through callow)
   static void initialize(int argc, char *argv[])
   {
+    START_PROFILER();
     callow_initialize(argc, argv);
   }
 
@@ -41,6 +41,7 @@ public:
   static void finalize()
   {
     callow_finalize();
+    STOP_PROFILER();
   }
 
 };
