@@ -6,7 +6,7 @@
  */
 //---------------------------------------------------------------------------//
 
-%module(package="pydetran") boundary
+%module(package="detran") boundary
 %{
 #include <stddef.h>
 #include "boundary/BoundaryDiffusion.hh"

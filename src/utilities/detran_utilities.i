@@ -6,7 +6,7 @@
  */
 //---------------------------------------------------------------------------//
 
-%module(package="pydetran") utilities
+%module(package="detran") utilities
 %{
 #include <stddef.h>
 #include "utilities/Definitions.hh"

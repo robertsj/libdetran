@@ -6,14 +6,14 @@
  */
 //---------------------------------------------------------------------------//
 
-%module(directors="1", allprotected="1", package="pydetran") solvers
+%module(directors="1", allprotected="1", package="detran") solvers
 %{
 #include <stddef.h>
 #include "FixedSourceManager.hh"
 #include "EigenvalueManager.hh"
 #include "time/TimeStepper.hh"
+#include "Manager.hh"
 %}
-
 
 %import "detran_kinetics.i"
 %import "detran_transport.i"
@@ -44,6 +44,7 @@ setCallbackMethod(4,
                   (ts, step, t, dt, it), 
                   1)
                   
+%include "Manager.hh"
 %include "TransportManager.hh"                  
 
 %include "FixedSourceManager.hh"

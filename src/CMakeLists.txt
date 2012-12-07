@@ -240,7 +240,7 @@ add_subdirectory(drivers)
 
 # Python things for installation
 if( DETRAN_ENABLE_PYTHON )
-#  add_subdirectory(python)
+  add_subdirectory(python)
 endif()
 
 #------------------------------------------------------------------------------#

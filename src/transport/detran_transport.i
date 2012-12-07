@@ -6,7 +6,7 @@
  */
 //---------------------------------------------------------------------------//
 
-%module(package="pydetran") transport
+%module(package="detran") transport
 %{
 #include <stddef.h>
 #include "transport/DimensionTraits.hh"

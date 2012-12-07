@@ -6,7 +6,7 @@
  */
 //---------------------------------------------------------------------------//
    
-%module(directors="1", allprotected="1", package="pydetran") kinetics
+%module(directors="1", allprotected="1", package="detran") kinetics
 %{
 #include <stddef.h>
 // material

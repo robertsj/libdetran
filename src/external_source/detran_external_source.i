@@ -6,7 +6,7 @@
  */
 //---------------------------------------------------------------------------//
 
-%module(directors="1", allprotected="1", package="pydetran") external_source
+%module(directors="1", allprotected="1", package="detran") external_source
 %{
 #include <stddef.h>
 #include "external_source/ExternalSource.hh"

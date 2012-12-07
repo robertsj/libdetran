@@ -6,7 +6,7 @@
  */
 //---------------------------------------------------------------------------//
 
-%module(directors="1", allprotected="1", package="pydetran") callow
+%module(directors="1", allprotected="1", package="detran") callow
 %{
 #include <stddef.h>
 #include "callow/callow_config.hh"

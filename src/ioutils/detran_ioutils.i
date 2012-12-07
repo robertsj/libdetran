@@ -6,7 +6,7 @@
  */
 //---------------------------------------------------------------------------//
 
-%module(directors="1", allprotected="1", package="pydetran") ioutils
+%module(directors="1", allprotected="1", package="detran") ioutils
 %{
 #include <stddef.h>
 #include "ioutils/IO_HDF5.hh"
