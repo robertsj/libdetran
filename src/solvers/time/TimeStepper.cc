@@ -226,7 +226,7 @@ void TimeStepper<D>::solve(SP_state initial_state)
     // user can explicitly turn extrapolation off.
     bool flag = false;
     if (d_scheme == IMP or (order == 1 and d_order > 1)) flag = true;
-    if (d_no_extrapolation) flag = false;
+    if (d_no_extrapolation and !(d_scheme == IMP)) flag = false;
 
     // Set the temporary time step
     dt = d_dt;
@@ -238,12 +238,19 @@ void TimeStepper<D>::solve(SP_state initial_state)
       // Perform the time step
       step(t, dt, order, flag);
 
-      //bool converged = check_convergence();
+      bool converged = check_convergence();
 
       // Call the monitor, if present.
       if (d_monitor_level) d_monitor(d_monitor_data, this, i, t, dt, iteration);
 
+      if (converged) break;
+
     } // end iterations
+
+    // Cycle the previous iterates and copy the current solution
+    cycle_states_precursors(order);
+    *d_states[0] = *d_state;
+    if (d_multiply) *d_precursors[0] = *d_precursor;
 
     // Output the initial state
     if (d_do_output) d_silooutput->write_time_flux(i+1, d_state, true);
@@ -269,12 +276,6 @@ void TimeStepper<D>::step(const double t,
   d_state = d_solver->state();
   update_precursors(t, dt, order);
   if (flag) extrapolate();
-
-  // Cycle the previous iterates and copy the current solution
-  cycle_states_precursors(order);
-  *d_states[0] = *d_state;
-  if (d_multiply) *d_precursors[0] = *d_precursor;
-
 }
 
 //---------------------------------------------------------------------------//

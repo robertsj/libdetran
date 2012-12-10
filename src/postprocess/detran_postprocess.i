@@ -12,6 +12,10 @@
 #include "postprocess/ReactionRates.hh"
 %}
 
+%import "detran_transport.i"
+
+%include "postprocess/ReactionRates.hh"
+
 //---------------------------------------------------------------------------//
 //              end of detran_postprocess.i
 //---------------------------------------------------------------------------//

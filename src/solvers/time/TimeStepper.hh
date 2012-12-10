@@ -149,6 +149,10 @@ private:
   SP_state d_state;
   /// Working precursor vector.
   SP_precursors d_precursor;
+  /// Working last state.  O
+  SP_state d_state_0;
+  /// Working precursor vector.
+  SP_precursors d_precursor_0;
   /// Time step size
   double d_dt;
   /// Step factor (for IMP)

@@ -17,20 +17,33 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-__all__ = ["utilities",         \
-           "angle",             \
-           "callow",            \
-           "geometry",          \
-           "material",          \
-           "external_source",   \
-           "boundary",          \
-           "transport",         \
-           "ioutils",           \
-           "kinetics",          \
-           "solvers",           \
-           "postprocess"        ]
+from utilities import *
+from angle import *
+from callow import *
+from geometry import *
+from material import *
+from external_source import *
+from boundary import *
+from transport import *
+from kinetics import *
+from ioutils import *
+from solvers import *
+from postprocess import *
 
 from pydetranutils import *
 
 import numpy as np
+
+#__all__ = ["utilities",         \
+#           "angle",             \
+#           "callow",            \
+#           "geometry",          \
+#           "material",          \
+#           "external_source",   \
+#           "boundary",          \
+#           "transport",         \
+#           "ioutils",           \
+#           "kinetics",          \
+#           "solvers",           \
+#           "postprocess"        ]
 
