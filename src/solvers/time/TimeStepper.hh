@@ -73,7 +73,7 @@ public:
   typedef detran_utilities::vec_int                       vec_int;
   typedef detran_ioutils::SiloOutput::SP_silooutput       SP_silooutput;
   typedef void (*function_pointer)
-               (void*, TimeStepper<D>*, int, double, double, int);
+               (void*, TimeStepper<D>*, int, double, double, int, bool);
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -149,9 +149,9 @@ private:
   SP_state d_state;
   /// Working precursor vector.
   SP_precursors d_precursor;
-  /// Working last state.  O
+  /// Previous state iterate.
   SP_state d_state_0;
-  /// Working precursor vector.
+  /// Previous precursor iterate.
   SP_precursors d_precursor_0;
   /// Time step size
   double d_dt;
@@ -243,7 +243,8 @@ void ts_default_monitor(void* data,
                         int step,
                         double t,
                         double dt,
-                        int it);
+                        int it,
+                        bool converged);
 
 } // end namespace detran
 

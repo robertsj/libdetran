@@ -215,8 +215,8 @@ void LRA::update_P_and_T(double t)
   for (size_t i = 0; i < d_mesh->number_cells(); ++i)
   {
     double F = sigma_f(i, 0) * phi0[i] + sigma_f(i, 1) * phi1[i];
-    d_P[i] = KAPPA * F * kcrit();
-    if (d_t > 0.0) d_T[i] = d_T[i] + d_dt * ALPHA * F;
+    d_P[i] = KAPPA * F;
+    if (d_t > 0.0) d_T[i] = d_T_old[i] + d_dt * ALPHA * F;
     if (step) d_T_old[i] = d_T[i];
   }
 

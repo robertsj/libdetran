@@ -128,6 +128,8 @@ TimeStepper<D>::TimeStepper(SP_input       input,
   // Get the convergence criteria
   if (d_input->check("ts_max_iters"))
     d_maximum_iterations = d_input->template get<int>("ts_max_iters");
+  if (d_input->check("ts_tolerance"))
+    d_tolerance = d_input->template get<double>("ts_tolerance");
 
   //-------------------------------------------------------------------------//
   // SETUP STATE AND PRECURSOR VECTORS
@@ -144,10 +146,13 @@ TimeStepper<D>::TimeStepper(SP_input       input,
                                        d_mesh->number_cells());
     }
   }
+  d_state_0 = new State(d_input, d_mesh, d_quadrature);
   if (d_multiply)
   {
-    d_precursor = new Precursors(d_material->number_precursor_groups(),
-                                 d_mesh->number_cells());
+    d_precursor   = new Precursors(d_material->number_precursor_groups(),
+                                   d_mesh->number_cells());
+    d_precursor_0 = new Precursors(d_material->number_precursor_groups(),
+                                   d_mesh->number_cells());
   }
 
   //-------------------------------------------------------------------------//
@@ -208,7 +213,7 @@ void TimeStepper<D>::solve(SP_state initial_state)
   d_solver->set_solver();
 
   // Call the monitor, if present.
-  if (d_monitor_level) d_monitor(d_monitor_data, this, 0, 0.0, d_dt, 1);
+  if (d_monitor_level) d_monitor(d_monitor_data, this, 0, 0.0, d_dt, 1, true);
 
   // Perform time steps
   double  t = 0.0;
@@ -241,7 +246,7 @@ void TimeStepper<D>::solve(SP_state initial_state)
       bool converged = check_convergence();
 
       // Call the monitor, if present.
-      if (d_monitor_level) d_monitor(d_monitor_data, this, i, t, dt, iteration);
+      if (d_monitor_level) d_monitor(d_monitor_data, this, i, t, dt, iteration, converged);
 
       if (converged) break;
 
@@ -270,6 +275,10 @@ void TimeStepper<D>::step(const double t,
   d_material->update(t, dt, order, true);
   update_sources(t, dt, order);
   d_solver->update();
+
+  // Save old state
+  *d_state_0 = *d_state;
+  if (d_multiply) *d_precursor_0 = *d_precursor;
 
   // Solve the MG problem for the new state and update the precursors
   d_solver->solve();
@@ -484,8 +493,8 @@ bool TimeStepper<D>::check_convergence()
   for (size_t g = 0; g < d_material->number_groups(); ++g)
   {
     double nr_g = detran_utilities::
-      norm_relative_residual(d_state->phi(g), d_states[0]->phi(g));
-    d_residual_norm += nr_g*nr_g;
+      norm_relative_residual(d_state->phi(g), d_state_0->phi(g));
+    d_residual_norm += nr_g * nr_g;
   }
   d_residual_norm = std::sqrt(d_residual_norm);
 
@@ -502,7 +511,8 @@ void ts_default_monitor(void* data,
                         int step,
                         double t,
                         double dt,
-                        int it)
+                        int it,
+                        bool converged)
 {
   Require(ts);
   if (!ts->monitor_level()) return;

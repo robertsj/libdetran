@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------//
 
-void test_monitor(void* data, TimeStepper<_1D>* ts, int step, double t, double dt, int it)
+void test_monitor(void* data, TimeStepper<_1D>* ts, int step, double t, double dt, int it, bool conv)
 {
   printf(" %16.13f  %16.13f  %16.13f \n", t, ts->state()->phi(0)[0], ts->precursor()->C(0)[0]);
 }

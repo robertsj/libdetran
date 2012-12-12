@@ -25,23 +25,23 @@
 setCallbackMethod(2, 
                   detran::TimeStepper<detran::_1D>, 
                   set_monitor, 
-                  (void* data, detran::TimeStepper<detran::_1D>* ts, int step, double t, double dt, int it), 
-                  (detran::TimeStepper<detran::_1D>* ts, int step, double t, double dt, int it), 
-                  (ts, step, t, dt, it), 
+                  (void* data, detran::TimeStepper<detran::_1D>* ts, int step, double t, double dt, int it, bool converged), 
+                  (detran::TimeStepper<detran::_1D>* ts, int step, double t, double dt, int it, bool converged), 
+                  (ts, step, t, dt, it, converged), 
                   1)
 setCallbackMethod(3, 
                   detran::TimeStepper<detran::_2D>, 
                   set_monitor, 
-                  (void* data, detran::TimeStepper<detran::_2D>* ts, int step, double t, double dt, int it), 
-                  (detran::TimeStepper<detran::_2D>* ts, int step, double t, double dt, int it), 
-                  (ts, step, t, dt, it), 
+                  (void* data, detran::TimeStepper<detran::_2D>* ts, int step, double t, double dt, int it, bool converged), 
+                  (detran::TimeStepper<detran::_2D>* ts, int step, double t, double dt, int it, bool converged), 
+                  (ts, step, t, dt, it, converged), 
                   1)
 setCallbackMethod(4, 
                   detran::TimeStepper<detran::_3D>, 
                   set_monitor, 
-                  (void* data, detran::TimeStepper<detran::_3D>* ts, int step, double t, double dt, int it), 
-                  (detran::TimeStepper<detran::_3D>* ts, int step, double t, double dt, int it), 
-                  (ts, step, t, dt, it), 
+                  (void* data, detran::TimeStepper<detran::_3D>* ts, int step, double t, double dt, int it, bool converged), 
+                  (detran::TimeStepper<detran::_3D>* ts, int step, double t, double dt, int it, bool converged), 
+                  (ts, step, t, dt, it, converged), 
                   1)
                   
 %include "Manager.hh"
