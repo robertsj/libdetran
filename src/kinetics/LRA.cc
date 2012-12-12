@@ -12,7 +12,7 @@
 namespace detran_user
 {
 
-// Raw material data
+// Raw material data    0                   1                   2                   3                   4                   5
 //                      fuel 1, blade in    fuel 1, blade out   fuel 2, blade in    fuel 2, blade out   reflector           cr (= fuel 2, blade in @ t = 0)
 const double T1[]  =  { 0.265604249667995 , 0.262881177707676 , 0.264760391845380 , 0.264760391845380 , 0.265181649429859 , 0.264760391845380 };
 const double T2[]  =  { 1.579778830963665 , 1.752541184717841 , 1.594133588394707 , 1.594133588394707 , 2.093802345058626 , 1.594133588394707 };
@@ -88,17 +88,17 @@ void LRA::initialize_materials()
   {
     size_t m = d_unique_mesh_map[i];
 
-    if (d_flag)
+    if (d_flag) // transport
     {
       set_sigma_t(i, 0,     T1[m] + B*D1[m]);
       set_sigma_t(i, 1,     T2[m] + B*D2[m]);
       set_sigma_s(i, 0, 0,  S11[m] / (1.0 + mu0[m]));
       set_sigma_s(i, 1, 1,  S22[m] / (1.0 + mu1[m]));
     }
-    else
+    else // diffusion (put removal into total; Sgg = 0)
     {
       set_sigma_t(i, 0,     A1[m] + S21[m]  + B*D1[m]);
-      set_sigma_t(i, 1,     A2[m] + B*D2[m]          );
+      set_sigma_t(i, 1,     A2[m]           + B*D2[m]);
     }
     set_sigma_s(i, 1, 0,  S21[m]);
     set_sigma_a(i, 0,     A1[m] + B*D1[m]);
@@ -198,7 +198,7 @@ void LRA::update_impl()
 }
 
 //---------------------------------------------------------------------------//
-void LRA::update_P_and_T(double t)
+void LRA::update_P_and_T(double t, double dt)
 {
   bool step = false;
   if (t > d_current_time)
@@ -216,7 +216,7 @@ void LRA::update_P_and_T(double t)
   {
     double F = sigma_f(i, 0) * phi0[i] + sigma_f(i, 1) * phi1[i];
     d_P[i] = KAPPA * F;
-    if (d_t > 0.0) d_T[i] = d_T_old[i] + d_dt * ALPHA * F;
+    if (d_t > 0.0) d_T[i] = d_T_old[i] + dt * ALPHA * F;
     if (step) d_T_old[i] = d_T[i];
   }
 

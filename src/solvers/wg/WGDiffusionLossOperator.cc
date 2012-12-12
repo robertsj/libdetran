@@ -65,6 +65,8 @@ WGDiffusionLossOperator::WGDiffusionLossOperator(SP_input    input,
   // Build the matrix.
   build();
 
+  print_matlab("WGDSA.out");
+
 }
 
 //---------------------------------------------------------------------------//
@@ -88,6 +90,8 @@ void WGDiffusionLossOperator::build()
   // Error flag
   bool flag;
 
+  double tmp = 3.0;
+
   // Loop over all matrix rows, which, because of the ordering,
   // is the same as the cell index.
   for (int row = 0; row < size; row++)
@@ -96,12 +100,13 @@ void WGDiffusionLossOperator::build()
     // Define the data for this cell.
     int m = mat_map[row];
 
-    double cell_dc = d_material->diff_coef(m, d_group);
+    double cell_dc = tmp * d_material->diff_coef(m, d_group);
     Assert(cell_dc > 0.0);
 
 
     double cell_sr = d_material->sigma_t(m, d_group) -
                      d_material->sigma_s(m, d_group, d_group);
+    //cell_sr *= 2.0;
 //    double cell_sr = d_material->sigma_a(m, d_group);
 //    for (size_t g = 0; g < d_material->number_groups(); ++g)
 //    {
@@ -176,7 +181,7 @@ void WGDiffusionLossOperator::build()
 
         // Neighbor volume and diffusion coefficient.
         double neig_hxyz[3] = {d_mesh->dx(ii), d_mesh->dy(jj), d_mesh->dz(kk)};
-        double neig_dc = d_material->diff_coef(mat_map[neig_row], d_group);
+        double neig_dc = tmp * d_material->diff_coef(mat_map[neig_row], d_group);
 
         // Compute dtilde.
         dtilde = ( 2.0 * cell_dc * neig_dc ) /

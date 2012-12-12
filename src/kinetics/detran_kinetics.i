@@ -136,10 +136,11 @@ setCallbackMethod(1, // this is a *unique* identifier
       # Note, we need to upcast to PYTDMat to do so.
       upcast(self.material).set_update_impl(self.update_material)
           
-    def update(self, t, dt, order) :
-      ''' Update the material for this time, step, and order
+    def update(self, t, dt, order, synthetic) :
+      ''' Update the material for this time, step, and order. If needed,
+          add the synthetic component.
       ''' 
-      self.material.update(t, dt, order)
+      self.material.update(t, dt, order, synthetic)
           
     def update_material(self) :
       ''' User-defined update function

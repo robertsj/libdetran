@@ -59,6 +59,9 @@ DiffusionLossOperator::DiffusionLossOperator(SP_input       input,
   // Set the albedo.  First, check if the input has an albedo
   // entry.  If it does, this is the default way to set the
   // condition.  Otherwise, check the boundary conditions.
+  bool zero_flux = false;
+  if (d_input->check("bc_zero_flux"))
+    zero_flux = d_input->get<int>("bc_zero_flux");
   if (d_input->check("albedo"))
   {
     // \todo Add a user-defined albedo
@@ -78,8 +81,17 @@ DiffusionLossOperator::DiffusionLossOperator(SP_input       input,
       {
         d_albedo[b][g - d_group_cutoff] = 0.0;
         if (d_input->check(boundary_name[b]))
+        {
           if (d_input->get<std::string>(boundary_name[b]) == "reflect")
+          {
             d_albedo[b][g - d_group_cutoff] = 1.0;
+          }
+          else
+          {
+            if (zero_flux) d_albedo[b][g - d_group_cutoff] = -1.0;
+          }
+
+        }
       }
     }
   }

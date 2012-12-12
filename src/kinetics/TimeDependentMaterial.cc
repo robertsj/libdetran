@@ -64,7 +64,7 @@ void TimeDependentMaterial::update(const double t,
         }
         d_chi[g][m] = chi;
         // synthetic fission cross section
-        d_sigma_f[g][m] /= d_kcrit;
+        d_nu[g][m] /= d_kcrit;
       } // end groups
     } // end materials
   }
@@ -77,7 +77,7 @@ void TimeDependentMaterial::update(const double t,
     {
       for (int g = 0; g < number_groups(); ++g)
       {
-        d_sigma_f[g][m] /= d_kcrit;
+        d_nu[g][m] /= d_kcrit;
         //d_chi[g][m] *= (1.0 - beta_total(m));
       }
     }

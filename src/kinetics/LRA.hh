@@ -47,7 +47,7 @@ public:
 
   void set_state(SP_state);
   void initialize_materials();
-  void update_P_and_T(double t);
+  void update_P_and_T(double t, double dt);
   vec_dbl T() {return d_T;}
   vec_dbl P() {return d_P;}
   double area() {return d_A;}

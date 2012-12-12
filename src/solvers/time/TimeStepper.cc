@@ -233,6 +233,8 @@ void TimeStepper<D>::solve(SP_state initial_state)
     if (d_scheme == IMP or (order == 1 and d_order > 1)) flag = true;
     if (d_no_extrapolation and !(d_scheme == IMP)) flag = false;
 
+    //std::cout << " FLAG = " << flag << std::endl;
+
     // Set the temporary time step
     dt = d_dt;
     if (flag) dt = 0.5 * d_dt;
@@ -244,6 +246,7 @@ void TimeStepper<D>::solve(SP_state initial_state)
       step(t, dt, order, flag);
 
       bool converged = check_convergence();
+      if (iteration == d_maximum_iterations) converged = true;
 
       // Call the monitor, if present.
       if (d_monitor_level) d_monitor(d_monitor_data, this, i, t, dt, iteration, converged);
