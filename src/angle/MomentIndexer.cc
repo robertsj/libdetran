@@ -40,7 +40,15 @@ MomentIndexer::MomentIndexer(const size_t dimension,
       d_m[j] = d_m_index[l][i];
     }
   }
+}
 
+//---------------------------------------------------------------------------//
+MomentIndexer::SP_momentindexer
+MomentIndexer::Create(const size_t dimension,
+                      const size_t legendre_order)
+{
+  SP_momentindexer p(new MomentIndexer(dimension, legendre_order));
+  return p;
 }
 
 //---------------------------------------------------------------------------//

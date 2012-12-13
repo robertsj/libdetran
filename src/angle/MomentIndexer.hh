@@ -61,7 +61,7 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef typename detran_utilities::SP<MomentIndexer>     SP_momentsindex;
+  typedef typename detran_utilities::SP<MomentIndexer>     SP_momentindexer;
   typedef detran_utilities::vec_int                        vec_int;
   typedef detran_utilities::vec2_int                       vec2_int;
   typedef detran_utilities::size_t                         size_t;
@@ -76,6 +76,10 @@ public:
    *  @param legendre_order     Legendre order of the \em flux.
    */
   MomentIndexer(const size_t dimension, const size_t legendre_order);
+
+  /// SP constructor
+  static SP_momentindexer Create(const size_t dimension,
+                                 const size_t legendre_order);
 
   //-------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
