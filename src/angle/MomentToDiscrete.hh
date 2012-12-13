@@ -11,6 +11,7 @@
 #define detran_angle_MOMENT_TO_DISCRETE_HH_
 
 #include "Quadrature.hh"
+#include "MomentIndexer.hh"
 #include "utilities/Definitions.hh"
 #include "utilities/SP.hh"
 #include <vector>
@@ -107,6 +108,7 @@ public:
   //-------------------------------------------------------------------------//
 
   typedef detran_utilities::SP<MomentToDiscrete>  SP_MtoD;
+  typedef MomentIndexer::SP_momentindexer         SP_momentindexer;
   typedef Quadrature::SP_quadrature               SP_quadrature;
   typedef detran_utilities::size_t                size_t;
   typedef detran_utilities::vec_dbl               M_Row;
@@ -118,18 +120,14 @@ public:
 
   /**
    *  @brief Constructor.
-   *
-   *  @param legendre_order   Legendre order of moments expansion.
-   *
-   * Note, this will be greater than or equal to the flux moments
-   * order, since we can optionally keep higher order moments.
+   *  @param indexer   Indexer for spherical harmonic orders
    */
-  explicit MomentToDiscrete(const size_t legendre_order);
+  explicit MomentToDiscrete(SP_momentindexer indexer);
 
   /// SP contructor
-  static SP_MtoD Create(const size_t o, SP_quadrature q)
+  static SP_MtoD Create(SP_momentindexer indexer, SP_quadrature q)
   {
-    SP_MtoD m(new MomentToDiscrete(o));
+    SP_MtoD m(new MomentToDiscrete(indexer));
     m->build(q);
     return m;
   }
@@ -222,6 +220,8 @@ private:
   // DATA
   //-------------------------------------------------------------------------//
 
+  /// Moment indexer
+  SP_momentindexer d_indexer;
   /// Legendre order of anisotropic scattering.
   const size_t d_legendre_order;
   /// Number of angular moments.

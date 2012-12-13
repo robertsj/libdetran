@@ -60,29 +60,19 @@ inline void MomentToDiscrete::build(SP_quadrature q)
 // 3-d
 inline void MomentToDiscrete::calc_row_3d(const size_t o, const size_t a)
 {
-  Assert(d_quadrature);
   int angle = d_quadrature->index(o, a);
-
   // reference to current row
   M_Row &row = d_M[angle];
-
   // calculate the moments and add them to the row
-  for (int l = 0; l <= d_legendre_order; l++)
+  double mu  = d_quadrature->mu(o, a);
+  double eta = d_quadrature->eta(o, a);
+  double xi  = d_quadrature->xi(o, a);
+  for (int i = 0; i < d_number_moments; ++i)
   {
+    size_t l = d_indexer->l(i);
+    int    m = d_indexer->m(i);
     double norm = (2.0 * l + 1.0) * detran_utilities::inv_four_pi;
-    ;
-    for (int m = -l; m <= l; m++)
-    {
-      // get cardinal moment index
-      int i = 0; //Moments<D>::index(l,m);
-      Assert(i < d_number_moments);
-      // add harmonic
-      row[i] = norm
-          * SphericalHarmonics::Y_lm(l, m,
-                                     d_quadrature->mu(o, a),
-                                     d_quadrature->eta(o, a),
-                                     d_quadrature->xi(o, a));
-    }
+    row[i] = norm * SphericalHarmonics::Y_lm(l, m, mu, eta, xi);
   }
 }
 
@@ -91,24 +81,18 @@ inline void MomentToDiscrete::calc_row_3d(const size_t o, const size_t a)
 inline void MomentToDiscrete::calc_row_2d(const size_t o, const size_t a)
 {
   int angle = d_quadrature->index(o, a);
-
   // reference to current row
   M_Row &row = d_M[angle];
-
   // compute the direction cosine w/r to polar axis
   double mu  = d_quadrature->mu(o, a);
   double eta = d_quadrature->eta(o, a);
   double xi  = std::sqrt(1.0 - mu * mu - eta * eta);
-
-  // loop through l>0 moments and add
-  for (int l = 0; l <= d_legendre_order; l++)
+  for (int i = 0; i < d_number_moments; ++i)
   {
+    size_t l = d_indexer->l(i);
+    int    m = d_indexer->m(i);
     double norm = (2.0 * l + 1.0) * detran_utilities::inv_four_pi;
-    for (int m = -l; m <= l; m += 2)
-    {
-      int i = 0; // Moments<_2D>::index(l, m);
-      row[i] = norm * SphericalHarmonics::Y_lm(l, m, mu, eta, xi);
-    }
+    row[i] = norm * SphericalHarmonics::Y_lm(l, m, mu, eta, xi);
   }
 }
 
@@ -117,16 +101,13 @@ inline void MomentToDiscrete::calc_row_2d(const size_t o, const size_t a)
 inline void MomentToDiscrete::calc_row_1d(const size_t o, const size_t a)
 {
   int angle = d_quadrature->index(o, a);
-
   // reference to current row
   M_Row &row = d_M[angle];
-
   // calculate the moments and add them to the row
-  for (int l = 0; l <= d_legendre_order; l++)
+  for (int l = 0; l < d_number_moments; ++l)
   {
     double norm = (2.0 * l + 1.0) * 0.5;
-    int i = 0; //Moments<_1D>::index(l, 0);
-    row[i] = norm * SphericalHarmonics::Y_lm(l, d_quadrature->mu(o, a));
+    row[l] = norm * SphericalHarmonics::Y_lm(l, d_quadrature->mu(o, a));
   }
 }
 
@@ -146,8 +127,8 @@ inline const double& MomentToDiscrete::
 operator()(const size_t angle, const size_t l, const size_t m) const
 {
   // Moment cardinal index
-  int index = 0; //Moments<D>::index(l, m);
-  return (*this)(angle, index);
+  size_t moment = d_indexer->index(l, m);
+  return (*this)(angle, moment);
 }
 
 //-----------------------------------------------------------------------------
@@ -159,7 +140,7 @@ operator()(const size_t o, const size_t a,
   // Angle cardinal index
   size_t angle = d_quadrature->index(o, a);
   // Moment cardinal index
-  size_t moment = 0; //Moments<D>::index(l, m);
+  size_t moment = d_indexer->index(l, m);
   return (*this)(angle, moment);
 }
 

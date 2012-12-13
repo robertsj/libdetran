@@ -13,11 +13,14 @@ namespace detran_angle
 {
 
 //---------------------------------------------------------------------------//
-MomentToDiscrete::MomentToDiscrete(const size_t legendre_order)
-  : d_legendre_order(legendre_order)
-  , d_number_moments(1) // \todo save for later use
+MomentToDiscrete::MomentToDiscrete(SP_momentindexer indexer)
+  : d_indexer(indexer)
 {
-  Require(d_number_moments > 0);
+  // Preconditioner
+  Require(d_indexer);
+
+  d_legendre_order = d_indexer->legendre_order();
+  d_number_moments = d_indexer->number_moments();
 }
 
 
