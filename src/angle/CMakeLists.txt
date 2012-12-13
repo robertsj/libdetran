@@ -29,6 +29,7 @@ SET(SRC
     ProductQuadrature.cc
     ChebyshevLegendre.cc
     ChebyshevDPN.cc
+    MomentIndexer.cc
 )
 
 #-----------------------------------------------------------------------------#

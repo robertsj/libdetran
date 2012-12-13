@@ -26,6 +26,9 @@ TARGET_LINK_LIBRARIES(test_TabuchiYamamoto  angle)
 ADD_EXECUTABLE(test_MomentToDiscrete        test_MomentToDiscrete.cc)
 TARGET_LINK_LIBRARIES(test_MomentToDiscrete angle)
 
+ADD_EXECUTABLE(test_MomentIndexer           test_MomentIndexer.cc)
+TARGET_LINK_LIBRARIES(test_MomentIndexer    angle)
+
 ADD_EXECUTABLE(test_SphericalHarmonics        test_SphericalHarmonics.cc)
 TARGET_LINK_LIBRARIES(test_SphericalHarmonics angle)
 
@@ -39,4 +42,5 @@ ADD_TEST(test_Collocated            test_Collocated         0)
 ADD_TEST(test_Uniform               test_Uniform            0)
 ADD_TEST(test_TabuchiYamamoto       test_TabuchiYamamoto    0)
 ADD_TEST(test_MomentToDiscrete      test_MomentToDiscrete   0)
-ADD_TEST(test_SphericalHarmonics    test_SphericalHarmonics   0)
+ADD_TEST(test_MomentIndexer         test_MomentIndexer      0)
+ADD_TEST(test_SphericalHarmonics    test_SphericalHarmonics 0)

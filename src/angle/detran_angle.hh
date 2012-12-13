@@ -28,6 +28,7 @@
 #include "angle/SphericalHarmonics.hh"
 #include "angle/MomentToDiscrete.hh"
 #include "angle/QuadratureFactory.hh"
+#include "angle/MomentIndexer.hh"
 
 #endif // DETRAN_ANGLE_HH_ 
 
