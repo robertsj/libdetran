@@ -36,7 +36,7 @@ public:
    *  @brief Constructor
    *  @param mesh       User-defined LRA mesh
    */
-  LRA(SP_mesh mesh, bool flag, bool steady);
+  LRA(SP_mesh mesh, bool doingtransport, bool steady);
 
   // SP constructor
   static SP_material Create(SP_mesh, bool flag, bool steady);

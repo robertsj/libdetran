@@ -29,17 +29,23 @@ const double mu0[] =  { 0.000000000000000 , 0.000000000000000 , 0.00000000000000
 const double mu1[] =  { 0.000000000000000 , 0.000000000000000 , 0.000000000000000 , 0.000000000000000 , 0.000000000000000 , 0.000000000000000 };
 const double NU = 2.43;
 const double B  = 0.0001;
-const double ALPHA = 3.830e-11;
-const double GAMMA = 2.034e-3;
-const double KAPPA = 3.204e-11;
+const double ALPHA   = 3.830e-11;
+const double GAMMA   = 3.034e-3; // Benchmark spec has 2.034e-3
+const double KAPPA   = 3.204e-11;
+const double LAMBDA0 = 0.0654; // Benchmark spec has 0.00654
+const double LAMBDA1 = 1.35;
+const double BETA0   = 0.0054;
+const double BETA1   = 0.0010873;
+const double VELOCITY0 = 3.0e7;
+const double VELOCITY1 = 3.0e5;
 const int ROD = 5;
 const int REFLECTOR = 4;
 
 //---------------------------------------------------------------------------//
-LRA::LRA(SP_mesh mesh, bool flag, bool steady)
+LRA::LRA(SP_mesh mesh, bool doingtransport, bool steady)
   : Base(mesh->number_cells(), 2, 2, "LRA_MATERIAL")
   , d_mesh(mesh)
-  , d_flag(flag)
+  , d_flag(doingtransport)
   , d_steady(steady)
   , d_T(mesh->number_cells(), 300.0)
   , d_T_old(mesh->number_cells(), 300.0)
@@ -115,14 +121,14 @@ void LRA::initialize_materials()
     set_chi_d(i, 1, 0,    1.00000);
   }
   // beta
-  set_beta(0,     0.0054);
-  set_beta(1,     0.0010873);
+  set_beta(0,     BETA0);
+  set_beta(1,     BETA1);
   // decay constants
-  set_lambda(0,   0.00654);
-  set_lambda(1,   1.35);
+  set_lambda(0,   LAMBDA0);
+  set_lambda(1,   LAMBDA1);
   // velocities
-  set_velocity(0, 3.0e7);
-  set_velocity(1, 3.0e5);
+  set_velocity(0, VELOCITY0);
+  set_velocity(1, VELOCITY1);
   // finalize and return
   finalize();
 }
@@ -188,13 +194,6 @@ void LRA::update_impl()
 
   }
 
-//  if (time() > 0)
-//  {
-//    //display();
-//    std::cout << " KEFF = " << kcrit() << std::endl;
-//    THROW("Done");
-//  }
-
 }
 
 //---------------------------------------------------------------------------//
@@ -211,13 +210,62 @@ void LRA::update_P_and_T(double t, double dt)
   const detran::State::moments_type &phi0 = d_state->phi(0);
   const detran::State::moments_type &phi1 = d_state->phi(1);
 
-  // Compute power and temperature.  Note, we "unscale" by keff.
-  for (size_t i = 0; i < d_mesh->number_cells(); ++i)
+  // USE A FINE-MESH FISSION DENSITY
+  if (1)
   {
-    double F = sigma_f(i, 0) * phi0[i] + sigma_f(i, 1) * phi1[i];
-    d_P[i] = KAPPA * F;
-    if (d_t > 0.0) d_T[i] = d_T_old[i] + dt * ALPHA * F;
-    if (step) d_T_old[i] = d_T[i];
+    // Compute power and temperature.  Note, we "unscale" by keff.
+    for (size_t i = 0; i < d_mesh->number_cells(); ++i)
+    {
+      double F = sigma_f(i, 0) * phi0[i] + sigma_f(i, 1) * phi1[i];
+      d_P[i] = KAPPA * F;
+      if (d_t > 0.0) d_T[i] = d_T_old[i] + dt * ALPHA * F;
+      if (step) d_T_old[i] = d_T[i];
+    }
+  }
+  // USE A NODE-AVERAGED FISSION DENSITY
+  else
+  {
+    vec_int map = d_mesh->mesh_map("SUBASSEMBLY");
+
+    // Number of unique regions.  This *assumes* sequential numbering,
+    int number = 1 + *std::max_element(map.begin(), map.end());
+
+    vec_dbl coarse_mesh_F(number, 0.0);
+    vec_dbl coarse_mesh_V(number, 0.0);
+
+    for (int k = 0; k < d_mesh->number_cells_z(); k++)
+    {
+      for (int j = 0; j < d_mesh->number_cells_y(); j++)
+      {
+        for (int i = 0; i < d_mesh->number_cells_x(); i++)
+        {
+          // Define the mesh cell and volume
+          int cell      = d_mesh->index(i, j, k);
+          int node      = map[cell];
+          double volume = d_mesh->volume(cell);
+
+          // Fine mesh fission density
+          double F = sigma_f(cell, 0) * phi0[cell] + sigma_f(cell, 1) * phi1[cell];
+
+          // Add contribution to this edit region
+          coarse_mesh_F[node] += volume * F;
+          coarse_mesh_V[node] += volume;
+        }
+      }
+    }
+
+    // Compute the AVERAGE fission density
+    for (int region = 0; region < number; ++region)
+      coarse_mesh_F[region] /= coarse_mesh_V[region];
+
+    // Assign the AVERAGE to the FINE MESH
+    for (int cell = 0; cell < d_mesh->number_cells(); ++cell)
+    {
+      size_t node = map[cell];
+      d_P[cell] = KAPPA * coarse_mesh_F[node];
+      if (d_t > 0.0) d_T[cell] = d_T_old[cell] + dt * ALPHA * coarse_mesh_F[node];
+      if (step) d_T_old[cell] = d_T[cell];
+    }
   }
 
 
