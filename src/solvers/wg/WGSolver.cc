@@ -52,7 +52,7 @@ WGSolver<D>::WGSolver(SP_state                  state,
 
   SP_MtoD MtoD;
   // \todo Currently limited to 1 moment (0th order)
-  MtoD = new detran_angle::MomentToDiscrete(0);
+  MtoD = new detran_angle::MomentToDiscrete(d_state->get_momentindexer());
   MtoD->build(d_quadrature);
 
   //-------------------------------------------------------------------------//

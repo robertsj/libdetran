@@ -21,36 +21,46 @@ State::State(SP_input        input,
   : d_input(input)
   , d_mesh(mesh)
   , d_quadrature(quadrature)
-  , d_number_groups(input->get<int>("number_groups"))
+  , d_number_groups(0)
+  , d_number_moments(1)
   , d_store_angular_flux(false)
-  , d_moments(d_number_groups, vec_dbl(mesh->number_cells(), 0.0))
-  , d_angular_flux(d_number_groups)
   , d_eigenvalue(0.0)
 {
   // Preconditions
-  Require(input);
-  Require(mesh);
+  Require(d_input);
+  Require(d_mesh);
+
+  Insist(d_input->check("number_groups"),
+         "Input must specify number of groups");
+  d_number_groups = d_input->get<int>("number_groups");
   Require(d_number_groups > 0);
 
-  // Allocate angular flux vectors if needed.
-  int store_psi = 0;
-  if (input->check("store_angular_flux"))
+  // If a discrete problem, define the Legendre order
+  if (d_quadrature)
   {
-    store_psi = input->get<int>("store_angular_flux");
+    size_t order = 0;
+    if (input->check("moment_order"))
+      order = input->get<int>("moment_order");
+    d_momentindexer =
+        detran_angle::MomentIndexer::Create(d_mesh->dimension(), order);
+    d_number_moments = d_momentindexer->number_moments();
   }
 
+  // Allocate the scalar flux moments vectors
+  d_moments.resize(d_number_groups, 
+                   vec_dbl(d_mesh->number_cells() * d_number_moments, 0.0));
+
+  // Allocate the angular flux vectors if needed.
+  int store_psi = 0;
+  if (input->check("store_angular_flux"))
+    store_psi = input->get<int>("store_angular_flux");
   if (store_psi > 0)
   {
     Insist(d_quadrature, "Angular flux requested but no quadrature given.");
-
     d_store_angular_flux = true;
-
-    for (int g = 0; g < d_number_groups; g++)
-    {
-      d_angular_flux[g].resize(d_quadrature->number_angles(),
-                               vec_dbl(mesh->number_cells(), 0.0));
-    }
-
+    d_angular_flux.resize(d_number_groups,
+                          vec_moments_type(d_quadrature->number_angles(),
+			  moments_type(d_mesh->number_cells(), 0.0)));
   }
 
 }
@@ -72,7 +82,6 @@ void State::clear()
       }
     }
   }
-
 }
 
 //---------------------------------------------------------------------------//

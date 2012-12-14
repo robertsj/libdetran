@@ -65,7 +65,7 @@ WGDiffusionLossOperator::WGDiffusionLossOperator(SP_input    input,
   // Build the matrix.
   build();
 
-  print_matlab("WGDSA.out");
+  //print_matlab("WGDSA.out");
 
 }
 
@@ -90,7 +90,7 @@ void WGDiffusionLossOperator::build()
   // Error flag
   bool flag;
 
-  double tmp = 3.0;
+  double tmp = 1.0;
 
   // Loop over all matrix rows, which, because of the ordering,
   // is the same as the cell index.

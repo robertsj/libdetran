@@ -11,6 +11,7 @@
 #define detran_STATE_HH_
 
 #include "angle/Quadrature.hh"
+#include "angle/MomentIndexer.hh"
 #include "geometry/Mesh.hh"
 #include "utilities/Definitions.hh"
 #include "utilities/InputDB.hh"
@@ -63,6 +64,7 @@ public:
   typedef detran_utilities::InputDB::SP_input           SP_input;
   typedef detran_geometry::Mesh::SP_mesh                SP_mesh;
   typedef detran_angle::Quadrature::SP_quadrature       SP_quadrature;
+  typedef detran_angle::MomentIndexer::SP_momentindexer SP_momentindexer;
   typedef detran_utilities::vec_dbl                     moments_type;
   typedef std::vector<moments_type>                     vec_moments_type;
   typedef std::vector<moments_type>                     group_moments_type;
@@ -176,6 +178,11 @@ public:
     return d_mesh;
   }
 
+  SP_momentindexer get_momentindexer()
+  {
+    return d_momentindexer;
+  }
+
   size_t moments_size() const
   {
     return d_moments[0].size();
@@ -210,28 +217,22 @@ private:
 
   /// Input database
   SP_input d_input;
-
   /// Mesh
   SP_mesh d_mesh;
-
   /// Angular quadrature
   SP_quadrature d_quadrature;
-
-  /// Boundary fluxes
-  //SP_boundary d_boundary;
-
+  /// Spherical harmonic moment indexer
+  SP_momentindexer d_momentindexer;
   /// Number of energy groups
   int d_number_groups;
-
+  /// Number of moments per unknown
+  size_t d_number_moments;
   /// Cell-center scalar flux moments, [energy, (space-moment)]
   vec_moments_type d_moments;
-
   /// Cell-center angular flux, [energy, angle, (space)]
   vec_angular_flux_type d_angular_flux;
-
   /// k-eigenvalue
   double d_eigenvalue;
-
   /// Store the angular flux?
   bool d_store_angular_flux;
 
