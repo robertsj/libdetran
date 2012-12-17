@@ -68,7 +68,8 @@ int test_Sweeper3D_basic(int argc, char *argv[])
     bound(new Sweeper_T::Boundary_T(input, mesh, quad));
 
   // Moment to Discrete
-  MomentToDiscrete::SP_MtoD m2d(new MomentToDiscrete(0));
+  MomentIndexer::SP_momentindexer indexer = MomentIndexer::Create(3, 0);
+  MomentToDiscrete::SP_MtoD m2d(new MomentToDiscrete(indexer));
   m2d->build(quad);
 
   // External

@@ -305,6 +305,8 @@ int test_BDF_Steps(int argc, char *argv[])
     stepper.solve(ic);
 
     State::SP_state final = stepper.state();
+    std::cout << " phi = " << final->phi(0)[0]
+              << " ref = " << ref[scheme] << std::endl;
     TEST(soft_equiv(final->phi(0)[0], ref[scheme]));
 
   } // end scheme loop

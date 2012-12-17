@@ -230,9 +230,9 @@ void TimeStepper<D>::solve(SP_state initial_state)
     // if doing the first step of a higher order BDF method.  The
     // user can explicitly turn extrapolation off.
     bool flag = false;
-    if (d_scheme == IMP) flag = true;
-//    if (d_scheme == IMP or (order == 1 and d_order > 1)) flag = true;
-//    if (d_no_extrapolation and !(d_scheme == IMP)) flag = false;
+    //if (d_scheme == IMP) flag = true;
+    if (d_scheme == IMP or (order == 1 and d_order > 1)) flag = true;
+    if (d_no_extrapolation and !(d_scheme == IMP)) flag = false;
 
     //std::cout << " FLAG = " << flag << std::endl;
 
@@ -413,10 +413,10 @@ void TimeStepper<D>::update_sources(const double t,
 {
   // Update the synthetic source.
   d_syntheticsource->build(dt, d_states, d_precursors, order);
-//  for (int cell = 0; cell < d_mesh->number_cells(); ++cell)
-//  {
-//    printf(" q[%3i]= %16.12f \n", cell, d_syntheticsource->source(cell, 0, 0));
-//  }
+  for (int cell = 0; cell < d_mesh->number_cells(); ++cell)
+  {
+    printf(" q[%3i]= %16.12f \n", cell, d_syntheticsource->source(cell, 0, 0));
+  }
 
   // Update the external sources.
   for (int i = 0; i < d_sources.size(); ++i)
@@ -435,6 +435,7 @@ void TimeStepper<D>::update_sources(const double t,
 template <class D>
 void TimeStepper<D>::extrapolate()
 {
+  THROW("bad!!!");
   // Extrapolate psi(n+1) = 2*psi(n+1/2) - psi(n)
   if (d_discrete)
   {

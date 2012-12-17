@@ -160,7 +160,8 @@ void MGDiffusionSolver<D>::build_volume_source()
       } // row loop
     } // group loop
   }
-
+  d_Q->display();
+  THROW("Q done");
 }
 
 //---------------------------------------------------------------------------//

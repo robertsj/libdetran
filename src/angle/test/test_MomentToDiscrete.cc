@@ -37,8 +37,10 @@ int test_MomentToDiscrete(int argc, char *argv[])
 {
   // 1d test
   {
+    // Indexer
+    MomentIndexer::SP_momentindexer indexer = MomentIndexer::Create(1, 0);
     // MtoD
-    MomentToDiscrete MtoD(0);
+    MomentToDiscrete MtoD(indexer);
     // Quadrature
     SP_quadrature q = GaussLegendre::Create(2);
     TEST(q);
@@ -49,8 +51,10 @@ int test_MomentToDiscrete(int argc, char *argv[])
   }
   // 2d test
   {
+    // Indexer
+    MomentIndexer::SP_momentindexer indexer = MomentIndexer::Create(2, 0);
     // MtoD
-    MomentToDiscrete MtoD(0);
+    MomentToDiscrete MtoD(indexer);
     // Quadrature
     SP_quadrature q = QuadrupleRange::Create(2);
     TEST(q);
