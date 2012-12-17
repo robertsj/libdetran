@@ -206,6 +206,9 @@ public:
   /// Zero out the state
   void clear();
 
+  /// Scale the state by a constant
+  void scale(const double f);
+
   /// Format display of flux
   void display() const;
 

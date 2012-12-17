@@ -85,6 +85,25 @@ void State::clear()
 }
 
 //---------------------------------------------------------------------------//
+void State::scale(const double f)
+{
+  for (int g = 0; g < d_number_groups; ++g)
+  {
+    for (int i = 0; i < d_mesh->number_cells(); ++i)
+    {
+      d_moments[g][i] *= f;
+      if (d_store_angular_flux)
+      {
+        for (int a = 0; a < d_quadrature->number_angles(); ++a)
+        {
+          d_angular_flux[g][a][i] *= f;
+        }
+      }
+    }
+  }
+}
+
+//---------------------------------------------------------------------------//
 void State::display() const
 {
   using std::printf;
