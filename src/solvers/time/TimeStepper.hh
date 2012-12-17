@@ -104,6 +104,8 @@ public:
 
   /// Getters
   SP_state state() {return d_state;}
+  SP_mesh mesh() {return d_mesh;}
+  SP_material material() {return d_material;}
   SP_quadrature quadrature() {return d_quadrature;}
   size_t monitor_level() const {return d_monitor_level;}
   SP_precursors precursor() {return d_precursor;}

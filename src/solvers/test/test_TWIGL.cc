@@ -21,7 +21,7 @@
 #include "boundary/BoundarySN.hh"
 #include "kinetics/LinearExternalSource.hh"
 #include "kinetics/LinearMaterial.hh"
-#include "solver/EigenvalueManager.hh"
+#include "solvers/EigenvalueManager.hh"
 //
 #include "angle/test/quadrature_fixture.hh"
 #include "geometry/test/mesh_fixture.hh"
@@ -49,11 +49,19 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //---------------------------------------------------------------------------//
 
-void test_monitor(void* data, TimeStepper<_1D>* ts, int step, double t,
+void test_monitor(void* data, TimeStepper<_2D>* ts, int step, double t,
                   double dt, int it, bool conv)
 {
-  printf(" %16.13f  %16.13f  %16.13f \n",
-         t, ts->state()->phi(0)[0], ts->precursor()->C(0)[0]);
+  double F = 0;
+  TimeStepper<_2D>::vec_int matmap = ts->mesh()->mesh_map("MATERIAL");
+  for (int i = 0; i < ts->mesh()->number_cells(); ++i)
+  {
+    int m = matmap[i];
+    F += ts->state()->phi(0)[i] * ts->material()->sigma_f(m, 0) +
+         ts->state()->phi(1)[i] * ts->material()->sigma_f(m, 1);
+  }
+  //ts->state()->display();
+  printf(" %5i  %16.13f  %16.13f %5i \n", step, t, F, it);
 }
 
 //---------------------------------------------------------------------------//
@@ -61,41 +69,41 @@ class TWIGLMaterial: public TimeDependentMaterial
 {
 public:
   typedef TimeDependentMaterial Base;
-  TWIGLMaterial(bool reactivity = true)
+  TWIGLMaterial(int perturbation = 0)
     : Base(3, 2, 1, "TWIGLMaterial")
-    , d_reactivity(reactivity)
+    , d_perturbation(perturbation)
   {
-    /* ... */
+    update_impl();
   }
   // Update the materials.
   void update_impl()
   {
     double t = time();
+    //t -= 0.000005;
     //
     int m = 0;
     set_diff_coef(m, 0,  1.400);
     set_diff_coef(m, 1,  0.400);
-
-    double sa = 0.0;
-    if (d_reactivity)
+    double sa = 0.150;
+    if (d_perturbation == 1) // RAMP
     {
-      if (t < 0.2)
-        sa = 0.150 * (1.0 - 0.11667 * t);
-      else
+      if (t >= 0.1 and t < 0.3)
+        sa = 0.150 * (1.0 - 0.11667 * (t - 0.1));
+      else if (t >= 0.3)
         sa = 0.150 * 0.97666;
     }
-    else
+    else if (d_perturbation == 2) // STEP
     {
-      if (t == 0.0)
-        sa = 0.150;
-      else
-        sa = 0.150 - 0.0;
+      if (t >= 0.1)
+        sa = 0.150 - 0.0035;
     }
     set_sigma_t(m, 0,    0.010 + 0.010);
     set_sigma_t(m, 1,    sa);
     set_sigma_s(m, 1, 0, 0.010);
     set_sigma_f(m, 0,    0.007);
     set_sigma_f(m, 1,    0.200);
+    set_nu(m, 0,         1.0);
+    set_nu(m, 1,         1.0);
     set_chi(m, 0,        1.000);
     //
     m = 1;
@@ -106,6 +114,8 @@ public:
     set_sigma_s(m, 1, 0, 0.010);
     set_sigma_f(m, 0,    0.007);
     set_sigma_f(m, 1,    0.200);
+    set_nu(m, 0,         1.0);
+    set_nu(m, 1,         1.0);
     set_chi(m, 0,        1.000);
     //
     m = 2;
@@ -116,10 +126,12 @@ public:
     set_sigma_s(m, 1, 0, 0.010);
     set_sigma_f(m, 0,    0.003);
     set_sigma_f(m, 1,    0.060);
+    set_nu(m, 0,         1.0);
+    set_nu(m, 1,         1.0);
     set_chi(m, 0,        1.000);
     // kinetics
     set_lambda(0,        0.08);
-    set_beta(0,          0.0*0.0075);
+    set_beta(0,          0.0075);
     set_velocity(0,      1.0e7);
     set_velocity(1,      2.0e5);
     // delayed chi(m, i, g, v)
@@ -131,8 +143,8 @@ public:
   }
 
 private:
-  /// True for ramp; false for step.
-  bool d_reactivity;
+  /// 0-steady, 1-ramp, 2-step
+  int d_perturbation;
 };
 
 //---------------------------------------------------------------------------//
@@ -153,6 +165,14 @@ Mesh2D::SP_mesh get_mesh(Mesh2D::size_t fmm = 1)
   mt[6] = 2; mt[7] = 2; mt[8] = 2;
   Mesh2D::SP_mesh mesh = Mesh2D::Create(fm, fm, cm, cm, mt);
   return mesh;
+//  Mesh2D::vec_dbl cm(2);
+//  cm[1] = 5.0;
+//  Mesh2D::vec_int fm(1);
+//  fm[0] = 3;
+//  Mesh2D::vec_int mt(1);
+//  mt[0] = 0;
+//  Mesh2D::SP_mesh mesh = Mesh2D::Create(fm, fm, cm, cm, mt);
+//  return mesh;
 }
 
 //---------------------------------------------------------------------------//
@@ -174,77 +194,75 @@ int test_TWIGL(int argc, char *argv[])
   inp->put<std::string>("bc_south",         "reflect");
   inp->put<std::string>("bc_north",         "vacuum");
   inp->put<int>("bc_zero_flux",             1);
-  inp->put<double>("ts_final_time",         1.0);
-  inp->put<double>("ts_step_size",          0.1);
-  inp->put<int>("ts_max_steps",             10);
+  inp->put<double>("ts_final_time",         0.6);
+  inp->put<double>("ts_step_size",          0.0001);
+  inp->put<int>("ts_max_steps",             10000);
   inp->put<int>("ts_scheme",                TS_2D::BDF1);
   inp->put<int>("ts_discrete",              0);
   inp->put<int>("ts_output",                0);
   inp->put<int>("ts_monitor_level",         1);
+  inp->put<int>("ts_no_extrapolation",      0);
+  inp->put<string>("eigen_solver",          "arnoldi");
   // inner gmres parameters
   InputDB::SP_input db(new InputDB("inner_solver_db"));
   db->put<double>("linear_solver_atol",                 1e-12);
   db->put<double>("linear_solver_rtol",                 1e-12);
-  db->put<string>("linear_solver_type",                 "gmres");
+  db->put<string>("linear_solver_type",                 "petsc");
+  db->put<string>("pc_type",                            "petsc_pc");
+  db->put<string>("petsc_pc_type",                      "lu");
   db->put<int>("linear_solver_maxit",                   2000);
   db->put<int>("linear_solver_gmres_restart",           20);
   db->put<int>("linear_solver_monitor_level",           0);
-  inp->put<InputDB::SP_input>("inner_solver_db",        db);
+  db->put<string>("eigen_solver_type",                 "slepc");
+  db->put<double>("eigen_solver_tol",                   1e-12);
   inp->put<InputDB::SP_input>("outer_solver_db",        db);
+  inp->put<InputDB::SP_input>("eigen_solver_db",        db);
 
   //-------------------------------------------------------------------------//
   // MATERIAL
   //-------------------------------------------------------------------------//
 
   // Create a TWIGL material with ramp reactivity
-  TS_2D::SP_material mat(new TWIGLMaterial(true));
+  TS_2D::SP_material mat(new TWIGLMaterial(1));
 
   //-------------------------------------------------------------------------//
   // MESH
   //-------------------------------------------------------------------------//
 
-  TS_2D::SP_mesh mesh = get_mesh();
+  TS_2D::SP_mesh mesh = get_mesh(2);
 
   //-------------------------------------------------------------------------//
   // STEADY STATE
   //-------------------------------------------------------------------------//
 
-  EigenValueManager<_2D> eigen(inp, mat, mesh);
-  FixedSourceManager<_1D> manager(inp, mat, mesh);
-  manager.setup();
-  manager.set_source(q_e1);
-  manager.set_solver();
-  //manager.solve();
+  EigenvalueManager<_2D> manager(inp, mat, mesh);
+  manager.solve();
   State::SP_state ic = manager.state();
+  mat->set_eigenvalue(ic->eigenvalue());
+  mat->update(0, 0, 1, false);
 
+  // Normalize state.
+  double F = 0;
+  TS_2D::vec_int matmap = mesh->mesh_map("MATERIAL");
+  for (int i = 0; i < mesh->number_cells(); ++i)
+  {
+    int m = matmap[i];
+    F += ic->phi(0)[i] * mat->sigma_f(m, 0) +
+         ic->phi(1)[i] * mat->sigma_f(m, 1);
+  }
+  for (int i = 0; i < mesh->number_cells(); ++i)
+  {
+    ic->phi(0)[i] /= F;
+    ic->phi(1)[i] /= F;
+  }
 
   //-------------------------------------------------------------------------//
   // TIME STEPPER
   //-------------------------------------------------------------------------//
 
 
-  TS_1D stepper(inp, linmat, mesh, true);
+  TS_2D stepper(inp, mat, mesh, true);
   stepper.set_monitor(test_monitor);
-
-//  // Initial condition (constant psi = 1/2)
-//  for (int o = 0; o < stepper.quadrature()->number_octants(); ++o)
-//  {
-//    for (int a = 0; a < stepper.quadrature()->number_angles_octant(); ++a)
-//    {
-//      for (int i = 0; i < mesh->number_cells(); ++i)
-//      {
-//        ic->phi(0)[i] = 1.0;
-//        ic->psi(0, o, a)[i] = 0.5;
-//      }
-//    }
-//  }
-  // Initial condition (constant psi = 1/2)
-  for (int i = 0; i < mesh->number_cells(); ++i)
-  {
-    ic->phi(0)[i] = 1.0;
-  }
-
-  //stepper.add_source(q_td);
 
   stepper.solve(ic);
 

@@ -107,6 +107,10 @@ void MGDiffusionSolver<D>::solve(const double keff)
   fill_state();
   if (d_fill_boundary) fill_boundary();
 
+//  d_M->print_matlab("M.out");
+//  d_Q->print_matlab("Q.out");
+//  d_phi->print_matlab("phi.out");
+
   //d_state->display();
 }
 
@@ -160,8 +164,7 @@ void MGDiffusionSolver<D>::build_volume_source()
       } // row loop
     } // group loop
   }
-  d_Q->display();
-  THROW("Q done");
+
 }
 
 //---------------------------------------------------------------------------//

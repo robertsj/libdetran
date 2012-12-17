@@ -91,7 +91,7 @@ inline void SyntheticMomentSource::build(const double dt,
 //        std::cout << " phi factor=" << phi_factor
 //                  << " phi = " << states[j]->phi(g)[cell]
 //                  << " source = " << d_source[g][cell] << std::endl;
-        d_source[g][cell] = phi_factor * states[j]->phi(g)[cell];
+        d_source[g][cell] += phi_factor * states[j]->phi(g)[cell];
       }
 
       // Add the precursor concentration, if applicable
@@ -118,7 +118,7 @@ inline void SyntheticMomentSource::build(const double dt,
     } // end groups
   } // end backward terms
 //  std::cout << " source = " << this->source(0, 0) << "  " << this->source(1, 0) << std::endl;
-//  std::cout << " source = " << this->source(0, 0, 0) << "  " << this->source(1, 0, 0) << std::endl;
+//  std::cout << " source = " << this->source(0, 0, 0) << "  " << this->source(1, 0, 0) << " " << dt << std::endl;
 }
 
 } // end namespace detran

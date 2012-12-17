@@ -70,13 +70,13 @@ int test_TimeStepper(int argc, char *argv[])
   InputDB::SP_input inp(new InputDB("time stepper test"));
   inp->put<int>("dimension",                1);
   inp->put<int>("number_groups",            1);
-  inp->put<std::string>("equation",         "dd");
+  inp->put<std::string>("equation",         "diffusion");
   inp->put<std::string>("bc_west",          "reflect");
   inp->put<std::string>("bc_east",          "reflect");
   inp->put<double>("ts_final_time",         1.0); // 0.95162581964040427
-  inp->put<double>("ts_step_size",          0.1);
-  inp->put<int>("ts_max_steps",             10);
-  inp->put<int>("ts_scheme",                TS_1D::BDF1);
+  inp->put<double>("ts_step_size",          0.01);
+  inp->put<int>("ts_max_steps",             1000);
+  inp->put<int>("ts_scheme",                TS_1D::IMP);
   inp->put<int>("ts_discrete",              0);
   inp->put<int>("ts_output",                0);
   inp->put<int>("ts_monitor_level",         1);
@@ -110,10 +110,10 @@ int test_TimeStepper(int argc, char *argv[])
   kinmat->set_sigma_t(0, 0,    1.0);
   kinmat->set_diff_coef(0, 0,  1.0/3.0);
   //kinmat->set_sigma_s(0, 0, 0, 0.5);
-  kinmat->set_sigma_f(0, 0,    0.5);
+  kinmat->set_sigma_f(0, 0,    0.0);
   kinmat->set_velocity(0,      1.0);
   kinmat->set_chi(0, 0,        1.0);
-  kinmat->set_beta(0, 0,       0.06);
+  kinmat->set_beta(0, 0,       0.00);
   kinmat->set_chi_d(0, 0, 0,   1.0);
   kinmat->set_lambda(0,        0.1);
   kinmat->finalize();
@@ -148,7 +148,7 @@ int test_TimeStepper(int argc, char *argv[])
   IsotropicSource::SP_externalsource
     q_e1(new IsotropicSource(1, mesh, spectra, source_map));
   // "off"
-  spectra[1][0] = 0.0;
+  spectra[1][0] = 1.0;
   IsotropicSource::SP_externalsource
     q_e2(new IsotropicSource(1, mesh, spectra, source_map));
   //

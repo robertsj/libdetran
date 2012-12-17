@@ -234,8 +234,6 @@ void TimeStepper<D>::solve(SP_state initial_state)
     if (d_scheme == IMP or (order == 1 and d_order > 1)) flag = true;
     if (d_no_extrapolation and !(d_scheme == IMP)) flag = false;
 
-    //std::cout << " FLAG = " << flag << std::endl;
-
     // Set the temporary time step
     dt = d_dt;
     if (flag) dt = 0.5 * d_dt;
@@ -261,6 +259,11 @@ void TimeStepper<D>::solve(SP_state initial_state)
     *d_states[0] = *d_state;
     if (d_multiply) *d_precursors[0] = *d_precursor;
 
+//    std::cout << " phi(n  )=" << d_states[0]->phi(0)[0] << std::endl;
+//    std::cout << " phi(n-1)=" << d_states[1]->phi(0)[0] << std::endl;
+
+
+
     // Output the initial state
     if (d_do_output) d_silooutput->write_time_flux(i+1, d_state, true);
 
@@ -275,9 +278,15 @@ void TimeStepper<D>::step(const double t,
                           const size_t order,
                           const bool   flag)
 {
+  // Adjust the time for evaluating materials and sources if
+  // we're in a half step to be extrapolated.  The dt passed
+  // *is* the half step.
+  double t_eval = t;
+  if (flag) t_eval -= dt;
+
   // Update the material, sources, and solver
-  d_material->update(t, dt, order, true);
-  update_sources(t, dt, order);
+  d_material->update(t_eval, dt, order, true);
+  update_sources(t_eval, dt, order);
   d_solver->update();
 
   // Save old state
@@ -287,7 +296,7 @@ void TimeStepper<D>::step(const double t,
   // Solve the MG problem for the new state and update the precursors
   d_solver->solve();
   d_state = d_solver->state();
-  update_precursors(t, dt, order);
+  update_precursors(t_eval, dt, order);
   if (flag) extrapolate();
 }
 
@@ -397,11 +406,17 @@ void TimeStepper<D>::cycle_states_precursors(const size_t order)
   for (size_t i = 0; i < d_order - 1; ++i)
   {
     size_t j = d_order - i - 1;
-    d_states[j] = d_states[j -1];
+
+//    std::cout << " j=" << j << " order=" << order
+//              << " dorder=" << d_order << " phi=" << d_states[j]->phi(0)[0] << std::endl;
+
+
+    d_states[j] = d_states[j - 1];
     if (d_precursors.size()) d_precursors[j] = d_precursors[j-1];
   }
   d_states[0] = tmp_state;
   if (d_precursors.size()) d_precursors[0] = tmp_precursors;
+
 
 }
 
@@ -413,10 +428,10 @@ void TimeStepper<D>::update_sources(const double t,
 {
   // Update the synthetic source.
   d_syntheticsource->build(dt, d_states, d_precursors, order);
-  for (int cell = 0; cell < d_mesh->number_cells(); ++cell)
-  {
-    printf(" q[%3i]= %16.12f \n", cell, d_syntheticsource->source(cell, 0, 0));
-  }
+//  for (int cell = 0; cell < d_mesh->number_cells(); ++cell)
+//  {
+//    printf(" q[%3i]= %16.12f \n", cell, d_syntheticsource->source(cell, 0, 0));
+//  }
 
   // Update the external sources.
   for (int i = 0; i < d_sources.size(); ++i)
@@ -435,7 +450,7 @@ void TimeStepper<D>::update_sources(const double t,
 template <class D>
 void TimeStepper<D>::extrapolate()
 {
-  THROW("bad!!!");
+  //THROW("bad!!!");
   // Extrapolate psi(n+1) = 2*psi(n+1/2) - psi(n)
   if (d_discrete)
   {

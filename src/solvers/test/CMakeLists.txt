@@ -33,6 +33,9 @@ TARGET_LINK_LIBRARIES(test_EigenvalueManager    solvers)
 ADD_EXECUTABLE(test_TimeStepper           		test_TimeStepper.cc)
 TARGET_LINK_LIBRARIES(test_TimeStepper    		solvers)
 
+ADD_EXECUTABLE(test_TWIGL                      test_TWIGL.cc)
+TARGET_LINK_LIBRARIES(test_TWIGL              solvers)
+
 #------------------------------------------------------------------------------#
 # Define tests
 #------------------------------------------------------------------------------#
@@ -43,13 +46,5 @@ TARGET_LINK_LIBRARIES(test_TimeStepper    		solvers)
 #ADD_TEST(test_PowerIteration_2D test_PowerIteration 0)
 ADD_TEST(test_FixedSourceManager_1D        test_FixedSourceManager 0)
 ADD_TEST(test_EigenvalueManager_1D         test_EigenvalueManager 0)
-
-if (DETRAN_ENABLE_PETSC)
-
-#ADD_TEST(test_InnerGMRES_1D 		test_InnerGMRES 0)
-#ADD_TEST(test_DiffusionFixedSourceSolver_1D  test_DiffusionFixedSourceSolver 0)
-#ADD_TEST(test_DiffusionFixedSourceSolver_2D  test_DiffusionFixedSourceSolver 1)
-#ADD_TEST(test_DiffusionFixedSourceSolver_3D  test_DiffusionFixedSourceSolver 2)
-#ADD_TEST(test_DiffusionEigenSolver_1D        test_DiffusionEigensolver 0)
-
-endif ()
+ADD_TEST(test_TimeStepper_BDF              test_TimeStepper 1)
+ADD_TEST(test_TWIGL              test_TWIGL 0)
