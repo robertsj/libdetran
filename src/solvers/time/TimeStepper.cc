@@ -212,7 +212,7 @@ void TimeStepper<D>::solve(SP_state initial_state)
   // Set the solver
   d_solver->set_solver();
 
-  // Call the monitor, if present.
+  // Call the monitor, if present.  [data, this, step, time, dt, order, conv]
   if (d_monitor_level) d_monitor(d_monitor_data, this, 0, 0.0, d_dt, 1, true);
 
   // Perform time steps
@@ -230,8 +230,9 @@ void TimeStepper<D>::solve(SP_state initial_state)
     // if doing the first step of a higher order BDF method.  The
     // user can explicitly turn extrapolation off.
     bool flag = false;
-    if (d_scheme == IMP or (order == 1 and d_order > 1)) flag = true;
-    if (d_no_extrapolation and !(d_scheme == IMP)) flag = false;
+    if (d_scheme == IMP) flag = true;
+//    if (d_scheme == IMP or (order == 1 and d_order > 1)) flag = true;
+//    if (d_no_extrapolation and !(d_scheme == IMP)) flag = false;
 
     //std::cout << " FLAG = " << flag << std::endl;
 

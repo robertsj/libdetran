@@ -60,7 +60,7 @@ State::State(SP_input        input,
     d_store_angular_flux = true;
     d_angular_flux.resize(d_number_groups,
                           vec_moments_type(d_quadrature->number_angles(),
-			  moments_type(d_mesh->number_cells(), 0.0)));
+			               moments_type(d_mesh->number_cells(), 0.0)));
   }
 
 }

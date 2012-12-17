@@ -140,6 +140,10 @@ void LRA::update_impl()
 
   if (d_steady) return;
 
+  // Remember, d_t is the time given to the step routine.  It
+  // is the time at which we compute the flux.  d_dt, however,
+  // may be a half step if extrapolating.
+
   // Thermal cross section perturbation
   double sigma_a2 = 0.878763 * A2[ROD];
   if (d_t <= 2.0) sigma_a2 = A2[ROD] * (1.0 - 0.0606184 * d_t);
@@ -160,7 +164,7 @@ void LRA::update_impl()
     if (d_flag)
     {
       // transport
-      set_sigma_t(i, 1, T2[m] + B * D2[m] + delta_2);
+      set_sigma_t(i, 1, T2[m] + B * D2[m] + del);
       set_sigma_a(i, 1, sa + B * D2[m]);
     }
     else
@@ -178,7 +182,7 @@ void LRA::update_impl()
 
     if (d_flag)
     {
-      set_sigma_t(i, 0, sigma_a1 + B * D1[m] + delta_1);
+      set_sigma_t(i, 0, T1[m] + B * D1[m] + delta_1);
       set_sigma_a(i, 0, sigma_a1 + B * D1[m]);
     }
     else

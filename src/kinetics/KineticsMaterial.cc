@@ -91,8 +91,7 @@ void KineticsMaterial::set_chi_d(const size_t m,
   Require(m < number_materials());
   Require(i < d_number_precursor_groups);
   Require(g < number_groups());
-  for (int m = 0; m < number_materials(); ++m)
-    d_chi_d[g][i][m] = v;
+  d_chi_d[g][i][m] = v;
 }
 
 //---------------------------------------------------------------------------//
