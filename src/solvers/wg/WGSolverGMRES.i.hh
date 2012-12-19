@@ -41,6 +41,10 @@ inline void WGSolverGMRES<D>::solve(const size_t g)
   State::moments_type B(d_mesh->number_cells(), 0.0);
   build_rhs(B);
   double b_norm = d_b->norm(callow::L1);
+  d_b->print_matlab("b.out");
+  d_operator->compute_explicit("A.out");
+  //d_operator->multiply(*d_b, *d_x);
+  //d_x->print_matlab("x0.out");
 
   //-------------------------------------------------------------------------//
   // SOLVE THE TRANSPORT EQUATION
@@ -51,6 +55,7 @@ inline void WGSolverGMRES<D>::solve(const size_t g)
 
   // Solve
   if (b_norm > 0.0) d_solver->solve(*d_b, *d_x);
+  //d_x->print_matlab("x.out");
 
   //-------------------------------------------------------------------------//
   // POSTPROCESS
@@ -89,6 +94,7 @@ inline void WGSolverGMRES<D>::solve(const size_t g)
     d_reflective_solve_iterations = iteration;
     d_sweeper->set_update_boundary(false);
   }
+  //d_state->display();
 
   if (d_print_level > 0)
   {

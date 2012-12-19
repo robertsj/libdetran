@@ -248,7 +248,8 @@ void TimeStepper<D>::solve(SP_state initial_state)
       if (iteration == d_maximum_iterations) converged = true;
 
       // Call the monitor, if present.
-      if (d_monitor_level) d_monitor(d_monitor_data, this, i, t, dt, iteration, converged);
+      if (d_monitor_level)
+        d_monitor(d_monitor_data, this, i, t, d_dt, iteration, converged);
 
       if (converged) break;
 

@@ -183,29 +183,35 @@ private:
 //---------------------------------------------------------------------------//
 Mesh2D::SP_mesh get_mesh(Mesh2D::size_t fmm = 1)
 {
-//  Mesh2D::vec_dbl cm(4);
-//  cm[0] =  0.0;
-//  cm[1] = 24.0;
-//  cm[2] = 56.0;
-//  cm[3] = 80.0;
-//  Mesh2D::vec_int fm(3);
-//  fm[0] = fmm * 3;
-//  fm[1] = fmm * 4;
-//  fm[2] = fmm * 3;
-//  Mesh2D::vec_int mt(9);
-//  mt[0] = 2; mt[1] = 1; mt[2] = 2;
-//  mt[3] = 1; mt[4] = 0; mt[5] = 2;
-//  mt[6] = 2; mt[7] = 2; mt[8] = 2;
-//  Mesh2D::SP_mesh mesh = Mesh2D::Create(fm, fm, cm, cm, mt);
-//  return mesh;
-  Mesh2D::vec_dbl cm(2);
-  cm[1] = 5.0;
-  Mesh2D::vec_int fm(1);
-  fm[0] = 10;
-  Mesh2D::vec_int mt(1);
-  mt[0] = 0;
-  Mesh2D::SP_mesh mesh = Mesh2D::Create(fm, fm, cm, cm, mt);
-  return mesh;
+  if (1)
+  {
+    Mesh2D::vec_dbl cm(4);
+    cm[0] =  0.0;
+    cm[1] = 24.0;
+    cm[2] = 56.0;
+    cm[3] = 80.0;
+    Mesh2D::vec_int fm(3);
+    fm[0] = fmm * 3;
+    fm[1] = fmm * 4;
+    fm[2] = fmm * 3;
+    Mesh2D::vec_int mt(9);
+    mt[0] = 2; mt[1] = 1; mt[2] = 2;
+    mt[3] = 1; mt[4] = 0; mt[5] = 2;
+    mt[6] = 2; mt[7] = 2; mt[8] = 2;
+    Mesh2D::SP_mesh mesh = Mesh2D::Create(fm, fm, cm, cm, mt);
+    return mesh;
+  }
+  else
+  { // debugging homogeneous problem
+    Mesh2D::vec_dbl cm(2);
+    cm[1] = 5.0;
+    Mesh2D::vec_int fm(1);
+    fm[0] = 3;
+    Mesh2D::vec_int mt(1);
+    mt[0] = 0;
+    Mesh2D::SP_mesh mesh = Mesh2D::Create(fm, fm, cm, cm, mt);
+    return mesh;
+  }
 }
 
 //---------------------------------------------------------------------------//
@@ -221,44 +227,54 @@ int test_TWIGL(int argc, char *argv[])
   InputDB::SP_input inp(new InputDB("TWIGL benchmark"));
   inp->put<int>("dimension",                2);
   inp->put<int>("number_groups",            2);
-  inp->put<std::string>("equation",         "sc");
+  inp->put<std::string>("equation",         "dd");
   inp->put<std::string>("bc_west",          "reflect");
-  inp->put<std::string>("bc_east",          "reflect");
+  inp->put<std::string>("bc_east",          "vacuum");
   inp->put<std::string>("bc_south",         "reflect");
-  inp->put<std::string>("bc_north",         "reflect");
+  inp->put<std::string>("bc_north",         "vacuum");
   inp->put<int>("bc_zero_flux",             0);
-  inp->put<double>("ts_final_time",         10.);
+  inp->put<double>("ts_final_time",         0.6);
   inp->put<double>("ts_step_size",          0.01);
-  inp->put<int>("ts_max_steps",             10);
-  inp->put<int>("ts_scheme",                TS_2D::BDF1);
+  inp->put<int>("ts_max_steps",             1000);
+  inp->put<int>("ts_scheme",                TS_2D::IMP);
   inp->put<int>("ts_output",                0);
   inp->put<int>("ts_monitor_level",         1);
   inp->put<int>("ts_no_extrapolation",      0);
   inp->put<string>("eigen_solver",          "arnoldi");
-  inp->put<string>("inner_solver",          "GMRES");
+  inp->put<int>("quad_number_polar_octant",      3);
+  inp->put<int>("quad_number_azimuth_octant",    3);
+
+  //inp->put<string>("outer_solver",          "GMRES");
+  //inp->put<int>("outer_krylov_group_cutoff",      1);
+
+  inp->put<string>("inner_solver",          "SI");
+  inp->put<double>("outer_tolerance",       1e-14);
+  inp->put<double>("inner_tolerance",       1e-14);
+  inp->put<int>("inner_max_iters",          1e5);
+
   inp->put<int>("inner_print_level",        0);
   inp->put<int>("outer_print_level",        0);
   inp->put<int>("quad_number_azimuth_octant",   1);
   inp->put<int>("quad_number_polar_octant",     1);
   // inner gmres parameters
   InputDB::SP_input db(new InputDB("inner_solver_db"));
-  //db->put<double>("linear_solver_atol",                 1e-12);
+  db->put<double>("linear_solver_atol",                 1e-12);
   db->put<double>("linear_solver_rtol",                 1e-15);
   db->put<string>("linear_solver_type",                 "petsc");
   db->put<string>("pc_type",                            "petsc_pc");
   db->put<string>("petsc_pc_type",                      "lu");
   db->put<int>("linear_solver_maxit",                   2000);
-  db->put<int>("linear_solver_gmres_restart",           20);
+  db->put<int>("linear_solver_gmres_restart",           30);
   db->put<int>("linear_solver_monitor_level",           0);
-  db->put<string>("eigen_solver_type",                 "slepc");
+  db->put<string>("eigen_solver_type",                  "slepc");
   db->put<double>("eigen_solver_tol",                   1e-15);
   inp->put<InputDB::SP_input>("inner_solver_db",        db);
   inp->put<InputDB::SP_input>("outer_solver_db",        db);
   inp->put<InputDB::SP_input>("eigen_solver_db",        db);
-
+  inp->put<int>("compute_boundary_flux",                1);
   if (inp->get<std::string>("equation") != "diffusion")
   {
-    inp->put<int>("ts_discrete",              1);
+    inp->put<int>("ts_discrete",              0);
     inp->put<int>("store_angular_flux",       1);
   }
 
@@ -269,13 +285,13 @@ int test_TWIGL(int argc, char *argv[])
   // Create a TWIGL material with ramp reactivity
   bool transport = false;
   if (inp->get<std::string>("equation") != "diffusion") transport = true;
-  TS_2D::SP_material mat(new TWIGLMaterial(0, transport));
+  TS_2D::SP_material mat(new TWIGLMaterial(1, transport));
 
   //-------------------------------------------------------------------------//
   // MESH
   //-------------------------------------------------------------------------//
 
-  TS_2D::SP_mesh mesh = get_mesh(2);
+  TS_2D::SP_mesh mesh = get_mesh(1);
 
   //-------------------------------------------------------------------------//
   // STEADY STATE
@@ -286,6 +302,10 @@ int test_TWIGL(int argc, char *argv[])
   State::SP_state ic = manager.state();
   mat->set_eigenvalue(ic->eigenvalue());
   mat->update(0, 0, 1, false);
+
+  //ic->display();
+  //return 0;
+  //inp->put<string>("inner_solver",          "GMRES");
 
   // Normalize state.
   double F = 0;
@@ -307,6 +327,8 @@ int test_TWIGL(int argc, char *argv[])
   stepper.set_monitor(test_monitor);
 
   stepper.solve(ic);
+  //stepper.state()->display();
+
 
   printf(" %20.16f %20.16f ", ic->phi(0)[0], ic->phi(0)[1]);
   std::cout << std::endl;
