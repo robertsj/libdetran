@@ -1,13 +1,13 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- *  \file   Mesh.hh
- *  \author Jeremy Roberts
- *  \brief  Mesh class definition.
+/**
+ *  @file   Mesh.hh
+ *  @author Jeremy Roberts
+ *  @brief  Mesh class definition.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef MESH_HH_
-#define MESH_HH_
+#ifndef detran_geometry_MESH_HH_
+#define detran_geometry_MESH_HH_
 
 #include "utilities/Definitions.hh"
 #include "utilities/DBC.hh"
@@ -29,9 +29,9 @@ namespace detran_geometry
 {
 
 //---------------------------------------------------------------------------//
-/*!
- *  \class Mesh
- *  \brief Abstract Cartesian mesh class.
+/**
+ *  @class Mesh
+ *  @brief Abstract Cartesian mesh class.
  *
  *  Note, the constructors are protected to forbid direct instantiation of
  *  the Mesh class.  Rather, use the dimension-specific subclasses.  We
@@ -85,29 +85,29 @@ public:
   // the constructors at the top for convention.
 protected:
 
-  /*!
-   *  \brief Constructor.
+  /**
+   *  @brief Constructor.
    *
-   *  \param    dim         Spatial dimension
-   *  \param    xfm         Fine meshes per coarse mesh in x dimension.
-   *  \param    yfm         Fine meshes per coarse mesh in y dimension.
-   *  \param    zfm         Fine meshes per coarse mesh in z dimension.
-   *  \param    xcme        Coarse mesh edges x dimension.
-   *  \param    ycme        Coarse mesh edges y dimension.
-   *  \param    zcme        Coarse mesh edges z dimension.
+   *  @param    dim         Spatial dimension
+   *  @param    xfm         Fine meshes per coarse mesh in x dimension.
+   *  @param    yfm         Fine meshes per coarse mesh in y dimension.
+   *  @param    zfm         Fine meshes per coarse mesh in z dimension.
+   *  @param    xcme        Coarse mesh edges x dimension.
+   *  @param    ycme        Coarse mesh edges y dimension.
+   *  @param    zcme        Coarse mesh edges z dimension.
    */
   Mesh(size_t dim,
        vec_int xfm,  vec_int yfm,  vec_int zfm,
        vec_dbl xcme, vec_dbl ycme, vec_dbl zcme,
        vec_int mat_map);
 
-  /*!
-   *  \brief Constructor.
+  /**
+   *  @brief Constructor.
    *
-   *  \param    dim         Spatial dimension
-   *  \param    xfme        Fine mesh edges x dimension.
-   *  \param    yfme        Fine mesh edges y dimension.
-   *  \param    zfme        Fine mesh edges z dimension.
+   *  @param    dim         Spatial dimension
+   *  @param    xfme        Fine mesh edges x dimension.
+   *  @param    yfme        Fine mesh edges y dimension.
+   *  @param    zfme        Fine mesh edges z dimension.
    */
   Mesh(size_t dim,
        vec_dbl xfme, vec_dbl yfme, vec_dbl zfme,
@@ -125,7 +125,7 @@ public:
   // Setters
   //------------------------------------------------------------------------//
 
-  /*!
+  /**
    * \brief  Add map of coarse mesh integer properties.
    *
    * This is an easy way to set mesh properties for meshes based on
@@ -136,7 +136,7 @@ public:
    */
   void add_coarse_mesh_map(std::string map_key, vec_int mesh_map);
 
-  /*!
+  /**
    * \brief  Add map of fine mesh integer properties.
    *
    * This adds properties for fine meshes directly, and so is meanty for
@@ -195,7 +195,7 @@ public:
   /// Get the mesh dimension
   size_t dimension() const;
 
-  /*!
+  /**
    *
    * \brief   Returns the cardinal index for i, j, and k
    *
@@ -206,38 +206,38 @@ public:
    */
   size_t index(size_t i, size_t j = 0, size_t k = 0);
 
-  /*!
-   *  \brief   Returns the x index given cardinal index
-   *  \param   cell  Cardinal index.
-   *  \return        Index along x axis.
+  /**
+   *  @brief   Returns the x index given cardinal index
+   *  @param   cell  Cardinal index.
+   *  @return        Index along x axis.
    */
   size_t cell_to_i(size_t cell) const;
 
-  /*!
-   *  \brief   Returns the y index given cardinal index
-   *  \param   cell  Cardinal index.
-   *  \return        Index along y axis.
+  /**
+   *  @brief   Returns the y index given cardinal index
+   *  @param   cell  Cardinal index.
+   *  @return        Index along y axis.
    */
   size_t cell_to_j(size_t cell) const;
 
-  /*!
-   *  \brief   Returns the z index given cardinal index
-   *  \param   cell  Cardinal index.
-   *  \return        Index along z axis.
+  /**
+   *  @brief   Returns the z index given cardinal index
+   *  @param   cell  Cardinal index.
+   *  @return        Index along z axis.
    */
   size_t cell_to_k(size_t cell) const;
 
   /// Check if fine mesh map exists.
   bool mesh_map_exists(std::string map_key);
 
-  /*!
-   * \brief  Get map of fine mesh integer properties.
+  /**
+   *  @brief  Get map of fine mesh integer properties.
    *
-   * This adds properties for fine meshes directly, and so is meant for
-   * use with higher level mesh construction, e.g. pin cells, where
-   * assignment is not possible by simple coarse mesh bounds.
+   *  This adds properties for fine meshes directly, and so is meant for
+   *  use with higher level mesh construction, e.g. pin cells, where
+   *  assignment is not possible by simple coarse mesh bounds.
    *
-   * \param   m  Logically multi-dimensional map as 1-d vector.
+   *  @param   m  Logically multi-dimensional map as 1-d vector.
    */
   const vec_int& mesh_map(std::string map_key);
 
@@ -251,56 +251,40 @@ protected:
 
   /// Mesh spatial dimension
   size_t d_dimension;
-
   /// x fine meshes in each x coarse mesh
   vec_int d_xfm;
-
   /// y fine meshes in each y coarse mesh
   vec_int d_yfm;
-
   /// z fine meshes in each y coarse mesh
   vec_int d_zfm;
-
   /// x coarse mesh edges
   vec_dbl d_xcme;
-
   /// y coarse mesh edges
   vec_dbl d_ycme;
-
   /// z coarse mesh edges
   vec_dbl d_zcme;
-
   /// x widths
   vec_dbl d_dx;
-
   /// y widths
   vec_dbl d_dy;
-
   /// z widths
   vec_dbl d_dz;
-
   /// total x width
   double d_total_width_x;
-
   /// total y width
   double d_total_width_y;
-
   /// total z width
   double d_total_width_z;
-
   /// Total number of cells
   size_t d_number_cells;
-
   /// Number of cells in x direction
   size_t d_number_cells_x;
-
   /// Number of cells in y direction
   size_t d_number_cells_y;
-
   /// Number of cells in y direction
   size_t d_number_cells_z;
 
-  /*!
+  /**
    *  Map container containing a key describing a mesh property and a fine
    *  mesh map defining the property in each cell.  These properties
    *  include materials, coarse mesh regions (pins, assembly, fuel,
@@ -310,8 +294,8 @@ protected:
 
 private:
 
-  /*!
-   *  \brief   Common construction tasks.
+  /**
+   *  @brief   Common construction tasks.
    */
   void setup();
 
@@ -357,7 +341,7 @@ private:
 
 #include "Mesh.i.hh"
 
-#endif /* MESH_HH_ */
+#endif /* detran_geometry_MESH_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of Mesh.hh

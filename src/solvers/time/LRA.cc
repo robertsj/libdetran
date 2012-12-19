@@ -69,6 +69,10 @@ LRA::LRA(SP_mesh mesh, bool doingtransport, bool steady)
   for (int i = 0; i < d_mesh->number_cells(); ++i)
     if (d_unique_mesh_map[i] != 4) d_A += d_mesh->volume(i);
 
+  // Create physics
+  d_physics = new detran::MultiPhysics(1);
+  d_physics->variable(0).resize(d_mesh->number_cells(), 300.0);
+
   initialize_materials();
 }
 
@@ -149,6 +153,8 @@ void LRA::update_impl()
   if (d_t <= 2.0) sigma_a2 = A2[ROD] * (1.0 - 0.0606184 * d_t);
   double delta_2 = sigma_a2 - A2[ROD];
 
+  vec_dbl &T = d_physics->variable(0);
+
   for (int i = 0; i < d_mesh->number_cells(); ++i)
   {
     size_t m = d_unique_mesh_map[i];
@@ -177,7 +183,7 @@ void LRA::update_impl()
     // update the FAST cross section
     double sigma_a1 = A1[m];
     if (m != REFLECTOR) // only FUEL has feedback
-      sigma_a1 = A1[m] * (1.0 + GAMMA * (std::sqrt(d_T[i]) - std::sqrt(300.0)));
+      sigma_a1 = A1[m] * (1.0 + GAMMA * (std::sqrt(T[i]) - std::sqrt(300.0)));
     double delta_1  = sigma_a1 - A1[m];
 
     if (d_flag)
@@ -203,77 +209,23 @@ void LRA::update_impl()
 //---------------------------------------------------------------------------//
 void LRA::update_P_and_T(double t, double dt)
 {
-  bool step = false;
-  if (t > d_current_time)
-  {
-    d_current_time = t;
-    step = true;
-  }
-
   // Get fluxes
   const detran::State::moments_type &phi0 = d_state->phi(0);
   const detran::State::moments_type &phi1 = d_state->phi(1);
 
-  // USE A FINE-MESH FISSION DENSITY
-  if (1)
+  // Compute power and temperature.  Note, we "unscale" by keff.
+  vec_dbl &T = d_physics->variable(0);
+  for (size_t i = 0; i < d_mesh->number_cells(); ++i)
   {
-    // Compute power and temperature.  Note, we "unscale" by keff.
-    for (size_t i = 0; i < d_mesh->number_cells(); ++i)
-    {
-      double F = sigma_f(i, 0) * phi0[i] + sigma_f(i, 1) * phi1[i];
-      d_P[i] = KAPPA * F;
-      if (d_t > 0.0) d_T[i] = d_T_old[i] + dt * ALPHA * F;
-      if (step) d_T_old[i] = d_T[i];
-    }
+    double F = sigma_f(i, 0) * phi0[i] + sigma_f(i, 1) * phi1[i];
+    d_P[i] = KAPPA * F;
+    if (d_t > 0.0)
+      T[i] = dt * ALPHA * F;
   }
-  // USE A NODE-AVERAGED FISSION DENSITY
-  else
-  {
-    vec_int map = d_mesh->mesh_map("SUBASSEMBLY");
-
-    // Number of unique regions.  This *assumes* sequential numbering,
-    int number = 1 + *std::max_element(map.begin(), map.end());
-
-    vec_dbl coarse_mesh_F(number, 0.0);
-    vec_dbl coarse_mesh_V(number, 0.0);
-
-    for (int k = 0; k < d_mesh->number_cells_z(); k++)
-    {
-      for (int j = 0; j < d_mesh->number_cells_y(); j++)
-      {
-        for (int i = 0; i < d_mesh->number_cells_x(); i++)
-        {
-          // Define the mesh cell and volume
-          int cell      = d_mesh->index(i, j, k);
-          int node      = map[cell];
-          double volume = d_mesh->volume(cell);
-
-          // Fine mesh fission density
-          double F = sigma_f(cell, 0) * phi0[cell] + sigma_f(cell, 1) * phi1[cell];
-
-          // Add contribution to this edit region
-          coarse_mesh_F[node] += volume * F;
-          coarse_mesh_V[node] += volume;
-        }
-      }
-    }
-
-    // Compute the AVERAGE fission density
-    for (int region = 0; region < number; ++region)
-      coarse_mesh_F[region] /= coarse_mesh_V[region];
-
-    // Assign the AVERAGE to the FINE MESH
-    for (int cell = 0; cell < d_mesh->number_cells(); ++cell)
-    {
-      size_t node = map[cell];
-      d_P[cell] = KAPPA * coarse_mesh_F[node];
-      if (d_t > 0.0) d_T[cell] = d_T_old[cell] + dt * ALPHA * coarse_mesh_F[node];
-      if (step) d_T_old[cell] = d_T[cell];
-    }
-  }
-
-
 }
+
+
+
 
 } // end namespace detran_user
 

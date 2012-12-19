@@ -1,8 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- *  \file   Mesh.cc
- *  \author Jeremy Roberts
- *  \brief  Mesh class member definitions.
+/**
+ *  @file   Mesh.cc
+ *  @author Jeremy Roberts
+ *  @brief  Mesh class member definitions.
  */
 //---------------------------------------------------------------------------//
 

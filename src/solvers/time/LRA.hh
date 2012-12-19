@@ -11,7 +11,9 @@
 #define detran_user_LRA_HH_
 
 #include "kinetics/TimeDependentMaterial.hh"
+#include "kinetics/MultiPhysics.hh"
 #include "geometry/Mesh.hh"
+#include "TimeStepper.hh"
 
 namespace detran_user
 {
@@ -27,6 +29,7 @@ public:
 
   typedef detran::TimeDependentMaterial             Base;
   typedef detran_geometry::Mesh::SP_mesh            SP_mesh;
+  typedef detran::MultiPhysics::SP_multiphysics     SP_multiphysics;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -50,6 +53,7 @@ public:
   void update_P_and_T(double t, double dt);
   vec_dbl T() {return d_T;}
   vec_dbl P() {return d_P;}
+  SP_multiphysics physics() {return d_physics;}
   double area() {return d_A;}
   void set_area(double a) {d_A = a;}
 
@@ -67,6 +71,8 @@ public:
   vec_int d_unique_mesh_map;
   /// Fine mesh map of assemblies
   vec_int d_assembly_map;
+  /// Multiphysics (just T)
+  SP_multiphysics d_physics;
   /// Fine mesh temperature
   vec_dbl d_T;
   /// Old fine mesh temperature
@@ -94,6 +100,22 @@ public:
 
 };
 
+//---------------------------------------------------------------------------//
+template <class D>
+void update_T_rhs(void* data,
+                  detran::TimeStepper<D>* step,
+                  double t,
+                  double dt)
+{
+  Require(data);
+  Require(step);
+
+  // cast data as LRA
+  LRA* mat = (LRA*) data;
+
+  // update
+  mat->update_P_and_T(t, dt);
+}
 } // end namespace detran_user
 
 #endif /* detran_user_LRA_HH_ */

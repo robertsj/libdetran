@@ -13,6 +13,8 @@
 #include "FixedSourceManager.hh"
 #include "angle/Quadrature.hh"
 #include "ioutils/SiloOutput.hh"
+#include "kinetics/BDFCoefficients.hh"
+#include "kinetics/MultiPhysics.hh"
 #include "kinetics/TimeDependentMaterial.hh"
 #include "kinetics/TimeDependentExternalSource.hh"
 #include "kinetics/SyntheticSource.hh"
@@ -20,7 +22,6 @@
 #include "utilities/Definitions.hh"
 #include "utilities/SP.hh"
 #include "transport/State.hh"
-#include "kinetics/BDFCoefficients.hh"
 #include <cstdio>
 
 namespace detran
@@ -69,12 +70,17 @@ public:
   typedef SyntheticSource::vec_states                     vec_states;
   typedef Precursors::SP_precursors                       SP_precursors;
   typedef SyntheticSource::vec_precursors                 vec_precursors;
+  typedef MultiPhysics::SP_multiphysics                   SP_multiphysics;
+  typedef std::vector<SP_multiphysics>                    vec_multiphysics;
   typedef FissionSource::SP_fissionsource                 SP_fissionsource;
   typedef detran_utilities::vec_int                       vec_int;
   typedef detran_ioutils::SiloOutput::SP_silooutput       SP_silooutput;
-  typedef void (*function_pointer)
+  /// Pointer to callback function for monitoring
+  typedef void (*monitor_pointer)
                (void*, TimeStepper<D>*, int, double, double, int, bool);
-
+  /// Pointer to callback function for updating physics
+  typedef void (*multiphysics_pointer)
+               (void*, TimeStepper<D>*, double, double);
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
@@ -109,17 +115,28 @@ public:
   SP_quadrature quadrature() {return d_quadrature;}
   size_t monitor_level() const {return d_monitor_level;}
   SP_precursors precursor() {return d_precursor;}
+  SP_multiphysics multiphysics() {return d_multiphysics;}
   SP_fissionsource fissionsource() {return d_fissionsource;}
   double residual_norm() {return d_residual_norm;}
 
   /// Set a user-defined monitor function.
-  void set_monitor(function_pointer monitor, void* monitor_data = NULL)
+  void set_monitor(monitor_pointer monitor, void* monitor_data = NULL)
   {
     Require(monitor);
     d_monitor = monitor;
     d_monitor_data = monitor_data;
   }
 
+  /**
+   *  @brief Set the multiphysics
+   *
+   *  The user must initialize the multiphysics state vector.  The
+   *  user also specifies the multiphysics update function as well
+   *  as any data required.
+   */
+  void set_multiphysics(SP_multiphysics ic,
+                        multiphysics_pointer update_multiphysics_rhs,
+                        void* multiphysics_data = NULL);
 
 private:
 
@@ -151,10 +168,14 @@ private:
   SP_state d_state;
   /// Working precursor vector.
   SP_precursors d_precursor;
+  /// Working multiphysics vector
+  SP_multiphysics d_multiphysics;
   /// Previous state iterate.
   SP_state d_state_0;
   /// Previous precursor iterate.
   SP_precursors d_precursor_0;
+  /// Previous multiphysics iterate
+  SP_multiphysics d_multiphysics_0;
   /// Time step size
   double d_dt;
   /// Step factor (for IMP)
@@ -171,6 +192,8 @@ private:
   vec_states d_states;
   /// Vector of previous precursor concentrations
   vec_precursors d_precursors;
+  /// Vector of previous physics iterates
+  vec_multiphysics d_vec_multiphysics;
   /// Flag to write out time-dependent fluxes
   bool d_do_output;
   /// SILO output
@@ -186,9 +209,13 @@ private:
   /// Residual norm
   double d_residual_norm;
   /// Time step monitor
-  function_pointer d_monitor;
+  monitor_pointer d_monitor;
   /// Monitor data
   void* d_monitor_data;
+  /// Multiphysics callback
+  multiphysics_pointer d_update_multiphysics_rhs;
+  /// Multiphysics data
+  void* d_multiphysics_data;
   /// Monitor level (only on or off right now)
   size_t d_monitor_level;
   /// Tolerance for nonlinear iterations
@@ -205,6 +232,10 @@ private:
 
   /// Given the new state and previous precursor vectors, compute new precursor
   void update_precursors(const double t, const double dt, const size_t order);
+
+  /// Given the new state and previous precursor vectors, compute new precursor
+  void update_multiphysics(const double t, const double dt, const size_t order);
+
 
   /**
    *  @brief Cycle the states and precursors.

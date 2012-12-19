@@ -13,6 +13,7 @@
 #include "EigenvalueManager.hh"
 #include "time/TimeStepper.hh"
 #include "Manager.hh"
+#include "time/LRA.hh"
 %}
 
 %import "detran_kinetics.i"
@@ -61,6 +62,19 @@ setCallbackMethod(4,
 %template(Time1D) detran::TimeStepper<detran::_1D>;
 %template(Time2D) detran::TimeStepper<detran::_2D>;
 %template(Time3D) detran::TimeStepper<detran::_3D>;
+
+// Downcasts and Upcasts for generic routines
+%inline
+{
+  
+  // TD -> LRA
+  detran_utilities::SP<detran_user::LRA> 
+  as_lra(detran_utilities::SP<detran::TimeDependentMaterial>* p)
+  {
+    return detran_utilities::SP<detran_user::LRA>(*p);
+  } 
+  
+}
 
 //---------------------------------------------------------------------------//
 //              end of detran_solvers.i

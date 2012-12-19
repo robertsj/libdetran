@@ -21,7 +21,7 @@ SET(SRC
     SyntheticDiscreteSource.cc
     LinearExternalSource.cc
     PulsedExternalSource.cc
-    LRA.cc
+    MultiPhysics.cc
 )
 
 #-----------------------------------------------------------------------------#
