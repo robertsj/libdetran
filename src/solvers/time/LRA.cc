@@ -219,11 +219,12 @@ void LRA::update_P_and_T(double t, double dt)
   for (size_t i = 0; i < d_mesh->number_cells(); ++i)
   {
     F = sigma_f(i, 0) * phi0[i] + sigma_f(i, 1) * phi1[i];
+
     d_P[i] = KAPPA * F;
     if (t > 0.0)
       T[i] = dt * ALPHA * F;
   }
-
+  std::cout << " T[0]=" << T[0] <<  " F=" << sigma_f(0, 0) * phi0[0] + sigma_f(0, 1) * phi1[0] << std::endl;
 }
 
 
