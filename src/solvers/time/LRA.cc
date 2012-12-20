@@ -215,13 +215,15 @@ void LRA::update_P_and_T(double t, double dt)
 
   // Compute power and temperature.  Note, we "unscale" by keff.
   vec_dbl &T = d_physics->variable(0);
+  double F = 0;
   for (size_t i = 0; i < d_mesh->number_cells(); ++i)
   {
-    double F = sigma_f(i, 0) * phi0[i] + sigma_f(i, 1) * phi1[i];
+    F = sigma_f(i, 0) * phi0[i] + sigma_f(i, 1) * phi1[i];
     d_P[i] = KAPPA * F;
-    if (d_t > 0.0)
+    if (t > 0.0)
       T[i] = dt * ALPHA * F;
   }
+
 }
 
 

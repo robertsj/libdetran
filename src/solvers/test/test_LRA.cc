@@ -56,14 +56,24 @@ void test_monitor(void* data, TimeStepper<_2D>* ts, int step, double t,
 {
   double F = 0;
   TimeStepper<_2D>::vec_int matmap = ts->mesh()->mesh_map("MATERIAL");
+
+  vec_dbl &T = ts->multiphysics()->variable(0);
+  TimeStepper<_2D>::size_t N = 0;
+  double T_avg = 0;
   for (int i = 0; i < ts->mesh()->number_cells(); ++i)
   {
     int m = matmap[i];
     F += ts->state()->phi(0)[i] * ts->material()->sigma_f(m, 0) +
          ts->state()->phi(1)[i] * ts->material()->sigma_f(m, 1);
+    if (m != 4)
+    {
+      ++N;
+      T_avg += T[i];
+    }
   }
+  T_avg /= N;
   //ts->state()->display();
-  printf(" %5i  %16.13f  %16.13f %5i \n", step, t, F, it);
+  printf(" %5i  %16.13f  %16.13f %16.13f %5i \n", step, t, F, T_avg, it);
 }
 
 //---------------------------------------------------------------------------//
@@ -133,7 +143,7 @@ int test_LRA(int argc, char *argv[])
   inp->put<std::string>("bc_south",         "reflect");
   inp->put<std::string>("bc_north",         "vacuum");
   inp->put<int>("bc_zero_flux",             0);
-  inp->put<double>("ts_final_time",         1.0);
+  inp->put<double>("ts_final_time",         1.1);
   inp->put<double>("ts_step_size",          0.01);
   inp->put<int>("ts_max_steps",             1000);
   inp->put<int>("ts_scheme",                TS_2D::BDF1);
@@ -221,6 +231,7 @@ int test_LRA(int argc, char *argv[])
   stepper.set_monitor(test_monitor);
   detran_utilities::SP<detran_user::LRA> mat_lra;
   mat_lra = mat;
+
   stepper.set_multiphysics(mat_lra->physics(),
                            detran_user::update_T_rhs<_2D>,
                            (void *) mat_lra.bp());

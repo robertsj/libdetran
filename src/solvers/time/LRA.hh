@@ -113,6 +113,8 @@ void update_T_rhs(void* data,
   // cast data as LRA
   LRA* mat = (LRA*) data;
 
+  std::cout << mat->physics()->variable(0)[0] << " "
+            << step->multiphysics()->variable(0)[0] << std::endl;
   // update
   mat->update_P_and_T(t, dt);
 }
