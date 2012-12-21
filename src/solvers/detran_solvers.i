@@ -14,6 +14,9 @@
 #include "time/TimeStepper.hh"
 #include "Manager.hh"
 #include "time/LRA.hh"
+//
+#include "kinetics/PyTimeDependentMaterial.hh"
+#include "kinetics/LinearMaterial.hh"
 %}
 
 %import "detran_kinetics.i"
@@ -63,6 +66,9 @@ setCallbackMethod(4,
 %template(Time2D) detran::TimeStepper<detran::_2D>;
 %template(Time3D) detran::TimeStepper<detran::_3D>;
 
+%include "time/LRA.hh"
+%template(SPLRA) detran_utilities::SP<detran_user::LRA>;
+
 // Downcasts and Upcasts for generic routines
 %inline
 {
@@ -73,6 +79,16 @@ setCallbackMethod(4,
   {
     return detran_utilities::SP<detran_user::LRA>(*p);
   } 
+  
+  // Set LRA physics.  Temporary hack.
+  void set_lra_physics(detran::TimeStepper<detran::_2D>* stepper,
+                       detran_utilities::SP<detran::MultiPhysics>* physics,
+                       detran_utilities::SP<detran::TimeDependentMaterial>* mat)
+  {
+    stepper->set_multiphysics(*physics,
+                              detran_user::update_T_rhs<detran::_2D>,
+                              (void *) (*mat).bp());
+  }
   
 }
 

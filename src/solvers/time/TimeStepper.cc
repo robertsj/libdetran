@@ -206,6 +206,8 @@ void TimeStepper<D>::solve(SP_state initial_state)
   initialize_precursors();
   *d_states[0] = *d_state;
   if (d_precursors.size()) *d_precursors[0] = *d_precursor;
+  if (d_multiphysics) *d_vec_multiphysics[0] = *d_multiphysics;
+
 
   // Output the initial state
   if (d_do_output) d_silooutput->write_time_flux(0, d_state, d_discrete);
@@ -261,6 +263,7 @@ void TimeStepper<D>::solve(SP_state initial_state)
     cycle_states_precursors(order);
     *d_states[0] = *d_state;
     if (d_multiply) *d_precursors[0] = *d_precursor;
+    if (d_multiphysics) *d_vec_multiphysics[0] = *d_multiphysics;
 
     // Output the initial state
     if (d_do_output) d_silooutput->write_time_flux(i+1, d_state, true);
@@ -413,11 +416,16 @@ void TimeStepper<D>::update_multiphysics(const double t,
   {
 
     // Reference to P(n+1)
-    MultiPhysics::vec_dbl &P = d_multiphysics->variable(i);
-    std::cout << " Pold[0]=" << P[0] << std::endl;
+    MultiPhysics::vec_dbl &P   = d_multiphysics->variable(i);
+
+    //std::cout << " Pold[0]=" << P[0] << std::endl;
+    printf("delP = %18.12e \n", P[0]);
+    printf("Pold[0] = %18.12e \n", d_vec_multiphysics[0]->variable(0)[0]);
+
     // Loop over all elements (usually spatial)
     for (int j = 0; j < P.size(); ++j)
     {
+
       double v = dt * P[j];
       for (size_t k = 1; k <= order; ++k)
         v += bdf_coefs[order-1][k] * d_vec_multiphysics[k-1]->variable(i)[j];

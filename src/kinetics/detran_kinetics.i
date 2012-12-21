@@ -23,6 +23,8 @@
 #include "kinetics/TimeDependentExternalSource.hh"
 #include "kinetics/LinearExternalSource.hh"
 #include "kinetics/PulsedExternalSource.hh"
+//
+#include "kinetics/MultiPhysics.hh"
 %}
 
 %include <pycontainer.swg>
@@ -70,6 +72,10 @@ setCallbackMethod(1, // this is a *unique* identifier
 %template(PYTDMaterialSP)       detran_utilities::SP<detran::PyTimeDependentMaterial>;
 %template(vec_material)         std::vector<detran_utilities::SP<detran::KineticsMaterial> >;
 %template(PrecursorsSP)         detran_utilities::SP<detran::Precursors>;
+
+// Multiphysics
+%include "MultiPhysics.hh"
+%template(MultiPhysicsSP)       detran_utilities::SP<detran::MultiPhysics>;
 
 // Downcasts and Upcasts for generic routines
 %inline
