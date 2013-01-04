@@ -83,9 +83,12 @@ void MGDiffusionSolver<D>::refresh()
 template <class D>
 void MGDiffusionSolver<D>::solve(const double keff)
 {
-  // Note, if keff is new, the client is responsible to refresh
-  // the solver.
-  d_keff = keff;
+  // Note, if keff is new, we must refresh the operators
+  if (d_keff != keff)
+  {
+    d_keff = keff;
+    refresh();
+  }
 
   // Reset and build the right hand side.
   d_Q->set(0.0);
