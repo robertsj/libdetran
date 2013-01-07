@@ -54,7 +54,6 @@ MGDiffusionSolver<D>::MGDiffusionSolver(SP_state                  state,
   {
     db = d_input->template get<SP_input>("outer_solver_db");
   }
-  Require(db);
   d_solver = Creator_T::Create(db);
   d_solver->set_operators(d_M, db);
 

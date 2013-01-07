@@ -17,6 +17,7 @@
 %import "detran_utilities.i"
 %import "detran_geometry.i"
 %import "detran_angle.i"
+%include "transport/DimensionTraits.hh"
 
 %include "BoundaryTraits.hh"
 %template(BT1) detran::BoundaryTraits<detran::_1D>;

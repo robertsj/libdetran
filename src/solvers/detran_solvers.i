@@ -19,8 +19,10 @@
 #include "kinetics/LinearMaterial.hh"
 %}
 
+%import "detran_boundary.i"
 %import "detran_kinetics.i"
 %import "detran_transport.i"
+%include "transport/DimensionTraits.hh"
 
 %include callback.i 
 
