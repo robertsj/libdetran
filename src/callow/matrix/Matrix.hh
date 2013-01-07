@@ -19,9 +19,9 @@
 namespace callow
 {
 
-/*!
- *  \class Matrix
- *  \brief CRS matrix
+/**
+ *  @class Matrix
+ *  @brief CRS matrix
  *
  * This is the base matrix class used within callow.  It implements
  * a compressed row storage (CRS) matrix.  An example of what this

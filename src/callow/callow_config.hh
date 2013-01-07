@@ -42,7 +42,7 @@
 #include "slepc.h"
 #endif
 
-//#define CALLOW_ENABLE_PETSC_OPS
+#define CALLOW_ENABLE_PETSC_OPS
 
 /// Provides linear algebra support for detran
 namespace callow

@@ -17,6 +17,10 @@ ADD_TEST(test_Matrix                    test_Matrix 0)
 ADD_EXECUTABLE(test_MatrixShell         test_MatrixShell.cc)
 TARGET_LINK_LIBRARIES(test_MatrixShell  callow )
 ADD_TEST(test_MatrixShell               test_MatrixShell 0)
+#
+ADD_EXECUTABLE(test_MatrixDense         test_MatrixDense.cc)
+TARGET_LINK_LIBRARIES(test_MatrixDense  callow )
+ADD_TEST(test_MatrixDense               test_MatrixDense 0)
 
 # Linear Solvers
 ADD_EXECUTABLE(test_LinearSolver        test_LinearSolver.cc)
