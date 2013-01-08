@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   TabuchiYamamoto.cc
- * \brief  TabuchiYamamoto class definition.
- * \author Jeremy Roberts
- * \date   Jun 22, 2012
+/**
+ *  @file   TabuchiYamamoto.cc
+ *  @brief  TabuchiYamamoto class definition.
+ *  @author Jeremy Roberts
+ *  @date   Jun 22, 2012
  */
 //---------------------------------------------------------------------------//
 
@@ -13,6 +13,7 @@
 namespace detran_angle
 {
 
+//---------------------------------------------------------------------------//
 TabuchiYamamoto::TabuchiYamamoto(size_t number_polar)
   : PolarQuadrature(number_polar)
 {

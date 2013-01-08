@@ -62,16 +62,11 @@ public:
   // destructor
   virtual ~MatrixDense();
   // sp constructor
-  static SP_matrix Create(const int m, const int n);
+  static SP_matrix Create(const int m, const int n, const double v = 0.0);
 
   //---------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
   //---------------------------------------------------------------------------//
-
-  /// allocate using constant row size
-  void preallocate(const int nnz_row);
-  /// allocate using variable row size
-  void preallocate(int *nnz_rows);
 
   /// add one value (return false if can't add)
   bool insert(int  i, int  j, double  v, const int type = INSERT);

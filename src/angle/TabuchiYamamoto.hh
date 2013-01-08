@@ -25,7 +25,7 @@ namespace detran_angle
  *  Bessel functions.
  *
  *  Their original paper gives quadratures for 1, 2, and 3 abscissa.
- *  We extend that to 6 abscissa.  Additionally, we implement another
+ *  We extend that to 5 abscissa.  Additionally, we implement another
  *  size abscissa based on an L2 minimization of the error (rather
  *  than the infinity norm).
  *

@@ -18,12 +18,14 @@ namespace callow
 // CONSTRUCTOR & DESTRUCTOR
 //---------------------------------------------------------------------------//
 
+//---------------------------------------------------------------------------//
 Matrix::Matrix()
   : d_allocated(false)
 {
   /* ... */
 }
 
+//---------------------------------------------------------------------------//
 Matrix::Matrix(const int m, const int n)
   : MatrixBase(m, n)
   , d_allocated(false)
@@ -31,6 +33,7 @@ Matrix::Matrix(const int m, const int n)
   /* ... */
 }
 
+//---------------------------------------------------------------------------//
 Matrix::Matrix(const int m, const int n, const int nnzrow)
   : MatrixBase(m, n)
   , d_allocated(false)
@@ -38,6 +41,7 @@ Matrix::Matrix(const int m, const int n, const int nnzrow)
   preallocate(nnzrow);
 }
 
+//---------------------------------------------------------------------------//
 Matrix::Matrix(Matrix &A)
   : MatrixBase(A.number_rows(), A.number_columns())
 {
@@ -66,6 +70,7 @@ Matrix::Matrix(Matrix &A)
   d_is_ready = true;
 }
 
+//---------------------------------------------------------------------------//
 Matrix::~Matrix()
 {
   if (d_is_ready)
@@ -77,6 +82,7 @@ Matrix::~Matrix()
   }
 }
 
+//---------------------------------------------------------------------------//
 Matrix::SP_matrix
 Matrix::Create(const int m, const int n)
 {

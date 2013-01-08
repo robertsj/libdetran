@@ -30,4 +30,4 @@
 
 %template(MatrixBaseSP)  detran_utilities::SP<callow::MatrixBase>;
 %template(MatrixSP)      detran_utilities::SP<callow::Matrix>;
-%template(MatrixDenseSP) detran_utilities::SP<callow::Matrix>;
+%template(MatrixDenseSP) detran_utilities::SP<callow::MatrixDense>;

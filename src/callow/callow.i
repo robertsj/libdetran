@@ -16,6 +16,7 @@
 #include "callow/matrix/MatrixBase.hh"
 #include "callow/matrix/Matrix.hh"
 #include "callow/matrix/MatrixShell.hh"
+#include "callow/matrix/MatrixDense.hh"
 #include "callow/solver/LinearSolverCreator.hh"
 #include "callow/solver/EigenSolverCreator.hh"
 #include "callow/preconditioner/Preconditioner.hh"
@@ -66,13 +67,6 @@ void callow_finalize();
 //---------------------------------------------------------------------------//
 
 %include "matrix/Matrix.i"
-
-//%include "matrix/MatrixBase.hh"
-//%template(MatrixBaseDouble)     callow::MatrixBase<double>;
-//%template(MatrixBaseDoubleSP)   detran_utilities::SP<callow::MatrixBase<double> >;
-//%include "matrix/Matrix.hh"
-//%template(MatrixDouble)     callow::Matrix<double>;
-//%template(MatrixDoubleSP)   detran_utilities::SP<callow::Matrix<double> >;
 
 //---------------------------------------------------------------------------//
 // linear solver
