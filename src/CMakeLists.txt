@@ -41,12 +41,14 @@ SET(DETRAN_COMPILED_DATE 7 CACHE INTEGER
 
 macro(month RESULT)
   execute_process(COMMAND "date" "+%d/%m/%Y" OUTPUT_VARIABLE ${RESULT})
-  string(REGEX REPLACE "(..)/(..)/(....)." "\\1" ${RESULT} ${${RESULT}})
+  string(REGEX REPLACE "(..)/(..)/(....)." "\\2" ${RESULT} ${${RESULT}})
+  string(REGEX REPLACE "0(.)" "\\1" ${RESULT} ${${RESULT}})
 endmacro(month)
 
 macro(day RESULT)
   execute_process(COMMAND "date" "+%d/%m/%Y" OUTPUT_VARIABLE ${RESULT})
-  string(REGEX REPLACE "(..)/(..)/(....)." "\\2" ${RESULT} ${${RESULT}})
+  string(REGEX REPLACE "(..)/(..)/(....)." "\\1" ${RESULT} ${${RESULT}})
+  string(REGEX REPLACE "0(.)" "\\1" ${RESULT} ${${RESULT}})
 endmacro(day)
 
 macro(year RESULT)

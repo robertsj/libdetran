@@ -190,8 +190,8 @@ namespace detran_angle
  *
  *
  *  @refs
- * - Alain Hébert, <em>Applied Reactor Physics</em>, Presses Internationales
- *   Polytechnique, Montréal, 2009.
+ * - Alain Hebert, <em>Applied Reactor Physics</em>, Presses Internationales
+ *   Polytechnique, Montreal, 2009.
  *
  *  @example angle/test/test_SphericalHarmonics.cc
  *

@@ -12,6 +12,8 @@
 #include "angle/detran_angle.hh"
 %}
 
+%include "python/output.i"
+
 %import "utilities/detran_utilities.i"
 
 // Base angle classes and utilities
