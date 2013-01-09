@@ -20,6 +20,7 @@
 from utilities import *
 from angle import *
 from callow import *
+from orthog import *
 from geometry import *
 from material import *
 from external_source import *
@@ -33,17 +34,6 @@ from postprocess import *
 from pydetranutils import *
 
 import numpy as np
+import sys
 
-#__all__ = ["utilities",         \
-#           "angle",             \
-#           "callow",            \
-#           "geometry",          \
-#           "material",          \
-#           "external_source",   \
-#           "boundary",          \
-#           "transport",         \
-#           "ioutils",           \
-#           "kinetics",          \
-#           "solvers",           \
-#           "postprocess"        ]
-
+Manager.initialize(sys.argv)

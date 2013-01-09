@@ -13,6 +13,7 @@
 #include "callow/vector/Vector.hh"
 #include "callow/matrix/MatrixDense.hh"
 #include "utilities/Definitions.hh"
+#include "utilities/SP.hh"
 
 /**
  *  @namespace detran_ortho
@@ -71,12 +72,12 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef callow::Vector              Vector;
-  typedef callow::Vector::SP_vector   SP_vector;
-  typedef callow::MatrixDense::SP_matrix  SP_matrix;
-
-  typedef detran_utilities::size_t    size_t;
-  typedef detran_utilities::vec_dbl   vec_dbl;
+  typedef detran_utilities::SP<OrthogonalBasis> SP_basis;
+  typedef callow::Vector                        Vector;
+  typedef callow::Vector::SP_vector             SP_vector;
+  typedef callow::MatrixDense::SP_matrix        SP_matrix;
+  typedef detran_utilities::size_t              size_t;
+  typedef detran_utilities::vec_dbl             vec_dbl;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
