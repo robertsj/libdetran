@@ -11,6 +11,12 @@ SET(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 #-----------------------------------------------------------------------------#
 
 SET(SRC
+  OrthogonalBasis.cc
+  ContinuousOrthogonalBasis.cc
+  CLP.cc
+  DLP.cc
+  DCT.cc
+  DCP.cc
 )
 
 #-----------------------------------------------------------------------------#

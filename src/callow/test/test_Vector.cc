@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   test_Vector.cc
- * \author Jeremy Roberts
- * \date   Aug 19, 2012
- * \brief  Test of Vector class.
+/**
+ *  @file   test_Vector.cc
+ *  @author Jeremy Roberts
+ *  @date   Aug 19, 2012
+ *  @brief  Test of Vector class.
  */
 //---------------------------------------------------------------------------//
 
@@ -13,8 +13,9 @@
         FUNC(test_Vector_resize)
 
 #include "TestDriver.hh"
-#include "vector/Vector.hh"
-#include "utils/Initialization.hh"
+#include "callow/vector/Vector.hh"
+#include "callow/utils/Initialization.hh"
+#include "utilities/Definitions.hh"
 #include <iostream>
 
 using namespace callow;
@@ -37,32 +38,45 @@ int main(int argc, char *argv[])
 // Test of basic public interface
 int test_Vector(int argc, char *argv[])
 {
-
-  typedef Vector vec_dbl;
-
-  vec_dbl v(10, 1.0);
-  for (int i = 0; i < 10; i++)
   {
-    TEST(soft_equiv(v[i], 1.0));
-  }
-  v[5] = 5.0;
-  TEST(soft_equiv(v[5], 5.0));
-  v[5] = 1.0;
+    Vector v(10, 1.0);
+    for (int i = 0; i < 10; i++)
+    {
+      TEST(soft_equiv(v[i], 1.0));
+    }
+    v[5] = 5.0;
+    TEST(soft_equiv(v[5], 5.0));
+    v[5] = 1.0;
 
-  vec_dbl y(10, 2.0);
-  double val = v.dot(y);
-  double val2 = 0.0;
-  for (int i = 0; i < 10; i++)
+    Vector y(10, 2.0);
+    double val = v.dot(y);
+    double val2 = 0.0;
+    for (int i = 0; i < 10; i++)
+    {
+      val2 += v[i]*y[i];
+    }
+    cout << val2 << endl;
+    TEST(soft_equiv(val, 20.0));
+
+    v.set(1.23);
+    TEST(soft_equiv(v[0], 1.23));
+    v.scale(2.0);
+    TEST(soft_equiv(v[0], 2.46));
+  }
+
   {
-    val2 += v[i]*y[i];
+    detran_utilities::vec_dbl v(5, 1.0);
+    Vector V(v);
+    TEST(V.size() == 5);
+    TEST(soft_equiv(V[4], 1.0));
   }
-  cout << val2 << endl;
-  TEST(soft_equiv(val, 20.0));
 
-  v.set(1.23);
-  TEST(soft_equiv(v[0], 1.23));
-  v.scale(2.0);
-  TEST(soft_equiv(v[0], 2.46));
+  {
+    double v[] = {1.0, 1.0, 1.0, 1.0, 1.0};
+    Vector V(5, v);
+    TEST(V.size() == 5);
+    TEST(soft_equiv(V[4], 1.0));
+  }
 
   return 0;
 }

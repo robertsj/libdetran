@@ -45,8 +45,10 @@ public:
   Vector(const int n, double v = 0);
   Vector(const Vector &x);
   Vector(Vector &x);
-  /// *Temporarily* wrap a std::vector
-  Vector(std::vector<double> &x);
+  /// Temporarily wrap a std::vector
+  Vector(const std::vector<double> &x);
+  /// Temporarily wrap a dumb point
+  Vector(const int n, double* v);
   //Vector(SP_vector x);
 #ifdef CALLOW_ENABLE_PETSC
   Vector(Vec pv);

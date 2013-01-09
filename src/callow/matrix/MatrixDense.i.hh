@@ -18,7 +18,17 @@ namespace callow
 //---------------------------------------------------------------------------//
 
 //---------------------------------------------------------------------------//
-inline double MatrixDense::operator()(const int i, const int j) const
+inline const double& MatrixDense::operator()(const int i, const int j) const
+{
+  // Preconditions
+  Require(d_is_ready);
+  Require(i >= 0 and i < d_m);
+  Require(j >= 0 and j < d_n);
+
+  return d_values[j + i * d_n];
+}
+//---------------------------------------------------------------------------//
+inline double& MatrixDense::operator()(const int i, const int j)
 {
   // Preconditions
   Require(d_is_ready);
@@ -29,7 +39,16 @@ inline double MatrixDense::operator()(const int i, const int j) const
 }
 
 //---------------------------------------------------------------------------//
-inline double MatrixDense::operator[](const int p) const
+inline const double& MatrixDense::operator[](const int p) const
+{
+  // Preconditions
+  Require(d_is_ready);
+  Require(p >= 0 and p < d_n * d_m);
+
+  return d_values[p];
+}
+//---------------------------------------------------------------------------//
+inline double& MatrixDense::operator[](const int p)
 {
   // Preconditions
   Require(d_is_ready);

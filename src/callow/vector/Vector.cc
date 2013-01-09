@@ -96,12 +96,37 @@ Vector::Vector(Vector &x)
 }
 
 //---------------------------------------------------------------------------//
-Vector::Vector(std::vector<double> &x)
+Vector::Vector(const std::vector<double> &x)
   : d_size(0)
   , d_temporary(true)
 {
-  d_value = &x[0];
+  d_value = const_cast<double*>(&x[0]);
   d_size  = x.size();
+#ifdef CALLOW_ENABLE_PETSC
+  // Create the vector and initialize values
+  PetscErrorCode ierr;
+  ierr = VecCreateSeq(PETSC_COMM_SELF, d_size, &d_petsc_vector);
+  // Place our new array
+  ierr = VecPlaceArray(d_petsc_vector, d_value);
+  Ensure(!ierr);
+#endif
+}
+
+//---------------------------------------------------------------------------//
+Vector::Vector(const int n, double* v)
+  : d_size(n)
+  , d_temporary(true)
+{
+  Require(n > 0);
+  d_value = v;
+#ifdef CALLOW_ENABLE_PETSC
+  // Create the vector and initialize values
+  PetscErrorCode ierr;
+  ierr = VecCreateSeq(PETSC_COMM_SELF, d_size, &d_petsc_vector);
+  // Place our new array
+  ierr = VecPlaceArray(d_petsc_vector, d_value);
+  Ensure(!ierr);
+#endif
 }
 
 //---------------------------------------------------------------------------//
@@ -122,11 +147,12 @@ Vector::Vector(Vec pv)
 //---------------------------------------------------------------------------//
 Vector::~Vector()
 {
-  if (!d_size or d_temporary) return;
+  if (!d_size) return;
 #ifdef CALLOW_ENABLE_PETSC
-  VecDestroy(&d_petsc_vector);
+    if (d_temporary) VecResetArray(d_petsc_vector);
+    VecDestroy(&d_petsc_vector);
 #else
-  delete [] d_value;
+    if (d_temporary) delete [] d_value;
 #endif
 }
 

@@ -76,9 +76,12 @@ public:
   bool insert_col(int  j, double *v, const int type = INSERT);
 
   /// value at a cardinal index
-  double operator[](const int p) const;
+  const double& operator[](const int p) const;
+  double& operator[](const int p);
+
   /// value at ij and returns 0 if not present
-  double operator()(const int i, const int j) const;
+  const double& operator()(const int i, const int j) const;
+  double& operator()(const int i, const int j);
 
   // get underlying storage and indexing. careful!
   double* values() {return d_values;}
