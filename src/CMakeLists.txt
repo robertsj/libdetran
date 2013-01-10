@@ -64,14 +64,14 @@ set(DETRAN_COMPILED_D ${DAY})
 set(DETRAN_COMPILED_Y ${YEAR})
 
 # Write config file, install it, and include that directory for all source
-set(DETRAN_CONFIG_IN  "${CMAKE_CURRENT_SOURCE_DIR}/config/detran_config.hh.in")
-set(DETRAN_CONFIG_OUT "${PROJECT_BINARY_DIR}/config/detran_config.hh")
+set(DETRAN_CONFIG_IN  "${CMAKE_CURRENT_SOURCE_DIR}/detran_config/detran_config.hh.in")
+set(DETRAN_CONFIG_OUT "${PROJECT_BINARY_DIR}/detran_config/detran_config.hh")
 message("DETRAN_CONFIG_IN = ${DETRAN_CONFIG_IN}")
 message("DETRAN_CONFIG_OUT = ${DETRAN_CONFIG_OUT}")
 configure_file(${DETRAN_CONFIG_IN} ${DETRAN_CONFIG_OUT})
 include_directories("${PROJECT_BINARY_DIR}")
-include_directories("${PROJECT_BINARY_DIR}/config")
-install(FILES ${PROJECT_BINARY_DIR}/config/detran_config.hh
+include_directories("${PROJECT_BINARY_DIR}/detran_config")
+install(FILES ${PROJECT_BINARY_DIR}/detran_config/detran_config.hh
         DESTINATION include)
 
 #------------------------------------------------------------------------------#
@@ -83,7 +83,7 @@ if(DETRAN_ENABLE_PYTHON)
   INCLUDE(${SWIG_USE_FILE})
   find_package(PythonLibs REQUIRED)
   include_directories(${PYTHON_INCLUDE_PATH})
-  include_directories(${PROJECT_BINARY_DIR}/config)
+  include_directories(${PROJECT_BINARY_DIR}/detran_config)
   set(CMAKE_SWIG_FLAGS "-v")
 endif()
 

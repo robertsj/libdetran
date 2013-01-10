@@ -8,7 +8,6 @@
 //---------------------------------------------------------------------------//
 
 #include "EigenvalueManager.hh"
-#include "config/detran_config.hh"
 #include "angle/QuadratureFactory.hh"
 #include "boundary/BoundaryDiffusion.hh"
 #include "boundary/BoundaryMOC.hh"
