@@ -15,5 +15,5 @@ SET(MG_SRC
 )
 
 # Install
-INSTALL_FILES(/include/solver/mg .hh)
+INSTALL_FILES(/include/solvers/mg .hh)
 

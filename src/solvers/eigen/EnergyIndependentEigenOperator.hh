@@ -10,7 +10,7 @@
 #ifndef detran_ENERGYINDEPENDENTEIGENOPERATOR_HH_
 #define detran_ENERGYINDEPENDENTEIGENOPERATOR_HH_
 
-#include "FixedSourceManager.hh"
+#include "solvers/FixedSourceManager.hh"
 #include "callow/matrix/MatrixShell.hh"
 
 namespace detran

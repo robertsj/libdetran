@@ -11,7 +11,7 @@
 #define detran_EIGENVALUEMANAGER_HH_
 
 #include "TransportManager.hh"
-#include "eigen/Eigensolver.hh"
+#include "solvers/eigen/Eigensolver.hh"
 
 namespace detran
 {

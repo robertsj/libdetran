@@ -10,7 +10,7 @@
 #ifndef detran_MGSOLVER_HH_
 #define detran_MGSOLVER_HH_
 
-#include "Solver.hh"
+#include "solvers/Solver.hh"
 #include "external_source/ExternalSource.hh"
 #include "geometry/Mesh.hh"
 #include "material/Material.hh"

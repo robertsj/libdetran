@@ -10,5 +10,5 @@ SET(EIGEN_SRC
 )
 
 # Install
-INSTALL_FILES(/include/solver/wg .hh)
+INSTALL_FILES(/include/solvers/wg .hh)
 

@@ -11,7 +11,7 @@
 #define detran_FIXEDSOURCEMANAGER_HH_
 
 #include "TransportManager.hh"
-#include "mg/MGSolver.hh"
+#include "solvers/mg/MGSolver.hh"
 #include "angle/Quadrature.hh"
 
 namespace detran

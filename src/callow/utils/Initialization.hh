@@ -1,16 +1,16 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Initialization.hh
- * \author robertsj
- * \date   Sep 18, 2012
- * \brief  Initialization class definition.
+/**
+ *  @file   Initialization.hh
+ *  @author robertsj
+ *  @date   Sep 18, 2012
+ *  @brief  Initialization class definition.
  */
 //---------------------------------------------------------------------------//
 
 #ifndef callow_INITIALIZATION_HH_
 #define callow_INITIALIZATION_HH_
 
-#include "callow_config.hh"
+#include "callow/callow_config.hh"
 
 #ifdef CALLOW_ENABLE_GPERFTOOLS
 #include "/home/robertsj/opt/gperftools/include/google/profiler.h"
@@ -28,7 +28,6 @@
  *        The workaround is putting work in a different scope
  *        sandwiched between init/fin.
  */
-
 
 /// Initialize external packages, if enabled
 inline void callow_initialize(int argc, char** argv)

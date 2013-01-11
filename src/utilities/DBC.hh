@@ -9,7 +9,7 @@
 #define detran_utilities_DBC_HH
 
 #include "GenException.hh"
-#include "detran_config/detran_config.hh"
+#include "detran_config.hh"
 
 #include <iostream>
 #include <string>

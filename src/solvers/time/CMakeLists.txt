@@ -7,5 +7,5 @@ SET(TIME_SRC
 )
 
 # Install
-INSTALL_FILES(/include/solver/time .hh)
+INSTALL_FILES(/include/solvers/time .hh)
 

@@ -7,10 +7,10 @@
  */
 //---------------------------------------------------------------------------//
 
-#ifndef EIGENSOLVER_HH_
-#define EIGENSOLVER_HH_
+#ifndef detran_EIGENSOLVER_HH_
+#define detran_EIGENSOLVER_HH_
 
-#include "FixedSourceManager.hh"
+#include "solvers/FixedSourceManager.hh"
 
 namespace detran
 {
@@ -194,4 +194,4 @@ protected:
 
 } // namespace detran
 
-#endif /* EIGENSOLVER_HH_ */
+#endif /* detran_EIGENSOLVER_HH_ */

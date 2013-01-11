@@ -15,9 +15,9 @@
 #include "geometry/Tracker.hh"
 
 // Eigenvalue solvers
-#include "eigen/EigenPI.hh"
-#include "eigen/EigenDiffusion.hh"
-#include "eigen/EigenArnoldi.hh"
+#include "solvers/eigen/EigenPI.hh"
+#include "solvers/eigen/EigenDiffusion.hh"
+#include "solvers/eigen/EigenArnoldi.hh"
 
 #include <string>
 

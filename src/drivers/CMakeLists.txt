@@ -53,6 +53,7 @@ TARGET_LINK_LIBRARIES(${LIB_NAME}
                       geometry
                       utilities
                       ioutils
+                      orthog
                       postprocess
 )
 

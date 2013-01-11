@@ -30,7 +30,7 @@
 #define CALLOW_CONFIG_HH_
 
 // include detran configuration
-#include "detran_config/detran_config.hh"
+#include "detran_config.hh"
 
 #ifdef DETRAN_ENABLE_PETSC
 #define CALLOW_ENABLE_PETSC
