@@ -76,6 +76,12 @@ int test_Vector(int argc, char *argv[])
     Vector V(5, v);
     TEST(V.size() == 5);
     TEST(soft_equiv(V[4], 1.0));
+    double v_L1 = V.norm(L1);
+    TEST(soft_equiv(v_L1, 5.0));
+    double v_L2 = V.norm(L2);
+    TEST(soft_equiv(v_L2, 2.236067977499790));
+    double v_LI = V.norm(LINF);
+    TEST(soft_equiv(v_LI, 1.0));
   }
 
   return 0;

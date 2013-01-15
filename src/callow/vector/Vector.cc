@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Vector.cc
- * \author robertsj
- * \date   Sep 13, 2012
- * \brief  Vector member definitions
+/**
+ *  @file   Vector.cc
+ *  @author robertsj
+ *  @date   Sep 13, 2012
+ *  @brief  Vector member definitions
  */
 //---------------------------------------------------------------------------//
 
@@ -20,6 +20,7 @@ namespace callow
 Vector::Vector()
   : d_size(0)
   , d_temporary(false)
+  , d_temporary_petsc(false)
 {
   /* ... */
 }
@@ -28,6 +29,7 @@ Vector::Vector()
 Vector::Vector(const int n, double v)
   : d_size(n)
   , d_temporary(false)
+  , d_temporary_petsc(false)
 {
   // Preconditions
   Require(d_size > 0);
@@ -53,6 +55,7 @@ Vector::Vector(const int n, double v)
 Vector::Vector(const Vector &x)
   : d_size(x.size())
   , d_temporary(false)
+  , d_temporary_petsc(false)
 {
   // nothing to do if x has no elements
   if (!d_size) return;
@@ -76,6 +79,7 @@ Vector::Vector(const Vector &x)
 Vector::Vector(Vector &x)
   : d_size(x.size())
   , d_temporary(false)
+  , d_temporary_petsc(false)
 {
   // nothing to do if x has no elements
   if (!d_size) return;
@@ -99,6 +103,7 @@ Vector::Vector(Vector &x)
 Vector::Vector(const std::vector<double> &x)
   : d_size(0)
   , d_temporary(true)
+  , d_temporary_petsc(false)
 {
   d_value = const_cast<double*>(&x[0]);
   d_size  = x.size();
@@ -116,6 +121,7 @@ Vector::Vector(const std::vector<double> &x)
 Vector::Vector(const int n, double* v)
   : d_size(n)
   , d_temporary(true)
+  , d_temporary_petsc(false)
 {
   Require(n > 0);
   d_value = v;
@@ -134,6 +140,7 @@ Vector::Vector(const int n, double* v)
 Vector::Vector(Vec pv)
   : d_size(0)
   , d_temporary(true)
+  , d_temporary_petsc(true)
 {
   PetscErrorCode ierr;
   ierr = VecGetArray(pv, &d_value);
@@ -149,8 +156,11 @@ Vector::~Vector()
 {
   if (!d_size) return;
 #ifdef CALLOW_ENABLE_PETSC
-    if (d_temporary) VecResetArray(d_petsc_vector);
-    VecDestroy(&d_petsc_vector);
+    if (d_temporary_petsc) return;
+    if (d_temporary)
+      VecResetArray(d_petsc_vector);
+    else
+      VecDestroy(&d_petsc_vector);
 #else
     if (d_temporary) delete [] d_value;
 #endif

@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Vector.i.hh
- * \author robertsj
- * \date   Sep 13, 2012
- * \brief  Vector inline member definitions
+/**
+ *  @file   Vector.i.hh
+ *  @author robertsj
+ *  @date   Sep 13, 2012
+ *  @brief  Vector inline member definitions
  */
 //---------------------------------------------------------------------------//
 

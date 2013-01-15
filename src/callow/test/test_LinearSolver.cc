@@ -228,6 +228,8 @@ int test_PetscSolver(int argc, char *argv[])
   db = get_db();
   db->put<std::string>("linear_solver_type", "petsc");
   db->put<std::string>("pc_type", "ilu0");
+//  db->put<std::string>("pc_type", "petsc_pc");
+//  db->put<std::string>("petsc_pc_type", "ilu");
   solver = LinearSolverCreator::Create(db);
   solver->set_operators(test_matrix_1(n), db);
   int status = solver->solve(B, X);

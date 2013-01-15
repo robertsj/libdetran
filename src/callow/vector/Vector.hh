@@ -156,6 +156,8 @@ protected:
 #endif
   // Is this a temporary wrapper around a pointer? i.e. no delete at dtor?
   bool d_temporary;
+  // Is this also temporary around an extant PETSC vector?
+  bool d_temporary_petsc;
 
 };
 

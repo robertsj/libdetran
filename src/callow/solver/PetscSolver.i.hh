@@ -16,9 +16,6 @@ namespace callow
 {
 
 //---------------------------------------------------------------------------//
-// SOLVE
-//---------------------------------------------------------------------------//
-
 inline void PetscSolver::
 solve_impl(const Vector &b, Vector &x)
 {
@@ -32,6 +29,7 @@ solve_impl(const Vector &b, Vector &x)
   Insist(!ierr, "Error in KSPSolve.");
 }
 
+//---------------------------------------------------------------------------//
 inline PetscErrorCode
 petsc_ksp_monitor(KSP ksp, PetscInt it, PetscReal rnorm, void* ctx)
 {
