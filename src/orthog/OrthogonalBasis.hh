@@ -166,6 +166,9 @@ public:
   /// Interface for std vector
   void inverse(const vec_dbl &f, vec_dbl &ftilde);
 
+  /// Access to transform operator PW
+  virtual double operator()(const size_t i, const size_t j) const;
+
   /// Return the basis matrix
   SP_matrix basis() {return d_basis;}
 

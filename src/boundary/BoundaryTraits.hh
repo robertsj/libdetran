@@ -72,6 +72,16 @@ struct BoundaryValue
 template <>
 struct BoundaryValue<_3D>
 {
+  // Const access to boundary value
+  static inline const double&
+  value(const BoundaryTraits<_3D>::value_type &b,
+        const size_t                           i,
+        const size_t                           j)
+  {
+    Require(i < b.size());
+    Require(j < b[0].size());
+    return b[i][j];
+  }
   // Mutable access to boundary value
   static inline double&
   value(BoundaryTraits<_3D>::value_type &b,
@@ -87,6 +97,15 @@ struct BoundaryValue<_3D>
 template <>
 struct BoundaryValue<_2D>
 {
+  // Const access to boundary value
+  static inline const double&
+  value(const BoundaryTraits<_2D>::value_type &b,
+        const size_t                           i,
+        const size_t                           j = 0)
+  {
+    Require(i < b.size());
+    return b[i];
+  }
   // Mutable access to boundary value
   static inline double&
   value(BoundaryTraits<_2D>::value_type &b,
@@ -101,6 +120,14 @@ struct BoundaryValue<_2D>
 template <>
 struct BoundaryValue<_1D>
 {
+  // Const access to boundary value
+  static inline const double&
+  value(const BoundaryTraits<_1D>::value_type &b,
+        const size_t                           i = 0,
+        const size_t                           j = 0)
+  {
+    return b;
+  }
   // Mutable access to boundary value
   static inline double&
   value(BoundaryTraits<_1D>::value_type &b,

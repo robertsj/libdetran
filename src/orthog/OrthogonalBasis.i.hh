@@ -109,6 +109,16 @@ inline void OrthogonalBasis::inverse(const vec_dbl &ftilde, vec_dbl &f)
   inverse(Ftilde, F);
 }
 
+//---------------------------------------------------------------------------//
+inline double OrthogonalBasis::
+operator()(const size_t i, const size_t j) const
+{
+  double v = (*d_basis)(i, j);
+  if (d_w) v *= (*d_w)[i];
+  return v;
+}
+
+
 } // end namespace detran_orthog
 
 #endif // detran_orthog_ORTHOGONALBASIS_I_HH_

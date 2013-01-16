@@ -96,8 +96,9 @@ void MGDiffusionSolver<D>::solve(const double keff)
 
   // Solve the problem
   d_solver->solve(*d_Q, *d_phi);
-//  d_M->print_matlab("M.out");
-//  d_phi->print_matlab("phi.out");
+  d_Q->print_matlab("Q.out");
+  d_phi->print_matlab("phi.out");
+  d_M->print_matlab("M.out");
 //  d_M->display();
 //  d_Q->display();
 //  d_phi->display();
@@ -109,11 +110,6 @@ void MGDiffusionSolver<D>::solve(const double keff)
   fill_state();
   if (d_fill_boundary) fill_boundary();
 
-//  d_M->print_matlab("M.out");
-//  d_Q->print_matlab("Q.out");
-//  d_phi->print_matlab("phi.out");
-
-  //d_state->display();
 }
 
 //---------------------------------------------------------------------------//
