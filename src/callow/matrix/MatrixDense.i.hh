@@ -110,7 +110,7 @@ inline void MatrixDense::multiply_transpose(const Vector &x, Vector &y)
   for (int i = 0; i < d_m; ++i)
   {
     // for all columns (now rows)
-    for (int j = 0; j < d_m; ++j, ++p)
+    for (int j = 0; j < d_n; ++j, ++p)
       y[j] += x[i] * d_values[p];
   }
 #endif

@@ -95,7 +95,7 @@ SP_mesh test_EigenvalueManager_mesh(int d)
 {
   vec_dbl cm(2, 0.0); cm[1] = 100.0;
   vec_dbl cc(2, 0.0); cc[1] = 0.1;
-  vec_int fm(1, 100);
+  vec_int fm(1, 10);
   vec_int ff(1, 1);
   vec_int mat_map(1, 1);
   SP_mesh mesh;

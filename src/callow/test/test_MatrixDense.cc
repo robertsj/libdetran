@@ -133,7 +133,7 @@ int test_MatrixDense(int argc, char *argv[])
 
     // Transpose
     A.multiply_transpose(Y, X);
-    return 0;
+
     double ref2[] =
     { 79.0, 100.0 };
     for (int i = 0; i < X.size(); i++)
