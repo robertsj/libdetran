@@ -13,8 +13,10 @@ namespace detran_orthog
 {
 
 //---------------------------------------------------------------------------//
-DLP::DLP(const size_t order, const size_t size)
-  : OrthogonalBasis(order, size)
+DLP::DLP(const size_t   order,
+         const size_t   size,
+         const bool     orthonormal)
+  : OrthogonalBasis(order, size, orthonormal)
 {
 
   // Allocate the basis matrix
@@ -41,7 +43,6 @@ DLP::DLP(const size_t order, const size_t size)
     }
   }
   compute_a();
-
 }
 
 

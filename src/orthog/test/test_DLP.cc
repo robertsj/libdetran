@@ -36,31 +36,32 @@ int main(int argc, char *argv[])
 int test_DLP(int argc, char *argv[])
 {
 
-  int N = 5;
-  int M = 4;
+  int N = 10;
+  int M = 9;
   double width = 2.0 / N;
 
   vec_dbl x(N, 0);
   x[0] = -1.0 + width / 2.0;
   for (int i = 1; i < N; ++i) x[i] = x[i-1] + width;
 
-  DLP P(M, N);
+  DLP P(M, N, true);
 
-  callow::Vector f(N, 0.0);
-  for (int i = 0; i < N; ++i) f[i] = std::cos(x[i]);
-
-  callow::Vector ft(M + 1, 0.0);
-  callow::Vector f2(N, 0.0);
-
-  P.transform(f, ft);
-  P.inverse(ft, f2);
-
-  f.display();
-  ft.display();
-  f2.display();
-  f2.subtract(f);
-  f2.display();
-
+//  callow::Vector f(N, 0.0);
+//  for (int i = 0; i < N; ++i) f[i] = std::cos(x[i]);
+//
+//  callow::Vector ft(M + 1, 0.0);
+//  callow::Vector f2(N, 0.0);
+//
+//  P.transform(f, ft);
+//  P.inverse(ft, f2);
+//
+//  f.display();
+//  ft.display();
+//  f2.display();
+//  f2.subtract(f);
+//  f2.display();
+  P.basis()->display();
+  P.coefficients()->display();
   return 0;
 }
 

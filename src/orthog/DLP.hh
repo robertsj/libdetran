@@ -30,10 +30,13 @@ public:
 
   /**
    *   @brief Constructor.
-   *   @param   order   Order of the basis
-   *   @param   size    Size of the basis vectors
+   *   @param   order       Order of the basis
+   *   @param   size        Size of the basis vectors
+   *   @param   orthonormal Flag to indicate the basis should be orthonormal
    */
-  DLP(const size_t order, const size_t size);
+  DLP(const size_t order,
+      const size_t size,
+      const bool orthonormal = false);
 
   /// Virtual destructor
   virtual ~DLP(){}

@@ -12,6 +12,7 @@
 
 #include "callow/vector/Vector.hh"
 #include "callow/matrix/MatrixDense.hh"
+#include "callow/utils/CallowDefinitions.hh"
 #include "utilities/Definitions.hh"
 #include "utilities/SP.hh"
 
@@ -85,10 +86,13 @@ public:
 
   /**
    *   @brief Constructor.
-   *   @param   order   Order of the expansion
-   *   @param   size    Size of the basis vectors
+   *   @param   order       Order of the expansion
+   *   @param   size        Size of the basis vectors
+   *   @param   orthonormal Flag to indicate the basis should be orthonormal
    */
-  OrthogonalBasis(const size_t order, const size_t size);
+  OrthogonalBasis(const size_t order,
+                  const size_t size,
+                  const bool orthonormal = false);
 
   /// Pure virtual destructor
   virtual ~OrthogonalBasis() = 0;
@@ -197,6 +201,8 @@ protected:
   SP_vector d_w;
   /// Vector of the inverse normalization coefficients
   SP_vector d_a;
+  /// Orthonormal flag
+  bool d_orthonormal;
 
   //-------------------------------------------------------------------------//
   // IMPLEMENTATION

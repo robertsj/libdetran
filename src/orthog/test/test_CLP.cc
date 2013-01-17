@@ -61,7 +61,6 @@ int test_CLP(int argc, char *argv[])
   ft.display();
   f2.display();
 
-
   return 0;
 }
 
