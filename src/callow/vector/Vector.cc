@@ -156,13 +156,15 @@ Vector::~Vector()
 {
   if (!d_size) return;
 #ifdef CALLOW_ENABLE_PETSC
-    if (d_temporary_petsc) return;
+    // If it was a temporary wrap around an extend Vec, do nothing.
+    // Otherwise, we have to kill it.
+    if (d_temporary_petsc)
+      return;
     if (d_temporary)
       VecResetArray(d_petsc_vector);
-    else
-      VecDestroy(&d_petsc_vector);
+    VecDestroy(&d_petsc_vector);
 #else
-    if (d_temporary) delete [] d_value;
+    if (!d_temporary) delete [] d_value;
 #endif
 }
 

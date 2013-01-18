@@ -180,6 +180,10 @@ void Mesh::setup()
   d_total_width_x = d_xcme[d_xcme.size()-1] - d_xcme[0];
   d_total_width_y = d_ycme[d_ycme.size()-1] - d_ycme[0];
   d_total_width_z = d_ycme[d_zcme.size()-1] - d_zcme[0];
+  if (dimension() < 3)
+    d_total_width_z = 1.0;
+  if (dimension() < 2)
+    d_total_width_y = 1.0;
 
   // Discretize.
   int ph = 0; // place holder

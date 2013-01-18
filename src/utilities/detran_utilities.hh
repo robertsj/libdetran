@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   detran_utilities.hh
- * \brief  Convenience header for using Detran utilities
- * \author Jeremy Roberts
- * \date   Aug 22, 2012
+/**
+ *  @file   detran_utilities.hh
+ *  @brief  Convenience header for using Detran utilities
+ *  @author Jeremy Roberts
+ *  @date   Aug 22, 2012
  */
 //---------------------------------------------------------------------------//
 
