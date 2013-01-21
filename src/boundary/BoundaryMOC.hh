@@ -56,6 +56,7 @@ public:
   typedef detran_utilities::vec2_dbl            vec2_dbl;
   typedef detran_utilities::vec3_dbl            vec3_dbl;
   typedef std::vector<vec3_dbl>                 bf_type;
+  typedef D                                     D_T;
 
   using Base::IN;
   using Base::OUT;

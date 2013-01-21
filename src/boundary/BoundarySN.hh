@@ -22,6 +22,7 @@ namespace detran
 /**
  *  @class BoundarySN
  *  @brief Boundary flux container for SN problems.
+ *  @todo Switch accessor to match diffusion (or vv)
  */
 //---------------------------------------------------------------------------//
 template <class D>
@@ -48,6 +49,7 @@ public:
   typedef detran_geometry::Mesh                     Mesh;
   typedef detran_utilities::vec_dbl                 vec_dbl;
   typedef detran_utilities::size_t                  size_t;
+  typedef D                                         D_T;
 
   using Base::IN;
   using Base::OUT;

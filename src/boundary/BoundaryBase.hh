@@ -56,6 +56,7 @@ public:
   typedef detran_geometry::Mesh                     Mesh;
   typedef detran_geometry::Mesh::SP_mesh            SP_mesh;
   typedef detran_utilities::size_t                  size_t;
+  typedef D                                         D_T;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTORS & DESTRUCTORS

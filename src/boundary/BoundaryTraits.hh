@@ -78,9 +78,9 @@ struct BoundaryValue<_3D>
         const size_t                           i,
         const size_t                           j)
   {
-    Require(i < b.size());
-    Require(j < b[0].size());
-    return b[i][j];
+    Require(j < b.size());
+    Require(i < b[0].size());
+    return b[j][i];
   }
   // Mutable access to boundary value
   static inline double&
@@ -88,9 +88,9 @@ struct BoundaryValue<_3D>
         const size_t                     i,
         const size_t                     j)
   {
-    Require(i < b.size());
-    Require(j < b[0].size());
-    return b[i][j];
+    Require(j < b.size());
+    Require(i < b[0].size());
+    return b[j][i];
   }
 };
 

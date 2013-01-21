@@ -36,15 +36,15 @@ int main(int argc, char *argv[])
 int test_DLP(int argc, char *argv[])
 {
 
-  int N = 10;
-  int M = 9;
+  int N = 4;
+  int M = N-1;
   double width = 2.0 / N;
 
   vec_dbl x(N, 0);
   x[0] = -1.0 + width / 2.0;
   for (int i = 1; i < N; ++i) x[i] = x[i-1] + width;
 
-  DLP P(M, N, true);
+  DLP P(M, N, false);
 
 //  callow::Vector f(N, 0.0);
 //  for (int i = 0; i < N; ++i) f[i] = std::cos(x[i]);
