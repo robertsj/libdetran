@@ -17,6 +17,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+
 from utilities import *
 from angle import *
 from callow import *
@@ -35,5 +36,14 @@ from pydetranutils import *
 
 import numpy as np
 import sys
+import atexit
+
+print "*** detran -- python interface ***"
 
 Manager.initialize(sys.argv)
+
+def goodbye() :
+  print "*** te ootte nyt loppuun ***"
+  Manager.finalize()
+atexit.register(goodbye)
+
