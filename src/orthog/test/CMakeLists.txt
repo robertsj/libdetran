@@ -20,6 +20,9 @@ TARGET_LINK_LIBRARIES(test_DCT    orthog)
 ADD_EXECUTABLE(test_DCP           test_DCP.cc)
 TARGET_LINK_LIBRARIES(test_DCP    orthog)
 
+ADD_EXECUTABLE(test_Jacobi01           test_Jacobi01.cc)
+TARGET_LINK_LIBRARIES(test_Jacobi01    orthog)
+
 ADD_EXECUTABLE(test_BasisComparison           test_BasisComparison.cc)
 TARGET_LINK_LIBRARIES(test_BasisComparison    orthog)
 
@@ -34,6 +37,8 @@ ADD_TEST(test_DLP   test_DLP      0)
 ADD_TEST(test_DCT   test_DCT      0)
 
 ADD_TEST(test_DCP   test_DCP      0)
+
+ADD_TEST(test_Jacobi01   test_Jacobi01      0)
 
 ADD_TEST(test_BasisComparisonAnalytic        test_BasisComparison      0)
 ADD_TEST(test_BasisComparisonDiscontinuous   test_BasisComparison      1)

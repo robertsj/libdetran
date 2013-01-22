@@ -45,7 +45,7 @@ namespace detran_orthog
  *      \tilde{f}_l \approx
  *        \sum_{i=0}^{N} P_l(x_i) w_l(x_i) f(x_i) \Delta_i \, .
  *  @f]
- *
+ *  In general, any quadrature may be used.
  *
  *
  */
@@ -62,12 +62,12 @@ public:
    *   @brief Constructor.
    *   @param   order     Order of the basis
    *   @param   x         Grid on which basis is defined
-   *   @param   dx        Cell widths
+   *   @param   qw        Quadrature weights
    *   @param   size
    */
   ContinuousOrthogonalBasis(const size_t order,
                             const vec_dbl &x,
-                            const vec_dbl &dx);
+                            const vec_dbl &qw);
 
   /// Pure virtual destructor
   virtual ~ContinuousOrthogonalBasis() = 0;
@@ -80,8 +80,8 @@ protected:
 
   /// Grid on which basis is defined
   vec_dbl d_x;
-  /// Mesh widths
-  vec_dbl d_dx;
+  /// Quadrature weights
+  vec_dbl d_qw;
 
 };
 

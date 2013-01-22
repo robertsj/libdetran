@@ -28,15 +28,12 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  /**
-   *   @brief Constructor.
-   *   @param   order   Order of the basis
-   *   @param   x       Grid on which basis is defined
-   *   @param   dx      Cell widths
-   */
+  /// Constructor
   CLP(const size_t order,
       const vec_dbl &x,
-      const vec_dbl &dx);
+      const vec_dbl &qw,
+      const double x_0 = -1.0,
+      const double x_1 = 1.0);
 
   /// Virtual destructor
   virtual ~CLP(){}

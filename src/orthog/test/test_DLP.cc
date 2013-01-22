@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 int test_DLP(int argc, char *argv[])
 {
 
-  int N = 4;
+  int N = 2;
   int M = N-1;
   double width = 2.0 / N;
 
@@ -44,7 +44,7 @@ int test_DLP(int argc, char *argv[])
   x[0] = -1.0 + width / 2.0;
   for (int i = 1; i < N; ++i) x[i] = x[i-1] + width;
 
-  DLP P(M, N, false);
+  DLP P(M, N, true);
 
 //  callow::Vector f(N, 0.0);
 //  for (int i = 0; i < N; ++i) f[i] = std::cos(x[i]);

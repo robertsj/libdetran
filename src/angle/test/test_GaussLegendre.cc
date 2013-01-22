@@ -16,9 +16,6 @@
 #include "TestDriver.hh"
 #include "GaussLegendre.hh"
 
-// Setup
-#include "quadrature_fixture.hh"
-
 using namespace detran_angle;
 using namespace detran_utilities;
 using namespace detran_test;
@@ -36,8 +33,9 @@ int main(int argc, char *argv[])
 int test_GaussLegendre_basic(int argc, char *argv[])
 {
   // Get quadrature fixture
-  SP_quadrature q = gausslegendre_fixture();
+  GaussLegendre::SP_quadrature q = GaussLegendre::Create(4);
   TEST(q);
+  q->display();
   TEST(q->number_angles()  == 8);
   TEST(q->number_octants() == 2);
   TEST(q->number_angles_octant() == 4);

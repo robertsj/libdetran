@@ -34,25 +34,29 @@ void OrthogonalBasis::compute_a()
 {
   Require(d_basis);
 
-  if (!d_a) d_a = Vector::Create(d_order + 1, 0.0);
+  if (!d_a) d_a = Vector::Create(d_order + 1, 1.0);
 
   // If we're orthonormal, then we pre-normalize the basis.
-  if (d_orthonormal)
-  {
-    for (size_t i = 0; i <= d_order; ++i)
-    {
-      Vector row(d_size, &(*d_basis)(i, 0));
-      row.scale(1.0/row.norm(callow::L2));
-    }
-  }
-
   for (size_t i = 0; i <= d_order; ++i)
   {
     Vector row(d_size, &(*d_basis)(i, 0));
-    double den = row.norm(callow::L2);
-    den *= den;
-    (*d_a)[i] = 1.0 / den;
+    Vector tmp(row);
+    if (d_w)
+    {
+      tmp.multiply(d_w);
+    }
+    double val = 1.0 / std::sqrt(tmp.dot(row));
+    if (d_orthonormal)
+    {
+      row.scale(val);
+    }
+    else
+    {
+      (*d_a)[i] = val;
+    }
   }
+
+
 }
 
 } // end namespace detran_orthog
