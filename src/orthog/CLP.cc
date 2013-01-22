@@ -35,20 +35,19 @@ CLP::CLP(const size_t order,
   d_a = Vector::Create(d_order + 1, 0.0);
 
   // The weights are just the qw's.
-  for (size_t i = 0; i < d_w->size(); ++i)
-    (*d_w)[i] = d_qw[i];
-
-  // The domain must be translated and scaled to be in [-1, 1]
   double L = x_1 - x_0;
+  for (size_t i = 0; i < d_w->size(); ++i)
+  {
+    d_x[i] =  2.0*(d_x[i] - x_0)/L - 1.0;
+    (*d_w)[i] = d_qw[i];
+  }
 
   // Build the basis
   for (size_t l = 0; l <= d_order; ++l)
   {
     for (size_t i = 0; i < d_size; ++i)
     {
-      // Scale the abscissa
-      double z =  2.0*(d_x[i] - x_0)/L - 1;
-      (*d_basis)(l, i) = boost::math::legendre_p(l, z);
+      (*d_basis)(l, i) = boost::math::legendre_p(l, d_x[i]);
     }
     // Inverse of normalization coefficient.
     (*d_a)[l] = (2.0 * l + 1.0) / 2.0;

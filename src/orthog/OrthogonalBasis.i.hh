@@ -94,6 +94,9 @@ inline void OrthogonalBasis::inverse(const Vector &ftilde, Vector &f)
   // Copy and vector and multiply point-wise by the weights
   Vector aft(ftilde);
   if (d_a) aft.multiply(d_a);
+  double v = 0;
+  for (int i = 0; i < d_a->size(); ++i)
+    v += (*d_a)[i];
   d_basis->multiply_transpose(aft, f);
 }
 //---------------------------------------------------------------------------//
@@ -114,7 +117,7 @@ inline double OrthogonalBasis::
 operator()(const size_t i, const size_t j) const
 {
   double v = (*d_basis)(i, j);
-  if (d_w) v *= (*d_w)[i];
+  if (d_a) v *= (*d_a)[i];
   return v;
 }
 

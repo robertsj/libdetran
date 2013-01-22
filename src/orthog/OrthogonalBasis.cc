@@ -8,6 +8,7 @@
 //---------------------------------------------------------------------------//
 
 #include "OrthogonalBasis.hh"
+#include <cmath>
 
 namespace detran_orthog
 {
@@ -34,7 +35,8 @@ void OrthogonalBasis::compute_a()
 {
   Require(d_basis);
 
-  if (!d_a) d_a = Vector::Create(d_order + 1, 1.0);
+  if (!d_a) d_a = Vector::Create(d_order + 1);
+  d_a->set(1.0);
 
   // If we're orthonormal, then we pre-normalize the basis.
   for (size_t i = 0; i <= d_order; ++i)
@@ -46,6 +48,7 @@ void OrthogonalBasis::compute_a()
       tmp.multiply(d_w);
     }
     double val = 1.0 / std::sqrt(tmp.dot(row));
+
     if (d_orthonormal)
     {
       row.scale(val);
@@ -55,7 +58,6 @@ void OrthogonalBasis::compute_a()
       (*d_a)[i] = val;
     }
   }
-
 
 }
 

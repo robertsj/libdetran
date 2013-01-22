@@ -36,6 +36,8 @@ Jacobi01::Jacobi01(const size_t order,
 {
   Insist(order < 8, "Maximum of 8th order for Jacobi01.");
 
+  d_orthonormal = true;
+
   // Allocate the basis matrix
   d_basis = new callow::MatrixDense(d_order + 1, d_size, 0.0);
 
@@ -46,11 +48,10 @@ Jacobi01::Jacobi01(const size_t order,
   double L = x_1 - x_0;
   for (size_t i = 0; i < d_w->size(); ++i)
   {
-    // Scale the abscissa
+    // Scale the abscissa 2*[0 1] - 1    2 * (x(:)+x_0)/L
     d_x[i] =  2.0*(d_x[i] - x_0)/L - 1.0;
     (*d_w)[i] = d_qw[i] * 0.5 * (d_x[i] + 1.0);
   }
-  Vector xx(d_x), qq(d_qw);
 
   // Build the basis
   for (size_t l = 0; l <= d_order; ++l)
