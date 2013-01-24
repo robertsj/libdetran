@@ -20,6 +20,7 @@
 #include "angle/QuadrupleRange.hh"
 #include "angle/UniformEqual.hh"
 #include "angle/ChebyshevLegendre.hh"
+#include "angle/LegendreDTN.hh"
 // MOC
 #include "angle/Collocated.hh"
 #include "angle/Uniform.hh"

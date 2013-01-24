@@ -44,6 +44,7 @@ namespace detran
  *  is in some way "similar" to the operator $\f \mathbf{A} \f$, and
  *  applying its inverse $\f \mathbf{M}^{-1} $\f can be done cheaply.
  *
+ *  @todo Figure out a good way to use extant boundary data in the source
  */
 //---------------------------------------------------------------------------//
 

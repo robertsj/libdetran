@@ -97,13 +97,10 @@ protected:
 
   /// Number of polar angles for a single half space.
   size_t d_number_polar;
-
   /// Vector of sines
   std::vector<double> d_sin;
-
   /// Vector of cosines
   std::vector<double> d_cos;
-
   /// Vector of weights (sums to 1).
   std::vector<double> d_weight;
 

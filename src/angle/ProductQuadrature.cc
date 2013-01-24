@@ -64,5 +64,19 @@ void ProductQuadrature::build_product_quadrature()
   Ensure(detran_utilities::soft_equiv(weight_tot, 1.0/angular_norm(d_dimension)));
 }
 
+//---------------------------------------------------------------------------//
+double ProductQuadrature::polar_weight(const size_t p) const
+{
+  Require(p < d_number_polar_octant);
+  return d_polar_weight[p];
+}
+
+//---------------------------------------------------------------------------//
+double ProductQuadrature::azimuth_weight(const size_t a) const
+{
+  Require(a < d_number_azimuths_octant);
+  return d_azimuth_weight[a];
+}
+
 } // end namespace detran_angle
 

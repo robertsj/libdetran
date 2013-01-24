@@ -21,6 +21,7 @@
 // Product
 #include "ChebyshevLegendre.hh"
 #include "ChebyshevDPN.hh"
+#include "LegendreDTN.hh"
 // MOC
 #include "Collocated.hh"
 #include "Uniform.hh"
@@ -147,6 +148,11 @@ build(SP_quadrature &q, SP_input input, int dimension)
   {
     Insist(dimension > 1, "ChebyshevDPN only for 2D or 3D.");
     q = new ChebyshevDPN(dimension, na, np);
+  }
+  else if (quad_type == "legendredtn")
+  {
+    Insist(dimension > 1, "LegendreDTN only for 2D or 3D.");
+    q = new LegendreDTN(dimension, na, np);
   }
 
   //-------------------------------------------------------------------------//

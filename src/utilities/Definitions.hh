@@ -1,8 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Definitions.hh
- * \author Jeremy Roberts
- * \brief  Useful type definitions, etc.
+/**
+ *  @file   Definitions.hh
+ *  @author Jeremy Roberts
+ *  @brief  Useful type definitions, etc.
  */
 //---------------------------------------------------------------------------//
 
@@ -43,10 +43,13 @@ struct vec4_T {typedef std::vector<typename vec3_T<T>::value_type> value_type;};
 typedef std::vector<int> vec_int;
 typedef std::vector<std::vector<int> > vec2_int;
 typedef std::vector<std::vector<std::vector<int> > > vec3_int;
+
 typedef std::vector<double> vec_dbl;
 typedef std::vector<std::vector<double> > vec2_dbl;
 typedef std::vector<std::vector<std::vector<double> > > vec3_dbl;
-
+typedef std::vector<std::vector<std::vector<std::vector<double> > > > vec4_dbl;
+typedef std::vector<std::vector<std::vector<std::vector<std::vector<double> > > > > vec5_dbl;
+typedef std::vector<std::vector<std::vector<std::vector<std::vector<std::vector<double> > > > > > vec6_dbl;
 
 typedef std::vector<size_t> vec_size_t;
 typedef std::vector<std::vector<size_t> > vec2_size_t;

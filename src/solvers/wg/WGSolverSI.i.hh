@@ -25,8 +25,8 @@ void WGSolverSI<D>::solve(const size_t g)
   using std::endl;
   using detran_utilities::norm_residual;
 
-  if (d_print_level > 0) std::cout << "    Starting SI." << std::endl;
-  if (d_print_level > 0) std::cout << "      group " << g << std::endl;
+  if (d_print_level > 0) cout << "    Starting SI." << endl;
+  if (d_print_level > 0) cout << "      group " << g << endl;
 
   // Setup boundary conditions.  This sets any conditions fixed for the solve.
   d_boundary->set(g);
@@ -49,9 +49,6 @@ void WGSolverSI<D>::solve(const size_t g)
   int iteration;
   for (iteration = 1; iteration <= d_maximum_iterations; iteration++)
   {
-
-    // Update boundary.  This updates boundaries due to reflection, etc.
-    //d_boundary->update(g); // sweeper should update this.
 
     // Swap old and new.
     std::swap(phi, phi_old);

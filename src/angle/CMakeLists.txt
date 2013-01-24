@@ -30,6 +30,7 @@ SET(SRC
     ChebyshevLegendre.cc
     ChebyshevDPN.cc
     MomentIndexer.cc
+    LegendreDTN.cc
 )
 
 #-----------------------------------------------------------------------------#

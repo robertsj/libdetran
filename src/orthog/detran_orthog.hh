@@ -16,6 +16,7 @@
 #include "DCT.hh"
 #include "DDF.hh"
 #include "Jacobi01.hh"
+#include "ChebyshevU.hh"
 
 #endif // detran_orthog_DETRAN_ORTHOG_HH_
 

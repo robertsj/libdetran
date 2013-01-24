@@ -96,6 +96,8 @@ public:
   double cos_phi(const size_t a) const;
   size_t number_azimuths_octant() const;
   size_t number_polar_octant() const;
+  double polar_weight(const size_t p) const;
+  double azimuth_weight(const size_t a) const;
 
 protected:
 
