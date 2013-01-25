@@ -16,7 +16,7 @@ namespace detran_angle
 inline ProductQuadrature::size_t
 ProductQuadrature::angle(const size_t a, const size_t p) const
 {
-  Require(a < d_number_azimuths_octant);
+  Require(a < d_number_azimuth_octant);
   Require(p < d_number_polar_octant);
   return p + a * d_number_polar_octant;
 }
@@ -26,7 +26,7 @@ ProductQuadrature::azimuth(const size_t angle) const
 {
   Require(angle < d_number_angles_octant);
   size_t tmp = (angle % d_number_angles_octant) / d_number_polar_octant;
-  Ensure(tmp < d_number_azimuths_octant);
+  Ensure(tmp < d_number_azimuth_octant);
   return tmp;
 }
 
@@ -53,26 +53,26 @@ inline double ProductQuadrature::cos_theta(const size_t p) const
 
 inline double ProductQuadrature::phi(const size_t a) const
 {
-  Require(a < 2 * d_number_azimuths_octant);
+  Require(a < 2 * d_number_azimuth_octant);
   return d_phi[a];
 }
 
 inline double ProductQuadrature::sin_phi(const size_t a) const
 {
-  Require(a < 2 * d_number_azimuths_octant);
+  Require(a < 2 * d_number_azimuth_octant);
   return d_sin_phi[a];
 }
 
 inline double ProductQuadrature::cos_phi(const size_t a) const
 {
-  Require(a < 2 * d_number_azimuths_octant);
+  Require(a < 2 * d_number_azimuth_octant);
   return d_cos_phi[a];
 }
 
 inline ProductQuadrature::size_t
 ProductQuadrature::number_azimuths_octant() const
 {
-  return d_number_azimuths_octant;
+  return d_number_azimuth_octant;
 }
 
 inline ProductQuadrature::size_t

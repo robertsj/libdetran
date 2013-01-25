@@ -47,9 +47,10 @@ ChebyshevLegendre::ChebyshevLegendre(const size_t dim,
   // fill array
   for (int i = 0; i < np; ++i)
   {
-    d_cos_theta[i]    = x[i];
-    d_sin_theta[i]    = std::sqrt(1.0 - x[i]*x[i]);
-    d_polar_weight[i] = w[i];
+    size_t j = np - i - 1;
+    d_cos_theta[j]    = x[i];
+    d_sin_theta[j]    = std::sqrt(1.0 - x[i]*x[i]);
+    d_polar_weight[j] = w[i];
   }
 
   //-------------------------------------------------------------------------//

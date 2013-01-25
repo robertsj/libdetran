@@ -48,9 +48,11 @@ ChebyshevDPN::ChebyshevDPN(const size_t dim,
   // fill array
   for (int i = 0; i < np; ++i)
   {
-    d_cos_theta[i]    = 0.5*x[i] + 0.5; // shift and scale
-    d_sin_theta[i]    = std::sqrt(1.0 - d_cos_theta[i]*d_cos_theta[i]);
-    d_polar_weight[i] = 0.5*w[i];
+    // Put in order.
+    size_t j = np - i - 1;
+    d_cos_theta[j]    = 0.5*x[i] + 0.5; // shift and scale
+    d_sin_theta[j]    = std::sqrt(1.0 - d_cos_theta[j]*d_cos_theta[j]);
+    d_polar_weight[j] = 0.5*w[i];
   }
 
   //-------------------------------------------------------------------------//

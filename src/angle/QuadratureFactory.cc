@@ -30,8 +30,16 @@ namespace detran_angle
 {
 
 // Build a quadrature
+QuadratureFactory::SP_quadrature QuadratureFactory::
+build(SP_input input, const int dimension)
+{
+  SP_quadrature q;
+  build(q, input, dimension);
+  return q;
+}
+// Build a quadrature
 void QuadratureFactory::
-build(SP_quadrature &q, SP_input input, int dimension)
+build(SP_quadrature &q, SP_input input, const int dimension)
 {
   using std::string;
 

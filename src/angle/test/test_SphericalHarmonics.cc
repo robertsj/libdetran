@@ -80,8 +80,8 @@ int test_SphericalHarmonics(int argc, char *argv[])
 int test_SphericalHarmonics_integration(int argc, char *argv[])
 {
   InputDB::SP_input inp(new InputDB());
-  inp->put<int>("quad_number_polar_octant",   4);
-  inp->put<int>("quad_number_azimuth_octant", 3);
+  inp->put<int>("quad_number_polar_octant",   3);
+  inp->put<int>("quad_number_azimuth_octant", 4);
   inp->put<std::string>("quad_type", "levelsymmetric");
   QuadratureFactory qf;
   QuadratureFactory::SP_quadrature Q;

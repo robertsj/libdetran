@@ -44,7 +44,10 @@ public:
    *  @param input      Smart point to input.
    *  @param dimension  Quadrature dimension
    */
-  void build(SP_quadrature &q, SP_input input, int dimension);
+  void build(SP_quadrature &q, SP_input input, const int dimension);
+
+  //
+  SP_quadrature build(SP_input input, const int dimension);
 
   /// Print out the available quadratures, etc.
   void help() const;

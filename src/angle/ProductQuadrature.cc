@@ -20,7 +20,7 @@ ProductQuadrature::ProductQuadrature(const size_t dim,
                                      const size_t np,
                                      std::string  name)
   : Quadrature(dim, na * np * std::pow(2, dim), name)
-  , d_number_azimuths_octant(na)
+  , d_number_azimuth_octant(na)
   , d_number_polar_octant(np)
   , d_phi(na, 0.0)
   , d_cos_phi(na, 0.0)
@@ -60,6 +60,8 @@ void ProductQuadrature::build_product_quadrature()
   } // end azimuth loop
   weight_tot *= d_number_octants;
 
+  verify();
+
   // Postconditions
   Ensure(detran_utilities::soft_equiv(weight_tot, 1.0/angular_norm(d_dimension)));
 }
@@ -74,9 +76,31 @@ double ProductQuadrature::polar_weight(const size_t p) const
 //---------------------------------------------------------------------------//
 double ProductQuadrature::azimuth_weight(const size_t a) const
 {
-  Require(a < d_number_azimuths_octant);
+  Require(a < d_number_azimuth_octant);
   return d_azimuth_weight[a];
 }
+
+//---------------------------------------------------------------------------//
+void ProductQuadrature::verify() const
+{
+  // verify polar ordering
+  double last_p = 0.0;
+  for (size_t p = 0; p < d_number_polar_octant; ++p)
+  {
+    Insist(d_cos_theta[p] > last_p, "Non-monotonic increasing polar cosine");
+    std::cout << " p=" <<  p << " " << d_cos_theta[p] << std::endl;
+    last_p = d_cos_theta[p];
+    // verify azimuth
+    double last_mu = 1.0;
+    for (size_t a = 0; a < d_number_azimuth_octant; ++a)
+    {
+      std::cout << "   a=" << a << " " << d_mu[angle(a, p)] << std::endl;
+      Insist(d_mu[angle(a, p)] < last_mu, "Non-monotonic increasing mu");
+      last_mu = d_mu[angle(a, p)];
+    }
+  }
+}
+
 
 } // end namespace detran_angle
 

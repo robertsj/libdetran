@@ -27,22 +27,29 @@ LegendreDTN::LegendreDTN(const size_t dim,
   //-------------------------------------------------------------------------//
 
   // temporary arrays
-  vec_dbl x(2*na, 0.0);
-  vec_dbl w(2*na, 0.0);
+  vec_dbl x(na, 0.0);
+  vec_dbl w(na, 0.0);
 
   // generate parameters
-  generate_gl_parameters(2*na, x, w);
+  generate_gl_parameters(na, x, w);
+
+  for (int i = 0; i < na; ++i)
+  {
+    std::cout << " i = " << i << " x = " << x[i] << std::endl;
+  }
 
   // fill array
   double w_sum = 0.0;
-  for (int i = 0; i < np; ++i)
+  for (int i = 0; i < na; ++i)
   {
-    d_cos_phi[i] = x[i];
-    d_sin_phi[i] = std::sqrt(1.0 - x[i]*x[i]);
-    d_azimuth_weight[i] = w[i];
+    size_t j     = na - i - 1;
+    d_phi[j]     = 0.25*pi*(x[i] + 1.0);
+    d_cos_phi[j] = std::cos(d_phi[j]);
+    d_sin_phi[j] = std::sin(d_phi[j]);
+    d_azimuth_weight[j] = w[i];
     w_sum += w[i];
   }
-  for (int i = 0; i < np; ++i)
+  for (int i = 0; i < na; ++i)
   {
     d_azimuth_weight[i] *= 0.5 * pi / w_sum;
   }
@@ -59,15 +66,17 @@ LegendreDTN::LegendreDTN(const size_t dim,
   w_sum = 0.0;
   for (int i = 0; i < np; i++)
   {
+    // Put in order.
+    size_t j = np - i - 1;
     // Shift the mu to [0, 1] from [-1, 1] and halve the weight
-    d_cos_theta[i] = 0.5*tmp_mu[i] + 0.5;
-    d_sin_theta[i] = std::sqrt(1.0 - d_cos_theta[i]*d_cos_theta[i]);
-    d_polar_weight[i] = tmp_wt[i];
+    d_cos_theta[j] = 0.5*tmp_mu[i] + 0.5;
+    d_sin_theta[j] = std::sqrt(1.0 - d_cos_theta[j]*d_cos_theta[j]);
+    d_polar_weight[j] = tmp_wt[i];
     w_sum += tmp_wt[i];
   }
   for (int i = 0; i < np; ++i)
   {
-    d_azimuth_weight[i] *= 1.0 / w_sum;
+    d_polar_weight[i] *= 1.0 / w_sum;
   }
 
 

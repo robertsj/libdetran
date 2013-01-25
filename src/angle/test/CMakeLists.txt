@@ -32,6 +32,9 @@ TARGET_LINK_LIBRARIES(test_MomentIndexer    angle)
 ADD_EXECUTABLE(test_SphericalHarmonics        test_SphericalHarmonics.cc)
 TARGET_LINK_LIBRARIES(test_SphericalHarmonics angle)
 
+ADD_EXECUTABLE(test_ProductQuadratures        test_ProductQuadratures.cc)
+TARGET_LINK_LIBRARIES(test_ProductQuadratures angle)
+
 #------------------------------------------------------------------------------#
 # Define tests
 #------------------------------------------------------------------------------#

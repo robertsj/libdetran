@@ -41,6 +41,12 @@ namespace detran_angle
  *  the azimuthal and polar quadratures are defined only within an
  *  octant.
  *
+ *  Furthermore, product quadratures must order angles so that
+ *  the polar angle changes most quickly and in increasing order.
+ *  For a given polar level, the azimuth (from x) increases from
+ *  0 to pi/2,  i.e. mu goes from 1 to 0.  This is enforced so that
+ *  applications dependent on ordering need not be responsible.
+ *
  *  Relevant database parameters:
  *    - quad_number_polar_octant    -- number polar angles per octant
  *    - quad_number_azimuth_octant  -- number azimuths per octant
@@ -106,7 +112,7 @@ protected:
   //-------------------------------------------------------------------------//
 
   /// Number of azimuths per octant
-  size_t d_number_azimuths_octant;
+  size_t d_number_azimuth_octant;
   /// Number of polar angles per octant
   size_t d_number_polar_octant;
   /// Azimuths
@@ -130,6 +136,11 @@ protected:
 
   /// Build the product quadrature parameters from polar and azimuth values
   void build_product_quadrature();
+
+private:
+
+  /// Verify the correct ordering.
+  void verify() const;
 
 };
 
