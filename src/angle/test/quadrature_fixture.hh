@@ -41,7 +41,7 @@ static SP_quadrature quadruplerange_fixture()
 {
   // Define quadrature.
   SP_quadrature q;
-  q = new detran_angle::QuadrupleRange(2, 2);
+  q = new detran_angle::QuadrupleRange(2, 2, 1);
 
   // Return the fixture.
   return q;

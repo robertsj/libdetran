@@ -17,11 +17,14 @@ ChebyshevU::ChebyshevU(const size_t order,
                        const vec_dbl &x,
                        const vec_dbl &qw,
                        const double x_0,
-                       const double x_1)
+                       const double x_1,
+                       const bool flag)
   : ContinuousOrthogonalBasis(order, x, qw)
 {
 
-  d_orthonormal = true;
+  size_t even = 1;
+  if (flag) even = 2;
+  //d_orthonormal = true;
 
   // Allocate the basis matrix
   d_basis = new callow::MatrixDense(d_order + 1, d_size, 0.0);
@@ -33,15 +36,18 @@ ChebyshevU::ChebyshevU(const size_t order,
   double L = x_1 - x_0;
   for (size_t i = 0; i < d_w->size(); ++i)
   {
-    d_x[i] =  2.0*(d_x[i] - x_0)/L - 1.0;
-    (*d_w)[i] = 2.0 * d_qw[i] * std::sqrt(1.0 - d_x[i]*d_x[i]);
+    d_x[i] = 2.0 * (d_x[i] - x_0) / L - 1.0;
+    std::cout << " i = " << i << " qw=" << d_qw[i] << " sin=" << std::sqrt(1.0 - d_x[i] * d_x[i]) << std::endl;
+    (*d_w)[i] = 2.0 * d_qw[i] * std::sqrt(1.0 - d_x[i] * d_x[i]);
   }
 
   // Build the basis
   for (size_t l = 0; l <= d_order; ++l)
     for (size_t i = 0; i < d_size; ++i)
-      (*d_basis)(l, i) = cheby_u(l, d_x[i]);
+      (*d_basis)(l, i) = cheby_u(even * l, d_x[i]);
 
+
+  //d_orthonormal = true;
   compute_a();
 }
 

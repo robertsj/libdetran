@@ -40,7 +40,8 @@ public:
              const vec_dbl &x,
              const vec_dbl &qw,
              const double x_0 = -1.0,
-             const double x_1 =  1.0);
+             const double x_1 =  1.0,
+             const bool flag = false);
 
   /// Virtual destructor
   virtual ~ChebyshevU(){}

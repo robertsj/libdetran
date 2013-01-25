@@ -41,7 +41,6 @@ public:
    *  @param dim    Dimension (2 or 3)
    *  @param na     Number of azimuths per octant
    *  @param np     Number of polar angles per octant
-   *  @param name   Quadrature name
    */
   ChebyshevLegendre(const size_t dim,
                     const size_t na,

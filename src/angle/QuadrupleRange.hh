@@ -7,11 +7,11 @@
  */
 //---------------------------------------------------------------------------//
 
-#ifndef QUADRUPLERANGE_HH_
-#define QUADRUPLERANGE_HH_
+#ifndef detran_angle_QUADRUPLERANGE_HH_
+#define detran_angle_QUADRUPLERANGE_HH_
 
 // Detran
-#include "Quadrature.hh"
+#include "ProductQuadrature.hh"
 
 namespace detran_angle
 {
@@ -112,7 +112,7 @@ namespace detran_angle
  */
 //---------------------------------------------------------------------------//
 
-class QuadrupleRange : public Quadrature
+class QuadrupleRange : public ProductQuadrature
 {
 
 public:
@@ -122,13 +122,19 @@ public:
   //-------------------------------------------------------------------------//
 
   /**
-   *  @brief Constructor.
-   *  @param    order       Quadrature order.
+   *  @brief Constructor
+   *  @param dim    Dimension (2 or 3)
+   *  @param na     Number of azimuths per octant
+   *  @param np     Number of polar angles per octant
    */
-  QuadrupleRange(const size_t order, const size_t dim = 2);
+  QuadrupleRange(const size_t dim,
+                 const size_t na,
+                 const size_t np);
 
   /// SP constructor
-  static SP_quadrature Create(const size_t order, const size_t dim = 2);
+  static SP_quadrature Create(const size_t dim,
+                              const size_t na,
+                              const size_t np);
 
 private:
 
@@ -157,7 +163,7 @@ private:
 
 } // end namespace detran_angle
 
-#endif /* QUADRUPLERANGE_HH_ */
+#endif /* detran_angle_QUADRUPLERANGE_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of QuadrupleRange.hh

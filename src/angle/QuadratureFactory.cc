@@ -132,11 +132,6 @@ build(SP_quadrature &q, SP_input input, const int dimension)
   // 2D/3D QUADRATURES
   //-------------------------------------------------------------------------//
 
-  else if (quad_type == "quadruplerange")
-  {
-    Insist(dimension > 1, "QuadrupleRange only for 2D or 3D.");
-    q = new QuadrupleRange(2*np, dimension);
-  }
   else if (quad_type == "levelsymmetric")
   {
     Insist(dimension > 1, "LevelSymmetric only for 2D or 3D.");
@@ -147,6 +142,7 @@ build(SP_quadrature &q, SP_input input, const int dimension)
     Insist(dimension > 1, "UniformEqual only for 2D or 3D.");
     q = new UniformEqual(np, dimension);
   }
+
   else if (quad_type == "chebyshevlegendre")
   {
     Insist(dimension > 1, "ChebyshevLegendre only for 2D or 3D.");
@@ -161,6 +157,11 @@ build(SP_quadrature &q, SP_input input, const int dimension)
   {
     Insist(dimension > 1, "LegendreDTN only for 2D or 3D.");
     q = new LegendreDTN(dimension, na, np);
+  }
+  else if (quad_type == "quadruplerange")
+  {
+    Insist(dimension > 1, "QuadrupleRange only for 2D or 3D.");
+    q = new QuadrupleRange(dimension, na, np);
   }
 
   //-------------------------------------------------------------------------//

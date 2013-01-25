@@ -15,7 +15,7 @@
 #include "TestDriver.hh"
 #include "DiscreteSource.hh"
 #include "Mesh2D.hh"
-#include "QuadrupleRange.hh"
+#include "QuadratureFactory.hh"
 
 // Setup
 /* ... */
@@ -45,11 +45,13 @@ int test_DiscreteSource(int argc, char *argv[])
   vec_int fm(1, 2);
   vec_int mt(1, 0);
   Mesh::SP_mesh mesh(new Mesh2D(fm, fm, cm, cm, mt));
+  TEST(mesh);
 
   // Create quadrature.
-  Quadrature::SP_quadrature quad(new QuadrupleRange(2, 2));
-
-  TEST(mesh);
+  Quadrature::SP_quadrature quad;
+  QuadratureFactory qf;
+  InputDB::SP_input db = InputDB::Create();
+  quad = qf.build(db, 2);
   TEST(quad);
 
   // Create spectra.
@@ -72,7 +74,7 @@ int test_DiscreteSource(int argc, char *argv[])
   TEST(soft_equiv(q_e.source(0, 0),    0.0));
   TEST(soft_equiv(q_e.source(0, 0, 1), 0.0));
   TEST(soft_equiv(q_e.source(0, 1),    (double)quad->number_angles()));
-  TEST(soft_equiv(q_e.source(0, 1, 1), 1/quad->weight(1)));
+  TEST(soft_equiv(q_e.source(0, 1, 1), 1/quad->weight(0)));
   TEST(soft_equiv(q_e.source(1, 0),    0.0));
   TEST(soft_equiv(q_e.source(1, 0, 0), 0.0));
 

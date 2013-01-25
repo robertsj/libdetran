@@ -88,13 +88,11 @@ void ProductQuadrature::verify() const
   for (size_t p = 0; p < d_number_polar_octant; ++p)
   {
     Insist(d_cos_theta[p] > last_p, "Non-monotonic increasing polar cosine");
-    std::cout << " p=" <<  p << " " << d_cos_theta[p] << std::endl;
     last_p = d_cos_theta[p];
     // verify azimuth
     double last_mu = 1.0;
     for (size_t a = 0; a < d_number_azimuth_octant; ++a)
     {
-      std::cout << "   a=" << a << " " << d_mu[angle(a, p)] << std::endl;
       Insist(d_mu[angle(a, p)] < last_mu, "Non-monotonic increasing mu");
       last_mu = d_mu[angle(a, p)];
     }

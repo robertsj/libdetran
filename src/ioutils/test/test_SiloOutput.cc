@@ -16,7 +16,7 @@
 #include "utilities/TestDriver.hh"
 #include "ioutils/SiloOutput.hh"
 #include "geometry/Mesh2D.hh"
-#include "angle/QuadrupleRange.hh"
+#include "angle/QuadratureFactory.hh"
 #include <iostream>
 
 using namespace detran_test;
@@ -54,7 +54,9 @@ int test_SiloOutput(int argc, char *argv[])
   Mesh2D::SP_mesh mesh(new Mesh2D(fm, fm, cm, cm, mt));
 
   // Quadrature
-  QuadrupleRange::SP_quadrature quad(new QuadrupleRange(2, 2));
+  QuadratureFactory qf;
+  inp->put<int>("quad_number_polar_octant", 2);
+  Quadrature::SP_quadrature quad = qf.build(inp, 2);
 
   // Make state and fill.
   State::SP_state state(new State(inp, mesh, quad));

@@ -16,54 +16,59 @@ namespace detran_angle
 {
 
 //---------------------------------------------------------------------------//
-QuadrupleRange::QuadrupleRange(const size_t order, const size_t dim)
-  : Quadrature(dim,
-               order*std::pow(2.0, dim),
-               "QuadrupleRange")
+QuadrupleRange::QuadrupleRange(const size_t dim,
+                               const size_t na,
+                               const size_t np)
+: ProductQuadrature(dim, na, np, "AbyShumaysQuadrupleRange")
 {
-  // Preconditions
-  Require(order % 2 == 0); // need an even order
+  Insist(na % 2 == 0, "Only an even number of azimuths per octant allowed");
+  Insist(na <= 30, "Maximum of 30 azimuths per octant.");
+  Insist(np <= 15, "Maximum of 15 polar angles per octant.");
 
-  size_t number_phi   = std::sqrt(2*order); // n*n/2
-  size_t number_theta = number_phi / 2;
+  //-------------------------------------------------------------------------//
+  // AZIMUTH QUADRATURE
+  //-------------------------------------------------------------------------//
 
-  // compute mu and eta for the first quadrant
-  double sintheta = 0;
-  double wtheta = 0;
-  double sinphi = 0;
-  double cosphi = 0;
-  double wphi = 0;
-  int k = 0;
-  double scale = 1.0;
-  if (dim == 3) scale = 0.5;
-  for (size_t i = 0; i < number_phi; i++)
+  for (size_t a = 0; a < na; ++a)
   {
-    cosphi = get_phi(number_phi, 0, i);
-    sinphi = std::sqrt(1.0 - cosphi * cosphi);
-    wphi   = scale * get_phi(number_phi, 1, i);
-    for (size_t j = 0; j < number_theta; j++)
-    {
-      sintheta     = get_theta(number_theta, 0, j);
-      wtheta       = get_theta(number_theta, 1, j);
-      d_mu[k]      = cosphi * sintheta;
-      d_eta[k]     = sinphi * sintheta;
-      d_xi[k]      = std::sqrt(1.0 - d_mu[k]*d_mu[k] - d_eta[k]*d_eta[k]);
-      d_weight[k]  = wphi * wtheta;
-      ++k;
-    }
+    size_t b = na - a - 1;
+    d_cos_phi[b] = get_phi(na, 0, a);
+    d_sin_phi[b] = std::sqrt(1.0 - d_cos_phi[b] * d_cos_phi[b]);
+    d_phi[b]     = std::acos(d_cos_phi[b]);
+    d_azimuth_weight[b] = get_phi(na, 1, a);
   }
-  //d_mu[0]=0.3124597141; d_eta[1]=0.3124597141;
-  //d_mu[1]=0.7543444795; d_eta[0]=0.7543444795;
-  Ensure(k == d_number_angles_octant);
+
+  //-------------------------------------------------------------------------//
+  // POLAR QUADRATURE
+  //-------------------------------------------------------------------------//
+
+  for (size_t p = 0; p < np; ++p)
+  {
+    size_t q = np - p - 1;
+    d_sin_theta[q] = get_theta(np, 0, p);
+    d_cos_theta[q] = std::sqrt(1.0 - d_sin_theta[q] * d_sin_theta[q]);
+    d_polar_weight[q] = 0.5*get_theta(np, 1, p);
+  }
+
+  //-------------------------------------------------------------------------//
+  // PRODUCT QUADRATURE
+  //-------------------------------------------------------------------------//
+
+  build_product_quadrature();
+
 }
 
+//---------------------------------------------------------------------------//
 QuadrupleRange::SP_quadrature
-QuadrupleRange::Create(const size_t order, const size_t dim)
+QuadrupleRange::Create(const size_t dim,
+                       const size_t na,
+                       const size_t np)
 {
-  SP_quadrature p(new QuadrupleRange(order, dim));
+  SP_quadrature p(new QuadrupleRange(dim, na, np));
   return p;
 }
 
+//---------------------------------------------------------------------------//
 double QuadrupleRange::get_phi(size_t N, size_t i, size_t j)
 {
     double a[30];
@@ -608,6 +613,7 @@ double QuadrupleRange::get_phi(size_t N, size_t i, size_t j)
 
 }
 
+//---------------------------------------------------------------------------//
 double QuadrupleRange::get_theta(size_t N, size_t i, size_t j)
 {
   double a[15];
