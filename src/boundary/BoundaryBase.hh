@@ -189,6 +189,12 @@ public:
     return d_boundary_flux_size[side];
   }
 
+  /// Display boundray information and contents
+  virtual void display(bool inout) const
+  {
+    /* ... */
+  }
+
 protected:
 
   //-------------------------------------------------------------------------//

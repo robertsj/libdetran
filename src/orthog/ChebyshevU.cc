@@ -37,7 +37,7 @@ ChebyshevU::ChebyshevU(const size_t order,
   for (size_t i = 0; i < d_w->size(); ++i)
   {
     d_x[i] = 2.0 * (d_x[i] - x_0) / L - 1.0;
-    std::cout << " i = " << i << " qw=" << d_qw[i] << " sin=" << std::sqrt(1.0 - d_x[i] * d_x[i]) << std::endl;
+    //std::cout << " i = " << i << " qw=" << d_qw[i] << " sin=" << std::sqrt(1.0 - d_x[i] * d_x[i]) << std::endl;
     (*d_w)[i] = 2.0 * d_qw[i] * std::sqrt(1.0 - d_x[i] * d_x[i]);
   }
 
@@ -47,7 +47,7 @@ ChebyshevU::ChebyshevU(const size_t order,
       (*d_basis)(l, i) = cheby_u(even * l, d_x[i]);
 
 
-  //d_orthonormal = true;
+  d_orthonormal = true;
   compute_a();
 }
 

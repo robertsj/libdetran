@@ -10,6 +10,7 @@
 #include "BoundarySN.hh"
 #include "Reflective.hh"
 #include "Vacuum.hh"
+#include "BoundaryTraits.hh"
 #include <string>
 
 namespace detran
@@ -76,6 +77,64 @@ BoundarySN<D>::Create(SP_input         input,
 {
   SP_boundary p(new BoundarySN(input, mesh, quadrature));
   return p;
+}
+
+//---------------------------------------------------------------------------//
+template<class D>
+void BoundarySN<D>::display(bool inout) const
+{
+  typedef BoundaryValue<D> BV_T;
+  // For a given dimension, provide remaining dimensions
+  int remdims[3][2] = {{1,2}, {0,2}, {0,1}};
+  // Cell indices
+  int ijk[3] = {0, 0, 0};
+  int &i = ijk[0];
+  int &j = ijk[1];
+  int &k = ijk[2];
+  // Loop over all dimensions
+  for (int dim0 = 0; dim0 < D::dimension; ++dim0)
+  {
+    // Bounding cell indices for this dimension
+    int bound[2] = {0, d_mesh->number_cells(dim0)-1};
+    // Other dimensions
+    int dim1 = remdims[dim0][0];
+    int dim2 = remdims[dim0][1];
+    // Loop over directions - and +
+    for (int dir = 0; dir < 2; ++dir)
+    {
+      // Surface index
+      int surface = 2 * dim0 + dir;
+      std::cout << " SURFACE = " << surface << std::endl;
+      // Index and width along this direction
+      ijk[dim0] = bound[dir];
+      double W  = d_mesh->width(dim0, ijk[dim0]);
+      for (int g = 0; g < d_number_groups; g++)
+      {
+        std::cout << "   GROUP = " << g << std::endl;
+        for (int oo = 0; oo < std::pow(2, D::dimension-1); ++oo)
+        {
+          int o = d_quadrature->outgoing_octant(surface)[oo];
+          if (inout)
+            o = d_quadrature->incident_octant(surface)[oo];
+          std::cout << "     OCTANT = " << o << std::endl;
+          for (int a = 0; a < d_quadrature->number_angles_octant(); ++a)
+          {
+            std::cout << "       ANGLE = " << a << std::endl;
+            for (ijk[dim1] = 0; ijk[dim1] < d_mesh->number_cells(dim1); ++ijk[dim1])
+            {
+              for (ijk[dim2] = 0; ijk[dim2] < d_mesh->number_cells(dim2); ++ijk[dim2])
+              {
+
+                std::cout << BV_T::value((*this)(surface, o, a, g), ijk[dim1], ijk[dim2])
+                          << " " << std::endl;
+              }
+              std::cout << std::endl;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 //---------------------------------------------------------------------------//

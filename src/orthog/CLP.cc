@@ -52,8 +52,8 @@ CLP::CLP(const size_t order,
     // Inverse of normalization coefficient.
     (*d_a)[l] = (2.0 * l + 1.0) / 2.0;
   }
-  //d_orthonormal = true;
-  //compute_a();
+  d_orthonormal = true;
+  compute_a();
 #endif
 }
 

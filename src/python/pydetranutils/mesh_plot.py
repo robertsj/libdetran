@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
         
-def plot_mesh_function(mesh, f, colormap = "hot", edges = False) :
+def plot_mesh_function(mesh, f, title="", colormap = "hot", edges = False, mybounds = [], myticks = []) :
     """ Plot a mesh function.
     """
     if mesh.dimension() == 1 :
@@ -26,12 +26,16 @@ def plot_mesh_function(mesh, f, colormap = "hot", edges = False) :
         else :
             plt.pcolor(X, Y, f, cmap=colormap)
         plt.axis("scaled") 
-        cbar = plt.colorbar()
         plt.xlabel("x [cm]")
         plt.ylabel("y [cm]")
+        if len(myticks) :
+          cbar = plt.colorbar(boundaries=mybounds,ticks=myticks)
+        else : 
+          cbar = plt.colorbar()
     else :
         print "not ready for 3d"
         return
+    plt.title(title)
     # show the plot
     plt.show()
 
@@ -58,9 +62,10 @@ def plot_mesh_map(mesh, key, edges = False) :
     unique_elements = np.unique(map)
     num_unique_elements = len(unique_elements)
     colormap = matplotlib.colors.ListedColormap(np.random.rand(num_unique_elements, 3))
-    
+    bounds = np.linspace(-0.5, num_unique_elements - 0.5, num_unique_elements+1)
+    ticks  = bounds[0:num_unique_elements]+0.5
     # Plot
-    plot_mesh_function(mesh, map, colormap, edges)
+    plot_mesh_function(mesh, map, key, colormap, edges, bounds, ticks)
         
         
 def plot_multigroup_flux(mesh, state, edges = False) :
