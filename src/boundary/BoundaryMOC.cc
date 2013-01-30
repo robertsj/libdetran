@@ -409,8 +409,9 @@ void BoundaryMOC<D>::setup_side_indices()
 // EXPLICIT INSTANTIATIONS
 //---------------------------------------------------------------------------//
 
+template class BoundaryMOC<_1D>;
 template class BoundaryMOC<_2D>;
-
+template class BoundaryMOC<_3D>;
 
 } // end namespace detran
 

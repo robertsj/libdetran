@@ -12,6 +12,8 @@
 #include "boundary/BoundaryDiffusion.hh"
 #include "boundary/BoundarySN.hh"
 #include "boundary/BoundaryMOC.hh"
+#include "boundary/BoundaryCondition.hh"
+#include "boundary/FixedBoundary.hh"
 %}
 
 %import "detran_utilities.i"
@@ -117,10 +119,10 @@
   %{
     def __setitem__(self, key, v) :
       t = self(key[0], key[1], key[2], key[3])
-      value(t, key[5], key[6], v)
+      value(t, key[4], key[5], v)
     def __getitem__(self, key) :
       t = self(key[0], key[1], key[2], key[3])
-      return value(t, key[5], key[6])
+      return value(t, key[4], key[5])
   %}
 }
   
@@ -130,6 +132,63 @@
 %template(BoundSN2DSP)     detran_utilities::SP<detran::BoundarySN<detran::_2D> >;
 %template(BoundSN3D)       detran::BoundarySN<detran::_3D>;
 %template(BoundSN3DSP)     detran_utilities::SP<detran::BoundarySN<detran::_3D> >;
+
+%include "BoundaryCondition.hh"
+%template(BoundCond1D)      detran::BoundaryCondition<detran::_1D>;
+%template(BoundCond2D)      detran::BoundaryCondition<detran::_2D>;
+%template(BoundCond3D)      detran::BoundaryCondition<detran::_3D>;
+%template(BoundCond1DSP)    detran_utilities::SP<detran::BoundaryCondition<detran::_1D> >;
+%template(BoundCond2DSP)    detran_utilities::SP<detran::BoundaryCondition<detran::_2D> >;
+%template(BoundCond3DSP)    detran_utilities::SP<detran::BoundaryCondition<detran::_3D> >;
+
+//%include "FixedBoundary.hh"
+
+// extend fixed bc
+//   key = [o, a, group, i, j]
+//%extend detran_utilities::SP<detran::Fixed<_1D> >
+//{
+//  %pythoncode 
+//  %{
+//    def __setitem__(self, key, v) :
+//      t = self(key[0], key[1], key[2])
+//      value(t, 0, 0, v)
+//    def __getitem__(self, key) :
+//      t = self(key[0], key[1], key[2])
+//      return value(t, 0, 0)
+//  %}
+//}
+//%extend detran_utilities::SP<detran::Fixed<_2D> >
+//{
+//  %pythoncode 
+//  %{
+//    def __setitem__(self, key, v) :
+//      t = self(key[0], key[1], key[2])
+//      value(t, key[3], 0, v)
+//    def __getitem__(self, key) :
+//      t = self(key[0], key[1], key[2])
+//      return value(t, key[3], 0)
+//  %}
+//}
+//%extend detran_utilities::SP<detran::Fixed<_3D> >
+//{
+//  %pythoncode 
+//  %{
+//    def __setitem__(self, key, v) :
+//      t = self(key[0], key[1], key[2])
+//      value(t, key[3], key[4], v)
+//    def __getitem__(self, key) :
+//      t = self(key[0], key[1], key[2])
+//      return value(t, key[3], key[4])
+//  %}
+//}
+
+//%template(FixedBoundCond1D)  detran::Fixed<detran::_1D>;
+//%template(FixedBoundCond2D)  detran::Fixed<detran::_2D>;
+//%template(FixedBoundCond3D)  detran::Fixed<detran::_3D>;
+//%template(FixedBoundCond1DSP)    detran_utilities::SP<detran::Fixed<detran::_1D> >;
+//%template(FixedBoundCond1DSP)    detran_utilities::SP<detran::Fixed<detran::_2D> >;
+//%template(FixedBoundCond1DSP)    detran_utilities::SP<detran::Fixed<detran::_3D> >;
+
 
 %include "BoundaryMOC.hh"
 %template(BoundMOC3D)      detran::BoundaryMOC<detran::_2D>;
@@ -173,6 +232,23 @@ cast_sn( detran_utilities::SP<detran::BoundaryBase<detran::_3D> >* b )
 {
   return detran_utilities::SP<detran::BoundarySN<detran::_3D> >( *b );
 } 
+
+//// cast base bc to fixed
+//detran_utilities::SP<detran::Fixed<detran::_1D> > 
+//cast_sn( detran_utilities::SP<detran::BoundaryCondition<detran::_1D> >* b )
+//{
+//  return detran_utilities::SP<detran::Fixed<detran::_1D> >( *b );
+//} 
+//detran_utilities::SP<detran::Fixed<detran::_2D> > 
+//cast_sn( detran_utilities::SP<detran::BoundaryCondition<detran::_2D> >* b )
+//{
+//  return detran_utilities::SP<detran::Fixed<detran::_2D> >( *b );
+//} 
+//detran_utilities::SP<detran::Fixed<detran::_3D> > 
+//cast_sn( detran_utilities::SP<detran::BoundaryCondition<detran::_3D> >* b )
+//{
+//  return detran_utilities::SP<detran::Fixed<detran::_3D> >( *b );
+//} 
 
 // return a boundary value
 double value(detran::BoundaryTraits<detran::_1D>::value_type* b, int i, int j)           

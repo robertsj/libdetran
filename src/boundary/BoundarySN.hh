@@ -151,7 +151,14 @@ public:
   //-------------------------------------------------------------------------//
 
   /// Display boundray information and contents
-  virtual void display(bool inout) const;
+  void display(bool inout) const;
+
+  /// Get the boundary condition.
+  SP_bc bc(const size_t side)
+  {
+    Require(side < D::dimension*2);
+    return d_bc[side];
+  }
 
 private:
 

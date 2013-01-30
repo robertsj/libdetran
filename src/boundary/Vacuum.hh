@@ -73,4 +73,4 @@ private:
 
 } // end namespace detran
 
-#endif /* VACUUM_HH_ */
+#endif /* detran_VACUUM_HH_ */

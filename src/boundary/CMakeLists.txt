@@ -14,6 +14,7 @@ SET(SRC
     BoundaryDiffusion.cc
     BoundarySN.cc
     BoundaryMOC.cc
+    BoundaryFactory.cc
 )
 
 #-----------------------------------------------------------------------------#

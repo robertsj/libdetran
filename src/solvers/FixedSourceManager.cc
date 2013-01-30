@@ -12,6 +12,7 @@
 #include "boundary/BoundaryDiffusion.hh"
 #include "boundary/BoundaryMOC.hh"
 #include "boundary/BoundarySN.hh"
+#include "boundary/BoundaryFactory.hh"
 #include "geometry/Tracker.hh"
 // Multigroup solvers
 #include "MGSolverGS.hh"
@@ -115,12 +116,21 @@ void FixedSourceManager<D>::setup()
 
   // Setup the boundary conditions
   if (d_discretization == MOC)
-    d_boundary = new BoundaryMOC<D>(d_input, d_mesh, d_quadrature);
+  {
+    d_boundary = BoundaryFactory<D, BoundaryMOC>::
+      build(d_input, d_mesh, d_quadrature);
+  }
   else if (d_discretization == SN)
-    d_boundary = new BoundarySN<D>(d_input, d_mesh, d_quadrature);
+  {
+    d_boundary = BoundaryFactory<D, BoundarySN>::
+      build(d_input, d_mesh, d_quadrature);
+  }
   else
-    d_boundary = new BoundaryDiffusion<D>(d_input, d_mesh);
-
+  {
+    d_boundary = BoundaryFactory<D, BoundaryDiffusion>::
+      build(d_input, d_mesh, d_quadrature);
+  }
+  Insist(d_boundary, "bad boundary");
   // Setup the state vector.
   d_state = new State(d_input, d_mesh, d_quadrature);
 

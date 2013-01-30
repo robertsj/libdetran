@@ -1,0 +1,67 @@
+//----------------------------------*-C++-*----------------------------------//
+/**
+ *  @file   BoundaryFactory.hh
+ *  @author robertsj
+ *  @date   Jan 30, 2013
+ *  @brief  BoundaryFactory class definition.
+ */
+//---------------------------------------------------------------------------//
+
+#ifndef detran_BOUNDARYFACTORY_HH_
+#define detran_BOUNDARYFACTORY_HH_
+
+#include "utilities/InputDB.hh"
+#include "geometry/Mesh.hh"
+#include "angle/Quadrature.hh"
+
+namespace detran
+{
+
+/// Class for constructing boundaries and boundary conditions
+template <typename D, template <typename D> class B>
+class BoundaryFactory
+{
+public:
+  typedef typename B<D>::SP_boundary                    SP_boundary;
+  typedef detran_utilities::InputDB::SP_input           SP_input;
+  typedef detran_geometry::Mesh::SP_mesh                SP_mesh;
+  typedef detran_angle::Quadrature::SP_quadrature       SP_quadrature;
+  static SP_boundary build(SP_input input, SP_mesh mesh, SP_quadrature quad)
+  {
+    THROW("NOT IMPLEMENTED");
+  }
+};
+
+/// DIFFUSION
+template <typename D>
+class BoundaryFactory<BoundaryDiffusion>
+{
+public:
+  typedef BoundaryDiffusion<D>                          Boundary_T;
+  typedef typename Boundary_T::SP_boundary              SP_boundary;
+  typedef detran_utilities::InputDB::SP_input           SP_input;
+  typedef detran_geometry::Mesh::SP_mesh                SP_mesh;
+  typedef detran_angle::Quadrature::SP_quadrature       SP_quadrature;
+  static SP_boundary build(SP_input input, SP_mesh mesh, SP_quadrature quad);
+
+}
+
+/// DIFFUSION                                                                                                                                                          
+template <typename D>
+class BoundaryFactory<BoundarySN>
+{
+public:
+  typedef B <D>                                         Boundary_T;
+  typedef typename Boundary_T::SP_boundary              SP_boundary;
+  typedef detran_utilities::InputDB::SP_input           SP_input;
+  typedef detran_geometry::Mesh::SP_mesh                SP_mesh;
+  typedef detran_angle::Quadrature::SP_quadrature       SP_quadrature;
+  static SP_boundary build(SP_input input, SP_mesh mesh, SP_quadrature quad);
+}
+
+
+} // end namespace detran
+
+#include "BoundaryFactory.t.hh"
+
+#endif /* detran_BOUNDARYFACTORY_HH_ */
