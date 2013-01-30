@@ -29,6 +29,7 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
   , d_boundary_size_group(0)
   , d_reflective_solve_iterations(0)
   , d_update_boundary_flux(false)
+  , d_use_initial_boundary_flux(false)
 {
 
   //-------------------------------------------------------------------------//
@@ -135,6 +136,14 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
     }
   }
 
+  // Use the initial incident flux as a source.  This is useful right
+  // now for response function generation, since they are not implemented
+  // as boundary conditions.
+  if (d_input->check("use_initial_boundary_flux"))
+  {
+    d_use_initial_boundary_flux =
+      d_input->template get<int>("use_initial_boundary_flux");
+  }
 }
 
 //---------------------------------------------------------------------------//

@@ -148,7 +148,7 @@ group_sweep(State::vec_moments_type &phi)
     d_sweeper->setup_group(g);
 
     // Clear the group boundary and set with any fixed conditions.
-    d_boundary->clear(g);
+    if (!d_use_initial_boundary_flux) d_boundary->clear(g);
     d_boundary->set(g);
 
     // Build the fixed source.  For fixed source problems, this

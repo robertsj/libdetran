@@ -121,7 +121,7 @@ inline void WGSolverGMRES<D>::build_rhs(State::moments_type &B)
 
   // Clear the group boundary.  This is because the right hand side should
   // be based only on fixed boundaries.
-  d_boundary->clear(d_g);
+  if (!d_use_initial_boundary_flux) d_boundary->clear(d_g);
 
   // Setup boundary conditions.  This sets any conditions fixed for the solve.
   d_boundary->set(d_g);
