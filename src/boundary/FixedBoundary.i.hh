@@ -49,8 +49,8 @@ inline void FixedBoundary<D>::set(const size_t g)
 template <class D>
 inline const typename FixedBoundary<D>::bf_type&
 FixedBoundary<D>::operator()(const size_t o,
-                     const size_t a,
-                     const size_t g) const
+                             const size_t a,
+                             const size_t g) const
 {
   Require(g < d_number_groups);
   Require(o < d_psi[g].size());
@@ -62,8 +62,8 @@ FixedBoundary<D>::operator()(const size_t o,
 template <class D>
 inline typename FixedBoundary<D>::bf_type&
 FixedBoundary<D>::operator()(const size_t o,
-                     const size_t a,
-                     const size_t g)
+                             const size_t a,
+                             const size_t g)
 {
   // Cast away return type
   return const_cast<typename FixedBoundary<D>::bf_type&>

@@ -146,8 +146,6 @@ private:
   int d_reflective_solve_iterations;
   /// Flag to update the outgoing fluxes (default: false)
   bool d_update_boundary_flux;
-  /// Flag to use initial incident flux as a source
-  bool d_use_initial_boundary_flux;
 
   //-------------------------------------------------------------------------//
   // IMPLEMENTATION

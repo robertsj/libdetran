@@ -46,7 +46,7 @@ public:
   typedef typename std::vector<boundary_flux_type>  vec_boundary_flux;
   typedef typename std::vector<vec_boundary_flux>   vec2_boundary_flux;
   typedef typename std::vector<vec2_boundary_flux>  vec3_boundary_flux;
-  typedef typename Boundary_T::size_t               size_t;
+  typedef detran_utilities::size_t                  size_t;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR

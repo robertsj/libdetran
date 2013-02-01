@@ -121,9 +121,8 @@ inline void WGSolverGMRES<D>::build_rhs(State::moments_type &B)
 
   d_b->set(0.0);
 
-  // Clear the group boundary.  This is because the right hand side should
-  // be based only on fixed boundaries.
-  if (!d_use_initial_boundary_flux) d_boundary->clear(d_g);
+  // Clear the group boundary.
+  d_boundary->clear(d_g);
 
   // Setup boundary conditions.  This sets any conditions fixed for the solve.
   d_boundary->set(d_g);
@@ -131,9 +130,6 @@ inline void WGSolverGMRES<D>::build_rhs(State::moments_type &B)
   // Build the fixed source.  This includes external, fission, and in-scatter.
   d_sweepsource->reset();
   d_sweepsource->build_fixed_with_scatter(d_g);
-
-  d_boundary->display(true);
-  d_boundary->display(false);
 
   // If no reflective, one sweep and out.
   if (!d_boundary->has_reflective())
@@ -178,7 +174,7 @@ inline void WGSolverGMRES<D>::build_rhs(State::moments_type &B)
 
   // Now that we've kept it for constructing the RHS, we
   // need to zero out the incident flux.
-  if (d_use_initial_boundary_flux) d_boundary->clear(d_g);
+  //d_boundary->clear(d_g);
 }
 
 } // namespace detran

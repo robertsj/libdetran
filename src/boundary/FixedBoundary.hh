@@ -43,10 +43,10 @@ public:
   typedef typename Base::SP_mesh                    SP_mesh;
   typedef typename Base::SP_quadrature              SP_quadrature;
   typedef typename Base::size_t                     size_t;
-  typedef typename Boundary_T::bf_type              bf_type;
-  typedef typename Boundary_T::vec_boundary_flux    vec1_bflux;
-  typedef typename Boundary_T::vec2_boundary_flux   vec2_bflux;
-  typedef typename Boundary_T::vec3_boundary_flux   vec3_bflux;
+  typedef typename BoundaryTraits<D>::value_type    bf_type;
+  typedef typename std::vector<bf_type>             vec1_bflux;
+  typedef typename std::vector<vec1_bflux>          vec2_bflux;
+  typedef typename std::vector<vec2_bflux>          vec3_bflux;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR

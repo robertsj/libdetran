@@ -25,7 +25,6 @@ WGSolverGMRES<D>::WGSolverGMRES(SP_state                  state,
                                 bool                      multiply)
  : Base(state, material, quadrature, boundary, q_e, q_f, multiply)
  , d_update_boundary_flux(false)
- , d_use_initial_boundary_flux(false)
 {
   Require(d_input);
 
@@ -101,15 +100,6 @@ WGSolverGMRES<D>::WGSolverGMRES(SP_state                  state,
   if (d_pc)
   {
     d_solver->set_preconditioner(d_pc, pc_side);
-  }
-
-  // Use the initial incident flux as a source.  This is useful right
-  // now for response function generation, since they are not implemented
-  // as boundary conditions.
-  if (d_input->check("use_initial_boundary_flux"))
-  {
-    d_use_initial_boundary_flux =
-      d_input->template get<int>("use_initial_boundary_flux");
   }
 
 }
