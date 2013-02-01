@@ -14,7 +14,7 @@ namespace detran
 
 //---------------------------------------------------------------------------//
 template <class D>
-FixedBoundary<D>::FixedBoundary(BoundarySN<D>& boundary,
+FixedBoundary<D>::FixedBoundary(SP_boundary boundary,
                                 const size_t side,
                                 SP_input input,
                                 SP_mesh mesh,
@@ -24,7 +24,7 @@ FixedBoundary<D>::FixedBoundary(BoundarySN<D>& boundary,
   , d_psi(d_number_groups,
           vec2_bflux(d_quadrature->number_octants()/2,
                      vec1_bflux(d_quadrature->number_angles_octant(),
-                                d_boundary(side, 0, 0, 0))))
+                                (*d_boundary)(side, 0, 0, 0))))
 {
   /* ... */
 }

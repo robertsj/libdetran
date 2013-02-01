@@ -15,7 +15,7 @@ namespace detran
 
 //---------------------------------------------------------------------------//
 template <class D>
-FixedBoundary<D>::FixedBoundary(BoundarySN<D>& boundary,
+FixedBoundary<D>::FixedBoundary(SP_boundary boundary,
                                 const size_t side,
                                 SP_input input,
                                 SP_mesh mesh,
@@ -25,11 +25,13 @@ FixedBoundary<D>::FixedBoundary(BoundarySN<D>& boundary,
   , d_psi(d_number_groups,
           vec2_bflux(d_quadrature->number_octants()/2,
                      vec1_bflux(d_quadrature->number_angles_octant(),
-                                d_boundary(side, 0, 0, 0))))
+                                (*d_boundary)(side, 0, 0, 0))))
 {
   /* ... */
 }
 
+
+//---------------------------------------------------------------------------//
 template <class D>
 inline void FixedBoundary<D>::set(const size_t g)
 {
@@ -38,7 +40,7 @@ inline void FixedBoundary<D>::set(const size_t g)
     size_t o = d_quadrature->incident_octant(d_side)[io];
     for (size_t a = 0; a < d_quadrature->number_angles_octant(); ++a)
     {
-      d_boundary(d_side, o, a, g) = d_psi[g][io][a];
+      (*d_boundary)(d_side, o, a, g) = d_psi[g][io][a];
     }
   }
 }
@@ -71,9 +73,10 @@ FixedBoundary<D>::operator()(const size_t o,
   );
 }
 
+
 //---------------------------------------------------------------------------//
 template <class D>
-inline void FixedBoundary<D>::clear()
+void FixedBoundary<D>::clear()
 {
   size_t dim = d_side / 2;
   size_t dims[3][2] = { {1, 2}, {0, 2}, {0, 1} };
@@ -94,6 +97,7 @@ inline void FixedBoundary<D>::clear()
     }
   }
 }
+
 } // end namespace detran
 
 #endif /* detran_FIXEDBOUNDARY_I_HH_ */

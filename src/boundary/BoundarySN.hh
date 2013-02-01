@@ -18,6 +18,8 @@
 namespace detran
 {
 
+template <class D> class BoundaryCondition;
+
 //---------------------------------------------------------------------------//
 /**
  *  @class BoundarySN
@@ -68,12 +70,6 @@ public:
   BoundarySN(SP_input        input,
              SP_mesh         mesh,
              SP_quadrature   quadrature);
-
-  /// SP Constructor
-  static SP_base
-  Create(SP_input         input,
-         SP_mesh          mesh,
-         SP_quadrature    quadrature);
 
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL BOUNDARY TYPES MUST IMPLEMENT THESE
@@ -152,6 +148,14 @@ public:
 
   /// Display boundray information and contents
   void display(bool inout) const;
+
+  /// Set the boundary condition
+  void set_bc(const size_t side, SP_bc b)
+  {
+    Require(side < D::dimension*2);
+    Require(b);
+    d_bc[side] = b;
+  }
 
   /// Get the boundary condition.
   SP_bc bc(const size_t side)

@@ -47,43 +47,17 @@ BoundarySN<D>::BoundarySN(SP_input        input,
     // Vacuum is default.
     std::string type = "vacuum";
     if (input->check(names[side]))
-      type = d_input->template get<std::string>(names[side]);
-
-    if (type == "vacuum")
+      type = input->template get<std::string>(names[side]);
+    if (type == "reflect")
     {
-      d_bc[side] = new Vacuum<D>((*this), side, d_input, d_mesh, d_quadrature);
-      d_has_vacuum = true;
-    }
-    else if (type == "reflect")
-    {
-      d_bc[side] = new Reflective<D>((*this), side, d_input, d_mesh, d_quadrature);
       d_is_reflective[side] = true;
       d_has_reflective = true;
     }
-    else if (type == "fixed")
-    {
-      d_bc[side] = new FixedBoundary<D>((*this), side, d_input, d_mesh, d_quadrature);
-      d_is_reflective[side] = false;
-      d_has_vacuum = true;
-    }
     else
     {
-      type.append(" is not a supported bc type.");
-      THROW(type);
-      break;
+      d_has_vacuum = true;
     }
   }
-}
-
-//---------------------------------------------------------------------------//
-template<class D>
-typename BoundarySN<D>::SP_base
-BoundarySN<D>::Create(SP_input         input,
-                      SP_mesh          mesh,
-                      SP_quadrature    quadrature)
-{
-  SP_boundary p(new BoundarySN(input, mesh, quadrature));
-  return p;
 }
 
 //---------------------------------------------------------------------------//

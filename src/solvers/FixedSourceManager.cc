@@ -12,7 +12,7 @@
 #include "boundary/BoundaryDiffusion.hh"
 #include "boundary/BoundaryMOC.hh"
 #include "boundary/BoundarySN.hh"
-#include "boundary/BoundaryFactory.hh"
+#include "boundary/BoundaryFactory.t.hh"
 #include "geometry/Tracker.hh"
 // Multigroup solvers
 #include "MGSolverGS.hh"

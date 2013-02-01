@@ -7,7 +7,7 @@
  */
 //---------------------------------------------------------------------------//
 
-#include "BoundaryFactory.hh"
+#include "BoundaryFactory.t.hh"
 
 namespace detran
 {

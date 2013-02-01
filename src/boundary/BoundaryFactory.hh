@@ -29,39 +29,10 @@ public:
   static SP_boundary build(SP_input input, SP_mesh mesh, SP_quadrature quad)
   {
     THROW("NOT IMPLEMENTED");
+    return SP_boundary();
   }
 };
 
-/// DIFFUSION
-template <typename D>
-class BoundaryFactory<BoundaryDiffusion>
-{
-public:
-  typedef BoundaryDiffusion<D>                          Boundary_T;
-  typedef typename Boundary_T::SP_boundary              SP_boundary;
-  typedef detran_utilities::InputDB::SP_input           SP_input;
-  typedef detran_geometry::Mesh::SP_mesh                SP_mesh;
-  typedef detran_angle::Quadrature::SP_quadrature       SP_quadrature;
-  static SP_boundary build(SP_input input, SP_mesh mesh, SP_quadrature quad);
-
-}
-
-/// DIFFUSION                                                                                                                                                          
-template <typename D>
-class BoundaryFactory<BoundarySN>
-{
-public:
-  typedef B <D>                                         Boundary_T;
-  typedef typename Boundary_T::SP_boundary              SP_boundary;
-  typedef detran_utilities::InputDB::SP_input           SP_input;
-  typedef detran_geometry::Mesh::SP_mesh                SP_mesh;
-  typedef detran_angle::Quadrature::SP_quadrature       SP_quadrature;
-  static SP_boundary build(SP_input input, SP_mesh mesh, SP_quadrature quad);
-}
-
-
 } // end namespace detran
-
-#include "BoundaryFactory.t.hh"
 
 #endif /* detran_BOUNDARYFACTORY_HH_ */

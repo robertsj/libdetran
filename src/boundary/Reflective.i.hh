@@ -24,8 +24,8 @@ void Reflective<D>::update(const size_t g)
     for (int a = 0; a < d_quadrature->number_angles_octant(); a++)
     {
       // Reroute reflecting fluxes.
-      d_boundary(d_side, d_octants[o][Boundary_T::IN], a, g) =
-        d_boundary(d_side, d_octants[o][Boundary_T::OUT], a, g);
+      (*d_boundary)(d_side, d_octants[o][Boundary_T::IN], a, g) =
+        (*d_boundary)(d_side, d_octants[o][Boundary_T::OUT], a, g);
     }
   }
 }
@@ -47,8 +47,8 @@ void Reflective<D>::update(const size_t g, const size_t o, const size_t a)
   if (o_out >= 0)
   {
     // Reroute reflecting fluxes.
-    d_boundary(d_side, o, a, g) =
-      d_boundary(d_side, o_out, a, g);
+    (*d_boundary)(d_side, o, a, g) =
+      (*d_boundary)(d_side, o_out, a, g);
   }
 }
 

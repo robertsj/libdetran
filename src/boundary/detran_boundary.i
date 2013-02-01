@@ -13,7 +13,7 @@
 #include "boundary/BoundarySN.hh"
 #include "boundary/BoundaryMOC.hh"
 #include "boundary/BoundaryCondition.hh"
-#include "boundary/FixedBoundary.hh"
+#include "boundary/Vacuum.hh"
 %}
 
 %import "detran_utilities.i"
@@ -141,7 +141,7 @@
 %template(BoundCond2DSP)    detran_utilities::SP<detran::BoundaryCondition<detran::_2D> >;
 %template(BoundCond3DSP)    detran_utilities::SP<detran::BoundaryCondition<detran::_3D> >;
 
-//%include "FixedBoundary.hh"
+//%include "Vacuum.hh"
 
 // extend fixed bc
 //   key = [o, a, group, i, j]

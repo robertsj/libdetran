@@ -52,7 +52,7 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  BoundaryCondition(Boundary_T& boundary,
+  BoundaryCondition(SP_boundary boundary,
                     const size_t side,
                     SP_input input,
                     SP_mesh mesh,
@@ -91,7 +91,7 @@ protected:
   //-------------------------------------------------------------------------//
 
   /// Boundary flux container. \todo Is there a way around using a reference?
-  Boundary_T& d_boundary;
+  SP_boundary d_boundary;
   /// My surface.
   const size_t d_side;
   /// Input
@@ -105,4 +105,4 @@ protected:
 
 } // end namespace detran
 
-#endif /* detranBOUNDARYCONDITION_HH_ */
+#endif /* detran_BOUNDARYCONDITION_HH_ */

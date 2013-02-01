@@ -12,10 +12,6 @@
 
 #include "BoundaryCondition.hh"
 
-// Forward declare boundary and traits.
-template <class D> class BoundarySN;
-template <class D> class BoundaryTraits;
-
 namespace detran
 {
 
@@ -42,6 +38,7 @@ public:
   typedef BoundaryCondition<D>                      Base;
   typedef typename Base::SP_bc                      SP_bc;
   typedef typename Base::Boundary_T                 Boundary_T;
+  typedef typename Base::SP_boundary                SP_boundary;
   typedef typename Base::SP_input                   SP_input;
   typedef typename Base::SP_mesh                    SP_mesh;
   typedef typename Base::SP_quadrature              SP_quadrature;
@@ -50,13 +47,12 @@ public:
   typedef typename Boundary_T::vec_boundary_flux    vec1_bflux;
   typedef typename Boundary_T::vec2_boundary_flux   vec2_bflux;
   typedef typename Boundary_T::vec3_boundary_flux   vec3_bflux;
-  typedef typename Boundary_T::SP_boundary          SP_boundary;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  FixedBoundary(BoundarySN<D>& boundary,
+  FixedBoundary(SP_boundary boundary,
                 const size_t side,
                 SP_input input,
                 SP_mesh mesh,

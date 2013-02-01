@@ -35,6 +35,7 @@ public:
   typedef BoundaryCondition<D>                Base;
   typedef typename Base::SP_bc                SP_bc;
   typedef typename Base::Boundary_T           Boundary_T;
+  typedef typename Base::SP_boundary          SP_boundary;
   typedef typename Base::SP_input             SP_input;
   typedef typename Base::SP_mesh              SP_mesh;
   typedef typename Base::SP_quadrature        SP_quadrature;
@@ -44,7 +45,7 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  Vacuum(BoundarySN<D>& boundary,
+  Vacuum(SP_boundary boundary,
          const size_t side,
          SP_input input,
          SP_mesh mesh,
