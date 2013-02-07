@@ -84,6 +84,16 @@ public:
   /// Update a boundary for a given angle following a sweep.
   virtual void update(const size_t g, const size_t o, const size_t a) = 0;
 
+  //-------------------------------------------------------------------------//
+  // PUBLIC FUNCTIONS
+  //-------------------------------------------------------------------------//
+
+  /// Clear any static data
+  virtual void clear()
+  {
+    /* ... */
+  }
+
 protected:
 
   //-------------------------------------------------------------------------//

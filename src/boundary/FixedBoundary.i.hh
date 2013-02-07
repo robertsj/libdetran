@@ -52,6 +52,8 @@ FixedBoundary<D>::operator()(const size_t o,
                              const size_t a,
                              const size_t g) const
 {
+//  std::cout << d_psi.size() << " "
+//            << d_psi[0].size() << std::endl;
   Require(g < d_number_groups);
   Require(o < d_psi[g].size());
   Require(a < d_psi[g][o].size());

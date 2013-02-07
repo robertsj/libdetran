@@ -146,6 +146,15 @@ public:
   // PUBLIC FUNCTIONS
   //-------------------------------------------------------------------------//
 
+  /// Clear any fixed boundary conditions.
+  void clear_bc()
+  {
+    for (size_t s = 0; s < d_bc.size(); ++s)
+    {
+      d_bc[s]->clear();
+    }
+  }
+
   /// Display boundray information and contents
   void display(bool inout) const;
 

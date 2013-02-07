@@ -139,6 +139,7 @@ public:
    */
   virtual void clear(const size_t g) = 0;
 
+
   /**
    *  @brief Set the entire group boundary flux for reflecting sides.
    *
@@ -161,6 +162,14 @@ public:
   void clear()
   {
     for (size_t g = 0; g < d_number_groups; ++g) clear(g);
+  }
+
+  /**
+   *  @brief Clear any fixed boundary conditions.
+   */
+  virtual void clear_bc()
+  {
+    /* ... */
   }
 
   /// Does the boundary have any reflective conditions?
