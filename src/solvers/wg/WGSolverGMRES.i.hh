@@ -85,6 +85,7 @@ inline void WGSolverGMRES<D>::solve(const size_t g)
     d_sweepsource->build_within_group_scatter(d_g, phi_g);
     int iteration;
     double error = 0;
+    d_boundary->set(d_g);
     for (iteration = 0; iteration < 1000; iteration++)
     {
       d_boundary->update(d_g);
@@ -175,6 +176,7 @@ inline void WGSolverGMRES<D>::build_rhs(State::moments_type &B)
   // Now that we've kept it for constructing the RHS, we
   // need to zero out the incident flux.
   //d_boundary->clear(d_g);
+  //d_boundary->set(d_g);
 }
 
 } // namespace detran
