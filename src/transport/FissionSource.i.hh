@@ -116,10 +116,11 @@ build_total_group_source(const size_t g,
   Require(g < d_material->number_groups());
 
   vec_int mat_map = d_mesh->mesh_map("MATERIAL");
-  for (int gp = 0; gp <= d_material->number_groups(); gp++)
+  for (int gp = 0; gp < d_material->number_groups(); gp++)
   {
     for (int cell = 0; cell < d_mesh->number_cells(); cell++)
     {
+      //std::cout << " g=" << " gp=" << gp << " cell=" << cell << std::endl;
       Assert(cell < source.size());
       Assert(cell < mat_map.size());
       source[cell] += phi[gp][cell] * d_scale *
