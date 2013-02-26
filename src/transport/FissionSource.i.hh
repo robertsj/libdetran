@@ -70,7 +70,6 @@ build_within_group_source(const size_t g,
                           const State::moments_type &phi,
                           State::moments_type &source)
 {
-  // Preconditions
   Require(g < d_material->number_groups());
   Require(phi.size() == source.size());
 
@@ -88,7 +87,6 @@ inline void FissionSource::
 build_in_fission_source(const size_t g,
                         moments_type &source)
 {
-  // Preconditions.
   Require(g < d_material->number_groups());
 
   vec_int mat_map = d_mesh->mesh_map("MATERIAL");
@@ -112,7 +110,6 @@ build_total_group_source(const size_t g,
                          const State::vec_moments_type &phi,
                          State::moments_type &source)
 {
-  // Preconditions
   Require(g < d_material->number_groups());
 
   vec_int mat_map = d_mesh->mesh_map("MATERIAL");
@@ -120,9 +117,6 @@ build_total_group_source(const size_t g,
   {
     for (int cell = 0; cell < d_mesh->number_cells(); cell++)
     {
-      //std::cout << " g=" << " gp=" << gp << " cell=" << cell << std::endl;
-      Assert(cell < source.size());
-      Assert(cell < mat_map.size());
       source[cell] += phi[gp][cell] * d_scale *
                       d_material->chi(mat_map[cell], g) *
                       d_material->nu_sigma_f(mat_map[cell], gp);
