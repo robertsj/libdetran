@@ -77,6 +77,8 @@ inline void WGSolverGMRES<D>::solve(const size_t g)
   // Iterate to pick up outgoing boundary fluxes if requested.
   if (d_update_boundary_flux)
   {
+    // Any fixed condition must be set again.
+    d_boundary->set(d_g);
     moments_type phi_g   = d_state->phi(g);
     moments_type phi_g_o = d_state->phi(g);
     d_sweeper->set_update_boundary(true);
@@ -85,7 +87,6 @@ inline void WGSolverGMRES<D>::solve(const size_t g)
     d_sweepsource->build_within_group_scatter(d_g, phi_g);
     int iteration;
     double error = 0;
-    d_boundary->set(d_g);
     for (iteration = 0; iteration < 1000; iteration++)
     {
       d_boundary->update(d_g);

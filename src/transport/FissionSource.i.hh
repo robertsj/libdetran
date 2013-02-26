@@ -120,6 +120,8 @@ build_total_group_source(const size_t g,
   {
     for (int cell = 0; cell < d_mesh->number_cells(); cell++)
     {
+      Assert(cell < source.size());
+      Assert(cell < mat_map.size());
       source[cell] += phi[gp][cell] * d_scale *
                       d_material->chi(mat_map[cell], g) *
                       d_material->nu_sigma_f(mat_map[cell], gp);

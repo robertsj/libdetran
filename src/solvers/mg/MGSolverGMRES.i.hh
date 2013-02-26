@@ -91,8 +91,10 @@ inline void MGSolverGMRES<D>::solve(const double keff)
     // boundary fluxes are never going to be needed.
     if (d_update_boundary_flux)
     {
+      //d_boundary->clear_bc();
       for (int g = d_krylov_group_cutoff; g < d_number_groups; g++)
       {
+        d_boundary->set(g);
         State::moments_type phi_g = d_state->phi(g);
         d_sweeper->setup_group(g);
         d_sweepsource->reset();
