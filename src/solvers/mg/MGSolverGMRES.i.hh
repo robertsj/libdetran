@@ -30,6 +30,9 @@ inline void MGSolverGMRES<D>::solve(const double keff)
   double norm_resid = 0.0;
   int iteration = 0;
 
+  // Set the scaling factor for multiplying problems
+  if (d_multiply) d_fissionsource->setup_outer(1.0/keff);
+
   //-------------------------------------------------------------------------//
   // GAUSS-SEIDEL BLOCK
   //-------------------------------------------------------------------------//
