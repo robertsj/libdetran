@@ -24,8 +24,6 @@ void MGSolverGS<D>::solve(const double keff)
 {
   using detran_utilities::norm_residual;
 
-  if (d_print_level > 0) std::cout << "  Starting GS." << std::endl;
-
   // Save current group flux.
   State::group_moments_type phi_old = d_state->all_phi();
 
@@ -111,10 +109,8 @@ void MGSolverGS<D>::solve(const double keff)
   // Diagnostic output
   if (d_print_level > 0)
   {
-    int number_sweeps = d_wg_solver->get_sweeper()->number_sweeps();
     printf("  GS Final: Number Iters: %3i  Error: %12.9f  Sweeps: %6i \n",
-           iteration, nres, number_sweeps);
-    std::cout << "  GS done!" << std::endl;
+           iteration, nres, number_sweeps());
   }
 
 }

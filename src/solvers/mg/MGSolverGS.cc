@@ -32,6 +32,13 @@ MGSolverGS<D>::MGSolverGS(SP_state                  state,
   Ensure(d_norm_type == "Linf" or d_norm_type == "L1" or d_norm_type == "L2");
 }
 
+//---------------------------------------------------------------------------//
+template <class D>
+int MGSolverGS<D>::number_sweeps() const
+{
+  return d_wg_solver->get_sweeper()->number_sweeps();
+}
+
 template class MGSolverGS<_1D>;
 template class MGSolverGS<_2D>;
 template class MGSolverGS<_3D>;

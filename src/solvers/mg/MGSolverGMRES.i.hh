@@ -113,7 +113,7 @@ inline void MGSolverGMRES<D>::solve(const double keff)
   if (d_print_level > 0)
   {
     printf(" MGSolverGMRES Final: Number Iters: %3i  Error: %12.9f  Sweeps: %6i \n",
-           iteration, norm_resid, d_sweeper->number_sweeps());
+           iteration, norm_resid, number_sweeps());
   }
   if (norm_resid > d_tolerance)
   {

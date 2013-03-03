@@ -75,6 +75,13 @@ public:
   /// Solve the multigroup equations.
   void solve(const double keff = 1.0);
 
+  //-------------------------------------------------------------------------//
+  // PUBLIC FUNCTIONS
+  //-------------------------------------------------------------------------//
+
+  /// Return number of sweeps
+  int number_sweeps() const;
+
 private:
 
   //-------------------------------------------------------------------------//

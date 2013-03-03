@@ -138,6 +138,14 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
 }
 
 //---------------------------------------------------------------------------//
+template <class D>
+int MGSolverGMRES<D>::number_sweeps() const
+{
+  Require(d_sweeper);
+  return d_sweeper->number_sweeps();
+}
+
+//---------------------------------------------------------------------------//
 // EXPLICIT INSTANTIATIONS
 //---------------------------------------------------------------------------//
 

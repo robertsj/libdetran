@@ -130,7 +130,7 @@ void PetscSolver::set_operators(SP_matrix A, SP_db db)
   // PETSc do its default.
   else
   {
-    std::cout << " WHY NO PETSC HAS PC? " << std::endl;
+    //std::cout << " WHY NO PETSC HAS PC? " << std::endl;
     PCSetType(pc, PCNONE);
   }
 

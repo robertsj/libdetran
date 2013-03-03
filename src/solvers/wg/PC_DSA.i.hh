@@ -16,8 +16,6 @@ namespace detran
 //---------------------------------------------------------------------------//
 inline void PC_DSA::apply(Vector &V_in, Vector &V_out)
 {
-  if (d_group == 1) d_operator[d_group]->print_matlab("wg.out");
-
   // Currently, DSA is only used on the flux moments,
   // not on the boundaries.
   size_t size_moments = d_mesh->number_cells();
@@ -52,8 +50,8 @@ inline void PC_DSA::apply(Vector &V_in, Vector &V_out)
   //-------------------------------------------------------------------------//
 
   // V_out <-- C\(S*V_in)
-  if (d_solver[d_group]->preconditioner())
-    std::cout << d_solver[d_group]->preconditioner()->name() << std::endl;
+//  if (d_solver[d_group]->preconditioner())
+//    std::cout << d_solver[d_group]->preconditioner()->name() << std::endl;
   d_solver[d_group]->solve(tmp, V_out_trunc);
 
   //-------------------------------------------------------------------------//

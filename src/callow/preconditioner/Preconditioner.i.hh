@@ -48,8 +48,8 @@ inline PetscErrorCode pc_apply_wrapper(PC pc, Vec b, Vec x)
   // wrap the petsc vectors
   Vector B(b);
   Vector X(x);
-  B.display();
-  X.display();
+//  B.display();
+//  X.display();
   // call the actual apply operator.
   foo->apply(B, X);
   return ierr;

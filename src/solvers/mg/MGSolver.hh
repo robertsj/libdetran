@@ -77,6 +77,16 @@ public:
   /// Solve the multigroup equations.
   virtual void solve(const double keff = 1.0) = 0;
 
+  //-------------------------------------------------------------------------//
+  // PUBLIC FUNCTIONS
+  //-------------------------------------------------------------------------//
+
+  /// Return number of sweeps
+  virtual int number_sweeps() const
+  {
+    return 0;
+  }
+
 protected:
 
   //-------------------------------------------------------------------------//

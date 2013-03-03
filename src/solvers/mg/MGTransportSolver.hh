@@ -74,7 +74,7 @@ public:
   virtual ~MGTransportSolver(){};
 
   //-------------------------------------------------------------------------//
-  // ABSTRACT INTERFACE -- ALL MULTIGROUP SOLVERS MUST IMPLEMENT
+  // ABSTRACT INTERFACE -- ALL MULTIGROUP TRANSPORT SOLVERS MUST IMPLEMENT
   //-------------------------------------------------------------------------//
 
   /// Solve the multigroup equations.
@@ -105,7 +105,6 @@ protected:
 
   /// Angular mesh
   SP_quadrature d_quadrature;
-
   /// Inner solver
   SP_wg_solver d_wg_solver;
 

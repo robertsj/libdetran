@@ -199,6 +199,7 @@ public:
   SP_fissionsource fissionsource() const { return d_fissionsource; }
   int discretization() const { return d_discretization; }
   SP_solver solver() const { return d_solver; }
+  int number_sweeps() const { return d_solver->number_sweeps(); }
   /// @}
 
 private:

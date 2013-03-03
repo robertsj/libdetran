@@ -60,7 +60,8 @@ def plot_mesh_map(mesh, key, edges = False) :
         
     # Choose a random color map for 2D plots
     unique_elements = np.unique(map)
-    num_unique_elements = len(unique_elements)
+    #num_unique_elements = len(unique_elements)
+    num_unique_elements = max(unique_elements)+1
     colormap = matplotlib.colors.ListedColormap(np.random.rand(num_unique_elements, 3))
     bounds = np.linspace(-0.5, num_unique_elements - 0.5, num_unique_elements+1)
     ticks  = bounds[0:num_unique_elements]+0.5
