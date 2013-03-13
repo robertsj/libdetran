@@ -1,32 +1,27 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   MathUtilities.hh
- * \author robertsj
- * \date   Apr 4, 2012
- * \brief  Provides several useful math functions
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+/**
+ *  @file   MathUtilities.hh
+ *  @author robertsj
+ *  @date   Apr 4, 2012
+ *  @brief  Provides several useful math functions
  */
 //---------------------------------------------------------------------------//
 
-#ifndef MATHUTILITIES_HH_
-#define MATHUTILITIES_HH_
+#ifndef detran_utilities_MATHUTILITIES_HH_
+#define detran_utilities_MATHUTILITIES_HH_
 
-// Utilities
 #include "DBC.hh"
 #include "Definitions.hh"
 
-// System
 #include <algorithm>
 #include <cmath>
 #include <string>
+#include <limits>
 
 namespace detran_utilities
 {
 
-/*!
- *  \brief Norm of a vector.
- *  \param  flag    L2 (Default), L1, or Linf
- */
+/// Norm of a vector
 inline double norm(vec_dbl &x, std::string flag = "L2")
 {
   double v = 0.0;
@@ -62,10 +57,7 @@ inline void vec_scale(vec_dbl &x, double scale)
 }
 
 
-/*!
- *  \brief Norm of the residual of two double vectors.
- *  \param  flag    Default is false for L2.  True for L-infinity.
- */
+/// Norm of the residual of two double vectors.
 inline double norm_residual(vec_dbl &x, vec_dbl &y, std::string flag = "L2")
 {
   Require(x.size() == y.size());
@@ -97,6 +89,7 @@ inline double norm_residual(vec_dbl &x, vec_dbl &y, std::string flag = "L2")
   return v;
 }
 
+/// Norm of the relative residual.
 inline double norm_relative_residual(vec_dbl &x, vec_dbl &y, std::string flag = "L2")
 {
   Require(x.size() == y.size());
@@ -128,9 +121,29 @@ inline double norm_relative_residual(vec_dbl &x, vec_dbl &y, std::string flag = 
   return v;
 }
 
+/// Return the minimum of a vector.
+template <class T>
+inline T vec_min(std::vector<T> &v)
+{
+  T m = std::numeric_limits<T>::max();
+  for (int i = 0; i < v.size(); ++i)
+    if (v[i] < m) m = v[i];
+  return m;
+}
+
+/// Return the maximum of a vector.
+template <class T>
+inline T vec_max(std::vector<T> &v)
+{
+  T m = std::numeric_limits<T>::min();
+  for (int i = 0; i < v.size(); ++i)
+    if (v[i] > m) m = v[i];
+  return m;
+}
+
 } // namespace detran_utilities
 
-#endif /* MATHUTILITIES_HH_ */
+#endif /* detran_utilities_MATHUTILITIES_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of MathUtilities.hh

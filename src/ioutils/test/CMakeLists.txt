@@ -18,6 +18,9 @@ ADD_EXECUTABLE(test_SiloOutput test_SiloOutput.cc)
 TARGET_LINK_LIBRARIES(test_SiloOutput ioutils)
 endif ()
 
+ADD_EXECUTABLE(test_PPMPlotter test_PPMPlotter.cc)
+TARGET_LINK_LIBRARIES(test_PPMPlotter ioutils)
+
 #------------------------------------------------------------------------------#
 # Define tests
 #------------------------------------------------------------------------------#

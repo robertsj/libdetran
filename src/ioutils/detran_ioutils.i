@@ -11,6 +11,7 @@
 #include <stddef.h>
 #include "ioutils/IO_HDF5.hh"
 #include "ioutils/SiloOutput.hh"
+#include "ioutils/PPMPlotter.hh"
 %}
 
 %import "detran_transport.i"
@@ -24,6 +25,8 @@
 #ifdef DETRAN_ENABLE_SILO
 %include "SiloOutput.hh"
 #endif
+
+%include "PPMPlotter.hh"
 
 //---------------------------------------------------------------------------//
 //              end of detran_ioutils.i
