@@ -12,6 +12,8 @@
 
 #include "utilities/DBC.hh"
 #include "utilities/Definitions.hh"
+#include "utilities/SP.hh"
+
 
 #include <string>
 
@@ -21,9 +23,6 @@ namespace detran_ioutils
 /**
  *  @class PPMPlotter
  *  @brief Produces 2-D plots in the PPM format
- *
- *  This is serves as a fast way to plot slices of the
- *  geometry.
  */
 class PPMPlotter
 {
@@ -34,9 +33,10 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::size_t        size_t;
-  typedef detran_utilities::vec_dbl       vec_dbl;
-  typedef detran_utilities::vec_int       vec_int;
+  typedef detran_utilities::SP<PPMPlotter>      SP_ppmplotter;
+  typedef detran_utilities::size_t              size_t;
+  typedef detran_utilities::vec_dbl             vec_dbl;
+  typedef detran_utilities::vec_int             vec_int;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR AND DESTRUCTOR
@@ -61,6 +61,14 @@ public:
    *  color range (8 bit).  Note, the value must be *positive*.
    */
   void set_pixel(const size_t i, const size_t j, const double v);
+
+  /// Write all pixels at once.
+  template <class T>
+  void set_pixels(const std::vector<T>& v)
+  {
+    Require(v.size() == d_image.size());
+    for (int i = 0; i < d_nx * d_ny; ++i) d_image[i] = v[i];
+  }
 
   /// Write the file
   bool write();

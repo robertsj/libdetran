@@ -14,6 +14,7 @@ SET(SRC
     IO_HDF5.cc
     SiloOutput.cc
     PPMPlotter.cc
+    PPMOutput.cc
 )
 
 #-----------------------------------------------------------------------------#

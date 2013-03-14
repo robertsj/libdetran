@@ -11,6 +11,7 @@
 
 #include "utilities/Definitions.hh"
 #include "utilities/DBC.hh"
+#include "utilities/Point.hh"
 #include "utilities/SP.hh"
 #include "utilities/Warning.hh"
 #include <cmath>
@@ -36,7 +37,6 @@ namespace detran_geometry
  *  Note, the constructors are protected to forbid direct instantiation of
  *  the Mesh class.  Rather, use the dimension-specific subclasses.  We
  *  could use a pure virtual destructor as an alternative.
- *
  */
 //---------------------------------------------------------------------------//
 class Mesh
@@ -126,27 +126,27 @@ public:
   //------------------------------------------------------------------------//
 
   /**
-   * \brief  Add map of coarse mesh integer properties.
+   * @brief  Add map of coarse mesh integer properties.
    *
    * This is an easy way to set mesh properties for meshes based on
    * simple coarse mesh regions.
    *
-   * \param  map_key   String description of map.
-   * \param  mesh_map  Logically multi-dimensional map as 1-d vector.
+   * @param  map_key   String description of map.
+   * @param  mesh_map  Logically multi-dimensional map as 1-d vector.
    */
   void add_coarse_mesh_map(std::string map_key, vec_int mesh_map);
 
   /**
-   * \brief  Add map of fine mesh integer properties.
+   * @brief  Add map of fine mesh integer properties.
    *
    * This adds properties for fine meshes directly, and so is meanty for
    * use with higher level mesh construction, e.g. pin cells, where
    * assignment is not possible by simple coarse mesh bounds.
    *
-   * \note If the key exists, this function overwrites the map.
+   * @note If the key exists, this function overwrites the map.
    *
-   * \param  map_key   String description of map.
-   * \param  mesh_map  Logically multi-dimensional map as 1-d vector.
+   * @param  map_key   String description of map.
+   * @param  mesh_map  Logically multi-dimensional map as 1-d vector.
    */
   void add_mesh_map(std::string map_key, vec_int mesh_map);
 
@@ -196,13 +196,11 @@ public:
   size_t dimension() const;
 
   /**
-   *
-   * \brief   Returns the cardinal index for i, j, and k
-   *
-   * \param   i  Index along x axis.
-   * \param   j  Index along y axis.
-   * \param   k  Index along z axis.
-   * \return     Cardinal index.
+   * @brief   Returns the cardinal index for i, j, and k
+   * @param   i  Index along x axis.
+   * @param   j  Index along y axis.
+   * @param   k  Index along z axis.
+   * @return     Cardinal index.
    */
   size_t index(size_t i, size_t j = 0, size_t k = 0);
 
@@ -226,6 +224,9 @@ public:
    *  @return        Index along z axis.
    */
   size_t cell_to_k(size_t cell) const;
+
+  /// Find the cell containing a point
+  int find_cell(detran_utilities::Point p);
 
   /// Check if fine mesh map exists.
   bool mesh_map_exists(std::string map_key);
@@ -294,9 +295,7 @@ protected:
 
 private:
 
-  /**
-   *  @brief   Common construction tasks.
-   */
+  /// Common construction tasks.
   void setup();
 
 #ifdef DETRAN_ENABLE_BOOST

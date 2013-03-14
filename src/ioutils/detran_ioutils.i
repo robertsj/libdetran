@@ -12,6 +12,7 @@
 #include "ioutils/IO_HDF5.hh"
 #include "ioutils/SiloOutput.hh"
 #include "ioutils/PPMPlotter.hh"
+#include "ioutils/PPMOutput.hh"
 %}
 
 %import "detran_transport.i"
@@ -27,6 +28,7 @@
 #endif
 
 %include "PPMPlotter.hh"
+%include "PPMOutput.hh"
 
 //---------------------------------------------------------------------------//
 //              end of detran_ioutils.i

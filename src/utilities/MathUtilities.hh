@@ -123,7 +123,7 @@ inline double norm_relative_residual(vec_dbl &x, vec_dbl &y, std::string flag = 
 
 /// Return the minimum of a vector.
 template <class T>
-inline T vec_min(std::vector<T> &v)
+inline T vec_min(const std::vector<T> &v)
 {
   T m = std::numeric_limits<T>::max();
   for (int i = 0; i < v.size(); ++i)
@@ -133,12 +133,42 @@ inline T vec_min(std::vector<T> &v)
 
 /// Return the maximum of a vector.
 template <class T>
-inline T vec_max(std::vector<T> &v)
+inline T vec_max(const std::vector<T> &v)
 {
   T m = std::numeric_limits<T>::min();
   for (int i = 0; i < v.size(); ++i)
     if (v[i] > m) m = v[i];
   return m;
+}
+
+/// Linear mesh between a and b.  Gives the edges.
+inline std::vector<double> linspace(double a, double b, int n = 10)
+{
+  Require(a < b);
+  std::vector<double> v(n, a);
+  double dx;
+  if (n <= 1)
+    dx = b-a;
+  else
+    dx = (b-a)/double(n-1);
+  for (int i = 1; i < n; ++i)
+    v[i] = v[i-1] + dx;
+  return v;
+}
+
+/// Linear mesh between a and b. Gives the mesh centers.
+inline std::vector<double> linspace_center(double a, double b, int n = 10)
+{
+  Require(a < b);
+  double dx;
+  if (n <= 1)
+    dx = b-a;
+  else
+    dx = (b-a)/double(n);
+  std::vector<double> v(n, 0.5*dx);
+  for (int i = 1; i < n; ++i)
+    v[i] = v[i-1] + dx;
+  return v;
 }
 
 } // namespace detran_utilities

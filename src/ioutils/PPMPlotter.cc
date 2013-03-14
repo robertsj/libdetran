@@ -35,8 +35,7 @@ initialize(const size_t nx, const size_t ny, std::string name)
 }
 
 //---------------------------------------------------------------------------//
-void PPMPlotter::
-set_pixel(const size_t i, const size_t j, const double v)
+void PPMPlotter::set_pixel(const size_t i, const size_t j, const double v)
 {
   d_image[i + j * d_nx] = v;
 }
