@@ -13,6 +13,7 @@
 #include "transport/FissionSource.hh"
 #include "transport/State.hh"
 #include "transport/SweepSource.hh"
+#include "transport/Homogenize.hh"
 %}
 
 %import "detran_utilities.i"
@@ -31,6 +32,9 @@
 %template(StateSP)          detran_utilities::SP<detran::State>;
 %template(FissionSourceSP)  detran_utilities::SP<detran::FissionSource>;
 %template(ScatterSourceSP)  detran_utilities::SP<detran::ScatterSource>;
+
+%include "Homogenize.hh"
+
 
 // We can optionally compile the sweepers again in the future
 // if it turns out we want to script some algorithms.

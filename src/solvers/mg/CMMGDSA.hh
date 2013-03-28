@@ -1,17 +1,18 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   MGDSA.hh
- *  @brief  MGDSA
+ *  @file   CMMGDSA.hh
+ *  @brief  CMMGDSA 
  *  @author Jeremy Roberts
- *  @date   Nov 12, 2012
+ *  @date   Mar 26, 2013
  */
 //---------------------------------------------------------------------------//
 
-#ifndef detran_MGDSA_HH_
-#define detran_MGDSA_HH_
+#ifndef detran_CMMGDSA_HH_
+#define detran_CMMGDSA_HH_
 
 #include "MGPreconditioner.hh"
 #include "DiffusionLossOperator.hh"
+#include "transport/CoarseMesh.hh"
 #include "transport/ScatterSource.hh"
 #include "callow/solver/LinearSolver.hh"
 #include "callow/preconditioner/Preconditioner.hh"
@@ -21,31 +22,28 @@ namespace detran
 {
 
 /**
- *  @class MGDSA
- *  @brief Multigroup diffusion synthetic acceleration
+ *  @class CMMGDSA
+ *  @brief Coarse mesh, multigroup diffusion synthetic acceleration
  *
  *  The multigroup DSA preconditioning process \$ \mathbf{P}^{-1} \$
  *  is defined to be
  *  @f[
- *      (\mathbf{I} - \mathbf{C}^{-1} \mathbf{S}) \, ,
+ *      (\mathbf{I} - \mathbf{R}^T \mathbf{C}^{-1} \mathbf{R} \mathbf{S}) \, ,
  *  @f]
- *  where \f$ \mathbf{C} \f$ is the multigroup diffusion operator.  This
- *  operator treats group-to-group scattering and, if requested,
+ *  where \f$ \mathbf{C} \f$ is the multigroup diffusion operator on
+ *  a coarse spatial mesh and
+ *  \f$ \mathbf{R} \f$ and its transpose represent a spatial restriction
+ *  and projection, respectively.
+ *  This operator treats group-to-group scattering and, if requested,
  *  fission implicitly.
  *
- *  Because this performs a diffusion solve on the same mesh as
- *  the transport problem, the resulting system can be very
- *  large.  Hence, it is likely to perform best for relatively
- *  small systems.  A coarse mesh version is under development, but
- *  this implementation will server as the upper bound for the
- *  efficacy of diffusion-based multigroup preconditioning.
  *
  *  @note This inherits from the shell matrix (for now) so that the
  *        action can be used to construct an explicit operator for
  *        detailed numerical studies
  */
 
-class MGDSA: public callow::MatrixShell, public MGPreconditioner
+class CMMGDSA: public callow::MatrixShell, public MGPreconditioner
 {
 
 public:
@@ -55,9 +53,11 @@ public:
   //-------------------------------------------------------------------------//
 
   typedef MGPreconditioner                  Base;
-  typedef detran_utilities::SP<MGDSA>       SP_pc;
+  typedef detran_utilities::SP<CMMGDSA>     SP_pc;
   typedef ScatterSource::SP_scattersource   SP_scattersource;
   typedef DiffusionLossOperator             Operator_T;
+  typedef CoarseMesh::SP_coarsemesh         SP_coarsemesh;
+  typedef CoarseMesh::SP_mesh               SP_mesh;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -77,15 +77,15 @@ public:
    *  @param source     Scattering source
    *  @param cutoff     First group included in solve
    */
-  MGDSA(SP_input input,
-        SP_material material,
-        SP_mesh mesh,
-        SP_scattersource source,
-        size_t cutoff,
-        bool include_fission);
+  CMMGDSA(SP_input          input,
+          SP_material       material,
+          SP_mesh           mesh,
+          SP_scattersource  source,
+          size_t            cutoff,
+          bool              include_fission);
 
   /// virtual destructor
-  virtual ~MGDSA(){}
+  virtual ~CMMGDSA(){}
 
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL PRECONDITIONERS MUST IMPLEMENT THIS
@@ -118,6 +118,9 @@ private:
   // DATA
   //-------------------------------------------------------------------------//
 
+  /// Coarse mesh
+
+
   /// Scatter source
   SP_scattersource d_scattersource;
 
@@ -125,14 +128,8 @@ private:
 
 } // end namespace detran
 
-//---------------------------------------------------------------------------//
-// INLINE FUNCTIONS
-//---------------------------------------------------------------------------//
-
-//#include "MGDSA.hh.i.hh"
-
-#endif // detran_MGDSA_HH_
+#endif // detran_CMMGDSA_HH_
 
 //---------------------------------------------------------------------------//
-//              end of file MGDSA.hh
+//              end of file CMMGDSA.hh
 //---------------------------------------------------------------------------//

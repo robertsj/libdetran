@@ -15,6 +15,7 @@ SET(SRC
     CoarseMesh.cc
     CurrentTally.cc
     FissionSource.cc
+    Homogenize.cc
     ScatterSource.cc
     State.cc
     Sweeper.cc
