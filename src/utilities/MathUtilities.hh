@@ -141,6 +141,28 @@ inline T vec_max(const std::vector<T> &v)
   return m;
 }
 
+/// Return the sum of a vector.
+template <class T>
+inline T vec_sum(const std::vector<T> &v)
+{
+  T s = 0;
+  for (int i = 0; i < v.size(); ++i)
+    s += v[i];
+  return s;
+}
+
+/// Return the unique elements of a vector
+template <class T>
+inline std::vector<T> vec_unique(const std::vector<T> &v)
+{
+  std::vector<T> u = v;                   // 1 1 2 3 5 6 6 1
+  std::sort(u.begin(), u.end());          // 1 1 1 2 3 5 6 6
+  typename std::vector<T>::iterator it;
+  it = std::unique(u.begin(), u.end());   // 1 2 3 5 6 ? ? ?
+  u.resize(std::distance(u.begin(), it)); // 1 2 3 5 6
+  return u;
+}
+
 /// Linear mesh between a and b.  Gives the edges.
 inline std::vector<double> linspace(double a, double b, int n = 10)
 {

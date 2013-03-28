@@ -252,7 +252,7 @@ void Material::compute_diff_coef()
   {
     for (size_t g = 0; g < d_number_groups; g++)
     {
-      d_diff_coef[g][m] =  coef * d_sigma_t[g][m];
+      d_diff_coef[g][m] =  coef / d_sigma_t[g][m];
     }
   }
 }

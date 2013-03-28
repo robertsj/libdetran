@@ -30,6 +30,9 @@ TARGET_LINK_LIBRARIES(test_Equation_DD_1D       transport)
 ADD_EXECUTABLE(test_Equation_SC_1D              test_Equation_SC_1D.cc)
 TARGET_LINK_LIBRARIES(test_Equation_SC_1D       transport)
 
+# HOMOGENIZATION
+ADD_EXECUTABLE(test_Homogenization                   test_Homogenization.cc)
+TARGET_LINK_LIBRARIES(test_Homogenization            transport)
 
 #------------------------------------------------------------------------------#
 # Define tests
@@ -44,3 +47,4 @@ ADD_TEST(test_CurrentTally_2D      test_CurrentTally    1)
 ADD_TEST(test_CurrentTally_3D      test_CurrentTally    2)
 ADD_TEST(test_Equation_DD_1D       test_Equation_DD_1D  0)
 ADD_TEST(test_Equation_SC_1D       test_Equation_SC_1D  0)
+ADD_TEST(test_Homogenization       test_Homogenization  0)
