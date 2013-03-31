@@ -203,6 +203,11 @@ public:
     return d_store_angular_flux;
   }
 
+  bool store_current() const
+  {
+    return d_store_current;
+  }
+
   /// Zero out the state
   void clear();
 
@@ -234,10 +239,14 @@ private:
   vec_moments_type d_moments;
   /// Cell-center angular flux, [energy, angle, (space)]
   vec_angular_flux_type d_angular_flux;
+  /// Cell-center current magnitude, e.g. sqrt(Jx^2+Jy^2)
+  vec_moments_type d_current;
   /// k-eigenvalue
   double d_eigenvalue;
   /// Store the angular flux?
   bool d_store_angular_flux;
+  /// Store the current?
+  bool d_store_current;
 
 };
 

@@ -253,6 +253,12 @@ void MGDiffusionSolver<D>::fill_state()
     {
       phi_g[cell] = (*d_phi)[row];
     }
+
+    if (d_state->store_current())
+    {
+
+    }
+
   }
 
 }

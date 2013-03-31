@@ -59,6 +59,7 @@ Homogenize::homogenize(SP_state     state,
   fg = 0;
   for (size_t cg = 0; cg < number_coarse_groups; ++cg)
   {
+
     // Zero out temporaries
     vec_dbl vol(number_coarse_cells, 0.0);
     vec_dbl phi_vol(number_coarse_cells, 0.0);
@@ -72,6 +73,7 @@ Homogenize::homogenize(SP_state     state,
     vec2_dbl sigma_s(number_coarse_cells,
                      vec_dbl(d_number_groups, 0.0));
     vec_dbl diff_coef(number_coarse_cells, 0.0);
+
 
     // Loop through fine groups in this coarse group
     for (size_t gg = 0; gg < coarsegroup[cg]; ++gg, ++fg)
@@ -94,8 +96,9 @@ Homogenize::homogenize(SP_state     state,
         // \todo Add options for homogenization.  Ideally, current-weighted.
         diff_coef[ci] += pv * d_material->diff_coef(m, fg);
       }
-    } // end energy
+    }
 
+    // Set the new coarse mesh values
     for (size_t ci = 0; ci < number_coarse_cells; ++ci)
     {
       // we might have indices that don't show up in the problem.
@@ -114,7 +117,7 @@ Homogenize::homogenize(SP_state     state,
           cmat->set_sigma_s(ci, cgp, cg, sigma_s[ci][cgp]/phi_vol[ci]);
         cmat->set_diff_coef(ci, cg, diff_coef[ci]/phi_vol[ci]);
       }
-    } // end space
+    }
 
   } // end coarse energy
 

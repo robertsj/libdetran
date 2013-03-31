@@ -24,6 +24,7 @@ State::State(SP_input        input,
   , d_number_groups(0)
   , d_number_moments(1)
   , d_store_angular_flux(false)
+  , d_store_current(false)
   , d_eigenvalue(0.0)
 {
   // Preconditions
@@ -49,6 +50,17 @@ State::State(SP_input        input,
   // Allocate the scalar flux moments vectors
   d_moments.resize(d_number_groups, 
                    vec_dbl(d_mesh->number_cells() * d_number_moments, 0.0));
+
+  //  Allocate the current vectors
+  int store_current = 0;
+  if (input->check("store_current"))
+    store_current = input->get<int>("store_current");
+  if (store_current > 0)
+  {
+    d_store_current = true;
+    d_current.resize(d_number_groups,
+                     vec_dbl(d_mesh->number_cells() * d_current, 0.0));
+  }
 
   // Allocate the angular flux vectors if needed.
   int store_psi = 0;
