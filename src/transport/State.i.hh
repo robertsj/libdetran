@@ -84,6 +84,27 @@ State::psi(const size_t g, const size_t o, const size_t a)
   );
 }
 
+//---------------------------------------------------------------------------//
+inline const State::moments_type&
+State::current(const size_t g) const
+{
+  Require(d_store_current);
+  Require(g < d_number_groups);
+  return d_current[g];
+}
+
+//---------------------------------------------------------------------------//
+inline State::moments_type&
+State::current(const size_t g)
+{
+  // Cast away return type
+  return const_cast<moments_type&>
+  (
+    // Add const to *this's type and call const version
+    static_cast<const State*>(this)->current(g)
+  );
+}
+
 } // end namespace detran
 
 

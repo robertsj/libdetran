@@ -26,7 +26,8 @@ Homogenize::SP_material
 Homogenize::homogenize(SP_state     state,
                        SP_mesh      mesh,
                        std::string  key,
-                       vec_int      coarsegroup)
+                       vec_int      coarsegroup,
+                       bool         current_weight)
 {
   Require(state);
   Require(mesh);
@@ -70,22 +71,25 @@ Homogenize::homogenize(SP_state     state,
     vec_dbl sigma_f(number_coarse_cells, 0.0);
     vec_dbl nu(number_coarse_cells, 0.0);
     vec_dbl chi(number_coarse_cells, 0.0);
-    vec2_dbl sigma_s(number_coarse_cells,
-                     vec_dbl(d_number_groups, 0.0));
+    vec2_dbl sigma_s(number_coarse_cells, vec_dbl(d_number_groups, 0.0));
     vec_dbl diff_coef(number_coarse_cells, 0.0);
 
 
     // Loop through fine groups in this coarse group
     for (size_t gg = 0; gg < coarsegroup[cg]; ++gg, ++fg)
     {
-      vec_dbl &phi_fg = state->phi(fg);
+      const vec_dbl &phi_fg = state->phi(fg);
+      const vec_dbl &J_fg   = current(state, fg, current_weight);
+
       for (size_t fi = 0; fi < mesh->number_cells(); ++fi)
       {
         size_t ci = mesh_map[fi]; // edit region index
         size_t m  = mat_map[fi];  // material index
         double pv = phi_fg[fi] * mesh->volume(fi);
+        double jv = J_fg[fi]   * mesh->volume(fi);
         vol[ci]        += mesh->volume(fi);
         phi_vol[ci]    += pv;
+        cur_vol[ci]    += jv;
         sigma_t[ci]    += pv * d_material->sigma_t(m, fg);
         sigma_a[ci]    += pv * d_material->sigma_a(m, fg);
         sigma_f[ci]    += pv * d_material->sigma_f(m, fg);
@@ -94,7 +98,7 @@ Homogenize::homogenize(SP_state     state,
         for (size_t gp = 0; gp < d_number_groups; ++gp)
           sigma_s[ci][fg_to_cg[gp]] += pv * d_material->sigma_s(m, gp, fg);
         // \todo Add options for homogenization.  Ideally, current-weighted.
-        diff_coef[ci] += pv * d_material->diff_coef(m, fg);
+        diff_coef[ci] += jv * d_material->diff_coef(m, fg);
       }
     }
 
@@ -115,7 +119,7 @@ Homogenize::homogenize(SP_state     state,
         cmat->set_chi(ci, cg, chi[ci]/vol[ci]);
         for (size_t cgp = 0; cgp < number_coarse_groups; ++cgp)
           cmat->set_sigma_s(ci, cgp, cg, sigma_s[ci][cgp]/phi_vol[ci]);
-        cmat->set_diff_coef(ci, cg, diff_coef[ci]/phi_vol[ci]);
+        cmat->set_diff_coef(ci, cg, diff_coef[ci]/cur_vol[ci]);
       }
     }
 
@@ -140,10 +144,25 @@ Homogenize::homogenize(SP_state     state,
 Homogenize::SP_material
 Homogenize::homogenize(SP_state     state,
                        SP_mesh      mesh,
-                       std::string  key)
+                       std::string  key,
+                       bool         current_weight)
 {
   vec_int coarsegroup(d_number_groups, 1);
-  return homogenize(state, mesh, key, coarsegroup);
+  return homogenize(state, mesh, key, coarsegroup, current_weight);
+}
+
+//---------------------------------------------------------------------------//
+const Homogenize::vec_dbl&
+Homogenize::current(SP_state state, size_t g, bool flag) const
+{
+  if (flag)
+  {
+    if (state->store_current())
+    {
+      return state->current(g);
+    }
+  }
+  return state->phi(g);
 }
 
 } // end namespace detran

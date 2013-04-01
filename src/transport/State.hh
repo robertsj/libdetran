@@ -158,6 +158,12 @@ public:
    */
   angular_flux_type& psi(const size_t g, const size_t o, const size_t a);
 
+  /// Const accessor to a group current field.
+  const moments_type& current(const size_t g) const;
+
+  /// Mutable accessor to a group current field.
+  moments_type& current(const size_t g);
+
   double eigenvalue() const
   {
     return d_eigenvalue;

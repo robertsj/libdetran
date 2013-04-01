@@ -54,25 +54,30 @@ public:
 
   /**
    *  @brief Homogenize the material on a coarser space and energy mesh
-   *  @param state        State vector for flux weighting
-   *  @param mesh         Fine mesh with appropriate coarse mesh map
-   *  @param key          Coarse mesh map key
-   *  @param coarsegroup  Vector of fine groups per coarse group
+   *  @param state          State vector for flux weighting
+   *  @param mesh           Fine mesh with appropriate coarse mesh map
+   *  @param key            Coarse mesh map key
+   *  @param coarsegroup    Vector of fine groups per coarse group
+   *  @param current_weight Use the current to weight the diffusion coefficient
    */
   SP_material homogenize(SP_state state,
                          SP_mesh mesh,
                          std::string key,
-                         vec_int coarsegroup);
+                         vec_int coarsegroup,
+                         bool current_weight = false);
 
   /**
    *  @brief Homogenize the material on a coarser space mesh.
-   *  @param state        State vector for flux weighting
-   *  @param mesh         Fine mesh with appropriate coarse mesh map
-   *  @param key          Coarse mesh map key
+   *  @param state          State vector for flux weighting
+   *  @param mesh           Fine mesh with appropriate coarse mesh map
+   *  @param key            Coarse mesh map key
+   *  @param current_weight Use the current to weight the diffusion coefficient
+
    */
   SP_material homogenize(SP_state state,
                          SP_mesh mesh,
-                         std::string key);
+                         std::string key,
+                         bool current_weight = false);
 
 private:
 
@@ -84,6 +89,13 @@ private:
   SP_material d_material;
   /// Original number of groups
   size_t d_number_groups;
+
+  //-------------------------------------------------------------------------//
+  // IMPLEMENTATION
+  //-------------------------------------------------------------------------//
+
+  /// Return the current (or flux) vector from state
+  const vec_dbl& current(SP_state, size_t g, bool current_weight) const;
 
 };
 

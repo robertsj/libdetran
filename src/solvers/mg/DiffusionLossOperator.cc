@@ -342,6 +342,13 @@ void DiffusionLossOperator::build()
 
 }
 
+double DiffusionLossOperator::albedo(const size_t side, const size_t g) const
+{
+  Require(side < 6);
+  Require(g < d_number_groups);
+  return d_albedo[side][g];
+}
+
 } // end namespace detran
 
 //---------------------------------------------------------------------------//

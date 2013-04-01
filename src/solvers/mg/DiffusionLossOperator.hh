@@ -96,6 +96,8 @@ public:
    */
   void construct(double keff = 1.0);
 
+  double albedo(const size_t side, const size_t g) const;
+
 private:
 
   //---------------------------------------------------------------------------//

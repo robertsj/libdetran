@@ -82,6 +82,7 @@ public:
   typedef callow::LinearSolver::SP_preconditioner   SP_preconditioner;
   typedef callow::MatrixBase::SP_matrix             SP_matrix;
   typedef detran_utilities::size_t                  size_t;
+  typedef detran_utilities::vec_int                 vec_int;
   typedef BoundaryDiffusion<D>                      Boundary_T;
 
   //-------------------------------------------------------------------------//
@@ -174,6 +175,8 @@ private:
   void build_boundary_source();
   /// Fill the state with the flux
   void fill_state();
+  /// Fill the state with the current
+  void fill_current();
   /// Fill the boundary with outgoing current
   void fill_boundary();
 

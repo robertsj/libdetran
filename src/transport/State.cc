@@ -59,7 +59,7 @@ State::State(SP_input        input,
   {
     d_store_current = true;
     d_current.resize(d_number_groups,
-                     vec_dbl(d_mesh->number_cells() * d_current, 0.0));
+                     vec_dbl(d_mesh->number_cells(), 0.0));
   }
 
   // Allocate the angular flux vectors if needed.
