@@ -27,11 +27,12 @@ Homogenize::homogenize(SP_state     state,
                        SP_mesh      mesh,
                        std::string  key,
                        vec_int      coarsegroup,
-                       bool         current_weight)
+                       size_t       dc_weight)
 {
   Require(state);
   Require(mesh);
   Require(detran_utilities::vec_sum(coarsegroup) == d_number_groups);
+  Require(dc_weight < END_DIFF_COEF_WEIGHTING);
 
   using detran_material::Material;
 
@@ -74,12 +75,11 @@ Homogenize::homogenize(SP_state     state,
     vec2_dbl sigma_s(number_coarse_cells, vec_dbl(d_number_groups, 0.0));
     vec_dbl diff_coef(number_coarse_cells, 0.0);
 
-
     // Loop through fine groups in this coarse group
     for (size_t gg = 0; gg < coarsegroup[cg]; ++gg, ++fg)
     {
       const vec_dbl &phi_fg = state->phi(fg);
-      const vec_dbl &J_fg   = current(state, fg, current_weight);
+      const vec_dbl &J_fg   = current(state, fg, dc_weight);
 
       for (size_t fi = 0; fi < mesh->number_cells(); ++fi)
       {
@@ -97,8 +97,8 @@ Homogenize::homogenize(SP_state     state,
         chi[ci]        += mesh->volume(fi) * d_material->chi(m, fg);
         for (size_t gp = 0; gp < d_number_groups; ++gp)
           sigma_s[ci][fg_to_cg[gp]] += pv * d_material->sigma_s(m, gp, fg);
-        // \todo Add options for homogenization.  Ideally, current-weighted.
-        diff_coef[ci] += jv * d_material->diff_coef(m, fg);
+        if (dc_weight == PHI_D or dc_weight == CURRENT_D)
+          diff_coef[ci] += jv * d_material->diff_coef(m, fg);
       }
     }
 
@@ -119,7 +119,10 @@ Homogenize::homogenize(SP_state     state,
         cmat->set_chi(ci, cg, chi[ci]/vol[ci]);
         for (size_t cgp = 0; cgp < number_coarse_groups; ++cgp)
           cmat->set_sigma_s(ci, cgp, cg, sigma_s[ci][cgp]/phi_vol[ci]);
-        cmat->set_diff_coef(ci, cg, diff_coef[ci]/cur_vol[ci]);
+        if (dc_weight == PHI_D or dc_weight == CURRENT_D)
+          cmat->set_diff_coef(ci, cg, diff_coef[ci]/cur_vol[ci]);
+        else
+          cmat->set_diff_coef(ci, cg, 1.0/(3.0*cmat->sigma_t(ci, cg)));
       }
     }
 
@@ -145,22 +148,21 @@ Homogenize::SP_material
 Homogenize::homogenize(SP_state     state,
                        SP_mesh      mesh,
                        std::string  key,
-                       bool         current_weight)
+                       size_t       dc_weight)
 {
   vec_int coarsegroup(d_number_groups, 1);
-  return homogenize(state, mesh, key, coarsegroup, current_weight);
+  return homogenize(state, mesh, key, coarsegroup, dc_weight);
 }
 
 //---------------------------------------------------------------------------//
 const Homogenize::vec_dbl&
-Homogenize::current(SP_state state, size_t g, bool flag) const
+Homogenize::current(SP_state state, size_t g, size_t dc_weight) const
 {
-  if (flag)
+  if (dc_weight == CURRENT_D)
   {
-    if (state->store_current())
-    {
-      return state->current(g);
-    }
+    Insist(state->store_current(),
+           "Current-weighting requires the state keeps the current.");
+    return state->current(g);
   }
   return state->phi(g);
 }

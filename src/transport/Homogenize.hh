@@ -31,6 +31,18 @@ class Homogenize
 public:
 
   //-------------------------------------------------------------------------//
+  // ENUMERATIONS
+  //-------------------------------------------------------------------------//
+
+  enum diff_coef_weighting
+  {
+    PHI_D,         // flux-weighted diffusion coefficient
+    CURRENT_D,     // current-weighted diffusion coefficient
+    PHI_SIGMA_TR,  // flux-weighted transport cross section, D = 1/(3*S_TR)
+    END_DIFF_COEF_WEIGHTING
+  };
+
+  //-------------------------------------------------------------------------//
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
@@ -58,26 +70,25 @@ public:
    *  @param mesh           Fine mesh with appropriate coarse mesh map
    *  @param key            Coarse mesh map key
    *  @param coarsegroup    Vector of fine groups per coarse group
-   *  @param current_weight Use the current to weight the diffusion coefficient
+   *  @param dc_weight      Selects weighting scheme for diffusion coefficient
    */
   SP_material homogenize(SP_state state,
                          SP_mesh mesh,
                          std::string key,
                          vec_int coarsegroup,
-                         bool current_weight = false);
+                         size_t dc_weight = 0);
 
   /**
    *  @brief Homogenize the material on a coarser space mesh.
    *  @param state          State vector for flux weighting
    *  @param mesh           Fine mesh with appropriate coarse mesh map
    *  @param key            Coarse mesh map key
-   *  @param current_weight Use the current to weight the diffusion coefficient
-
+   *  @param dc_weight      Selects weighting scheme for diffusion coefficient
    */
   SP_material homogenize(SP_state state,
                          SP_mesh mesh,
                          std::string key,
-                         bool current_weight = false);
+                         size_t dc_weight = 0);
 
 private:
 
@@ -95,7 +106,7 @@ private:
   //-------------------------------------------------------------------------//
 
   /// Return the current (or flux) vector from state
-  const vec_dbl& current(SP_state, size_t g, bool current_weight) const;
+  const vec_dbl& current(SP_state, size_t g, size_t dc_weight = 0) const;
 
 };
 
