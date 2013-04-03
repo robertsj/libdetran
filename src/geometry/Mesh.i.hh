@@ -168,7 +168,6 @@ inline int Mesh::find_cell(detran_utilities::Point p)
        (p.z() < 0.0) or (p.z() > d_total_width_z) )
   {
     cell = -1;
-    std::cout << " point is " << p << std::endl;
   }
   else
   {
