@@ -9,6 +9,8 @@
 #ifndef detran_material_MATERIAL_I_HH_
 #define detran_material_MATERIAL_I_HH_
 
+#include "utilities/DBC.hh"
+
 namespace detran_material
 {
 

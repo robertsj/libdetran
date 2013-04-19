@@ -10,7 +10,6 @@
 #define detran_material_MATERIAL_HH_
 
 #include "utilities/Definitions.hh"
-#include "utilities/DBC.hh"
 #include "utilities/SP.hh"
 #include <string>
 #ifdef DETRAN_ENABLE_BOOST
@@ -252,6 +251,7 @@ protected:
     ar & d_number_materials;
     ar & d_downscatter;
     ar & d_sigma_t;
+    ar & d_sigma_a;
     ar & d_nu_sigma_f;
     ar & d_sigma_f;
     ar & d_nu;

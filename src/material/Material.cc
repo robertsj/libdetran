@@ -35,8 +35,12 @@ Material::Material(const size_t number_materials,
  , d_nu(number_groups, vec_dbl(number_materials, 1.0))
  , d_chi(number_groups, vec_dbl(number_materials, 0.0))
  , d_diff_coef(number_groups, vec_dbl(number_materials, 0.0))
- , d_sigma_s(number_groups, vec2_dbl(number_groups, vec_dbl(number_materials, 0.0)))
+ , d_sigma_s(number_groups,
+		     vec2_dbl(number_groups,
+		    		  vec_dbl(number_materials, 0.0)))
  , d_scatter_bounds(number_groups, vec_int(2, 0))
+ , d_upscatter_cutoff(0)
+ , d_finalized(false)
 {
   // Postconditions
   Ensure(d_sigma_t.size() == number_groups);

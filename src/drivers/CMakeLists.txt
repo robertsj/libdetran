@@ -46,14 +46,17 @@ ADD_LIBRARY(${LIB_NAME}
             ${SRC} 
 )
 TARGET_LINK_LIBRARIES(${LIB_NAME}
-                      solvers
-                      transport
+                      utilities
+                      callow
+                      orthog
                       material
                       angle
                       geometry
-                      utilities
+                      external_source
+                      boundary
+                      transport
+                      solvers
                       ioutils
-                      orthog
                       postprocess
 )
 
