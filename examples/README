@@ -1,0 +1,8 @@
+# examples/README
+
+This folder has some very simple text-based inputs for xdetran.  This 
+interface is largely depricated in favor of the Python interface and 
+the HDF5 interface.  Several Python-based inputs are available in 
+a seperate repository.
+
+

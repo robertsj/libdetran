@@ -1,5 +1,0 @@
-PI Iter:   1  Error: 110.966661761  keff:  0.048567924 keffa:  1.000000000 
-PI Iter:   2  Error:  5.305898253  keff:  0.094060883 keffa:  0.091984890 
-PI Iter:   3  Error:  5.676936684  keff:  0.142735139 keffa: -0.601987364 
-PI Iter:   4  Error:  6.365476161  keff:  0.197312957 keffa: -0.307253317 
-
