@@ -1,6 +1,6 @@
-# examples/simple_box.inp
+# examples/two_region_two_group_box.inp
 #
-# A simple 2-d square region, 1 group, uniform isotropic source
+# A simple 2-d, 2 region, 2 group box with uniform isotropic source.
 
 # Input
 int number_groups   2
@@ -13,7 +13,7 @@ int inner_print_out 0
 int outer_max_iters 1
 dbl outer_tolerance 1e-6
 int outer_print_out 0
-int eigen_max_iters 5
+int eigen_max_iters 100
 dbl eigen_tolerance 1e-6
 str bc_left         reflect
 str bc_right        reflect
@@ -39,6 +39,6 @@ material sigma_s    0 1 0.0380 1.4536
 material sigma_t    1   0.2263 1.0119
 material sigma_s    1 0 0.2006 0.0000
 material sigma_s    1 1 0.0161 0.9355
-material nu_sigma_f 1   0.0067 0.1241
+material sigma_f    1   0.0067 0.1241
 material chi        1   1.0000 0.0000
 
