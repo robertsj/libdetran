@@ -1,9 +1,25 @@
+# This is an example of a relatively complete configuration
+
 rm CMakeCache.txt
-cmake                                              \
--G "Eclipse CDT4 - Unix Makefiles"                 \
--D CMAKE_BUILD_TYPE=Debug                          \
--D DETRAN_ENABLE_DEBUG=YES                         \
--D DETRAN_ENABLE_PYTHON=YES                        \
--D SWIG_EXECUTABLE=/home/robertsj/opt/swig/swig-2.0.4/bin/swig \
-/home/robertsj/Research/libdetran/source/src
-make
+/home/robertsj/opt/cmake/bin/cmake                              \
+CMAKE_CXX_FLAGS="-Wall -ansi -pedantic"                         \
+-G "Eclipse CDT4 - Unix Makefiles"                              \
+-D CMAKE_VERBOSE_MAKEFILE=ON                                    \
+-D CMAKE_BUILD_TYPE=Release                                     \
+-D DETRAN_ENABLE_DEBUG=NO                                       \
+-D DETRAN_ENABLE_PETSC=YES                                      \
+-D DETRAN_ENABLE_SLEPC=YES                                      \
+-D Silo_DIR=/home/robertsj/opt/silo/4.9.1                       \
+-D DETRAN_ENABLE_SILO=YES                                       \
+-D HDF5_DIR=/home/robertsj/opt/hdf5/1.8.10                      \
+-D DETRAN_ENABLE_HDF5=YES                                       \
+-D DETRAN_ENABLE_OPENMP=NO                                      \
+-D DETRAN_ENABLE_PYTHON=YES                                     \
+-D DETRAN_ENABLE_GPERFTOOLS=NO                                  \
+-D DETRAN_ENABLE_TEST=YES                                       \
+-D DETRAN_ENABLE_BOOST=YES                                      \
+-D SWIG_EXECUTABLE=/home/robertsj/opt/swig/bin/swig             \
+-D BOOST_ROOT=/home/robertsj/opt/boost                          \
+-D CMAKE_INSTALL_PREFIX=/home/robertsj/Research/detran/install  \
+/home/robertsj/Research/detran/source/src
+
