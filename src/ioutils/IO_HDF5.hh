@@ -48,6 +48,17 @@ class IO_HDF5
 public:
 
   //-------------------------------------------------------------------------//
+  // ENUMERATIONS
+  //-------------------------------------------------------------------------//
+
+	enum HDF5_FILE_ACCESS
+	{
+		HDF5_READ_ONLY,
+		HDF5_OVERWRITE,
+		END_HDF5_FILE_ACCESS
+	};
+
+  //-------------------------------------------------------------------------//
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
@@ -57,6 +68,11 @@ public:
   typedef detran_geometry::Mesh::SP_mesh            SP_mesh;
   typedef detran_utilities::vec_int                 vec_int;
   typedef detran_utilities::vec_dbl                 vec_dbl;
+  struct group_info
+  {
+  	hid_t 				location; // /path/to/location
+  	std::string 	name;     // /path/to/location/name
+  };
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -68,12 +84,15 @@ public:
    */
   IO_HDF5(std::string filename);
 
+  /// Destructor
+  ~IO_HDF5();
+
   //-------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
   //-------------------------------------------------------------------------//
 
-  /// Open HDF5 file for writing.  This replaces old content.
-  void open();
+  /// Open HDF5 file for writing.  This *replaces old content*.
+  void open(const int flag = HDF5_READ_ONLY);
 
   /**
    *  @brief Write the input database into an HDF5 file.
@@ -131,12 +150,23 @@ private:
   //-------------------------------------------------------------------------//
 
   /**
+   *  @brief Write a nested input database into an HDF5 file.
+   *  @param input    Database to be written
+   *  @param name 		Name of the nested db (as found in the root db)
+   *  @param root 		Root group into which the new db is entered
+   */
+  void write(SP_input db, std::string name, hid_t root);
+
+  /**
    *  @brief Fill a temporary compound type container and write to file
    *  @param input  User input database
    *  @param data   Pointer to compound type array
    */
   template <class T>
   bool read_data(SP_input input, hid_t group, std::string name);
+
+  /// Read a nested database
+  SP_input read_input(hid_t root, const char* name);
 
   /// Set the data type for storage in memory
   template <class T>
@@ -187,6 +217,16 @@ private:
 };
 
 } // end namespace detran_ioutils
+
+//---------------------------------------------------------------------------//
+// HELPER FUNCTIONS
+//---------------------------------------------------------------------------//
+
+/// Given a location and name, find accessible group names.
+//herr_t find_groups(hid_t 							loc_id,
+//		               const char 	     *name,
+//		               const H5L_info_t  *info,
+//		               void 						 *data);
 
 //---------------------------------------------------------------------------//
 // TEMPLATE DEFINITIONS

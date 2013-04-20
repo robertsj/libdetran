@@ -27,18 +27,34 @@ namespace detran_ioutils
 IO_HDF5::IO_HDF5(std::string filename)
   : d_filename(filename)
   , d_open(false)
+  , d_file_id(0)
 {
   /* ... */
 }
 
 //---------------------------------------------------------------------------//
-void IO_HDF5::open()
+IO_HDF5::~IO_HDF5()
 {
-  // Open the HDF5 file
-  d_file_id = H5Fcreate(d_filename.c_str(), // filename
-                        H5F_ACC_TRUNC,      // overwrite existing file
-                        H5P_DEFAULT,        // file create property list
+  if (d_open) close();
+}
+
+//---------------------------------------------------------------------------//
+void IO_HDF5::open(const int flag)
+{
+  Require(flag < END_HDF5_FILE_ACCESS);
+  if (flag == HDF5_READ_ONLY)
+  {
+    d_file_id = H5Fopen(d_filename.c_str(), // filename
+                        H5F_ACC_RDONLY,     // do not overwrite existing file
                         H5P_DEFAULT);       // file access property list
+  }
+  else if (flag == HDF5_OVERWRITE)
+  {
+    d_file_id = H5Fcreate(d_filename.c_str(), // filename
+                          H5F_ACC_TRUNC,      // overwrite existing file
+                          H5P_DEFAULT,        // file create property list
+                          H5P_DEFAULT);       // file access property list
+  }
   d_open = true;
 }
 
@@ -48,18 +64,42 @@ void IO_HDF5::write(SP_input input)
   // Preconditions
   Require(input);
 
-  if (!d_open) open();
+  if (!d_open) open(HDF5_OVERWRITE);
 
   // Create the input group
   hid_t group = H5Gcreate(d_file_id, "input",
                           H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 
   // Write the data.
-  write_map(group, "int_data", input->get_map<int>());
-  write_map(group, "dbl_data", input->get_map<double>());
-  write_map(group, "str_data", input->get_map<std::string>());
+  write_map(group, "int_data",     input->get_map<int>());
+  write_map(group, "dbl_data",     input->get_map<double>());
+  write_map(group, "str_data",     input->get_map<std::string>());
   write_map(group, "vec_int_data", input->get_map<vec_int>());
   write_map(group, "vec_dbl_data", input->get_map<vec_dbl>());
+  write_map(group, "db_data",      input->get_map<SP_input>());
+
+  // Close the group.
+  herr_t status = H5Gclose(group);
+}
+
+//---------------------------------------------------------------------------//
+void IO_HDF5::write(SP_input input, std::string name, hid_t root)
+{
+  // Preconditions
+  Require(input);
+  Require(d_open);
+
+  // Create the input group
+  hid_t group = H5Gcreate(root, name.c_str(),
+                          H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+
+  // Write the data.
+  write_map(group, "int_data",     input->get_map<int>());
+  write_map(group, "dbl_data",     input->get_map<double>());
+  write_map(group, "str_data",     input->get_map<std::string>());
+  write_map(group, "vec_int_data", input->get_map<vec_int>());
+  write_map(group, "vec_dbl_data", input->get_map<vec_dbl>());
+  write_map(group, "db_data",      input->get_map<SP_input>());
 
   // Close the group.
   herr_t status = H5Gclose(group);
@@ -71,7 +111,7 @@ void IO_HDF5::write(SP_material mat)
   // Preconditions
   Require(mat);
 
-  if (!d_open) open();
+  if (!d_open) open(HDF5_OVERWRITE);
 
   // Create the material group
   hid_t group = H5Gcreate(d_file_id, "material",
@@ -200,7 +240,7 @@ void IO_HDF5::write(SP_mesh mesh)
   // Preconditions
   Require(mesh);
 
-  if (!d_open) open();
+  if (!d_open) open(HDF5_OVERWRITE);
 
   // Create the mesh group
   hid_t group = H5Gcreate(d_file_id, "mesh",
@@ -240,17 +280,13 @@ void IO_HDF5::close()
 }
 
 //---------------------------------------------------------------------------//
-detran_utilities::InputDB::SP_input IO_HDF5::read_input()
+IO_HDF5::SP_input IO_HDF5::read_input()
 {
-  // Preconditions
-  /* ... */
-
   // Create the input object.
-  SP_input input(new detran_utilities::InputDB());
+  SP_input input(new detran_utilities::InputDB(d_filename));
 
   // Open the file if necessary.
-  if (!d_open)
-    d_file_id = H5Fopen(d_filename.c_str(), H5F_ACC_RDONLY, H5P_DEFAULT);
+  if (!d_open) open(HDF5_READ_ONLY);
 
   // Open the input group
   htri_t flag = H5Lexists(d_file_id, "input", H5P_DEFAULT);
@@ -258,17 +294,13 @@ detran_utilities::InputDB::SP_input IO_HDF5::read_input()
   hid_t group = H5Gopen(d_file_id, "input", H5P_DEFAULT);
 
   // Read data
-  read_data<int>(input, group, "int_data");
-  read_data<double>(input, group, "dbl_data");
-  read_data<std::string>(input, group, "str_data");
-  read_data<vec_int>(input, group, "vec_int_data");
-  read_data<vec_dbl>(input, group, "vec_dbl_data");
+  read_data<int>(input, group,           "int_data");
+  read_data<double>(input, group,        "dbl_data");
+  read_data<std::string>(input, group,   "str_data");
+  read_data<vec_int>(input, group,       "vec_int_data");
+  read_data<vec_dbl>(input, group,       "vec_dbl_data");
+  read_data<SP_input>(input, group,      "db_data");
 
-//  read_map(group, "int_data", input->get_map<int>());
-//  read_map(group, "dbl_data", input->get_map<double>());
-//  read_map(group, "str_data", input->get_map<std::string>());
-//  read_map(group, "vec_int_data", input->get_map<vec_int>());
-//  read_map(group, "vec_dbl_data", input->get_map<vec_dbl>());
 
   // Close the group.
   herr_t status = H5Gclose(group);
@@ -276,6 +308,36 @@ detran_utilities::InputDB::SP_input IO_HDF5::read_input()
   // Postconditions
   Ensure(input);
   return input;
+}
+
+//---------------------------------------------------------------------------//
+IO_HDF5::SP_input IO_HDF5::read_input(hid_t root, const char* name)
+{
+  Require(d_open);
+
+  // Create the input object.
+  std::string str_name(name);
+  SP_input db(new detran_utilities::InputDB(str_name));
+
+  // Open the input group
+  htri_t flag = H5Lexists(root, name, H5P_DEFAULT);
+  Insist(flag > 0, "Group " + str_name + " does not exist; can't read data.");
+  hid_t group = H5Gopen(root, name, H5P_DEFAULT);
+
+  // Read data
+  read_data<int>(db, group,           "int_data");
+  read_data<double>(db, group,        "dbl_data");
+  read_data<std::string>(db, group,   "str_data");
+  read_data<vec_int>(db, group,       "vec_int_data");
+  read_data<vec_dbl>(db, group,       "vec_dbl_data");
+  read_data<SP_input>(db, group,      "db_data");
+
+  // Close the group.
+  herr_t status = H5Gclose(group);
+
+  // Postconditions
+  Ensure(db);
+  return db;
 }
 
 //---------------------------------------------------------------------------//
@@ -288,8 +350,7 @@ detran_material::Material::SP_material IO_HDF5::read_material()
   SP_material mat;
 
   // Open the file if necessary.
-  if (!d_open)
-    d_file_id = H5Fopen(d_filename.c_str(), H5F_ACC_RDONLY, H5P_DEFAULT);
+  if (!d_open) open(HDF5_READ_ONLY);
 
   // HDF5 bool
   htri_t flag;
@@ -397,9 +458,7 @@ detran_geometry::Mesh::SP_mesh IO_HDF5::read_mesh()
   SP_mesh mesh;
 
   // Open the file if necessary.
-  if (!d_open)
-    d_file_id = H5Fopen(d_filename.c_str(), H5F_ACC_RDONLY, H5P_DEFAULT);
-  d_open = true;
+  if (!d_open) open(HDF5_READ_ONLY);
 
   // Open the input group
   Insist(exists(d_file_id, "mesh") > 0,
@@ -467,6 +526,65 @@ detran_geometry::Mesh::SP_mesh IO_HDF5::read_mesh()
   Ensure(mesh);
 
   return mesh;
+}
+
+//---------------------------------------------------------------------------//
+herr_t find_db_groups(hid_t              loc_id,
+                      const char        *name,
+                      const H5L_info_t  *info,
+                      void              *data)
+{
+  herr_t status;
+  herr_t return_val = 0;
+  H5O_info_t infobuf;
+  std::vector<std::string> &names = *((std::vector<std::string>*)data);
+
+  // Get type of the object.  There should *only* be groups.
+  status = H5Oget_info_by_name(loc_id, name, &infobuf, H5P_DEFAULT);
+  Insist(infobuf.type == H5O_TYPE_GROUP,
+  		   "Something other than a group was found nested in a parameter DB.");
+
+  // Keep the name
+  names.push_back(std::string(name));
+
+  return 0;
+}
+
+//---------------------------------------------------------------------------//
+template <>
+bool IO_HDF5::read_data<IO_HDF5::SP_input>(SP_input      db,     // db to add to
+                                           hid_t         root,   // current_db/db_data
+                                           std::string   name)   //  ''  ''
+{
+  // Preconditions
+  Require(db);
+
+  // Open the root db group
+  if (!exists(root, name.c_str())) return false;
+  hid_t group = H5Gopen(root, "db_data", H5P_DEFAULT);
+
+  // Note, we need to iterate through the groups in ~/db_data, as these
+  // represent imbedded db's.  For simplicity, only a second level is
+  // handled.  Iterating gets us the group names.
+  std::vector<std::string> names;
+  hid_t status = H5Literate(group,
+  		                      H5_INDEX_NAME,
+  		                      H5_ITER_NATIVE,
+  		                      NULL,
+  		                      find_db_groups,
+                            (void *) &names);
+
+  // Loop through the nested groups, and add the resulting db's to the
+  // main db.
+  for (int i = 0; i < names.size(); ++i)
+  {
+  	Assert(exists(group, names[i].c_str()));
+  	SP_input nested_db = read_input(group, names[i].c_str());
+  	db->put<SP_input>(names[i], nested_db);
+  }
+
+  // Postconditions
+  return true;
 }
 
 } // end namespace detran_ioutils

@@ -1,10 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   test_IO_HDF5.cc
- * \author Jeremy Roberts
- * \date   Jun 22, 2012
- * \brief  Test of IO_HDF5 class
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+/**
+ *  @file   test_IO_HDF5.cc
+ *  @author Jeremy Roberts
+ *  @date   Jun 22, 2012
+ *  @brief  Test of IO_HDF5 class
  */
 //---------------------------------------------------------------------------//
 
@@ -12,15 +11,13 @@
 #define TEST_LIST                     \
         FUNC(test_IO_HDF5_input)      \
         FUNC(test_IO_HDF5_material)   \
-        FUNC(test_IO_HDF5_mesh)
+        FUNC(test_IO_HDF5_mesh)       \
+        FUNC(test_IO_HDF5_nested)
 
 // Detran headers
 #include "utilities/TestDriver.hh"
 #include "ioutils/IO_HDF5.hh"
 #include "geometry/Mesh3D.hh"
-
-// Setup
-/* ... */
 
 using namespace detran_test;
 using namespace detran_utilities;
@@ -254,6 +251,80 @@ return 0;
   return 0;
 }
 
+// Test writing and reading of a DB containing another DB
+int test_IO_HDF5_nested(int argc, char *argv[])
+{
+	// write
+	{
+
+		//-- Create the main db
+		InputDB::SP_input db = InputDB::Create("outer_db");
+		db->put<int>("ip", 1);
+		db->put<double>("dp", 2.0);
+
+		//---- Create first nested db
+		InputDB::SP_input db2 = InputDB::Create("db2");
+		db2->put<int>("ip2", 2);
+		db->put<InputDB::SP_input>("database2", db2);
+
+		//---- Create second nested db
+		InputDB::SP_input db3 = InputDB::Create("db3");
+		db3->put<int>("ip3", 3);
+		//-------- A second level of nesting
+		InputDB::SP_input db4 = InputDB::Create("db4");
+		db4->put<int>("ip4", 4);
+		db3->put<InputDB::SP_input>("database4", db4);
+		db->put<InputDB::SP_input>("database3", db3);
+
+		// Create an IO_HDF5
+		IO_HDF5 io("test_nested.h5");
+
+		// Write to the HDF5 file.  The input has the filename
+		// to write out, or a default is used.
+		io.write(db);
+		io.close();
+
+	}
+
+	// read
+  if(1){
+		// Create an IO_HDF5
+		IO_HDF5 io("test_nested.h5");
+		IO_HDF5::SP_input db = io.read_input(), db2, db3, db4;
+
+		TEST(db->check("ip"));
+		TEST(db->get<int>("ip") == 1);
+		TEST(db->check("dp"));
+		TEST(soft_equiv(db->get<double>("dp"), 2.0));
+		db->display();
+    std::cout << std::endl << std::endl;
+
+		TEST(db->check("database2"));
+		db2 = db->get<IO_HDF5::SP_input>("database2");
+		TEST(db2->check("ip2"));
+		TEST(db2->get<int>("ip2") == 2);
+
+		TEST(db->check("database3"));
+		db3 = db->get<IO_HDF5::SP_input>("database3");
+		TEST(db3->check("ip3"));
+		TEST(db3->get<int>("ip3") == 3);
+		db3->display();
+
+		TEST(db3->check("database4"));
+		db4 = db3->get<IO_HDF5::SP_input>("database4");
+		TEST(db4->check("ip4"));
+		TEST(db4->get<int>("ip4") == 4);
+
+		io.close();
+  }
+
+//  // Create an IO_HDF5 and read input
+//  IO_HDF5 io2("test_nested.h5");
+//  InputDB::SP_input dbread;
+//  dbread = io.read_input();
+
+  return 0;
+}
 //---------------------------------------------------------------------------//
 //              end of test_IO_HDF5.cc
 //---------------------------------------------------------------------------//
