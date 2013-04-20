@@ -117,8 +117,6 @@ bool IO_HDF5::read_data(SP_input 		input,
   status = H5Dclose(dset);
   status = H5Sclose(space);
 
-
-  // Postconditions
   return true;
 }
 
@@ -180,8 +178,6 @@ bool IO_HDF5::write_map(hid_t group,
   status = H5Sclose(space);
   status = H5Tclose(filetype);
   status = H5Tclose(memtype);
-
-  // Postconditions
 
   return true;
 }
@@ -259,7 +255,6 @@ bool IO_HDF5::read_map(hid_t 										 group,
   status = H5Dclose(dset);
   status = H5Sclose(space);
 
-  // Postconditions
 
   return true;
 }
@@ -318,7 +313,6 @@ bool IO_HDF5::read_vec(hid_t group, const char* name, std::vector<T> &target)
 }
 
 //---------------------------------------------------------------------------//
-/// Write a scalar (int or double) attribute
 template <class T>
 bool IO_HDF5::write_scalar_attribute
 (hid_t group, const char* name, const T &value)
@@ -338,7 +332,6 @@ bool IO_HDF5::write_scalar_attribute
 }
 
 //---------------------------------------------------------------------------//
-/// Read a scalar (int or double) attribute
 template <class T>
 bool  IO_HDF5::read_scalar_attribute
 (hid_t group, const char* name, T &value)

@@ -42,50 +42,25 @@ IO_HDF5::~IO_HDF5()
 void IO_HDF5::open(const int flag)
 {
   Require(flag < END_HDF5_FILE_ACCESS);
+  const char* fname = d_filename.c_str();
   if (flag == HDF5_READ_ONLY)
-  {
-    d_file_id = H5Fopen(d_filename.c_str(), // filename
-                        H5F_ACC_RDONLY,     // do not overwrite existing file
-                        H5P_DEFAULT);       // file access property list
-  }
+    d_file_id = H5Fopen(fname, H5F_ACC_RDONLY, H5P_DEFAULT);
   else if (flag == HDF5_OVERWRITE)
-  {
-    d_file_id = H5Fcreate(d_filename.c_str(), // filename
-                          H5F_ACC_TRUNC,      // overwrite existing file
-                          H5P_DEFAULT,        // file create property list
-                          H5P_DEFAULT);       // file access property list
-  }
+    d_file_id = H5Fcreate(fname, H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
   d_open = true;
 }
 
 //---------------------------------------------------------------------------//
 void IO_HDF5::write(SP_input input)
 {
-  // Preconditions
   Require(input);
-
   if (!d_open) open(HDF5_OVERWRITE);
-
-  // Create the input group
-  hid_t group = H5Gcreate(d_file_id, "input",
-                          H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
-
-  // Write the data.
-  write_map(group, "int_data",     input->get_map<int>());
-  write_map(group, "dbl_data",     input->get_map<double>());
-  write_map(group, "str_data",     input->get_map<std::string>());
-  write_map(group, "vec_int_data", input->get_map<vec_int>());
-  write_map(group, "vec_dbl_data", input->get_map<vec_dbl>());
-  write_map(group, "db_data",      input->get_map<SP_input>());
-
-  // Close the group.
-  herr_t status = H5Gclose(group);
+  write(input, "input", d_file_id);
 }
 
 //---------------------------------------------------------------------------//
 void IO_HDF5::write(SP_input input, std::string name, hid_t root)
 {
-  // Preconditions
   Require(input);
   Require(d_open);
 
@@ -108,7 +83,6 @@ void IO_HDF5::write(SP_input input, std::string name, hid_t root)
 //---------------------------------------------------------------------------//
 void IO_HDF5::write(SP_material mat)
 {
-  // Preconditions
   Require(mat);
 
   if (!d_open) open(HDF5_OVERWRITE);
@@ -117,41 +91,25 @@ void IO_HDF5::write(SP_material mat)
   hid_t group = H5Gcreate(d_file_id, "material",
                           H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 
-  herr_t status;
-
   //-------------------------------------------------------------------------//
   // ATTRIBUTES
   //-------------------------------------------------------------------------//
 
-  hid_t att_space;
-  hid_t att;
+  bool flag;
 
-  // Create scalar attribute.
-  att_space = H5Screate(H5S_SCALAR);
-  att = H5Acreate(group, "number_groups", H5T_NATIVE_INT, att_space,
-                  H5P_DEFAULT, H5P_DEFAULT);
-  // Write scalar attribute.
   int ng = mat->number_groups();
-  status = H5Awrite(att, H5T_NATIVE_INT, (void *) &ng);
-  // Close dataspace and attribute
-  status = H5Sclose(att_space);
-  status = H5Aclose(att);
+  flag = write_scalar_attribute(group, "number_groups", ng);
+  Assert(flag);
 
-  // Create scalar attribute.
-  att_space = H5Screate(H5S_SCALAR);
-  att = H5Acreate(group, "number_materials", H5T_NATIVE_INT, att_space,
-                  H5P_DEFAULT, H5P_DEFAULT);
-  // Write scalar attribute.
   int nm = mat->number_materials();
-  status = H5Awrite(att, H5T_NATIVE_INT, (void *) &nm);
-  // Close dataspace and attribute
-  status = H5Sclose(att_space);
-  status = H5Aclose(att);
+  flag = write_scalar_attribute(group, "number_materials", nm);
+  Assert(flag);
 
   //-------------------------------------------------------------------------//
   // DATA
   //-------------------------------------------------------------------------//
 
+  herr_t status;
   hid_t dset;
   hid_t space;
 
@@ -169,45 +127,18 @@ void IO_HDF5::write(SP_material mat)
 
 
     // All data is ng long, except scatter, which is ng * ng
-    hsize_t dims1[1] = {ng};
     hsize_t dims2[2] = {ng, ng};
 
     // TOTAL, FISSION, NU, CHI, DIFFUSION
-    space  = H5Screate_simple(1, dims1, NULL);
-
-    dset   = H5Dcreate(group_m, "sigma_t", H5T_NATIVE_DOUBLE, space,
-                       H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
-    status = H5Dwrite(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL,
-                      H5P_DEFAULT, &mat->sigma_t(m)[0]);
-    status = H5Dclose(dset);
-
-    dset   = H5Dcreate(group_m, "sigma_f", H5T_NATIVE_DOUBLE, space,
-                       H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
-    status = H5Dwrite(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL,
-                      H5P_DEFAULT, &mat->sigma_f(m)[0]);
-    status = H5Dclose(dset);
-
-    dset   = H5Dcreate(group_m, "nu", H5T_NATIVE_DOUBLE, space,
-                       H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
-    status = H5Dwrite(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL,
-                      H5P_DEFAULT, &mat->nu(m)[0]);
-    status = H5Dclose(dset);
-
-    dset   = H5Dcreate(group_m, "chi", H5T_NATIVE_DOUBLE, space,
-                       H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
-    status = H5Dwrite(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL,
-                      H5P_DEFAULT, &mat->chi(m)[0]);
-    status = H5Dclose(dset);
-
-    dset   = H5Dcreate(group_m, "diff_coef", H5T_NATIVE_DOUBLE, space,
-                       H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
-    status = H5Dwrite(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL,
-                      H5P_DEFAULT, &mat->diff_coef(m)[0]);
-    status = H5Dclose(dset);
+    write_vec(group_m, "sigma_t",     mat->sigma_t(m));
+    write_vec(group_m, "sigma_a",     mat->sigma_a(m));
+    write_vec(group_m, "sigma_f",     mat->sigma_f(m));
+    write_vec(group_m, "nu",          mat->nu(m));
+    write_vec(group_m, "chi",         mat->chi(m));
+    write_vec(group_m, "diff_coef",   mat->sigma_a(m));
 
     // SCATTER
     space  = H5Screate_simple(2, dims2, NULL);
-
     // There may be a better way to avoid so much copying.  Even so, this
     // is *not* intended to be an interface for large data.
     double *ss;
@@ -222,16 +153,13 @@ void IO_HDF5::write(SP_material mat)
                       H5P_DEFAULT, ss);
     status = H5Dclose(dset);
     delete [] ss;
-
     status = H5Sclose(space);
 
-    // Close the group.
     status = H5Gclose(group_m);
   }
 
   // Close the group.
   status = H5Gclose(group);
-
 }
 
 //---------------------------------------------------------------------------//
@@ -282,32 +210,15 @@ void IO_HDF5::close()
 //---------------------------------------------------------------------------//
 IO_HDF5::SP_input IO_HDF5::read_input()
 {
-  // Create the input object.
-  SP_input input(new detran_utilities::InputDB(d_filename));
-
   // Open the file if necessary.
   if (!d_open) open(HDF5_READ_ONLY);
 
-  // Open the input group
-  htri_t flag = H5Lexists(d_file_id, "input", H5P_DEFAULT);
-  Insist(flag > 0, "Input group does not exist; can't read data.");
-  hid_t group = H5Gopen(d_file_id, "input", H5P_DEFAULT);
-
-  // Read data
-  read_data<int>(input, group,           "int_data");
-  read_data<double>(input, group,        "dbl_data");
-  read_data<std::string>(input, group,   "str_data");
-  read_data<vec_int>(input, group,       "vec_int_data");
-  read_data<vec_dbl>(input, group,       "vec_dbl_data");
-  read_data<SP_input>(input, group,      "db_data");
-
-
-  // Close the group.
-  herr_t status = H5Gclose(group);
+  // Create the database
+  SP_input db = read_input(d_file_id, "input");
 
   // Postconditions
-  Ensure(input);
-  return input;
+  Ensure(db);
+  return db;
 }
 
 //---------------------------------------------------------------------------//
@@ -335,7 +246,6 @@ IO_HDF5::SP_input IO_HDF5::read_input(hid_t root, const char* name)
   // Close the group.
   herr_t status = H5Gclose(group);
 
-  // Postconditions
   Ensure(db);
   return db;
 }
@@ -343,9 +253,6 @@ IO_HDF5::SP_input IO_HDF5::read_input(hid_t root, const char* name)
 //---------------------------------------------------------------------------//
 detran_material::Material::SP_material IO_HDF5::read_material()
 {
-  // Preconditions
-  /* ... */
-
   // Material to be filled.
   SP_material mat;
 
@@ -357,21 +264,18 @@ detran_material::Material::SP_material IO_HDF5::read_material()
   herr_t status;
 
   // Check if the material group exists.
-  flag = H5Lexists(d_file_id, "material", H5P_DEFAULT);
-  Insist(flag > 0, "Material group does not exist; can't read data.");
+  Insist(exists(d_file_id, "material"),
+    "Material group does not exist; can't read data.");
   hid_t group = H5Gopen(d_file_id, "material", H5P_DEFAULT);
 
   //-------------------------------------------------------------------------//
   // ATTRIBUTES
   //-------------------------------------------------------------------------//
 
-  // Read them.
   int ng;
   int nm;
-
   Insist(read_scalar_attribute(group, "number_groups", ng),
     "Number of groups missing from HDF5 file.");
-
   Insist(read_scalar_attribute(group, "number_materials", nm),
     "Number of materials missing from HDF5 file.");
 
@@ -380,14 +284,10 @@ detran_material::Material::SP_material IO_HDF5::read_material()
   //-------------------------------------------------------------------------//
 
   // Create the material object.
-  mat = new detran_material::Material(nm, ng, d_filename+"_material");
+  mat = new detran_material::Material(nm, ng, d_filename + "_material");
 
   hid_t dset;
   hid_t space;
-
-  // All data is ng long, except scatter, which is ng * ng
-  hsize_t dims1[1] = {ng};
-  hsize_t dims2[2] = {ng, ng};
 
   for (int m = 0; m < nm; m++)
   {
@@ -398,37 +298,27 @@ detran_material::Material::SP_material IO_HDF5::read_material()
     name += convert.str();
 
     // Switch to this material's group
+    Insist(exists(group, name.c_str()), "Group not found");
     hid_t group_m = H5Gopen(group, name.c_str(), H5P_DEFAULT);
 
-
     // TOTAL, FISSION, NU, CHI, DIFFUSION
-
-    // Read buffer.
     vec_dbl v(ng, 0.0);
-
     Insist(read_vec(group_m, "sigma_t", v),
       "Error reading SigmaT from HDF5.  SigmaT is *required*");
     mat->set_sigma_t(m, v);
-
-    if (read_vec(group_m, "sigma_f", v))
-      mat->set_sigma_f(m, v);
-    if (read_vec(group_m, "nu", v))
-      mat->set_nu(m, v);
-    if (read_vec(group_m, "chi", v))
-      mat->set_chi(m, v);
-    if (read_vec(group_m, "diff_coef", v))
-      mat->set_diff_coef(m, v);
+    if (read_vec(group_m, "sigma_a", v))    mat->set_sigma_a(m, v);
+    if (read_vec(group_m, "sigma_f", v))    mat->set_sigma_f(m, v);
+    if (read_vec(group_m, "nu", v))         mat->set_nu(m, v);
+    if (read_vec(group_m, "chi", v))        mat->set_chi(m, v);
+    if (read_vec(group_m, "diff_coef", v))  mat->set_diff_coef(m, v);
 
     // SCATTER
-
-    // Read buffer
     double *ss;
     ss = new double[ng * ng];
     dset   = H5Dopen(group_m, "sigma_s", H5P_DEFAULT);
     status = H5Dread(dset, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL,
                      H5P_DEFAULT, ss);
     status = H5Dclose(dset);
-
     for (int g = 0; g < ng; g++)
       for (int gp = 0; gp < ng; gp++)
         mat->set_sigma_s(m, g, gp, ss[gp + g * ng]);
@@ -443,18 +333,13 @@ detran_material::Material::SP_material IO_HDF5::read_material()
   // Close the group.
   status = H5Gclose(group);
 
-  // Postconditions
-  /* ... */
-
   return mat;
 }
 
 //---------------------------------------------------------------------------//
 detran_geometry::Mesh::SP_mesh IO_HDF5::read_mesh()
 {
-  // Preconditions
-  /* ... */
-
+  // Mesh to fill
   SP_mesh mesh;
 
   // Open the file if necessary.
@@ -522,9 +407,7 @@ detran_geometry::Mesh::SP_mesh IO_HDF5::read_mesh()
   // Close the group.
   herr_t status = H5Gclose(group);
 
-  // Postconditions
   Ensure(mesh);
-
   return mesh;
 }
 
@@ -535,14 +418,13 @@ herr_t find_db_groups(hid_t              loc_id,
                       void              *data)
 {
   herr_t status;
-  herr_t return_val = 0;
   H5O_info_t infobuf;
   std::vector<std::string> &names = *((std::vector<std::string>*)data);
 
   // Get type of the object.  There should *only* be groups.
   status = H5Oget_info_by_name(loc_id, name, &infobuf, H5P_DEFAULT);
   Insist(infobuf.type == H5O_TYPE_GROUP,
-  		   "Something other than a group was found nested in a parameter DB.");
+         "Something other than a group was found nested in a parameter DB.");
 
   // Keep the name
   names.push_back(std::string(name));
@@ -552,11 +434,10 @@ herr_t find_db_groups(hid_t              loc_id,
 
 //---------------------------------------------------------------------------//
 template <>
-bool IO_HDF5::read_data<IO_HDF5::SP_input>(SP_input      db,     // db to add to
-                                           hid_t         root,   // current_db/db_data
-                                           std::string   name)   //  ''  ''
+bool IO_HDF5::read_data<IO_HDF5::SP_input>(SP_input      db,
+                                           hid_t         root,
+                                           std::string   name)
 {
-  // Preconditions
   Require(db);
 
   // Open the root db group
@@ -564,26 +445,23 @@ bool IO_HDF5::read_data<IO_HDF5::SP_input>(SP_input      db,     // db to add to
   hid_t group = H5Gopen(root, "db_data", H5P_DEFAULT);
 
   // Note, we need to iterate through the groups in ~/db_data, as these
-  // represent imbedded db's.  For simplicity, only a second level is
-  // handled.  Iterating gets us the group names.
+  // represent imbedded db's.
   std::vector<std::string> names;
   hid_t status = H5Literate(group,
-  		                      H5_INDEX_NAME,
-  		                      H5_ITER_NATIVE,
-  		                      NULL,
-  		                      find_db_groups,
+                            H5_INDEX_NAME,
+                            H5_ITER_NATIVE,
+                            NULL,
+                            find_db_groups,
                             (void *) &names);
 
-  // Loop through the nested groups, and add the resulting db's to the
-  // main db.
+  // Loop through the nested groups, and add the resulting db's to the main db.
   for (int i = 0; i < names.size(); ++i)
   {
-  	Assert(exists(group, names[i].c_str()));
-  	SP_input nested_db = read_input(group, names[i].c_str());
-  	db->put<SP_input>(names[i], nested_db);
+    Assert(exists(group, names[i].c_str()));
+    SP_input nested_db = read_input(group, names[i].c_str());
+    db->put<SP_input>(names[i], nested_db);
   }
 
-  // Postconditions
   return true;
 }
 

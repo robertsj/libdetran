@@ -219,16 +219,6 @@ private:
 } // end namespace detran_ioutils
 
 //---------------------------------------------------------------------------//
-// HELPER FUNCTIONS
-//---------------------------------------------------------------------------//
-
-/// Given a location and name, find accessible group names.
-//herr_t find_groups(hid_t 							loc_id,
-//		               const char 	     *name,
-//		               const H5L_info_t  *info,
-//		               void 						 *data);
-
-//---------------------------------------------------------------------------//
 // TEMPLATE DEFINITIONS
 //---------------------------------------------------------------------------//
 
