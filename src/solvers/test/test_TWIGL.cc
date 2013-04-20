@@ -225,27 +225,28 @@ int test_TWIGL(int argc, char *argv[])
   //-------------------------------------------------------------------------//
 
   InputDB::SP_input inp(new InputDB("TWIGL benchmark"));
-  inp->put<int>("dimension",                2);
-  inp->put<int>("number_groups",            2);
-  inp->put<std::string>("equation",         "dd");
-  inp->put<std::string>("bc_west",          "reflect");
-  inp->put<std::string>("bc_east",          "vacuum");
-  inp->put<std::string>("bc_south",         "reflect");
-  inp->put<std::string>("bc_north",         "vacuum");
-  inp->put<int>("bc_zero_flux",             0);
-  inp->put<double>("ts_final_time",         0.6);
-  inp->put<double>("ts_step_size",          0.01);
-  inp->put<int>("ts_max_steps",             1000);
-  inp->put<int>("ts_scheme",                TS_2D::IMP);
-  inp->put<int>("ts_output",                0);
-  inp->put<int>("ts_monitor_level",         1);
-  inp->put<int>("ts_no_extrapolation",      0);
-  inp->put<string>("eigen_solver",          "arnoldi");
-  inp->put<int>("quad_number_polar_octant",      3);
-  inp->put<int>("quad_number_azimuth_octant",    3);
+  inp->put<int>("dimension",                      2);
+  inp->put<int>("number_groups",                  2);
+  inp->put<std::string>("equation",               "diffusion");
+  inp->put<std::string>("bc_west",                "reflect");
+  inp->put<std::string>("bc_east",                "vacuum");
+  inp->put<std::string>("bc_south",               "reflect");
+  inp->put<std::string>("bc_north",               "vacuum");
+  inp->put<int>("bc_zero_flux",                   0);
+  inp->put<double>("ts_final_time",               0.6);
+  inp->put<double>("ts_step_size",                0.01);
+  inp->put<int>("ts_max_steps",                   1000);
+  inp->put<int>("ts_scheme",                      TS_2D::BDF2);
+  inp->put<int>("ts_output",                      0);
+  inp->put<int>("ts_monitor_level",               1);
+  inp->put<int>("ts_no_extrapolation",            0);
+  inp->put<string>("eigen_solver",                "arnoldi");
+  inp->put<int>("quad_number_polar_octant",       3);
+  inp->put<int>("quad_number_azimuth_octant",     3);
 
-  //inp->put<string>("outer_solver",          "GMRES");
-  //inp->put<int>("outer_krylov_group_cutoff",      1);
+//  inp->put<string>("outer_solver",          "GMRES");
+//  inp->put<int>("outer_krylov_group_cutoff",      1);
+  //inp->put<int>("compute_boundary_flux",          1);
 
   inp->put<string>("inner_solver",          "SI");
   inp->put<double>("outer_tolerance",       1e-14);
@@ -274,7 +275,7 @@ int test_TWIGL(int argc, char *argv[])
   inp->put<int>("compute_boundary_flux",                1);
   if (inp->get<std::string>("equation") != "diffusion")
   {
-    inp->put<int>("ts_discrete",              0);
+    inp->put<int>("ts_discrete",              1);
     inp->put<int>("store_angular_flux",       1);
   }
 
@@ -291,7 +292,7 @@ int test_TWIGL(int argc, char *argv[])
   // MESH
   //-------------------------------------------------------------------------//
 
-  TS_2D::SP_mesh mesh = get_mesh(1);
+  TS_2D::SP_mesh mesh = get_mesh(2);
 
   //-------------------------------------------------------------------------//
   // STEADY STATE

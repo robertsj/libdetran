@@ -63,6 +63,7 @@ public:
     ierr = MatSetSizes(d_petsc_matrix, d_m, d_n, PETSC_DETERMINE, PETSC_DETERMINE);
     ierr = MatSetType(d_petsc_matrix, MATSHELL);
     ierr = MatShellSetContext(d_petsc_matrix, d_context);
+    ierr = MatSetUp(d_petsc_matrix);
     Ensure(!ierr);
 #endif
     set_operation();
