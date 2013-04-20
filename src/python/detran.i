@@ -1,12 +1,12 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   detran.i
- * \author Jeremy Roberts
- * \brief  Python interface for detran library.
+/**
+ *  @file   detran.i
+ *  @author Jeremy Roberts
+ *  @brief  Python interface for detran library.
  */
 //---------------------------------------------------------------------------//
 
-%module pydetran
+%module(directors="1", allprotected="1") pydetran
 %{
 
 //---------------------------------------------------------------------------//
@@ -25,97 +25,87 @@
 // LEVEL 1
 //---------------------------------------------------------------------------//
   
-// Angle
-#include "Collocated.hh"
-#include "GaussLegendre.hh"
-#include "LevelSymmetric.hh"
-#include "MomentToDiscrete.hh"
-#include "PolarQuadrature.hh"
-#include "Quadrature.hh"
-#include "QuadratureFactory.hh"
-#include "QuadratureMOC.hh"
-#include "QuadrupleRange.hh"
-#include "SphericalHarmonics.hh"
-#include "TabuchiYamamoto.hh"
-#include "Uniform.hh"
-#include "UniformEqual.hh"
-
+// Callow
+#include "callow/callow_config.hh"
+#include "callow/utils/Initialization.hh"
+#include "callow/utils/Typedefs.hh"
+#include "callow/vector/Vector.hh"
+#include "callow/matrix/MatrixBase.hh"
+#include "callow/matrix/Matrix.hh"
+#include "callow/matrix/MatrixShell.hh"
+#include "callow/solver/LinearSolverCreator.hh"
+#include "callow/solver/EigenSolverCreator.hh"
+#include "callow/preconditioner/Preconditioner.hh"
+#include "angle/detran_angle.hh"
 
 // Geometry
-#include "Assembly.hh"
-#include "Core.hh"
-#include "Mesh.hh"
-#include "MeshMOC.hh"
-#include "Mesh1D.hh" 
-#include "Mesh2D.hh" 
-#include "Mesh3D.hh"   
-#include "PinCell.hh"
-#include "Segment.hh"
-#include "Track.hh"
-#include "TrackDB.hh"
-#include "Tracker.hh"
+#include "geometry/Assembly.hh"
+#include "geometry/Core.hh"
+#include "geometry/Mesh.hh"
+#include "geometry/MeshMOC.hh"
+#include "geometry/Mesh1D.hh" 
+#include "geometry/Mesh2D.hh" 
+#include "geometry/Mesh3D.hh"   
+#include "geometry/PinCell.hh"
+#include "geometry/Segment.hh"
+#include "geometry/Track.hh"
+#include "geometry/TrackDB.hh"
+#include "geometry/Tracker.hh"
 
 // Material
-#include "Material.hh"
-  
+#include "material/Material.hh"
+
+// External source
+#include "external_source/ExternalSource.hh"
+#include "external_source/ConstantSource.hh"
+#include "external_source/DiscreteSource.hh"
+#include "external_source/IsotropicSource.hh"
+
 //---------------------------------------------------------------------------//
 // LEVEL 2 
 //---------------------------------------------------------------------------//  
-  
+
+// Discretization
+#include "discretization/DimensionTraits.hh"
+    
+// Boundary
+#include "boundary/BoundaryDiffusion.hh"
+#include "boundary/BoundarySN.hh"
+#include "boundary/BoundaryMOC.hh"
+
 // Transport
-//#include "Acceleration.hh"
-#include "BoundaryBase.hh"
-#include "Boundary.hh"
-#include "BoundaryMOC.hh"
-#include "FissionSource.hh"
-#include "ExternalSource.hh"
-#include "ConstantSource.hh"
-#include "DiscreteSource.hh"
-#include "State.hh"
-#include "SweepSource.hh"
-#include "Traits.hh"
-//#include "WithinGroupAcceleration.hh"
-#include "Sweeper.hh"
-#include "Sweeper1D.hh"
-#include "Sweeper2D.hh"
-#include "Sweeper3D.hh"
-#include "Sweeper2DMOC.hh"
-//
-#include "Equation_DD_1D.hh"
-#include "Equation_DD_2D.hh"
-#include "Equation_DD_3D.hh"
-#include "Equation_SC_2D.hh"
-#include "Equation_SD_1D.hh"
-#include "Equation_SD_2D.hh"
-#include "Equation_SC_MOC.hh"
-//
-#include "ReactionRates.hh"
+#include "transport/FissionSource.hh"
+#include "transport/State.hh"
+#include "transport/SweepSource.hh"
+  
+// Kinetics
+//   material
+#include "kinetics/KineticsMaterial.hh"
+#include "kinetics/TimeDependentMaterial.hh"
+#include "kinetics/PyTimeDependentMaterial.hh"
+#include "kinetics/LinearMaterial.hh"
+#include "kinetics/LRA.hh"
+//   source
+#include "kinetics/TimeDependentExternalSource.hh"
+#include "kinetics/LinearExternalSource.hh"
+#include "kinetics/PulsedExternalSource.hh"
 
 //---------------------------------------------------------------------------//
 // LEVEL 3 
 //---------------------------------------------------------------------------//  
-      
-// Diffusion
-#ifdef DETRAN_ENABLE_SLEPC
-#include "DiffusionEigensolver.hh"
-#endif
-#ifdef DETRAN_ENABLE_PETSC
-#include "GainOperator.hh"
-#include "LossOperator.hh"
-#endif
-  
-// Solvers
-#include "InnerIteration.hh"
-#include "GaussSeidel.hh"
-#include "PowerIteration.hh"
-#include "SourceIteration.hh"
 
+// Solvers
+#include "FixedSourceManager.hh"
+#include "EigenvalueManager.hh"
+#include "time/TimeStepper.hh"
+  
 //---------------------------------------------------------------------------//
 // LEVEL 4 
 //---------------------------------------------------------------------------//  
 
+#include "ReactionRates.hh"
 #include "Manager.hh"
-#include "PyExecute.hh"
+//#include "PyExecute.hh"
 #ifdef DETRAN_ENABLE_SILO
 #include "SiloOutput.hh"
 #endif
@@ -128,7 +118,7 @@
 //------------------------------------//
 // CONFIGURATION
 
-%include "detran_config.h"
+%include "detran_config.hh"
 
 //------------------------------------//
 // LEVEL 0
@@ -139,31 +129,33 @@
 //------------------------------------//
 // LEVEL 1
 
+// Callow
+//%include "callow.i"
 // Angle
 %include "detran_angle.i"
-
 // Geometry
 %include "detran_geometry.i"
-
 // Material
-%include "detran_materials.i"
+%include "detran_material.i"
+// External source
+%include "detran_external_source.i"
 
 //------------------------------------//
 // LEVEL 2
-
+//
 // Transport
+%include "detran_discretization.i"
+%include "detran_boundary.i"
 %include "detran_transport.i"
 
 //------------------------------------//
 // LEVEL 3
 
-// Diffusion
-#ifdef DETRAN_ENABLE_PETSC
-%include "detran_diffusion.i"
-#endif
-
 // Transport
 %include "detran_solvers.i"
+
+// Kinetics
+%include "detran_kinetics.i"
 
 //------------------------------------//
 // LEVEL 4
@@ -174,40 +166,8 @@
 // Post process
 %include "detran_postprocess.i"
 
-// Anyhere in C/C++ that we need (argc, argv), 
-%typemap(in) (int argc, char *argv[]) 
-{
-  /* Check if is a list */
-  if (PyList_Check($input)) 
-  {
-    int i;
-    $1 = PyList_Size($input);
-    $2 = (char **) malloc(($1+1)*sizeof(char *));
-    for (i = 0; i < $1; i++) 
-    {
-      PyObject *o = PyList_GetItem($input,i);
-      if (PyString_Check(o))
-        $2[i] = PyString_AsString(PyList_GetItem($input,i));
-      else 
-      {
-        PyErr_SetString(PyExc_TypeError,"list must contain strings");
-        free($2);
-        return NULL;
-      }
-    }
-    $2[i] = 0;
-  } 
-  else 
-  {
-    PyErr_SetString(PyExc_TypeError,"not a list");
-    return NULL;
-  }
-}
-%typemap(freearg) (int argc, char *argv[]) {
-  free((char *) $2);
-}
-%include "PyExecute.hh"
+//%include "PyExecute.hh"
 %include "Manager.hh"
-%template(Execute1D) detran::PyExecute<detran::_1D>;
-%template(Execute2D) detran::PyExecute<detran::_2D>;
-%template(Execute3D) detran::PyExecute<detran::_3D>;
+//%template(Execute1D) detran::PyExecute<detran::_1D>;
+//%template(Execute2D) detran::PyExecute<detran::_2D>;
+//%template(Execute3D) detran::PyExecute<detran::_3D>;

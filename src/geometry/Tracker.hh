@@ -10,20 +10,15 @@
 #ifndef TRACKER_HH_
 #define TRACKER_HH_
 
-// Detran
-#include "MeshMOC.hh"
-#include "QuadratureMOC.hh"
 #include "Track.hh"
 #include "TrackDB.hh"
-
-// Utilities
-#include "DBC.hh"
-#include "SP.hh"
-
-// System
+#include "MeshMOC.hh"
+#include "angle/QuadratureMOC.hh"
+#include "utilities/DBC.hh"
+#include "utilities/SP.hh"
 #include <vector>
 
-namespace detran
+namespace detran_geometry
 {
 
 /*!
@@ -35,19 +30,29 @@ class Tracker
 
 public:
 
-  typedef SP<Tracker>                   SP_tracker;
-  typedef Mesh::SP_mesh                 SP_mesh;
-  typedef QuadratureMOC::SP_quadrature  SP_quadrature;
-  typedef Track::SP_track               SP_track;
-  typedef TrackDB::SP_trackdb           SP_trackdb;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
+
+  typedef detran_utilities::SP<Tracker>               SP_tracker;
+  typedef Mesh::SP_mesh                               SP_mesh;
+  typedef detran_angle::QuadratureMOC::SP_quadrature  SP_quadrature;
+  typedef Track::SP_track                             SP_track;
+  typedef TrackDB::SP_trackdb                         SP_trackdb;
+  typedef detran_utilities::vec_dbl                   vec_dbl;
+  typedef detran_utilities::Point                     Point;
+
+  //-------------------------------------------------------------------------//
+  // PUBLIC INTERFACE
+  //-------------------------------------------------------------------------//
 
   Tracker(SP_mesh mesh, SP_quadrature quadrature);
 
-  static SP_tracker Create(SP<Mesh>       mesh,
-                           SP<Quadrature> quadrature)
+  static SP_tracker
+  Create(SP_mesh       mesh,
+         SP_quadrature quadrature)
   {
-    SP_tracker p;
-    p = new Tracker(mesh, quadrature);
+    SP_tracker p(new Tracker(mesh, quadrature));
     return p;
   }
 
@@ -69,8 +74,9 @@ public:
 
 private:
 
-  /// \name Private Data
-  /// \{
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   SP_mesh d_mesh;
 
@@ -85,19 +91,16 @@ private:
 
   vec_dbl d_y;
 
-  /// \}
-
-  /// \name Implementation
-  /// \{
+  //-------------------------------------------------------------------------//
+  // IMPLEMENTATION
+  //-------------------------------------------------------------------------//
 
   void generate_tracks();
-
   void find_starting_cell(Point enter, double tan_phi, int *IJ);
 
-  /// \}
 };
 
-} // end namespace detran
+} // end namespace detran_geometry
 
 #endif /* TRACKER_HH_ */
 

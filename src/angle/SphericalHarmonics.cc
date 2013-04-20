@@ -1,91 +1,85 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   SphericalHarmonics.cc
- * \author Jeremy Roberts
- * \date   Jun 30, 2011
- * \brief
- * \note   Copyright (C) 2011 Jeremy Roberts.
+/**
+ *  @file   SphericalHarmonics.cc
+ *  @author Jeremy Roberts
+ *  @date   Jun 30, 2011
+ *  @brief  SphericalHarmonics member definitions
  */
 //---------------------------------------------------------------------------//
 
-// Detran
 #include "SphericalHarmonics.hh"
-
-// Utilities
-#include "Constants.hh"
-#include "DBC.hh"
-#include "GenException.hh"
-#include "SoftEquivalence.hh"
-
-// System
+#include "utilities/Constants.hh"
+#include "utilities/DBC.hh"
+#include "utilities/GenException.hh"
+#include "utilities/SoftEquivalence.hh"
 #include <cmath>
+#ifdef DETRAN_ENABLE_BOOST
+#include <boost/math/special_functions/spherical_harmonic.hpp>
+#include <boost/math/special_functions/factorials.hpp>
+#endif
 
-namespace detran
+namespace detran_angle
 {
 
 // Calculate the spherical harmonic of degree l, order m
 // given  cos(polar) and azimuthal angle
-double SphericalHarmonics::Y_lm(int l,
-                                int m,
-                                double xi,
-                                double varphi )
+double SphericalHarmonics::Y_lm(const int    l,
+                                const int    m,
+                                const double xi,
+                                const double varphi )
 {
-
-    using std::sqrt;
-
     Require (xi >= -1.0);
     Require (xi <= 1.0);
     Require (varphi >= 0.0);
-    Require (varphi <= two_pi);
+    Require (varphi <= detran_utilities::two_pi);
 
-    double sintheta = sqrt(1.0 - xi*xi);
-    double mu     = sintheta*cos(varphi);
-    double eta    = sintheta*sin(varphi);
-    return get_Y_lm(l,m,mu,eta,xi);
+    double sintheta = std::sqrt(1.0 - xi*xi);
+    double mu  = sintheta*std::cos(varphi);
+    double eta = sintheta*std::sin(varphi);
+    return get_Y_lm(l, m, mu, eta, xi);
 
 }
 
 // Calculate the spherical harmonic of degree l, order m
 // given the triplet of directional cosines
-double SphericalHarmonics::Y_lm( int l,
-                              int m,
-                              double mu,
-                              double eta,
-                              double xi )
+double SphericalHarmonics::Y_lm(const int    l,
+                                const int    m,
+                                const double mu,
+                                const double eta,
+                                const double xi )
 {
-
-    return get_Y_lm(l,m,mu,eta,xi);
-
+    return get_Y_lm(l, m, mu, eta, xi);
 }
 
 // Calculate the Legendre polynomial of degree l
 // given the polar angle cosine
-double SphericalHarmonics::Y_lm( int l,
-                              double xi )
+double SphericalHarmonics::Y_lm(const int    l,
+                                const double xi )
 {
-
-    return get_Y_lm(l,0,0,0,xi);
-
+    return get_Y_lm(l, 0, 0, 0, xi);
 }
 
-double  SphericalHarmonics::get_Y_lm(int l,
-                                     int m,
-                                     double mu,
-                                     double eta,
-                                     double xi )
+double SphericalHarmonics::get_Y_lm(const int    l,
+                                    const int    m,
+                                    const double mu,
+                                    const double eta,
+                                    const double xi )
 {
   using std::fabs;
-  Require (l >= 0);
-  Require (m <= l);
-  Require (m >= -l);
-  Require ( (mu >= -1.0) && (mu <= 1.0) );
-  Require ( (eta >= -1.0) && (eta <= 1.0) );
-  Require ( (xi >= -1.0) && (xi <= 1.0) );
+  Require(l >= 0);
+  Require(m <= l);
+  Require(m >= -l);
+  Require(mu >= -1.0);
+  Require(mu <= 1.0);
+  Require(eta >= -1.0);
+  Require(eta <= 1.0);
+  Require(xi >= -1.0);
+  Require(xi <= 1.0);
   double unity = mu * mu + eta * eta + xi * xi;
-  if (!soft_equiv(1.0, unity, 1.0e-5))
+  if (!detran_utilities::soft_equiv(1.0, unity, 1.0e-5))
   {
-    Require( soft_equiv( fabs(mu), 0.0 ) &&
-             soft_equiv( fabs(eta), 0.0 ) );
+    Require( detran_utilities::soft_equiv( fabs(mu), 0.0 ) &&
+             detran_utilities::soft_equiv( fabs(eta), 0.0 ) );
   }
 
   if ( l == 0 )
@@ -129,13 +123,31 @@ double  SphericalHarmonics::get_Y_lm(int l,
     else if ( m == 3 )
       return 0.7905694150420948*mu*(mu*mu-3.0*eta*eta);
   }
+  else
+  {
+#ifdef DETRAN_ENABLE_BOOST
+    double phi   = std::acos(mu / std::sqrt(1.0 - xi*xi));
+    double theta = std::acos(xi);
+    // Normalization so that phi_00 = phi, phi_1m = current components, etc.
+    // This leads to a match with definitions given by Hebert.
+    double del = (m == 0) ? 1.0 : 2.0;
+    double norm = std::pow(-1.0, m) *
+                  std::sqrt(del * detran_utilities::four_pi / (2.*l + 1.));
+    if (m >= 0)
+      return norm * boost::math::spherical_harmonic_r(l, m, theta, phi);
+    else
+      return norm * boost::math::spherical_harmonic_i(l,-m, theta, phi);
+#else
+    // Degree not implemented.
+    THROW("Maximum Legendre order is 3. For higher orders, enable Boost.");
 
-  // Degree not implemented.
-  THROW("l too large; maximum Legendre order is 3.");
-
+#endif
+  }
 }
 
-} // end namespace detran
+
+
+} // end namespace detran_angle
 
 //---------------------------------------------------------------------------//
 //              end of SphericalHarmonics.cc

@@ -7,13 +7,10 @@
  */
 //---------------------------------------------------------------------------//
 
-// Detran
 #include "TrackDB.hh"
-
-// System
 #include <iostream>
 
-namespace detran
+namespace detran_geometry
 {
 
 void TrackDB::normalize(vec_dbl &volume)
@@ -29,7 +26,7 @@ void TrackDB::normalize(vec_dbl &volume)
         Assert(region < d_number_regions);
         appx_volume[region] +=
           d_tracks[a][t]->segment(s).length() * d_spacing[a] *
-            d_quadrature->azimuth_weight(a) / pi;
+            d_quadrature->azimuth_weight(a) / detran_utilities::pi;
       }
     }
   }
@@ -70,10 +67,9 @@ void TrackDB::display() const
       cout << "       track = " << t << *d_tracks[a][t] << endl;
     }
   }
-
 }
 
-} // end namespace detran
+} // end namespace detran_geometry
 
 //---------------------------------------------------------------------------//
 //              end of file TrackDB.cc

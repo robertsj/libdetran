@@ -1,28 +1,25 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Equation_DD_1D.i.hh
- * \author Jeremy Roberts
- * \date   Mar 31, 2012
- * \brief  Equation_DD_1D inline member definitions.
- * \note   Copyright (C) 2012 Jeremy Roberts.
+/**
+ *  @file   Equation_DD_1D.i.hh
+ *  @author Jeremy Roberts
+ *  @date   Mar 31, 2012
+ *  @brief  Equation_DD_1D inline member definitions.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef EQUATION_DD_1D_I_HH_
-#define EQUATION_DD_1D_I_HH_
+#ifndef detran_EQUATION_DD_1D_I_HH_
+#define detran_EQUATION_DD_1D_I_HH_
 
 #include <iostream>
 
 namespace detran
 {
 
-
-inline void Equation_DD_1D::setup_angle(int angle)
+//---------------------------------------------------------------------------//
+inline void Equation_DD_1D::setup_angle(const size_t angle)
 {
-  // Currently, only the 1st octant values should be in use.
-  Require(angle >= 0);
   Require(angle < d_quadrature->number_angles_octant());
-  double mu  = d_quadrature->mu(0, angle);
+  double mu = d_quadrature->mu(0, angle);
   for (int i = 0; i < d_mesh->number_cells_x(); i++)
   {
     d_coef_x[i] = 2.0 * mu / d_mesh->dx(i);
@@ -30,9 +27,10 @@ inline void Equation_DD_1D::setup_angle(int angle)
   d_angle = angle;
 }
 
-inline void Equation_DD_1D::solve(int i,
-                                  int j,
-                                  int k,
+//---------------------------------------------------------------------------//
+inline void Equation_DD_1D::solve(const size_t i,
+                                  const size_t j,
+                                  const size_t k,
                                   moments_type &source,
                                   face_flux_type &psi_in,
                                   face_flux_type &psi_out,
@@ -40,16 +38,13 @@ inline void Equation_DD_1D::solve(int i,
                                   angular_flux_type &psi)
 {
   // Preconditions.  (The client *must* set group and angles.)
-  Require(d_g >= 0);
-  Require(d_angle >= 0);
-  Require(d_octant >= 0);
   Require(j == 0);
   Require(k == 0);
 
   // Compute cell-center angular flux.
   int cell = d_mesh->index(i);
-  double coef = 1.0 / (d_material->sigma_t(d_mat_map[cell], d_g) +
-                       d_coef_x[i]);
+  double coef = 1.0 /
+                (d_material->sigma_t(d_mat_map[cell], d_g) + d_coef_x[i]);
   double psi_center = coef * (source[cell] + d_coef_x[i] * psi_in);
 
   // Compute outgoing fluxes.
@@ -65,7 +60,7 @@ inline void Equation_DD_1D::solve(int i,
 
 } // end namespace detran
 
-#endif /* EQUATION_DD_1D_I_HH_ */
+#endif /* detran_EQUATION_DD_1D_I_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of Equation_DD_1D.i.hh

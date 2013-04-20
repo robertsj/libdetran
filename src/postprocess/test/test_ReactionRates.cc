@@ -25,6 +25,9 @@
 #include <iostream>
 
 using namespace detran_test;
+using namespace detran_utilities;
+using namespace detran_geometry;
+using namespace detran_material;
 using namespace detran_postprocess;
 using namespace detran;
 using namespace std;

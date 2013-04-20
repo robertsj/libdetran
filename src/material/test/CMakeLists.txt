@@ -9,7 +9,7 @@ message( "++ Adding detran material tests." )
 #------------------------------------------------------------------------------#
 
 ADD_EXECUTABLE(test_Material test_Material.cc)
-TARGET_LINK_LIBRARIES(test_Material materials utilities)
+TARGET_LINK_LIBRARIES(test_Material material utilities)
 
 #------------------------------------------------------------------------------#
 # Define tests

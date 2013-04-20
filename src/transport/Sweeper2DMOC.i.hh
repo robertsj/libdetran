@@ -1,19 +1,15 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Sweeper2DMOC.i.hh
- * \author Jeremy Roberts
- * \date   Jun 22, 2012
- * \brief  Sweeper2DMOC inline member definitions.
+/**
+ *  @file   Sweeper2DMOC.i.hh
+ *  @author Jeremy Roberts
+ *  @date   Jun 22, 2012
+ *  @brief  Sweeper2DMOC inline member definitions.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef SWEEPER2DMOC_I_HH_
-#define SWEEPER2DMOC_I_HH_
+#ifndef detran_SWEEPER2DMOC_I_HH_
+#define detran_SWEEPER2DMOC_I_HH_
 
-// Detran
-#include "Equation_SC_MOC.hh"
-
-// System
 #include <iostream>
 #ifdef DETRAN_ENABLE_OPENMP
 #include <omp.h>
@@ -22,7 +18,7 @@
 namespace detran
 {
 
-// Sweep.
+//---------------------------------------------------------------------------//
 template <class EQ>
 inline void Sweeper2DMOC<EQ>::sweep(moments_type &phi)
 {
@@ -55,11 +51,12 @@ inline void Sweeper2DMOC<EQ>::sweep(moments_type &phi)
   double psi_in  = 0;
   double psi_out = 0;
 
-  QuadratureMOC::SP_quadrature q = d_quadrature;
+  SP_quadrature q = d_quadrature;
 
   // Sweep over all octants.
-  for (int o = 0; o < 4; o++)
+  for (int oo = 0; oo < 4; oo++)
   {
+    size_t o = d_ordered_octants[oo];
     //cout << "OCTANT: " << o << endl;
 
     // Setup equation for this octant.
@@ -82,6 +79,7 @@ inline void Sweeper2DMOC<EQ>::sweep(moments_type &phi)
       equation.setup_polar(polar);
 
       // Switch the azimuth index to correct one for track access.
+      // \todo Adjoint sweeps should probably be controlled here
       bool track_reverse = false;
       switch (o)
       {
@@ -205,9 +203,6 @@ inline void Sweeper2DMOC<EQ>::sweep(moments_type &phi)
   return;
 }
 
-// Instantiate
-template class Sweeper2DMOC<Equation_SC_MOC>;
-
 } // end namespace detran
 
-#endif /* SWEEPER2DMOC_I_HH_ */
+#endif /* detran_SWEEPER2DMOC_I_HH_ */

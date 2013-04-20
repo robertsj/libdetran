@@ -1,19 +1,19 @@
 README - libdetran
 ------------------
 
-This is a set of simple utilites for deterministic transport, mostly
-with a focus on reactor physics.  A lot of the code is taken from
-things I've already done, adapted a bit, and put in one set of 
-libraries for use via C++, Python, or (maybe) MATLAB.  There are
-other similar projects out there (PyTRT is a very complete 
-example), but, as is true for much development work, I needed my own tools 
-for specific things.
+Detran is a set of simple utilities for deterministic transport, mostly
+with a focus on easy algorithm development for reactor physics.  Several
+aspects of the design are directly inspired by ORNL code Denovo, especially
+with respect to object orientation.  
 
-Much of the capabilities are echoed in MATLAB for in MTP.
-
-Features (to be) included:
-  - Simple multigroup data container class
-  - Cartesian mesh class
-  - Quadrature for SN
-  - SN sweeping routines 
-  - Various solvers (SI, Krylov, etc.) for within-group and multigroup solves
+Current features:
+  - Multigroup diffusion, discrete ordinates, and method of 
+    characteristics
+  - Various built-in fixed source and eigenvalue solvers that can be extended
+    via use of PETSc and SLEPc
+  - Initial support for time-dependent transport with time varying sources
+    and materials as well as support for arbitrary state-dependent materials
+    for modeling feedback
+  - Executable input via HDF5 or a somewhat limited text-based input
+  - Full access via a SWIG-generated Python front end
+  - Output to Silo for visualization in Visit or Paraview

@@ -1,20 +1,15 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Sweeper1D.i.hh
- * \author Jeremy Roberts
- * \date   Mar 24, 2012
- * \brief  Sweeper1D inline member definitions.
- * \note   Copyright (C) 2012 Jeremy Roberts.
+/**
+ *  @file   Sweeper1D.i.hh
+ *  @author Jeremy Roberts
+ *  @date   Mar 24, 2012
+ *  @brief  Sweeper1D inline member definitions.
  */
 //---------------------------------------------------------------------------//
-#ifndef SWEEPER1D_I_HH_
-#define SWEEPER1D_I_HH_
 
-// Detran
-#include "Equation_DD_1D.hh"
-#include "Equation_SD_1D.hh"
+#ifndef detran_SWEEPER1D_I_HH_
+#define detran_SWEEPER1D_I_HH_
 
-// System
 #include <iostream>
 #ifdef DETRAN_ENABLE_OPENMP
 #include <omp.h>
@@ -23,12 +18,11 @@
 namespace detran
 {
 
-// Sweep.
+//---------------------------------------------------------------------------//
 template <class EQ>
 inline void Sweeper1D<EQ>::sweep(moments_type &phi)
 {
   // Preconditions
-  Require(d_g >= 0);
   Require(d_g < d_material->number_groups());
 
   // Reset the flux moments
@@ -54,12 +48,16 @@ inline void Sweeper1D<EQ>::sweep(moments_type &phi)
   SweepSource<_1D>::sweep_source_type source(d_mesh->number_cells(), 0.0);
 
   // Temporary edge fluxes
-  Equation<_1D>::face_flux_type psi_in = 0.0;
-  Equation<_1D>::face_flux_type psi_out = 0.0;
+  typename Equation_T::face_flux_type psi_in = 0.0;
+  typename Equation_T::face_flux_type psi_out = 0.0;
+
+  // Reference to boundary to simplify clutter.
+  Boundary_T &b = *d_boundary;
 
   // Sweep over all octants
-  for (int o = 0; o < 2; o++)
+  for (size_t oo = 0; oo < 2; oo++)
   {
+    size_t o = d_ordered_octants[oo];
 
     // Setup equation for this octant.
     equation.setup_octant(o);
@@ -80,39 +78,34 @@ inline void Sweeper1D<EQ>::sweep(moments_type &phi)
       if (d_update_psi) psi = d_state->psi(d_g, o, a);
 
       // Update the boundary for this angle.
-      if (d_update_boundary) d_boundary->update(d_g, o, a);
+      if (d_update_boundary) b.update(d_g, o, a);
 
       // Get boundary fluxes.
-      psi_out =
-        (*d_boundary)(d_face_index[o][Mesh::VERT][Boundary_T::IN], o, a, d_g);
+      psi_out = b(d_face_index[o][Mesh::VERT][Boundary_T::IN], o, a, d_g);
+
+      // Get index and increment
+      int i  = d_space_ranges[o][0][0];
+      int di = d_space_ranges[o][0][1];
 
       // Tally the incident flux.
-      if (d_current)
-      {
-        d_current->tally(index(o, 1, 0), 0, 0, d_g, o, a,
-                         CurrentTally_T::X_DIRECTED, psi_out);
-      }
+      if (d_tally) d_tally->tally(i, 0, 0, d_g, o, a, Tally_T::X_DIRECTED, psi_out);
 
       // Sweep over all cells.
-      for (int ii = 0; ii < d_mesh->number_cells_x(); ii++)
+      for (int ii = 0; ii < d_mesh->number_cells_x(); ++ii, i += di)
       {
-        // Get actual index.
-        int i = index(o, 1, ii);
-
         // Set the incident cell surface flux.
         psi_in = psi_out;
 
         // Solve the equation in this cell.
         equation.solve(i, 0, 0, source, psi_in, psi_out, phi, psi);
 
-        // ACCELERATION
-        //if (d_acceleration) d_acceleration->tally(i, 0, 0, o, a, psi_out);
+        // Tally the outgoing cell flux
+        if (d_tally) d_tally->tally(i, 0, 0, d_g, o, a, Tally_T::X_DIRECTED, psi_out);
 
       } // end x loop
 
       // Update boundary.
-      (*d_boundary)
-        (d_face_index[o][Mesh::VERT][Boundary_T::OUT], o, a, d_g) = psi_out;
+      b(d_face_index[o][Mesh::VERT][Boundary_T::OUT], o, a, d_g) = psi_out;
 
       // Update the angular flux.
       if (d_update_psi) d_state->psi(d_g, o, a) = psi;
@@ -142,11 +135,6 @@ inline void Sweeper1D<EQ>::sweep(moments_type &phi)
   return;
 }
 
-// Instantiate
-template class Sweeper1D<Equation_SD_1D>;
-template class Sweeper1D<Equation_DD_1D>;
-//template class Sweeper1D<Equation_SC_1D>;
-
 } // end namespace detran
 
-#endif /* SWEEPER1D_I_HH_ */
+#endif /* detran_SWEEPER1D_I_HH_ */

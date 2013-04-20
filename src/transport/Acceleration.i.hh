@@ -2,7 +2,7 @@
 /*!
  * \file   Acceleration.i.hh
  * \author Jeremy Roberts
- * \date   May 17, 2012
+ * @date   May 17, 2012
  * \brief  Acceleration inline member definitions.
  * \note   Copyright (C) 2012 Jeremy Roberts.
  */

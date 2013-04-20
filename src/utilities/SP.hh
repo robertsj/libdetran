@@ -19,7 +19,11 @@
 #include <boost/archive/text_oarchive.hpp>
 #endif
 
-namespace detran
+#include <iostream>
+#include <string>
+#include <typeinfo>
+
+namespace detran_utilities
 {
  
 //---------------------------------------------------------------------------//
@@ -83,7 +87,7 @@ private:
 
 };
 
-//===========================================================================//
+//---------------------------------------------------------------------------//
 /*!
  * \class SP
  * 
@@ -133,11 +137,13 @@ private:
  * to which these SP's point are <b>not</b> thread safe, but there are
  * few, if any, cases where that behavior would be required.
  *
- * \example utilities/test/test_SP.cc
- *
- * denovo::SP (smart pointer) usage example.
  */
-//===========================================================================//
+/*!
+ *  \example utilities/test/test_SP.cc
+ *
+ *  Test of class SP.
+ */
+//---------------------------------------------------------------------------//
 
 template<class T>
 class SP 
@@ -180,10 +186,18 @@ public:
   inline SP<T>& operator=(const SP<X> spx_in);
 
   /// Access operator.
-  T* operator->() const { Require(p); return p; }
+  T* operator->() const
+  {
+    Require_msg(p, std::string(typeid(T).name()));
+    return p;
+  }
 
   /// Dereference operator.
-  T& operator*() const { Require(p); return *p; }
+  T& operator*() const
+  {
+    Require_msg(p, std::string(typeid(T).name()));
+    return *p;
+  }
 
   /// Get the base-class pointer; better know what you are doing.
   T* bp() const { return p; }
@@ -208,8 +222,9 @@ public:
 
 private:
 
-  /// \name Private Data
-  /// \{
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   /// Raw pointer held by smart pointer.
   T *p;
@@ -217,21 +232,15 @@ private:
   /// Pointer to reference counter.
   SPref *r;
 
-  /// \}
-
-  /// \name Implementation
-  /// \{
+  //-------------------------------------------------------------------------//
+  // IMPLEMENTATION
+  //-------------------------------------------------------------------------//
 
   /// Free the pointer.
   inline void free();
 
   /// All derivatives of SP are friends.
   template<class X> friend class SP;
-
-  /// \}
-
-  /// \name Serialize
-  /// \{
 
 #ifdef DETRAN_ENABLE_BOOST
 
@@ -246,16 +255,26 @@ private:
 
 #endif
 
-  /// \}
 };
 
-} // end namespace detran
+} // end namespace detran_utilities
 
 //---------------------------------------------------------------------------//
 // INLINE AND TEMPLATE MEMBERS
 //---------------------------------------------------------------------------//
 
 #include "SP.i.hh"
+
+//---------------------------------------------------------------------------//
+// SP CONSTRUCTOR MACRO
+//---------------------------------------------------------------------------//
+
+#define SPCREATE(class_name, return_type, types, vals)  \
+static return_type CREATE types                         \
+{                                                       \
+  return_type p(new class_name vals) ;                  \
+  return p;                                             \
+};
 
 #endif // SP_HH_
 

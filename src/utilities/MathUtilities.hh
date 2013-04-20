@@ -1,32 +1,27 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   MathUtilities.hh
- * \author robertsj
- * \date   Apr 4, 2012
- * \brief  MathUtilities class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+/**
+ *  @file   MathUtilities.hh
+ *  @author robertsj
+ *  @date   Apr 4, 2012
+ *  @brief  Provides several useful math functions
  */
 //---------------------------------------------------------------------------//
 
-#ifndef MATHUTILITIES_HH_
-#define MATHUTILITIES_HH_
+#ifndef detran_utilities_MATHUTILITIES_HH_
+#define detran_utilities_MATHUTILITIES_HH_
 
-// Utilities
 #include "DBC.hh"
 #include "Definitions.hh"
 
-// System
 #include <algorithm>
 #include <cmath>
 #include <string>
+#include <limits>
 
-namespace detran
+namespace detran_utilities
 {
 
-/*!
- *  \brief Norm of a vector.
- *  \param  flag    L2 (Default), L1, or Linf
- */
+/// Norm of a vector
 inline double norm(vec_dbl &x, std::string flag = "L2")
 {
   double v = 0.0;
@@ -62,10 +57,7 @@ inline void vec_scale(vec_dbl &x, double scale)
 }
 
 
-/*!
- *  \brief Norm of the residual of two double vectors.
- *  \param  flag    Default is false for L2.  True for L-infinity.
- */
+/// Norm of the residual of two double vectors.
 inline double norm_residual(vec_dbl &x, vec_dbl &y, std::string flag = "L2")
 {
   Require(x.size() == y.size());
@@ -97,6 +89,7 @@ inline double norm_residual(vec_dbl &x, vec_dbl &y, std::string flag = "L2")
   return v;
 }
 
+/// Norm of the relative residual.
 inline double norm_relative_residual(vec_dbl &x, vec_dbl &y, std::string flag = "L2")
 {
   Require(x.size() == y.size());
@@ -128,9 +121,81 @@ inline double norm_relative_residual(vec_dbl &x, vec_dbl &y, std::string flag = 
   return v;
 }
 
-} // namespace
+/// Return the minimum of a vector.
+template <class T>
+inline T vec_min(const std::vector<T> &v)
+{
+  T m = std::numeric_limits<T>::max();
+  for (int i = 0; i < v.size(); ++i)
+    if (v[i] < m) m = v[i];
+  return m;
+}
 
-#endif /* MATHUTILITIES_HH_ */
+/// Return the maximum of a vector.
+template <class T>
+inline T vec_max(const std::vector<T> &v)
+{
+  T m = std::numeric_limits<T>::min();
+  for (int i = 0; i < v.size(); ++i)
+    if (v[i] > m) m = v[i];
+  return m;
+}
+
+/// Return the sum of a vector.
+template <class T>
+inline T vec_sum(const std::vector<T> &v)
+{
+  T s = 0;
+  for (int i = 0; i < v.size(); ++i)
+    s += v[i];
+  return s;
+}
+
+/// Return the unique elements of a vector
+template <class T>
+inline std::vector<T> vec_unique(const std::vector<T> &v)
+{
+  std::vector<T> u = v;                   // 1 1 2 3 5 6 6 1
+  std::sort(u.begin(), u.end());          // 1 1 1 2 3 5 6 6
+  typename std::vector<T>::iterator it;
+  it = std::unique(u.begin(), u.end());   // 1 2 3 5 6 ? ? ?
+  u.resize(std::distance(u.begin(), it)); // 1 2 3 5 6
+  return u;
+}
+
+/// Linear mesh between a and b.  Gives the edges.
+inline std::vector<double> linspace(double a, double b, int n = 10)
+{
+  Require(a < b);
+  std::vector<double> v(n, a);
+  double dx;
+  if (n <= 1)
+    dx = b-a;
+  else
+    dx = (b-a)/double(n-1);
+  for (int i = 1; i < n; ++i)
+    v[i] = v[i-1] + dx;
+  return v;
+}
+
+/// Linear mesh between a and b. Gives the mesh centers.
+inline std::vector<double> linspace_center(double a, double b, int n = 10)
+{
+  Require(a < b);
+  double dx;
+  if (n <= 1)
+    dx = b-a;
+  else
+    dx = (b-a)/double(n);
+  std::vector<double> v(n, 0.5*dx);
+  for (int i = 1; i < n; ++i)
+    v[i] = v[i-1] + dx;
+  return v;
+}
+
+} // namespace detran_utilities
+
+#endif /* detran_utilities_MATHUTILITIES_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of MathUtilities.hh

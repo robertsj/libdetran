@@ -1,48 +1,53 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   detran_angle.i
- * \author Jeremy Roberts
- * \brief  Python interface for detran angular system.
+/**
+ *  @file   detran_angle.i
+ *  @author Jeremy Roberts
+ *  @brief  Python interface for detran angular system.
  */
 //---------------------------------------------------------------------------//
 
-%include "detran_utilities.i"
+%module(directors="1", allprotected="1", package="detran") angle
+%{
+#include <stddef.h>
+#include "angle/detran_angle.hh"
+%}
 
-// Base angle classes
-//
+%import "utilities/detran_utilities.i"
+
+// Base angle classes and utilities
 %include "Quadrature.hh"
-%include "GaussLegendre.hh"
-%include "LevelSymmetric.hh"
-%include "QuadrupleRange.hh"
-%include "UniformEqual.hh"
-%include "MomentToDiscrete.hh"
-// MOC angle classes
-%include "PolarQuadrature.hh"
-%include "TabuchiYamamoto.hh"
+%include "ProductQuadrature.hh"
 %include "QuadratureMOC.hh"
-%include "Collocated.hh"
-%include "Uniform.hh"
+%include "MomentToDiscrete.hh"
+%include "QuadratureFactory.hh"
+%include "MomentIndexer.hh"
 
-%template(QuadratureSP)     detran::SP<detran::Quadrature>;
-%template(GaussLegendreSP)  detran::SP<detran::GaussLegendre>;
-%template(LevelSymmetricSP) detran::SP<detran::LevelSymmetric>;
-%template(QuadrupleRangeSP) detran::SP<detran::QuadrupleRange>;
-%template(UniformEqualSP)   detran::SP<detran::UniformEqual>;
-//
-%template(MomentToDiscrete1D) detran::MomentToDiscrete<detran::_1D>;
-%template(MomentToDiscrete2D) detran::MomentToDiscrete<detran::_2D>;
-%template(MomentToDiscrete3D) detran::MomentToDiscrete<detran::_3D>;
-//
-%template(MomentToDiscrete1DSP) detran::SP<detran::MomentToDiscrete<detran::_1D> >;
-%template(MomentToDiscrete2DSP) detran::SP<detran::MomentToDiscrete<detran::_2D> >;
-%template(MomentToDiscrete3DSP) detran::SP<detran::MomentToDiscrete<detran::_3D> >;
+%template(QuadratureSP)         detran_utilities::SP<detran_angle::Quadrature>;
+%template(ProductQuadratureSP)  detran_utilities::SP<detran_angle::ProductQuadrature>;
+%template(QuadratureMOCSP)      detran_utilities::SP<detran_angle::QuadratureMOC>;
+%template(MomentToDiscreteSP)   detran_utilities::SP<detran_angle::MomentToDiscrete>;
+%template(MomentIndexerSP)      detran_utilities::SP<detran_angle::MomentIndexer>;
 
-%template(QuadratureMOCSP)    detran::SP<detran::QuadratureMOC>;
-%template(CollocatedSP)       detran::SP<detran::Collocated>;
-%template(UniformSP)          detran::SP<detran::Uniform>;
-//
-%template(PolarQuadratureSP)  detran::SP<detran::PolarQuadrature>;
-%template(TabuchiYamamotoSP)  detran::SP<detran::TabuchiYamamoto>;
+%inline
+{
+
+// Cast from base quadrature to product quadrature
+detran_utilities::SP<detran_angle::ProductQuadrature> 
+cast_base_to_product(detran_utilities::SP<detran_angle::Quadrature>* q)
+{
+  return detran_utilities::SP<detran_angle::ProductQuadrature>(*q);
+} 
+
+// Cast from base quadrature to moc quadrature
+detran_utilities::SP<detran_angle::QuadratureMOC> 
+cast_base_to_moc(detran_utilities::SP<detran_angle::Quadrature>* q)
+{
+  return detran_utilities::SP<detran_angle::QuadratureMOC>(*q);
+} 
+
+} // end inline
+
+
 
 //---------------------------------------------------------------------------//
 //              end of detran_angle.i

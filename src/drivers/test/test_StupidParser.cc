@@ -13,16 +13,15 @@
         FUNC(test_StupidParser)       \
         FUNC(test_StupidParser_hdf5)
 
-// Detran headers
-#include "TestDriver.hh"
-#include "StupidParser.hh"
-
-// System headers
+#include "utilities/TestDriver.hh"
+#include "drivers/StupidParser.hh"
 #include <iostream>
 #include <cstdlib>
 
 using namespace detran_test;
 using namespace detran;
+using namespace detran_geometry;
+using namespace detran_utilities;
 using namespace std;
 
 int main(int argc, char *argv[])

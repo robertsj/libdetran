@@ -1,76 +1,99 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   detran_solvers.i
- * \author Jeremy Roberts
- * \brief  Python interface for detran solvers.
+/**
+ *  @file   detran_solvers.i
+ *  @author Jeremy Roberts
+ *  @brief  Python interface for detran solvers.
  */
 //---------------------------------------------------------------------------//
 
-%include "detran_utilities.i"
+%module(directors="1", allprotected="1", package="detran") solvers
+%{
+#include <stddef.h>
+#include "FixedSourceManager.hh"
+#include "EigenvalueManager.hh"
+#include "time/TimeStepper.hh"
+#include "Manager.hh"
+#include "time/LRA.hh"
+//
+#include "kinetics/PyTimeDependentMaterial.hh"
+#include "kinetics/LinearMaterial.hh"
+%}
 
-// Note, only the basic, non-PETSc classes are exposed directly.
-// The others can be accessed from within Execute.
+%import "detran_boundary.i"
+%import "detran_kinetics.i"
+%import "detran_transport.i"
+%include "transport/DimensionTraits.hh"
 
-%include "InnerIteration.hh"
-%include "GaussSeidel.hh"
-%include "PowerIteration.hh"
+%include callback.i 
 
-%template(InnerIteration1D)     detran::InnerIteration<detran::_1D>;
-%template(InnerIteration1DSP)   detran::SP<detran::InnerIteration<detran::_1D> >;
-%template(InnerIteration2D)     detran::InnerIteration<detran::_2D>;
-%template(InnerIteration2DSP)   detran::SP<detran::InnerIteration<detran::_2D> >;
+// Set the callback setter for time stepping manager.
+// Note, these are indexed 2, 3, and 4
+setCallbackMethod(2, 
+                  detran::TimeStepper<detran::_1D>, 
+                  set_monitor, 
+                  (void* data, detran::TimeStepper<detran::_1D>* ts, int step, double t, double dt, int it, bool converged), 
+                  (detran::TimeStepper<detran::_1D>* ts, int step, double t, double dt, int it, bool converged), 
+                  (ts, step, t, dt, it, converged), 
+                  1)
+setCallbackMethod(3, 
+                  detran::TimeStepper<detran::_2D>, 
+                  set_monitor, 
+                  (void* data, detran::TimeStepper<detran::_2D>* ts, int step, double t, double dt, int it, bool converged), 
+                  (detran::TimeStepper<detran::_2D>* ts, int step, double t, double dt, int it, bool converged), 
+                  (ts, step, t, dt, it, converged), 
+                  1)
+setCallbackMethod(4, 
+                  detran::TimeStepper<detran::_3D>, 
+                  set_monitor, 
+                  (void* data, detran::TimeStepper<detran::_3D>* ts, int step, double t, double dt, int it, bool converged), 
+                  (detran::TimeStepper<detran::_3D>* ts, int step, double t, double dt, int it, bool converged), 
+                  (ts, step, t, dt, it, converged), 
+                  1)
+                  
+%include "Manager.hh"
+%include "TransportManager.hh"                  
 
-%template(GaussSeidel1D)        detran::GaussSeidel<detran::_1D>;
-%template(GaussSeidel1DSP)      detran::SP<detran::GaussSeidel<detran::_1D> >;
-%template(GaussSeidel2D)        detran::GaussSeidel<detran::_2D>;
-%template(GaussSeidel2DSP)      detran::SP<detran::GaussSeidel<detran::_2D> >;
+%include "FixedSourceManager.hh"
+%template(Fixed1D) detran::FixedSourceManager<detran::_1D>;
+%template(Fixed2D) detran::FixedSourceManager<detran::_2D>;
+%template(Fixed3D) detran::FixedSourceManager<detran::_3D>;
 
-%template(PowerIteration1D)     detran::PowerIteration<detran::_1D>;
-%template(PowerIteration1DSP)   detran::SP<detran::PowerIteration<detran::_1D> >;
-%template(PowerIteration2D)     detran::PowerIteration<detran::_2D>;
-%template(PowerIteration2DSP)   detran::SP<detran::PowerIteration<detran::_2D> >;
+%include "EigenvalueManager.hh"
+%template(Eigen1D) detran::EigenvalueManager<detran::_1D>;
+%template(Eigen2D) detran::EigenvalueManager<detran::_2D>;
+%template(Eigen3D) detran::EigenvalueManager<detran::_3D>;
 
-namespace detran
+%include "time/TimeStepper.hh"
+%template(Time1D) detran::TimeStepper<detran::_1D>;
+%template(Time2D) detran::TimeStepper<detran::_2D>;
+%template(Time3D) detran::TimeStepper<detran::_3D>;
+
+%include "time/LRA.hh"
+%template(SPLRA) detran_utilities::SP<detran_user::LRA>;
+
+// Downcasts and Upcasts for generic routines
+%inline
 {
-
-// This is the one class I couldn't easily wrap.  I narrow it down to it being
-// derived and my subsequent use of the "using Base::something" syntax.  SWIG,
-// for whatever reason, tries to make getters and setters for those base 
-// variables, and the generated code fails due to typedef issues. 
-template <class D>
-class SourceIteration: public InnerIteration<D>
-{
-public:
-  // Constructor
-  SourceIteration(SP<detran::InputDB>          input,
-                  SP<detran::State>            state,
-                  SP<detran::Mesh>             mesh,
-                  SP<detran::Material>         material,
-                  SP<detran::Quadrature>       quadrature,
-                  SP<detran::BoundaryBase<D> > boundary,
-                  SP<detran::ExternalSource>   q_e,
-                  SP<detran::FissionSource>    q_f);
-  // SP Constructor
-  static SP<SourceIteration<D> >
-  Create(SP<detran::InputDB>          input,
-         SP<detran::State>            state,
-         SP<detran::Mesh>             mesh,
-         SP<detran::Material>         material,
-         SP<detran::Quadrature>       quadrature,
-         SP<detran::BoundaryBase<D> > boundary,
-         SP<detran::ExternalSource>   q_e,
-         SP<detran::FissionSource>    q_f);
-  // Solve the within group equation.
-  void solve(int g);
-};
-
-} // end namespace detran
-
-%template(SourceIteration1D)    detran::SourceIteration<detran::_1D>;
-%template(SourceIteration1DSP)  detran::SP<detran::SourceIteration<detran::_1D> >;
-%template(SourceIteration2D)    detran::SourceIteration<detran::_2D>;
-%template(SourceIteration2DSP)  detran::SP<detran::SourceIteration<detran::_2D> >;
+  
+  // TD -> LRA
+  detran_utilities::SP<detran_user::LRA> 
+  as_lra(detran_utilities::SP<detran::TimeDependentMaterial>* p)
+  {
+    return detran_utilities::SP<detran_user::LRA>(*p);
+  } 
+  
+  // Set LRA physics.  Temporary hack.
+  void set_lra_physics(detran::TimeStepper<detran::_2D>* stepper,
+                       detran_utilities::SP<detran::MultiPhysics>* physics,
+                       detran_utilities::SP<detran::TimeDependentMaterial>* mat)
+  {
+    stepper->set_multiphysics(*physics,
+                              detran_user::update_T_rhs<detran::_2D>,
+                              (void *) (*mat).bp());
+  }
+  
+}
 
 //---------------------------------------------------------------------------//
-//              end of detran_transport.i
+//              end of detran_solvers.i
 //---------------------------------------------------------------------------//

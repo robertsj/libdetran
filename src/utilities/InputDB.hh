@@ -1,20 +1,17 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   InputDB.hh
- * \author Jeremy Roberts
- * \brief  InputDB class definition.
+/**
+ *  @file   InputDB.hh
+ *  @author Jeremy Roberts
+ *  @brief  InputDB class definition.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef INPUTDB_HH_
-#define INPUTDB_HH_
+#ifndef detran_utilities_INPUTDB_HH_
+#define detran_utilities_INPUTDB_HH_
 
-// Utilities
 #include "DBC.hh"
 #include "Definitions.hh"
 #include "SP.hh"
-
-// System headers
 #include <string>
 #include <map>
 #ifdef DETRAN_ENABLE_BOOST
@@ -27,11 +24,11 @@
 #include <boost/serialization/string.hpp>
 #endif
 
-namespace detran
+namespace detran_utilities
 {
 
 //===========================================================================//
-/*!
+/**
  * \class InputDB
  * \brief Flexible storage for user input.
  *
@@ -52,10 +49,14 @@ namespace detran
  */
 //===========================================================================//
 
-class InputDB : public Object
+class InputDB
 {
 
 public:
+
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
 
   enum INPUT_TYPES
   {
@@ -63,31 +64,35 @@ public:
     DBL,
     STR,
     VEC_INT,
-    VEC_DBL
+    VEC_DBL,
+    SPINPUT
   };
 
   typedef SP<InputDB> SP_input;
 
-  /*!
-   *  \brief Constructor.
-   */
-  InputDB();
+  //-------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //-------------------------------------------------------------------------//
 
-  static SP_input Create()
+  /// Constructor with optional name
+  InputDB(std::string name = "InputDB");
+
+  static SP_input Create(std::string name = "InputDB")
   {
     SP_input p;
-    p = new InputDB();
+    p = new InputDB(name);
     return p;
   }
 
-  /// \name Accessors
-  //\{
+  //-------------------------------------------------------------------------//
+  // PUBLIC FUNCTIONS
+  //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Return value of key
-   *  \param    key     Name of the parameter.
-   *  \param    value   Reference to which parameter value is assigned.
-   *  \return           Check whether key is found.
+  /**
+   *  @brief Return value of key
+   *  @param    key     Name of the parameter.
+   *  @param    value   Reference to which parameter value is assigned.
+   *  @return           Check whether key is found.
    */
   template <class T>
   inline T get(const std::string &key) const
@@ -95,33 +100,31 @@ public:
 
   }
 
-  /*!
-   *  \brief Check if the key is in a  map.
+  /**
+   *  @brief Check if the key is in a  map.
    *
    *  Note, if used consistently, this will prevent the
    *  same key being used for different value types.
    *  Maybe there's a better way to do this input
    *  structure.
    *
-   *  \param    key     Name of the parameter.
-   *  \return           True if exists; false otherwise.
+   *  @param    key     Name of the parameter.
+   *  @return           True if exists; false otherwise.
    */
   inline bool check(const std::string &key) const;
 
-  /*!
-   *  \brief Put a key and value in the database.
-   *  \param    key         Name of the parameter.
-   *  \param    value       Reference to which parameter value is assigned.
-   *  \param    replace     Can we replace a current value?
-   *  \return               Check whether key is found.
+  /**
+   *  @brief Put a key and value in the database.
+   *  @param    key         Name of the parameter.
+   *  @param    value       Reference to which parameter value is assigned.
+   *  @param    replace     Can we replace a current value?
+   *  @return               Check whether key is found.
    */
   template <class T>
   inline void put(const std::string &key, const T value)
   {
 
   }
-
-  //\}
 
   /// Return a map
   template <class T>
@@ -133,43 +136,30 @@ public:
   /// Display all my contents.
   void display() const;
 
-  /*
-   *  \brief Validate the input database.
-   *
-   *  This is probably the only place where upkeep needs to occur.  There
-   *  may be an intelligent way to do it, something like a "grammar".
-   *
-   *  At the very least, it should contain things like dimension, groups,
-   *  and so forth.
-   *
-   *  \return Whether or not verification was successful.
-   */
-  bool is_valid() const {return true;};
-
 private:
 
-  /// \name Data
-  //\{
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
+  /// Name of the database
+  std::string d_name;
   /// Integer parameters.
   std::map<std::string, int> d_data_int;
-
   /// Double parameters.
   std::map<std::string, double> d_data_dbl;
-
   /// Integer vector parameters.
   std::map<std::string, vec_int> d_data_vec_int;
-
   /// Double vector parameters.
   std::map<std::string, vec_dbl> d_data_vec_dbl;
-
   /// String parameters.
   std::map<std::string, std::string> d_data_str;
+  /// InputDB parameters
+  std::map<std::string, SP_input> d_data_db;
 
-  //\}
-
-  /// \name Serialize
-  /// \{
+  //-------------------------------------------------------------------------//
+  // IMPLEMENTATION
+  //-------------------------------------------------------------------------//
 
 #ifdef DETRAN_ENABLE_BOOST
 
@@ -183,15 +173,14 @@ private:
     ar & d_data_vec_int;
     ar & d_data_vec_dbl;
     ar & d_data_str;
+    ar & d_data_db;
   }
 
 #endif
 
-  /// \}
-
 };
 
-} // end namespace detran
+} // end namespace detran_utilities
 
 //---------------------------------------------------------------------------//
 // INLINE FUNCTIONS
@@ -199,7 +188,7 @@ private:
 
 #include "InputDB.i.hh"
 
-#endif /* INPUTDB_HH_ */
+#endif /* detran_utilities_INPUTDB_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of InputDB.hh

@@ -11,7 +11,7 @@
 #include <sstream>
 #include "GenException.hh"
 
-namespace detran
+namespace detran_utilities
 {
 
 std::string itoa(int i)
@@ -57,4 +57,4 @@ GenException::~GenException() throw()
 
 }
 
-} // end namespace detran
+} // end namespace detran_utilities

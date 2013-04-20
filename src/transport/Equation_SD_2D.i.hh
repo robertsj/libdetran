@@ -1,24 +1,24 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Equation_SD_2D.i.hh
- * \author Jeremy Roberts
- * \date   Jun 08, 2012
- * \brief  Equation_SD_2D inline member definitions.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+/**
+ *  @file   Equation_SD_2D.i.hh
+ *  @author Jeremy Roberts
+ *  @date   Jun 08, 2012
+ *  @brief  Equation_SD_2D inline member definitions.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef EQUATION_SD_2D_I_HH_
-#define EQUATION_SD_2D_I_HH_
+#ifndef detran_EQUATION_SD_2D_I_HH_
+#define detran_EQUATION_SD_2D_I_HH_
 
 #include <iostream>
 
 namespace detran
 {
 
-inline void Equation_SD_2D::solve(int i,
-                                  int j,
-                                  int k,
+//---------------------------------------------------------------------------//
+inline void Equation_SD_2D::solve(const size_t i,
+                                  const size_t j,
+                                  const size_t k,
                                   moments_type &source,
                                   face_flux_type &psi_in,
                                   face_flux_type &psi_out,
@@ -26,10 +26,9 @@ inline void Equation_SD_2D::solve(int i,
                                   angular_flux_type &psi)
 {
   // Preconditions.  (The client *must* set group and angles.)
-  Require(d_g >= 0);
-  Require(d_angle >= 0);
-  Require(d_octant >= 0);
   Require(k == 0);
+
+  typedef detran_geometry::Mesh Mesh;
 
   // Compute cell-center angular flux.
   int cell = d_mesh->index(i, j);
@@ -46,15 +45,13 @@ inline void Equation_SD_2D::solve(int i,
   phi[cell] += d_quadrature->weight(d_angle) * psi_center;
 
   // Store angular flux if needed.
-  if (d_update_psi)
-  {
-    psi[cell] = psi_center;
-  }
+  if (d_update_psi) psi[cell] = psi_center;
+
 }
 
 } // end namespace detran
 
-#endif /* EQUATION_SD_2D_I_HH_ */
+#endif /* detran_EQUATION_SD_2D_I_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of Equation_SD_2D.i.hh

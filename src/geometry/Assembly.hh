@@ -1,9 +1,11 @@
-/*
- * Assembly.hh
- *
- *  Created on: Apr 14, 2012
- *      Author: robertsj
+//----------------------------------*-C++-*----------------------------------//
+/*!
+ *  \file   Assembly.hh
+ *  \author Jeremy Roberts
+ *  \brief  Mesh class definition.
+ *  \date   Mar 23, 2012
  */
+//---------------------------------------------------------------------------//
 
 #ifndef ASSEMBLY_HH_
 #define ASSEMBLY_HH_
@@ -11,7 +13,7 @@
 #include "Mesh2D.hh"
 #include "PinCell.hh"
 
-namespace detran
+namespace detran_geometry
 {
 
 /*!
@@ -24,15 +26,25 @@ namespace detran
  *  necessarily uniform.
  *
  */
-class Assembly : public Object
+class Assembly
 {
 
 public:
 
-  typedef SP<Assembly>            SP_assembly;
-  typedef Mesh::SP_mesh           SP_mesh;
-  typedef PinCell::SP_pincell     SP_pincell;
-  typedef std::vector<SP_pincell> vec_pincell;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
+
+  typedef detran_utilities::SP<Assembly>    SP_assembly;
+  typedef Mesh::SP_mesh                     SP_mesh;
+  typedef PinCell::SP_pincell               SP_pincell;
+  typedef std::vector<SP_pincell>           vec_pincell;
+  typedef Mesh::vec_dbl                     vec_dbl;
+  typedef Mesh::vec_int                     vec_int;
+
+  //-------------------------------------------------------------------------//
+  // PUBLIC INTERFACE
+  //-------------------------------------------------------------------------//
 
   /*!
    *  \brief Constructor.
@@ -52,10 +64,9 @@ public:
   explicit Assembly(int dimension);
 
   /// SP Constructor
-  static SP<Assembly> Create(int dim)
+  static SP_assembly Create(int dim)
   {
-    SP_assembly p;
-    p = new Assembly(dim);
+    SP_assembly p(new Assembly(dim));
     return p;
   }
 
@@ -82,12 +93,11 @@ public:
     return d_number_pincells;
   }
 
-  bool is_valid() const
-  {
-    return true;
-  }
-
 private:
+
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   /// Meshed object
   Mesh2D::SP_mesh d_mesh;
@@ -104,9 +114,10 @@ private:
   /// Logically 2-D map of pin cell locations
   vec_int d_pincell_map;
 
+  /// Number of pincells in the assembly
   int d_number_pincells;
 };
 
-} // end namespace detran
+} // end namespace detran_geometry
 
 #endif /* ASSEMBLY_HH_ */

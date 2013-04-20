@@ -7,24 +7,18 @@
  */
 //---------------------------------------------------------------------------//
 
-// Detran
 #include "Uniform.hh"
-
-// Utilities
-#include "SoftEquivalence.hh"
-
-// System
+#include "utilities/SoftEquivalence.hh"
 #include <cmath>
 #include <iostream>
 
-
-namespace detran
+namespace detran_angle
 {
 
-Uniform::Uniform(int dim,
-                 int num_azimuths_octant,
-                 int num_space,
-                 int num_polar,
+Uniform::Uniform(size_t dim,
+                 size_t num_azimuths_octant,
+                 size_t num_space,
+                 size_t num_polar,
                  std::string polar)
   : QuadratureMOC(dim,
                   num_azimuths_octant,
@@ -36,18 +30,20 @@ Uniform::Uniform(int dim,
   using std::cout;
   using std::endl;
 
+  const double pi = detran_utilities::pi;
+
   bool db = false;
 
   // Define evenly-spaced azimuthal angles over [0, pi/2].  These
   // are subject change.
   vec_dbl phi_quadrant(d_number_azimuths_octant, 0.0);
-  double delta = 0.5 * pi / d_number_azimuths_octant;
+  double delta = 0.5 * detran_utilities::pi / d_number_azimuths_octant;
   phi_quadrant[0] = delta/2;
   for (int a = 1; a < d_number_azimuths_octant; a++)
   {
     phi_quadrant[a] = phi_quadrant[a-1] + delta;
   }
-  Ensure(soft_equiv(phi_quadrant[d_number_azimuths_octant-1], pi/2-delta/2));
+  Ensure(detran_utilities::soft_equiv(phi_quadrant[d_number_azimuths_octant-1], detran_utilities::pi/2-delta/2));
 
 
   vec_int num_x(d_number_azimuths_octant, 0);
@@ -116,7 +112,7 @@ Uniform::Uniform(int dim,
 
   for (int a = 1; a < d_number_azimuths_octant; a++)
   {
-    Insist(!soft_equiv(phi[a], phi[a-1]),
+    Insist(!detran_utilities::soft_equiv(phi[a], phi[a-1]),
       "Repeated azimuths.  Increase space parameter or try an odd number.");
   }
 
@@ -160,7 +156,7 @@ Uniform::Uniform(int dim,
 
     double dx = 1.0 / num_x[a];
     double dy = 1.0 / num_y[a];
-    d_phi[a2]     = pi - phi[a];
+    d_phi[a2]     = detran_utilities::pi - phi[a];
     d_cos_phi[a2] = cos(d_phi[a2]);
     d_sin_phi[a2] = sin(d_phi[a2]);
     d_spacing[a2] = sin(phi[a]) * std::min(dx, 0.5);
@@ -185,7 +181,7 @@ Uniform::Uniform(int dim,
 
 }
 
-} // end namespace detran
+} // end namespace detran_angle
 
 //---------------------------------------------------------------------------//
 //              end of file Uniform.cc

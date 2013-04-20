@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   CurrentTally.cc
- * \brief  CurrentTally member definitions
- * \author Jeremy Roberts
- * \date   Aug 9, 2012
+/**
+ *  @file   CurrentTally.cc
+ *  @brief  CurrentTally member definitions
+ *  @author Jeremy Roberts
+ *  @date   Aug 9, 2012
  */
 //---------------------------------------------------------------------------//
 
@@ -12,27 +12,20 @@
 namespace detran
 {
 
-// Partial currents are sized for groups and sense, which
-// should be fine if unused
+//---------------------------------------------------------------------------//
 template <class D>
 CurrentTally<D>::CurrentTally(SP_coarsemesh coarsemesh,
                               SP_quadrature quadrature,
-                              const u_int number_groups)
-  : d_coarsemesh(coarsemesh)
-  , d_quadrature(quadrature)
-  , d_number_groups(number_groups)
+                              const size_t  number_groups)
+  : Base(coarsemesh, quadrature, number_groups)
   , d_partial_current(3, vec3_dbl(number_groups,  vec2_dbl(2)))
 {
-  // Preconditions
-  Require(d_coarsemesh);
-  Require(d_quadrature);
-
   SP_mesh mesh = d_coarsemesh->get_coarse_mesh();
 
-  u_int nx = d_coarsemesh->get_coarse_mesh()->number_cells_x();
-  u_int ny = d_coarsemesh->get_coarse_mesh()->number_cells_y();
-  u_int nz = d_coarsemesh->get_coarse_mesh()->number_cells_z();
-  u_int n[] = { (nx+1)*ny*nz, nx*(ny+1)*nz, nx*ny*(nz+1) };
+  size_t nx = d_coarsemesh->get_coarse_mesh()->number_cells_x();
+  size_t ny = d_coarsemesh->get_coarse_mesh()->number_cells_y();
+  size_t nz = d_coarsemesh->get_coarse_mesh()->number_cells_z();
+  size_t n[] = { (nx+1)*ny*nz, nx*(ny+1)*nz, nx*ny*(nz+1) };
 
   for (int g = 0; g < d_number_groups; g++)
   {
@@ -45,44 +38,34 @@ CurrentTally<D>::CurrentTally(SP_coarsemesh coarsemesh,
     }
   }
 
-  // Octant shift
-  d_octant_shift.resize(3, vec_int(8, 0));
-  // mu
-  d_octant_shift[0][0] =  1;
-  d_octant_shift[0][1] =  0;
-  d_octant_shift[0][2] =  0;
-  d_octant_shift[0][3] =  1;
-  d_octant_shift[0][4] =  1;
-  d_octant_shift[0][5] =  0;
-  d_octant_shift[0][6] =  0;
-  d_octant_shift[0][7] =  1;
-  // eta
-  d_octant_shift[1][0] =  1;
-  d_octant_shift[1][1] =  1;
-  d_octant_shift[1][2] =  0;
-  d_octant_shift[1][3] =  0;
-  d_octant_shift[1][4] =  1;
-  d_octant_shift[1][5] =  1;
-  d_octant_shift[1][6] =  0;
-  d_octant_shift[1][7] =  0;
-  // xi
-  d_octant_shift[2][0] =  1;
-  d_octant_shift[2][1] =  1;
-  d_octant_shift[2][2] =  1;
-  d_octant_shift[2][3] =  1;
-  d_octant_shift[2][4] =  0;
-  d_octant_shift[2][5] =  0;
-  d_octant_shift[2][6] =  0;
-  d_octant_shift[2][7] =  0;
+}
 
-  // Perpendicular indices
-  d_perpendicular_index[0][0] = 1;
-  d_perpendicular_index[0][1] = 2;
-  d_perpendicular_index[1][0] = 0;
-  d_perpendicular_index[1][1] = 2;
-  d_perpendicular_index[2][0] = 0;
-  d_perpendicular_index[2][1] = 1;
+//---------------------------------------------------------------------------//
+template <class D>
+void CurrentTally<D>::reset(const size_t group)
+{
+  Require(group < d_number_groups);
+  for (int d = 0; d < d_partial_current.size(); d++)
+    for (int s = 0; s < 2; s++)
+      for (int i = 0; i < d_partial_current[d][group][s].size(); i++)
+      {
+        d_partial_current[d][group][s][i] = 0.0;
+      }
+}
 
+//---------------------------------------------------------------------------//
+template <class D>
+void CurrentTally<D>::display()
+{
+  for (int d = 0; d < d_partial_current.size(); d++)
+    for (int g = 0; g < d_partial_current[d].size(); g++)
+      for (int s = 0; s < 2; s++)
+        for (int i = 0; i < d_partial_current[d][g][s].size(); i++)
+        {
+          std::cout << " J(d=" << d << ",g=" << g << ",s=" << s << ",i="
+                    << i << ") = " << d_partial_current[d][g][s][i]
+                    << std::endl;
+        }
 }
 
 //---------------------------------------------------------------------------//

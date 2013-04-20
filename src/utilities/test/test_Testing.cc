@@ -4,7 +4,6 @@
  * \author Jeremy Roberts
  * \date   Jul 14, 2011
  * \brief  Test of the simple Testing utilities.
- * \note   Copyright (C) 2011 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 

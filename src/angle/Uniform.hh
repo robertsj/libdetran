@@ -12,7 +12,7 @@
 
 #include "QuadratureMOC.hh"
 
-namespace detran
+namespace detran_angle
 {
 
 /*!
@@ -24,6 +24,10 @@ class Uniform: public QuadratureMOC
 
 public:
 
+  //-------------------------------------------------------------------------//
+  // PUBLIC INTERFACE
+  //-------------------------------------------------------------------------//
+
   /*!
    *  \brief Constructor
    *  \param dim                  Problem dimension (only 2 supported for now)
@@ -32,21 +36,22 @@ public:
    *  \param num_polar            Number of polar angles in half space
    *  \param polar                Polar quadrature string identifier
    */
-  Uniform(int dim,
-          int num_azimuths_octant,
-          int num_space,
-          int num_polar,
+  Uniform(size_t dim,
+          size_t num_azimuths_octant,
+          size_t num_space,
+          size_t num_polar,
           std::string polar);
 
   /// SP Constructor.
-  static SP<Quadrature> Create(int dim,
-                               int num_azimuths_octant,
-                               int num_space,
-                               int num_polar,
-                               std::string polar)
+  static detran_utilities::SP<Quadrature>
+    Create(size_t dim,
+           size_t num_azimuths_octant,
+           size_t num_space,
+           size_t num_polar,
+           std::string polar)
   {
-    SP_quadrature p;
-    p = new Uniform(dim, num_azimuths_octant, num_space, num_polar, polar);
+    SP_quadrature
+      p(new Uniform(dim, num_azimuths_octant, num_space, num_polar, polar));
     return p;
   }
 
@@ -54,10 +59,9 @@ public:
 
 private:
 
-
 };
 
-} // end namespace detran
+} // end namespace detran_angle
 
 #endif // UNIFORM_HH_ 
 

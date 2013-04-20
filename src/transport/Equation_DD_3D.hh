@@ -1,28 +1,25 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Equation_DD_3D.hh
- * \author Jeremy Roberts
- * \date   Mar 31, 2012
- * \brief  Equation_DD_3D class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts.
+/**
+ *  @file   Equation_DD_3D.hh
+ *  @author Jeremy Roberts
+ *  @date   Mar 31, 2012
+ *  @brief  Equation_DD_3D class definition.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef EQUATION_DD_3D_HH_
-#define EQUATION_DD_3D_HH_
+#ifndef detran_EQUATION_DD_3D_HH_
+#define detran_EQUATION_DD_3D_HH_
 
-// Detran headers
 #include "Equation.hh"
-
-// Detran utilities
-#include "Definitions.hh"
 
 namespace detran
 {
 
-/*!
- *  \class Equation_DD_3D
- *  \brief Diamond difference discretization in two dimensions.
+/**
+ *  @class Equation_DD_3D
+ *  @brief Diamond difference discretization in three dimensions.
+ *
+ *  Fill me.
  *
  */
 class Equation_DD_3D : public Equation<_3D>
@@ -30,33 +27,36 @@ class Equation_DD_3D : public Equation<_3D>
 
 public:
 
-  typedef SP<Equation<_3D> >                SP_equation;
-  typedef Equation<_3D>::SP_material        SP_material;
-  typedef Equation<_3D>::SP_mesh            SP_mesh;
-  typedef Equation<_3D>::SP_quadrature      SP_quadrature;
-  typedef Equation<_3D>::moments_type       moments_type;
-  typedef Equation<_3D>::angular_flux_type  angular_flux_type;
-  typedef Equation<_3D>::face_flux_type     face_flux_type;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Constructor
-   */
+  typedef detran_utilities::SP<Equation<_3D> >    SP_equation;
+  typedef Equation<_3D>::SP_material              SP_material;
+  typedef Equation<_3D>::SP_mesh                  SP_mesh;
+  typedef Equation<_3D>::SP_quadrature            SP_quadrature;
+  typedef Equation<_3D>::moments_type             moments_type;
+  typedef Equation<_3D>::angular_flux_type        angular_flux_type;
+  typedef Equation<_3D>::face_flux_type           face_flux_type;
+
+  //-------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //-------------------------------------------------------------------------//
+
+  /// Constructor
   Equation_DD_3D(SP_mesh mesh,
                  SP_material material,
                  SP_quadrature quadrature,
                  bool update_psi);
 
-  /// \name Public Interface
-  /// \{
+  //-------------------------------------------------------------------------//
+  // ABSTRACT INTERFACE -- ALL EQUATION TYPES MUST IMPLEMENT THESE
+  //-------------------------------------------------------------------------//
 
-  /*!
-   *   \brief Solve for the cell-center and outgoing edge fluxes.
-   *
-   *   See \ref Equation for full description.
-   */
-  inline void solve(int i,
-                    int j,
-                    int k,
+  /// Solve for the cell-center and outgoing edge fluxes.
+  inline void solve(const size_t i,
+                    const size_t j,
+                    const size_t k,
                     moments_type &source,
                     face_flux_type &psi_in,
                     face_flux_type &psi_out,
@@ -64,36 +64,26 @@ public:
                     angular_flux_type &psi);
 
 
-  /*!
-   *  \brief Setup the equations for a group.
-   *  \param g     Current group.
-   */
-  void setup_group(int g);
+  /// Setup the equations for a group.
+  void setup_group(const size_t g);
 
-  /*!
-   *  \brief Setup the equations for an octant.
-   *  \param octant    Current octant.
-   */
-  void setup_octant(int octant);
+  /// Setup the equations for an octant.
+  void setup_octant(const size_t octant);
 
-  /*!
-   *  \brief Setup the equations for an angle.
-   *  \param angle  Angle index within octant.
-   */
-  void setup_angle(int angle);
+  /// Setup the equations for an angle.
+  void setup_angle(const size_t angle);
 
-  /// \}
 
 private:
 
   /// X-directed coefficient, \f$ 2|\mu|/\Delta_x \f$.
-  vec_dbl d_coef_x;
+  detran_utilities::vec_dbl d_coef_x;
 
   /// Y-directed coefficient, \f$ 2|\eta|/\Delta_y \f$.
-  vec_dbl d_coef_y;
+  detran_utilities::vec_dbl d_coef_y;
 
   /// Z-directed coefficient, \f$ 2|\xi|/\Delta_z \f$.
-  vec_dbl d_coef_z;
+  detran_utilities::vec_dbl d_coef_z;
 };
 
 } // end namespace detran
@@ -104,7 +94,7 @@ private:
 
 #include "Equation_DD_3D.i.hh"
 
-#endif /* EQUATION_DD_3D_HH_ */
+#endif /* detran_EQUATION_DD_3D_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of Equation_DD_3D.hh

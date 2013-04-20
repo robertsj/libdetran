@@ -1,18 +1,17 @@
-/*
- * Core.cc
- *
- *  Created on: Apr 16, 2012
- *      Author: robertsj
+//----------------------------------*-C++-*----------------------------------//
+/*!
+ *  \file   Core.cc
+ *  \author Jeremy Roberts
+ *  \brief  Core class member definitions
+ *  \date   Apr 16, 2012
  */
+//---------------------------------------------------------------------------//
 
-// Detran
 #include "Core.hh"
-
-// System
 #include <cmath>
 #include <iostream>
 
-namespace detran
+namespace detran_geometry
 {
 
 Core::Core(int dimension, vec_assembly assemblies, vec_int assembly_map)
@@ -172,11 +171,5 @@ void Core::finalize(vec_int assembly_map)
 
 }
 
-} // end namespace detran
-
-
-
-
-
-
+} // end namespace detran_geometry
 

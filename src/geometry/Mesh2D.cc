@@ -9,7 +9,7 @@
 // Geometry headers
 #include "Mesh2D.hh"
 
-namespace detran
+namespace detran_geometry
 {
 
 Mesh2D::Mesh2D(vec_int xfm, vec_int yfm, vec_dbl xcme, vec_dbl ycme, vec_int mat_map)
@@ -39,10 +39,10 @@ Mesh2D::Mesh2D(vec_dbl xfme, vec_dbl yfme, vec_int mat_map)
   d_dz[0]   = 1.0;
 }
 
-} // end namespace detran
+} // end namespace detran_geometry
 
 #ifdef DETRAN_ENABLE_BOOST
-BOOST_CLASS_EXPORT_IMPLEMENT(detran::Mesh2D)
+BOOST_CLASS_EXPORT_IMPLEMENT(detran_geometry::Mesh2D)
 #endif
 
 //---------------------------------------------------------------------------//

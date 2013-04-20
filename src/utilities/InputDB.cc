@@ -1,30 +1,34 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   InputDB.c
- * \author Jeremy Roberts
- * \brief  InputDB class definition.
+/**
+ *  @file   InputDB.c
+ *  @author Jeremy Roberts
+ *  @brief  InputDB class member definitions
  */
 //---------------------------------------------------------------------------//
-
 
 #include "InputDB.hh"
 
 #include <iostream>
 
-namespace detran
+namespace detran_utilities
 {
 
-InputDB::InputDB()
+//---------------------------------------------------------------------------//
+InputDB::InputDB(std::string name)
+  : d_name(name)
 {
   /* ... */
 }
 
+//---------------------------------------------------------------------------//
 void InputDB::display() const
 {
   using std::cout;
   using std::endl;
   using std::string;
-  cout << "Detran Input" << endl;
+  cout << "--------------------------------------------" << endl;
+  cout << "Detran Database: " << d_name << endl;
+  cout << "--------------------------------------------" << endl;
   {
     // Integers
     cout << "  Integer data: " << endl;
@@ -76,8 +80,18 @@ void InputDB::display() const
       cout << endl;
     }
   }
+  {
+    // DB data
+    cout << "  Database data: " << endl;
+    std::map<string, SP_input>::const_iterator it = d_data_db.begin();
+    for (; it != d_data_db.end(); it++)
+    {
+      (*it).second->display();
+    }
+  }
 }
 
+//---------------------------------------------------------------------------//
 int InputDB::size(int type) const
 {
   int value = 0;
@@ -91,12 +105,14 @@ int InputDB::size(int type) const
     value = d_data_vec_int.size();
   else if (type == VEC_DBL)
     value = d_data_vec_dbl.size();
+  else if (type == SPINPUT)
+    value = d_data_db.size();
   else
     THROW("Invalid type specifier.");
   return value;
 }
 
-} // end namespace detran
+} // end namespace detran_utilities
 
 //---------------------------------------------------------------------------//
 //              end of InputDB.cc

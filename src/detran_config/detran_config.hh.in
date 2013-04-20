@@ -1,0 +1,36 @@
+//-----------------------------------*-C-*-----------------------------------//
+/**
+ *  @file   detran_config.hh.in
+ *  @author Jeremy Roberts 
+ *  @brief  Definitions for DETRAN packages.
+ */
+//---------------------------------------------------------------------------//
+
+#ifndef DETRAN_CONFIG_HH_
+#define DETRAN_CONFIG_HH_
+
+// DBC
+#cmakedefine DETRAN_ENABLE_DEBUG
+
+// Unit Testing
+#cmakedefine DETRAN_ENABLE_TEST
+
+// External Libraries
+#cmakedefine DETRAN_ENABLE_PETSC
+#cmakedefine DETRAN_ENABLE_SLEPC
+#cmakedefine DETRAN_ENABLE_OPENMP
+#cmakedefine DETRAN_ENABLE_GPERFTOOLS
+#cmakedefine DETRAN_ENABLE_SILO
+#cmakedefine DETRAN_ENABLE_HDF5
+#cmakedefine DETRAN_ENABLE_BOOST
+
+// Date of Compilation
+#cmakedefine DETRAN_COMPILED_M ${DETRAN_COMPILED_M}
+#cmakedefine DETRAN_COMPILED_D ${DETRAN_COMPILED_D}
+#cmakedefine DETRAN_COMPILED_Y ${DETRAN_COMPILED_Y}
+
+#endif // DETRAN_CONFIG_HH 
+
+//---------------------------------------------------------------------------//
+//              end of detran_config.hh.in
+//---------------------------------------------------------------------------//

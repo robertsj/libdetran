@@ -4,7 +4,6 @@
  * \author robertsj
  * \date   May 22, 2012
  * \brief  UniformEqual class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 
@@ -14,12 +13,12 @@
 // Detran
 #include "Quadrature.hh"
 
-namespace detran
+namespace detran_angle
 {
 
-//===========================================================================//
+//---------------------------------------------------------------------------//
 /*!
- * \class Uniform_Equal_3D
+ * \class UniformEqual
  * \brief 2D/3D Uniform, Equal Weight (UEn) quadrature class.
  *
  * As mentioned in \ref LevelSymmetric, a fundamental problem inherent
@@ -31,7 +30,7 @@ namespace detran
  *
  * Here, we implement the "uniform, equal weight" (UEn) quadrature of Carew
  * and Zamonsky.  The basic idea is to choose uniform azimuthal divisions
- * and uniform polar cosines.  The result is product quadrature that
+ * and uniform polar cosines.  The result is a product quadrature that
  * can be extended on-the-fly to arbitrary numbers of angles.
  *
  * Here, the quadrature order defines the number of polar angles.
@@ -39,44 +38,53 @@ namespace detran
  * number.  Hence, the total number of angles is
  * twice the number of polar angles squared.
  *
+ * Note, the angles are stored with polar as the inner index.  This is
+ * requested for all product quadratures.
  *
  * \refs
  * - Carew, J. and Zamonsky. G., <em>Nuclear Science and Engineering</em>
  *     <b>131</b>, 199-207 (1999).
  *
  */
-//===========================================================================//
+//---------------------------------------------------------------------------//
+
 class UniformEqual : public Quadrature
 {
 
 public:
 
-  typedef SP<UniformEqual>  SP_quadrature;
-  typedef SP<Quadrature>    SP_base;
+  //---------------------------------------------------------------------------//
+  // TYPEDEFS
+  //---------------------------------------------------------------------------//
+
+  typedef detran_utilities::SP<UniformEqual>  SP_quadrature;
+  typedef detran_utilities::SP<Quadrature>    SP_base;
+
+  //---------------------------------------------------------------------------//
+  // PUBLIC INTERFACE
+  //---------------------------------------------------------------------------//
 
   /*!
    *  \brief Constructor.
-   *
    *  \param    order       Quadrature order.
    *  \param    dim         Problem dimension
    */
-  UniformEqual(int order, int dim);
+  UniformEqual(size_t order, size_t dim);
 
-  /*!
-   *  \brief SP Constructor.
-   */
-  static SP<Quadrature> Create(int order, int dim)
+  /// SP constructor
+  static detran_utilities::SP<Quadrature>
+  Create(size_t order, size_t dim)
   {
-    SP_quadrature p;
-    p = new UniformEqual(order, dim);
+    SP_quadrature p(new UniformEqual(order, dim));
     return p;
   }
 
-  void display() const;
-
 };
 
-} // end namespace detran
-
+} // end namespace detran_angle
 
 #endif /* UNIFORMEQUAL_HH_ */
+
+//---------------------------------------------------------------------------//
+//              end of UniformEqual.hh
+//---------------------------------------------------------------------------//

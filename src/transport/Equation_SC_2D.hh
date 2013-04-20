@@ -1,28 +1,23 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
+/**
  * \file   Equation_SC_2D.hh
  * \author robertsj
  * \date   Apr 10, 2012
  * \brief  Equation_SC_2D class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 
 #ifndef EQUATION_SC_2D_HH_
 #define EQUATION_SC_2D_HH_
 
-// Detran headers
 #include "Equation.hh"
-
-// Detran utilities
-#include "Definitions.hh"
 
 namespace detran
 {
 
-/*!
- *  \class Equation_SC_2D
- *  \brief Step characteristic discretization in two dimensions.
+/**
+ *  @class Equation_SC_2D
+ *  @brief Step characteristic discretization in two dimensions.
  *
  *  Reference: Lathrop, K. D. "Spatial differencing of the Transport
  *             Equation: Positivity vs. Accuracy", J. Comp. Phys. 4,
@@ -34,33 +29,36 @@ class Equation_SC_2D : public Equation<_2D>
 
 public:
 
-  typedef SP<Equation<_2D> >                SP_equation;
-  typedef Equation<_2D>::SP_material        SP_material;
-  typedef Equation<_2D>::SP_mesh            SP_mesh;
-  typedef Equation<_2D>::SP_quadrature      SP_quadrature;
-  typedef Equation<_2D>::moments_type       moments_type;
-  typedef Equation<_2D>::angular_flux_type  angular_flux_type;
-  typedef Equation<_2D>::face_flux_type     face_flux_type;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Constructor
-   */
+  typedef detran_utilities::SP<Equation<_2D> >    SP_equation;
+  typedef Equation<_2D>::SP_material              SP_material;
+  typedef Equation<_2D>::SP_mesh                  SP_mesh;
+  typedef Equation<_2D>::SP_quadrature            SP_quadrature;
+  typedef Equation<_2D>::moments_type             moments_type;
+  typedef Equation<_2D>::angular_flux_type        angular_flux_type;
+  typedef Equation<_2D>::face_flux_type           face_flux_type;
+
+  //-------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //-------------------------------------------------------------------------//
+
+  /// Constructor
   Equation_SC_2D(SP_mesh mesh,
                  SP_material material,
                  SP_quadrature quadrature,
-                 bool update_psi);
+                 const bool update_psi);
 
-  /// \name Public Interface
-  /// \{
+  //-------------------------------------------------------------------------//
+  // ABSTRACT INTERFACE -- ALL EQUATION TYPES MUST IMPLEMENT THESE
+  //-------------------------------------------------------------------------//
 
-  /*!
-   *   \brief Solve for the cell-center and outgoing edge fluxes.
-   *
-   *   See \ref Equation for full description.
-   */
-  inline void solve(int i,
-                    int j,
-                    int k,
+  /// Solve for the cell-center and outgoing edge fluxes.
+  inline void solve(const size_t i,
+                    const size_t j,
+                    const size_t k,
                     moments_type &source,
                     face_flux_type &psi_in,
                     face_flux_type &psi_out,
@@ -68,35 +66,29 @@ public:
                     angular_flux_type &psi);
 
 
-  /*!
-   *  \brief Setup the equations for a group.
-   *  \param g     Current group.
-   */
-  void setup_group(int g);
+  /// Setup the equations for a group.
+  void setup_group(const size_t g);
 
-  /*!
-   *  \brief Setup the equations for an octant.
-   *  \param octant    Current octant.
-   */
-  void setup_octant(int octant);
+  /// Setup the equations for an octant.
+  void setup_octant(const size_t octant);
 
-  /*!
-   *  \brief Setup the equations for an angle.
-   *  \param angle  Angle index within octant.
-   */
-  void setup_angle(int angle);
+  /// Setup the equations for an angle.
+  void setup_angle(const size_t angle);
 
-  /// \}
 
 private:
 
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
+
   /// X-directed coefficient, \f$ \Delta_x / |\mu| \f$.
-  vec_dbl d_alpha;
+  detran_utilities::vec_dbl d_alpha;
 
   /// Y-directed coefficient, \f$ \Delta_y / |\eta|  \f$.
-  vec_dbl d_beta;
+  detran_utilities::vec_dbl d_beta;
 
-  /*!
+  /**
    *  \brief Approximate exponential.
    *
    *  For SC, Denovo uses a 7th order truncate expansion for

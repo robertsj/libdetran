@@ -1,22 +1,21 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   CoarseMesh.cc
- * \brief  CoarseMesh 
- * \author Jeremy Roberts
- * \date   Aug 8, 2012
+/**
+ *  @file   CoarseMesh.cc
+ *  @brief  CoarseMesh
+ *  @author Jeremy Roberts
+ *  @date   Aug 8, 2012
  */
 //---------------------------------------------------------------------------//
 
-// Detran
 #include "CoarseMesh.hh"
-#include "Mesh1D.hh"
-#include "Mesh2D.hh"
-#include "Mesh3D.hh"
+#include "geometry/Mesh1D.hh"
+#include "geometry/Mesh2D.hh"
+#include "geometry/Mesh3D.hh"
 
 namespace detran
 {
 
-CoarseMesh::CoarseMesh(SP_mesh fine_mesh, u_int level)
+CoarseMesh::CoarseMesh(SP_mesh fine_mesh, const size_t level)
   : d_fine_mesh(fine_mesh)
   , d_level(level)
   , d_fine_to_coarse(3)
@@ -104,25 +103,42 @@ CoarseMesh::CoarseMesh(SP_mesh fine_mesh, u_int level)
   // Create the coarse mesh.
   if (dim == 1)
   {
-    d_coarse_mesh = new Mesh1D(coarse_edges[0],
-                               coarse_material_map);
+    d_coarse_mesh =
+      new detran_geometry::Mesh1D(coarse_edges[0], coarse_material_map);
   }
   else if (dim == 2)
   {
-    d_coarse_mesh = new Mesh2D(coarse_edges[0],
-                               coarse_edges[1],
-                               coarse_material_map);
+    d_coarse_mesh =
+      new detran_geometry::Mesh2D(coarse_edges[0], coarse_edges[1],
+                                  coarse_material_map);
   }
   else
   {
-    d_coarse_mesh = new Mesh3D(coarse_edges[0],
-                               coarse_edges[1],
-                               coarse_edges[2],
-                               coarse_material_map);
+    d_coarse_mesh =
+      new detran_geometry::Mesh3D(coarse_edges[0], coarse_edges[1],
+                                  coarse_edges[2], coarse_material_map);
   }
 
+  // Create fine mesh to coarse mesh map
+  vec_int f2c_mesh_map(d_fine_mesh->number_cells(), 0);
+  for (size_t k = 0; k < d_fine_mesh->number_cells_z(); ++k)
+  {
+    size_t kk = this->fine_to_coarse(k, 2);
+    for (size_t j = 0; j < d_fine_mesh->number_cells_y(); ++j)
+    {
+      size_t jj = this->fine_to_coarse(j, 1);
+      for (size_t i = 0; i < d_fine_mesh->number_cells_x(); ++i)
+      {
+        size_t ii = this->fine_to_coarse(i, 0);
+        f2c_mesh_map[d_fine_mesh->index(i, j, k)] =
+          d_coarse_mesh->index(ii, jj, kk);
+      }
+    }
+  }
+  // \todo it might be good to check if the key is there and
+  // use a numbered version
+  d_fine_mesh->add_mesh_map("COARSEMESH", f2c_mesh_map);
 }
-
 
 } // end namespace detran
 

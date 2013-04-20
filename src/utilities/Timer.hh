@@ -1,9 +1,11 @@
-/*
- * Timer.hh
- *
- *  Created on: Apr 11, 2012
- *      Author: robertsj
+//----------------------------------*-C++-*----------------------------------//
+/*!
+ * \file   TestDriver.hh
+ * \author Jeremy Roberts
+ * \date   Apr 11, 2012
+ * \brief  Timer class definition
  */
+//---------------------------------------------------------------------------//
 
 #ifndef TIMER_HH_
 #define TIMER_HH_
@@ -16,7 +18,7 @@
 #include <map>
 #include <string>
 
-namespace detran
+namespace detran_utilities
 {
 
 class Timer
@@ -82,7 +84,7 @@ private:
 
 };
 
-}
+} // end namespace detran_utilities
 
 
 

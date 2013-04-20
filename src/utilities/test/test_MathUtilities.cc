@@ -14,7 +14,8 @@
         FUNC(test_vec_scale) \
         FUNC(test_norm_residual_L2) \
         FUNC(test_norm_residual_L1) \
-        FUNC(test_norm_residual_Linf)
+        FUNC(test_norm_residual_Linf) \
+        FUNC(test_linspace)
 
 
 // Detran headers
@@ -25,7 +26,7 @@
 #include <iostream>
 
 using namespace detran_test;
-using namespace detran;
+using namespace detran_utilities;
 using namespace std;
 
 int main(int argc, char *argv[])
@@ -90,7 +91,23 @@ int test_norm_residual_Linf(int argc, char *argv[])
   TEST(soft_equiv(norm_res, 0.1));
   return 0;
 }
-
+int test_linspace(int argc, char *argv[])
+{
+  vec_dbl v = linspace(0, 4, 5);
+  for (int i = 0; i < v.size(); ++i)
+  {
+    std::cout << v[i] << " " << i << std::endl;
+    TEST(soft_equiv(v[i], double(i)));
+  }
+  double ref[] = {0.4, 1.2, 2.0, 2.8, 3.6};
+  v = linspace_center(0, 4, 5);
+  for (int i = 0; i < v.size(); ++i)
+  {
+    std::cout << v[i] << " " << ref[i] << std::endl;
+    TEST(soft_equiv(v[i], ref[i]));
+  }
+  return 0;
+}
 
 //---------------------------------------------------------------------------//
 //              end of testMathUtilities.cc

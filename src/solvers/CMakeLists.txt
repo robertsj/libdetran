@@ -1,54 +1,86 @@
 #------------------------------------------------------------------------------#
-# libdetran/src/solvers/CMakeLists.txt
+# src/solvers/CMakeLists.txt
 #------------------------------------------------------------------------------#
 
-SET(SOLVERS_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+set(LIB_NAME "solvers")
 
-#-------------------------------------#
+set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+
+#-----------------------------------------------------------------------------#
 # SOURCE
-#-------------------------------------#
+#-----------------------------------------------------------------------------#
 
-SET(SOLVERS_SRC
-	Eigensolver.cc
-	EigenSLEPc.cc
-    InnerIteration.cc
-    SourceIteration.cc
-    InnerGMRES.cc
-    GaussSeidel.cc
-    KrylovMG.cc
-    PowerIteration.cc
-    PreconditionerWG.cc
-    PreconditionerMG.cc
+# Include
+include_directories(${SRC_DIR})
+include_directories(wg)
+include_directories(mg)
+include_directories(eigen)
+include_directories(time)
+add_subdirectory(wg)
+add_subdirectory(mg)
+add_subdirectory(eigen)
+add_subdirectory(time)
+set(SRC
+    FixedSourceManager.cc
+    EigenvalueManager.cc
+    SweepOperator.cc
+    Solver.cc
 )
 
-#-------------------------------------#
+#-----------------------------------------------------------------------------#
 # SHARED LIBRARY
-#-------------------------------------#
+#-----------------------------------------------------------------------------#
 
-ADD_LIBRARY(solvers
+ADD_LIBRARY(${LIB_NAME}
             SHARED
-            ${SOLVERS_SRC} 
+            ${SRC} 
+            ${WG_SRC}
+            ${MG_SRC}
+            ${EIGEN_SRC}
+            ${TIME_SRC}
 )
-TARGET_LINK_LIBRARIES( solvers
-                       diffusion
-                       transport
-                       angle
-                       materials
-                       geometry
-                       utilities
-                       ${PETSC_LIBRARIES}
-                       ${SLEPC_LIBRARIES}  
-                       ${GPERFTOOLS_LIBRARIES}
+TARGET_LINK_LIBRARIES(${LIB_NAME}
+                      callow
+                      transport
+                      angle
+                      material
+                      geometry
+                      utilities
+                      ioutils
+                      kinetics
 )
 
-INSTALL_FILES(/include .hh)
-INSTALL_TARGETS(/lib solvers)
+INSTALL_FILES(/include/${LIB_NAME} .hh)
+INSTALL_TARGETS(/lib ${LIB_NAME})
 
-#-------------------------------------#
+#-----------------------------------------------------------------------------#
 # TESTING
-#-------------------------------------#
+#-----------------------------------------------------------------------------#
 
 if( DETRAN_ENABLE_TEST )
-    include_directories(${SOLVERS_DIR}/test)
-    add_subdirectory(${SOLVERS_DIR}/test)
+    include_directories(${SRC_DIR}/test)
+    add_subdirectory(${SRC_DIR}/test)
 endif()
+
+#-----------------------------------------------------------------------------#
+# PYTHON
+#-----------------------------------------------------------------------------#
+
+if(DETRAN_ENABLE_PYTHON)
+
+SET_SOURCE_FILES_PROPERTIES(detran_${LIB_NAME}.i PROPERTIES CPLUSPLUS ON)
+SWIG_ADD_MODULE(${LIB_NAME} python detran_${LIB_NAME}.i )
+SWIG_LINK_LIBRARIES(${LIB_NAME}
+                    ${PYTHON_LIBRARIES}
+                    ${LIB_NAME} 
+                    transport
+                    
+                    )
+
+# Install the module and library
+INSTALL(FILES ${CMAKE_BINARY_DIR}/${LIB_NAME}/${LIB_NAME}.py
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/python/detran)
+INSTALL(FILES ${CMAKE_BINARY_DIR}/${LIB_NAME}/_${LIB_NAME}.so
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/python/detran)
+        
+endif()        

@@ -1,35 +1,38 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Quadrature.hh
- * \brief  Quadrature class definition.
- * \author Jeremy Roberts
- * \date   Mar 23, 2012
+/**
+ *  @file   Quadrature.hh
+ *  @brief  Quadrature class definition.
+ *  @author Jeremy Roberts
+ *  @date   Mar 23, 2012
  */
 //---------------------------------------------------------------------------//
 
-#ifndef QUADRATURE_HH_
-#define QUADRATURE_HH_
+#ifndef detran_angle_QUADRATURE_HH_
+#define detran_angle_QUADRATURE_HH_
 
-// Other libtran headers
-#include "Constants.hh"
-#include "Definitions.hh"
-#include "DBC.hh"
-#include "SP.hh"
-#include "Warning.hh"
-
-// System headers
+#include "utilities/Constants.hh"
+#include "utilities/Definitions.hh"
+#include "utilities/DBC.hh"
+#include "utilities/SP.hh"
+#include "utilities/Warning.hh"
 #include <string>
 
-namespace detran
+/**
+ *  @namespace detran_angle
+ *  @brief Contains all angular quadrature and related items for detran
+ */
+namespace detran_angle
 {
 
-//---------------------------------------------------------------------------//
-/*!
- *  \class Quadrature
- *  \brief Base quadrature class for discrete ordinates.
+/**
+ *  @class Quadrature
+ *  @brief Base quadrature class for transport calculations
  *
- *  All quadratures must be ordered so that the signs of the cosines are
- *  arranged in the following manner:
+ *  For all Detran quadratures, octant symmetry is assumed.  As a result,
+ *  only the first octant abscissa and weights are stored.  This applies
+ *  to specializations for product and MOC-specific quadratures.
+ *
+ *  The octants are ordered as follows, with
  *
  *  \verbatim
  *    indices | mu  | eta | xi
@@ -59,11 +62,15 @@ namespace detran
  *  sign.  This assumes, of course, symmetric quadratures.
  *
  */
-//---------------------------------------------------------------------------//
-class Quadrature : public Object
+
+class Quadrature
 {
 
 public:
+
+  //-------------------------------------------------------------------------//
+  // ENUMERATIONS
+  //-------------------------------------------------------------------------//
 
   enum directions
   {
@@ -73,245 +80,167 @@ public:
     END_COSINES
   };
 
-  typedef SP<Quadrature>      SP_quadrature;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Constructor.
-   *
-   *  \param    order       Quadrature order
-   *  \param    dim         Spatial dimension
-   */
-  Quadrature(int order,
-             int dim,
-             int number_angles,
-             std::string name);
+  typedef detran_utilities::SP<Quadrature>      SP_quadrature;
+  typedef detran_utilities::vec_dbl             vec_dbl;
+  typedef detran_utilities::vec2_dbl            vec2_dbl;
+  typedef detran_utilities::vec_int             vec_int;
+  typedef detran_utilities::vec2_int            vec2_int;
+  typedef detran_utilities::size_t              size_t;
 
-  /*!
-   *  \brief Pure virtual destructor.
+  //-------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //-------------------------------------------------------------------------//
+
+  /**
+   *   @brief Constructor.
+   *   @param    dim             Spatial dimension
+   *   @param    number_angles   Total number of angles
+   *   @param    name            Descriptive name
    */
+  Quadrature(const size_t dim,
+             const size_t number_angles,
+             const std::string name);
+
+  /// Pure virtual destructor
   virtual ~Quadrature() = 0;
 
-  /*!
-   *  \brief Return total number of angles.
+  //-------------------------------------------------------------------------//
+  // PUBLIC FUNCTIONS
+  //-------------------------------------------------------------------------//
+
+  /// Return total number of angles.
+  size_t number_angles() const;
+  /// Return total number of octants.
+  size_t number_octants() const;
+  /// Return number of angles per octant.
+  size_t number_angles_octant() const;
+
+  /**
+   *  @brief Return cardinal angle index.
+   *  @param o    Octant index
+   *  @param a    Angle within octant
    */
-  int number_angles() const
+  size_t index(const size_t o, const size_t a);
+
+  /// Return const reference to weights.
+  const vec_dbl& weights() const;
+
+  /**
+   *  @brief Return const reference to a cosine vector
+   *  @param dir    Direction of cosine
+   */
+  const vec_dbl& cosines(const size_t dir) const;
+
+  /**
+   *  @brief Return single weight.
+   *  @param a  Angle within octant
+   */
+  double weight(const size_t a) const;
+
+  /**
+   *  @brief Return single \f$ \mu \f$.
+   *  @param o    Octant index
+   *  @param a    Angle within octant
+   */
+  double mu(const size_t o, const size_t a) const;
+
+  /**
+   *  @brief Return single \f$ \eta \f$.
+   *  @param o    Octant index
+   *  @param a    Angle within octant
+   */
+  double eta(const size_t o, const size_t a) const;
+
+  /**
+   *  @brief Return single \f$ \xi \f$.
+   *  @param o    Octant index
+   *  @param a    Angle within octant
+   */
+  double xi(const size_t o, const size_t a) const;
+
+  /**
+   *  @brief Return one over the integral of unity over all angles.
+   *  @param d    Problem dimension
+   */
+  static double angular_norm(const size_t d);
+
+  /// Get vector of incident octants for a side
+  const vec_int& incident_octant(const size_t s);
+
+  /// Get vector of outgoing octants for a side
+  const vec_int& outgoing_octant(const size_t s);
+
+  /**
+   *  @brief Are the indices valid?
+   *  @param o    Octant index
+   *  @param a    Angle within octant
+   */
+  bool valid_index(const size_t o, const size_t a) const;
+
+  size_t dimension() const
   {
-    return d_number_angles;
+    return d_dimension;
   }
 
-  /*!
-   *  \brief Return total number of octants.
-   */
-  int number_octants() const
+  /// Set adjoint.  This changes the octant multipliers.
+  void set_adjoint(const bool v = true);
+
+  /// Is adjoint?
+  bool is_adjoint() const
   {
-    return d_number_octants;
+    return d_adjoint;
   }
 
-  /*!
-   *  \brief Return number of angles per octant.
-   */
-  int number_angles_octant() const
-  {
-    return d_number_angles_octant;
-  }
+  // Return my name
+  std::string name() const;
 
-  /*!
-   *  \brief Return number of azimuths per octant.
-   *
-   *  This is useful when a product quadrature is defined.
-   */
-  virtual int number_azimuths_octant() const
-  {
-    return 0;
-  }
-
-  /*!
-   *  \brief Return number of polar angles per octant.
-   *
-   *  This is useful when a product quadrature is defined.
-   */
-  virtual int number_polar_octant() const
-  {
-    return 0;
-  }
-
-  /*!
-   *  \brief Return cardinal angle index.
-   */
-  int index(int o, int a)
-  {
-    Require(o >= 0);
-    Require(o < d_number_octants);
-    Require(a >= 0);
-    Require(a < d_number_angles_octant);
-    int angle = a + o * d_number_angles_octant;
-    Ensure(angle >= 0);
-    Ensure(angle < d_number_angles);
-    return angle;
-  }
-
-  /*!
-   *  \brief Angle in octant from azimuth and polar
-   *
-   *  Useful for product quadratures.
-   */
-  virtual int angle(int a, int p) const
-  {
-    THROW("NOT A PRODUCT QUADRATURE");
-    return 0;
-  }
-
-  /*!
-   *  \brief Return const reference to weights.
-   */
-  const vec_dbl& weights()
-  {
-    return d_weight;
-  }
-
-  /*!
-   *  \brief Return const reference a cosine vector.
-   */
-  const vec_dbl& cosines(int dir)
-  {
-    Require (dir >= 0 and dir < d_dimension);
-    if (dir == MU)
-      return d_mu;
-    else if (dir == ETA)
-      return d_eta;
-    else
-      return d_xi;
-  }
-
-  /*!
-   *  \brief Return single weight.
-   */
-  double weight(int a)
-  {
-    Require(a >= 0);
-    Require(a < d_number_angles_octant);
-    return d_weight[a];
-  }
-
-  /*!
-   *  \brief Return single \f$ \mu \f$.
-   */
-  double mu(int o, int a)
-  {
-    Require(a >= 0);
-    Require(a < d_number_angles_octant);
-    Require(o >= 0);
-    Require(o < d_number_octants);
-    return d_octant_sign[o][MU]*d_mu[a];
-  }
-
-  /*!
-   *  \brief Return single \f$ \eta \f$.
-   */
-  double eta(int o, int a)
-  {
-    Require(a >= 0);
-    Require(a < d_number_angles_octant);
-    Require(o >= 0);
-    Require(o < d_number_octants);
-    Require(d_dimension > 1); // 1d calcs have no business with eta...
-    return d_octant_sign[o][ETA]*d_eta[a];
-  }
-
-  /*!
-   *  \brief Return single \f$ \xi \f$.
-   */
-  double xi(int o, int a)
-  {
-    Require(a >= 0);
-    Require(a < d_number_angles_octant);
-    Require(o >= 0);
-    Require(o < d_number_octants);
-    //Require(d_dimension == 3); // 1d/2d calcs have no need for xi...
-    return d_octant_sign[o][XI]*d_xi[a];
-  }
-
-  /*!
-   *  \brief Return one over the integral of unity over all angles.
-   */
-  static double angular_norm(int d)
-  {
-    Require(d > 0 and d < 4);
-    if (d == 1)
-      return 0.5;
-    else
-      return inv_four_pi;
-  }
-
-  /*!
-   *  \brief Are the indices valid?
-   */
-  bool valid_index(int o, int a) const
-  {
-    if (o >= 0 and o < d_number_octants and
-        a >= 0 and a < d_number_angles_octant)
-    {
-      return true;
-    }
-    else
-    {
-      return false;
-    }
-  }
-
-  /*!
-   *  \brief Pretty print of the first octant parameters.
-   */
+  /// Pretty print of the first octant parameters.
   virtual void display() const;
 
-  /*!
-   *  \brief Unimplemented DBC method.
-   */
-  bool is_valid() const
-  {
-    return true;
-  }
 
 protected:
 
   /// problem dimension
-  int d_dimension;
-
-  /// Quadrature order (means different things for each type!)
-  int d_order;
-
+  size_t d_dimension;
   /// number of angles
-  int d_number_angles;
-
+  size_t d_number_angles;
   /// number of octants
-  int d_number_octants;
-
+  size_t d_number_octants;
   /// number of angle per octant
-  int d_number_angles_octant;
-
+  size_t d_number_angles_octant;
   /// Quadrature weight
   vec_dbl d_weight;
-
   /// x-axis cosines
   vec_dbl d_mu;
-
   /// y-axis cosines
   vec_dbl d_eta;
-
   /// z-axis cosines
   vec_dbl d_xi;
-
   /// type of quadrature being used
   std::string d_name;
-
   /// octant cosign signs (e.g [1 1 1] for octant 1)
   vec2_dbl d_octant_sign;
+  /// incident octants
+  vec2_int d_incident_octants;
+  /// outgoing octants
+  vec2_int d_outgoing_octants;
+  /// Is this an adjoint problem?
+  bool d_adjoint;
 
 };
 
-} // end namespace detran
+} // end namespace detran_angle
 
-#endif /* QUADRATURE_HH_ */
+//---------------------------------------------------------------------------//
+// INLINE MEMBER DEFINITIONS
+//---------------------------------------------------------------------------//
+#include "Quadrature.i.hh"
+
+#endif /* detran_angle_QUADRATURE_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of Quadrature.hh

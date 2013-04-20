@@ -4,7 +4,6 @@
  * \author Jeremy Roberts
  * \date   Jul 12, 2011
  * \brief  Simple functions and macro for testing and printing failures.
- * \note   Copyright (C) 2012 Jeremy Roberts.
  */
 //---------------------------------------------------------------------------//
 
@@ -20,7 +19,6 @@
 #include <string>
 #include <sstream>
 #include <cstdlib>
-
 
 /*!
  *  \page testing Detran Testing Typedefs and Macros
@@ -75,12 +73,15 @@
  *  more unit tests.  The actual unit test takes the form
  *
  *  \code
-    int test_one()
+    int test_one(int argc, char *argv[])
     {
       // Do some setup.
       TEST(some_boolean_expression);
       // Do something else.
       TEST(some_other_boolean_expression);
+      // The following will generate error messages, but that's
+      // expected (i.e. the test passes)
+      TESTFALSE(something_that_should_be_false);
       // Make sure to return 0 if all is well.
       return 0;
     }
@@ -93,7 +94,9 @@
  *  still be completed.
  */
 
-/// \{
+//---------------------------------------------------------------------------//
+// FUNCTIONS AND MACROS FOR DEFINING TESTS
+//---------------------------------------------------------------------------//
 
 /// Typedefs for test arrays.
 typedef int (*test_pointer)(int argc, char *argv[]);
@@ -125,13 +128,17 @@ test_name test_names[] =
                        / ((size_t)(!(sizeof(test_table)            \
                        % sizeof(0[test_table])))))
 
-/// \}
-
+/*!
+ *  \namespace detran_test
+ *  \brief Includes all functionality for performing tests using the
+ *         detran unit test framework.
+ */
 namespace detran_test
 {
 
-/// \name Utility functions
-/// \{
+//---------------------------------------------------------------------------//
+// UTILITY FUNCTIONS
+//---------------------------------------------------------------------------//
 
 /// integer to string
 static std::string itoa(int i)
@@ -149,8 +156,11 @@ static std::string dtoa(double d)
   return out.str();
 }
 
-/// \}
 
+/*!
+ *  \class TestDriver
+ *  \brief Drives a test set
+ */
 class TestDriver
 {
 
@@ -299,16 +309,21 @@ int TestDriver::d_test = 0;
 
 } // end namespace testing
 
+//---------------------------------------------------------------------------//
+// TEST MACROS
+//---------------------------------------------------------------------------//
+
 /// Evaluate a statement expected to be true.
-#define TEST(c)      if(TestDriver::                                 \
+#define TEST(c)      if(TestDriver::                               \
  test( c, #c, __FILE__, __func__, __LINE__ )) return 1;
 
 /// Evaluate a statement expected to be false.
-#define TESTFALSE(c) if(!TestDriver::                                 \
+#define TESTFALSE(c) if(!TestDriver::                              \
  test( c, #c, __FILE__, __func__, __LINE__ )) return 1;
 
 /// The single function call needed in test_XYX.cc.
 #define RUN(argv, argc) return TestDriver::run(argv, argc);
+
 
 #endif /* TESTING_HH_ */
 

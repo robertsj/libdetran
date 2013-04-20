@@ -1,27 +1,22 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   InputDB.i.hh
- * \author Jeremy Roberts
- * \date   Mar 25, 2012
- * \brief  
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+/**
+ *  @file   InputDB.i.hh
+ *  @author Jeremy Roberts
+ *  @date   Mar 25, 2012
+ *  @brief  InputDB inline member definitions
  */
 //---------------------------------------------------------------------------//
-// $Rev::                                               $:Rev of last commit
-// $Author:: j.alyn.roberts@gmail.com                   $:Author of last commit
-// $Date::                                              $:Date of last commit
-//---------------------------------------------------------------------------//
 
 
-#ifndef INPUTDB_I_HH_
-#define INPUTDB_I_HH_
+#ifndef detran_utilities_INPUTDB_I_HH_
+#define detran_utilities_INPUTDB_I_HH_
 
 #include <iostream>
 
-namespace detran
+namespace detran_utilities
 {
 
-
+//---------------------------------------------------------------------------//
 inline bool InputDB::check(const std::string &key) const
 {
   using std::cout;
@@ -72,107 +67,142 @@ inline bool InputDB::check(const std::string &key) const
     if (it5 != d_data_str.end())
       return true;
   }
+
+  // Check db
+  std::map<std::string, SP_input>::const_iterator it6;
+  if (d_data_db.size() > 0)
+  {
+    it6 = d_data_db.find(key);
+    if (it6 != d_data_db.end())
+      return true;
+  }
+
   return false;
 }
 
+//---------------------------------------------------------------------------//
 // Get
 
 template <>
-inline int InputDB::get(const std::string &key) const
+inline int InputDB::get<int>(const std::string &key) const
 {
-  Require(check(key));
+  Require_msg(check(key), key);
   return d_data_int.find(key)->second;
 }
 template <>
-inline double InputDB::get(const std::string &key) const
+inline double InputDB::get<double>(const std::string &key) const
 {
-  Require(check(key));
+  Require_msg(check(key), key);
   return d_data_dbl.find(key)->second;
 }
 template <>
-inline vec_int InputDB::get(const std::string &key) const
+inline vec_int InputDB::get<vec_int>(const std::string &key) const
 {
-  Require(check(key));
+  Require_msg(check(key), key);
   return d_data_vec_int.find(key)->second;
 }
 template <>
-inline vec_dbl InputDB::get(const std::string &key) const
+inline vec_dbl InputDB::get<vec_dbl>(const std::string &key) const
 {
-  Require(check(key));
+  Require_msg(check(key), key);
   return d_data_vec_dbl.find(key)->second;
 }
 template <>
-inline std::string InputDB::get(const std::string &key) const
+inline std::string InputDB::get<std::string>(const std::string &key) const
 {
-  Require(check(key));
+  Require_msg(check(key), key);
   return d_data_str.find(key)->second;
 }
+template <>
+inline InputDB::SP_input InputDB::get<InputDB::SP_input>(const std::string &key) const
+{
+  Require_msg(check(key), key);
+  return d_data_db.find(key)->second;
+}
 
+//---------------------------------------------------------------------------//
 // Put
 
 template <>
 inline void InputDB::put(const std::string &key, const int value)
 {
   d_data_int[key] = value;
-  Ensure(check(key));
+  Ensure_msg(check(key), key);
 }
 template <>
 inline void InputDB::put(const std::string &key, const double value)
 {
   d_data_dbl[key] = value;
-  Ensure(check(key));
+  Ensure_msg(check(key), key);
 }
 template <>
 inline void InputDB::put(const std::string &key, const vec_int value)
 {
   d_data_vec_int[key] = value;
-  Ensure(check(key));
+  Ensure_msg(check(key), key);
 }
 template <>
 inline void InputDB::put(const std::string &key, const vec_dbl value)
 {
   d_data_vec_dbl[key] = value;
-  Ensure(check(key));
+  Ensure_msg(check(key), key);
 }
 template <>
 inline void InputDB::put(const std::string &key, const std::string value)
 {
   d_data_str[key] = value;
-  Ensure(check(key));
+  Ensure_msg(check(key), key);
+}
+template <>
+inline void InputDB::put(const std::string &key, const SP_input value)
+{
+  d_data_db[key] = value;
+  Ensure_msg(check(key), key);
 }
 
+//---------------------------------------------------------------------------//
 // Get map
 
 template <class T>
-inline const std::map<std::string, T>& InputDB::get_map()
+inline const std::map<std::string, T>&
+InputDB::get_map()
 {
   return d_data_int;
 }
 template <>
-inline const std::map<std::string, double>& InputDB::get_map<double>()
+inline const std::map<std::string, double>&
+InputDB::get_map<double>()
 {
   return d_data_dbl;
 }
 template <>
-inline const std::map<std::string, std::string>& InputDB::get_map<std::string>()
+inline const std::map<std::string, std::string>&
+InputDB::get_map<std::string>()
 {
   return d_data_str;
 }
 template <>
-inline const std::map<std::string, vec_int>& InputDB::get_map<vec_int>()
+inline const std::map<std::string, vec_int>&
+InputDB::get_map<vec_int>()
 {
   return d_data_vec_int;
 }
 template <>
-inline const std::map<std::string, vec_dbl>& InputDB::get_map<vec_dbl>()
+inline const std::map<std::string, vec_dbl>&
+InputDB::get_map<vec_dbl>()
 {
   return d_data_vec_dbl;
 }
+template <>
+inline const std::map<std::string, InputDB::SP_input>&
+InputDB::get_map<InputDB::SP_input>()
+{
+  return d_data_db;
+}
 
+} // end namespace detran_utilities
 
-} // end namespace detran
-
-#endif /* INPUTDB_I_HH_ */
+#endif /* detran_utilities_INPUTDB_I_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of InputDB.i.hh

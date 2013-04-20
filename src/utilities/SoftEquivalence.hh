@@ -6,6 +6,7 @@
  * \brief  Soft_Equivalence functions for floating point comparisons.
  * \note   Copyright (C) 2008 Oak Ridge National Laboratory, UT-Battelle, LLC.
  */
+//---------------------------------------------------------------------------//
 
 #ifndef harness_Soft_Equivalence_hh
 #define harness_Soft_Equivalence_hh
@@ -14,7 +15,7 @@
 #include <iterator>
 #include "DBC.hh"
 
-namespace detran
+namespace detran_utilities
 {
 
 //===========================================================================//
@@ -40,7 +41,7 @@ namespace detran
 template<class FPT>
 inline bool soft_equiv(const FPT &value,
                        const FPT &reference, 
-		       const FPT  precision = 1.0e-12)
+		                   const FPT  precision = 1.0e-12)
 {
     using std::fabs;
     bool passed = false;
@@ -106,24 +107,24 @@ inline bool soft_equiv(
     // first check that the sizes are equivalent
     if (distance(value, value_end) != distance(ref, ref_end))
     {
-	passed = false;
+      passed = false;
     }
 
     // if the sizes are the same, loop through and check each element
     else
     {
-	while (value != value_end && passed == true)
-	{
-	    passed = soft_equiv(*value, *ref, precision);
-	    value++;
-	    ref++;
-	}
+      while (value != value_end && passed == true)
+      {
+        passed = soft_equiv(*value, *ref, precision);
+        value++;
+        ref++;
+      }
     }
-    
+
     return passed;
 }
 
-} // end namespace detran
+} // end namespace detran_utilities
 
 #endif // Soft_Equivalence_hh
 

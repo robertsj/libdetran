@@ -1,14 +1,16 @@
 #------------------------------------------------------------------------------#
-# libdetran/src/geometry/CMakeLists.txt
+# src/geometry/CMakeLists.txt
 #------------------------------------------------------------------------------#
 
-SET(GEOMETRY_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+SET(LIB_NAME "geometry")
 
-#-------------------------------------#
+SET(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+
+#-----------------------------------------------------------------------------#
 # SOURCE
-#-------------------------------------#
+#-----------------------------------------------------------------------------#
 
-SET(GEOMETRY_SRC
+SET(SRC
     Mesh.cc
     Mesh1D.cc
     Mesh2D.cc
@@ -20,28 +22,51 @@ SET(GEOMETRY_SRC
     Tracker.cc
 )
 
-#-------------------------------------#
+#-----------------------------------------------------------------------------#
 # SHARED LIBRARY
-#-------------------------------------#
+#-----------------------------------------------------------------------------#
 
-ADD_LIBRARY(geometry
+ADD_LIBRARY(${LIB_NAME}
             SHARED
-            ${GEOMETRY_SRC} 
+            ${SRC} 
 )
-TARGET_LINK_LIBRARIES( geometry
-                       utilities
-                       angle
-                       ${Boost_LIBRARIES}        
+TARGET_LINK_LIBRARIES(${LIB_NAME}
+                      angle
+                      utilities
 )
 
-INSTALL_FILES(/include .hh)
-INSTALL_TARGETS(/lib geometry)
+INSTALL_FILES(/include/${LIB_NAME} .hh)
+INSTALL_FILES(/include/${LIB_NAME} .i)
+INSTALL_TARGETS(/lib ${LIB_NAME})
 
-#-------------------------------------#
+#-----------------------------------------------------------------------------#
 # TESTING
-#-------------------------------------#
+#-----------------------------------------------------------------------------#
 
 if( DETRAN_ENABLE_TEST )
-    include_directories(${GEOMETRY_DIR}/test)
-    add_subdirectory(${GEOMETRY_DIR}/test)
+    include_directories(${SRC_DIR}/test)
+    add_subdirectory(${SRC_DIR}/test)
 endif()
+
+#-----------------------------------------------------------------------------#
+# PYTHON
+#-----------------------------------------------------------------------------#
+
+if(DETRAN_ENABLE_PYTHON)
+
+SET_SOURCE_FILES_PROPERTIES(detran_${LIB_NAME}.i PROPERTIES CPLUSPLUS ON)
+SWIG_ADD_MODULE(${LIB_NAME} python detran_${LIB_NAME}.i )
+SWIG_LINK_LIBRARIES(${LIB_NAME}
+                    ${PYTHON_LIBRARIES}
+                    ${LIB_NAME} 
+                    utilities
+                    angle
+                    )
+
+# Install the module and library
+INSTALL(FILES ${CMAKE_BINARY_DIR}/${LIB_NAME}/${LIB_NAME}.py
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/python/detran)
+INSTALL(FILES ${CMAKE_BINARY_DIR}/${LIB_NAME}/_${LIB_NAME}.so
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/python/detran)
+
+endif()        

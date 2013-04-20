@@ -1,22 +1,19 @@
-/*
- * PinCell.cc
- *
- *  Created on: Apr 14, 2012
- *      Author: robertsj
+//----------------------------------*-C++-*----------------------------------//
+/*!
+ *  \file   PinCell.cc
+ *  \author Jeremy Roberts
+ *  \brief  PinCell class member definitions
+ *  \date   Mar 23, 2012
  */
+//---------------------------------------------------------------------------//
 
-// Detran
 #include "PinCell.hh"
-
-// Utilities
-#include "SoftEquivalence.hh"
-#include "Warning.hh"
-
-// System
+#include "utilities/SoftEquivalence.hh"
+#include "utilities/Warning.hh"
 #include <cmath>
 #include <iostream>
 
-namespace detran
+namespace detran_geometry
 {
 
 // Constructor
@@ -37,13 +34,15 @@ void PinCell::meshify(int number_meshes, bool flag)
   if (flag and d_radii.size() != 1)
   {
     // Best fit mesh only for single radius.
-    warning(USER_INPUT, "Best fit pincell only for a single radius.");
+    detran_utilities::warning(detran_utilities::USER_INPUT,
+      "Best fit pincell only for a single radius.");
     flag = false;
   }
   if (flag and number_meshes < 7)
   {
     // Best fit mesh only for single radius.
-    warning(USER_INPUT, "Best fit pincell needs at least 7 meshes.");
+    detran_utilities::warning(detran_utilities::USER_INPUT,
+      "Best fit pincell needs at least 7 meshes.");
     flag = false;
   }
 
@@ -101,11 +100,15 @@ void PinCell::meshify(int number_meshes, bool flag)
 
     // Number of fine meshes in moderator, delta, and square
     // regions, along the x axis
-    int num_mod    = std::max(std::floor(0.5*number_meshes * width_mod / half_pitch), 1.0);
-    int num_delta  = std::max(std::floor(0.5 * number_meshes * delta / half_pitch),   1.0);
-    int num_L_4    = std::max(std::floor(0.5 * number_meshes * 0.25*L / half_pitch), 1.0);
-    int num_L_2    = std::max(std::floor(0.25 * number_meshes * L / half_pitch)-1.0,
-                          double(number_meshes-2.0*(num_mod+num_delta+num_L_4)));
+    int num_mod    =
+      std::max(std::floor(0.5*number_meshes * width_mod / half_pitch), 1.0);
+    int num_delta  =
+      std::max(std::floor(0.5 * number_meshes * delta / half_pitch),   1.0);
+    int num_L_4    =
+      std::max(std::floor(0.5 * number_meshes * 0.25*L / half_pitch), 1.0);
+    int num_L_2    =
+      std::max(std::floor(0.25 * number_meshes * L / half_pitch)-1.0,
+               double(number_meshes-2.0*(num_mod+num_delta+num_L_4)));
 
 //    std::cout << " num_mod = "      << num_mod      << std::endl;
 //    std::cout << " num_delta = "    << num_delta    << std::endl;
@@ -172,7 +175,7 @@ void PinCell::meshify(int number_meshes, bool flag)
     coarse[5] = coarse[4] + 0.25*L;
     coarse[6] = coarse[5] + delta;
     coarse[7] = coarse[6] + width_mod;
-    Ensure(soft_equiv(coarse[7], d_pitch));
+    Ensure(detran_utilities::soft_equiv(coarse[7], d_pitch));
 
     // Set the material.  Default is zero, which
     // is fuel.  We need to set the 13 fuel cells.
@@ -190,7 +193,6 @@ void PinCell::meshify(int number_meshes, bool flag)
   }
 
 }
-
 
 int PinCell::find_region(int i, int j, double width)
 {
@@ -210,7 +212,7 @@ int PinCell::find_region(int i, int j, double width)
   return r;
 }
 
-} // end namespace detran
+} // end namespace detran_geometry
 
 
 

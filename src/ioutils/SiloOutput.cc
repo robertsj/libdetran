@@ -1,31 +1,25 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   SiloOutput.cc
- * \brief  SiloOutput 
- * \author Jeremy Roberts
- * \date   Jul 27, 2012
+/**
+ *  @file   SiloOutput.cc
+ *  @brief  SiloOutput
+ *  @author Jeremy Roberts
+ *  @date   Jul 27, 2012
  */
 //---------------------------------------------------------------------------//
 
-// Configuration
-#include "detran_config.h"
-
-#ifdef DETRAN_ENABLE_SILO
-
-// Postprocess
+#include "detran_config.hh"
 #include "SiloOutput.hh"
-
-// Utilities
-#include "DBC.hh"
-#include "Definitions.hh"
-
-// System
+#include "utilities/DBC.hh"
+#include "utilities/Definitions.hh"
 #include <string>
 #include <stdio.h>
 
 namespace detran_ioutils
 {
 
+#ifdef DETRAN_ENABLE_SILO
+
+//---------------------------------------------------------------------------//
 SiloOutput::SiloOutput(SP_mesh mesh)
   : d_mesh(mesh)
   , d_initialized(false)
@@ -34,11 +28,13 @@ SiloOutput::SiloOutput(SP_mesh mesh)
   Require(d_mesh);
 }
 
+//---------------------------------------------------------------------------//
 SiloOutput::~SiloOutput()
 {
   if(d_initialized) finalize();
 }
 
+//---------------------------------------------------------------------------//
 bool SiloOutput::initialize(std::string filename)
 {
   // Simply return if already initialized.
@@ -75,9 +71,9 @@ bool SiloOutput::initialize(std::string filename)
   d_dims[2] = d_mesh->number_cells_z() + 1;
 
   // Create the coordinate vectors (mesh edges)
-  detran::vec_dbl x(d_mesh->number_cells_x() + 1, 0.0);
-  detran::vec_dbl y(d_mesh->number_cells_y() + 1, 0.0);
-  detran::vec_dbl z(d_mesh->number_cells_z() + 1, 0.0);
+  detran_utilities::vec_dbl x(d_mesh->number_cells_x() + 1, 0.0);
+  detran_utilities::vec_dbl y(d_mesh->number_cells_y() + 1, 0.0);
+  detran_utilities::vec_dbl z(d_mesh->number_cells_z() + 1, 0.0);
   for (int i = 0; i < d_mesh->number_cells_x(); i++)
     x[i + 1] = x[i] + d_mesh->dx(i);
   for (int i = 0; i < d_mesh->number_cells_y(); i++)
@@ -97,8 +93,10 @@ bool SiloOutput::initialize(std::string filename)
   d_dims[1]--;
   d_dims[2]--;
 
+  return true;
 }
 
+//---------------------------------------------------------------------------//
 void SiloOutput::finalize()
 {
   if (d_initialized)
@@ -108,6 +106,7 @@ void SiloOutput::finalize()
   }
 }
 
+//---------------------------------------------------------------------------//
 bool SiloOutput::write_mesh_map(const std::string &key)
 {
   using std::cout;
@@ -122,10 +121,10 @@ bool SiloOutput::write_mesh_map(const std::string &key)
   // Get the mesh map
   if (!d_mesh->mesh_map_exists(key))
   {
-    cout << "Mesh map doesn't exist; not writing mesh map" << endl;
+    cout << "Mesh map " + key + " doesn't exist; not writing mesh map" << endl;
     return false;
   }
-  detran::vec_int map = d_mesh->mesh_map(key);
+  detran_utilities::vec_int map = d_mesh->mesh_map(key);
 
   // Write to silo
   DBPutQuadvar1(d_silofile, key.c_str(), "mesh", &map[0],
@@ -135,6 +134,7 @@ bool SiloOutput::write_mesh_map(const std::string &key)
   return true;
 }
 
+//---------------------------------------------------------------------------//
 bool SiloOutput::write_scalar_flux(SP_state state)
 {
   // Preconditions
@@ -165,6 +165,7 @@ bool SiloOutput::write_scalar_flux(SP_state state)
   return true;
 }
 
+//---------------------------------------------------------------------------//
 bool SiloOutput::write_angular_flux(SP_state state, SP_quadrature quad)
 {
   // Preconditions
@@ -206,10 +207,61 @@ bool SiloOutput::write_angular_flux(SP_state state, SP_quadrature quad)
   return true;
 }
 
-} // end namespace detran_ioutils
+//---------------------------------------------------------------------------//
+bool SiloOutput::write_time_flux(const int step,
+                                 SP_state  state,
+                                 bool      do_psi)
+{
+  // Preconditions
+  Require(state);
+  SP_quadrature q;
+  if (do_psi)
+  {
+    Require(state->store_angular_flux());
+    q = state->get_quadrature();
+    Require(q);
+  }
+
+  // Example: step000001
+  char buffer[10];
+  sprintf(buffer, "step%i", step);
+  std::string buffer_str(buffer);
+
+  // Initialize
+  bool flag = initialize(buffer_str);
+
+  // Write fluxes
+  flag = write_scalar_flux(state);
+  if (do_psi) flag = write_angular_flux(state, q);
+
+  // Finalize
+  finalize();
+
+  return flag;
+}
+
+#else
+
+SiloOutput::SiloOutput(SP_mesh mesh)
+{
+  THROW("SILO NOT ENABLED");
+}
+SiloOutput::~SiloOutput(){}
+void SiloOutput::finalize(){}
+bool SiloOutput::initialize(std::string filename){}
+bool SiloOutput::write_mesh_map(const std::string &key)
+{return false;}
+bool SiloOutput::write_scalar_flux(SP_state state)
+{return false;}
+bool SiloOutput::write_angular_flux(SP_state state, SP_quadrature quad)
+{return false;}
+bool SiloOutput::write_time_flux(const int step, SP_state state, bool do_psi)
+{return false;}
 
 
 #endif // DETRAN_ENABLE_SILO
+
+} // end namespace detran_ioutils
 
 //---------------------------------------------------------------------------//
 //              end of file SiloOutput.cc

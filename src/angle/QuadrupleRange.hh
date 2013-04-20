@@ -1,30 +1,25 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   QuadrupleRange.hh
- * \author Jeremy Roberts
- * \date   Mar 23, 2012
- * \brief  QuadrupleRange class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+/**
+ *  @file   QuadrupleRange.hh
+ *  @author Jeremy Roberts
+ *  @date   Mar 23, 2012
+ *  @brief  QuadrupleRange class definition.
  */
 //---------------------------------------------------------------------------//
-// $Rev::                                               $:Rev of last commit
-// $Author:: j.alyn.roberts@gmail.com                   $:Author of last commit
-// $Date::                                              $:Date of last commit
-//---------------------------------------------------------------------------//
 
-#ifndef QUADRUPLERANGE_HH_
-#define QUADRUPLERANGE_HH_
+#ifndef detran_angle_QUADRUPLERANGE_HH_
+#define detran_angle_QUADRUPLERANGE_HH_
 
 // Detran
-#include "Quadrature.hh"
+#include "ProductQuadrature.hh"
 
-namespace detran
+namespace detran_angle
 {
 
-//===========================================================================//
-/*!
- * \class QuadrupleRange
- * \brief Quadruple Range quadrature class.
+//---------------------------------------------------------------------------//
+/**
+ * @class QuadrupleRange
+ * @brief Quadruple Range quadrature class.
  *
  * For two-dimensional transport, Abu-Shumays developed several quadrature
  * sets that are in some sense analogs of the DPn quadrature.  The sets he
@@ -107,70 +102,68 @@ namespace detran
  * Abu-Shumays, I.K. <em>Nuclear Science and Engineering</em>
  *     <b>64</b>, 299-316 (1977).
  *
- * \example angle/test/testQuadrupleRange.cc
  *
- * Test of Quadrature.
+ *
  */
-//===========================================================================//
-class QuadrupleRange : public Quadrature
+/**
+ *  \example angle/test/test_QuadrupleRange.cc
+ *
+ *  Test of class QuadrupleRange
+ */
+//---------------------------------------------------------------------------//
+
+class QuadrupleRange : public ProductQuadrature
 {
 
 public:
 
-  typedef SP<QuadrupleRange>  SP_quadrature;
-  typedef SP<Quadrature>      SP_base;
+  //-------------------------------------------------------------------------//
+  // PUBLIC INTERFACE
+  //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Constructor.
-   *
-   *  \param    order       Quadrature order.
+  /**
+   *  @brief Constructor
+   *  @param dim    Dimension (2 or 3)
+   *  @param na     Number of azimuths per octant
+   *  @param np     Number of polar angles per octant
    */
-  QuadrupleRange(int order, int dim = 2);
+  QuadrupleRange(const size_t dim,
+                 const size_t na,
+                 const size_t np);
 
-  /*!
-   *  \brief SP Constructor.
-   *
-   *  \param    order       Quadrature order.
-   */
-  static SP<Quadrature> Create(int order)
-  {
-    SP_quadrature p;
-    p = new QuadrupleRange(order);
-    return p;
-  }
-
-  void display() const;
+  /// SP constructor
+  static SP_quadrature Create(const size_t dim,
+                              const size_t na,
+                              const size_t np);
 
 private:
 
-  /// \name Implementation
-  /// \{
+  //-------------------------------------------------------------------------//
+  // IMPLEMENTATION
+  //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Return cosine of \f$ \theta \f$.
-   *  \param    N   number of azimuthal angles per quadrant
-   *  \param    i   0 for angle and 1 for weight
-   *  \param    j   index of requested point
+  /**
+   *  @brief Return cosine of \f$ \theta \f$.
+   *  @param    N   number of azimuthal angles per quadrant
+   *  @param    i   0 for angle and 1 for weight
+   *  @param    j   index of requested point
    */
-  double get_theta(int N, int i, int j);
+  double get_theta(size_t N, size_t i, size_t j);
 
-  /*!
-   *  \brief Return sine of \f$ \phi \f$.
-   *  \param    N   number of polar angles per quadrant
-   *  \param    i   0 for angle and 1 for weight
-   *  \param    j   index of requested point
+  /**
+   *  @brief Return sine of \f$ \phi \f$.
+   *  @param    N   number of polar angles per quadrant
+   *  @param    i   0 for angle and 1 for weight
+   *  @param    j   index of requested point
    */
 
-  double get_phi(int N, int i, int j);
-
-  /// \}
+  double get_phi(size_t N, size_t i, size_t j);
 
 };
 
-} // end namespace detran
+} // end namespace detran_angle
 
-
-#endif /* QUADRUPLERANGE_HH_ */
+#endif /* detran_angle_QUADRUPLERANGE_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of QuadrupleRange.hh

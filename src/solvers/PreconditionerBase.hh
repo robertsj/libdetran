@@ -11,7 +11,7 @@
 #define PRECONDITIONERBASE_HH_
 
 // Detran
-#include "Material.hh"
+#include "material/Material.hh"
 #include "Mesh.hh"
 #include "ScatterSource.hh"
 

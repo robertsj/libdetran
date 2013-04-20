@@ -1,59 +1,42 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   MomentToDiscrete.i.hh
- * \author Jeremy Roberts
- * \date   Sep 6, 2011
- * \brief  MomentToDiscrete inline member definitions.
- * \note   Copyright (C) 2011 Jeremy Roberts.
+/**
+ *  @file   MomentToDiscrete.i.hh
+ *  @author Jeremy Roberts
+ *  @date   Sep 6, 2011
+ *  @brief  MomentToDiscrete inline member definitions.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef MOMENT_TO_DISCRETE_I_HH_
-#define MOMENT_TO_DISCRETE_I_HH_
+#ifndef detran_angle_MOMENT_TO_DISCRETE_I_HH_
+#define detran_angle_MOMENT_TO_DISCRETE_I_HH_
 
-// Detran
 #include "SphericalHarmonics.hh"
-
-// Utilities
-#include "Constants.hh"
-#include "DBC.hh"
-#include "SoftEquivalence.hh"
-
-// System
+#include "utilities/Constants.hh"
+#include "utilities/DBC.hh"
+#include "utilities/SoftEquivalence.hh"
 #include <cmath>
 #include <iostream>
 
-namespace detran
+namespace detran_angle
 {
 
-// Constructor.
-template <class D>
-MomentToDiscrete<D>::MomentToDiscrete(const size_type legendre_order)
-  : d_legendre_order(legendre_order)
-  , d_number_moments(1) // \todo save for later use
+//---------------------------------------------------------------------------//
+inline void MomentToDiscrete::build(SP_quadrature q)
 {
-  Require(d_legendre_order >= 0);
-  Require(d_number_moments > 0);
-}
-
-// Build the operator.
-template <class D>
-void MomentToDiscrete<D>::build(SP_quadrature quadrature)
-{
-  Require(quadrature);
+  Require(q);
+  Require(q->dimension() >= 1 and q->dimension() <= 3);
 
   // Store the angular mesh.
-  d_quadrature = quadrature;
+  d_quadrature = q;
 
   // Clear the existing M matrix.
   d_M.clear();
   Assert(d_M.empty());
 
   // Resize M.
-  d_number_angles = quadrature->number_angles();
+  d_number_angles = d_quadrature->number_angles();
   Ensure(d_number_angles > 0);
   d_M.resize(d_number_angles, M_Row(d_number_moments));
-  Assert(d_M.size() == quadrature->number_angles());
 
   // Build the moment-to-discrete operator by looping through each octant
   // and then the angles in each octant.  The ordering is determined by the
@@ -62,128 +45,105 @@ void MomentToDiscrete<D>::build(SP_quadrature quadrature)
   {
     for (int a = 0; a < d_quadrature->number_angles_octant(); a++)
     {
-      calc_row(o, a);
+      if (d_quadrature->dimension() == 1)
+        calc_row_1d(o, a);
+      else if (d_quadrature->dimension() == 2)
+        calc_row_2d(o, a);
+      else
+        calc_row_3d(o, a);
     }
   }
 
 }
 
+//---------------------------------------------------------------------------//
 // 3-d
-template <class D>
-inline void MomentToDiscrete<D>::calc_row(int o, int a)
+inline void MomentToDiscrete::calc_row_3d(const size_t o, const size_t a)
 {
-  Assert(d_quadrature);
   int angle = d_quadrature->index(o, a);
-
   // reference to current row
   M_Row &row = d_M[angle];
-
   // calculate the moments and add them to the row
-  for (int l = 0; l <= d_legendre_order; l++)
-  {
-    double norm = (2.0 * l + 1.0) * inv_four_pi;
-    ;
-    for (int m = -l; m <= l; m++)
-    {
-      // get cardinal moment index
-      int i = 0; //Moments<D>::index(l,m);
-      Assert(i < d_number_moments);
-      // add harmonic
-      row[i] = norm
-          * SphericalHarmonics::Y_lm(l, m, d_quadrature->mu(o, a),
-                                     d_quadrature->eta(o, a),
-                                     d_quadrature->xi(o, a));
-    }
-  }
-}
-
-// 2-d
-template <>
-inline void MomentToDiscrete<_2D>::calc_row(const int o, const int a)
-{
-  int angle = d_quadrature->index(o, a);
-
-  // reference to current row
-  M_Row &row = d_M[angle];
-
-  // compute the direction cosine w/r to polar axis
-  double mu = d_quadrature->mu(o, a);
+  double mu  = d_quadrature->mu(o, a);
   double eta = d_quadrature->eta(o, a);
-  double xi = sqrt(1.0 - mu * mu - eta * eta);
-
-  // loop through l>0 moments and add
-  for (int l = 0; l <= d_legendre_order; l++)
+  double xi  = d_quadrature->xi(o, a);
+  for (int i = 0; i < d_number_moments; ++i)
   {
-    double norm = (2.0 * l + 1.0) * inv_four_pi;
-    for (int m = -l; m <= l; m += 2)
-    {
-      int i = 0; // Moments<_2D>::index(l, m);
-      row[i] = norm * SphericalHarmonics::Y_lm(l, m, mu, eta, xi);
-    }
+    size_t l = d_indexer->l(i);
+    int    m = d_indexer->m(i);
+    double norm = (2.0 * l + 1.0) * detran_utilities::inv_four_pi;
+    row[i] = norm * SphericalHarmonics::Y_lm(l, m, mu, eta, xi);
   }
 }
 
-// 1-d
-template <>
-inline void MomentToDiscrete<_1D>::calc_row(const int o, const int a)
+//---------------------------------------------------------------------------//
+// 2-d
+inline void MomentToDiscrete::calc_row_2d(const size_t o, const size_t a)
 {
   int angle = d_quadrature->index(o, a);
-
   // reference to current row
   M_Row &row = d_M[angle];
+  // compute the direction cosine w/r to polar axis
+  double mu  = d_quadrature->mu(o, a);
+  double eta = d_quadrature->eta(o, a);
+  double xi  = std::sqrt(1.0 - mu * mu - eta * eta);
+  for (int i = 0; i < d_number_moments; ++i)
+  {
+    size_t l = d_indexer->l(i);
+    int    m = d_indexer->m(i);
+    double norm = (2.0 * l + 1.0) * detran_utilities::inv_four_pi;
+    row[i] = norm * SphericalHarmonics::Y_lm(l, m, mu, eta, xi);
+  }
+}
 
+//---------------------------------------------------------------------------//
+// 1-d
+inline void MomentToDiscrete::calc_row_1d(const size_t o, const size_t a)
+{
+  int angle = d_quadrature->index(o, a);
+  // reference to current row
+  M_Row &row = d_M[angle];
   // calculate the moments and add them to the row
-  for (int l = 0; l <= d_legendre_order; l++)
+  for (int l = 0; l < d_number_moments; ++l)
   {
     double norm = (2.0 * l + 1.0) * 0.5;
-    int i = 0; //Moments<_1D>::index(l, 0);
-    row[i] = norm * SphericalHarmonics::Y_lm(l, d_quadrature->mu(o, a));
+    row[l] = norm * SphericalHarmonics::Y_lm(l, d_quadrature->mu(o, a));
   }
 }
 
 //-----------------------------------------------------------------------------
 // Operator(cardinal_angle_index, cardinal_moment_index)
-template <class D>
-inline const double& MomentToDiscrete<D>::
-operator()(const int angle, const int moment) const
+inline const double& MomentToDiscrete::
+operator()(const size_t angle, const size_t moment) const
 {
-  Require(angle >= 0);
   Require(angle < d_number_angles);
-  Require (moment >= 0);
   Require(moment < d_number_moments);
   return d_M[angle][moment];
 }
 
 //-----------------------------------------------------------------------------
 // Operator(cardinal_angle_index, legendre_degree, legendre_order)
-template <class D>
-inline const double& MomentToDiscrete<D>::
-operator()(const int angle, const int l, const int m) const
+inline const double& MomentToDiscrete::
+operator()(const size_t angle, const size_t l, const size_t m) const
 {
   // Moment cardinal index
-  int index = 0; //Moments<D>::index(l, m);
-  return (*this)(angle, index);
+  size_t moment = d_indexer->index(l, m);
+  return (*this)(angle, moment);
 }
 
 //-----------------------------------------------------------------------------
 // Operator(octant_index, angle_in_octant, legendre_degree, legendre_order)
-template <class D>
-inline const double& MomentToDiscrete<D>::
-operator()(const int o, const int a,
-           const int l, const int m) const
+inline const double& MomentToDiscrete::
+operator()(const size_t o, const size_t a,
+           const size_t l, const size_t m) const
 {
   // Angle cardinal index
-  int angle = d_quadrature->index(o, a);
+  size_t angle = d_quadrature->index(o, a);
   // Moment cardinal index
-  int moment = 0; //Moments<D>::index(l, m);
+  size_t moment = d_indexer->index(l, m);
   return (*this)(angle, moment);
 }
 
-// explicit instantiations
-template class MomentToDiscrete<_1D>;
-template class MomentToDiscrete<_2D>;
-template class MomentToDiscrete<_3D>;
+} // end namespace detran_angle
 
-} // end namespace detran
-
-#endif /* MOMENT_TO_DISCRETE_I_HH_ */
+#endif /* detran_angle_MOMENT_TO_DISCRETE_I_HH_ */

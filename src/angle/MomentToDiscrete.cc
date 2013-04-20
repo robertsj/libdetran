@@ -1,28 +1,27 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   MomentToDiscrete.cc
- * \author Jeremy Roberts
- * \date   Jul 1, 2011
- * \brief  MomentToDiscrete member definitions.
- * \note   Copyright (C) 2011 Jeremy Roberts.
+/**
+ *  @file   MomentToDiscrete.cc
+ *  @author Jeremy Roberts
+ *  @date   Jul 1, 2011
+ *  @brief  MomentToDiscrete member definitions.
  */
 //---------------------------------------------------------------------------//
 
-// Detran
 #include "MomentToDiscrete.hh"
-#include "SphericalHarmonics.hh"
 
-// Utilities
-#include "Constants.hh"
-#include "DBC.hh"
-#include "SoftEquivalence.hh"
-
-// System
-#include <cmath>
-
-namespace detran
+namespace detran_angle
 {
 
+//---------------------------------------------------------------------------//
+MomentToDiscrete::MomentToDiscrete(SP_momentindexer indexer)
+  : d_indexer(indexer)
+{
+  // Preconditioner
+  Require(d_indexer);
+
+  d_legendre_order = d_indexer->legendre_order();
+  d_number_moments = d_indexer->number_moments();
+}
 
 
 } // end namespace slabtran

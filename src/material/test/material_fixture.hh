@@ -1,10 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   material_fixture.hh
- * \author Jeremy Roberts
- * \date   Apr 1, 2012
- * \brief  Materials for testing.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+/**
+ *  @file   material_fixture.hh
+ *  @author Jeremy Roberts
+ *  @date   Apr 1, 2012
+ *  @brief  Materials for testing.
  */
 //---------------------------------------------------------------------------//
 
@@ -22,7 +21,7 @@
 namespace detran_test
 {
 
-typedef detran::Material::SP_material SP_material;
+typedef detran_material::Material::SP_material SP_material;
 
 /*!
  *  \brief Two group material database for transport tests.
@@ -34,7 +33,7 @@ static SP_material material_fixture_1g()
   // Create the new database.
   SP_material mat;
   // 1 group, 3 materials.
-  mat = new detran::Material(1, 3, false);
+  mat = new detran_material::Material(3, 1, "fixtured_1g");
 
   // ---------------------------
   // Material 0: strong scatter
@@ -87,7 +86,7 @@ static SP_material material_fixture_2g()
   SP_material mat;
   // 2 groups, 4 materials, and we don't turn off upscatter explicitly
   // (though there happens to be no upscatter in this data)
-  mat = new detran::Material(2, 4, false);
+  mat = new detran_material::Material(4, 2, "fixtured_2g");
 
   // ---------------------------
   // Material 0: Water
@@ -128,6 +127,9 @@ static SP_material material_fixture_2g()
   mat->set_sigma_s(1, 0, 1, 0.0000); // 1 <- 2
   mat->set_sigma_s(1, 1, 0, 0.0161); // 2 <- 1
   mat->set_sigma_s(1, 1, 1, 0.9355); // 2 <- 2
+
+  // sa(0) =  .2263- .2006-0.0161 = 0.0096
+  // sa(1) = 1.0119- .9355 = 0.0764
 
   // ---------------------------
   // Material 2: Fuel II
@@ -174,10 +176,9 @@ static SP_material material_fixture_2g()
   // ---------------------------
 
   // This mat->sets the scattering bounds, which can eliminate a few operations.
+  mat->compute_diff_coef();
+  mat->compute_sigma_a();
   mat->finalize();
-
-  // Ensure a valid input.
-  Ensure(mat->is_valid());
 
   // Return the fixture.
   return mat;
@@ -194,7 +195,7 @@ static SP_material material_fixture_7g()
   // Create the new database.
   SP_material mat;
   // 7 groups, 4 materials, and we don't turn off upscatter.
-  mat = new detran::Material(7, 7, false);
+  mat = new detran_material::Material(7, 7, "fixtured_7g");
 
   // --------------------------------------------
   // Material 0: UO2 fuel-clad
@@ -209,13 +210,13 @@ static SP_material material_fixture_7g()
   mat->set_sigma_t(m, 5, 3.95168E-01);
   mat->set_sigma_t(m, 6, 5.64406E-01);
   // Absorption cross section
-  // mat->set_sigma_a(m, 0, 8.02480E-03);
-  // mat->set_sigma_a(m, 1, 3.71740E-03);
-  // mat->set_sigma_a(m, 2, 2.67690E-02);
-  // mat->set_sigma_a(m, 3, 9.62360E-02);
-  // mat->set_sigma_a(m, 4, 3.00200E-02);
-  // mat->set_sigma_a(m, 5, 1.11260E-01);
-  // mat->set_sigma_a(m, 6, 2.82780E-01);
+  mat->set_sigma_a(m, 0, 8.02480E-03);
+  mat->set_sigma_a(m, 1, 3.71740E-03);
+  mat->set_sigma_a(m, 2, 2.67690E-02);
+  mat->set_sigma_a(m, 3, 9.62360E-02);
+  mat->set_sigma_a(m, 4, 3.00200E-02);
+  mat->set_sigma_a(m, 5, 1.11260E-01);
+  mat->set_sigma_a(m, 6, 2.82780E-01);
   // Fission times nu
   mat->set_sigma_f(m, 0, 7.21206E-03*2.78145E+00);
   mat->set_sigma_f(m, 1, 8.19301E-04*2.47443E+00);
@@ -274,13 +275,13 @@ static SP_material material_fixture_7g()
   mat->set_sigma_t(m, 5, 6.78997E-01);
   mat->set_sigma_t(m, 6, 6.82852E-01);
   // Absorption cross section
-  // mat->set_sigma_a(m, 0, 8.43390E-03);
-  // mat->set_sigma_a(m, 1, 3.75770E-03);
-  // mat->set_sigma_a(m, 2, 2.79700E-02);
-  // mat->set_sigma_a(m, 3, 1.04210E-01);
-  // mat->set_sigma_a(m, 4, 1.39940E-01);
-  // mat->set_sigma_a(m, 5, 4.09180E-01);
-  // mat->set_sigma_a(m, 6, 4.09350E-01);
+  mat->set_sigma_a(m, 0, 8.43390E-03);
+  mat->set_sigma_a(m, 1, 3.75770E-03);
+  mat->set_sigma_a(m, 2, 2.79700E-02);
+  mat->set_sigma_a(m, 3, 1.04210E-01);
+  mat->set_sigma_a(m, 4, 1.39940E-01);
+  mat->set_sigma_a(m, 5, 4.09180E-01);
+  mat->set_sigma_a(m, 6, 4.09350E-01);
   // Fission times nu
   mat->set_sigma_f(m, 0, 7.62704E-03*2.85209E+00);
   mat->set_sigma_f(m, 1, 8.76898E-04*2.89099E+00);
@@ -339,13 +340,13 @@ static SP_material material_fixture_7g()
   mat->set_sigma_t(m, 5, 8.33601E-01);
   mat->set_sigma_t(m, 6, 8.53603E-01);
   // Absorption cross section
-  // mat->set_sigma_a(m, 0, 9.06570E-03);
-  // mat->set_sigma_a(m, 1, 4.29670E-03);
-  // mat->set_sigma_a(m, 2, 3.28810E-02);
-  // mat->set_sigma_a(m, 3, 1.22030E-01);
-  // mat->set_sigma_a(m, 4, 1.82980E-01);
-  // mat->set_sigma_a(m, 5, 5.68460E-01);
-  // mat->set_sigma_a(m, 6, 5.85210E-01);
+  mat->set_sigma_a(m, 0, 9.06570E-03);
+  mat->set_sigma_a(m, 1, 4.29670E-03);
+  mat->set_sigma_a(m, 2, 3.28810E-02);
+  mat->set_sigma_a(m, 3, 1.22030E-01);
+  mat->set_sigma_a(m, 4, 1.82980E-01);
+  mat->set_sigma_a(m, 5, 5.68460E-01);
+  mat->set_sigma_a(m, 6, 5.85210E-01);
   // Fission times nu
   mat->set_sigma_f(m, 0, 8.25446E-03*2.88498E+00);
   mat->set_sigma_f(m, 1, 1.32565E-03*2.91079E+00);
@@ -404,13 +405,13 @@ static SP_material material_fixture_7g()
   mat->set_sigma_t(m, 5, 9.21028E-01);
   mat->set_sigma_t(m, 6, 9.55231E-01);
   // Absorption cross section
-  // mat->set_sigma_a(m, 0, 9.48620E-03);
-  // mat->set_sigma_a(m, 1, 4.65560E-03);
-  // mat->set_sigma_a(m, 2, 3.62400E-02);
-  // mat->set_sigma_a(m, 3, 1.32720E-01);
-  // mat->set_sigma_a(m, 4, 2.08400E-01);
-  // mat->set_sigma_a(m, 5, 6.58700E-01);
-  // mat->set_sigma_a(m, 6, 6.90170E-01);
+  mat->set_sigma_a(m, 0, 9.48620E-03);
+  mat->set_sigma_a(m, 1, 4.65560E-03);
+  mat->set_sigma_a(m, 2, 3.62400E-02);
+  mat->set_sigma_a(m, 3, 1.32720E-01);
+  mat->set_sigma_a(m, 4, 2.08400E-01);
+  mat->set_sigma_a(m, 5, 6.58700E-01);
+  mat->set_sigma_a(m, 6, 6.90170E-01);
   // Fission times nu
   mat->set_sigma_f(m, 0, 8.67209E-03*2.90426E+00);
   mat->set_sigma_f(m, 1, 1.62426E-03*2.91795E+00);
@@ -469,13 +470,13 @@ static SP_material material_fixture_7g()
   mat->set_sigma_t(m, 5, 5.65640E-01);
   mat->set_sigma_t(m, 6, 1.17214E+00);
   // Absorption cross section
-  // mat->set_sigma_a(m, 0, 5.11320E-04);
-  // mat->set_sigma_a(m, 1, 7.58130E-05);
-  // mat->set_sigma_a(m, 2, 3.16430E-04);
-  // mat->set_sigma_a(m, 3, 1.16750E-03);
-  // mat->set_sigma_a(m, 4, 3.39770E-03);
-  // mat->set_sigma_a(m, 5, 9.18860E-03);
-  // mat->set_sigma_a(m, 6, 2.32440E-02);
+  mat->set_sigma_a(m, 0, 5.11320E-04);
+  mat->set_sigma_a(m, 1, 7.58130E-05);
+  mat->set_sigma_a(m, 2, 3.16430E-04);
+  mat->set_sigma_a(m, 3, 1.16750E-03);
+  mat->set_sigma_a(m, 4, 3.39770E-03);
+  mat->set_sigma_a(m, 5, 9.18860E-03);
+  mat->set_sigma_a(m, 6, 2.32440E-02);
   // Fission times nu
   mat->set_sigma_f(m, 0, 4.79002E-09*2.76283E+00);
   mat->set_sigma_f(m, 1, 5.82564E-09*2.46239E+00);
@@ -543,13 +544,13 @@ static SP_material material_fixture_7g()
   mat->set_sigma_t(m, 5, 5.65640E-01);
   mat->set_sigma_t(m, 6, 1.17215E+00);
   // Absorption cross section
-  // mat->set_sigma_a(m, 0, 5.11320E-04);
-  // mat->set_sigma_a(m, 1, 7.58010E-05);
-  // mat->set_sigma_a(m, 2, 3.15720E-04);
-  // mat->set_sigma_a(m, 3, 1.15820E-03);
-  // mat->set_sigma_a(m, 4, 3.39750E-03);
-  // mat->set_sigma_a(m, 5, 9.18780E-03);
-  // mat->set_sigma_a(m, 6, 2.32420E-02);
+  mat->set_sigma_a(m, 0, 5.11320E-04);
+  mat->set_sigma_a(m, 1, 7.58010E-05);
+  mat->set_sigma_a(m, 2, 3.15720E-04);
+  mat->set_sigma_a(m, 3, 1.15820E-03);
+  mat->set_sigma_a(m, 4, 3.39750E-03);
+  mat->set_sigma_a(m, 5, 9.18780E-03);
+  mat->set_sigma_a(m, 6, 2.32420E-02);
   // Scattering
   //   1 <- g'
   mat->set_sigma_s(m, 0, 0, 6.61659E-02);
@@ -601,13 +602,13 @@ static SP_material material_fixture_7g()
   mat->set_sigma_t(m, 5, 1.25445E+00);
   mat->set_sigma_t(m, 6, 2.65038E+00);
   // Absorption cross section
-  // mat->set_sigma_a(m, 0, 6.01050E-04);
-  // mat->set_sigma_a(m, 1, 1.57930E-05);
-  // mat->set_sigma_a(m, 2, 3.37160E-04);
-  // mat->set_sigma_a(m, 3, 1.94060E-03);
-  // mat->set_sigma_a(m, 4, 5.74160E-03);
-  // mat->set_sigma_a(m, 5, 1.50010E-02);
-  // mat->set_sigma_a(m, 6, 3.72390E-02);
+  mat->set_sigma_a(m, 0, 6.01050E-04);
+  mat->set_sigma_a(m, 1, 1.57930E-05);
+  mat->set_sigma_a(m, 2, 3.37160E-04);
+  mat->set_sigma_a(m, 3, 1.94060E-03);
+  mat->set_sigma_a(m, 4, 5.74160E-03);
+  mat->set_sigma_a(m, 5, 1.50010E-02);
+  mat->set_sigma_a(m, 6, 3.72390E-02);
   // Scattering
   //   1 <- g'
   mat->set_sigma_s(m, 0, 0, 4.44777E-02);

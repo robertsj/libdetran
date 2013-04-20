@@ -1,19 +1,18 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Equation_SD_1D.cc
- * \author robertsj
- * \date   Jun 9, 2012
- * \brief  Equation_SD_1D class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+/**
+ *  @file   Equation_SD_1D.cc
+ *  @author robertsj
+ *  @date   Jun 9, 2012
+ *  @brief  Equation_SD_1D class definition.
  */
 //---------------------------------------------------------------------------//
 
-// Detran
 #include "Equation_SD_1D.hh"
 
 namespace detran
 {
 
+//---------------------------------------------------------------------------//
 Equation_SD_1D::Equation_SD_1D(SP_mesh mesh,
                                SP_material material,
                                SP_quadrature quadrature,
@@ -24,16 +23,16 @@ Equation_SD_1D::Equation_SD_1D(SP_mesh mesh,
   /* ... */
 }
 
-void Equation_SD_1D::setup_group(int g)
+//---------------------------------------------------------------------------//
+void Equation_SD_1D::setup_group(const size_t g)
 {
-  Require(g >= 0);
   Require(g < d_material->number_groups());
   d_g = g;
 }
 
-void Equation_SD_1D::setup_octant(int octant)
+//---------------------------------------------------------------------------//
+void Equation_SD_1D::setup_octant(const size_t octant)
 {
-  Require(octant >= 0);
   Require(octant < 2);
   d_octant = octant;
 }

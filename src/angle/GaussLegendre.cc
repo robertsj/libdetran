@@ -1,37 +1,30 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   GaussLegendre.cc
- * \author Jeremy Roberts
- * \date   Mar 23, 2012
- * \brief  
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+/**
+ *  @file   GaussLegendre.cc
+ *  @author Jeremy Roberts
+ *  @date   Mar 23, 2012
+ *  @brief  GaussLegendre member definitions
  */
 //---------------------------------------------------------------------------//
 
-// Angle headers
 #include "GaussLegendre.hh"
-
-// System headers
+#include "GenerateGaussLegendre.hh"
 #include <iostream>
 #include <cstdio>
 #include <cmath>
 
-namespace detran
+namespace detran_angle
 {
 
-GaussLegendre::GaussLegendre(int order)
-  : Quadrature(order,
-               1,
-               order,
-               "GaussLegendre")
+//---------------------------------------------------------------------------//
+GaussLegendre::GaussLegendre(const size_t number_polar_octant)
+  : Quadrature(1, 2*number_polar_octant, "GaussLegendre")
 {
-  Require(order % 2 == 0); // need an even order
-
   // Set GL values for one half-space based on the SN order specified.
   // For 2:2:20, we use hard-coded, high precision values, though I honestly
   // doubt the value of storing more than 16 decimal places.
   // For order > 20, the quadrature is computed numerically.
-  switch (order)
+  switch (d_number_angles)
   {
   case 2:
   {
@@ -206,9 +199,9 @@ GaussLegendre::GaussLegendre(int order)
   default:
   {
     // generate the parameters on-the-fly
-    vec_dbl tmp_mu(d_number_angles_octant, 0.0);
-    vec_dbl tmp_wt(d_number_angles_octant, 0.0);
-    generate_parameters(order, tmp_mu, tmp_wt);
+    vec_dbl tmp_mu(d_number_angles, 0.0);
+    vec_dbl tmp_wt(d_number_angles, 0.0);
+    generate_gl_parameters(d_number_angles, tmp_mu, tmp_wt);
     for (int i = 0; i < d_number_angles_octant; i++)
     {
       d_mu[i]     = tmp_mu[i];
@@ -220,81 +213,12 @@ GaussLegendre::GaussLegendre(int order)
 
 } // end constructor
 
-/*!
- * \brief Generate Gauss-Legendre parameters.
- *
- * Modified version of the function gauleg from <B> Numerical Recipes in C</B>
- * (Cambridge Univ. Press) by W.H. Press, S.A. Teukolsky, W.T. Vetterling, and
- * & B.P. Flannery
- *
- * \param order     number of points (i.e. the quadrature order)
- * \param mu        temporary array for Gauss points
- * \param wt        temporary array for weights
- *
- */
-void GaussLegendre::generate_parameters(int order, vec_dbl &mu, vec_dbl &wt)
-{
-  int m, j, i;
-  double z1, z, xm, xl, pp, p3, p2, p1;
-  // The roots are symmetric, so we only find half of them.
-  m = (order + 1) / 2;
-  for (i = 1; i <= m; i++)
-  { /* Loop over the desired roots. */
-    z = cos(pi * (i - 0.25) / (order + 0.5));
-    // Starting with the above approximation to the ith root, we enter
-    // the main loop of refinement by Newton's method.
-    int count = 0;
-    do
-    {
-      p1 = 1.0;
-      p2 = 0.0;
-      // Recurrence to get Legendre polynomial.
-      for (j = 1; j <= order; j++)
-      {
-        p3 = p2;
-        p2 = p1;
-        p1 = ((2.0 * j - 1.0) * z * p2 - (j - 1.0) * p3) / j;
-      }
-      // p1 is now the desired Legendre polynomial. We next compute
-      // pp, its derivative, by a standard relation involving also
-      // p2, the polynomial of one lower order.
-      pp = order * (z * p1 - p2) / (z * z - 1.0);
-      z1 = z;
-      z = z1 - p1 / pp; // <-- Newton's method
-    } while (std::abs(z - z1) > 1e-15 && ++count < 200);
-    // Store the root and compute the weight.
-    mu[i - 1] = z;
-    wt[i - 1] = 2.0 / ((1.0 - z * z) * pp * pp);
-  }
-}
-
 //---------------------------------------------------------------------------//
-// PUBLIC FUNCTIONS
-//---------------------------------------------------------------------------//
-/*!
- * \brief Display the quadrature.
- */
-void GaussLegendre::display() const
+GaussLegendre::SP_quadrature
+GaussLegendre::Create(const size_t number_polar_octant)
 {
-
-  using std::cout;
-  using std::endl;
-  using std::printf;
-
-
-  cout << endl;
-  cout << d_name << " abscissa and weights: " << endl << endl;
-  cout << "   m         mu              wt       " << endl;
-  cout << "  ---   --------------  --------------" << endl;
-
-  double weight_sum = 0;
-  for (int i = 0; i < d_number_angles_octant; ++i)
-  {
-    printf("%4i    %13.10f   %13.10f \n", i, d_mu[i], d_weight[i]);
-    weight_sum += d_weight[i];
-  }
-  cout << endl << "  The sum of the weights is " << weight_sum << endl;
-  cout << endl;
+  SP_quadrature p(new GaussLegendre(number_polar_octant));
+  return p;
 }
 
 } // end namespace detran

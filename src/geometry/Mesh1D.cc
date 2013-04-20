@@ -6,10 +6,9 @@
  */
 //---------------------------------------------------------------------------//
 
-// Geometry headers
 #include "Mesh1D.hh"
 
-namespace detran
+namespace detran_geometry
 {
 
 Mesh1D::Mesh1D(vec_int xfm, vec_dbl xcme, vec_int mat_map)
@@ -45,10 +44,10 @@ Mesh1D::Mesh1D(vec_dbl xfme, vec_int mat_map)
   d_dz[0]   = 1.0;
 }
 
-} // end namespace detran
+} // end namespace detran_geometry
 
 #ifdef DETRAN_ENABLE_BOOST
-BOOST_CLASS_EXPORT_IMPLEMENT(detran::Mesh1D)
+BOOST_CLASS_EXPORT_IMPLEMENT(detran_geometry::Mesh1D)
 #endif
 
 //---------------------------------------------------------------------------//

@@ -1,10 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   QuadratureFactory.cc
- * \author robertsj
- * \date   Apr 11, 2012
- * \brief  QuadratureFactory member definitions.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+/**
+ *  @file   QuadratureFactory.cc
+ *  @author robertsj
+ *  @date   Apr 11, 2012
+ *  @brief  QuadratureFactory member definitions.
  */
 //---------------------------------------------------------------------------//
 
@@ -12,30 +11,44 @@
 #include "QuadratureFactory.hh"
 // 1D
 #include "GaussLegendre.hh"
+#include "GaussChebyshev.hh"
+#include "DPN.hh"
+#include "DTN.hh"
 // 2D/3D
-#include "QuadrupleRange.hh"
 #include "LevelSymmetric.hh"
+#include "QuadrupleRange.hh"
 #include "UniformEqual.hh"
+// Product
+#include "ChebyshevLegendre.hh"
+#include "ChebyshevDPN.hh"
+#include "LegendreDTN.hh"
 // MOC
 #include "Collocated.hh"
 #include "Uniform.hh"
 
-namespace detran
+namespace detran_angle
 {
 
 // Build a quadrature
+QuadratureFactory::SP_quadrature QuadratureFactory::
+build(SP_input input, const int dimension)
+{
+  SP_quadrature q;
+  build(q, input, dimension);
+  return q;
+}
+// Build a quadrature
 void QuadratureFactory::
-build(SP_quadrature &q, SP_input input, int dimension)
+build(SP_quadrature &q, SP_input input, const int dimension)
 {
   using std::string;
 
   // Set the quadrature type.
-  string quad_type;
+  string quad_type = "notset";
   if (!input->check("quad_type"))
   {
+    quad_type = "chebyshevdpn";
     if (dimension == 1) quad_type = "gausslegendre";
-    if (dimension == 2) quad_type = "quadruplerange";
-    if (dimension == 3) quad_type = "levelsymmetric";
   }
   else
   {
@@ -47,7 +60,17 @@ build(SP_quadrature &q, SP_input input, int dimension)
   int azimuths_octant = 2;
   int polar_octant = 1;
   string polar_type = "TY";
-  int quad_order = 2;
+
+  // All quadratures are parameterized by number of polar and/or
+  // number of azimuths
+  int np = 1;
+  int na = 1;
+
+  // For quadratures with Chebyshev components, the default is
+  // not to normalize the weights.
+  bool cheb_norm = false;
+  if (input->check("quad_chebyshev_normalize"))
+    cheb_norm = input->get<int>("quad_chebyshev_normalize");
 
   // First, check whether this is an MOC quadrature or not.  If it
   // is, we need different parameters.
@@ -73,36 +96,78 @@ build(SP_quadrature &q, SP_input input, int dimension)
   }
   else
   {
-
-    // Set the quadrature order.  Note, this means different
-    // things for each quadrature.  See the documentation.
-    if (input->check("quad_order"))
-      quad_order = input->get<int>("quad_order");
-
+    // Get the number of polar and/or azimuths
+    if (input->check("quad_number_polar_octant"))
+      np = input->get<int>("quad_number_polar_octant");
+    if (input->check("quad_number_azimuth_octant"))
+      na = input->get<int>("quad_number_azimuth_octant");
   }
 
-  // SN quadratures
+  //-------------------------------------------------------------------------//
+  // 1D QUADRATURES
+  //-------------------------------------------------------------------------//
+
   if (quad_type == "gausslegendre")
   {
     Insist(dimension == 1, "GaussLegendre only for 1D.");
-    q = new GaussLegendre(quad_order);
+    q = new GaussLegendre(np);
   }
-  else if (quad_type == "quadruplerange")
+  else if (quad_type == "gausschebyshev")
   {
-    Insist(dimension > 1, "QuadrupleRange only for 2D or 3D.");
-    q = new QuadrupleRange(quad_order, dimension);
+    Insist(dimension == 1, "GaussLegendre only for 1D.");
+    q = new GaussChebyshev(np, cheb_norm);
   }
+  else if (quad_type == "dpn")
+  {
+    Insist(dimension == 1, "DPN only for 1D.");
+    q = new DPN(np);
+  }
+  else if (quad_type == "dtn")
+  {
+    Insist(dimension == 1, "DTN only for 1D.");
+    q = new DTN(np, cheb_norm);
+  }
+
+  //-------------------------------------------------------------------------//
+  // 2D/3D QUADRATURES
+  //-------------------------------------------------------------------------//
+
   else if (quad_type == "levelsymmetric")
   {
     Insist(dimension > 1, "LevelSymmetric only for 2D or 3D.");
-    q = new LevelSymmetric(quad_order, dimension);
+    q = new LevelSymmetric(np, dimension);
   }
   else if (quad_type == "uniformequal")
   {
     Insist(dimension > 1, "UniformEqual only for 2D or 3D.");
-    q = new UniformEqual(quad_order, dimension);
+    q = new UniformEqual(np, dimension);
   }
-  // MOC quadratures
+
+  else if (quad_type == "chebyshevlegendre")
+  {
+    Insist(dimension > 1, "ChebyshevLegendre only for 2D or 3D.");
+    q = new ChebyshevLegendre(dimension, na, np);
+  }
+  else if (quad_type == "chebyshevdpn")
+  {
+    Insist(dimension > 1, "ChebyshevDPN only for 2D or 3D.");
+    q = new ChebyshevDPN(dimension, na, np);
+  }
+  else if (quad_type == "legendredtn")
+  {
+    Insist(dimension > 1, "LegendreDTN only for 2D or 3D.");
+    q = new LegendreDTN(dimension, na, np);
+  }
+  else if (quad_type == "quadruplerange")
+  {
+    Insist(dimension > 1, "QuadrupleRange only for 2D or 3D.");
+    q = new QuadrupleRange(dimension, na, np);
+  }
+
+  //-------------------------------------------------------------------------//
+  // MOC QUADRATURES
+  //-------------------------------------------------------------------------//
+
   else if (quad_type == "collocated")
   {
     Insist(dimension > 1, "Collocated only for 2D or 3D.");
@@ -118,44 +183,28 @@ build(SP_quadrature &q, SP_input input, int dimension)
   }
   else
   {
-    THROW("Unsupported quadrature selected.")
+    THROW("Unsupported quadrature selected: " + quad_type);
   }
 
 }
 
-// Build a quadrature
-void QuadratureFactory::
-build(SP_quadrature &q, std::string type, int order, int dimension)
+void QuadratureFactory::help() const
 {
-  if (type == "gausslegendre")
-  {
-    Insist(dimension == 1, "GaussLegendre only for 1D.");
-    q = new GaussLegendre(order);
-  }
-  else if (type == "quadruplerange")
-  {
-    Insist(dimension > 1, "QuadrupleRange only for 2D or 3D.");
-    q = new QuadrupleRange(order, dimension);
-  }
-  else if (type == "levelsymmetric")
-  {
-    Insist(dimension > 1, "LevelSymmetric only for 2D or 3D.");
-    q = new LevelSymmetric(order, dimension);
-  }
-  else if (type == "uniformequal")
-  {
-    Insist(dimension > 1, "UniformEqual only for 2D or 3D.");
-    q = new UniformEqual(order, dimension);
-  }
-  else
-  {
-    THROW("Unsupported quadrature selected.")
-  }
+
+  std::cout << "Available quadratures are: " << std::endl;
+  std::cout << "  gausslegendre (1D)" << std::endl;
+  std::cout << "  gausschebyshev (1D)" << std::endl;
+  std::cout << "  dpn (1D)" << std::endl;
+  std::cout << "  dtn (1D)" << std::endl;
+  std::cout << "  levelsymmetric" << std::endl;
+  std::cout << "  quadruplerange" << std::endl;
+  std::cout << "  uniformequal" << std::endl;
+  std::cout << "  chebyshevlegendre" << std::endl;
+  std::cout << "  chebyshevdpn" << std::endl;
+
 }
 
-
-
-} // end namespace detran
+} // end namespace detran_angle
 
 //---------------------------------------------------------------------------//
 //              end of QuadratureFactory.cc

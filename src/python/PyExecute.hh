@@ -4,7 +4,6 @@
  * \author robertsj
  * \date   Jun 13, 2012
  * \brief  PyExecute class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts.
  */
 //---------------------------------------------------------------------------//
 
@@ -12,39 +11,29 @@
 #define PYEXECUTE_HH_
 
 // Config
-#include "detran_config.h"
+#include "detran_config.hh"
 
 // Detran
-#include "BoundaryBase.hh"
-#include "Material.hh"
-#include "Mesh.hh"
-#include "MeshMOC.hh"
-#include "Tracker.hh"
-#include "Eigensolver.hh"
+#include "discretization/DimensionTraits.hh"
+#include "external_source/ExternalSource.hh"
+#include "geometry/Mesh.hh"
+#include "material/Material.hh"
+#include "solvers/GaussSeidelMG.hh"
+#include "solvers/Eigensolver.hh"
 #ifdef DETRAN_ENABLE_SLEPC
-#include "EigenSLEPc.hh"
+#include "solvers/EigenSLEPc.hh"
 #endif
-#include "ExternalSource.hh"
-#include "FissionSource.hh"
-#include "State.hh"
-#include "StupidParser.hh"
-#include "Traits.hh"
-#include "PowerIteration.hh"
-#include "GaussSeidel.hh"
 #ifdef DETRAN_ENABLE_PETSC
-#include "KrylovMG.hh"
-#endif
-
-// Utilities
-#include "DBC.hh"
-#include "InputDB.hh"
-
-// System
-#include <iostream>
-#include <string>
-#ifdef DETRAN_ENABLE_PETSC
+#include "solvers/KrylovMG.hh"
 #include "petsc.h"
 #endif
+#include "solvers/PowerIteration.hh"
+#include "transport/FissionSource.hh"
+#include "transport/State.hh"
+#include "utilities/DBC.hh"
+#include "utilities/InputDB.hh"
+#include <iostream>
+#include <string>
 
 namespace detran
 {
@@ -57,22 +46,28 @@ namespace detran
 //---------------------------------------------------------------------------//
 
 template <class D>
-class PyExecute: public Object
+class PyExecute
 {
 
 public:
 
-  /// \name Useful Typedefs
-  /// \{
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
 
-  typedef InputDB::SP_input                     SP_input;
-  typedef Mesh::SP_mesh                         SP_mesh;
-  typedef Material::SP_material                 SP_material;
+  typedef detran_utilities::InputDB::SP_input     SP_input;
+  typedef detran_geometry::Mesh::SP_mesh          SP_mesh;
+  typedef detran_material::Material::SP_material  SP_material;
 
-  typedef State::SP_state                       SP_state;
-  typedef Quadrature::SP_quadrature             SP_quadrature;
-  typedef ExternalSource::SP_source             SP_externalsource;
-  typedef FissionSource::SP_source              SP_fissionsource;
+  typedef State::SP_state                         SP_state;
+  typedef detran_angle::Quadrature::SP_quadrature SP_quadrature;
+  typedef detran_external_source::
+          ExternalSource::SP_externalsource       SP_externalsource;
+  typedef FissionSource::SP_fissionsource         SP_fissionsource;
+
+  //-------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //-------------------------------------------------------------------------//
 
   /*
    *  \brief Constructor
@@ -83,6 +78,10 @@ public:
    *  \param argv   Command line arguments
    */
   PyExecute(int argc, char *argv[]);
+
+  //-------------------------------------------------------------------------//
+  // PUBLIC FUNCTIONS
+  //-------------------------------------------------------------------------//
 
   /*
    *  \brief Initialize the manager for a new transport problem.
@@ -130,16 +129,11 @@ public:
 
   /// \}
 
-  /// Unimplemented DBC method.
-  bool is_valid() const
-  {
-    return true;
-  }
-
 private:
 
-  /// \name Private Data
-  /// \{
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   SP_input d_input;
   SP_material d_material;
@@ -149,20 +143,15 @@ private:
   SP_externalsource d_externalsource;
   SP_fissionsource d_fissionsource;
   std::string d_problem_type;
-
   bool d_initialized;
-
   bool d_moc;
 
-  /// \}
-
-  /// \name Implementation
-  /// \{
+  //-------------------------------------------------------------------------//
+  // IMPLEMENTATION
+  //-------------------------------------------------------------------------//
 
   /// Generic problem setup.
   void setup();
-
-  /// \}
 
 };
 
@@ -240,7 +229,7 @@ void PyExecute<D>::setup()
   // Quadrature
   //-------------------------------------------------------------------------//
 
-  QuadratureFactory quad_factory;
+  detran_angle::QuadratureFactory quad_factory;
   quad_factory.build(d_quadrature, d_input, D::dimension);
   Assert(d_quadrature);
 
@@ -250,7 +239,7 @@ void PyExecute<D>::setup()
   if (d_moc)
   {
     // Track the mesh
-    Tracker tracker(d_mesh, d_quadrature);
+    detran_geometry::Tracker tracker(d_mesh, d_quadrature);
 
     // Normalize segments to conserve volume.
     tracker.normalize();
@@ -264,7 +253,7 @@ void PyExecute<D>::setup()
   // State
   //-------------------------------------------------------------------------//
 
-  d_state = new State(d_input, d_mesh, d_quadrature);
+  d_state = new detran::State(d_input, d_mesh, d_quadrature);
 
   //-------------------------------------------------------------------------//
   // Fission source
@@ -289,7 +278,7 @@ void PyExecute<D>::solve()
   if (d_moc)
     boundary = new BoundaryMOC<D>(d_input, d_mesh, d_quadrature);
   else
-    boundary = new Boundary<D>(d_input, d_mesh, d_quadrature);
+    boundary = new BoundarySN<D>(d_input, d_mesh, d_quadrature);
 
   //--------------------------------------------------------------------------//
   // Create solver and solve.
@@ -336,7 +325,7 @@ void PyExecute<D>::solve()
     }
     if (outer_solver == "GS")
     {
-      GaussSeidel<D> solver(d_input, d_state, d_mesh, d_material, d_quadrature,
+      GaussSeidelMG<D> solver(d_input, d_state, d_mesh, d_material, d_quadrature,
                             boundary, d_externalsource, d_fissionsource);
       solver.solve();
     }
@@ -366,9 +355,9 @@ void PyExecute<D>::solve()
 }
 
 // Explicit instantiations
-template class PyExecute<_1D>;
-template class PyExecute<_2D>;
-template class PyExecute<_3D>;
+//template class PyExecute<_1D>;
+//template class PyExecute<_2D>;
+//template class PyExecute<_3D>;
 
 } // end namespace detran
 

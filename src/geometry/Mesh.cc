@@ -1,22 +1,20 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- *  \file   Mesh.cc
- *  \author Jeremy Roberts
- *  \brief  Mesh class member definitions.
+/**
+ *  @file   Mesh.cc
+ *  @author Jeremy Roberts
+ *  @brief  Mesh class member definitions.
  */
 //---------------------------------------------------------------------------//
 
-// Geometry headers
 #include "Mesh.hh"
-
-// System headers
 #include <numeric>
 #include <iostream>
 
-namespace detran
+namespace detran_geometry
 {
 
-Mesh::Mesh(int dim,
+//---------------------------------------------------------------------------//
+Mesh::Mesh(size_t dim,
            vec_int xfm,  vec_int yfm,  vec_int zfm,
            vec_dbl xcme, vec_dbl ycme, vec_dbl zcme,
            vec_int mat_map)
@@ -36,7 +34,8 @@ Mesh::Mesh(int dim,
   add_coarse_mesh_map(s, mat_map);
 }
 
-Mesh::Mesh(int dim,
+//---------------------------------------------------------------------------//
+Mesh::Mesh(size_t dim,
            vec_dbl xfme, vec_dbl yfme, vec_dbl zfme,
            vec_int mat_map)
   : d_dimension(dim)
@@ -55,8 +54,7 @@ Mesh::Mesh(int dim,
   add_mesh_map(s, mat_map);
 }
 
-
-
+//---------------------------------------------------------------------------//
 void Mesh::add_coarse_mesh_map(std::string map_key, vec_int m_map)
 {
   // Temporary map.
@@ -109,9 +107,7 @@ void Mesh::add_coarse_mesh_map(std::string map_key, vec_int m_map)
   return;
 }
 
-/*!
- *
- */
+//---------------------------------------------------------------------------//
 void Mesh::add_mesh_map(std::string map_key, vec_int mesh_map)
 {
   Require(!map_key.empty());
@@ -128,7 +124,7 @@ void Mesh::add_mesh_map(std::string map_key, vec_int mesh_map)
 
 }
 
-// Check if fine mesh map exists.
+//---------------------------------------------------------------------------//
 bool Mesh::mesh_map_exists(std::string map_key)
 {
   mesh_map_type::iterator iter;
@@ -139,24 +135,35 @@ bool Mesh::mesh_map_exists(std::string map_key)
     return false;
 }
 
-/*!
- *
- */
-const vec_int& Mesh::mesh_map(std::string map_key)
+//---------------------------------------------------------------------------//
+const Mesh::vec_int& Mesh::mesh_map(std::string map_key)
 {
   // Add the new value.
   return d_mesh_map[map_key];
 }
 
-
+//---------------------------------------------------------------------------//
 void Mesh::setup()
 {
+  // Preconditions
   Require(d_xfm.size() > 0);
   Require(d_yfm.size() > 0);
   Require(d_zfm.size() > 0);
   Require(d_xcme.size() == d_xfm.size()+1);
   Require(d_ycme.size() == d_yfm.size()+1);
   Require(d_zcme.size() == d_zfm.size()+1);
+  for (int i = 0; i < d_xfm.size(); ++i)
+  {
+    Require(d_xfm[i] > 0);
+  }
+  for (int i = 0; i < d_yfm.size(); ++i)
+  {
+    Require(d_yfm[i] > 0);
+  }
+  for (int i = 0; i < d_zfm.size(); ++i)
+  {
+    Require(d_zfm[i] > 0);
+  }
 
   // Compute numbers of cells.
   d_number_cells_x = std::accumulate(d_xfm.begin(), d_xfm.end(), 0);
@@ -172,7 +179,11 @@ void Mesh::setup()
   // Total domain widths
   d_total_width_x = d_xcme[d_xcme.size()-1] - d_xcme[0];
   d_total_width_y = d_ycme[d_ycme.size()-1] - d_ycme[0];
-  d_total_width_z = d_ycme[d_zcme.size()-1] - d_zcme[0];
+  d_total_width_z = d_zcme[d_zcme.size()-1] - d_zcme[0];
+  if (dimension() < 3)
+    d_total_width_z = 1.0;
+  if (dimension() < 2)
+    d_total_width_y = 1.0;
 
   // Discretize.
   int ph = 0; // place holder
@@ -212,6 +223,7 @@ void Mesh::setup()
 
 }
 
+//---------------------------------------------------------------------------//
 void Mesh::display() const
 {
   using std::cout;
@@ -257,8 +269,6 @@ void Mesh::display() const
   }
   cout << endl << endl;
 }
-
-
 
 } // end namespace detran
 

@@ -1,37 +1,29 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Equation_DD_3D.i.hh
- * \author Jeremy Roberts
- * \date   Mar 31, 2012
- * \brief  Equation_DD_3D inline member definitions.
- * \note   Copyright (C) 2012 Jeremy Roberts.
+/**
+ *  @file   Equation_DD_3D.i.hh
+ *  @author Jeremy Roberts
+ *  @date   Mar 31, 2012
+ *  @brief  Equation_DD_3D inline member definitions.
  */
 //---------------------------------------------------------------------------//
 
-#ifndef EQUATION_DD_3D_I_HH_
-#define EQUATION_DD_3D_I_HH_
-
-#include <iostream>
+#ifndef detran_EQUATION_DD_3D_I_HH_
+#define detran_EQUATION_DD_3D_I_HH_
 
 namespace detran
 {
 
-inline void Equation_DD_3D::solve(int i,
-                                  int j,
-                                  int k,
+//---------------------------------------------------------------------------//
+inline void Equation_DD_3D::solve(const size_t i,
+                                  const size_t j,
+                                  const size_t k,
                                   moments_type &source,
                                   face_flux_type &psi_in,
                                   face_flux_type &psi_out,
                                   moments_type &phi,
                                   angular_flux_type &psi)
 {
-  using std::cout;
-  using std::endl;
-
-  // Preconditions.  (The client *must* set group and angles.)
-  Require(d_g >= 0);
-  Require(d_angle >= 0);
-  Require(d_octant >= 0);
+  typedef detran_geometry::Mesh Mesh;
 
   // Compute cell-center angular flux.
   int cell = d_mesh->index(i, j, k);
@@ -43,29 +35,21 @@ inline void Equation_DD_3D::solve(int i,
 
   // Compute outgoing fluxes.
   double two_psi_center = 2.0 * psi_center;
-  psi_out[0] = two_psi_center - psi_in[0];
-  psi_out[1] = two_psi_center - psi_in[1];
-  psi_out[2] = two_psi_center - psi_in[2];
+  psi_out[Mesh::YZ] = two_psi_center - psi_in[Mesh::YZ];
+  psi_out[Mesh::XZ] = two_psi_center - psi_in[Mesh::XZ];
+  psi_out[Mesh::XY] = two_psi_center - psi_in[Mesh::XY];
 
   // Compute flux moments.
   phi[cell] += d_quadrature->weight(d_angle) * psi_center;
 
-//  cout << "------------------------------------" << endl;
-//  cout << " [i, j, k] = " << " [" << i << "," << j << "," << k << "]" << endl;
-//  cout << " cell = " << cell << endl;
-//  cout << " source = " << source[cell] << endl;
-//  cout << "------------------------------------" << endl;
-
   // Store angular flux if needed.
-  if (d_update_psi)
-  {
-    psi[cell] = psi_center;
-  }
+  if (d_update_psi) psi[cell] = psi_center;
+
 }
 
 } // end namespace detran
 
-#endif /* EQUATION_DD_3D_I_HH_ */
+#endif /* detran_EQUATION_DD_3D_I_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of Equation_DD_3D.i.hh

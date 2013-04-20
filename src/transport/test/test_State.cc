@@ -2,9 +2,8 @@
 /*!
  * \file   test_State.cc
  * \author Jeremy Roberts
- * \date   Mar 25, 2012
+ * @date   Mar 25, 2012
  * \brief  Test of State.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 
@@ -12,8 +11,7 @@
 #define TEST_LIST                     \
         FUNC(test_State_basic)
 
-// Detran headers
-#include "TestDriver.hh"
+#include "utilities/TestDriver.hh"
 #include "State.hh"
 
 // Setup
@@ -21,8 +19,8 @@
 #include "angle/test/quadrature_fixture.hh"
 
 using namespace detran;
+using namespace detran_utilities;
 using namespace detran_test;
-using namespace std;
 
 int main(int argc, char *argv[])
 {
@@ -43,7 +41,7 @@ int test_State_basic(int argc, char *argv[])
   // Input
   State::SP_input input;
   input = new InputDB();
-  input->put<string>("equation", "dd");
+  input->put<std::string>("equation", "dd");
   input->put<int>("number_groups", 2);
 
   // State

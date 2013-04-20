@@ -4,53 +4,42 @@
  * \author robertsj
  * \date   May 22, 2012
  * \brief  LevelSymmetric class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
  */
 //---------------------------------------------------------------------------//
 
-// Detran
 #include "LevelSymmetric.hh"
-
-// Utilities
-#include "DBC.hh"
-
-// System
+#include "utilities/DBC.hh"
 #include <iostream>
 #include <cstdio>
 #include <cmath>
 
-namespace detran
+namespace detran_angle
 {
 
 //---------------------------------------------------------------------------//
-// CONSTRUCTOR
-//---------------------------------------------------------------------------//
-/*!
- * \brief Constructor.
- */
-LevelSymmetric::LevelSymmetric(int order, int dim)
-  : Quadrature(order,
-               dim,
-               order * (order + 2) / 8 * int(std::pow(float(2), dim)),
+LevelSymmetric::LevelSymmetric(const size_t np, const size_t dim)
+  : Quadrature(dim,
+               2 * np * (2 * np + 2) / 8 * size_t(std::pow(float(2), dim)),
                "LevelSymmetric")
 {
+  int order = 2 * np;
 
   // Set up some temporaries.
   vec_dbl att;
   vec_dbl wtt;
 
   // Fill the temporaries
-  set_quad_values(att, wtt);
+  set_quad_values(order, att, wtt);
 
   // Scaling for weight.
-  double scale = pi;
-  if (dim == 3) scale = 0.5 * pi;
+  double scale = detran_utilities::pi;
+  if (dim == 3) scale = 0.5 * detran_utilities::pi;
 
   // Evaluate mu and eta for octant 1
   int m = 0;
-  for (int i = 0; i <= d_order / 2 - 1; ++i)
+  for (int i = 0; i <= order / 2 - 1; ++i)
   {
-    for (int j = 0; j <= (d_order / 2) - (i + 1); ++j)
+    for (int j = 0; j <= (order / 2) - (i + 1); ++j)
     {
       d_mu[m] = att[i];
       d_eta[m] = att[j];
@@ -64,38 +53,11 @@ LevelSymmetric::LevelSymmetric(int order, int dim)
   wtt.clear();
 }
 
-void LevelSymmetric::display() const
-{
-
-    using std::cout;
-    using std::endl;
-    using std::printf;
-
-    cout << endl;
-    cout << d_name << " abscissa and weights: " << endl << endl;
-    cout << "   m            mu                 eta                xi                 wt       " << endl;
-    cout << "  ---   -----------------  -----------------  -----------------  -----------------" << endl;
-    double weight_sum = 0.0;
-    for ( int ix = 0; ix < d_number_angles_octant; ++ix )
-    {
-        printf ("%4i    %16.13f   %16.13f   %16.13f   %16.13f   \n",
-                ix, d_mu[ix], d_eta[ix], d_xi[ix], d_weight[ix] );
-        weight_sum += d_weight[ix];
-    }
-    cout << endl << "  The sum of the weights is " << weight_sum << endl;
-    cout << endl;
-
-}
-
-/*!
- * \brief Contains precomputed LQn quadrature numbers
- *
- */
-void LevelSymmetric::set_quad_values(vec_dbl &att, vec_dbl &wtt)
+void LevelSymmetric::set_quad_values(const size_t order, vec_dbl &att, vec_dbl &wtt)
 {
 
   // Set LS values for one quadrant based on the SN order specified.
-  switch (d_order)
+  switch (order)
   {
 
   case 2:
@@ -415,6 +377,14 @@ void LevelSymmetric::set_quad_values(vec_dbl &att, vec_dbl &wtt)
   }
 
   }
+}
+
+//---------------------------------------------------------------------------//
+LevelSymmetric::SP_quadrature
+LevelSymmetric::Create(const size_t np, const size_t dim)
+{
+  SP_quadrature p(new LevelSymmetric(np, dim));
+  return p;
 }
 
 }

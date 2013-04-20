@@ -15,9 +15,13 @@
 #include <ostream>
 #include <iomanip>
 
-namespace detran
+namespace detran_utilities
 {
 
+/*!
+ *  \class Point
+ *  \brief Represent a point in three-space
+ */
 class Point
 {
 
@@ -101,7 +105,7 @@ inline std::ostream& operator<< (std::ostream &out, Point p)
   return out;
 }
 
-} // end namespace detran
+} // end namespace detran_utilities
 
 #endif // POINT_HH_ 
 

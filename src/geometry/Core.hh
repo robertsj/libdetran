@@ -1,9 +1,11 @@
-/*
- * Core.hh
- *
- *  Created on: Apr 16, 2012
- *      Author: robertsj
+//----------------------------------*-C++-*----------------------------------//
+/*!
+ *  \file   Core.hh
+ *  \author Jeremy Roberts
+ *  \brief  Core class definition
+ *  \date   Apr 16, 2012
  */
+//---------------------------------------------------------------------------//
 
 #ifndef CORE_HH_
 #define CORE_HH_
@@ -11,22 +13,32 @@
 #include "Mesh2D.hh"
 #include "Assembly.hh"
 
-namespace detran
+namespace detran_geometry
 {
 
 /*!
  *  \class Core
  *  \brief Simple 2-D core of assemblies.
  */
-class Core : public Object
+class Core
 {
 
 public:
 
-  typedef SP<Core>                  SP_core;
-  typedef Mesh::SP_mesh             SP_mesh;
-  typedef Assembly::SP_assembly     SP_assembly;
-  typedef std::vector<SP_assembly>  vec_assembly;
+  //-------------------------------------------------------------------------//
+  // TYPEDEFS
+  //-------------------------------------------------------------------------//
+
+  typedef detran_utilities::SP<Core>    SP_core;
+  typedef Mesh::SP_mesh                 SP_mesh;
+  typedef Assembly::SP_assembly         SP_assembly;
+  typedef std::vector<SP_assembly>      vec_assembly;
+  typedef Mesh::vec_int                 vec_int;
+  typedef Mesh::vec_dbl                 vec_dbl;
+
+  //-------------------------------------------------------------------------//
+  // PUBLIC INTERFACE
+  //-------------------------------------------------------------------------//
 
   /*!
    *  \brief Constructor.
@@ -46,10 +58,10 @@ public:
   explicit Core(int dimension);
 
   /// SP Constructor
-  static SP<Core> Create(int dimension)
+  static SP_core
+  Create(int dimension)
   {
-    SP_core p;
-    p = new Core(dimension);
+    SP_core p(new Core(dimension));
     return p;
   }
 
@@ -71,12 +83,11 @@ public:
     return i + j * d_number_pincells_dim;
   }
 
-  bool is_valid() const
-  {
-    return true;
-  }
-
 private:
+
+  //-------------------------------------------------------------------------//
+  // DATA
+  //-------------------------------------------------------------------------//
 
   /// Meshed object
   Mesh2D::SP_mesh d_mesh;
@@ -92,11 +103,15 @@ private:
 
   /// Number of pins along one dimension of core
   int d_number_pincells_dim;
+
+  /// Number of assemblies in the core
   int d_number_assemblies;
+
+  /// Number of pincells in the core
   int d_number_pincells;
 
 };
 
-} // end namespace detran
+} // end namespace detran_geometry
 
 #endif /* CORE_HH_ */
