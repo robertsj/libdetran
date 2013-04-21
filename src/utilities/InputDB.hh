@@ -9,9 +9,10 @@
 #ifndef detran_utilities_INPUTDB_HH_
 #define detran_utilities_INPUTDB_HH_
 
-#include "DBC.hh"
-#include "Definitions.hh"
-#include "SP.hh"
+#include "utilities/utilities_export.hh"
+#include "utilities/DBC.hh"
+#include "utilities/Definitions.hh"
+#include "utilities/SP.hh"
 #include <string>
 #include <map>
 #ifdef DETRAN_ENABLE_BOOST
@@ -27,29 +28,17 @@
 namespace detran_utilities
 {
 
-//===========================================================================//
+//---------------------------------------------------------------------------//
 /**
- * \class InputDB
- * \brief Flexible storage for user input.
+ *  @class InputDB
+ *  @brief Flexible storage for user input.
  *
- * User input for transport codes typically involves several integer and
- * scalar quantities along with meshing, materials data, and materials
- * placement.  For the former quantities, it can be a bonafide pain in the
- * arse to maintain an input structure throughout development.  To avoid that
- * issue, we use C++ maps of type int and double to store anything the user
- * needs to put there for use anywhere in the code.  This is inspired by the
- * way Denovo handles input.  For us, a descendent of Parser will read some
- * form of user input (be it XML or SILO or HDF5) and fill an InputDB along
- * with generating other things (like the data needed to make meshes and
- * materials libraries).  Of course, some parameters need to be there, and
- * that can be checked during a verification.
- *
- * (It's anticipated this will become a serment-wide approach)
- *
+ *  Having a dynamic parameter database allows new parameters to be
+ *  added without having any fixed parser be updated.
  */
-//===========================================================================//
+//---------------------------------------------------------------------------//
 
-class InputDB
+class UTILITIES_EXPORT InputDB
 {
 
 public:

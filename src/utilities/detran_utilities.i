@@ -23,9 +23,10 @@
 %include std_string.i
 %include std_vector.i
 
-// SP
-//%include "SP.hh"
+// Configuration
+%include detran_config.hh
 
+// SP
 // We define a dummy SP interface to stop some annoying warnings from SWIG
 namespace detran_utilities
 {

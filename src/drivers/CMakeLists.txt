@@ -42,7 +42,7 @@ INSTALL_TARGETS(/bin xdetran)
 
 # This is the detran library to be linked against.
 ADD_LIBRARY(${LIB_NAME}
-            SHARED
+            ${LIB_TYPE}
             ${SRC} 
 )
 TARGET_LINK_LIBRARIES(${LIB_NAME}

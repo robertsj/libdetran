@@ -2,63 +2,28 @@
 # src/utilities/CMakeLists.txt
 #------------------------------------------------------------------------------#
 
-SET(LIB_NAME "utilities")
-
-SET(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+set(LIB_NAME "utilities")
 
 #-----------------------------------------------------------------------------#
 # SOURCE
 #-----------------------------------------------------------------------------#
 
-SET(SRC
+set(SRC
     InputDB.cc
     GenException.cc
 )
 
 #-----------------------------------------------------------------------------#
-# SHARED LIBRARY
+# LINKED LIBRARIES
 #-----------------------------------------------------------------------------#
 
-ADD_LIBRARY(${LIB_NAME}
-            SHARED
-            ${SRC} 
-)
-TARGET_LINK_LIBRARIES(${LIB_NAME}
-                      ${GPERFTOOLS_LIBRARIES}
-                      ${Boost_LIBRARIES} 
+set(LINKED_LIBS
+    ${GPERFTOOLS_LIBRARIES}
+    ${Boost_LIBRARIES} 
 )
 
-INSTALL_FILES(/include/${LIB_NAME} .hh)
-INSTALL_FILES(/include/${LIB_NAME} .i)
-INSTALL_TARGETS(/lib ${LIB_NAME})
-
 #-----------------------------------------------------------------------------#
-# TESTING
+# LIBRARY
 #-----------------------------------------------------------------------------#
 
-if( DETRAN_ENABLE_TEST )
-    include_directories(${SRC_DIR}/test)
-    add_subdirectory(${SRC_DIR}/test)
-endif()
-
-#-----------------------------------------------------------------------------#
-# PYTHON
-#-----------------------------------------------------------------------------#
-
-if(DETRAN_ENABLE_PYTHON)
-
-SET_SOURCE_FILES_PROPERTIES(detran_${LIB_NAME}.i PROPERTIES CPLUSPLUS ON)
-SWIG_ADD_MODULE(${LIB_NAME} python detran_${LIB_NAME}.i )
-SWIG_LINK_LIBRARIES(${LIB_NAME}
-                    ${PYTHON_LIBRARIES}
-                    ${LIB_NAME} 
-                    )
-
-# Install the module and library
-INSTALL(FILES ${CMAKE_BINARY_DIR}/${LIB_NAME}/${LIB_NAME}.py
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/python/detran)
-INSTALL(FILES ${CMAKE_BINARY_DIR}/${LIB_NAME}/_${LIB_NAME}.so
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/python/detran)
-
-endif()
-
+setup_detran_library(${LIB_NAME} "${SRC}" "${LINKED_LIBS}")
