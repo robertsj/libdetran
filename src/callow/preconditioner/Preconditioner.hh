@@ -10,6 +10,7 @@
 #ifndef callow_PRECONDITIONER_HH_
 #define callow_PRECONDITIONER_HH_
 
+#include "callow/callow_export.hh"
 #include "callow/callow_config.hh"
 #include "callow/vector/Vector.hh"
 #include <string>
@@ -54,7 +55,7 @@ namespace callow
  *  with PetscSolver parameters.
  */
 
-class Preconditioner
+class CALLOW_EXPORT Preconditioner
 {
 
 public:

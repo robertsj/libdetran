@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   detran_material.hh
- * \brief  Convenience header for using Detran materials.
- * \author Jeremy Roberts
- * \date   Aug 22, 2012
+/**
+ *  @file   detran_material.hh
+ *  @brief  Convenience header for using Detran materials.
+ *  @author Jeremy Roberts
+ *  @date   Aug 22, 2012
  */
 //---------------------------------------------------------------------------//
 

@@ -9,6 +9,7 @@
 #ifndef detran_material_MATERIAL_HH_
 #define detran_material_MATERIAL_HH_
 
+#include "material/material_export.hh"
 #include "utilities/Definitions.hh"
 #include "utilities/SP.hh"
 #include <string>
@@ -32,7 +33,7 @@ namespace detran_material
  *  appears to be the best storage scheme with respect to memory access.
  */
 //---------------------------------------------------------------------------//
-class Material
+class MATERIAL_EXPORT Material
 {
 
 public:

@@ -22,7 +22,7 @@ namespace callow
  *  @class LinearSolverCreator
  *  @brief Creates a
  */
-class LinearSolverCreator
+class CALLOW_EXPORT LinearSolverCreator
 {
 
 public:

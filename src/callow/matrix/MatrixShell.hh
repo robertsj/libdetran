@@ -29,7 +29,7 @@ namespace callow
  *  client may simply throw an exception to forbid its use).
  *
  */
-class MatrixShell: public MatrixBase
+class CALLOW_EXPORT MatrixShell: public MatrixBase
 {
 
 public:

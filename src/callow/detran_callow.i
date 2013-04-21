@@ -1,6 +1,6 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   callow.i
+ *  @file   detran_callow.i
  *  @author Jeremy Roberts
  *  @brief  Python interface for callow library.
  */
@@ -21,6 +21,13 @@
 #include "callow/solver/EigenSolverCreator.hh"
 #include "callow/preconditioner/Preconditioner.hh"
 %}
+
+// SWIG doesn't like the export stuff, and, really, it's not 
+// needed.  Hence, just eliminate it.
+%inline
+{
+#define CALLOW_EXPORT
+}
 
 %import "detran_utilities.i"
 %include "callow_config.hh"

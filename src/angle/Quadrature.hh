@@ -10,6 +10,7 @@
 #ifndef detran_angle_QUADRATURE_HH_
 #define detran_angle_QUADRATURE_HH_
 
+#include "angle/angle_export.hh"
 #include "utilities/Constants.hh"
 #include "utilities/Definitions.hh"
 #include "utilities/DBC.hh"
@@ -63,7 +64,7 @@ namespace detran_angle
  *
  */
 
-class Quadrature
+class ANGLE_EXPORT Quadrature
 {
 
 public:

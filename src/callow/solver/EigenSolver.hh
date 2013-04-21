@@ -58,7 +58,7 @@ namespace callow
  *  structure is really intended for the dominant mode.
  *  Other modes will require different handling.
  */
-class EigenSolver
+class CALLOW_EXPORT EigenSolver
 {
 
 public:

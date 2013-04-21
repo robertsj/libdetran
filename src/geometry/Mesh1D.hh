@@ -1,13 +1,13 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Mesh1D.hh
- * \author Jeremy Roberts
- * \date   Mar 23, 2012
+/**
+ *  @file   Mesh1D.hh
+ *  @author Jeremy Roberts
+ *  @date   Mar 23, 2012
  */
 //---------------------------------------------------------------------------//
 
-#ifndef MESH1D_HH_
-#define MESH1D_HH_
+#ifndef detran_geometry_MESH1D_HH_
+#define detran_geometry_MESH1D_HH_
 
 #include "Mesh.hh"
 #ifdef DETRAN_ENABLE_BOOST
@@ -20,14 +20,14 @@ namespace detran_geometry
 {
 
 //---------------------------------------------------------------------------//
-/*!
- *  \class Mesh1D
- *  \brief One-dimensional Cartesian mesh.
+/**
+ *  @class Mesh1D
+ *  @brief One-dimensional Cartesian mesh.
  *
  *  This is mostly a convenience interface.
  */
 //---------------------------------------------------------------------------//
-class Mesh1D : public Mesh
+class GEOMETRY_EXPORT Mesh1D : public Mesh
 {
 
 public:
@@ -35,21 +35,20 @@ public:
   typedef Mesh Base;
   typedef Base::SP_mesh SP_mesh;
 
-  /*!
-   *  \brief Constructor.
+  /**
+   *  @brief Constructor.
    *
-   *  \param    xfm         Fine meshes per coarse mesh in x dimension.
-   *  \param    xcme        Coarse mesh edges x dimension.
-
-   *  \param    mat_map     Coarse mesh material map.
+   *  @param    xfm         Fine meshes per coarse mesh in x dimension.
+   *  @param    xcme        Coarse mesh edges x dimension.
+   *  @param    mat_map     Coarse mesh material map.
    */
   Mesh1D(vec_int xfm, vec_dbl xcme, vec_int mat_map);
 
-  /*!
-   *  \brief Constructor.
+  /**
+   *  @brief Constructor.
    *
-   *  \param    xfme        Fine mesh edges x dimension.
-   *  \param    mat_map     Fine mesh material map.
+   *  @param    xfme        Fine mesh edges x dimension.
+   *  @param    mat_map     Fine mesh material map.
    */
   Mesh1D(vec_dbl xfme, vec_int mat_map);
 
@@ -71,7 +70,7 @@ public:
 
 protected:
 
-  /*!
+  /**
    *   We keep this as an option in the event inherited meshes need
    *   more flexibility.
    */
@@ -96,7 +95,7 @@ private:
 BOOST_CLASS_EXPORT_KEY(detran_geometry::Mesh1D)
 #endif
 
-#endif /* MESH1D_HH_ */
+#endif /* detran_geometry_MESH1D_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of Mesh1D.hh

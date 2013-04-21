@@ -1,13 +1,13 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Mesh2D.hh
- * \author Jeremy Roberts
- * \date   Mar 23, 2012
+/**
+ *  @file   Mesh2D.hh
+ *  @author Jeremy Roberts
+ *  @date   Mar 23, 2012
  */
 //---------------------------------------------------------------------------//
 
-#ifndef MESH2D_HH_
-#define MESH2D_HH_
+#ifndef detran_geometry_MESH2D_HH_
+#define detran_geometry_MESH2D_HH_
 
 #include "Mesh.hh"
 #ifdef DETRAN_ENABLE_BOOST
@@ -20,9 +20,9 @@ namespace detran_geometry
 {
 
 //---------------------------------------------------------------------------//
-/*!
- *  \class Mesh2D
- *  \brief Two-dimensional Cartesian mesh.
+/**
+ *  @class Mesh2D
+ *  @brief Two-dimensional Cartesian mesh.
  *
  *  This is mostly a convenience interface.
  */
@@ -35,23 +35,23 @@ public:
   typedef Mesh            Base;
   typedef Base::SP_mesh   SP_mesh;
 
-  /*!
-   *  \brief Constructor.
+  /**
+   *  @brief Constructor.
    *
-   *  \param    xfm         Fine meshes per coarse mesh in x dimension.
-   *  \param    yfm         Fine meshes per coarse mesh in y dimension.
-   *  \param    xcme        Coarse mesh edges x dimension.
-   *  \param    ycme        Coarse mesh edges y dimension.
-   *  \param    mat_map     Coarse mesh material map.
+   *  @param    xfm         Fine meshes per coarse mesh in x dimension.
+   *  @param    yfm         Fine meshes per coarse mesh in y dimension.
+   *  @param    xcme        Coarse mesh edges x dimension.
+   *  @param    ycme        Coarse mesh edges y dimension.
+   *  @param    mat_map     Coarse mesh material map.
    */
   Mesh2D(vec_int xfm, vec_int yfm, vec_dbl xcme, vec_dbl ycme, vec_int mat_map);
 
-  /*!
-   *  \brief Constructor.
+  /**
+   *  @brief Constructor.
    *
-   *  \param    xfme        Fine mesh edges x dimension.
-   *  \param    yfme        Fine mesh edges y dimension.
-   *  \param    mat_map     Fine mesh material map.
+   *  @param    xfme        Fine mesh edges x dimension.
+   *  @param    yfme        Fine mesh edges y dimension.
+   *  @param    mat_map     Fine mesh material map.
    */
   Mesh2D(vec_dbl xfme, vec_dbl yfme, vec_int mat_map);
 
@@ -73,7 +73,7 @@ public:
 
 protected:
 
-  /*!
+  /**
    *   We keep this as an option in the event inherited meshes need
    *   more flexibility.
    */
@@ -98,7 +98,7 @@ private:
 BOOST_CLASS_EXPORT_KEY(detran_geometry::Mesh2D)
 #endif
 
-#endif /* MESH2D_HH_ */
+#endif /* detran_geometry_MESH2D_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of Mesh2D.hh

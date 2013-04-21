@@ -22,7 +22,7 @@ namespace callow
  *  @class Vector
  *  @brief Dense vector object
  */
-class Vector
+class CALLOW_EXPORT Vector
 {
 
 public:

@@ -12,6 +12,13 @@
 #include "angle/detran_angle.hh"
 %}
 
+// SWIG doesn't like the export stuff, and, really, it's not 
+// needed.  Hence, just eliminate it.
+%inline
+{
+#define ANGLE_EXPORT
+}
+
 %import "utilities/detran_utilities.i"
 
 // Base angle classes and utilities

@@ -68,11 +68,6 @@ public:
   typedef detran_geometry::Mesh::SP_mesh            SP_mesh;
   typedef detran_utilities::vec_int                 vec_int;
   typedef detran_utilities::vec_dbl                 vec_dbl;
-  struct group_info
-  {
-  	hid_t 				location; // /path/to/location
-  	std::string 	name;     // /path/to/location/name
-  };
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR

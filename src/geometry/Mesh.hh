@@ -9,6 +9,7 @@
 #ifndef detran_geometry_MESH_HH_
 #define detran_geometry_MESH_HH_
 
+#include "geometry/geometry_export.hh"
 #include "utilities/Definitions.hh"
 #include "utilities/DBC.hh"
 #include "utilities/Point.hh"
@@ -39,7 +40,7 @@ namespace detran_geometry
  *  could use a pure virtual destructor as an alternative.
  */
 //---------------------------------------------------------------------------//
-class Mesh
+class GEOMETRY_EXPORT Mesh
 {
 
 public:

@@ -21,7 +21,7 @@ namespace detran_angle
  *  @class QuadratureFactory
  *  @brief Constructs quadratures.
  */
-class QuadratureFactory
+class ANGLE_EXPORT QuadratureFactory
 {
 
 public:

@@ -69,7 +69,7 @@ namespace callow
  *
  */
 
-class LinearSolver
+class CALLOW_EXPORT LinearSolver
 {
 
 public:

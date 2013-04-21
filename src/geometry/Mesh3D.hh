@@ -1,13 +1,13 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Mesh3D.hh
- * \author Jeremy Roberts
- * \date   Mar 23, 2012
+/**
+ *  @file   Mesh3D.hh
+ *  @author Jeremy Roberts
+ *  @date   Mar 23, 2012
  */
 //---------------------------------------------------------------------------//
 
-#ifndef MESH3D_HH_
-#define MESH3D_HH_
+#ifndef detran_geometry_MESH3D_HH_
+#define detran_geometry_MESH3D_HH_
 
 #include "Mesh.hh"
 #ifdef DETRAN_ENABLE_BOOST
@@ -20,14 +20,14 @@ namespace detran_geometry
 {
 
 //---------------------------------------------------------------------------//
-/*!
- *  \class Mesh3D
- *  \brief Three-dimensional Cartesian mesh.
+/**
+ *  @class Mesh3D
+ *  @brief Three-dimensional Cartesian mesh.
  *
  *  This is mostly a convenience interface.
  */
 //---------------------------------------------------------------------------//
-class Mesh3D : public Mesh
+class GEOMETRY_EXPORT Mesh3D : public Mesh
 {
 
 public:
@@ -35,41 +35,41 @@ public:
   typedef Mesh            Base;
   typedef Base::SP_mesh   SP_mesh;
 
-  /*!
-   *  \brief Constructor.
+  /**
+   *  @brief Constructor.
    *
-   *  \param    xfm         Fine meshes per coarse mesh in x dimension.
-   *  \param    yfm         Fine meshes per coarse mesh in y dimension.
-   *  \param    zfm         Fine meshes per coarse mesh in z dimension.
-   *  \param    xcme        Coarse mesh edges x dimension.
-   *  \param    ycme        Coarse mesh edges y dimension.
-   *  \param    zcme        Coarse mesh edges z dimension.
-   *  \param    mat_map     Coarse mesh material map.
+   *  @param    xfm         Fine meshes per coarse mesh in x dimension.
+   *  @param    yfm         Fine meshes per coarse mesh in y dimension.
+   *  @param    zfm         Fine meshes per coarse mesh in z dimension.
+   *  @param    xcme        Coarse mesh edges x dimension.
+   *  @param    ycme        Coarse mesh edges y dimension.
+   *  @param    zcme        Coarse mesh edges z dimension.
+   *  @param    mat_map     Coarse mesh material map.
    */
   Mesh3D(vec_int xfm,  vec_int yfm,  vec_int zfm,
          vec_dbl xcme, vec_dbl ycme, vec_dbl zcme,
          vec_int mat_map);
 
-  /*!
-   *  \brief Constructor.
+  /**
+   *  @brief Constructor.
    *
-   *  \param    xfme        Fine mesh edges x dimension.
-   *  \param    yfme        Fine mesh edges y dimension.
-   *  \param    zfme        Fine mesh edges z dimension.
-   *  \param    mat_map     Fine mesh material map.
+   *  @param    xfme        Fine mesh edges x dimension.
+   *  @param    yfme        Fine mesh edges y dimension.
+   *  @param    zfme        Fine mesh edges z dimension.
+   *  @param    mat_map     Fine mesh material map.
    */
    Mesh3D(vec_dbl xfme, vec_dbl yfme, vec_dbl zfme, vec_int mat_map);
 
-  /*!
-   *  \brief SP Constructor.
+  /**
+   *  @brief SP Constructor.
    *
-   *  \param    xfm         Fine meshes per coarse mesh in x dimension.
-   *  \param    yfm         Fine meshes per coarse mesh in y dimension.
-   *  \param    zfm         Fine meshes per coarse mesh in z dimension.
-   *  \param    xcme        Coarse mesh edges x dimension.
-   *  \param    ycme        Coarse mesh edges y dimension.
-   *  \param    zcme        Coarse mesh edges z dimension.
-   *  \param    mat_map     Coarse mesh material map.
+   *  @param    xfm         Fine meshes per coarse mesh in x dimension.
+   *  @param    yfm         Fine meshes per coarse mesh in y dimension.
+   *  @param    zfm         Fine meshes per coarse mesh in z dimension.
+   *  @param    xcme        Coarse mesh edges x dimension.
+   *  @param    ycme        Coarse mesh edges y dimension.
+   *  @param    zcme        Coarse mesh edges z dimension.
+   *  @param    mat_map     Coarse mesh material map.
    */
   static SP_mesh
   Create(vec_int xfm, vec_int yfm, vec_int zfm, vec_dbl xcme, vec_dbl ycme,
@@ -80,13 +80,13 @@ public:
     return p;
   }
 
-  /*!
-   *  \brief SP Constructor.
+  /**
+   *  @brief SP Constructor.
    *
-   *  \param    xfme        Fine mesh edges x dimension.
-   *  \param    yfme        Fine mesh edges y dimension.
-   *  \param    zfme        Fine mesh edges z dimension.
-   *  \param    mat_map     Fine mesh material map.
+   *  @param    xfme        Fine mesh edges x dimension.
+   *  @param    yfme        Fine mesh edges y dimension.
+   *  @param    zfme        Fine mesh edges z dimension.
+   *  @param    mat_map     Fine mesh material map.
    */
   static SP_mesh
   Create(vec_dbl xfme, vec_dbl yfme, vec_dbl zfme, vec_int mat_map)
@@ -98,7 +98,7 @@ public:
 
 protected:
 
-  /*!
+  /**
    *   We keep this as an option in the event inherited meshes need
    *   more flexibility.
    */
@@ -123,7 +123,7 @@ private:
 BOOST_CLASS_EXPORT_KEY(detran_geometry::Mesh3D)
 #endif
 
-#endif /* MESH3D_HH_ */
+#endif /* detran_geometry_MESH3D_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of Mesh3D.hh

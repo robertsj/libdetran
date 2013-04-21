@@ -10,6 +10,7 @@
 #ifndef detran_angle_MOMENTINDEXER_HH_
 #define detran_angle_MOMENTINDEXER_HH_
 
+#include "angle/angle_export.hh"
 #include "utilities/Definitions.hh"
 #include "utilities/DBC.hh"
 #include "utilities/SP.hh"
@@ -52,7 +53,7 @@ namespace detran_angle
  *  from 0 to the given order.  Hence, there are \f$L+1\f$ moments.
  */
 
-class MomentIndexer
+class ANGLE_EXPORT MomentIndexer
 {
 
 public:

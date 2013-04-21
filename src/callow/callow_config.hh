@@ -32,6 +32,9 @@
 // include detran configuration
 #include "detran_config.hh"
 
+// callow export stuff
+#include "callow/callow_export.hh"
+
 #ifdef DETRAN_ENABLE_PETSC
 #define CALLOW_ENABLE_PETSC
 #include "petsc.h"

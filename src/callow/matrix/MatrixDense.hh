@@ -31,7 +31,7 @@ namespace callow
  *  by default.
  */
 
-class MatrixDense: public MatrixBase
+class CALLOW_EXPORT MatrixDense: public MatrixBase
 {
 
 public:

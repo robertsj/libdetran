@@ -12,6 +12,11 @@
 #include "material/detran_material.hh"
 %}
 
+%inline
+{
+#define MATERIAL_EXPORT
+}
+
 %import "utilities/detran_utilities.i"
 
 %include "Material.hh"

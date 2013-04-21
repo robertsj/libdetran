@@ -16,10 +16,10 @@ namespace callow
 {
 
 /**
- *  \class EigenSolverCreator
- *  \brief Creates an eigensolver
+ *  @class EigenSolverCreator
+ *  @brief Creates an eigensolver
  */
-class EigenSolverCreator
+class CALLOW_EXPORT EigenSolverCreator
 {
 
 public:

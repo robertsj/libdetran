@@ -98,7 +98,7 @@ namespace detran_angle
  * Test of MomentToDiscrete.
  */
 //---------------------------------------------------------------------------//
-class MomentToDiscrete
+class ANGLE_EXPORT MomentToDiscrete
 {
 
 public:

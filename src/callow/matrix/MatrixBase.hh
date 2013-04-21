@@ -17,7 +17,7 @@
 namespace callow
 {
 
-class MatrixBase
+class CALLOW_EXPORT MatrixBase
 {
 
 public:

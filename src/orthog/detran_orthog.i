@@ -18,7 +18,7 @@
 %}
 
 %import "utilities/detran_utilities.i"
-%import "callow/callow.i"
+%import "callow/detran_callow.i"
 
 // Base angle classes and utilities
 %include "OrthogonalBasis.hh"
@@ -28,7 +28,7 @@
 %include "DCP.hh"
 %include "DCT.hh"
 
-%template(OrthogonalBasisSP)    detran_utilities::SP<detran_orthog::OrthogonalBasis>;
+%template(OrthogonalBasisSP) detran_utilities::SP<detran_orthog::OrthogonalBasis>;
 
 //---------------------------------------------------------------------------//
 //              end of detran_orthog.i
