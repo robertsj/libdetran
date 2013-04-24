@@ -248,7 +248,8 @@ SiloOutput::SiloOutput(SP_mesh mesh)
 }
 SiloOutput::~SiloOutput(){}
 void SiloOutput::finalize(){}
-bool SiloOutput::initialize(std::string filename){}
+bool SiloOutput::initialize(std::string filename)
+{return false;}
 bool SiloOutput::write_mesh_map(const std::string &key)
 {return false;}
 bool SiloOutput::write_scalar_flux(SP_state state)
@@ -258,8 +259,9 @@ bool SiloOutput::write_angular_flux(SP_state state, SP_quadrature quad)
 bool SiloOutput::write_time_flux(const int step, SP_state state, bool do_psi)
 {return false;}
 
-
 #endif // DETRAN_ENABLE_SILO
+
+template IOUTILS_EXPORT class detran_utilities::SP<SiloOutput>;
 
 } // end namespace detran_ioutils
 

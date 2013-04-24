@@ -25,7 +25,7 @@ GaussChebyshev::GaussChebyshev(const size_t number_polar_octant,
   generate_gc_parameters(d_number_angles, tmp_mu, tmp_wt, normalize);
 
   // fill parameters
-  for (int i = 0; i < d_number_angles_octant; i++)
+  for (size_t i = 0; i < d_number_angles_octant; ++i)
   {
     d_mu[i]     = tmp_mu[i];
     d_weight[i] = tmp_wt[i];

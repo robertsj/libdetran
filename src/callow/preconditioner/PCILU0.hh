@@ -37,7 +37,7 @@ namespace callow
  *  @endcode
  */
 
-class PCILU0: public Preconditioner
+class CALLOW_EXPORT PCILU0: public Preconditioner
 {
 
 public:

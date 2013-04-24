@@ -10,8 +10,8 @@
 #ifndef detran_BOUNDARYMOC_HH_
 #define detran_BOUNDARYMOC_HH_
 
-#include "BoundaryBase.hh"
-#include "BoundaryConditionMOC.hh"
+#include "boundary/BoundaryBase.hh"
+#include "boundary/BoundaryConditionMOC.hh"
 #include "geometry/MeshMOC.hh"
 #include "angle/QuadratureMOC.hh"
 

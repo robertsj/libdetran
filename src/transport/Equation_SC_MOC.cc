@@ -13,15 +13,15 @@ namespace detran
 {
 
 //---------------------------------------------------------------------------//
-Equation_SC_MOC::Equation_SC_MOC(SP_mesh mesh,
-                                 SP_material material,
+Equation_SC_MOC::Equation_SC_MOC(SP_mesh       mesh,
+                                 SP_material   material,
                                  SP_quadrature quadrature,
-                                 const bool update_psi)
+                                 const bool    update_psi)
   : Equation_MOC(mesh, material, quadrature, update_psi)
   , d_weights(quadrature->number_polar_octant(), 0.0)
   , d_inv_sin(quadrature->number_polar_octant(), 0.0)
 {
-  for (int p = 0; p < d_quadrature->number_polar_octant(); p++)
+  for (size_t p = 0; p < d_quadrature->number_polar_octant(); ++p)
   {
     d_inv_sin[p] = 1.0 / d_quadrature->sin_theta(p);
   }
@@ -47,9 +47,9 @@ void Equation_SC_MOC::setup_azimuth(const size_t a)
   Require(a < d_quadrature->number_azimuths_octant());
   d_azimuth = a;
   d_spacing = d_tracks->spacing(d_azimuth);
-  for (int p = 0; p < d_quadrature->number_polar_octant(); p++)
+  for (size_t p = 0; p < d_quadrature->number_polar_octant(); ++p)
   {
-    int angle = d_quadrature->angle(a, p);
+    size_t angle = d_quadrature->angle(a, p);
     d_weights[p] = d_quadrature->weight(angle);
   }
 }

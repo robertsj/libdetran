@@ -10,6 +10,7 @@
 #ifndef TRACKDB_HH_
 #define TRACKDB_HH_
 
+#include "geometry/geometry_export.hh"
 #include "Track.hh"
 #include "angle/QuadratureMOC.hh"
 #include "utilities/DBC.hh"
@@ -163,6 +164,8 @@ private:
   vec_dbl d_spacing;
 
 };
+
+GEOMETRY_TEMPLATE class GEOMETRY_EXPORT detran_utilities::SP<TrackDB>;
 
 } // end namespace detran_geometry
 

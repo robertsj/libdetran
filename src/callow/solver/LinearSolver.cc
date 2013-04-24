@@ -126,7 +126,7 @@ bool LinearSolver::monitor(int it, double r)
     d_status = SUCCESS;
     return true;
   }
-  else if (d_monitor_diverge and it >  1 and r - d_residual[it - 1] > 0.0)
+  else if (d_monitor_diverge && it >  1 && r - d_residual[it - 1] > 0.0)
   {
     if (d_monitor_level) printf("*** %s diverged \n", d_name.c_str());
     d_status = DIVERGE;

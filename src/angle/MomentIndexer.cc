@@ -34,7 +34,7 @@ MomentIndexer::MomentIndexer(const size_t dimension,
   size_t j = 0;
   for (size_t l = 0; l <= d_legendre_order; ++l)
   {
-    for (int i = 0; i < d_m_index[l].size(); ++i, ++j)
+    for (size_t i = 0; i < d_m_index[l].size(); ++i, ++j)
     {
       d_l[j] = l;
       d_m[j] = d_m_index[l][i];
@@ -55,7 +55,7 @@ MomentIndexer::Create(const size_t dimension,
 void MomentIndexer::display() const
 {
   std::cout << " MOMENTS INDEXER: " << std::endl;
-  for (int i = 0; i < d_number_moments; ++i)
+  for (size_t i = 0; i < d_number_moments; ++i)
   {
     std::cout << " " << i << " " << l(i) << " " << m(i) << std::endl;
   }
@@ -66,7 +66,7 @@ void MomentIndexer::construct_1D()
 {
   d_number_moments = d_legendre_order + 1;
   d_m_index.resize(d_legendre_order + 1);
-  for (int l = 0; l <= d_legendre_order; l++)
+  for (size_t l = 0; l <= d_legendre_order; ++l)
     d_m_index[l].resize(1, 0); // always zero
 }
 
@@ -75,11 +75,10 @@ void MomentIndexer::construct_2D()
 {
   d_number_moments = (d_legendre_order + 1) * (d_legendre_order + 2) / 2;
   d_m_index.resize(d_legendre_order + 1);
-  for (int l = 0; l <= d_legendre_order; l++)
-  {
+  int lo = d_legendre_order;
+  for (int l = 0; l <= (int)d_legendre_order; ++l)
     for (int m = -l; m <= l; m++)
       if ((m + l) % 2 == 0) d_m_index[l].push_back(m);
-  }
 }
 
 //---------------------------------------------------------------------------//
@@ -87,9 +86,9 @@ void MomentIndexer::construct_3D()
 {
   d_number_moments = (d_legendre_order + 1) * (d_legendre_order + 1);
   d_m_index.resize(d_legendre_order + 1);
-  for (int l = 0; l <= d_legendre_order; l++)
+  for (int l = 0; l <= (int)d_legendre_order; ++l)
   {
-    for (int m = -l; m <= l; m++)
+    for (int m = -l; m <= l; ++m)
       d_m_index[l].push_back(m);
   }
 }

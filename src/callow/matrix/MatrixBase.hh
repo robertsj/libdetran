@@ -10,12 +10,17 @@
 #ifndef callow_MATRIXBASE_HH_
 #define callow_MATRIXBASE_HH_
 
+#include "utilities/Definitions.hh"
 #include "callow/callow_config.hh"
 #include "callow/vector/Vector.hh"
 #include "utilities/SP.hh"
 
 namespace callow
 {
+
+// DLL support
+class MatrixBase;
+template class CALLOW_EXPORT detran_utilities::SP<MatrixBase>;
 
 class CALLOW_EXPORT MatrixBase
 {
@@ -28,6 +33,7 @@ public:
 
   typedef detran_utilities::SP<MatrixBase >     SP_matrix;
   typedef Vector::SP_vector                     SP_vector;
+  typedef detran_utilities::size_t              size_t;
 
   //---------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR

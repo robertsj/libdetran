@@ -1,18 +1,20 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- *  \file   Mesh2D.hh
- *  \author Jeremy Roberts
- *  \brief  Mesh2D member definitions.
+/**
+ *  @file   Mesh2D.hh
+ *  @author Jeremy Roberts
+ *  @brief  Mesh2D member definitions.
  */
 //---------------------------------------------------------------------------//
 
-// Geometry headers
 #include "Mesh2D.hh"
 
 namespace detran_geometry
 {
 
-Mesh2D::Mesh2D(vec_int xfm, vec_int yfm, vec_dbl xcme, vec_dbl ycme, vec_int mat_map)
+//---------------------------------------------------------------------------//
+Mesh2D::Mesh2D(vec_int xfm, vec_int yfm, 
+			   vec_dbl xcme, vec_dbl ycme, 
+			   vec_int mat_map)
   : Mesh(2,
          xfm,
          yfm,
@@ -27,6 +29,7 @@ Mesh2D::Mesh2D(vec_int xfm, vec_int yfm, vec_dbl xcme, vec_dbl ycme, vec_int mat
   d_dz[0]   = 1.0;
 }
 
+//---------------------------------------------------------------------------//
 Mesh2D::Mesh2D(vec_dbl xfme, vec_dbl yfme, vec_int mat_map)
   : Mesh(2,
          xfme,

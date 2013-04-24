@@ -48,6 +48,8 @@ public:
   typedef detran_utilities::vec3_dbl     vec3_dbl;
   typedef detran_utilities::vec_int      vec_int;
   typedef detran_utilities::vec2_int     vec2_int;
+  typedef detran_utilities::vec_size_t   vec_size_t;
+  typedef detran_utilities::vec2_size_t  vec2_size_t;
   typedef detran_utilities::size_t       size_t;
 
   //-------------------------------------------------------------------------//
@@ -226,7 +228,7 @@ protected:
   /// Diffusion coefficient [material, group]
   vec2_dbl d_diff_coef;
   /// Scatter bounds applied to all materials [group, 2]
-  vec2_int d_scatter_bounds;
+  vec2_size_t d_scatter_bounds;
   /// Groups equal to or above cutoff are subject to upscatter iterations
   size_t d_upscatter_cutoff;
   /// Are we ready to be used?
@@ -267,6 +269,8 @@ protected:
 #endif
 
 };
+
+MATERIAL_TEMPLATE class MATERIAL_EXPORT detran_utilities::SP<Material>;
 
 } // end namespace detran_material
 

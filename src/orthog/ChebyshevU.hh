@@ -19,7 +19,7 @@ namespace detran_orthog
  *  @class ChebyshevU
  *  @brief Chebyshev polynomials of the second kind
  */
-class ChebyshevU: public ContinuousOrthogonalBasis
+class ORTHOG_EXPORT ChebyshevU: public ContinuousOrthogonalBasis
 {
 
 public:

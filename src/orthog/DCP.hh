@@ -15,12 +15,11 @@
 namespace detran_orthog
 {
 
-
 /**
  *  @class DCP
  *  @brief Discrete Chebyshev polynomial basis
  */
-class DCP: public OrthogonalBasis
+class ORTHOG_EXPORT DCP: public OrthogonalBasis
 {
 
 public:

@@ -10,7 +10,8 @@
 #ifndef detran_EQUATION_DD_1D_HH_
 #define detran_EQUATION_DD_1D_HH_
 
-#include "Equation.hh"
+#include "transport/transport_export.hh"
+#include "transport/Equation.hh"
 
 namespace detran
 {
@@ -22,7 +23,7 @@ namespace detran
  *  See \ref Equation_DD_3D for a general description of the
  *  diamond difference approximation.
  */
-class Equation_DD_1D : public Equation<_1D>
+class TRANSPORT_EXPORT Equation_DD_1D : public Equation<_1D>
 {
 
 public:

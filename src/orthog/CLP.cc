@@ -16,11 +16,11 @@ namespace detran_orthog
 {
 
 //---------------------------------------------------------------------------//
-CLP::CLP(const size_t order,
+CLP::CLP(const size_t   order,
          const vec_dbl &x,
          const vec_dbl &qw,
-         const double x_0,
-         const double x_1)
+         const double   x_0,
+         const double   x_1)
   : ContinuousOrthogonalBasis(order, x, qw)
 {
 #ifndef DETRAN_ENABLE_BOOST

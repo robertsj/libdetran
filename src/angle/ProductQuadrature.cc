@@ -46,10 +46,10 @@ void ProductQuadrature::build_product_quadrature()
   double scale = 1.0;
   if (d_dimension == 2) scale = 2.0;
   double weight_tot = 0.0;
-  int n = 0;
-  for (int a = 0; a < number_azimuths_octant(); ++a)
+  size_t n = 0;
+  for (size_t a = 0; a < number_azimuths_octant(); ++a)
   {
-    for (int p = 0; p < number_polar_octant(); ++p, ++n)
+    for (size_t p = 0; p < number_polar_octant(); ++p, ++n)
     {
       d_mu[n]     = d_sin_theta[p] * d_cos_phi[a];
       d_eta[n]    = d_sin_theta[p] * d_sin_phi[a];
@@ -62,7 +62,6 @@ void ProductQuadrature::build_product_quadrature()
 
   verify();
 
-  // Postconditions
   Ensure(detran_utilities::soft_equiv(weight_tot, 1.0/angular_norm(d_dimension)));
 }
 

@@ -79,7 +79,7 @@ void LevelSymmetric::set_quad_values(const size_t order, vec_dbl &att, vec_dbl &
     wtt[0] = 0.333333333333333333333333;
     int wp4[3] =
     { 0, 0, 0 };
-    for (int m = 0; m <= d_number_angles_octant - 1; ++m)
+    for (size_t m = 0; m <= d_number_angles_octant - 1; ++m)
       d_weight[m] = wtt[wp4[m]];
     break;
   }
@@ -96,7 +96,7 @@ void LevelSymmetric::set_quad_values(const size_t order, vec_dbl &att, vec_dbl &
     wtt[1] = 0.157207202469949899549768;
     int wp6[6] =
     { 0, 1, 0, 1, 1, 0 };
-    for (int m = 0; m <= d_number_angles_octant - 1; ++m)
+    for (size_t m = 0; m <= d_number_angles_octant - 1; ++m)
       d_weight[m] = wtt[wp6[m]];
     break;
   }
@@ -115,7 +115,7 @@ void LevelSymmetric::set_quad_values(const size_t order, vec_dbl &att, vec_dbl &
     wtt[2] = 0.0925925925925925925925926;
     int wp8[10] =
     { 0, 1, 1, 0, 1, 2, 1, 1, 1, 0 };
-    for (int m = 0; m <= d_number_angles_octant - 1; ++m)
+    for (size_t m = 0; m <= d_number_angles_octant - 1; ++m)
       d_weight[m] = wtt[wp8[m]];
     break;
   }
@@ -136,7 +136,7 @@ void LevelSymmetric::set_quad_values(const size_t order, vec_dbl &att, vec_dbl &
     wtt[3] = 0.0539281144878369243545650;
     int wp10[15] =
     { 0, 1, 2, 1, 0, 1, 3, 3, 1, 2, 3, 2, 1, 1, 0 };
-    for (int m = 0; m <= d_number_angles_octant - 1; ++m)
+    for (size_t m = 0; m <= d_number_angles_octant - 1; ++m)
       d_weight[m] = wtt[wp10[m]];
     break;
   }
@@ -159,7 +159,7 @@ void LevelSymmetric::set_quad_values(const size_t order, vec_dbl &att, vec_dbl &
     wtt[4] = 0.0258512916557503911218290;
     int wp12[21] =
     { 0, 1, 2, 2, 1, 0, 1, 3, 4, 3, 1, 2, 4, 4, 2, 2, 3, 2, 1, 1, 0 };
-    for (int m = 0; m <= d_number_angles_octant - 1; ++m)
+    for (size_t m = 0; m <= d_number_angles_octant - 1; ++m)
       d_weight[m] = wtt[wp12[m]];
     break;
   }
@@ -186,7 +186,7 @@ void LevelSymmetric::set_quad_values(const size_t order, vec_dbl &att, vec_dbl &
     int wp14[28] =
     { 0, 1, 2, 3, 2, 1, 0, 1, 4, 5, 5, 4, 1, 2, 5, 6, 5, 2, 3, 5, 5, 3, 2, 4,
       2, 1, 1, 0 };
-    for (int m = 0; m <= d_number_angles_octant - 1; ++m)
+    for (size_t m = 0; m <= d_number_angles_octant - 1; ++m)
       d_weight[m] = wtt[wp14[m]];
     break;
   }
@@ -215,7 +215,7 @@ void LevelSymmetric::set_quad_values(const size_t order, vec_dbl &att, vec_dbl &
     int wp16[36] =
     { 0, 1, 2, 3, 3, 2, 1, 0, 1, 4, 5, 6, 5, 4, 1, 2, 5, 7, 7, 5, 2, 3, 6, 7,
       6, 3, 3, 5, 5, 3, 2, 4, 2, 1, 1, 0 };
-    for (int m = 0; m <= d_number_angles_octant - 1; ++m)
+    for (size_t m = 0; m <= d_number_angles_octant - 1; ++m)
       d_weight[m] = wtt[wp16[m]];
     break;
   }
@@ -247,7 +247,7 @@ void LevelSymmetric::set_quad_values(const size_t order, vec_dbl &att, vec_dbl &
     int wp18[45] =
     { 0, 1, 2, 3, 4, 3, 2, 1, 0, 1, 5, 6, 7, 7, 6, 5, 1, 2, 6, 8, 9, 8, 6, 2,
       3, 7, 9, 9, 7, 3, 4, 7, 8, 7, 4, 3, 6, 6, 3, 2, 5, 2, 1, 1, 0 };
-    for (int m = 0; m <= d_number_angles_octant - 1; ++m)
+    for (size_t m = 0; m <= d_number_angles_octant - 1; ++m)
       d_weight[m] = wtt[wp18[m]];
     break;
   }
@@ -283,7 +283,7 @@ void LevelSymmetric::set_quad_values(const size_t order, vec_dbl &att, vec_dbl &
     { 0, 1, 2, 3, 4, 4, 3, 2, 1, 0, 1, 5, 6, 7, 8, 7, 6, 5, 1, 2, 6, 9, 10, 10,
       9, 6, 2, 3, 7, 10, 11, 10, 7, 3, 4, 8, 10, 10, 8, 4, 4, 7, 9, 7, 4, 3, 6,
       6, 3, 2, 5, 2, 1, 1, 0 };
-    for (int m = 0; m <= d_number_angles_octant - 1; ++m)
+    for (size_t m = 0; m <= d_number_angles_octant - 1; ++m)
       d_weight[m] = wtt[wp20[m]];
     break;
   }
@@ -322,7 +322,7 @@ void LevelSymmetric::set_quad_values(const size_t order, vec_dbl &att, vec_dbl &
     { 0, 1, 2, 3, 4, 5, 4, 3, 2, 1, 0, 1, 6, 7, 8, 9, 9, 8, 7, 6, 1, 2, 7, 10,
       11, 12, 11, 10, 7, 2, 3, 8, 11, 13, 13, 11, 8, 3, 4, 9, 12, 13, 12, 9, 4,
       5, 9, 11, 11, 9, 5, 4, 8, 10, 8, 4, 3, 7, 7, 3, 2, 6, 2, 1, 1, 0 };
-    for (int m = 0; m <= d_number_angles_octant - 1; ++m)
+    for (size_t m = 0; m <= d_number_angles_octant - 1; ++m)
       d_weight[m] = wtt[wp22[m]];
     break;
   }
@@ -365,7 +365,7 @@ void LevelSymmetric::set_quad_values(const size_t order, vec_dbl &att, vec_dbl &
       7, 11, 12, 13, 13, 12, 11, 7, 2, 3, 8, 12, 14, 15, 14, 12, 8, 3, 4, 9,
       13, 15, 15, 13, 9, 4, 5, 10, 13, 14, 13, 10, 5, 5, 9, 12, 12, 9, 5, 4, 8,
       11, 8, 4, 3, 7, 7, 3, 2, 6, 2, 1, 1, 0 };
-    for (int m = 0; m <= d_number_angles_octant - 1; ++m)
+    for (size_t m = 0; m <= d_number_angles_octant - 1; ++m)
       d_weight[m] = wtt[wp24[m]];
     break;
   }

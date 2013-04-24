@@ -7,8 +7,8 @@
  */
 //---------------------------------------------------------------------------//
 
-#include "Sweeper2DMOC.hh"
-#include "Equation_SC_MOC.hh"
+#include "transport/Sweeper2DMOC.hh"
+#include "transport/Equation_SC_MOC.hh"
 
 namespace detran
 {
@@ -48,6 +48,7 @@ Sweeper2DMOC<EQ>::Create(SP_input       input,
 // EXPLICIT INSTANTIATIONS
 //---------------------------------------------------------------------------//
 
-template class Sweeper2DMOC<Equation_SC_MOC>;
+template TRANSPORT_EXPORT class Sweeper2DMOC<Equation_SC_MOC>;
+template TRANSPORT_EXPORT class detran_utilities::SP<Sweeper2DMOC<Equation_SC_MOC> >;
 
 } // end namespace detran

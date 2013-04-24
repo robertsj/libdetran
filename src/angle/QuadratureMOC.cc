@@ -53,14 +53,14 @@ void QuadratureMOC::display_tracks() const
   cout << "MOC Quadrature: " << d_name << endl;
   cout << endl;
   cout << "Unscaled track data: " << endl;
-  for (int a = 0; a < 2*d_number_azimuths_octant; a++)
+  for (int a = 0; a < 2*d_number_azimuths_octant; ++a)
   {
     cout << "*** azimuth = " << a << endl;
     cout << "        phi = " << d_phi[a] << endl;
     cout << "    cos_phi = " << d_cos_phi[a] << endl;
     cout << "    sin_phi = " << d_sin_phi[a] << endl;
     cout << "    spacing = " << d_spacing[a] << endl;
-    for (int t = 0; t < d_exit[a].size(); t++)
+    for (size_t t = 0; t < d_exit[a].size(); ++t)
     {
       cout << "****** track = " << t;
       cout << " enter = " << d_enter[a][t]

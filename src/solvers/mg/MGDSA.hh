@@ -37,7 +37,7 @@ namespace detran
  *  the transport problem, the resulting system can be very
  *  large.  Hence, it is likely to perform best for relatively
  *  small systems.  A coarse mesh version is under development, but
- *  this implementation will server as the upper bound for the
+ *  this implementation will serve as the upper bound for the
  *  efficacy of diffusion-based multigroup preconditioning.
  *
  *  @note This inherits from the shell matrix (for now) so that the
@@ -45,7 +45,7 @@ namespace detran
  *        detailed numerical studies
  */
 
-class MGDSA: public callow::MatrixShell, public MGPreconditioner
+class MGDSA: public MGPreconditioner
 {
 
 public:

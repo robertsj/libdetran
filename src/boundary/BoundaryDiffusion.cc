@@ -7,7 +7,7 @@
  */
 //---------------------------------------------------------------------------//
 
-#include "BoundaryDiffusion.hh"
+#include "boundary/BoundaryDiffusion.hh"
 
 namespace detran
 {
@@ -119,10 +119,12 @@ void BoundaryDiffusion<_1D>::initialize()
 // EXPLICIT INSTANTIATIONS
 //---------------------------------------------------------------------------//
 
-template class BoundaryDiffusion<_1D>;
-template class BoundaryDiffusion<_2D>;
-template class BoundaryDiffusion<_3D>;
-
+BOUNDARY_TEMPLATE class BOUNDARY_EXPORT BoundaryDiffusion<_1D>;
+BOUNDARY_TEMPLATE class BOUNDARY_EXPORT BoundaryDiffusion<_2D>;
+BOUNDARY_TEMPLATE class BOUNDARY_EXPORT BoundaryDiffusion<_3D>;
+BOUNDARY_TEMPLATE class BOUNDARY_EXPORT detran_utilities::SP<BoundaryDiffusion<_1D> >;
+BOUNDARY_TEMPLATE class BOUNDARY_EXPORT detran_utilities::SP<BoundaryDiffusion<_2D> >;
+BOUNDARY_TEMPLATE class BOUNDARY_EXPORT detran_utilities::SP<BoundaryDiffusion<_3D> >;
 
 } // end namespace detran
 

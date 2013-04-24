@@ -54,7 +54,7 @@ inline void Sweeper2DMOC<EQ>::sweep(moments_type &phi)
   SP_quadrature q = d_quadrature;
 
   // Sweep over all octants.
-  for (int oo = 0; oo < 4; oo++)
+  for (size_t oo = 0; oo < 4; oo++)
   {
     size_t o = d_ordered_octants[oo];
     //cout << "OCTANT: " << o << endl;
@@ -64,13 +64,13 @@ inline void Sweeper2DMOC<EQ>::sweep(moments_type &phi)
 
     // Sweep over all angles.
     #pragma omp for
-    for (int a = 0; a < q->number_angles_octant(); a++)
+    for (size_t a = 0; a < q->number_angles_octant(); ++a)
     {
       //cout << "  ANGLE: " << a << endl;
 
       // Get the azimuth and polar indices within the octant.
-      int azimuth = q->azimuth(a);
-      int polar   = q->polar(a);
+      size_t azimuth = q->azimuth(a);
+      size_t polar   = q->polar(a);
       //cout << "  AZIMUTH: " << azimuth << endl;
       //cout << "  POLAR: " << polar << endl;
 

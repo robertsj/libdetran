@@ -55,7 +55,7 @@ inline void GMRES::solve_impl(const Vector &b, Vector &x0)
 
   int iteration = 0;  // total iterations (i.e. applications of A)
   bool done = false;
-  while (!done and iteration < d_maximum_iterations)
+  while (!done && iteration < d_maximum_iterations)
   {
 
     // clear krylov subspace
@@ -69,7 +69,7 @@ inline void GMRES::solve_impl(const Vector &b, Vector &x0)
     r.scale(-1);
 
     //   apply left preconditioner
-    if (d_P and d_pc_side == Base::LEFT)
+    if (d_P && d_pc_side == Base::LEFT)
     {
       t.copy(r);
       d_P->apply(t, r);
@@ -111,7 +111,7 @@ inline void GMRES::solve_impl(const Vector &b, Vector &x0)
       //---------------------------------------------------------------------//
 
       // apply right preconditioner and operator
-      if (d_P and d_pc_side == Base::RIGHT)
+      if (d_P && d_pc_side == Base::RIGHT)
       {
         d_P->apply(v[k], v[k + 1]);
         t.copy(v[k + 1]);
@@ -123,7 +123,7 @@ inline void GMRES::solve_impl(const Vector &b, Vector &x0)
         d_A->multiply(v[k], v[k + 1]);
       }
       // apply left preconditioner
-      if (d_P and d_pc_side == Base::LEFT)
+      if (d_P && d_pc_side == Base::LEFT)
       {
         t.copy(v[k + 1]);
         d_P->apply(t, v[k + 1]);
@@ -146,7 +146,7 @@ inline void GMRES::solve_impl(const Vector &b, Vector &x0)
       // optional reorthogonalization
       //---------------------------------------------------------------------//
 
-      if ( (d_reorthog == 1 and norm_Av + 0.001 * norm_Av_2 == norm_Av) or
+      if ( (d_reorthog == 1 && norm_Av + 0.001 * norm_Av_2 == norm_Av) ||
            (d_reorthog == 2) )
       {
         // summarized from kelley:
@@ -226,7 +226,7 @@ inline void GMRES::solve_impl(const Vector &b, Vector &x0)
     {
       x.add_a_times_x(y[i], v[i]);
     }
-    if (d_P and d_pc_side == Base::RIGHT)
+    if (d_P && d_pc_side == Base::RIGHT)
     {
       t.copy(x);
       d_P->apply(t, x);

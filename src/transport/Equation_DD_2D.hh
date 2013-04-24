@@ -22,7 +22,7 @@ namespace detran
  *  See \ref Equation_DD_3D for a general description of the
  *  diamond difference approximation.
  */
-class Equation_DD_2D : public Equation<_2D>
+class TRANSPORT_EXPORT Equation_DD_2D : public Equation<_2D>
 {
 
 public:

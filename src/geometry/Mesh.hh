@@ -80,7 +80,6 @@ public:
   typedef std::map<std::string, vec_int>    mesh_map_type;
   typedef detran_utilities::size_t          size_t;
 
-
   // Note, these constructors are protected to hide them from the
   // user.  These are to be called by inherited classes.  I keep
   // the constructors at the top for convention.
@@ -332,6 +331,8 @@ private:
 #endif
 
 };
+
+GEOMETRY_TEMPLATE class GEOMETRY_EXPORT detran_utilities::SP<Mesh>;
 
 } // end namespace detran_geometry
 

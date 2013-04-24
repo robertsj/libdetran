@@ -15,6 +15,8 @@
 namespace detran
 {
 
+//KINETICS_TEMPLATE class KINETICS_EXPORT std::vector<detran_utilities::SP<detran_external_source::ExternalSource> >;
+
 /**
  *  @class LinearExternalSource
  *  @brief Base class for time-dependent external sources
@@ -23,7 +25,7 @@ namespace detran
  *  specify a time at which the source will be evaluated during the
  *  transport solve for the current step.
  */
-class LinearExternalSource: public TimeDependentExternalSource
+class KINETICS_EXPORT LinearExternalSource: public TimeDependentExternalSource
 {
 
 public:
@@ -106,22 +108,16 @@ protected:
 
   /// Discrete times at which sources are defined
   vec_dbl d_times;
-
   /// Number of times
   double d_number_times;
-
   /// Sources at each time
   vec_source d_sources;
-
   /// Index of first source
   size_t d_ia;
-
   /// Interpolation factor for first source
   double d_fa;
-
   /// Index of second source
   size_t d_ib;
-
   /// Interpolation factor for second source
   double d_fb;
 
@@ -135,7 +131,7 @@ protected:
 
 #include "LinearExternalSource.i.hh"
 
-#endif // LINEAREXTERNALSOURCE_HH_ 
+#endif // detran_LINEAREXTERNALSOURCE_HH_ 
 
 //---------------------------------------------------------------------------//
 //              end of file LinearExternalSource.hh

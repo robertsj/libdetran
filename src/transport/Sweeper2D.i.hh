@@ -91,7 +91,7 @@ inline void Sweeper2D<EQ>::sweep(moments_type &phi)
       // Sweep over all y.
       int j  = d_space_ranges[o][1][0]; // actual index
       int dj = d_space_ranges[o][1][1]; // decrement
-      for (int jj = 0; jj < d_mesh->number_cells_y(); ++jj, j += dj)
+      for (size_t jj = 0; jj < d_mesh->number_cells_y(); ++jj, j += dj)
       {
         // Note the index: incident boundaries are access from
         // "left to right" w/r to self.
@@ -100,7 +100,7 @@ inline void Sweeper2D<EQ>::sweep(moments_type &phi)
         // Sweep over all x.
         int i  = d_space_ranges[o][0][0]; // actual index
         int di = d_space_ranges[o][0][1]; // decrement
-        for (int ii = 0; ii < d_mesh->number_cells_x(); ++ii, i += di)
+        for (size_t ii = 0; ii < d_mesh->number_cells_x(); ++ii, i += di)
         {
           // Set the incident cell surface fluxes.
           psi_in[Mesh::HORZ] = psi_h[i];

@@ -24,7 +24,7 @@ DTN::DTN(const size_t number_polar,
   vec_dbl tmp_wt(d_number_angles_octant, 0.0);
   generate_gc_parameters(d_number_angles_octant, tmp_mu, tmp_wt, normalize);
 
-  for (int i = 0; i < d_number_angles_octant; i++)
+  for (size_t i = 0; i < d_number_angles_octant; ++i)
   {
     // Shift the mu to [0, 1] from [-1, 1] and halve the weight
     d_mu[i]     = 0.5*tmp_mu[i] + 0.5;

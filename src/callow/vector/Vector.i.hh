@@ -75,19 +75,19 @@ inline double Vector::norm(const int type)
 #ifdef CALLOW_ENABLE_PETSC_OPS
   if (type == L1)
     VecNorm(d_petsc_vector, NORM_1, &val);
-  else if (type == L2 or type == L2GRID)
+  else if (type == L2 || type == L2GRID)
     VecNorm(d_petsc_vector, NORM_2, &val);
   else if (type == LINF)
     VecNorm(d_petsc_vector, NORM_INFINITY, &val);
   else
     THROW("Unsupported norm type");
 #else
-  if (type == L1 or type == L1GRID)
+  if (type == L1 || type == L1GRID)
   {
     for (int i = 0; i < d_size; i++)
       val += std::abs(d_value[i]);
   }
-  else if (type == L2 or type == L2GRID)
+  else if (type == L2 || type == L2GRID)
   {
     for (int i = 0; i < d_size; i++)
       val += d_value[i] * d_value[i];

@@ -10,6 +10,7 @@
 #ifndef detran_MULTIPHYSICS_HH_
 #define detran_MULTIPHYSICS_HH_
 
+#include "kinetics/kinetics_export.hh"
 #include "utilities/DBC.hh"
 #include "utilities/Definitions.hh"
 #include "utilities/SP.hh"
@@ -27,7 +28,7 @@ namespace detran
  *  about the problem as is merely a data container.
  *
  */
-class MultiPhysics
+class KINETICS_EXPORT MultiPhysics
 {
 
 public:

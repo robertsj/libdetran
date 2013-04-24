@@ -43,7 +43,7 @@ void Assembly::finalize(vec_int pincell_map)
 
   // Verify that pin cells are consistent, using first
   // pin as the reference.
-  for (int i = 1; i < d_pincells.size(); i++)
+  for (size_t i = 1; i < d_pincells.size(); i++)
   {
     Insist(d_pincells[0]->mesh()->number_cells_x() ==
            d_pincells[i]->mesh()->number_cells_x(),

@@ -21,8 +21,7 @@ MGDSA::MGDSA(SP_input input,
              SP_scattersource source,
              size_t cutoff,
              bool include_fission)
-  : callow::MatrixShell(this)
-  , Base(input, material, mesh, cutoff, "MG-DSA")
+  : Base(input, material, mesh, cutoff, "MG-DSA")
   , d_scattersource(source)
 {
   // Preconditions
@@ -54,9 +53,8 @@ MGDSA::MGDSA(SP_input input,
   // to set the preconditioner parameters for the diffusion solves.
   d_solver->set_operators(d_operator, db);
 
-  set_size(d_operator->number_columns());
-
-  // DEBUG
+  // DEBUG -- inherit from MatrixShell
+  // set_size(d_operator->number_columns());
   // d_operator->compute_explicit("mgdiff.out");
   // compute_explicit("mgdsa.out");
   // d_operator->print_matlab("mg.out");

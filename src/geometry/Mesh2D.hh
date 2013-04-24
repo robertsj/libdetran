@@ -27,7 +27,7 @@ namespace detran_geometry
  *  This is mostly a convenience interface.
  */
 //---------------------------------------------------------------------------//
-class Mesh2D : public Mesh
+class GEOMETRY_EXPORT Mesh2D : public Mesh
 {
 
 public:

@@ -10,6 +10,7 @@
 #ifndef detran_STATE_HH_
 #define detran_STATE_HH_
 
+#include "transport/transport_export.hh"
 #include "angle/Quadrature.hh"
 #include "angle/MomentIndexer.hh"
 #include "geometry/Mesh.hh"
@@ -30,28 +31,14 @@ namespace detran
  *  defined by the unknown flux moments (scalar flux and higher moments),
  *  as these quantities are sufficient to describe reaction rates, which is
  *  typically what we need (e.g. doses or fission rates).  For eigenvalue
- *  problems, keff is also important.
- *
- *  When needed, the underlying data array for a group can be accessed as
- *  demonstrated by the following (I <b>think!</b>).
- *  \code
-      // Get moments by reference.
-      moments_type moments = state.moments();
-      double *localgrouparray;
-      localgrouparray = &moments[g][0];
- *  \endcode
- *  This would be useful e.g. for filling a PETSc Vec object to use in one
- *  of their Krylov schemes (rather than copying into another array).
- *
- *  \todo Test whether referencing a Moments_Field object at [0] actually
- *        yields the array underneath.
+ *  problems, keff is also included.
  *
  *  Relevant input entries:
  *  - number_groups (int)
  *  - store_angular_flux (int)
  */
 //---------------------------------------------------------------------------//
-class State
+class TRANSPORT_EXPORT State
 {
 
 public:
@@ -103,7 +90,6 @@ public:
 
   /**
    *  @brief Const accessor to a group moments field.
-   *
    *  @param    g   Group of field requested.
    *  @return       Constant reference to group moment vector.
    */
@@ -111,14 +97,6 @@ public:
 
   /**
    *  @brief Mutable accessor to a group moments field.
-   *
-   *  This is to be used for copying, i.e.
-   *  \code
-   *    State::moments_type new_phi;
-   *    // compute new_phi and update
-   *    moments->phi(g) = new_phi;
-   *  \endcode
-   *
    *  @param    g   Group of field requested.
    *  @return       Mutable reference to group moment vector.
    */
@@ -139,7 +117,6 @@ public:
 
   /**
    *  @brief Const accessor to a group angular flux.
-   *
    *  @param    g   Group of field requested.
    *  @param    o   Octant
    *  @param    a   Angle within octant
@@ -150,7 +127,6 @@ public:
                                const size_t a) const;
   /**
    *  @brief Mutable accessor to a group angular flux.
-   *
    *  @param    g   Group of field requested.
    *  @param    o   Octant
    *  @param    a   Angle within octant
@@ -255,6 +231,8 @@ private:
   bool d_store_current;
 
 };
+
+TRANSPORT_TEMPLATE class TRANSPORT_EXPORT detran_utilities::SP<State>;
 
 } // end namespace detran
 

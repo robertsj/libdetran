@@ -16,15 +16,15 @@ namespace detran
 // EXPLICIT INSTANTIATIONS
 //---------------------------------------------------------------------------//
 
-template class BoundaryFactory<_1D, BoundaryDiffusion>;
-template class BoundaryFactory<_2D, BoundaryDiffusion>;
-template class BoundaryFactory<_3D, BoundaryDiffusion>;
-template class BoundaryFactory<_1D, BoundarySN>;
-template class BoundaryFactory<_2D, BoundarySN>;
-template class BoundaryFactory<_3D, BoundarySN>;
-template class BoundaryFactory<_1D, BoundaryMOC>;
-template class BoundaryFactory<_2D, BoundaryMOC>;
-template class BoundaryFactory<_3D, BoundaryMOC>;
+BOUNDARY_TEMPLATE class BOUNDARY_EXPORT BoundaryFactory<_1D, BoundaryDiffusion>;
+BOUNDARY_TEMPLATE class BOUNDARY_EXPORT BoundaryFactory<_2D, BoundaryDiffusion>;
+BOUNDARY_TEMPLATE class BOUNDARY_EXPORT BoundaryFactory<_3D, BoundaryDiffusion>;
+BOUNDARY_TEMPLATE class BOUNDARY_EXPORT BoundaryFactory<_1D, BoundarySN>;
+BOUNDARY_TEMPLATE class BOUNDARY_EXPORT BoundaryFactory<_2D, BoundarySN>;
+BOUNDARY_TEMPLATE class BOUNDARY_EXPORT BoundaryFactory<_3D, BoundarySN>;
+BOUNDARY_TEMPLATE class BOUNDARY_EXPORT BoundaryFactory<_1D, BoundaryMOC>;
+BOUNDARY_TEMPLATE class BOUNDARY_EXPORT BoundaryFactory<_2D, BoundaryMOC>;
+BOUNDARY_TEMPLATE class BOUNDARY_EXPORT BoundaryFactory<_3D, BoundaryMOC>;
 
 } // end namespace detran
 

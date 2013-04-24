@@ -26,7 +26,7 @@ ChebyshevDPN::ChebyshevDPN(const size_t dim,
 
   // Chebyshev points are just equally spaced phi's in the first quadrant
   using detran_utilities::pi;
-  for (int i = 0; i < na; ++i)
+  for (size_t i = 0; i < na; ++i)
   {
     d_phi[i] = 0.25 * (2*i + 1)*pi / na;
     d_cos_phi[i] = std::cos(d_phi[i]);
@@ -46,7 +46,7 @@ ChebyshevDPN::ChebyshevDPN(const size_t dim,
   generate_gl_parameters(np, x, w);
 
   // fill array
-  for (int i = 0; i < np; ++i)
+  for (size_t i = 0; i < np; ++i)
   {
     // Put in order.
     size_t j = np - i - 1;

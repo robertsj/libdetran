@@ -15,7 +15,7 @@
 namespace detran
 {
 
-class SyntheticDiscreteSource: public SyntheticSource
+class KINETICS_EXPORT SyntheticDiscreteSource: public SyntheticSource
 {
 
 public:

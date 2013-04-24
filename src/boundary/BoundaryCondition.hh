@@ -17,7 +17,7 @@ namespace detran
 
 // Forward declare boundary and traits.
 template <class D> class BoundarySN;
-template <class D> class BoundaryTraits;
+template <class D> struct BoundaryTraits;
 
 //---------------------------------------------------------------------------//
 /**

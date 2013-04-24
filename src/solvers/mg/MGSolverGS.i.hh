@@ -31,13 +31,13 @@ void MGSolverGS<D>::solve(const double keff)
   double nres = 0.0;
 
   // Upscatter iterations.
-  int iteration = 0;
+  size_t iteration = 0;
 
   // Set the scaling factor for multiplying problems
   if (d_multiply) d_fissionsource->setup_outer(1.0/keff);
 
   // Initial downscatter.
-  for (int g = 0; g < d_number_groups; g++)
+  for (size_t g = 0; g < d_number_groups; g++)
   {
     // Recompute the fission density
     if (d_multiply) d_fissionsource->update();
@@ -47,8 +47,8 @@ void MGSolverGS<D>::solve(const double keff)
 
   // Decide whether to iterate or not
   bool iterate = false;
-  if ((!d_downscatter and d_maximum_iterations > 0 and d_number_groups > 1)
-      or d_multiply)
+  if ((!d_downscatter && d_maximum_iterations > 0 && d_number_groups > 1)
+      || d_multiply)
   {
     iterate = true;
   }
@@ -72,7 +72,7 @@ void MGSolverGS<D>::solve(const double keff)
       if (d_multiply) g_lower = 0;
 
       // Loop over required groups
-      for (int g = g_lower; g < d_number_groups; ++g)
+      for (size_t g = g_lower; g < d_number_groups; ++g)
       {
         // Recompute the fission density
         if (d_multiply) d_fissionsource->update();
@@ -90,7 +90,7 @@ void MGSolverGS<D>::solve(const double keff)
       if (d_norm_type == "L2")
         nres = std::sqrt(nres);
 
-      if (d_print_level > 1  and iteration % d_print_interval == 0)
+      if (d_print_level > 1  && iteration % d_print_interval == 0)
       {
         printf("  GS Iter: %3i  Error: %12.9f \n", iteration, nres);
       }

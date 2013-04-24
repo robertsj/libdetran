@@ -46,7 +46,7 @@ void WGSolverSI<D>::solve(const size_t g)
 
   // Iterate.
   double error = 1.0;
-  int iteration;
+  size_t iteration;
   for (iteration = 1; iteration <= d_maximum_iterations; iteration++)
   {
 
@@ -59,7 +59,7 @@ void WGSolverSI<D>::solve(const size_t g)
     // Flux residual using L-infinity.
     error = norm_residual(phi_old, phi, "Linf");
 
-    if (d_print_level > 1 and iteration % d_print_interval == 0)
+    if (d_print_level > 1 && iteration % d_print_interval == 0)
     {
       printf("    SI Iter: %3i  Error: %12.9f \n", iteration, error);
     }

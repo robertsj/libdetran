@@ -9,7 +9,9 @@
 #ifndef DETRAN_UTILS_DEFINITIONS_HH_
 #define DETRAN_UTILS_DEFINITIONS_HH_
 
+#include "utilities/utilities_export.hh"
 #include <vector>
+#include <map>
 
 namespace detran_utilities
 {
@@ -30,16 +32,6 @@ struct vec4_T {typedef std::vector<typename vec3_T<T>::value_type> value_type;};
 
 // Instantiations
 
-//typedef vec1_T<int>::value_type      vec_int;
-//typedef vec2_T<int>::value_type     vec2_int;
-//typedef vec3_T<int>::value_type     vec3_int;
-//typedef vec4_T<int>::value_type     vec4_int;
-//
-//typedef vec1_T<double>::value_type      vec_dbl;
-//typedef vec2_T<double>::value_type     vec2_dbl;
-//typedef vec3_T<double>::value_type     vec3_dbl;
-//typedef vec4_T<double>::value_type     vec4_dbl;
-
 typedef std::vector<int> vec_int;
 typedef std::vector<std::vector<int> > vec2_int;
 typedef std::vector<std::vector<std::vector<int> > > vec3_int;
@@ -55,10 +47,28 @@ typedef std::vector<size_t> vec_size_t;
 typedef std::vector<std::vector<size_t> > vec2_size_t;
 typedef std::vector<std::vector<std::vector<size_t> > > vec3_size_t;
 typedef std::vector<std::vector<std::vector<std::vector<size_t> > > > vec4_size_t;
-//typedef vec1_T<size_t>::value_type      vec_size_t;
-//typedef vec2_T<size_t>::value_type     vec2_size_t;
-//typedef vec3_T<size_t>::value_type     vec3_size_t;
-//typedef vec4_T<size_t>::value_type     vec4_size_t;
+
+typedef std::vector<bool> vec_bool;
+
+// DLL exports
+template class UTILITIES_EXPORT std::vector<int>;
+template class UTILITIES_EXPORT std::vector<std::vector<int> >;
+template class UTILITIES_EXPORT std::vector<std::vector<std::vector<int> > >;
+template class UTILITIES_EXPORT std::vector<size_t>;
+template class UTILITIES_EXPORT std::vector<std::vector<size_t> >;
+template class UTILITIES_EXPORT std::vector<std::vector<std::vector<size_t> > >;
+template class UTILITIES_EXPORT std::vector<double>;
+template class UTILITIES_EXPORT std::vector<std::vector<double> >;
+template class UTILITIES_EXPORT std::vector<std::vector<std::vector<double> > >;
+template class UTILITIES_EXPORT std::map<std::string, int>;
+template class UTILITIES_EXPORT std::map<std::string, double>;
+template class UTILITIES_EXPORT std::map<std::string, vec_int>;
+template class UTILITIES_EXPORT std::map<std::string, vec_dbl>;
+template class UTILITIES_EXPORT std::map<std::string, std::string>;
+
+//disable warnings on 255 char debug symbols
+#pragma warning (disable : 4244)
+
 
 } // end namespace detran_utilities
 

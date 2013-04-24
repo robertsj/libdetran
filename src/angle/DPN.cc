@@ -23,7 +23,7 @@ DPN::DPN(const size_t number_polar_octant)
   vec_dbl tmp_wt(d_number_angles_octant, 0.0);
   generate_gl_parameters(d_number_angles_octant, tmp_mu, tmp_wt);
 
-  for (int i = 0; i < d_number_angles_octant; i++)
+  for (size_t i = 0; i < d_number_angles_octant; ++i)
   {
     // Shift the mu to [0, 1] from [-1, 1]
     d_mu[i]     = 0.5*tmp_mu[i] + 0.5;

@@ -10,6 +10,7 @@
 #ifndef detran_TIMEDEPENDENTEXTERNALSOURCE_HH_
 #define detran_TIMEDEPENDENTEXTERNALSOURCE_HH_
 
+#include "kinetics/kinetics_export.hh"
 #include "external_source/ExternalSource.hh"
 
 namespace detran
@@ -23,7 +24,8 @@ namespace detran
  *  specify a time at which the source will be evaluated during the
  *  transport solve for the current step.
  */
-class TimeDependentExternalSource: public detran_external_source::ExternalSource
+class KINETICS_EXPORT TimeDependentExternalSource: 
+  public detran_external_source::ExternalSource
 {
 
 public:

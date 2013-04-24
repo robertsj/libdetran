@@ -130,12 +130,12 @@ void Sweeper<D>::setup_spatial_indices()
                                  vec_int(2, 0)));
   // Octants for each dimension that don't need sweep in negative direction
   int oct[3][4] = {{0,3,4,7}, {0,1,4,5}, {0,1,2,3}};
-  for (int o = 0; o < d_quadrature->number_octants(); ++o)
+  for (size_t o = 0; o < d_quadrature->number_octants(); ++o)
   {
-    for (int dim = 0; dim < D::dimension; ++dim)
+    for (size_t dim = 0; dim < D::dimension; ++dim)
     {
-      if ((o == oct[dim][0] or o == oct[dim][1]  or
-           o == oct[dim][2] or o == oct[dim][3]) and !d_adjoint)
+      if ((o == oct[dim][0] || o == oct[dim][1]  ||
+           o == oct[dim][2] || o == oct[dim][3]   ) && !d_adjoint)
       {
         d_space_ranges[o][dim][0] = 0;
         d_space_ranges[o][dim][1] = 1;
@@ -164,7 +164,7 @@ void Sweeper<D>::setup_octant_indices(SP_boundary boundary)
   }
 
   // Sort the octants if their are mixed conditions
-  if (boundary->has_reflective() and boundary->has_vacuum())
+  if (boundary->has_reflective() && boundary->has_vacuum())
   {
     // Reset to cyclic for ordering.
     for (int i = 0; i < no; ++i)
@@ -216,8 +216,8 @@ void Sweeper<D>::setup_octant_indices(SP_boundary boundary)
 // EXPLICIT INSTANTIATIONS
 //---------------------------------------------------------------------------//
 
-template class Sweeper<_1D>;
-template class Sweeper<_2D>;
-template class Sweeper<_3D>;
+TRANSPORT_TEMPLATE class TRANSPORT_EXPORT Sweeper<_1D>;
+TRANSPORT_TEMPLATE class TRANSPORT_EXPORT Sweeper<_2D>;
+TRANSPORT_TEMPLATE class TRANSPORT_EXPORT Sweeper<_3D>;
 
 } // end namespace detran

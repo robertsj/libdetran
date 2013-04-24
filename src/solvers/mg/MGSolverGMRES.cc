@@ -42,7 +42,7 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
   if (d_input->check("outer_krylov_group_cutoff"))
   {
     d_krylov_group_cutoff = d_input->template get<int>("outer_krylov_group_cutoff");
-    Insist((d_krylov_group_cutoff >= 0) and
+    Insist((d_krylov_group_cutoff >= 0) &&
            (d_krylov_group_cutoff <= d_material->upscatter_cutoff()),
            "Upscatter cutoff must be >= 0 and <= material upscatter cutoff");
   }

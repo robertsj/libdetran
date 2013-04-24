@@ -23,7 +23,7 @@ namespace callow
  *  preconditioning processes that are potentially matrix free.
  */
 
-class PCShell: public Preconditioner
+class CALLOW_EXPORT PCShell: public Preconditioner
 {
 
 public:

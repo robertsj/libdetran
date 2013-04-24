@@ -7,13 +7,8 @@
  */
 //---------------------------------------------------------------------------//
 
-// Detran
-#include "FissionSource.hh"
-
-// Utilities
-#include "MathUtilities.hh"
-
-// System
+#include "transport/FissionSource.hh"
+#include "utilities/MathUtilities.hh"
 #include <iostream>
 
 namespace detran
@@ -58,7 +53,7 @@ void FissionSource::initialize()
    */
   vec_int mat_map = d_mesh->mesh_map("MATERIAL");
   int ng = d_material->number_groups();
-  for (int cell = 0; cell < d_mesh->number_cells(); cell++)
+  for (size_t cell = 0; cell < d_mesh->number_cells(); ++cell)
   {
     d_density[cell] = 0.0;
     for (int g = 0; g < ng; g++)
@@ -70,9 +65,6 @@ void FissionSource::initialize()
   Require(norm_density > 0.0);
   detran_utilities::vec_scale(d_density, 1.0/norm_density);
 }
-
-
-
 
 } // end namespace detran
 

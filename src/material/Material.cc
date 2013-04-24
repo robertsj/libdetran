@@ -38,7 +38,7 @@ Material::Material(const size_t number_materials,
  , d_sigma_s(number_groups,
 		     vec2_dbl(number_groups,
 		    		  vec_dbl(number_materials, 0.0)))
- , d_scatter_bounds(number_groups, vec_int(2, 0))
+ , d_scatter_bounds(number_groups, vec_size_t(2, 0))
  , d_upscatter_cutoff(0)
  , d_finalized(false)
 {
@@ -422,4 +422,4 @@ void Material::material_display()
   printf("upscatter cutoff %4i : \n", d_upscatter_cutoff);
 }
 
-} // end namespace detran
+} // end namespace detran_material

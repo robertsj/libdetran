@@ -33,14 +33,14 @@ LegendreDTN::LegendreDTN(const size_t dim,
   // generate parameters
   generate_gl_parameters(na, x, w);
 
-  for (int i = 0; i < na; ++i)
+  for (size_t i = 0; i < na; ++i)
   {
     std::cout << " i = " << i << " x = " << x[i] << std::endl;
   }
 
   // fill array
   double w_sum = 0.0;
-  for (int i = 0; i < na; ++i)
+  for (size_t i = 0; i < na; ++i)
   {
     size_t j     = na - i - 1;
     d_phi[j]     = 0.25*pi*(x[i] + 1.0);
@@ -49,7 +49,7 @@ LegendreDTN::LegendreDTN(const size_t dim,
     d_azimuth_weight[j] = w[i];
     w_sum += w[i];
   }
-  for (int i = 0; i < na; ++i)
+  for (size_t i = 0; i < na; ++i)
   {
     d_azimuth_weight[i] *= 0.5 * pi / w_sum;
   }
@@ -64,7 +64,7 @@ LegendreDTN::LegendreDTN(const size_t dim,
   generate_gc_parameters(np, tmp_mu, tmp_wt, true);
 
   w_sum = 0.0;
-  for (int i = 0; i < np; i++)
+  for (size_t i = 0; i < np; i++)
   {
     // Put in order.
     size_t j = np - i - 1;
@@ -74,11 +74,10 @@ LegendreDTN::LegendreDTN(const size_t dim,
     d_polar_weight[j] = tmp_wt[i];
     w_sum += tmp_wt[i];
   }
-  for (int i = 0; i < np; ++i)
+  for (size_t i = 0; i < np; ++i)
   {
     d_polar_weight[i] *= 1.0 / w_sum;
   }
-
 
   //-------------------------------------------------------------------------//
   // PRODUCT QUADRATURE

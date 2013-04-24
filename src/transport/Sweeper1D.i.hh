@@ -64,7 +64,7 @@ inline void Sweeper1D<EQ>::sweep(moments_type &phi)
 
     // Sweep over all angles.
     #pragma omp for
-    for (int a = 0; a < d_quadrature->number_angles_octant(); a++)
+    for (size_t a = 0; a < d_quadrature->number_angles_octant(); ++a)
     {
 
       // Get sweep source for this angle.
@@ -91,7 +91,7 @@ inline void Sweeper1D<EQ>::sweep(moments_type &phi)
       if (d_tally) d_tally->tally(i, 0, 0, d_g, o, a, Tally_T::X_DIRECTED, psi_out);
 
       // Sweep over all cells.
-      for (int ii = 0; ii < d_mesh->number_cells_x(); ++ii, i += di)
+      for (size_t ii = 0; ii < d_mesh->number_cells_x(); ++ii, i += di)
       {
         // Set the incident cell surface flux.
         psi_in = psi_out;

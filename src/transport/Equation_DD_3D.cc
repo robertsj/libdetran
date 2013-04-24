@@ -13,10 +13,10 @@ namespace detran
 {
 
 //---------------------------------------------------------------------------//
-Equation_DD_3D::Equation_DD_3D(SP_mesh mesh,
-                               SP_material material,
+Equation_DD_3D::Equation_DD_3D(SP_mesh       mesh,
+                               SP_material   material,
                                SP_quadrature quadrature,
-                               bool update_psi)
+                               bool          update_psi)
   :  Equation<_3D>(mesh, material, quadrature, update_psi)
   ,  d_coef_x(mesh->number_cells_x())
   ,  d_coef_y(mesh->number_cells_y())
@@ -47,15 +47,15 @@ void Equation_DD_3D::setup_angle(const size_t angle)
   double mu  = d_quadrature->mu(0, d_angle);
   double eta = d_quadrature->eta(0, d_angle);
   double xi  = d_quadrature->xi(0, d_angle);
-  for (int i = 0; i < d_mesh->number_cells_x(); i++)
+  for (size_t i = 0; i < d_mesh->number_cells_x(); ++i)
   {
     d_coef_x[i] = 2.0 * mu / d_mesh->dx(i);
   }
-  for (int j = 0; j < d_mesh->number_cells_y(); j++)
+  for (size_t j = 0; j < d_mesh->number_cells_y(); ++j)
   {
     d_coef_y[j] = 2.0 * eta / d_mesh->dy(j);
   }
-  for (int k = 0; k < d_mesh->number_cells_z(); k++)
+  for (size_t k = 0; k < d_mesh->number_cells_z(); ++k)
   {
     d_coef_z[k] = 2.0 * xi / d_mesh->dz(k);
   }

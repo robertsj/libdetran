@@ -10,6 +10,7 @@
 #ifndef detran_ioutils_SILOOUTPUT_HH_
 #define detran_ioutils_SILOOUTPUT_HH_
 
+#include "ioutils/ioutils_export.hh"
 #include "detran_config.hh"
 #include "angle/Quadrature.hh"
 #include "geometry/Mesh.hh"
@@ -27,7 +28,7 @@ namespace detran_ioutils
  *  @class SiloOutput
  *  @brief Write mesh data to a Silo file.
  */
-class SiloOutput
+class IOUTILS_EXPORT SiloOutput
 {
 
 public:

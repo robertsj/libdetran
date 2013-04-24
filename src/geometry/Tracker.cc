@@ -51,7 +51,7 @@ Tracker::Tracker(SP_mesh mesh, SP_quadrature quadrature)
                            d_quadrature->sin_phi(a),
                            width*d_quadrature->spacing(a));
 
-    for (int t = 0; t < d_quadrature->number_tracks(a); t++)
+    for (size_t t = 0; t < d_quadrature->number_tracks(a); t++)
     {
 
       // Define the entrance and exit points on the actual mesh.
@@ -78,7 +78,7 @@ Tracker::Tracker(SP_mesh mesh, SP_quadrature quadrature)
 void Tracker::normalize()
 {
   vec_dbl volume(d_mesh->number_cells(), 0.0);
-  for (int i = 0; i < volume.size(); i++)
+  for (size_t i = 0; i < volume.size(); i++)
     volume[i] = d_mesh->volume(i);
   // Normalize track lengths by volume.
   d_trackdb->normalize(volume);
@@ -106,11 +106,11 @@ void Tracker::generate_tracks()
   // Create the mesh grid.
   d_x.resize(d_mesh->number_cells_x() + 1, 0.0);
   d_y.resize(d_mesh->number_cells_y() + 1, 0.0);
-  for (int i = 0; i < d_x.size()-1; i++)
+  for (size_t i = 0; i < d_x.size()-1; i++)
   {
     d_x[i + 1] = d_x[i] + d_mesh->dx(i);
   }
-  for (int i = 0; i < d_y.size()-1; i++)
+  for (size_t i = 0; i < d_y.size()-1; i++)
   {
     d_y[i + 1] = d_y[i] + d_mesh->dy(i);
   }
@@ -193,14 +193,14 @@ void Tracker::generate_tracks()
         double temp = std::abs(d_to_x * tan_phi) - d_to_y;
 
         if (db) cout << "           temp = " << temp << endl;
-        if (std::abs(temp) > 1e-12 and temp > 0.0)
+        if (std::abs(temp) > 1e-12 && temp > 0.0)
         {
           // I hit the top
           p = Point(p.x() + d_to_y / tan_phi, d_y[++J]);
           length = d_to_y / sin_phi;
           if (db) cout << "                NEW POINT 1 = " << p << endl;
         }
-        else if (std::abs(temp) > 1e-12 and temp < 0.0)
+        else if (std::abs(temp) > 1e-12 && temp < 0.0)
         {
           // I hit the side
           if (tan_phi > 0.0)
@@ -226,7 +226,7 @@ void Tracker::generate_tracks()
         track->add_segment(Segment(region, length));
 
         // Check to see if we've left.
-        if (I == -1 or I == d_x.size()-1 or J == d_y.size()-1)
+        if (I == -1 || I == d_x.size()-1 || J == d_y.size()-1)
         {
           double temp = distance(enter, p);
 

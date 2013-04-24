@@ -15,12 +15,11 @@
 namespace detran
 {
 
-
 /**
  *  @class PyTimeDependentMaterial
  *  @brief Base class for time-dependent materials defined in Python
  */
-class PyTimeDependentMaterial: public TimeDependentMaterial
+class KINETICS_EXPORT PyTimeDependentMaterial: public TimeDependentMaterial
 {
 
 public:

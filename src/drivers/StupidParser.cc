@@ -376,12 +376,12 @@ StupidParser::parse_mesh_text()
     if (coarse)  d_mesh = new detran_geometry::Mesh1D(xfm, xme, mesh_map);
     if (!coarse) d_mesh = new detran_geometry::Mesh1D(xme, mesh_map);
   }
-  else if (dimension == 2 and coarse)
+  else if (dimension == 2 && coarse)
   {
     if (coarse)  d_mesh = new detran_geometry::Mesh2D(xfm, yfm, xme, yme, mesh_map);
     if (!coarse) d_mesh = new detran_geometry::Mesh2D(xme, yme, mesh_map);
   }
-  else if (dimension == 3 and coarse)
+  else if (dimension == 3 && coarse)
   {
     if (coarse)  d_mesh = new detran_geometry::Mesh3D(yfm, zfm, zfm, xme, yme, zme, mesh_map);
     if (!coarse) d_mesh = new detran_geometry::Mesh3D(xme, yme, zme, mesh_map);

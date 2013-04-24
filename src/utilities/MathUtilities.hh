@@ -27,19 +27,19 @@ inline double norm(vec_dbl &x, std::string flag = "L2")
   double v = 0.0;
   if (flag == "L2")
   {
-    for (int i = 0; i < x.size(); i++)
+    for (size_t i = 0; i < x.size(); i++)
       v += x[i]*x[i];
     v = std::sqrt(v);
   }
   else if (flag == "L1")
   {
-    for (int i = 0; i < x.size(); i++)
+    for (size_t i = 0; i < x.size(); i++)
       v += std::abs(x[i]);
   }
   else if (flag == "Linf")
   {
     v = x[0];
-    for (int i = 1; i < x.size(); i++)
+    for (size_t i = 1; i < x.size(); i++)
       v = std::max(std::abs(x[i]), v);
   }
   else
@@ -52,7 +52,7 @@ inline double norm(vec_dbl &x, std::string flag = "L2")
 /// Scale a double vector.
 inline void vec_scale(vec_dbl &x, double scale)
 {
-  for (int i = 0; i < x.size(); i++)
+  for (size_t i = 0; i < x.size(); ++i)
     x[i] = x[i] * scale;
 }
 
@@ -65,21 +65,21 @@ inline double norm_residual(vec_dbl &x, vec_dbl &y, std::string flag = "L2")
   if (flag == "L2")
   {
     // Square root of sum of square of differences.
-    for (int i = 0; i < x.size(); i++)
+    for (size_t i = 0; i < x.size(); ++i)
       v += std::pow(x[i]-y[i], 2);
     v = std::sqrt(v);
   }
   else if (flag == "L1")
   {
     // Sum of absolute value of differences.
-    for (int i = 0; i < x.size(); i++)
+    for (size_t i = 0; i < x.size(); ++i)
       v += std::abs(x[i]-y[i]);
   }
   else if (flag == "Linf")
   {
     // Max absolute value of differences.
     v = std::abs(x[0] - y[0]);
-    for (int i = 1; i < x.size(); i++)
+    for (size_t i = 1; i < x.size(); ++i)
       v = std::max(std::abs(x[i]-y[i]), v);
   }
   else
@@ -97,21 +97,21 @@ inline double norm_relative_residual(vec_dbl &x, vec_dbl &y, std::string flag = 
   if (flag == "L2")
   {
     // Square root of sum of square of differences.
-    for (int i = 0; i < x.size(); i++)
+    for (size_t i = 0; i < x.size(); ++i)
       v += std::pow((x[i]-y[i])/y[i], 2);
     v = std::sqrt(v);
   }
   else if (flag == "L1")
   {
     // Sum of absolute value of differences.
-    for (int i = 0; i < x.size(); i++)
+    for (size_t i = 0; i < x.size(); ++i)
       v += std::abs((x[i]-y[i])/y[i]);
   }
   else if (flag == "Linf")
   {
     // Max absolute value of differences.
     v = std::abs(x[0] - y[0]);
-    for (int i = 1; i < x.size(); i++)
+    for (size_t i = 1; i < x.size(); ++i)
       v = std::max(std::abs((x[i]-y[i])/y[i]), v);
   }
   else
@@ -126,7 +126,7 @@ template <class T>
 inline T vec_min(const std::vector<T> &v)
 {
   T m = std::numeric_limits<T>::max();
-  for (int i = 0; i < v.size(); ++i)
+  for (size_t i = 0; i < v.size(); ++i)
     if (v[i] < m) m = v[i];
   return m;
 }
@@ -136,7 +136,7 @@ template <class T>
 inline T vec_max(const std::vector<T> &v)
 {
   T m = std::numeric_limits<T>::min();
-  for (int i = 0; i < v.size(); ++i)
+  for (size_t i = 0; i < v.size(); ++i)
     if (v[i] > m) m = v[i];
   return m;
 }

@@ -10,8 +10,9 @@
 #ifndef detran_HOMOGENIZE_HH_
 #define detran_HOMOGENIZE_HH_
 
-#include "CoarseMesh.hh"
-#include "State.hh"
+#include "transport/transport_export.hh"
+#include "transport/CoarseMesh.hh"
+#include "transport/State.hh"
 #include "geometry/Mesh.hh"
 #include "material/Material.hh"
 #include "utilities/Definitions.hh"
@@ -25,7 +26,7 @@ namespace detran
  *
  *  Homogenization is based on flux or current weighting.
  */
-class Homogenize
+class TRANSPORT_EXPORT Homogenize
 {
 
 public:

@@ -9,6 +9,7 @@ set(LIB_NAME "external_source")
 #-----------------------------------------------------------------------------#
 
 set(SRC
+    ExternalSource.cc
     ConstantSource.cc
     IsotropicSource.cc
     DiscreteSource.cc
@@ -19,9 +20,9 @@ set(SRC
 #-----------------------------------------------------------------------------#
 
 set(LINKED_LIBS
-    angle
-    geometry
     utilities
+	angle
+	geometry
 )
 
 #-----------------------------------------------------------------------------#

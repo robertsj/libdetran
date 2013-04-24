@@ -19,6 +19,10 @@
 namespace callow
 {
 
+// DLL support
+struct triplet;
+template class CALLOW_EXPORT std::vector<std::vector<triplet> >;
+
 /**
  *  @class Matrix
  *  @brief CRS matrix
@@ -199,7 +203,7 @@ protected:
   // temporaries [number of rows][nonzeros per row]
   std::vector<std::vector<triplet> > d_aij;
   // counts entries added per row
-  std::vector<int> d_counter;
+  detran_utilities::vec_int d_counter;
 
   //---------------------------------------------------------------------------//
   // IMPLEMENTATION

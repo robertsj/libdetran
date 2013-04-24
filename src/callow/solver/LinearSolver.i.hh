@@ -21,7 +21,7 @@ inline int LinearSolver::solve(const Vector &b, Vector &x)
 
   d_status = MAXIT;
   solve_impl(b, x);
-  if (d_status ==  MAXIT and d_monitor_level > 0)
+  if (d_status ==  MAXIT && d_monitor_level > 0)
   {
      printf("*** %s did not converge within the maximum number of iterations\n",
             d_name.c_str());

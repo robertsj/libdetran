@@ -79,7 +79,7 @@ void EigenPI<D>::solve()
 
     // Compute error in fission density.
     error = norm_residual(fd, fd_old, "L1");
-    if (d_print_level > 1 and iteration % d_print_interval == 0)
+    if (d_print_level > 1 && iteration % d_print_interval == 0)
     {
       if (d_aitken)
       {

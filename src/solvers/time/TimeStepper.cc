@@ -123,7 +123,7 @@ TimeStepper<D>::TimeStepper(SP_input       input,
   d_order = d_scheme;
   if (d_scheme == 0) d_order++;
 
-  if (d_input->check("ts_no_extrapolation") and d_scheme != IMP)
+  if (d_input->check("ts_no_extrapolation") && d_scheme != IMP)
     d_no_extrapolation = d_input->template get<int>("ts_no_extrapolation");
 
   // Get the convergence criteria
@@ -234,8 +234,8 @@ void TimeStepper<D>::solve(SP_state initial_state)
     // user can explicitly turn extrapolation off.
     bool flag = false;
     //if (d_scheme == IMP) flag = true;
-    if (d_scheme == IMP or (order == 1 and d_order > 1)) flag = true;
-    if (d_no_extrapolation and !(d_scheme == IMP)) flag = false;
+    if (d_scheme == IMP || (order == 1 && d_order > 1)) flag = true;
+    if (d_no_extrapolation && !(d_scheme == IMP)) flag = false;
 
     // Set the temporary time step
     dt = d_dt;
@@ -318,7 +318,7 @@ void TimeStepper<D>::initialize_precursors()
   Require(d_state);
 
   // Skip if we have no multiplication or if we have no precursors
-  if (!d_multiply or !d_material->number_precursor_groups()) return;
+  if (!d_multiply || !d_material->number_precursor_groups()) return;
   Assert(d_precursors.size() > 0);
 
   /*
@@ -354,7 +354,7 @@ void TimeStepper<D>::update_precursors(const double t,
                                        const size_t order)
 {
   // Skip if we have no multiplication
-  if (!d_multiply or !d_material->number_precursor_groups()) return;
+  if (!d_multiply || !d_material->number_precursor_groups()) return;
 
   // Update the materials to eliminate the synthetic component.
   d_material->update(t, dt, order, false);
@@ -525,7 +525,7 @@ void TimeStepper<D>::extrapolate()
           for (size_t i = 0; i < d_mesh->number_cells(); ++i)
           {
             psi[i] = 2.0 * psi[i] - psi0[i];
-            if (d_fixup and psi[i] < 0.0) psi[i] = 0.0;
+            if (d_fixup && psi[i] < 0.0) psi[i] = 0.0;
             d_state->phi(g)[i] += d_quadrature->weight(a) * psi[i];
           } // end cell
         } // end angle
@@ -544,7 +544,7 @@ void TimeStepper<D>::extrapolate()
   }
 
   // Extrapolate the precursors.
-  if (d_multiply and d_precursor->number_precursor_groups())
+  if (d_multiply && d_precursor->number_precursor_groups())
   {
     for (size_t i = 0; i < d_precursor->number_precursor_groups(); ++i)
     {
@@ -632,7 +632,7 @@ void ts_default_monitor(void* data,
 {
   Require(ts);
   if (!ts->monitor_level()) return;
-  if (step == 0 and it == 1)
+  if (step == 0 && it == 1)
   {
     printf(" step        t       dt   iter \n");
     printf("-------------------------------\n");

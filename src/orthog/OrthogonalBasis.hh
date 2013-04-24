@@ -10,6 +10,7 @@
 #ifndef detran_orthog_ORTHOGONALBASIS_HH_
 #define detran_orthog_ORTHOGONALBASIS_HH_
 
+#include "orthog/orthog_export.hh"
 #include "callow/vector/Vector.hh"
 #include "callow/matrix/MatrixDense.hh"
 #include "callow/utils/CallowDefinitions.hh"
@@ -64,7 +65,7 @@ namespace detran_orthog
  *  of the   @f$ a_l @f$ coefficients.
  *
  */
-class OrthogonalBasis
+class ORTHOG_EXPORT OrthogonalBasis
 {
 
 public:

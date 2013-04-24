@@ -51,7 +51,7 @@ EigenDiffusion<D>::EigenDiffusion(SP_mg_solver mg_solver)
 
 //---------------------------------------------------------------------------//
 template <class D>
-void EigenDiffusion<D>::EigenDiffusion::solve()
+void EigenDiffusion<D>::solve()
 {
 
   // solve the system

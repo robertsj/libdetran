@@ -22,7 +22,7 @@ namespace detran_external_source
  */
 //---------------------------------------------------------------------------//
 
-class IsotropicSource : public ExternalSource
+class EXTERNAL_SOURCE_EXPORT IsotropicSource : public ExternalSource
 {
 
 public:

@@ -7,7 +7,6 @@
 //---------------------------------------------------------------------------//
 
 #include "InputDB.hh"
-
 #include <iostream>
 
 namespace detran_utilities

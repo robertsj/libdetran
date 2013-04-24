@@ -61,7 +61,7 @@ inline void State::set_moments(const size_t g, std::vector<double>& f)
 
 //---------------------------------------------------------------------------//
 inline const State::angular_flux_type&
-State::State::psi(const size_t g, const size_t o, const size_t a) const
+State::psi(const size_t g, const size_t o, const size_t a) const
 {
   Require(d_store_angular_flux);
   Require(d_angular_flux.size() > 0);

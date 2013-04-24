@@ -40,7 +40,7 @@ inline double KineticsMaterial::beta_total(const size_t m) const
 {
   Require(m < number_materials());
   double value = 0;
-  for (int i = 0; i < d_number_precursor_groups; ++i)
+  for (size_t i = 0; i < d_number_precursor_groups; ++i)
     value += d_beta[i][m];
   return value;
 }

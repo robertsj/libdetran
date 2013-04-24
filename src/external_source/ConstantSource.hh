@@ -22,7 +22,7 @@ namespace detran_external_source
  */
 //---------------------------------------------------------------------------//
 
-class ConstantSource: public ExternalSource
+class EXTERNAL_SOURCE_EXPORT ConstantSource: public ExternalSource
 {
 
 public:

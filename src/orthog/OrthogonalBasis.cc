@@ -7,7 +7,7 @@
  */
 //---------------------------------------------------------------------------//
 
-#include "OrthogonalBasis.hh"
+#include "orthog/OrthogonalBasis.hh"
 #include <cmath>
 
 namespace detran_orthog
@@ -60,6 +60,9 @@ void OrthogonalBasis::compute_a()
   }
 
 }
+
+//---------------------------------------------------------------------------//
+template ORTHOG_EXPORT class detran_utilities::SP<OrthogonalBasis>;
 
 } // end namespace detran_orthog
 

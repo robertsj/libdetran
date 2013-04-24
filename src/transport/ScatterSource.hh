@@ -10,7 +10,8 @@
 #ifndef detran_SCATTERSOURCE_HH_
 #define detran_SCATTERSOURCE_HH_
 
-#include "State.hh"
+#include "transport/transport_export.hh"
+#include "transport/State.hh"
 #include "material/Material.hh"
 #include "geometry/Mesh.hh"
 #include "utilities/DBC.hh"
@@ -28,7 +29,7 @@ namespace detran
  */
 //---------------------------------------------------------------------------//
 
-class ScatterSource
+class TRANSPORT_EXPORT ScatterSource
 {
 
 public:
@@ -159,6 +160,8 @@ protected:
   vec_int d_mat_map;
 
 };
+
+TRANSPORT_TEMPLATE class TRANSPORT_EXPORT detran_utilities::SP<ScatterSource>;
 
 } // end namespace detran
 

@@ -234,6 +234,8 @@ protected:
 
 };
 
+template class ANGLE_EXPORT detran_utilities::SP<Quadrature>;
+
 } // end namespace detran_angle
 
 //---------------------------------------------------------------------------//

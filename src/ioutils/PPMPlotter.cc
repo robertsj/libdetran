@@ -53,7 +53,7 @@ bool PPMPlotter::write()
   // write the data
   double min = detran_utilities::vec_min(d_image);
   double max = detran_utilities::vec_max(d_image);
-  for (int i = 0; i < d_nx * d_ny; ++i)
+  for (size_t i = 0; i < d_nx * d_ny; ++i)
   {
     // scale data to [0, 1], and then define r, g, and b.
     // this scale should give fair cold-to-hot.  Default

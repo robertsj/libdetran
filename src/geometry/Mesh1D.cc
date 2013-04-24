@@ -1,8 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- *  \file   Mesh1D.hh
- *  \author Jeremy Roberts
- *  \brief  Mesh1D member definitions.
+/**
+ *  @file   Mesh1D.hh
+ *  @author Jeremy Roberts
+ *  @brief  Mesh1D member definitions.
  */
 //---------------------------------------------------------------------------//
 
@@ -11,6 +11,7 @@
 namespace detran_geometry
 {
 
+//---------------------------------------------------------------------------//
 Mesh1D::Mesh1D(vec_int xfm, vec_dbl xcme, vec_int mat_map)
   : Mesh(1,
          xfm,
@@ -29,6 +30,7 @@ Mesh1D::Mesh1D(vec_int xfm, vec_dbl xcme, vec_int mat_map)
   d_dz[0]   = 1.0;
 }
 
+//---------------------------------------------------------------------------//
 Mesh1D::Mesh1D(vec_dbl xfme, vec_int mat_map)
   : Mesh(1,
          xfme,

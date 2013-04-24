@@ -10,6 +10,7 @@
 #ifndef QUADRATUREMOC_HH_
 #define QUADRATUREMOC_HH_
 
+#include "angle/angle_export.hh"
 #include "Quadrature.hh"
 #include "PolarQuadrature.hh"
 #include "utilities/Point.hh"
@@ -231,6 +232,9 @@ protected:
   /// \}
 
 };
+
+ANGLE_TEMPLATE class ANGLE_EXPORT detran_utilities::SP<QuadratureMOC>;
+
 
 } // end namespace detran
 

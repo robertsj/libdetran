@@ -7,7 +7,7 @@
  */
 //---------------------------------------------------------------------------//
 
-#include "CoarseMesh.hh"
+#include "transport/CoarseMesh.hh"
 #include "geometry/Mesh1D.hh"
 #include "geometry/Mesh2D.hh"
 #include "geometry/Mesh3D.hh"
@@ -139,6 +139,8 @@ CoarseMesh::CoarseMesh(SP_mesh fine_mesh, const size_t level)
   // use a numbered version
   d_fine_mesh->add_mesh_map("COARSEMESH", f2c_mesh_map);
 }
+
+TRANSPORT_TEMPLATE class TRANSPORT_EXPORT detran_utilities::SP<CoarseMesh>;
 
 } // end namespace detran
 

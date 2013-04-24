@@ -100,10 +100,10 @@ inline void Matrix::assemble()
 
     // find and/or insert the diagonal
     int j = 0;
-    for (int k = 0; k < d_aij[i].size(); ++k)
+    for (size_t k = 0; k < d_aij[i].size(); ++k)
       if (d_aij[i][k].j <= d_aij[i][k].i) ++j;
     if (j) --j;
-    if (d_aij[i][j].i != d_aij[i][j].j and i < d_n)
+    if (d_aij[i][j].i != d_aij[i][j].j && i < d_n)
       d_aij[i].insert(d_aij[i].begin()+j, triplet_T(i, i, 0.0));
 
 
@@ -132,7 +132,7 @@ inline void Matrix::assemble()
   for (int i = 0; i < d_m; i++)
   {
     // for all columns in the row
-    for (int j = 0; j < d_aij[i].size(); ++j, ++p)
+    for (size_t j = 0; j < d_aij[i].size(); ++j, ++p)
     {
       d_columns[p] = d_aij[i][j].j;
       d_values[p] = d_aij[i][j].v;
@@ -300,7 +300,7 @@ inline bool Matrix::insert(int i, int j, double v, const int type)
   // add to a current entry if found
   if (type == ADD)
   {
-    for (int p = 0; p < d_aij[i].size(); ++p)
+    for (size_t p = 0; p < d_aij[i].size(); ++p)
     {
       if (d_aij[i][p].j == j)
       {
@@ -331,7 +331,7 @@ inline bool Matrix::insert(int i, int *j, double *v, int n, const int type)
     for (int jj = 0; jj < n; ++jj)
     {
       bool flag = false;
-      for (int p = 0; p < d_aij[i].size(); ++p)
+      for (size_t p = 0; p < d_aij[i].size(); ++p)
       {
         if (d_aij[i][p].j == j[jj])
         {
@@ -426,7 +426,7 @@ inline void Matrix::display() const
   printf("   number columns = %5i \n",   d_n);
   printf("      stored size = %5i \n\n", d_nnz);
   printf("\n");
-  if (d_m > 20 or d_n > 20)
+  if (d_m > 20 || d_n > 20)
   {
     printf("  *** matrix not printed for m or n > 20 *** \n");
     return;

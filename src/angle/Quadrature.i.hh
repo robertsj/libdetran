@@ -116,7 +116,7 @@ inline double Quadrature::angular_norm(const size_t d)
 
 inline bool Quadrature::valid_index(const size_t o, const size_t a) const
 {
-  if (o < d_number_octants and a < d_number_angles_octant)
+  if (o < d_number_octants && a < d_number_angles_octant)
   {
     return true;
   }

@@ -64,6 +64,8 @@ void MultiPhysics::display() const
   /* ... */
 }
 
+template KINETICS_EXPORT class detran_utilities::SP<MultiPhysics>;
+
 } // end namespace detran
 
 //---------------------------------------------------------------------------//

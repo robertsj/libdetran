@@ -14,9 +14,13 @@ namespace detran_geometry
 {
 
 //---------------------------------------------------------------------------//
-Mesh::Mesh(size_t dim,
-           vec_int xfm,  vec_int yfm,  vec_int zfm,
-           vec_dbl xcme, vec_dbl ycme, vec_dbl zcme,
+Mesh::Mesh(size_t  dim,
+           vec_int xfm,  
+		   vec_int yfm,  
+		   vec_int zfm,
+           vec_dbl xcme, 
+		   vec_dbl ycme, 
+		   vec_dbl zcme,
            vec_int mat_map)
   : d_dimension(dim)
   , d_xfm(xfm)
@@ -35,8 +39,10 @@ Mesh::Mesh(size_t dim,
 }
 
 //---------------------------------------------------------------------------//
-Mesh::Mesh(size_t dim,
-           vec_dbl xfme, vec_dbl yfme, vec_dbl zfme,
+Mesh::Mesh(size_t  dim,
+           vec_dbl xfme, 
+		   vec_dbl yfme, 
+		   vec_dbl zfme,
            vec_int mat_map)
   : d_dimension(dim)
   , d_xfm(vec_int(xfme.size()-1, 1))
@@ -64,29 +70,29 @@ void Mesh::add_coarse_mesh_map(std::string map_key, vec_int m_map)
   int j_save = 0;
   int k_save = 0;
 
-  for (int k = 0; k < d_zfm.size(); k++)
+  for (size_t k = 0; k < d_zfm.size(); ++k)
   {
     // Fine mesh z range for this kth coarse mesh.
-    int k1 = k_save;
-    int k2 = k_save + d_zfm[k];
+    size_t k1 = k_save;
+    size_t k2 = k_save + d_zfm[k];
 
-    for (int j = 0; j < d_yfm.size(); j++)
+    for (size_t j = 0; j < d_yfm.size(); ++j)
     {
       // Fine mesh x range for this jth coarse mesh.
-      int j1 = j_save;
-      int j2 = j_save + d_yfm[j];
+      size_t j1 = j_save;
+      size_t j2 = j_save + d_yfm[j];
 
-      for (int i = 0; i < d_xfm.size(); i++)
+      for (size_t i = 0; i < d_xfm.size(); ++i)
       {
         // Fine mesh y range for this ith coarse mesh.
-        int i1 = i_save;
-        int i2 = i_save + d_xfm[i];
+        size_t i1 = i_save;
+        size_t i2 = i_save + d_xfm[i];
 
-        for (int kk = k1; kk < k2; kk++)
+        for (size_t kk = k1; kk < k2; ++kk)
         {
-          for (int jj = j1; jj < j2; jj++)
+          for (size_t jj = j1; jj < j2; ++jj)
           {
-            for (int ii = i1; ii < i2; ii++)
+            for (size_t ii = i1; ii < i2; ++ii)
             {
               tmp_m_map[ii + jj * d_number_cells_x  +
                         kk * d_number_cells_x * d_number_cells_y] =
@@ -152,15 +158,15 @@ void Mesh::setup()
   Require(d_xcme.size() == d_xfm.size()+1);
   Require(d_ycme.size() == d_yfm.size()+1);
   Require(d_zcme.size() == d_zfm.size()+1);
-  for (int i = 0; i < d_xfm.size(); ++i)
+  for (size_t i = 0; i < d_xfm.size(); ++i)
   {
     Require(d_xfm[i] > 0);
   }
-  for (int i = 0; i < d_yfm.size(); ++i)
+  for (size_t i = 0; i < d_yfm.size(); ++i)
   {
     Require(d_yfm[i] > 0);
   }
-  for (int i = 0; i < d_zfm.size(); ++i)
+  for (size_t i = 0; i < d_zfm.size(); ++i)
   {
     Require(d_zfm[i] > 0);
   }
@@ -187,18 +193,18 @@ void Mesh::setup()
 
   // Discretize.
   int ph = 0; // place holder
-  for (int i = 0; i < d_xfm.size(); i++)
+  for (size_t i = 0; i < d_xfm.size(); ++i)
   {
     // Fine mesh x range for this Ith coarse mesh.
-    int i1 = ph;
-    int i2 = ph + d_xfm[i];
-    for (int ii = i1; ii < i2; ii++)
+    size_t i1 = ph;
+    size_t i2 = ph + d_xfm[i];
+    for (size_t ii = i1; ii < i2; ++ii)
       d_dx[ii] = (d_xcme[i + 1] - d_xcme[i]) / d_xfm[i];
     ph = std::accumulate(d_xfm.begin(), d_xfm.begin() + i + 1, 0);
 
   }
   ph = 0;
-  for (int j = 0; j < d_yfm.size(); j++)
+  for (size_t j = 0; j < d_yfm.size(); j++)
   {
     // Fine mesh y range for this Jth coarse mesh.
     int j1 = ph;
@@ -211,7 +217,7 @@ void Mesh::setup()
     ph = std::accumulate(d_yfm.begin(), d_yfm.begin() + j + 1, 0);
   }
   ph = 0;
-  for (int k = 0; k < d_zfm.size(); k++)
+  for (size_t k = 0; k < d_zfm.size(); k++)
   {
     // Fine mesh z range for this Kth coarse mesh.
     int k1 = ph;
@@ -238,32 +244,32 @@ void Mesh::display() const
   cout << "             y width: " << d_total_width_y << endl;
   cout << "             z width: " << d_total_width_z << endl;
   cout << " x coarse mesh edges: " << endl << "   ";
-  for (int i = 0; i < d_xcme.size(); i++)
+  for (size_t i = 0; i < d_xcme.size(); i++)
   {
     cout << d_xcme[i] << " ";
   }
   cout << endl << " y coarse mesh edges: " << endl << "   ";
-  for (int i = 0; i < d_ycme.size(); i++)
+  for (size_t i = 0; i < d_ycme.size(); i++)
   {
     cout << d_ycme[i] << " ";
   }
   cout << endl << " z coarse mesh edges: " << endl << "   ";
-  for (int i = 0; i < d_zcme.size(); i++)
+  for (size_t i = 0; i < d_zcme.size(); i++)
   {
     cout << d_zcme[i] << " ";
   }
   cout << endl << " x fine mesh count: " << endl << "   ";
-  for (int i = 0; i < d_xfm.size(); i++)
+  for (size_t i = 0; i < d_xfm.size(); i++)
   {
     cout << d_xfm[i] << " ";
   }
   cout << endl << " y fine mesh count: " << endl << "   ";
-  for (int i = 0; i < d_yfm.size(); i++)
+  for (size_t i = 0; i < d_yfm.size(); i++)
   {
     cout << d_yfm[i] << " ";
   }
   cout << endl << " z fine mesh count: " << endl << "   ";
-  for (int i = 0; i < d_zfm.size(); i++)
+  for (size_t i = 0; i < d_zfm.size(); i++)
   {
     cout << d_zfm[i] << " ";
   }

@@ -7,8 +7,8 @@
  */
 //---------------------------------------------------------------------------//
 
-#include "Sweeper3D.hh"
-#include "Equation_DD_3D.hh"
+#include "transport/Sweeper3D.hh"
+#include "transport/Equation_DD_3D.hh"
 //#include "discretization/Equation_SD_3D.hh"
 //#include "discretization/Equation_SC_3D.hh"
 
@@ -51,9 +51,11 @@ Sweeper3D<EQ>::Create(SP_input       input,
 // EXPLICIT INSTANTIATIONS
 //---------------------------------------------------------------------------//
 
-template class Sweeper3D<Equation_DD_3D>;
+template TRANSPORT_EXPORT class Sweeper3D<Equation_DD_3D>;
 //template class Sweeper3D<Equation_SD_3D>;
 //template class Sweeper3D<Equation_SC_3D>;
+template TRANSPORT_EXPORT class detran_utilities::SP<Sweeper3D<Equation_DD_3D> >;
+
 
 } // end namespace detran
 

@@ -10,9 +10,10 @@
 #ifndef detran_BOUNDARYTALLY_HH_
 #define detran_BOUNDARYTALLY_HH_
 
-#include "CoarseMesh.hh"
-#include "DimensionTraits.hh"
-#include "Equation.hh"
+#include "transport/transport_export.hh"
+#include "transport/CoarseMesh.hh"
+#include "transport/DimensionTraits.hh"
+#include "transport/Equation.hh"
 #include "angle/Quadrature.hh"
 #include "utilities/Definitions.hh"
 #include "utilities/SP.hh"

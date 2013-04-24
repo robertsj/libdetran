@@ -7,10 +7,11 @@
  */
 //---------------------------------------------------------------------------//
 
-#ifndef FISSIONSOURCE_HH_
-#define FISSIONSOURCE_HH_
+#ifndef detran_FISSIONSOURCE_HH_
+#define detran_FISSIONSOURCE_HH_
 
-#include "State.hh"
+#include "transport/transport_export.hh"
+#include "transport/State.hh"
 #include "geometry/Mesh.hh"
 #include "material/Material.hh"
 #include "utilities/DBC.hh"
@@ -24,7 +25,7 @@ namespace detran
  *  @class FissionSource
  *  @brief Defines the isotropic source from fission reactions.
  */
-class FissionSource
+class TRANSPORT_EXPORT FissionSource
 {
 
 public:
@@ -205,11 +206,13 @@ private:
 
 };
 
+TRANSPORT_TEMPLATE class TRANSPORT_EXPORT detran_utilities::SP<FissionSource>;
+
 } // end namespace detran
 
 #include "FissionSource.i.hh"
 
-#endif /* FISSIONSOURCE_HH_ */
+#endif /* detran_FISSIONSOURCE_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of FissionSource.hh

@@ -31,7 +31,7 @@ TimeDependentMaterial(const size_t number_materials,
 void TimeDependentMaterial::update(const double t,
                                    const double dt,
                                    const size_t order,
-                                   const bool synthetic)
+                                   const bool   synthetic)
 {
   // Store time step data
   d_t     = t;
@@ -48,16 +48,16 @@ void TimeDependentMaterial::update(const double t,
   // Add synthetic components
   if (synthetic)
   {
-    for (int m = 0; m < number_materials(); ++m)
+    for (size_t m = 0; m < number_materials(); ++m)
     {
-      for (int g = 0; g < number_groups(); ++g)
+      for (size_t g = 0; g < number_groups(); ++g)
       {
         // synthetic total cross section
         d_sigma_t[g][m] += a_0 / (d_velocity[g] * dt);
 
         // synthetic prompt chi spectrum
         double chi = (1.0 - beta_total(m)) * d_chi[g][m];
-        for (int i = 0; i < d_number_precursor_groups; ++i)
+        for (size_t i = 0; i < d_number_precursor_groups; ++i)
         {
           double den = a_0 + dt * d_lambda[i];
           chi += d_lambda[i] * d_chi_d[g][i][m] * dt * d_beta[i][m] / den;
@@ -73,9 +73,9 @@ void TimeDependentMaterial::update(const double t,
     // Just scale by the eigenvalue.  This must be done
     // to get the right precursor concentration for initial
     // conditions.
-    for (int m = 0; m < number_materials(); ++m)
+    for (size_t m = 0; m < number_materials(); ++m)
     {
-      for (int g = 0; g < number_groups(); ++g)
+      for (size_t g = 0; g < number_groups(); ++g)
       {
         d_sigma_f[g][m] /= d_kcrit;
         //d_chi[g][m] *= (1.0 - beta_total(m));
@@ -85,8 +85,7 @@ void TimeDependentMaterial::update(const double t,
 
   // Finalize
   finalize();
-//  d_state->display();
-//  display();
+
 }
 
 } // end namespace detran

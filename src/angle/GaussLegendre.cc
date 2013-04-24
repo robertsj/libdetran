@@ -202,7 +202,7 @@ GaussLegendre::GaussLegendre(const size_t number_polar_octant)
     vec_dbl tmp_mu(d_number_angles, 0.0);
     vec_dbl tmp_wt(d_number_angles, 0.0);
     generate_gl_parameters(d_number_angles, tmp_mu, tmp_wt);
-    for (int i = 0; i < d_number_angles_octant; i++)
+    for (size_t i = 0; i < d_number_angles_octant; ++i)
     {
       d_mu[i]     = tmp_mu[i];
       d_weight[i] = tmp_wt[i];

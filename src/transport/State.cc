@@ -82,12 +82,12 @@ void State::clear()
 {
   for (int g = 0; g < d_number_groups; ++g)
   {
-    for (int i = 0; i < d_mesh->number_cells(); ++i)
+    for (size_t i = 0; i < d_mesh->number_cells(); ++i)
     {
       d_moments[g][i] = 0.0;
       if (d_store_angular_flux)
       {
-        for (int a = 0; a < d_quadrature->number_angles(); ++a)
+        for (size_t a = 0; a < d_quadrature->number_angles(); ++a)
         {
           d_angular_flux[g][a][i] = 0.0;
         }
@@ -101,12 +101,12 @@ void State::scale(const double f)
 {
   for (int g = 0; g < d_number_groups; ++g)
   {
-    for (int i = 0; i < d_mesh->number_cells(); ++i)
+    for (size_t i = 0; i < d_mesh->number_cells(); ++i)
     {
       d_moments[g][i] *= f;
       if (d_store_angular_flux)
       {
-        for (int a = 0; a < d_quadrature->number_angles(); ++a)
+        for (size_t a = 0; a < d_quadrature->number_angles(); ++a)
         {
           d_angular_flux[g][a][i] *= f;
         }
@@ -133,7 +133,7 @@ void State::display() const
 
   printf("\n");
   printf("\n");
-  for (int g = 0; g < d_moments.size() + 1; g++)
+  for (size_t g = 0; g < d_moments.size() + 1; g++)
     printf("--------------");
   printf("\n");
   printf("Scalar Flux Moments\n");
@@ -141,10 +141,10 @@ void State::display() const
   for (int g = 0; g < d_number_groups; g++)
     printf(" %12i ", g);
   printf("\n");
-  for (int g = 0; g < d_moments.size() + 1; g++)
+  for (size_t g = 0; g < d_moments.size() + 1; g++)
     printf("--------------");
   printf("\n");
-  for (int i = 0; i < d_mesh->number_cells(); i++)
+  for (size_t i = 0; i < d_mesh->number_cells(); i++)
   {
     printf("%10i", i);
     for (int g = 0; g < d_number_groups; g++)
@@ -157,11 +157,11 @@ void State::display() const
   if (d_store_angular_flux)
   {
     printf("\n");
-    for (int a = 0; a < d_angular_flux[0].size() + 1; a++)
+    for (size_t a = 0; a < d_angular_flux[0].size() + 1; a++)
       printf("--------------", a);
     printf("\n");
     printf("Discrete Angular Flux\n");
-    for (int a = 0; a < d_angular_flux[0].size() + 1; a++)
+    for (size_t a = 0; a < d_angular_flux[0].size() + 1; a++)
       printf("--------------", a);
     printf("\n");
 
@@ -169,16 +169,16 @@ void State::display() const
     {
       printf("group %4i \n", g);
       printf("cell \\ a");
-      for (int a = 0; a < d_angular_flux[g].size(); a++)
+      for (size_t a = 0; a < d_angular_flux[g].size(); a++)
         printf(" %12i ", a);
       printf("\n");
-      for (int a = 0; a < d_angular_flux[0].size() + 1; a++)
+      for (size_t a = 0; a < d_angular_flux[0].size() + 1; a++)
         printf("--------------", a);
       printf("\n");
-      for (int i = 0; i < d_mesh->number_cells(); i++)
+      for (size_t i = 0; i < d_mesh->number_cells(); i++)
       {
         printf("%10i", i);
-        for (int a = 0; a < d_angular_flux[g].size(); a++)
+        for (size_t a = 0; a < d_angular_flux[g].size(); a++)
         {
           printf(" %12.5e ", d_angular_flux[g][a][i]);
         }
@@ -190,7 +190,7 @@ void State::display() const
 
 }
 
-}
+} // end namespace detran
 
 //---------------------------------------------------------------------------//
 //              end of State.cc

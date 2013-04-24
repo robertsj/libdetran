@@ -22,7 +22,7 @@ namespace detran
  *  Fill me.
  *
  */
-class Equation_DD_3D : public Equation<_3D>
+class TRANSPORT_EXPORT Equation_DD_3D : public Equation<_3D>
 {
 
 public:

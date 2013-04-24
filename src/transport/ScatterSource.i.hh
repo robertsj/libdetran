@@ -15,15 +15,15 @@ namespace detran
 
 //---------------------------------------------------------------------------//
 inline void ScatterSource::
-build_within_group_source(const size_t g,
+build_within_group_source(const size_t        g,
                           const moments_type &phi,
-                          moments_type &source)
+                          moments_type       &source)
 {
   // Preconditions
   Require(g < d_material->number_groups());
   Require(phi.size() == source.size());
 
-  for (int cell = 0; cell < d_mesh->number_cells(); cell++)
+  for (size_t cell = 0; cell < d_mesh->number_cells(); ++cell)
   {
     source[cell] += phi[cell] * d_material->sigma_s(d_mat_map[cell], g, g);
   }
@@ -31,26 +31,26 @@ build_within_group_source(const size_t g,
 
 //---------------------------------------------------------------------------//
 inline void ScatterSource::
-build_in_scatter_source(const size_t g,
+build_in_scatter_source(const size_t  g,
                         moments_type &source)
 {
   // Preconditions.
   Require(g < d_material->number_groups());
 
   // Add downscatter.
-  for (int gp = d_material->lower(g); gp < g; gp++) //
+  for (size_t gp = d_material->lower(g); gp < g; ++gp) 
   {
     const moments_type &phi = d_state->phi(gp);
-    for (int cell = 0; cell < d_mesh->number_cells(); cell++)
+    for (size_t cell = 0; cell < d_mesh->number_cells(); ++cell)
     {
       source[cell] += phi[cell] * d_material->sigma_s(d_mat_map[cell], g, gp);
     }
   }
   // Add upscatter.
-  for (int gp = g + 1; gp <= d_material->upper(g); gp++)
+  for (size_t gp = g + 1; gp <= d_material->upper(g); ++gp)
   {
     const moments_type &phi = d_state->phi(gp);
-    for (int cell = 0; cell < d_mesh->number_cells(); cell++)
+    for (size_t cell = 0; cell < d_mesh->number_cells(); ++cell)
     {
       source[cell] += phi[cell] * d_material->sigma_s(d_mat_map[cell], g, gp);
     }
@@ -59,8 +59,8 @@ build_in_scatter_source(const size_t g,
 
 //---------------------------------------------------------------------------//
 inline void ScatterSource::
-build_downscatter_source(const size_t g,
-                         const size_t g_cutoff,
+build_downscatter_source(const size_t  g,
+                         const size_t  g_cutoff,
                          moments_type &source)
 {
   // Preconditions.
@@ -68,10 +68,10 @@ build_downscatter_source(const size_t g,
   Require(g_cutoff <= d_material->number_groups());
 
   // Add downscatter.
-  for (int gp = d_material->lower(g); gp < g_cutoff; gp++) //
+  for (size_t gp = d_material->lower(g); gp < g_cutoff; ++gp) 
   {
     moments_type &phi = d_state->phi(gp);
-    for (int cell = 0; cell < d_mesh->number_cells(); cell++)
+    for (size_t cell = 0; cell < d_mesh->number_cells(); ++cell)
     {
       source[cell] += phi[cell] * d_material->sigma_s(d_mat_map[cell], g, gp);
     }
@@ -81,17 +81,16 @@ build_downscatter_source(const size_t g,
 
 //---------------------------------------------------------------------------//
 inline void ScatterSource::
-build_total_group_source(const size_t g,
-                         const size_t g_cutoff,
+build_total_group_source(const size_t                   g,
+                         const size_t                   g_cutoff,
                          const State::vec_moments_type &phi,
-                         moments_type &source)
+                         moments_type                  &source)
 {
-  // Preconditions
   Require(g < d_material->number_groups());
 
-  for (int gp = g_cutoff; gp <= d_material->upper(g); gp++)
+  for (size_t gp = g_cutoff; gp <= d_material->upper(g); ++gp)
   {
-    for (int cell = 0; cell < d_mesh->number_cells(); cell++)
+    for (size_t cell = 0; cell < d_mesh->number_cells(); ++cell)
     {
       source[cell] += phi[gp][cell] *
           d_material->sigma_s(d_mat_map[cell], g, gp);

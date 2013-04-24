@@ -10,8 +10,9 @@
 #ifndef detran_external_source_EXTERNALSOURCE_HH_
 #define detran_external_source_EXTERNALSOURCE_HH_
 
-#include "geometry/Mesh.hh"
+#include "external_source/external_source_export.hh"
 #include "angle/Quadrature.hh"
+#include "geometry/Mesh.hh"
 #include "utilities/DBC.hh"
 #include "utilities/Definitions.hh"
 #include "utilities/SP.hh"
@@ -40,7 +41,7 @@ namespace detran_external_source
  */
 //---------------------------------------------------------------------------//
 
-class ExternalSource
+class EXTERNAL_SOURCE_EXPORT ExternalSource
 {
 
 public:
@@ -69,21 +70,7 @@ public:
   ExternalSource(size_t         number_groups,
                  SP_mesh        mesh,
                  SP_quadrature  quadrature,
-                 bool           discrete = false)
-    : d_number_groups(number_groups)
-    , d_mesh(mesh)
-    , d_quadrature(quadrature)
-    , d_number_angles(-1)
-    , d_discrete(discrete)
-  {
-    // Preconditions
-    Require(number_groups > 0);
-    Require(mesh);
-
-    // Set the angle count.  We leave this in the constructor, since
-    // the quadrature need not be set.
-    if (d_quadrature) d_number_angles = d_quadrature->number_angles();
-  }
+                 bool           discrete = false);
 
   /// Virtual destructor
   virtual ~ExternalSource(){}
@@ -143,6 +130,9 @@ protected:
   bool d_discrete;
 
 };
+
+EXTERNAL_SOURCE_TEMPLATE class EXTERNAL_SOURCE_EXPORT detran_utilities::SP<ExternalSource>;
+EXTERNAL_SOURCE_TEMPLATE class EXTERNAL_SOURCE_EXPORT std::vector<detran_utilities::SP<ExternalSource> >;
 
 } // end namespace detran_external_source
 

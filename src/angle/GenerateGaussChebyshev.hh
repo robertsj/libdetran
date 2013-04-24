@@ -63,14 +63,14 @@ inline void generate_gc_parameters(detran_utilities::size_t  m,
   double W = pi / (double)m;
 
   // Generate abscissa
-  for (int i = 1; i <= m; ++i)
+  for (size_t i = 1; i <= m; ++i)
   {
     x[i-1] = std::cos((i-0.5)*pi/m);
   }
 
   // Generate weights
   double w_tot = 0.0;
-  for (int i = 0; i < m; ++i)
+  for (size_t i = 0; i < m; ++i)
   {
     w[i] = W * std::sqrt(1.0 - x[i]*x[i]);
     w_tot += w[i];
@@ -79,7 +79,7 @@ inline void generate_gc_parameters(detran_utilities::size_t  m,
   // Optionally normalize the weights to 2
   if (normalize)
   {
-    for (int i = 0; i < m; ++i)
+    for (size_t i = 0; i < m; ++i)
     {
       w[i] *= 2.0 / w_tot;
     }

@@ -27,7 +27,7 @@ LinearMaterial::LinearMaterial(const vec_dbl      &times,
   Require(d_times.size() > 0);
   Require(d_times.size() == d_materials.size());
   Require(d_materials[0]);
-  for (int i = 0; i < d_times.size(); ++i)
+  for (size_t i = 0; i < d_times.size(); ++i)
   {
     // Strictly monotonic increasing
     if (i > 0)
@@ -45,10 +45,10 @@ LinearMaterial::LinearMaterial(const vec_dbl      &times,
             d_number_precursor_groups);
   }
 
-  for (int g = 0; g < d_number_groups; ++g)
+  for (size_t g = 0; g < d_number_groups; ++g)
     d_velocity[g] = d_materials[0]->velocity(g);
 
-  for (int i = 0; i < d_number_precursor_groups; ++i)
+  for (size_t i = 0; i < d_number_precursor_groups; ++i)
     d_lambda[i] = d_materials[0]->lambda(i);
 
   d_number_times = d_times.size();
@@ -91,8 +91,8 @@ void LinearMaterial::update_impl()
   }
   else
   {
-    for (int i = 1; i < d_number_times; ++i)
-      if (d_t > d_times[i-1] and d_t <= d_times[i])
+    for (size_t i = 1; i < d_number_times; ++i)
+      if (d_t > d_times[i-1] && d_t <= d_times[i])
         index_B = i;
     // f = fA + slope * delta = fA + (fB-fA)/(tB-tA) * delta
     //   = fA*(1 - delta/(tB-tA)) + fB*delta/(tB-tA)
@@ -117,9 +117,9 @@ void LinearMaterial::update_material(const size_t iA,
   SP_kineticsmaterial A = d_materials[iA];
   SP_kineticsmaterial B = d_materials[iB];
 
-  for (int m = 0; m < A->number_materials(); ++m)
+  for (size_t m = 0; m < A->number_materials(); ++m)
   {
-    for (int g = 0; g < A->number_groups(); ++g)
+    for (size_t g = 0; g < A->number_groups(); ++g)
     {
 
       d_sigma_t[g][m]    = cA*A->sigma_t(m, g) + cB*B->sigma_t(m, g);
@@ -128,17 +128,17 @@ void LinearMaterial::update_material(const size_t iA,
       d_nu[g][m]         = cA*A->nu(m, g) + cB*B->nu(m, g);
       d_diff_coef[g][m]  = cA*A->diff_coef(m, g)  + cB*B->diff_coef(m, g);
 
-      for (int gp = 0; gp < A->number_groups(); ++gp)
+      for (size_t gp = 0; gp < A->number_groups(); ++gp)
         d_sigma_s[g][gp][m] = cA*A->sigma_s(m, g, gp) + cB*B->sigma_s(m, g, gp);
 
-      for (int i = 0; i < d_number_precursor_groups; ++i)
+      for (size_t i = 0; i < d_number_precursor_groups; ++i)
         d_chi_d[g][i][m] = cA*A->chi_d(m, i, g)  + cB*B->chi_d(m, i, g);
 
       d_chi[g][m] = cA * A->chi(m, g) + cB * B->chi(m, g);
 
     } // end groups
 
-    for (int i = 0; i < d_number_precursor_groups; ++i)
+    for (size_t i = 0; i < d_number_precursor_groups; ++i)
       d_beta[i][m] = cA*A->beta(m, i)  + cB*B->beta(m, i);
 
   } // end materials

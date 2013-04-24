@@ -90,7 +90,7 @@ void MatrixDense::display() const
   printf("      number rows = %5i \n",   d_m);
   printf("   number columns = %5i \n",   d_n);
   printf("\n");
-  if (d_m > 20 or d_n > 20)
+  if (d_m > 20 || d_n > 20)
   {
     printf("  *** matrix not printed for m or n > 20 *** \n");
     return;

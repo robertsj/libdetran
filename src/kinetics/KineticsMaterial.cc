@@ -78,7 +78,7 @@ void KineticsMaterial::set_beta(const size_t i, const double v)
 {
   Require(i < d_number_precursor_groups);
   //Require(v > 0.0);
-  for (int m = 0; m < number_materials(); ++m)
+  for (size_t m = 0; m < number_materials(); ++m)
     d_beta[i][m] = v;
 }
 
@@ -98,31 +98,31 @@ void KineticsMaterial::set_chi_d(const size_t m,
 void KineticsMaterial::finalize()
 {
   Material::finalize();
-  for (int i = 0; i < d_number_precursor_groups; ++i)
+  for (size_t i = 0; i < d_number_precursor_groups; ++i)
   {
     Insist(d_lambda[i] > 0.0, "Decay constants must be greater than zero.");
   }
-  for (int g = 0; g < number_groups(); ++g)
+  for (size_t g = 0; g < number_groups(); ++g)
   {
     Insist(d_velocity[g] > 0.0, "Velocities must be greater than zero.");
   }
 
   // Check that chi's add to 1
-  for (int m = 0; m < number_materials(); ++m)
+  for (size_t m = 0; m < number_materials(); ++m)
   {
     bool has_fission = false;
     double v = 0;
-    for (int g = 0; g < number_groups(); ++g)
+    for (size_t g = 0; g < number_groups(); ++g)
     {
       if (d_sigma_f[g][m] > 0.0) has_fission = true;
       v += d_chi[g][m];
     }
     Assert(v > 0.0 or !has_fission);
 
-    for (int i = 0; i < d_number_precursor_groups; ++i)
+    for (size_t i = 0; i < d_number_precursor_groups; ++i)
     {
       v = 0;
-      for (int g = 0; g < number_groups(); ++g)
+      for (size_t g = 0; g < number_groups(); ++g)
       {
         v += d_chi_d[g][i][m];
       }

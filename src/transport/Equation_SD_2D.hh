@@ -19,7 +19,7 @@ namespace detran
  *  @class Equation_SD_2D
  *  @brief Step difference discretization in two dimensions.
  */
-class Equation_SD_2D : public Equation<_2D>
+class TRANSPORT_EXPORT Equation_SD_2D : public Equation<_2D>
 {
 
 public:

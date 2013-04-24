@@ -10,7 +10,7 @@
 #ifndef detran_SWEEPER2DMOC_HH_
 #define detran_SWEEPER2DMOC_HH_
 
-#include "Sweeper.hh"
+#include "transport/Sweeper.hh"
 #include "angle/QuadratureMOC.hh"
 #include "boundary/BoundaryMOC.hh"
 #include "geometry/MeshMOC.hh"

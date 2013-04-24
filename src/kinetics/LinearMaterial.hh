@@ -15,6 +15,8 @@
 namespace detran
 {
 
+KINETICS_TEMPLATE class KINETICS_EXPORT std::vector<detran_utilities::SP<KineticsMaterial> >;
+
 /**
  *  @class LinearMaterial
  *  @brief Material defined via discrete materials to be linearly
@@ -30,7 +32,7 @@ namespace detran
  *  returned.  Likewise, if $t \ge t_N$, the last
  *  material is returned.
  */
-class LinearMaterial: public TimeDependentMaterial
+class KINETICS_EXPORT LinearMaterial: public TimeDependentMaterial
 {
 
 public:
@@ -107,7 +109,7 @@ private:
 
 } // end namespace detran
 
-#endif // LINEARMATERIAL_HH_ 
+#endif // detran_LINEARMATERIAL_HH_ 
 
 //---------------------------------------------------------------------------//
 //              end of file LinearMaterial.hh

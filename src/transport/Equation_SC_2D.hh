@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- * \file   Equation_SC_2D.hh
- * \author robertsj
- * \date   Apr 10, 2012
- * \brief  Equation_SC_2D class definition.
+ *  @file   Equation_SC_2D.hh
+ *  @author robertsj
+ *  @date   Apr 10, 2012
+ *  @brief  Equation_SC_2D class definition.
  */
 //---------------------------------------------------------------------------//
 
@@ -24,7 +24,7 @@ namespace detran
  *             475-498 (1969)
  *
  */
-class Equation_SC_2D : public Equation<_2D>
+class TRANSPORT_EXPORT Equation_SC_2D : public Equation<_2D>
 {
 
 public:

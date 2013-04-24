@@ -45,9 +45,9 @@ bool PPMOutput::initialize(const std::string filename, size_t n)
   d_x = detran_utilities::linspace(0, d_mesh->total_width_x(), d_nx);
   d_y = detran_utilities::linspace(0, d_mesh->total_width_y(), d_ny);
   d_cells.resize(d_nx * d_ny);
-  for (int j = 0; j < d_ny; ++j)
+  for (size_t j = 0; j < d_ny; ++j)
   {
-    for (int i = 0; i < d_nx; ++i)
+    for (size_t i = 0; i < d_nx; ++i)
     {
       d_cells[i + j * d_ny] =
         d_mesh->find_cell(detran_utilities::Point(d_x[i], d_y[j]));
@@ -75,7 +75,7 @@ bool PPMOutput::write_mesh_map(const std::string &key)
   }
   d_plotter->initialize(d_nx, d_ny, d_filename+"_"+key+".ppm");
   vec_dbl data(d_cells.size());
-  for (int i = 0; i < d_cells.size(); ++i)
+  for (size_t i = 0; i < d_cells.size(); ++i)
   {
     Assert(d_cells[i] >= 0.0);
     data[i] = d_mesh->mesh_map(key)[d_cells[i]];
@@ -87,14 +87,14 @@ bool PPMOutput::write_mesh_map(const std::string &key)
 //---------------------------------------------------------------------------//
 bool PPMOutput::write_scalar_flux(SP_state state)
 {
-  for (int g = 0; g < state->number_groups(); ++g)
+  for (size_t g = 0; g < state->number_groups(); ++g)
   {
     std::cout << " g=" << g << std::endl;
     std::stringstream g_;
     g_ << g;
     d_plotter->initialize(d_nx, d_ny, d_filename+"_scalar_flux_"+g_.str()+".ppm");
     vec_dbl data(d_cells.size());
-    for (int i = 0; i < d_cells.size(); ++i)
+    for (size_t i = 0; i < d_cells.size(); ++i)
     {
       //Assert(d_cells[i] >= 0.0);
       data[i] = state->phi(g)[d_cells[i]];

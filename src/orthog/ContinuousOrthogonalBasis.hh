@@ -49,7 +49,7 @@ namespace detran_orthog
  *
  *
  */
-class ContinuousOrthogonalBasis: public OrthogonalBasis
+class ORTHOG_EXPORT ContinuousOrthogonalBasis: public OrthogonalBasis
 {
 
 public:

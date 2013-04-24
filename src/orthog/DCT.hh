@@ -15,12 +15,11 @@
 namespace detran_orthog
 {
 
-
 /**
  *  @class DCT
  *  @brief Discrete cosine transform
  */
-class DCT: public OrthogonalBasis
+class ORTHOG_EXPORT DCT: public OrthogonalBasis
 {
 
 public:

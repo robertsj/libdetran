@@ -10,6 +10,7 @@
 #ifndef MESHMOC_HH_
 #define MESHMOC_HH_
 
+#include "geometry/geometry_export.hh"
 #include "Mesh.hh"
 #include "TrackDB.hh"
 
@@ -22,7 +23,7 @@ namespace detran_geometry
  *  \todo  This is bloat.  There should be one mesh object, or
  *         perhaps one geometry object that contains a mesh and tracking
  */
-class MeshMOC: public Mesh
+class GEOMETRY_EXPORT MeshMOC: public Mesh
 {
 
 public:
@@ -62,6 +63,8 @@ private:
   SP_trackdb d_tracks;
 
 };
+
+GEOMETRY_TEMPLATE class GEOMETRY_EXPORT detran_utilities::SP<MeshMOC>;
 
 } // end namespace detran_geometry
 

@@ -23,11 +23,11 @@ inline double SyntheticDiscreteSource::source(const size_t cell,
 
   // Integrate over angle
   double value = 0;
-  for (int o = 0; o < d_quadrature->number_octants(); ++o)
+  for (size_t o = 0; o < d_quadrature->number_octants(); ++o)
   {
-    for (int a = 0; a < d_quadrature->number_angles_octant(); ++a)
+    for (size_t a = 0; a < d_quadrature->number_angles_octant(); ++a)
     {
-      int angle = d_quadrature->index(o, a);
+      size_t angle = d_quadrature->index(o, a);
       value += d_source[group][angle][cell] * d_quadrature->weight(a);
     }
   }
@@ -75,14 +75,14 @@ inline void SyntheticDiscreteSource::build(const double dt,
   double a_0 = bdf_coefs[order - 1][0];
 
   // Clear the source
-  for (int g = 0; g < d_material->number_groups(); ++g)
-    for (int o = 0; o < d_quadrature->number_octants(); ++o)
-      for (int a = 0; a < d_quadrature->number_angles_octant(); ++a)
-        for (int cell = 0; cell < d_mesh->number_cells(); ++cell)
+  for (size_t g = 0; g < d_material->number_groups(); ++g)
+    for (size_t o = 0; o < d_quadrature->number_octants(); ++o)
+      for (size_t a = 0; a < d_quadrature->number_angles_octant(); ++a)
+        for (size_t cell = 0; cell < d_mesh->number_cells(); ++cell)
           d_source[g][d_quadrature->index(o, a)][cell] = 0.0;
 
   // Add all backward terms
-  for (int j = 0; j < order; ++j)
+  for (size_t j = 0; j < order; ++j)
   {
     Assert(states[j]);
     if (size_precursor)
@@ -93,19 +93,19 @@ inline void SyntheticDiscreteSource::build(const double dt,
     // Skip the first entry, which is for the (n+1) term
     double a_j = bdf_coefs[order - 1][j + 1];
 
-    for (int g = 0; g < d_material->number_groups(); ++g)
+    for (size_t g = 0; g < d_material->number_groups(); ++g)
     {
       double psi_factor = a_j / dt / d_material->velocity(g);
 
-      for (int o = 0; o < d_quadrature->number_octants(); ++o)
+      for (size_t o = 0; o < d_quadrature->number_octants(); ++o)
       {
-        for (int a = 0; a < d_quadrature->number_angles_octant(); ++a)
+        for (size_t a = 0; a < d_quadrature->number_angles_octant(); ++a)
         {
 
-          int angle = d_quadrature->index(o, a);
+          size_t angle = d_quadrature->index(o, a);
 
           // Add flux
-          for (int cell = 0; cell < d_mesh->number_cells(); ++cell)
+          for (size_t cell = 0; cell < d_mesh->number_cells(); ++cell)
           {
             d_source[g][angle][cell] +=
               psi_factor * states[j]->psi(g, o, a)[cell];
@@ -115,7 +115,7 @@ inline void SyntheticDiscreteSource::build(const double dt,
           // Add the precursor concentration, if applicable
           if (size_precursor)
           {
-            for (int i = 0; i < np; ++i)
+            for (size_t i = 0; i < np; ++i)
             {
               double C_factor =  a_j * d_norm * d_material->lambda(i) /
                                 (a_0 + dt * d_material->lambda(i));
@@ -125,7 +125,7 @@ inline void SyntheticDiscreteSource::build(const double dt,
 //                        << " aj=" << a_j
 //                        << " lam=" << d_material->lambda(i)
 //                        << " nrm=" << d_norm << std::endl;
-              for (int cell = 0; cell < d_mesh->number_cells(); ++cell)
+              for (size_t cell = 0; cell < d_mesh->number_cells(); ++cell)
               {
 //                std::cout << " C=" <<precursors[j]->C(i)[cell]
 //                          << " chid = " << d_material->chi_d(mt[cell], i, g)

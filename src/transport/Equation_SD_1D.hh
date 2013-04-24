@@ -33,7 +33,7 @@ namespace detran
  *  the cell, and so it is consistent for DGM.
  *
  */
-class Equation_SD_1D : public Equation<_1D>
+class TRANSPORT_EXPORT Equation_SD_1D : public Equation<_1D>
 {
 
 public:

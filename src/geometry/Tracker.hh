@@ -25,7 +25,7 @@ namespace detran_geometry
  *  \class Tracker
  *  \brief Track a mesh.
  */
-class Tracker
+class GEOMETRY_EXPORT Tracker
 {
 
 public:
@@ -79,16 +79,11 @@ private:
   //-------------------------------------------------------------------------//
 
   SP_mesh d_mesh;
-
   SP_quadrature d_quadrature;
-
   SP_trackdb d_trackdb;
-
   // Number azimuths per octant
   int d_number_azimuths;
-
   vec_dbl d_x;
-
   vec_dbl d_y;
 
   //-------------------------------------------------------------------------//

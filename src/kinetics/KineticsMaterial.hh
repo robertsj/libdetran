@@ -10,6 +10,7 @@
 #ifndef detran_KINETICSMATERIAL_HH_
 #define detran_KINETICSMATERIAL_HH_
 
+#include "kinetics/kinetics_export.hh"
 #include "material/Material.hh"
 
 namespace detran
@@ -44,7 +45,7 @@ namespace detran
  *    - assume that \f$ \lambda_i \f$ is material-independent
  *
  */
-class KineticsMaterial: public detran_material::Material
+class KINETICS_EXPORT KineticsMaterial: public detran_material::Material
 {
 
 public:
@@ -123,7 +124,6 @@ protected:
 
   /// Number of precursor groups
   size_t d_number_precursor_groups;
-
   /// Group velocities
   vec_dbl d_velocity;
   /// Decay constants [number precursors groups]
@@ -132,7 +132,6 @@ protected:
   vec2_dbl d_beta;
   /// Delayed neutron spectra [num e groups][num p groups][number materials]
   vec3_dbl d_chi_d;
-
   /// Verified
   bool d_verified;
 
@@ -142,6 +141,8 @@ protected:
 
   void kinetics_display();
 };
+
+KINETICS_TEMPLATE class KINETICS_EXPORT detran_utilities::SP<KineticsMaterial>;
 
 } // end namespace detran
 

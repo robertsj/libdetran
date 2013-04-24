@@ -10,6 +10,7 @@
 #ifndef detran_FIXEDSOURCEMANAGER_HH_
 #define detran_FIXEDSOURCEMANAGER_HH_
 
+#include "solvers/solvers_export.hh"
 #include "TransportManager.hh"
 #include "solvers/mg/MGSolver.hh"
 #include "angle/Quadrature.hh"

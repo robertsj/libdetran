@@ -1,16 +1,13 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Quadrature.cc
- * \author Jeremy Roberts
- * \date   Mar 23, 2012
- * \brief  Quadrature class member definitions
+/**
+ *  @file   Quadrature.cc
+ *  @author Jeremy Roberts
+ *  @date   Mar 23, 2012
+ *  @brief  Quadrature class member definitions
  */
 //---------------------------------------------------------------------------//
 
-// Detran
-#include "Quadrature.hh"
-
-// System 
+#include "angle/Quadrature.hh"
 #include <iostream>
 #include <cstdio>
 #include <cmath>
@@ -37,7 +34,7 @@ Quadrature::Quadrature(const size_t dim,
   , d_adjoint(false)
 {
   // Preconditions
-  Insist((dim > 0) and (dim < 4),
+  Insist((dim > 0) && (dim < 4),
     "The quadrature dimension MUST be 1, 2, or 3.");
 
   // Define the signs for all eight octants.
@@ -176,7 +173,7 @@ void Quadrature::display() const
     {
       cout << "   m            mu                  wt       " << endl;
       cout << "  ---   ------------------  -----------------" << endl;
-      for ( int ix = 0; ix < d_number_angles_octant; ++ix )
+      for (size_t ix = 0; ix < d_number_angles_octant; ++ix)
       {
           printf ("%4i    %16.13f   %16.13f   \n", ix, d_mu[ix], d_weight[ix] );
           weight_sum += d_weight[ix];
@@ -186,7 +183,7 @@ void Quadrature::display() const
     {
       cout << "   m            mu                 eta                xi                 wt       " << endl;
       cout << "  ---   -----------------  -----------------  -----------------  -----------------" << endl;
-      for ( int ix = 0; ix < d_number_angles_octant; ++ix )
+      for (size_t ix = 0; ix < d_number_angles_octant; ++ix)
       {
           printf ("%4i    %16.13f   %16.13f   %16.13f   %16.13f   \n",
                   ix, d_mu[ix], d_eta[ix], d_xi[ix], d_weight[ix] );

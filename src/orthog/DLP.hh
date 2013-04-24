@@ -19,7 +19,7 @@ namespace detran_orthog
  *  @class DLP
  *  @brief Discrete Legendre polynomial basis
  */
-class DLP: public OrthogonalBasis
+class ORTHOG_EXPORT DLP: public OrthogonalBasis
 {
 
 public:

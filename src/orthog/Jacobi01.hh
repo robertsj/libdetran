@@ -21,7 +21,7 @@ namespace detran_orthog
  *
  *  Implements the Jacobi polynomial with alpha = 0, beta = 1.
  */
-class Jacobi01: public ContinuousOrthogonalBasis
+class ORTHOG_EXPORT Jacobi01: public ContinuousOrthogonalBasis
 {
 
 public:

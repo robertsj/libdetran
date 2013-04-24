@@ -10,6 +10,7 @@
 #ifndef detran_PRECURSORS_HH_
 #define detran_PRECURSORS_HH_
 
+#include "kinetics/kinetics_export.hh"
 #include "utilities/DBC.hh"
 #include "utilities/Definitions.hh"
 #include "utilities/SP.hh"
@@ -21,7 +22,7 @@ namespace detran
  *  @class Precursors
  *  @brief Container for precursor concentrations
  */
-class Precursors
+class KINETICS_EXPORT Precursors
 {
 
 public:
@@ -86,8 +87,9 @@ private:
   /// Precursor concentrations [npc][ncells]
   vec2_dbl d_C;
 
-
 };
+
+KINETICS_TEMPLATE class KINETICS_EXPORT detran_utilities::SP<Precursors>;
 
 } // end namespace detran
 

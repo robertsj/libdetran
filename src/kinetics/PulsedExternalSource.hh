@@ -15,7 +15,6 @@
 namespace detran
 {
 
-
 /**
  *  @class PulsedExternalSource
  *  @brief External source with Gaussian dependence in time
@@ -35,7 +34,7 @@ namespace detran
  *  This shape should be relatively good for modeling pulsed
  *  sources.
  */
-class PulsedExternalSource: public TimeDependentExternalSource
+class KINETICS_EXPORT PulsedExternalSource: public TimeDependentExternalSource
 {
 
 public:

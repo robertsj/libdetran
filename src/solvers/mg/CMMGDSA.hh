@@ -43,7 +43,7 @@ namespace detran
  *        detailed numerical studies
  */
 
-class CMMGDSA: public callow::MatrixShell, public MGPreconditioner
+class CMMGDSA: public MGPreconditioner
 {
 
 public:

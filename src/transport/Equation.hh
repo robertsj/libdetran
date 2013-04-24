@@ -10,6 +10,7 @@
 #ifndef detran_EQUATION_HH_
 #define detran_EQUATION_HH_
 
+#include "transport/transport_export.hh"
 #include "DimensionTraits.hh"
 #include "material/Material.hh"
 #include "geometry/Mesh.hh"

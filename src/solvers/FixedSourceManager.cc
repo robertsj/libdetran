@@ -38,7 +38,7 @@ FixedSourceManager<D>::FixedSourceManager(int argc,
   , d_material(material)
   , d_mesh(mesh)
   , d_multiply(multiply)
-  , d_fission(multiply or fission)
+  , d_fission(multiply || fission)
   , d_is_setup(false)
   , d_is_ready(false)
 {
@@ -59,7 +59,7 @@ FixedSourceManager<D>::FixedSourceManager(SP_input    input,
   , d_material(material)
   , d_mesh(mesh)
   , d_multiply(multiply)
-  , d_fission(multiply or fission)
+  , d_fission(multiply || fission)
   , d_is_setup(false)
   , d_is_ready(false)
 {
@@ -291,9 +291,12 @@ double FixedSourceManager<D>::iterate(const int generation)
 // Explicit instantiations
 //---------------------------------------------------------------------------//
 
-template class FixedSourceManager<_1D>;
-template class FixedSourceManager<_2D>;
-template class FixedSourceManager<_3D>;
+SOLVERS_TEMPLATE class SOLVERS_EXPORT FixedSourceManager<_1D>;
+SOLVERS_TEMPLATE class SOLVERS_EXPORT FixedSourceManager<_2D>;
+SOLVERS_TEMPLATE class SOLVERS_EXPORT FixedSourceManager<_3D>;
+SOLVERS_TEMPLATE class SOLVERS_EXPORT detran_utilities::SP<FixedSourceManager<_1D> >;
+SOLVERS_TEMPLATE class SOLVERS_EXPORT detran_utilities::SP<FixedSourceManager<_2D> >;
+SOLVERS_TEMPLATE class SOLVERS_EXPORT detran_utilities::SP<FixedSourceManager<_3D> >;
 
 } // end namespace detran
 

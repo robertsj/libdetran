@@ -10,6 +10,7 @@
 #ifndef detran_EQUATION_MOC_HH_
 #define detran_EQUATION_MOC_HH_
 
+#include "transport/transport_export.hh"
 #include "DimensionTraits.hh"
 #include "angle/QuadratureMOC.hh"
 #include "material/Material.hh"
@@ -29,7 +30,7 @@ namespace detran
  */
 //---------------------------------------------------------------------------//
 
-class Equation_MOC
+class TRANSPORT_EXPORT Equation_MOC
 {
 
 public:

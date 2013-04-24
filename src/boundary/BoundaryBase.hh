@@ -10,9 +10,11 @@
 #ifndef detran_BOUNDARYBASE_HH_
 #define detran_BOUNDARYBASE_HH_
 
+#include "boundary/boundary_export.hh"
 #include "transport/DimensionTraits.hh"
 #include "geometry/Mesh.hh"
 #include "utilities/DBC.hh"
+#include "utilities/Definitions.hh"
 #include "utilities/InputDB.hh"
 
 namespace detran
@@ -217,7 +219,7 @@ protected:
   /// Do I have any reflective conditions?  (Krylov support)
   bool d_has_reflective;
   /// Vector of is it reflective? (Krylov support)
-  std::vector<bool> d_is_reflective;
+  detran_utilities::vec_bool d_is_reflective;
   /// Do I have any vacuum conditions? (Krylov support)
   bool d_has_vacuum;
   /// Size of the boundary flux on a side in one group.

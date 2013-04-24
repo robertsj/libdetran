@@ -27,10 +27,10 @@ Precursors::Precursors(const size_t number_precursor_groups,
 void Precursors::display() const
 {
 
-  for (int i = 0; i < d_number_cells; i++)
+  for (size_t i = 0; i < d_number_cells; i++)
   {
     printf("%10i", i);
-    for (int g = 0; g < d_number_precursor_groups; g++)
+    for (size_t g = 0; g < d_number_precursor_groups; g++)
     {
       printf(" %12.5e ", d_C[g][i]);
     }

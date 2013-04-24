@@ -59,7 +59,7 @@ inline void Sweeper3D<EQ>::sweep(moments_type &phi)
 
     // Sweep over all angles
     #pragma omp for
-    for (int a = 0; a < d_quadrature->number_angles_octant(); a++)
+    for (size_t a = 0; a < d_quadrature->number_angles_octant(); ++a)
     {
 
       // Get sweep source for this angle.
@@ -87,21 +87,21 @@ inline void Sweeper3D<EQ>::sweep(moments_type &phi)
       // Sweep over all z
       int k  = d_space_ranges[o][2][0];
       int dk = d_space_ranges[o][2][1];
-      for (int kk = 0; kk < d_mesh->number_cells_z(); ++kk, k += dk)
+      for (size_t kk = 0; kk < d_mesh->number_cells_z(); ++kk, k += dk)
       {
 
         // Sweep over all y
         int j  = d_space_ranges[o][1][0];
         int dj = d_space_ranges[o][1][1];
-        for (int jj = 0; jj < d_mesh->number_cells_y(); ++jj, j += dj)
+        for (size_t jj = 0; jj < d_mesh->number_cells_y(); ++jj, j += dj)
         {
 
           psi_out[Mesh::YZ] = psi_yz[k][j];
 
           // Sweep over all x
-          int i  = d_space_ranges[o][0][0];
-          int di = d_space_ranges[o][0][1];
-          for (int ii = 0; ii < d_mesh->number_cells_x(); ++ii, i += di)
+          size_t i  = d_space_ranges[o][0][0];
+          size_t di = d_space_ranges[o][0][1];
+          for (size_t ii = 0; ii < d_mesh->number_cells_x(); ++ii, i += di)
           {
             psi_in[Mesh::YZ] = psi_out[Mesh::YZ];
             psi_in[Mesh::XZ] = psi_xz[k][i];

@@ -7,10 +7,10 @@
  */
 //---------------------------------------------------------------------------//
 
-#ifndef SWEEPER_T_HH_
-#define SWEEPER_T_HH_
+#ifndef detran_SWEEPER_T_HH_
+#define detran_SWEEPER_T_HH_
 
-#include "Sweeper.hh"
+#include "transport/Sweeper.hh"
 
 namespace detran
 {
@@ -83,8 +83,6 @@ inline void Sweeper<_1D>::setup()
   d_face_index[1][Mesh::VERT][Boundary_T::OUT] = Mesh::WEST;
 }
 
-
-
 } // end namespace detran
 
-#endif /* SWEEPER_T_HH_ */
+#endif /* detran_SWEEPER_T_HH_ */

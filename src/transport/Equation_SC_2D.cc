@@ -13,10 +13,10 @@ namespace detran
 {
 
 //---------------------------------------------------------------------------//
-Equation_SC_2D::Equation_SC_2D(SP_mesh mesh,
-                               SP_material material,
+Equation_SC_2D::Equation_SC_2D(SP_mesh       mesh,
+                               SP_material   material,
                                SP_quadrature quadrature,
-                               const bool update_psi)
+                               const bool    update_psi)
   :  Equation<_2D>(mesh, material, quadrature, update_psi)
   ,  d_alpha(mesh->number_cells_x())
   ,  d_beta(mesh->number_cells_y())
@@ -47,11 +47,11 @@ void Equation_SC_2D::setup_angle(const size_t angle)
   d_angle = angle;
   double mu  = d_quadrature->mu(0, d_angle);
   double eta = d_quadrature->eta(0, d_angle);
-  for (int i = 0; i < d_mesh->number_cells_x(); i++)
+  for (size_t i = 0; i < d_mesh->number_cells_x(); ++i)
   {
     d_alpha[i] = d_mesh->dx(i) / mu;
   }
-  for (int j = 0; j < d_mesh->number_cells_y(); j++)
+  for (size_t j = 0; j < d_mesh->number_cells_y(); ++j)
   {
     d_beta[j] = d_mesh->dy(j) / eta;
   }

@@ -40,7 +40,7 @@ Homogenize::homogenize(SP_state     state,
   vec_int fg_to_cg(d_number_groups, 0);
   size_t fg = 0;
   for (size_t cg = 0; cg < coarsegroup.size(); ++cg)
-    for (size_t gg = 0; gg < coarsegroup[cg]; ++gg, ++fg)
+    for (int gg = 0; gg < coarsegroup[cg]; ++gg, ++fg)
       fg_to_cg[fg] = cg;
 
   // Coarse mesh maps
@@ -76,7 +76,7 @@ Homogenize::homogenize(SP_state     state,
     vec_dbl diff_coef(number_coarse_cells, 0.0);
 
     // Loop through fine groups in this coarse group
-    for (size_t gg = 0; gg < coarsegroup[cg]; ++gg, ++fg)
+    for (int gg = 0; gg < coarsegroup[cg]; ++gg, ++fg)
     {
       const vec_dbl &phi_fg = state->phi(fg);
       const vec_dbl &J_fg   = current(state, fg, dc_weight);
@@ -97,7 +97,7 @@ Homogenize::homogenize(SP_state     state,
         chi[ci]        += mesh->volume(fi) * d_material->chi(m, fg);
         for (size_t gp = 0; gp < d_number_groups; ++gp)
           sigma_s[ci][fg_to_cg[gp]] += pv * d_material->sigma_s(m, gp, fg);
-        if (dc_weight == PHI_D or dc_weight == CURRENT_D)
+        if (dc_weight == PHI_D || dc_weight == CURRENT_D)
           diff_coef[ci] += jv * d_material->diff_coef(m, fg);
       }
     }
@@ -119,7 +119,7 @@ Homogenize::homogenize(SP_state     state,
         cmat->set_chi(ci, cg, chi[ci]/vol[ci]);
         for (size_t cgp = 0; cgp < number_coarse_groups; ++cgp)
           cmat->set_sigma_s(ci, cgp, cg, sigma_s[ci][cgp]/phi_vol[ci]);
-        if (dc_weight == PHI_D or dc_weight == CURRENT_D)
+        if (dc_weight == PHI_D || dc_weight == CURRENT_D)
           cmat->set_diff_coef(ci, cg, diff_coef[ci]/cur_vol[ci]);
         else
           cmat->set_diff_coef(ci, cg, 1.0/(3.0*cmat->sigma_t(ci, cg)));
@@ -129,13 +129,13 @@ Homogenize::homogenize(SP_state     state,
   } // end coarse energy
 
   // normalize chi
-  for (int m = 0; m < number_coarse_cells; ++m)
+  for (size_t m = 0; m < number_coarse_cells; ++m)
   {
     double chi_sum = 0.0;
-    for (int g = 0; g < number_coarse_groups; ++g)
+    for (size_t g = 0; g < number_coarse_groups; ++g)
       chi_sum += cmat->chi(m, g);
     if (chi_sum > 0.0)
-      for (int g = 0; g < number_coarse_groups; ++g)
+      for (size_t g = 0; g < number_coarse_groups; ++g)
         cmat->set_chi(m, g, cmat->chi(m, g)/chi_sum);
   }
 

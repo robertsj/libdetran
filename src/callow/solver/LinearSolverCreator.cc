@@ -48,17 +48,17 @@ LinearSolverCreator::Create(SP_db db)
       monitor_level = db->get<int>("linear_solver_monitor_level");
     if (db->check("linear_solver_monitor_diverge"))
       monitor_diverge = db->get<int>("linear_solver_monitor_diverge");
-    if (solver_type == "richardson" and
+    if (solver_type == "richardson" &&
         db->check("linear_solver_richardson_omega"))
     {
       omega = db->get<double>("linear_solver_richardson_omega");
     }
-    if (solver_type == "sor" and
+    if (solver_type == "sor" &&
         db->check("linear_solver_sor_omega"))
     {
       omega = db->get<double>("linear_solver_sor_omega");
     }
-    if (solver_type == "gmres" and
+    if (solver_type == "gmres" &&
         db->check("linear_solver_gmres_restart"))
     {
       restart = db->get<int>("linear_solver_gmres_restart");

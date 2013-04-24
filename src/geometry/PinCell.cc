@@ -31,14 +31,14 @@ PinCell::PinCell(double pitch, vec_dbl radii, vec_int mat_map, bool fuel_flag)
 void PinCell::meshify(int number_meshes, bool flag)
 {
   Require(number_meshes > 0);
-  if (flag and d_radii.size() != 1)
+  if (flag && d_radii.size() != 1)
   {
     // Best fit mesh only for single radius.
     detran_utilities::warning(detran_utilities::USER_INPUT,
       "Best fit pincell only for a single radius.");
     flag = false;
   }
-  if (flag and number_meshes < 7)
+  if (flag && number_meshes < 7)
   {
     // Best fit mesh only for single radius.
     detran_utilities::warning(detran_utilities::USER_INPUT,
@@ -201,7 +201,7 @@ int PinCell::find_region(int i, int j, double width)
   // Loop through the radii. If I'm in there, that's where I live.
   int r = d_radii.size(); // start off in outer region.
   double hp = 0.5 * d_pitch;
-  for (int p = 0; p < d_radii.size(); p++)
+  for (size_t p = 0; p < d_radii.size(); p++)
   {
     if (std::sqrt((x - hp) * (x - hp) + (y - hp) * (y - hp)) < d_radii[p])
     {

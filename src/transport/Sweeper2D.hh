@@ -10,7 +10,7 @@
 #ifndef detran_SWEEPER2D_HH_
 #define detran_SWEEPER2D_HH_
 
-#include "Sweeper.hh"
+#include "transport/Sweeper.hh"
 #include "boundary/BoundarySN.hh"
 
 namespace detran
@@ -91,7 +91,7 @@ public:
   //-------------------------------------------------------------------------//
 
   /// Sweep.
-  inline void sweep(moments_type &phi) __attribute__((always_inline));
+  inline void sweep(moments_type &phi);
 
 private:
 

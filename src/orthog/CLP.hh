@@ -19,7 +19,7 @@ namespace detran_orthog
  *  @class CLP
  *  @brief Continuous Legendre polynomial basis
  */
-class CLP: public ContinuousOrthogonalBasis
+class ORTHOG_EXPORT CLP: public ContinuousOrthogonalBasis
 {
 
 public:

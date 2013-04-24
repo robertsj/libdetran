@@ -37,7 +37,7 @@ namespace detran
  *  PARTISN.
  *
  */
-class SyntheticSource: public detran_external_source::ExternalSource
+class KINETICS_EXPORT SyntheticSource: public detran_external_source::ExternalSource
 {
 
 public:

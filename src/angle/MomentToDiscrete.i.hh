@@ -41,9 +41,9 @@ inline void MomentToDiscrete::build(SP_quadrature q)
   // Build the moment-to-discrete operator by looping through each octant
   // and then the angles in each octant.  The ordering is determined by the
   // order of octants in the quadrature.
-  for (int o = 0; o < d_quadrature->number_octants(); o++)
+  for (size_t o = 0; o < d_quadrature->number_octants(); ++o)
   {
-    for (int a = 0; a < d_quadrature->number_angles_octant(); a++)
+    for (size_t a = 0; a < d_quadrature->number_angles_octant(); ++a)
     {
       if (d_quadrature->dimension() == 1)
         calc_row_1d(o, a);
@@ -67,7 +67,7 @@ inline void MomentToDiscrete::calc_row_3d(const size_t o, const size_t a)
   double mu  = d_quadrature->mu(o, a);
   double eta = d_quadrature->eta(o, a);
   double xi  = d_quadrature->xi(o, a);
-  for (int i = 0; i < d_number_moments; ++i)
+  for (size_t i = 0; i < d_number_moments; ++i)
   {
     size_t l = d_indexer->l(i);
     int    m = d_indexer->m(i);
@@ -87,7 +87,7 @@ inline void MomentToDiscrete::calc_row_2d(const size_t o, const size_t a)
   double mu  = d_quadrature->mu(o, a);
   double eta = d_quadrature->eta(o, a);
   double xi  = std::sqrt(1.0 - mu * mu - eta * eta);
-  for (int i = 0; i < d_number_moments; ++i)
+  for (size_t i = 0; i < d_number_moments; ++i)
   {
     size_t l = d_indexer->l(i);
     int    m = d_indexer->m(i);
@@ -104,7 +104,7 @@ inline void MomentToDiscrete::calc_row_1d(const size_t o, const size_t a)
   // reference to current row
   M_Row &row = d_M[angle];
   // calculate the moments and add them to the row
-  for (int l = 0; l < d_number_moments; ++l)
+  for (size_t l = 0; l < d_number_moments; ++l)
   {
     double norm = (2.0 * l + 1.0) * 0.5;
     row[l] = norm * SphericalHarmonics::Y_lm(l, d_quadrature->mu(o, a));

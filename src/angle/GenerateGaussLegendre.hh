@@ -46,8 +46,8 @@ inline void generate_gl_parameters(detran_utilities::size_t  m,
   Require(x.size() == m);
   Require(w.size() == m);
 
-  int j, i;
-  double z1, z, xm, xl, pp, p3, p2, p1;
+  size_t j, i;
+  double z1, z, pp, p3, p2, p1;
 
   // The roots are symmetric, so we only find half of them.
   for (i = 1; i <= m; i++)

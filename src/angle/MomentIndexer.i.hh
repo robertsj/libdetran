@@ -40,7 +40,7 @@ MomentIndexer::index(const size_t l, const int m) const
   size_t i = 0;
   for (; i < d_number_moments; ++i)
   {
-    if (d_l[i] == l and d_m[i] == m) break;
+    if (d_l[i] == l && d_m[i] == m) break;
   }
   // Postconditions
   Ensure(i < d_number_moments);

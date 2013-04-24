@@ -10,7 +10,7 @@
 #ifndef detran_SWEEPER1D_HH_
 #define detran_SWEEPER1D_HH_
 
-#include "Sweeper.hh"
+#include "transport/Sweeper.hh"
 #include "boundary/BoundarySN.hh"
 
 namespace detran

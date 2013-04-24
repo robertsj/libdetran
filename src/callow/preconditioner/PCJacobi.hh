@@ -32,7 +32,7 @@ namespace callow
  *
  */
 
-class PCJacobi: public Preconditioner
+class CALLOW_EXPORT PCJacobi: public Preconditioner
 {
 
 public:

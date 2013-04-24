@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Triplet.hh
- * \brief  Triplet class definition
- * \author Jeremy Roberts
- * \date   Sep 26, 2012
+/**
+ *  @file   Triplet.hh
+ *  @brief  Triplet class definition
+ *  @author Jeremy Roberts
+ *  @date   Sep 26, 2012
  */
 //---------------------------------------------------------------------------//
 

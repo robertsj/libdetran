@@ -66,7 +66,7 @@ inline void LinearExternalSource::set_time(const double time)
   else
   {
     for (int i = 1; i < d_number_times; ++i)
-      if (d_time > d_times[i - 1] and d_time <= d_times[i])
+      if (d_time > d_times[i - 1] && d_time <= d_times[i])
         d_ib = i;
     d_ia = d_ib - 1;
     d_fb = (d_time - d_times[d_ia]) / (d_times[d_ib] - d_times[d_ia]);

@@ -10,14 +10,14 @@
 #ifndef detran_CURRENTTALLY_HH_
 #define detran_CURRENTTALLY_HH_
 
-#include "BoundaryTally.hh"
+#include "transport/BoundaryTally.hh"
 
 namespace detran
 {
 
 /**
- *  \class CurrentTally
- *  \brief Records partial currents through coarse mesh surfaces.
+ *  @class CurrentTally
+ *  @brief Records partial currents through coarse mesh surfaces.
  *
  *  To illustrate, consider the leakage term of the transport
  *  equation in one coarse cell:
@@ -52,10 +52,10 @@ namespace detran
  *  be required.
  *
  */
-/*!
- * \example /transport/test/test_CurrentTally.cc
+/**
+ *  @example /transport/test/test_CurrentTally.cc
  *
- * Test of CurrentTally.
+ *  Test of CurrentTally.
  */
 
 template <class D>
@@ -93,7 +93,7 @@ public:
    */
   CurrentTally(SP_coarsemesh mesh,
                SP_quadrature quadrature,
-               const size_t number_groups);
+               const size_t  number_groups);
 
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE --- ALL TALLIES MUST IMPLEMENT THESE

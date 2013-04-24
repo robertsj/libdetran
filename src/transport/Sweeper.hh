@@ -7,14 +7,15 @@
  */
 //---------------------------------------------------------------------------//
 
-#ifndef SWEEPER_HH_
-#define SWEEPER_HH_
+#ifndef detran_SWEEPER_HH_
+#define detran_SWEEPER_HH_
 
 #include "detran_config.hh"
-#include "CurrentTally.hh"
-#include "Equation.hh"
-#include "State.hh"
-#include "SweepSource.hh"
+#include "transport/transport_export.hh"
+#include "transport/CurrentTally.hh"
+#include "transport/Equation.hh"
+#include "transport/State.hh"
+#include "transport/SweepSource.hh"
 #include "angle/Quadrature.hh"
 #include "boundary/BoundaryBase.hh"
 #include "geometry/Mesh.hh"
@@ -120,9 +121,11 @@ public:
    *  allows various input types (e.g. Krylov vectors) without having to go
    *  through State.  The angular flux will never be a direct unknown.
    *
+   *  @note __attribute__((always_inline))
+   *  
    *  @param phi    reference to moments vector to be updated
    */
-  virtual void sweep(moments_type &phi) __attribute__((always_inline)) = 0;
+  virtual void sweep(moments_type &phi) = 0;
 
   //-------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
@@ -204,4 +207,4 @@ protected:
 
 } // end namespace detran
 
-#endif /* SWEEPER_HH_ */
+#endif /* detran_SWEEPER_HH_ */

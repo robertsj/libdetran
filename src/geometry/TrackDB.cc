@@ -16,9 +16,9 @@ namespace detran_geometry
 void TrackDB::normalize(vec_dbl &volume)
 {
   vec_dbl appx_volume(volume.size(), 0.0);
-  for (int a = 0; a < d_tracks.size(); a++)
+  for (size_t a = 0; a < d_tracks.size(); a++)
   {
-    for (int t = 0; t < d_tracks[a].size(); t++)
+    for (size_t t = 0; t < d_tracks[a].size(); t++)
     {
       for (int s = 0; s < d_tracks[a][t]->number_segments(); s++)
       {
@@ -36,9 +36,9 @@ void TrackDB::normalize(vec_dbl &volume)
 //              << " volume: " << volume[r]
 //              << " appx: " << appx_volume[r] << std::endl;
 //  }
-  for (int a = 0; a < d_tracks.size(); a++)
+  for (size_t a = 0; a < d_tracks.size(); a++)
   {
-    for (int t = 0; t < d_tracks[a].size(); t++)
+    for (size_t t = 0; t < d_tracks[a].size(); t++)
     {
       for (int s = 0; s < d_tracks[a][t]->number_segments(); s++)
       {
@@ -59,10 +59,10 @@ void TrackDB::display() const
   cout << "TrackDB data" << endl;
   cout << "------------" << endl;
   cout << endl;
-  for (int a = 0; a < d_tracks.size(); a++)
+  for (size_t a = 0; a < d_tracks.size(); a++)
   {
     cout << "    azimuth = " << a << endl;
-    for (int t = 0; t < d_tracks[a].size(); t++)
+    for (size_t t = 0; t < d_tracks[a].size(); t++)
     {
       cout << "       track = " << t << *d_tracks[a][t] << endl;
     }

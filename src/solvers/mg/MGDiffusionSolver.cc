@@ -141,7 +141,7 @@ void MGDiffusionSolver<D>::build_volume_source()
   // eigenvalue problems or multiplying fixed source problems
   // in which fission iterations are performed.  In both cases,
   // the caller has updated the source.
-  if (d_fissionsource and !d_multiply)
+  if (d_fissionsource && !d_multiply)
   {
     for (int g = 0; g < d_material->number_groups(); g++)
     {

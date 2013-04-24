@@ -30,7 +30,7 @@ namespace detran
  *  are dependent on the time increment)
  *
  */
-class TimeDependentMaterial: public KineticsMaterial
+class KINETICS_EXPORT TimeDependentMaterial: public KineticsMaterial
 {
 
 public:
@@ -149,6 +149,8 @@ protected:
   virtual void update_impl() = 0;
 
 };
+
+KINETICS_TEMPLATE class KINETICS_EXPORT detran_utilities::SP<TimeDependentMaterial>;
 
 } // end namespace detran
 

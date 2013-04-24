@@ -19,8 +19,7 @@ CMMGDSA::CMMGDSA(SP_input         input,
                  SP_scattersource source,
                  size_t           cutoff,
                  bool             include_fission)
-  : callow::MatrixShell(this)
-  , Base(input, material, mesh, cutoff, "CMMGDSA")
+  : Base(input, material, mesh, cutoff, "CMMGDSA")
 {
   Require(d_scattersource);
 

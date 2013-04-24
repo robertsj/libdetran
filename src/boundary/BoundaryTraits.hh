@@ -11,6 +11,7 @@
 #ifndef detran_BOUNDARYTRAITS_HH_
 #define detran_BOUNDARYTRAITS_HH_
 
+#include "boundary/boundary_export.hh"
 #include "utilities/DBC.hh"
 #include "utilities/Definitions.hh"
 
@@ -35,19 +36,19 @@ struct BoundaryTraits
 };
 
 template <>
-struct BoundaryTraits<_3D>
+struct BOUNDARY_EXPORT BoundaryTraits<_3D>
 {
   typedef detran_utilities::vec2_dbl value_type;
 };
 
 template <>
-struct BoundaryTraits<_2D>
+struct BOUNDARY_EXPORT BoundaryTraits<_2D>
 {
   typedef detran_utilities::vec_dbl value_type;
 };
 
 template <>
-struct BoundaryTraits<_1D>
+struct BOUNDARY_EXPORT BoundaryTraits<_1D>
 {
   typedef double value_type;
 };
@@ -70,7 +71,7 @@ struct BoundaryValue
 };
 
 template <>
-struct BoundaryValue<_3D>
+struct BOUNDARY_EXPORT BoundaryValue<_3D>
 {
   // Const access to boundary value
   static inline const double&
@@ -95,7 +96,7 @@ struct BoundaryValue<_3D>
 };
 
 template <>
-struct BoundaryValue<_2D>
+struct BOUNDARY_EXPORT BoundaryValue<_2D>
 {
   // Const access to boundary value
   static inline const double&
@@ -118,7 +119,7 @@ struct BoundaryValue<_2D>
 };
 
 template <>
-struct BoundaryValue<_1D>
+struct BOUNDARY_EXPORT BoundaryValue<_1D>
 {
   // Const access to boundary value
   static inline const double&

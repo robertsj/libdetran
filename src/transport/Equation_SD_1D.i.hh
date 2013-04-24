@@ -21,7 +21,7 @@ inline void Equation_SD_1D::setup_angle(const size_t angle)
   Require(angle < d_quadrature->number_angles_octant());
   d_angle = angle;
   double mu  = d_quadrature->mu(0, d_angle);
-  for (int i = 0; i < d_mesh->number_cells_x(); i++)
+  for (size_t i = 0; i < d_mesh->number_cells_x(); ++i)
   {
     d_coef_x[i] = mu / d_mesh->dx(i);
   }

@@ -10,6 +10,7 @@
 #ifndef detran_ioutils_PPMOUTPUT_HH_
 #define detran_ioutils_PPMOUTPUT_HH_
 
+#include "ioutils/ioutils_export.hh"
 #include "ioutils/PPMPlotter.hh"
 #include "transport/State.hh"
 #include "geometry/Mesh.hh"
@@ -25,7 +26,7 @@ namespace detran_ioutils
  *  displayed---just colors.  It's mostly as a fast way to plot the
  *  mesh when Python+matplotlib isn't the answer.
  */
-class PPMOutput
+class IOUTILS_EXPORT PPMOutput
 {
 
 public:

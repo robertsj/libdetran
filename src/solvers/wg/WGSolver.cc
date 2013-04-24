@@ -68,7 +68,7 @@ WGSolver<D>::WGSolver(SP_state                  state,
   Assert(!multiply or (multiply and q_f));
 
   // Add any moment and discrete sources present.
-  for (int i = 0; i < q_e.size(); ++i)
+  for (size_t i = 0; i < q_e.size(); ++i)
   {
     if (q_e[i])
     {

@@ -10,11 +10,10 @@
 #ifndef detran_ioutils_PPMPLOTTER_HH_
 #define detran_ioutils_PPMPLOTTER_HH_
 
+#include "ioutils/ioutils_export.hh"
 #include "utilities/DBC.hh"
 #include "utilities/Definitions.hh"
 #include "utilities/SP.hh"
-
-
 #include <string>
 
 namespace detran_ioutils
@@ -24,7 +23,7 @@ namespace detran_ioutils
  *  @class PPMPlotter
  *  @brief Produces 2-D plots in the PPM format
  */
-class PPMPlotter
+class IOUTILS_EXPORT PPMPlotter
 {
 
 public:
@@ -67,7 +66,7 @@ public:
   void set_pixels(const std::vector<T>& v)
   {
     Require(v.size() == d_image.size());
-    for (int i = 0; i < d_nx * d_ny; ++i) d_image[i] = v[i];
+    for (size_t i = 0; i < d_nx * d_ny; ++i) d_image[i] = v[i];
   }
 
   /// Write the file
@@ -89,6 +88,8 @@ private:
   std::string d_name;
 
 };
+
+IOUTILS_TEMPLATE class IOUTILS_EXPORT detran_utilities::SP<PPMPlotter>;
 
 } // end namespace detran_ioutils
 

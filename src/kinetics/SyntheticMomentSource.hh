@@ -15,7 +15,7 @@
 namespace detran
 {
 
-class SyntheticMomentSource: public SyntheticSource
+class KINETICS_EXPORT SyntheticMomentSource: public SyntheticSource
 {
 
 public:

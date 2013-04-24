@@ -19,6 +19,10 @@
 namespace detran_angle
 {
 
+// DLL support
+class MomentToDiscrete;
+template class ANGLE_EXPORT detran_utilities::SP<MomentToDiscrete>;
+
 //---------------------------------------------------------------------------//
 /**
  *  @class MomentToDiscrete

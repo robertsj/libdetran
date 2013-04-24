@@ -44,7 +44,7 @@ namespace detran
  *
  *  @sa Equation_SC_MOC
  */
-class Equation_SC_1D : public Equation<_1D>
+class TRANSPORT_EXPORT Equation_SC_1D : public Equation<_1D>
 {
 
 public:

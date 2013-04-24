@@ -32,14 +32,14 @@ Collocated::Collocated(size_t dim,
   bool db = false;
 
   Insist(   (d_number_azimuths_octant == 3)
-         or (d_number_azimuths_octant == 5)
-         or (d_number_azimuths_octant == 7)
-         or (d_number_azimuths_octant == 9),
+         || (d_number_azimuths_octant == 5)
+         || (d_number_azimuths_octant == 7)
+         || (d_number_azimuths_octant == 9),
          "Collocated quadrature implemented for 3, 5, 7, or 9 azimuths.");
 
   Insist(multiplier > 0, "The multiplier must be positive");
 
-  int num_space = std::pow(3.0, double(d_number_azimuths_octant / 2));
+  int num_space = std::pow(3, d_number_azimuths_octant / 2);
   Ensure(   num_space ==  3
          or num_space ==  9
          or num_space == 27
@@ -60,8 +60,8 @@ Collocated::Collocated(size_t dim,
   for (int i = 0; i < d_number_azimuths_octant / 2; i++)
   {
     int a = d_number_azimuths_octant - i - 1;
-    num_y[a] = std::pow(3, i); // 3^(i-1);
-    num_x[i] = std::pow(3, i);
+    num_y[a] = std::pow((int)3, i); // 3^(i-1);
+    num_x[i] = std::pow((int)3, i);
   }
 
   //-------------------------------------------------------------------------//
@@ -317,7 +317,6 @@ Collocated::Collocated(size_t dim,
     d_number_exit[a2][1]  = num_x[a];
     d_azimuth_weight[a2]  = d_azimuth_weight[a];
   }
-
 
 }
 

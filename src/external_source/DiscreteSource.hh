@@ -22,7 +22,7 @@ namespace detran_external_source
  */
 //---------------------------------------------------------------------------//
 
-class DiscreteSource: public ExternalSource
+class EXTERNAL_SOURCE_EXPORT DiscreteSource: public ExternalSource
 {
 
 public:
@@ -74,9 +74,9 @@ public:
     Require(cell < d_mesh->number_cells());
     Require(group < d_number_groups);
     double value = 0;
-    for (int o = 0; o < d_quadrature->number_octants(); o++)
+    for (size_t o = 0; o < d_quadrature->number_octants(); ++o)
     {
-      for (int a = 0; a < d_quadrature->number_angles_octant(); a++)
+      for (size_t a = 0; a < d_quadrature->number_angles_octant(); ++a)
       {
         int angle = d_quadrature->index(o, a);
         value += d_source_spectra[d_source_map[cell]][group][angle] *

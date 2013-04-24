@@ -12,7 +12,6 @@
 
 #include "detran_config.hh"
 
-#ifdef DETRAN_ENABLE_HDF5
 
 #include "IO_HDF5.hh"
 #include "geometry/Mesh1D.hh"
@@ -22,6 +21,8 @@
 
 namespace detran_ioutils
 {
+
+#ifdef DETRAN_ENABLE_HDF5
 
 //---------------------------------------------------------------------------//
 IO_HDF5::IO_HDF5(std::string filename)
@@ -465,9 +466,48 @@ bool IO_HDF5::read_data<IO_HDF5::SP_input>(SP_input      db,
   return true;
 }
 
-} // end namespace detran_ioutils
+#else
+
+//-------------------------------------------------------------------------//
+IO_HDF5::IO_HDF5(std::string filename)
+{
+  THROW("NOT IMPLEMENTED");
+}
+
+//-------------------------------------------------------------------------//
+IO_HDF5::~IO_HDF5(){}
+
+//-------------------------------------------------------------------------//
+void IO_HDF5::open(const int flag){}
+
+//-------------------------------------------------------------------------//
+void IO_HDF5::write(SP_input input){}
+
+//-------------------------------------------------------------------------//
+void IO_HDF5::write(SP_material mat){}
+
+//-------------------------------------------------------------------------//
+void IO_HDF5::write(SP_mesh mesh){}
+
+//-------------------------------------------------------------------------//
+void IO_HDF5::close(){}
+
+//-------------------------------------------------------------------------//
+IO_HDF5::SP_input IO_HDF5::read_input(){return SP_input(0);}
+
+//-------------------------------------------------------------------------//
+IO_HDF5::SP_material IO_HDF5::read_material(){return SP_material(0);}
+
+//-------------------------------------------------------------------------//
+IO_HDF5::SP_mesh IO_HDF5::read_mesh(){return SP_mesh(0);}
 
 #endif // DETRAN_ENABLE_HDF5
+
+template IOUTILS_EXPORT class detran_utilities::SP<IO_HDF5>;
+
+} // end namespace detran_ioutils
+
+
 
 //---------------------------------------------------------------------------//
 //              end of file IO_HDF5.cc

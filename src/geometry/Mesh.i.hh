@@ -163,9 +163,9 @@ inline int Mesh::find_cell(detran_utilities::Point p)
 {
   // Default is -1, meaning not found
   int cell;
-  if ( (p.x() < 0.0) or (p.x() > d_total_width_x) or
-       (p.y() < 0.0) or (p.y() > d_total_width_y) or
-       (p.z() < 0.0) or (p.z() > d_total_width_z) )
+  if ( (p.x() < 0.0) || (p.x() > d_total_width_x) ||
+       (p.y() < 0.0) || (p.y() > d_total_width_y) ||
+       (p.z() < 0.0) || (p.z() > d_total_width_z) )
   {
     cell = -1;
   }

@@ -42,7 +42,6 @@ LinearExternalSource::Create(const size_t   number_groups,
   return p;
 }
 
-
 } // end namespace detran
 
 //---------------------------------------------------------------------------//

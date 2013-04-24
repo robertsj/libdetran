@@ -18,6 +18,10 @@
 namespace callow
 {
 
+// DLL support
+class Preconditioner;
+template class CALLOW_EXPORT detran_utilities::SP<Preconditioner>;
+
 /**
  *  @class Preconditioner
  *  @brief Defines a preconditioner for linear solves

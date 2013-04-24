@@ -10,6 +10,7 @@
 #ifndef detran_COARSEMESH_HH_
 #define detran_COARSEMESH_HH_
 
+#include "transport/transport_export.hh"
 #include "geometry/Mesh.hh"
 #include "utilities/DBC.hh"
 #include "utilities/SP.hh"
@@ -18,7 +19,7 @@
 namespace detran
 {
 
-class CoarseMesh
+class TRANSPORT_EXPORT CoarseMesh
 {
 
 public:

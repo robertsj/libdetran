@@ -29,6 +29,15 @@
 #ifndef CALLOW_CONFIG_HH_
 #define CALLOW_CONFIG_HH_
 
+// disable signed-to-unsigned
+#pragma warning (disable : 4018)
+// disable multiple copy ctor
+#pragma warning (disable : 4521)
+// safe fopen, etc.
+#pragma warning (disable : 4996)
+// int to bool
+#pragma warning (disable : 4800)
+
 // include detran configuration
 #include "detran_config.hh"
 
