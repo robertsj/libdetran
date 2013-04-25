@@ -15,6 +15,14 @@
 #include "external_source/IsotropicSource.hh"
 %}
 
+// Hide templates from SWIG
+%inline
+{
+#define EXTERNAL_SOURCE_EXPORT
+#define EXTERNAL_SOURCE_TEMPLATE_EXPORT(...)
+#define EXTERNAL_SOURCE_INSTANTIATE_EXPORT(...)
+}
+
 %include <pycontainer.swg>
 %import "detran_utilities.i"
 %import "detran_geometry.i"

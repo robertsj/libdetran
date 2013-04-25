@@ -503,8 +503,6 @@ IO_HDF5::SP_mesh IO_HDF5::read_mesh(){return SP_mesh(0);}
 
 #endif // DETRAN_ENABLE_HDF5
 
-template IOUTILS_EXPORT class detran_utilities::SP<IO_HDF5>;
-
 } // end namespace detran_ioutils
 
 

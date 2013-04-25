@@ -45,7 +45,7 @@ namespace detran_geometry
  *
  *  Test of TrackDB class
  */
-class TrackDB
+class GEOMETRY_EXPORT TrackDB
 {
 
 public:
@@ -144,28 +144,22 @@ private:
 
   /// Quadrature
   SP_quadrature d_quadrature;
-
   /// Number of azimuths in first two octants
   int d_number_azimuths;
-
   /// Number of flat source regions
   int d_number_regions;
-
   /// Tracks by [azimuth][space]
   vec2_track d_tracks;
-
   /// Azimuthal cosines.
   vec_dbl d_cos_phi;
-
   /// Azimuthal sines.
   vec_dbl d_sin_phi;
-
   /// Constant track spacing for each angle.
   vec_dbl d_spacing;
 
 };
 
-GEOMETRY_TEMPLATE class GEOMETRY_EXPORT detran_utilities::SP<TrackDB>;
+GEOMETRY_TEMPLATE_EXPORT(detran_utilities::SP<TrackDB>)
 
 } // end namespace detran_geometry
 

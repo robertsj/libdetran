@@ -23,10 +23,6 @@
 namespace callow
 {
 
-// DLL support
-class LinearSolver;
-template class CALLOW_EXPORT detran_utilities::SP<LinearSolver>;
-
 /**
  *  @class LinearSolver
  *  @brief Base class for iterative linear solvers
@@ -243,6 +239,8 @@ private:
   int d_status;
 
 };
+
+CALLOW_TEMPLATE_EXPORT(detran_utilities::SP<LinearSolver>)
 
 } // end namespace callow
 

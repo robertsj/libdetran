@@ -18,10 +18,6 @@
 namespace detran_angle
 {
 
-// DLL support
-class MomentIndexer;
-template class ANGLE_EXPORT detran_utilities::SP<MomentIndexer>;
-
 /**
  *  @class MomentIndexer
  *  @brief Indexex spherical harmonics moments
@@ -160,6 +156,8 @@ private:
   void construct_3D();
 
 };
+
+ANGLE_TEMPLATE_EXPORT(detran_utilities::SP<MomentIndexer>)
 
 } // end namespace detran_angle
 

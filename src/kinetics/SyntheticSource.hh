@@ -37,7 +37,8 @@ namespace detran
  *  PARTISN.
  *
  */
-class KINETICS_EXPORT SyntheticSource: public detran_external_source::ExternalSource
+class KINETICS_EXPORT SyntheticSource:
+  public detran_external_source::ExternalSource
 {
 
 public:
@@ -103,6 +104,8 @@ protected:
   double d_norm;
 
 };
+
+KINETICS_TEMPLATE_EXPORT(detran_utilities::SP<SyntheticSource>)
 
 } // end namespace detran
 

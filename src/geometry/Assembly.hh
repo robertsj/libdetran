@@ -101,21 +101,17 @@ private:
 
   /// Meshed object
   Mesh2D::SP_mesh d_mesh;
-
   /// Dimension, e.g. 17 in 17x17.
   int d_dimension;
-
   /// Assembly pitch
   double d_pitch;
-
   /// Vector of SP pointers to pin cells in the assembly
   vec_pincell d_pincells;
-
   /// Logically 2-D map of pin cell locations
   vec_int d_pincell_map;
-
   /// Number of pincells in the assembly
   int d_number_pincells;
+
 };
 
 } // end namespace detran_geometry

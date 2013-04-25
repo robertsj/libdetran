@@ -229,6 +229,8 @@ protected:
 
 };
 
+CALLOW_TEMPLATE_EXPORT(detran_utilities::SP<EigenSolver>)
+
 } // end namespace callow
 
 #include "EigenSolver.i.hh"

@@ -7,8 +7,8 @@
  */
 //---------------------------------------------------------------------------//
 
-#ifndef detran_BOUNDARYDIFFUSION_I_HH_
-#define detran_BOUNDARYDIFFUSION_I_HH_
+#ifndef BOUNDARYDIFFUSION_I_HH_
+#define BOUNDARYDIFFUSION_I_HH_
 
 #include <iostream>
 
@@ -35,8 +35,10 @@ BoundaryDiffusion<D>::operator()(const size_t side,
                                  const size_t g,
                                  const size_t inout)
 {
+  // Cast away return type
   return const_cast<typename BoundaryDiffusion<D>::bf_type&>
   (
+    // Add const to *this's type and call const version
     static_cast<const BoundaryDiffusion<D>&>(*this)(side, g, inout)
   );
 }
@@ -45,17 +47,17 @@ BoundaryDiffusion<D>::operator()(const size_t side,
 template <class D>
 inline void BoundaryDiffusion<D>::clear(const size_t g)
 {
-  THROW("NOT IMPLEMENTED");
+  D::not_implemented();
 }
 
 //---------------------------------------------------------------------------//
 template <>
 inline void BoundaryDiffusion<_3D>::clear(const size_t g)
 {
-  for (size_t inout = 0; inout < 2; ++inout)
-    for (size_t side = 0; side < 6; ++side)
-      for (size_t j = 0; j < d_boundary_flux[inout][side][g].size(); ++j)
-        for (size_t i = 0; i < d_boundary_flux[inout][side][g][0].size(); ++i)
+  for (int inout = 0; inout < 2; ++inout)
+    for (int side = 0; side < 6; ++side)
+      for (int j = 0; j < d_boundary_flux[inout][side][g].size(); ++j)
+        for (int i = 0; i < d_boundary_flux[inout][side][g][0].size(); ++i)
           d_boundary_flux[inout][side][g][j][i] = 0.0;
 
 }
@@ -64,9 +66,9 @@ inline void BoundaryDiffusion<_3D>::clear(const size_t g)
 template <>
 inline void BoundaryDiffusion<_2D>::clear(const size_t g)
 {
-  for (size_t inout = 0; inout < 2; ++inout)
-    for (size_t side = 0; side < 4; ++side)
-      for (size_t i = 0; i < d_boundary_flux[inout][side][g].size(); ++i)
+  for (int inout = 0; inout < 2; ++inout)
+    for (int side = 0; side < 4; ++side)
+      for (int i = 0; i < d_boundary_flux[inout][side][g].size(); ++i)
         d_boundary_flux[inout][side][g][i] = 0.0;
 }
 
@@ -74,11 +76,11 @@ inline void BoundaryDiffusion<_2D>::clear(const size_t g)
 template <>
 inline void BoundaryDiffusion<_1D>::clear(const size_t g)
 {
-  for (size_t inout = 0; inout < 2; ++inout)
-    for (size_t side = 0; side < 2; ++side)
+  for (int inout = 0; inout < 2; ++inout)
+    for (int side = 0; side < 2; ++side)
       d_boundary_flux[inout][side][g] = 0.0;
 }
 
 } // end namespace detran
 
-#endif /* detran_BOUNDARYDIFFUSION_I_HH_ */
+#endif /* BOUNDARYDIFFUSION_I_HH_ */

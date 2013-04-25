@@ -10,6 +10,8 @@
 #ifndef callow_TRIPLET_HH_
 #define callow_TRIPLET_HH_
 
+#include <vector>
+
 namespace callow
 {
 
@@ -39,6 +41,8 @@ inline std::ostream& operator<< (std::ostream &out, triplet s)
   out << "(i = " << s.i << ", j = " << s.j << ", v = " << s.v << ")";
   return out;
 }
+
+CALLOW_TEMPLATE_EXPORT(std::vector<std::vector<triplet> >)
 
 } // end namespace detran
 

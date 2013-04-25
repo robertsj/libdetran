@@ -19,6 +19,9 @@ namespace detran_ioutils
 //---------------------------------------------------------------------------//
 PPMOutput::PPMOutput(SP_mesh mesh)
   : d_mesh(mesh)
+  , d_dxyx(0.0)
+  , d_nx(0)
+  , d_ny(0)
 {
   Require(d_mesh);
 }

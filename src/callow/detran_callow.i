@@ -22,11 +22,12 @@
 #include "callow/preconditioner/Preconditioner.hh"
 %}
 
-// SWIG doesn't like the export stuff, and, really, it's not 
-// needed.  Hence, just eliminate it.
+// Hide templates from SWIG
 %inline
 {
 #define CALLOW_EXPORT
+#define CALLOW_TEMPLATE_EXPORT(...)
+#define CALLOW_INSTANTIATE_EXPORT(...)
 }
 
 %import "detran_utilities.i"

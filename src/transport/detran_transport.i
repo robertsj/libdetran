@@ -16,6 +16,14 @@
 #include "transport/Homogenize.hh"
 %}
 
+// Hide templates from SWIG
+%inline
+{
+#define TRANSPORT_EXPORT
+#define TRANSPORT_TEMPLATE_EXPORT(...)
+#define TRANSPORT_INSTANTIATE_EXPORT(...)
+}
+
 %import "detran_utilities.i"
 %import "detran_material.i"
 %import "detran_angle.i"

@@ -15,8 +15,6 @@
 namespace detran
 {
 
-KINETICS_TEMPLATE class KINETICS_EXPORT std::vector<detran_utilities::SP<KineticsMaterial> >;
-
 /**
  *  @class LinearMaterial
  *  @brief Material defined via discrete materials to be linearly

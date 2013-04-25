@@ -61,9 +61,6 @@ void OrthogonalBasis::compute_a()
 
 }
 
-//---------------------------------------------------------------------------//
-template ORTHOG_EXPORT class detran_utilities::SP<OrthogonalBasis>;
-
 } // end namespace detran_orthog
 
 //---------------------------------------------------------------------------//

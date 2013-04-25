@@ -10,8 +10,8 @@
 #ifndef detran_BOUNDARYDIFFUSION_HH_
 #define detran_BOUNDARYDIFFUSION_HH_
 
-#include "boundary/BoundaryBase.hh"
-#include "boundary/BoundaryTraits.hh"
+#include "BoundaryBase.hh"
+#include "BoundaryTraits.hh"
 
 namespace detran
 {

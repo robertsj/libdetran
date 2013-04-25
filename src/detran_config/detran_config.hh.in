@@ -29,9 +29,6 @@
 #cmakedefine DETRAN_COMPILED_D ${DETRAN_COMPILED_D}
 #cmakedefine DETRAN_COMPILED_Y ${DETRAN_COMPILED_Y}
 
-// Architecture
-
-
 #endif // DETRAN_CONFIG_HH 
 
 //---------------------------------------------------------------------------//

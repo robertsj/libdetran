@@ -49,58 +49,18 @@ set(DETRAN_ENABLE_BOOST NO CACHE BOOL       "Enable BOOST.")
 # CONFIGURATION
 #------------------------------------------------------------------------------#
 
-set(DETRAN_COMPILED_DATE 7 CACHE INTEGER "Date of compilation.")
-
-macro(month RESULT)
-  if (WIN32)
-    execute_process(COMMAND "cmd" "/C date /T" OUTPUT_VARIABLE ${RESULT})
-	string(REGEX REPLACE "(...) (..)/(..)/(....).*" "\\2" ${RESULT} ${${RESULT}})
-    string(REGEX REPLACE "0(.)" "\\1" ${RESULT} ${${RESULT}})
-  else()
-    execute_process(COMMAND "date" "+%d/%m/%Y" OUTPUT_VARIABLE ${RESULT})
-    string(REGEX REPLACE "(..)/(..)/(....)." "\\2" ${RESULT} ${${RESULT}})
-    string(REGEX REPLACE "0(.)" "\\1" ${RESULT} ${${RESULT}})
-  endif()
-endmacro(month)
-
-macro(day RESULT)
-  if (WIN32)
-    execute_process(COMMAND "cmd" "/C date /T" OUTPUT_VARIABLE ${RESULT})
-	string(REGEX REPLACE "(...) (..)/(..)/(....).*" "\\3" ${RESULT} ${${RESULT}})
-    string(REGEX REPLACE "0(.)" "\\1" ${RESULT} ${${RESULT}})
-  else()
-    execute_process(COMMAND "date" "+%d/%m/%Y" OUTPUT_VARIABLE ${RESULT})
-	string(REGEX REPLACE "(..)/(..)/(....)." "\\1" ${RESULT} ${${RESULT}})
-    string(REGEX REPLACE "0(.)" "\\1" ${RESULT} ${${RESULT}})
-  endif()
-endmacro(day)
-
-macro(year RESULT)
-  if (WIN32)
-    execute_process(COMMAND "cmd" "/C date /T" OUTPUT_VARIABLE ${RESULT})
-	string(REGEX REPLACE "(...) (..)/(..)/(....).*" "\\4" ${RESULT} ${${RESULT}})
-  else()
-    execute_process(COMMAND "date" "+%d/%m/%Y" OUTPUT_VARIABLE ${RESULT})
-	string(REGEX REPLACE "(..)/(..)/(....)." "\\3" ${RESULT} ${${RESULT}})
-  endif()
-endmacro(year)
-
-month(MONTH)
-day(DAY)
-year(YEAR)
-set(DETRAN_COMPILED_M ${MONTH})
-set(DETRAN_COMPILED_D ${DAY})
-set(DETRAN_COMPILED_Y ${YEAR})
+include(GetTheDate)
+get_the_date(DETRAN_COMPILED_D DETRAN_COMPILED_M DETRAN_COMPILED_Y)
 
 # Write config file, install it, and include that directory for all source
-set(DETRAN_CONFIG_IN  "${CMAKE_CURRENT_SOURCE_DIR}/detran_config/detran_config.hh.in")
-set(DETRAN_CONFIG_OUT "${PROJECT_BINARY_DIR}/detran_config/detran_config.hh")
-message("DETRAN_CONFIG_IN = ${DETRAN_CONFIG_IN}")
-message("DETRAN_CONFIG_OUT = ${DETRAN_CONFIG_OUT}")
+set(DETRAN_CONFIG_IN  
+    "${CMAKE_CURRENT_SOURCE_DIR}/detran_config/detran_config.hh.in")
+set(DETRAN_CONFIG_OUT 
+    "${PROJECT_BINARY_DIR}/detran_config/detran_config.hh")
 configure_file(${DETRAN_CONFIG_IN} ${DETRAN_CONFIG_OUT})
 include_directories("${PROJECT_BINARY_DIR}")
 include_directories("${PROJECT_BINARY_DIR}/detran_config")
-install(FILES ${PROJECT_BINARY_DIR}/detran_config/detran_config.hh
+install(FILES       ${PROJECT_BINARY_DIR}/detran_config/detran_config.hh
         DESTINATION include)
 
 #------------------------------------------------------------------------------#
@@ -192,31 +152,23 @@ endif()
 
 OPTION (USE_TESTING "Build testing" ON)
 if (DETRAN_ENABLE_TEST)
-    set (CTEST_INITIAL_CACHE "COVERAGE_COMMAND:FILEPATH=/usr/bin/gcov")
-    # need for coverage -- probably a cleaner way to set this up.
-#    set( CMAKE_CXX_FLAGS_DEBUG  "-g -O0  -fprofile-arcs -ftest-coverage" CACHE STRING "Choose" FORCE)
-#    set( CMAKE_CXX_FLAGS        "-g -O0  -fprofile-arcs -ftest-coverage" CACHE STRING "Choose" FORCE)
-#    set( CMAKE_EXE_LINKER_FLAGS "-g -O0  -fprofile-arcs -ftest-coverage" CACHE STRING "Choose" FORCE)
-#    set( CTEST_MEMORYCHECK_COMMAND /usr/bin/valgrind CACHE STRING "Set the memory checking command." FORCE)
-#    set( CTEST_MEMORYCHECK_COMMAND_OPTIONS "--tool=memcheck --leak-check=full" CACHE STRING 
-#       "Set the memory checking command options." FORCE
-#    ) 
-    enable_testing()
-    include(CTest)
-    # is there a better way?
-    include_directories(utilities/test)
-    include_directories(material/test)
-    include_directories(geometry/test)
-    include_directories(angle/test)
-    include_directories(callow/test)
-    include_directories(external_source/test)
-    include_directories(discretization/test)
-    include_directories(boundary/test)
-    include_directories(transport/test)
-    include_directories(solvers/test)
-    include_directories(drivers/test)
-    include_directories(postprocess/test)
-    include_directories(ioutils/test)
+  set (CTEST_INITIAL_CACHE "COVERAGE_COMMAND:FILEPATH=/usr/bin/gcov")
+  enable_testing()
+  include(CTest)
+  # is there a better way?
+  include_directories(utilities/test)
+  include_directories(material/test)
+  include_directories(geometry/test)
+  include_directories(angle/test)
+  include_directories(callow/test)
+  include_directories(external_source/test)
+  include_directories(discretization/test)
+  include_directories(boundary/test)
+  include_directories(transport/test)
+  include_directories(solvers/test)
+  include_directories(drivers/test)
+  include_directories(postprocess/test)
+  include_directories(ioutils/test)
 endif()
 
 #------------------------------------------------------------------------------#
@@ -236,7 +188,6 @@ include_directories(callow)
 include_directories(external_source)
 include_directories(orthog)
 # level 2
-#include_directories(discretization)
 include_directories(boundary)
 include_directories(transport)
 include_directories(kinetics)

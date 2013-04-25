@@ -19,10 +19,6 @@
 namespace detran_angle
 {
 
-// DLL support
-class MomentToDiscrete;
-template class ANGLE_EXPORT detran_utilities::SP<MomentToDiscrete>;
-
 //---------------------------------------------------------------------------//
 /**
  *  @class MomentToDiscrete
@@ -251,6 +247,8 @@ private:
   void calc_row_3d(const size_t o, const size_t a);
 
 };
+
+ANGLE_TEMPLATE_EXPORT(detran_utilities::SP<MomentToDiscrete>)
 
 } // end namespace detran_angle
 

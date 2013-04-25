@@ -270,7 +270,7 @@ protected:
 
 };
 
-MATERIAL_TEMPLATE class MATERIAL_EXPORT detran_utilities::SP<Material>;
+MATERIAL_TEMPLATE_EXPORT(detran_utilities::SP<Material>)
 
 } // end namespace detran_material
 

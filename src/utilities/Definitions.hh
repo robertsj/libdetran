@@ -51,20 +51,20 @@ typedef std::vector<std::vector<std::vector<std::vector<size_t> > > > vec4_size_
 typedef std::vector<bool> vec_bool;
 
 // DLL exports
-template class UTILITIES_EXPORT std::vector<int>;
-template class UTILITIES_EXPORT std::vector<std::vector<int> >;
-template class UTILITIES_EXPORT std::vector<std::vector<std::vector<int> > >;
-template class UTILITIES_EXPORT std::vector<size_t>;
-template class UTILITIES_EXPORT std::vector<std::vector<size_t> >;
-template class UTILITIES_EXPORT std::vector<std::vector<std::vector<size_t> > >;
-template class UTILITIES_EXPORT std::vector<double>;
-template class UTILITIES_EXPORT std::vector<std::vector<double> >;
-template class UTILITIES_EXPORT std::vector<std::vector<std::vector<double> > >;
-template class UTILITIES_EXPORT std::map<std::string, int>;
-template class UTILITIES_EXPORT std::map<std::string, double>;
-template class UTILITIES_EXPORT std::map<std::string, vec_int>;
-template class UTILITIES_EXPORT std::map<std::string, vec_dbl>;
-template class UTILITIES_EXPORT std::map<std::string, std::string>;
+UTILITIES_TEMPLATE_EXPORT(std::vector<std::vector<int> >)
+UTILITIES_TEMPLATE_EXPORT(std::vector<std::vector<std::vector<int> > >)
+UTILITIES_TEMPLATE_EXPORT(std::vector<size_t>)
+UTILITIES_TEMPLATE_EXPORT(std::vector<std::vector<size_t> >)
+UTILITIES_TEMPLATE_EXPORT(std::vector<std::vector<std::vector<size_t> > >)
+UTILITIES_TEMPLATE_EXPORT(std::vector<double>)
+UTILITIES_TEMPLATE_EXPORT(std::vector<std::vector<double> >)
+UTILITIES_TEMPLATE_EXPORT(std::vector<std::vector<std::vector<double> > >)
+UTILITIES_TEMPLATE_EXPORT(std::basic_string<char, std::char_traits<char>, std::allocator<char> >)
+UTILITIES_TEMPLATE_EXPORT(std::map<std::string, int>)
+UTILITIES_TEMPLATE_EXPORT(std::map<std::string, double>)
+UTILITIES_TEMPLATE_EXPORT(std::map<std::string, vec_int>)
+UTILITIES_TEMPLATE_EXPORT(std::map<std::string, vec_dbl>)
+UTILITIES_TEMPLATE_EXPORT(std::map<std::string, std::string>)
 
 //disable warnings on 255 char debug symbols
 #pragma warning (disable : 4244)

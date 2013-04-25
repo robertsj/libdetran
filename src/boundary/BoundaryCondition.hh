@@ -100,7 +100,7 @@ protected:
   // DATA
   //-------------------------------------------------------------------------//
 
-  /// Boundary flux container. \todo Is there a way around using a reference?
+  /// Boundary flux container.
   SP_boundary d_boundary;
   /// My surface.
   const size_t d_side;

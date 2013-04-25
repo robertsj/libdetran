@@ -24,11 +24,12 @@
 %include std_string.i
 %include std_vector.i
 
-// SWIG doesn't like the export stuff, and, really, it's not 
-// needed.  Hence, just eliminate it.
+// Hide templates from SWIG
 %inline
 {
 #define UTILITIES_EXPORT
+#define UTILITIES_TEMPLATE_EXPORT(...)
+#define UTILITIES_INSTANTIATE_EXPORT(...)
 }
 
 // Dummy SP interface to stop some annoying warnings from SWIG

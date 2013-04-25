@@ -125,14 +125,14 @@ protected:
   /// Number of angles
   size_t d_number_angles;
   /// Am I ready?
-  int d_initialized;
+  //int d_initialized;
   /// Discrete flag
   bool d_discrete;
 
 };
 
-EXTERNAL_SOURCE_TEMPLATE class EXTERNAL_SOURCE_EXPORT detran_utilities::SP<ExternalSource>;
-EXTERNAL_SOURCE_TEMPLATE class EXTERNAL_SOURCE_EXPORT std::vector<detran_utilities::SP<ExternalSource> >;
+EXTERNAL_SOURCE_TEMPLATE_EXPORT(detran_utilities::SP<ExternalSource>)
+EXTERNAL_SOURCE_TEMPLATE_EXPORT(std::vector<detran_utilities::SP<ExternalSource> >)
 
 } // end namespace detran_external_source
 

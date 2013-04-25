@@ -89,7 +89,7 @@ private:
 
 };
 
-IOUTILS_TEMPLATE class IOUTILS_EXPORT detran_utilities::SP<PPMPlotter>;
+IOUTILS_TEMPLATE_EXPORT(detran_utilities::SP<PPMPlotter>)
 
 } // end namespace detran_ioutils
 

@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
  *  @file   BoundaryBase.hh
- *  @brief  BoundaryBase
- *  @author Jeremy Roberts
- *  @date   Jun 25, 2012
+ *  @brief  BoundaryBase class definition
+ *  @author Copyright (C) 2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 
@@ -20,10 +19,12 @@
 namespace detran
 {
 
+//---------------------------------------------------------------------------//
 /**
  *  @class BoundaryBase
  *  @brief Base class for boundary flux containers.
  */
+//---------------------------------------------------------------------------//
 
 template <class D>
 class BoundaryBase
@@ -150,14 +151,14 @@ public:
    *  @param g  Group of current sweep
    *  @param v  Pointer to data used in Krylov solve
    */
-  virtual void psi(const size_t g,
-                   double *v,
-                   const int inout,
-                   const int gs,
-                   bool onlyref = true) = 0;
+  virtual void psi(const      size_t g,
+                   double    *v,
+                   const int  inout,
+                   const int  gs,
+                   bool       onlyref = true) = 0;
 
   //-------------------------------------------------------------------------//
-  // PUBLIC INTERFACE
+  // PUBLIC FUNCTIONS
   //-------------------------------------------------------------------------//
 
   /// Clear all groups.

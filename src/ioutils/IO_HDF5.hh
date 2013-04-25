@@ -212,6 +212,8 @@ private:
 
 };
 
+IOUTILS_TEMPLATE_EXPORT(detran_utilities::SP<IO_HDF5>)
+
 } // end namespace detran_ioutils
 
 //---------------------------------------------------------------------------//

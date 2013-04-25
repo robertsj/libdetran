@@ -26,8 +26,6 @@ SyntheticSource::SyntheticSource(const size_t   number_groups,
   /* ... */
 }
 
-template KINETICS_EXPORT class detran_utilities::SP<SyntheticSource>;
-
 } // end namespace detran
 
 //---------------------------------------------------------------------------//

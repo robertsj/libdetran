@@ -2,8 +2,6 @@
 # src/callow/test/CMakeLists.txt
 #------------------------------------------------------------------------------#
 
-message( "++ Adding callow tests." )
-
 # Vector
 ADD_EXECUTABLE(test_Vector              test_Vector.cc)
 TARGET_LINK_LIBRARIES(test_Vector       callow )

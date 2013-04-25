@@ -243,6 +243,8 @@ bool SiloOutput::write_time_flux(const int step,
 #else
 
 SiloOutput::SiloOutput(SP_mesh mesh)
+  : d_initialized(false)
+  , d_dimension(0)
 {
   THROW("SILO NOT ENABLED");
 }
@@ -260,8 +262,6 @@ bool SiloOutput::write_time_flux(const int step, SP_state state, bool do_psi)
 {return false;}
 
 #endif // DETRAN_ENABLE_SILO
-
-template IOUTILS_EXPORT class detran_utilities::SP<SiloOutput>;
 
 } // end namespace detran_ioutils
 

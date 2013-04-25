@@ -140,7 +140,7 @@ CoarseMesh::CoarseMesh(SP_mesh fine_mesh, const size_t level)
   d_fine_mesh->add_mesh_map("COARSEMESH", f2c_mesh_map);
 }
 
-TRANSPORT_TEMPLATE class TRANSPORT_EXPORT detran_utilities::SP<CoarseMesh>;
+TRANSPORT_TEMPLATE_EXPORT(detran_utilities::SP<CoarseMesh>)
 
 } // end namespace detran
 

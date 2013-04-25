@@ -27,6 +27,14 @@
 #include "kinetics/MultiPhysics.hh"
 %}
 
+// Hide templates from SWIG
+%inline
+{
+#define KINETICS_EXPORT
+#define KINETICS_TEMPLATE_EXPORT(...)
+#define KINETICS_INSTANTIATE_EXPORT(...)
+}
+
 %include <pycontainer.swg>
 %import "detran_utilities.i"
 %import "detran_material.i"

@@ -19,10 +19,6 @@
 namespace detran_utilities
 {
 
-// DLL support
-template class UTILITIES_EXPORT 
-std::basic_string<char, std::char_traits<char>, std::allocator<char> >;
-
 /**
  *  A generic mechanism to manually manage exceptions
  */

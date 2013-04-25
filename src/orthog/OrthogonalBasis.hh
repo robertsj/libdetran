@@ -214,6 +214,8 @@ protected:
 
 };
 
+ORTHOG_TEMPLATE_EXPORT(detran_utilities::SP<OrthogonalBasis>)
+
 } // end namespace detran_orthog
 
 #include "OrthogonalBasis.i.hh"

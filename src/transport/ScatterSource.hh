@@ -161,7 +161,7 @@ protected:
 
 };
 
-TRANSPORT_TEMPLATE class TRANSPORT_EXPORT detran_utilities::SP<ScatterSource>;
+TRANSPORT_TEMPLATE_EXPORT(detran_utilities::SP<ScatterSource>)
 
 } // end namespace detran
 

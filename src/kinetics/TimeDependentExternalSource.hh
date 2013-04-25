@@ -107,6 +107,8 @@ protected:
 
 };
 
+KINETICS_TEMPLATE_EXPORT(detran_utilities::SP<TimeDependentExternalSource>)
+
 } // end namespace detran
 
 #endif // detran_TIMEDEPENDENTEXTERNALSOURCE_HH_

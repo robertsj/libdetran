@@ -166,12 +166,12 @@ void SweepSource<D>::reset()
 // EXPLICIT INSTANTIATIONS
 //---------------------------------------------------------------------------//
 
-TRANSPORT_TEMPLATE class TRANSPORT_EXPORT SweepSource<_1D>;
-TRANSPORT_TEMPLATE class TRANSPORT_EXPORT SweepSource<_2D>;
-TRANSPORT_TEMPLATE class TRANSPORT_EXPORT SweepSource<_3D>;
-TRANSPORT_TEMPLATE class TRANSPORT_EXPORT detran_utilities::SP<SweepSource<_1D> >;
-TRANSPORT_TEMPLATE class TRANSPORT_EXPORT detran_utilities::SP<SweepSource<_2D> >;
-TRANSPORT_TEMPLATE class TRANSPORT_EXPORT detran_utilities::SP<SweepSource<_3D> >;
+TRANSPORT_INSTANTIATE_EXPORT(SweepSource<_1D>)
+TRANSPORT_INSTANTIATE_EXPORT(SweepSource<_2D>)
+TRANSPORT_INSTANTIATE_EXPORT(SweepSource<_3D>)
+TRANSPORT_TEMPLATE_EXPORT(detran_utilities::SP<SweepSource<_1D> >)
+TRANSPORT_TEMPLATE_EXPORT(detran_utilities::SP<SweepSource<_2D> >)
+TRANSPORT_TEMPLATE_EXPORT(detran_utilities::SP<SweepSource<_3D> >)
 
 } // namespace detran
 

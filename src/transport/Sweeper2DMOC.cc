@@ -48,7 +48,7 @@ Sweeper2DMOC<EQ>::Create(SP_input       input,
 // EXPLICIT INSTANTIATIONS
 //---------------------------------------------------------------------------//
 
-template TRANSPORT_EXPORT class Sweeper2DMOC<Equation_SC_MOC>;
-template TRANSPORT_EXPORT class detran_utilities::SP<Sweeper2DMOC<Equation_SC_MOC> >;
+TRANSPORT_INSTANTIATE_EXPORT(Sweeper2DMOC<Equation_SC_MOC>)
+TRANSPORT_TEMPLATE_EXPORT(detran_utilities::SP<Sweeper2DMOC<Equation_SC_MOC> >)
 
 } // end namespace detran

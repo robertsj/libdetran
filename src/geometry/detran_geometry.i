@@ -24,11 +24,12 @@
 #include "geometry/Tracker.hh"
 %}
 
-// SWIG doesn't like the export stuff, and, really, it's not 
-// needed.  Hence, just eliminate it.
+// Hide templates from SWIG
 %inline
 {
 #define GEOMETRY_EXPORT
+#define GEOMETRY_TEMPLATE_EXPORT(...)
+#define GEOMETRY_INSTANTIATE_EXPORT(...)
 }
 
 %import "utilities/detran_utilities.i"

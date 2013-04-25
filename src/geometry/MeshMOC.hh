@@ -64,7 +64,7 @@ private:
 
 };
 
-GEOMETRY_TEMPLATE class GEOMETRY_EXPORT detran_utilities::SP<MeshMOC>;
+GEOMETRY_TEMPLATE_EXPORT(detran_utilities::SP<MeshMOC>)
 
 } // end namespace detran_geometry
 

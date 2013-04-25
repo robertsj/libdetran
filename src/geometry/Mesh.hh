@@ -1,8 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   Mesh.hh
- *  @author Jeremy Roberts
- *  @brief  Mesh class definition.
+ *  @file  Mesh.hh
+ *  @brief Mesh class definition.
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 
@@ -332,7 +332,7 @@ private:
 
 };
 
-GEOMETRY_TEMPLATE class GEOMETRY_EXPORT detran_utilities::SP<Mesh>;
+GEOMETRY_TEMPLATE_EXPORT(detran_utilities::SP<Mesh>)
 
 } // end namespace detran_geometry
 

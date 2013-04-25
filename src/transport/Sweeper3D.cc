@@ -51,10 +51,8 @@ Sweeper3D<EQ>::Create(SP_input       input,
 // EXPLICIT INSTANTIATIONS
 //---------------------------------------------------------------------------//
 
-template TRANSPORT_EXPORT class Sweeper3D<Equation_DD_3D>;
-//template class Sweeper3D<Equation_SD_3D>;
-//template class Sweeper3D<Equation_SC_3D>;
-template TRANSPORT_EXPORT class detran_utilities::SP<Sweeper3D<Equation_DD_3D> >;
+TRANSPORT_INSTANTIATE_EXPORT(Sweeper3D<Equation_DD_3D>)
+TRANSPORT_TEMPLATE_EXPORT(detran_utilities::SP<Sweeper3D<Equation_DD_3D> >)
 
 
 } // end namespace detran

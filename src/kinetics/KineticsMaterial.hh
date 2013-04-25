@@ -142,7 +142,8 @@ protected:
   void kinetics_display();
 };
 
-KINETICS_TEMPLATE class KINETICS_EXPORT detran_utilities::SP<KineticsMaterial>;
+KINETICS_TEMPLATE_EXPORT(detran_utilities::SP<KineticsMaterial>)
+KINETICS_TEMPLATE_EXPORT(std::vector<detran_utilities::SP<KineticsMaterial> >)
 
 } // end namespace detran
 

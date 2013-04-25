@@ -206,7 +206,7 @@ private:
 
 };
 
-TRANSPORT_TEMPLATE class TRANSPORT_EXPORT detran_utilities::SP<FissionSource>;
+TRANSPORT_TEMPLATE_EXPORT(detran_utilities::SP<FissionSource>)
 
 } // end namespace detran
 

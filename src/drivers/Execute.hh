@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
  *  @file   Execute.hh
- *  @author robertsj
- *  @date   Apr 4, 2012
  *  @brief  Execute class definition.
+ *  @note   Copyright (C) 2013 Jeremy Roberts.
  */
 //---------------------------------------------------------------------------//
 

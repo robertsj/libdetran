@@ -1,10 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   MatrixShell.cc
- * \author robertsj
- * \date   Sep 20, 2012
- * \brief  MatrixShell class definition.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+/**
+ *  @file   MatrixShell.cc
+ *  @author robertsj
+ *  @date   Sep 20, 2012
+ *  @brief  MatrixShell class definition.
  */
 //---------------------------------------------------------------------------//
 
@@ -39,8 +38,6 @@ MatrixShell::~MatrixShell()
 //#endif
   }
 }
-
-
 
 
 } // end namespace callow

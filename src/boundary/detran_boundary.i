@@ -16,6 +16,14 @@
 #include "boundary/FixedBoundary.hh"
 %}
 
+// Hide templates from SWIG
+%inline
+{
+#define BOUNDARY_EXPORT
+#define BOUNDARY_TEMPLATE_EXPORT(...)
+#define BOUNDARY_INSTANTIATE_EXPORT(...)
+}
+
 %import "detran_utilities.i"
 %import "detran_geometry.i"
 %import "detran_angle.i"

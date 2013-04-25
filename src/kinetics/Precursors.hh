@@ -89,7 +89,7 @@ private:
 
 };
 
-KINETICS_TEMPLATE class KINETICS_EXPORT detran_utilities::SP<Precursors>;
+KINETICS_TEMPLATE_EXPORT(detran_utilities::SP<Precursors>)
 
 } // end namespace detran
 

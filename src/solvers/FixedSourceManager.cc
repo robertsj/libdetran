@@ -37,10 +37,13 @@ FixedSourceManager<D>::FixedSourceManager(int argc,
   , d_input(input)
   , d_material(material)
   , d_mesh(mesh)
+  , d_adjoint(false)
+  , d_discretization(0)
   , d_multiply(multiply)
   , d_fission(multiply || fission)
   , d_is_setup(false)
   , d_is_ready(false)
+  , d_generation(0)
 {
   // Preconditions
   Require(d_input);
@@ -58,10 +61,13 @@ FixedSourceManager<D>::FixedSourceManager(SP_input    input,
   : d_input(input)
   , d_material(material)
   , d_mesh(mesh)
+  , d_adjoint(false)
+  , d_discretization(0)
   , d_multiply(multiply)
   , d_fission(multiply || fission)
   , d_is_setup(false)
   , d_is_ready(false)
+  , d_generation(0)
 {
   // Preconditions
   Require(d_input);
@@ -291,12 +297,12 @@ double FixedSourceManager<D>::iterate(const int generation)
 // Explicit instantiations
 //---------------------------------------------------------------------------//
 
-SOLVERS_TEMPLATE class SOLVERS_EXPORT FixedSourceManager<_1D>;
-SOLVERS_TEMPLATE class SOLVERS_EXPORT FixedSourceManager<_2D>;
-SOLVERS_TEMPLATE class SOLVERS_EXPORT FixedSourceManager<_3D>;
-SOLVERS_TEMPLATE class SOLVERS_EXPORT detran_utilities::SP<FixedSourceManager<_1D> >;
-SOLVERS_TEMPLATE class SOLVERS_EXPORT detran_utilities::SP<FixedSourceManager<_2D> >;
-SOLVERS_TEMPLATE class SOLVERS_EXPORT detran_utilities::SP<FixedSourceManager<_3D> >;
+SOLVERS_INSTANTIATE_EXPORT(FixedSourceManager<_1D>)
+SOLVERS_INSTANTIATE_EXPORT(FixedSourceManager<_2D>)
+SOLVERS_INSTANTIATE_EXPORT(FixedSourceManager<_3D>)
+SOLVERS_TEMPLATE_EXPORT(detran_utilities::SP<FixedSourceManager<_1D> >)
+SOLVERS_TEMPLATE_EXPORT(detran_utilities::SP<FixedSourceManager<_2D> >)
+SOLVERS_TEMPLATE_EXPORT(detran_utilities::SP<FixedSourceManager<_3D> >)
 
 } // end namespace detran
 

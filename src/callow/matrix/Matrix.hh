@@ -19,10 +19,6 @@
 namespace callow
 {
 
-// DLL support
-struct triplet;
-template class CALLOW_EXPORT std::vector<std::vector<triplet> >;
-
 /**
  *  @class Matrix
  *  @brief CRS matrix

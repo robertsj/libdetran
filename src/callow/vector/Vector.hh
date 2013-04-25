@@ -161,6 +161,8 @@ protected:
 
 };
 
+CALLOW_TEMPLATE_EXPORT(detran_utilities::SP<Vector>);
+
 } // end namespace callow
 
 #include "Vector.i.hh"

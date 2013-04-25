@@ -150,7 +150,7 @@ protected:
 
 };
 
-KINETICS_TEMPLATE class KINETICS_EXPORT detran_utilities::SP<TimeDependentMaterial>;
+KINETICS_TEMPLATE_EXPORT(detran_utilities::SP<TimeDependentMaterial>)
 
 } // end namespace detran
 

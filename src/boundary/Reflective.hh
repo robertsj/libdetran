@@ -96,9 +96,9 @@ private:
 
 };
 
-template class Reflective<_1D>;
-template class Reflective<_2D>;
-template class Reflective<_3D>;
+BOUNDARY_INSTANTIATE_EXPORT(Reflective<_1D>)
+BOUNDARY_INSTANTIATE_EXPORT(Reflective<_2D>)
+BOUNDARY_INSTANTIATE_EXPORT(Reflective<_3D>)
 
 } // end namespace detran
 

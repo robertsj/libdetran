@@ -207,12 +207,12 @@ void BoundarySN<_1D>::initialize()
 // EXPLICIT INSTANTIATIONS
 //---------------------------------------------------------------------------//
 
-BOUNDARY_TEMPLATE class BOUNDARY_EXPORT BoundarySN<_1D>;
-BOUNDARY_TEMPLATE class BOUNDARY_EXPORT BoundarySN<_2D>;
-BOUNDARY_TEMPLATE class BOUNDARY_EXPORT BoundarySN<_3D>;
-BOUNDARY_TEMPLATE class BOUNDARY_EXPORT detran_utilities::SP<BoundarySN<_1D> >;
-BOUNDARY_TEMPLATE class BOUNDARY_EXPORT detran_utilities::SP<BoundarySN<_2D> >;
-BOUNDARY_TEMPLATE class BOUNDARY_EXPORT detran_utilities::SP<BoundarySN<_3D> >;
+BOUNDARY_INSTANTIATE_EXPORT(BoundarySN<_1D>)
+BOUNDARY_INSTANTIATE_EXPORT(BoundarySN<_2D>)
+BOUNDARY_INSTANTIATE_EXPORT(BoundarySN<_3D>)
+BOUNDARY_TEMPLATE_EXPORT(detran_utilities::SP<BoundarySN<_1D> >)
+BOUNDARY_TEMPLATE_EXPORT(detran_utilities::SP<BoundarySN<_2D> >)
+BOUNDARY_TEMPLATE_EXPORT(detran_utilities::SP<BoundarySN<_3D> >)
 
 } // end namespace detran
 

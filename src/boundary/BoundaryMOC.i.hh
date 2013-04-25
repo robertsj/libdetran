@@ -120,7 +120,7 @@ BoundaryMOC<D>::feed_from(const size_t  o1, const size_t  a1, const size_t  t1,
 
 } // end namespace detran
 
-#endif // detran_BOUNDARYMOC_I_HH_ 
+#endif // detran_BOUNDARYMOC_I_HH_
 
 //---------------------------------------------------------------------------//
 //              end of file BoundaryMOC.i.hh

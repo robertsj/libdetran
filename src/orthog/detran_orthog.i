@@ -17,6 +17,14 @@
 #include "orthog/DCT.hh"
 %}
 
+// Hide templates from SWIG
+%inline
+{
+#define ORTHOG_EXPORT
+#define ORTHOG_TEMPLATE_EXPORT(...)
+#define ORTHOG_INSTANTIATE_EXPORT(...)
+}
+
 %import "utilities/detran_utilities.i"
 %import "callow/detran_callow.i"
 

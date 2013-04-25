@@ -1,14 +1,13 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   StupidParser.hh
- * \author robertsj
- * \date   Apr 11, 2012
- * \brief  StupidParser class definition.
+/**
+ *  @file   StupidParser.hh
+ *  @brief  StupidParser class definition
+ *  @note   Copyright (C) 2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 
-#ifndef STUPIDPARSER_HH_
-#define STUPIDPARSER_HH_
+#ifndef detran_STUPIDPARSER_HH_
+#define detran_STUPIDPARSER_HH_
 
 #include "material/Material.hh"
 #include "geometry/Mesh.hh"
@@ -103,11 +102,11 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Constructor
+  /**
+   *  @brief Constructor
    *
-   *  \param    argc    Number of arguments
-   *  \param    argv    Arguments
+   *  @param    argc    Number of arguments
+   *  @param    argv    Arguments
    */
   StupidParser(int argc, char **argv);
 
@@ -179,7 +178,7 @@ private:
 
 } // end namespace detran
 
-#endif /* STUPIDPARSER_HH_ */
+#endif /* detran_STUPIDPARSER_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of StupidParser.hh

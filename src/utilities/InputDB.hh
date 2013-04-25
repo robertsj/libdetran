@@ -29,9 +29,9 @@ namespace detran_utilities
 {
 
 // DLL support
-class InputDB;
-template class UTILITIES_EXPORT SP<InputDB>;
-template class UTILITIES_EXPORT std::map<std::string, SP<InputDB> >;
+//class InputDB;
+//EXPTEMPLATE(SP<InputDB>;)
+//EXPTEMPLATE(std::map<std::string, SP<InputDB> >;)
 
 //---------------------------------------------------------------------------//
 /**

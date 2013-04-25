@@ -19,6 +19,14 @@
 #include "kinetics/LinearMaterial.hh"
 %}
 
+// Hide templates from SWIG
+%inline
+{
+#define SOLVERS_EXPORT
+#define SOLVERS_TEMPLATE_EXPORT(...)
+#define SOLVERS_INSTANTIATE_EXPORT(...)
+}
+
 %import "detran_boundary.i"
 %import "detran_kinetics.i"
 %import "detran_transport.i"

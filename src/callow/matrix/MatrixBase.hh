@@ -18,10 +18,6 @@
 namespace callow
 {
 
-// DLL support
-class MatrixBase;
-template class CALLOW_EXPORT detran_utilities::SP<MatrixBase>;
-
 class CALLOW_EXPORT MatrixBase
 {
 
@@ -151,6 +147,7 @@ protected:
 
 };
 
+CALLOW_TEMPLATE_EXPORT(detran_utilities::SP<MatrixBase>)
 
 } // end namespace callow
 

@@ -122,6 +122,8 @@ protected:
 
 };
 
+CALLOW_TEMPLATE_EXPORT(detran_utilities::SP<MatrixDense>)
+
 } // end namespace callow
 
 // Inline members

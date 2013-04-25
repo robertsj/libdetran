@@ -39,7 +39,7 @@ namespace detran_angle
  *        well-quantified ordering for future analysis.
  *
  */
-class QuadratureMOC: public Quadrature
+class ANGLE_EXPORT QuadratureMOC: public Quadrature
 {
 
 public:
@@ -195,46 +195,32 @@ protected:
 
   /// Polar quadrature
   SP_polar d_polar;
-
   /// Azimuth angles
   vec_dbl d_phi;
-
   /// Azimuth cosines
   vec_dbl d_cos_phi;
-
   /// Azimuth sines
   vec_dbl d_sin_phi;
-
   /// Normalized spacing (one 1x1 box)
   vec_dbl d_spacing;
-
   /// Azimuth weights
   vec_dbl d_azimuth_weight;
-
   /// Number of azimuths per octant
   int d_number_azimuths_octant;
-
   /// Number of polar angles
   int d_number_polar;
-
   /// Track entrance points.
   vec2_point d_enter;
-
   /// Track exit points.
   vec2_point d_exit;
-
   /// Number of entrance points per angle per side.
   vec2_int d_number_enter;
-
   /// Number of exit points per angle per side.
   vec2_int d_number_exit;
 
-  /// \}
-
 };
 
-ANGLE_TEMPLATE class ANGLE_EXPORT detran_utilities::SP<QuadratureMOC>;
-
+ANGLE_TEMPLATE_EXPORT(detran_utilities::SP<QuadratureMOC>)
 
 } // end namespace detran
 

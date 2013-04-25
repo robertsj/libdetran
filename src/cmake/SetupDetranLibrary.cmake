@@ -5,13 +5,13 @@
 # associated with adding a library.
 #
 
-include(GenerateExportHeader)
+include(GenerateExportHeaderModified)
 
 function(SETUP_DETRAN_LIBRARY LIB_NAME LIB_SOURCE LIB_LINKS)
 
-message(" SETTING UP DETRAN LIBRARY = ${LIB_NAME}")
-message(" SOURCE = ${LIB_SOURCE}")
-message(" LINKS  = ${LIB_LINKS}")
+#message(" SETTING UP DETRAN LIBRARY = ${LIB_NAME}")
+#message(" SOURCE = ${LIB_SOURCE}")
+#message(" LINKS  = ${LIB_LINKS}")
 
 # Add the target library and set the linked libraries
 add_library(${LIB_NAME} ${LIB_TYPE} ${SRC})
@@ -32,7 +32,7 @@ FILE(GLOB_RECURSE files
      ${CMAKE_CURRENT_SOURCE_DIR}/*.hh
      ${CMAKE_CURRENT_SOURCE_DIR}/*.i
 )
-message("my files are ${files}")
+#message("my files are ${files}")
 install(FILES       ${files} 
         DESTINATION ${CMAKE_INSTALL_PREFIX}/include/${LIB_NAME})
 install(TARGETS     ${LIB_NAME} 

@@ -38,6 +38,7 @@ MatrixDense::MatrixDense(const int m, const int n, const double v)
 //---------------------------------------------------------------------------//
 MatrixDense::MatrixDense(const MatrixDense &A)
   : MatrixBase(A.number_rows(), A.number_columns())
+  , d_values(NULL)
 {
   // Preconditions
   Require(d_m > 0);

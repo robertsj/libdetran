@@ -15,6 +15,14 @@
 #include "ioutils/PPMOutput.hh"
 %}
 
+// Hide templates from SWIG
+%inline
+{
+#define IOUTILS_EXPORT
+#define IOUTILS_TEMPLATE_EXPORT(...)
+#define IOUTILS_INSTANTIATE_EXPORT(...)
+}
+
 %import "detran_transport.i"
 
 %include "detran_config.hh"

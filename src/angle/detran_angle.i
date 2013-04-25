@@ -12,11 +12,12 @@
 #include "angle/detran_angle.hh"
 %}
 
-// SWIG doesn't like the export stuff, and, really, it's not 
-// needed.  Hence, just eliminate it.
+// Hide templates from SWIG
 %inline
 {
 #define ANGLE_EXPORT
+#define ANGLE_TEMPLATE_EXPORT(...)
+#define ANGLE_INSTANTIATE_EXPORT(...)
 }
 
 %import "utilities/detran_utilities.i"

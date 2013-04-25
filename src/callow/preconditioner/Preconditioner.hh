@@ -18,10 +18,6 @@
 namespace callow
 {
 
-// DLL support
-class Preconditioner;
-template class CALLOW_EXPORT detran_utilities::SP<Preconditioner>;
-
 /**
  *  @class Preconditioner
  *  @brief Defines a preconditioner for linear solves
@@ -121,6 +117,8 @@ protected:
 // petsc as shells.
 PetscErrorCode pc_apply_wrapper(PC pc, Vec b, Vec x);
 #endif
+
+CALLOW_TEMPLATE_EXPORT(detran_utilities::SP<Preconditioner>)
 
 } // end namespace callow
 

@@ -52,12 +52,12 @@ Sweeper2D<EQ>::Create(SP_input       input,
 // EXPLICIT INSTANTIATIONS
 //---------------------------------------------------------------------------//
 
-template TRANSPORT_EXPORT class Sweeper2D<Equation_SD_2D>;
-template TRANSPORT_EXPORT class Sweeper2D<Equation_DD_2D>;
-template TRANSPORT_EXPORT class Sweeper2D<Equation_SC_2D>;
-template TRANSPORT_EXPORT class detran_utilities::SP<Sweeper2D<Equation_SD_2D> >;
-template TRANSPORT_EXPORT class detran_utilities::SP<Sweeper2D<Equation_DD_2D> >;
-template TRANSPORT_EXPORT class detran_utilities::SP<Sweeper2D<Equation_SC_2D> >;
+TRANSPORT_INSTANTIATE_EXPORT(Sweeper2D<Equation_SD_2D>)
+TRANSPORT_INSTANTIATE_EXPORT(Sweeper2D<Equation_DD_2D>)
+TRANSPORT_INSTANTIATE_EXPORT(Sweeper2D<Equation_SC_2D>)
+TRANSPORT_TEMPLATE_EXPORT(detran_utilities::SP<Sweeper2D<Equation_SD_2D> >)
+TRANSPORT_TEMPLATE_EXPORT(detran_utilities::SP<Sweeper2D<Equation_DD_2D> >)
+TRANSPORT_TEMPLATE_EXPORT(detran_utilities::SP<Sweeper2D<Equation_SC_2D> >)
 
 } // end namespace detran
 

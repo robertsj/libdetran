@@ -95,6 +95,8 @@ private:
 
 };
 
+KINETICS_TEMPLATE_EXPORT(detran_utilities::SP<MultiPhysics>)
+
 } // end namespace detran
 
 //---------------------------------------------------------------------------//

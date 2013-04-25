@@ -10,6 +10,7 @@
 #ifndef detran_angle_SPHERICAL_HARMONICS_HH_
 #define detran_angle_SPHERICAL_HARMONICS_HH_
 
+#include "angle/angle_export.hh"
 #include "utilities/Definitions.hh"
 
 namespace detran_angle
@@ -199,7 +200,7 @@ namespace detran_angle
  *
 */
 //---------------------------------------------------------------------------//
-class SphericalHarmonics
+class ANGLE_EXPORT SphericalHarmonics
 {
 
 public:

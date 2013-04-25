@@ -15,9 +15,9 @@
 namespace detran_angle
 {
 
-// Constructor
-Quadrature::Quadrature(const size_t dim,
-                       const size_t number_angles,
+//---------------------------------------------------------------------------//
+Quadrature::Quadrature(const size_t      dim,
+                       const size_t      number_angles,
                        const std::string name)
   : d_dimension(dim)
   , d_number_angles(number_angles)
@@ -114,13 +114,13 @@ Quadrature::Quadrature(const size_t dim,
 
 }
 
-// Pure virtual still needs definition.
+//---------------------------------------------------------------------------//
 Quadrature::~Quadrature()
 {
   /* ... */
 }
 
-// Set adjoint
+//---------------------------------------------------------------------------//
 void Quadrature::set_adjoint(const bool v)
 {
 
@@ -137,11 +137,13 @@ void Quadrature::set_adjoint(const bool v)
 
 }
 
+//---------------------------------------------------------------------------//
 std::string Quadrature::name() const
 {
   return d_name;
 }
 
+//---------------------------------------------------------------------------//
 const Quadrature::vec_int&
 Quadrature::incident_octant(const size_t s)
 {
@@ -149,6 +151,7 @@ Quadrature::incident_octant(const size_t s)
   return d_incident_octants[s];
 }
 
+//---------------------------------------------------------------------------//
 const Quadrature::vec_int&
 Quadrature::outgoing_octant(const size_t s)
 {
@@ -156,44 +159,42 @@ Quadrature::outgoing_octant(const size_t s)
   return d_outgoing_octants[s];
 }
 
-// Display
+//---------------------------------------------------------------------------//
 void Quadrature::display() const
 {
 
-    using std::cout;
-    using std::endl;
-    using std::printf;
+  using std::cout;
+  using std::endl;
+  using std::printf;
 
-    cout << endl;
-    cout << d_name << " abscissa and weights: " << endl << endl;
+  cout << endl;
+  cout << d_name << " abscissa and weights: " << endl << endl;
 
-    double weight_sum = 0;
+  double weight_sum = 0;
 
-    if (d_dimension == 1)
+  if (d_dimension == 1)
+  {
+    cout << "   m            mu                  wt       " << endl;
+    cout << "  ---   ------------------  -----------------" << endl;
+    for (size_t ix = 0; ix < d_number_angles_octant; ++ix)
     {
-      cout << "   m            mu                  wt       " << endl;
-      cout << "  ---   ------------------  -----------------" << endl;
-      for (size_t ix = 0; ix < d_number_angles_octant; ++ix)
-      {
-          printf ("%4i    %16.13f   %16.13f   \n", ix, d_mu[ix], d_weight[ix] );
-          weight_sum += d_weight[ix];
-      }
+      printf ("%4i    %16.13f   %16.13f   \n", ix, d_mu[ix], d_weight[ix] );
+      weight_sum += d_weight[ix];
     }
-    else
+  }
+  else
+  {
+    cout << "   m            mu                 eta                xi                 wt       " << endl;
+    cout << "  ---   -----------------  -----------------  -----------------  -----------------" << endl;
+    for (size_t ix = 0; ix < d_number_angles_octant; ++ix)
     {
-      cout << "   m            mu                 eta                xi                 wt       " << endl;
-      cout << "  ---   -----------------  -----------------  -----------------  -----------------" << endl;
-      for (size_t ix = 0; ix < d_number_angles_octant; ++ix)
-      {
-          printf ("%4i    %16.13f   %16.13f   %16.13f   %16.13f   \n",
-                  ix, d_mu[ix], d_eta[ix], d_xi[ix], d_weight[ix] );
-          weight_sum += d_weight[ix];
-      }
+      printf ("%4i    %16.13f   %16.13f   %16.13f   %16.13f   \n",
+              ix, d_mu[ix], d_eta[ix], d_xi[ix], d_weight[ix] );
+      weight_sum += d_weight[ix];
     }
+  }
 
-    cout << endl << "  The sum of the weights is " << weight_sum << endl;
-    cout << endl;
-
+  cout << endl << "  The sum of the weights is " << weight_sum << endl << endl;
 }
 
 } // end namespace detran_angle

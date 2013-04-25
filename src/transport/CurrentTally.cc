@@ -72,9 +72,9 @@ void CurrentTally<D>::display()
 // EXPLICIT INSTANTIATIONS
 //---------------------------------------------------------------------------//
 
-TRANSPORT_TEMPLATE class TRANSPORT_EXPORT CurrentTally<_1D>;
-TRANSPORT_TEMPLATE class TRANSPORT_EXPORT CurrentTally<_2D>;
-TRANSPORT_TEMPLATE class TRANSPORT_EXPORT CurrentTally<_3D>;
+TRANSPORT_INSTANTIATE_EXPORT(CurrentTally<_1D>)
+TRANSPORT_INSTANTIATE_EXPORT(CurrentTally<_2D>)
+TRANSPORT_INSTANTIATE_EXPORT(CurrentTally<_3D>)
 
 } // end namespace detran
 

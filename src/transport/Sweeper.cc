@@ -216,8 +216,8 @@ void Sweeper<D>::setup_octant_indices(SP_boundary boundary)
 // EXPLICIT INSTANTIATIONS
 //---------------------------------------------------------------------------//
 
-TRANSPORT_TEMPLATE class TRANSPORT_EXPORT Sweeper<_1D>;
-TRANSPORT_TEMPLATE class TRANSPORT_EXPORT Sweeper<_2D>;
-TRANSPORT_TEMPLATE class TRANSPORT_EXPORT Sweeper<_3D>;
+TRANSPORT_INSTANTIATE_EXPORT(Sweeper<_1D>)
+TRANSPORT_INSTANTIATE_EXPORT(Sweeper<_2D>)
+TRANSPORT_INSTANTIATE_EXPORT(Sweeper<_3D>)
 
 } // end namespace detran

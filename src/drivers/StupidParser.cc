@@ -1,23 +1,16 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   StupidParser.cc
- * \author robertsj
- * \date   Apr 11, 2012
- * \brief  StupidParser member definitions.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+/**
+ *  @file   StupidParser.cc
+ *  @brief  StupidParser member definitions
+ *  @note   Copyright (C) 2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 
-// Detran
-#include "Mesh1D.hh"
-#include "Mesh2D.hh"
-#include "Mesh3D.hh"
-
-// Utilities
-#include "StupidParser.hh"
-#include "Definitions.hh"
-
-// System
+#include "geometry/Mesh1D.hh"
+#include "geometry/Mesh2D.hh"
+#include "geometry/Mesh3D.hh"
+#include "drivers/StupidParser.hh"
+#include "utilities/Definitions.hh"
 #include <sstream>
 #include <iostream>
 #include <ios>
@@ -25,6 +18,7 @@
 namespace detran
 {
 
+//---------------------------------------------------------------------------//
 StupidParser::StupidParser(int argc,  char **argv)
   : d_is_hdf5(false)
 {
@@ -52,6 +46,7 @@ StupidParser::StupidParser(int argc,  char **argv)
 
 }
 
+//---------------------------------------------------------------------------//
 StupidParser::SP_input StupidParser::parse_input()
 {
   SP_input input;
@@ -69,6 +64,7 @@ StupidParser::SP_input StupidParser::parse_input()
   return input;
 }
 
+//---------------------------------------------------------------------------//
 StupidParser::SP_material StupidParser::parse_material()
 {
   // Get the material
@@ -86,6 +82,7 @@ StupidParser::SP_material StupidParser::parse_material()
   return mat;
 }
 
+//---------------------------------------------------------------------------//
 StupidParser::SP_mesh StupidParser::parse_mesh()
 {
   // Get the mesh
@@ -104,10 +101,6 @@ StupidParser::SP_mesh StupidParser::parse_mesh()
 }
 
 //---------------------------------------------------------------------------//
-// IMPLEMENTATION
-//---------------------------------------------------------------------------//
-
-/// Parse input. \todo maybe template some of this?
 StupidParser::SP_input StupidParser::parse_input_text()
 {
   using std::cout;
@@ -174,9 +167,8 @@ StupidParser::SP_input StupidParser::parse_input_text()
   return p;
 }
 
-/// Parse material.
-detran_material::Material::SP_material
-StupidParser::parse_material_text()
+//---------------------------------------------------------------------------//
+detran_material::Material::SP_material StupidParser::parse_material_text()
 {
   using std::cout;
   using std::endl;
@@ -297,8 +289,8 @@ StupidParser::parse_material_text()
   return d_material;
 }
 
-detran_geometry::Mesh::SP_mesh
-StupidParser::parse_mesh_text()
+//---------------------------------------------------------------------------//
+detran_geometry::Mesh::SP_mesh StupidParser::parse_mesh_text()
 {
   Insist(d_input, "Input must be parsed before mesh!");
 
@@ -394,7 +386,7 @@ StupidParser::parse_mesh_text()
   return d_mesh;
 }
 
-//
+//---------------------------------------------------------------------------//
 void StupidParser::remove_white_space(std::string &s)
 {
   int i = s.find("  ");
@@ -409,10 +401,9 @@ void StupidParser::remove_white_space(std::string &s)
   }
 }
 
-//
+//---------------------------------------------------------------------------//
 template <class T>
-std::vector<T>
-StupidParser::read_vector(std::istringstream &iss)
+std::vector<T> StupidParser::read_vector(std::istringstream &iss)
 {
   std::vector<T> vec;
   std::string s;
@@ -426,7 +417,8 @@ StupidParser::read_vector(std::istringstream &iss)
   }
   return vec;
 }
-//
+
+//---------------------------------------------------------------------------//
 template <class T>
 T StupidParser::read_scalar(std::istringstream &iss)
 {

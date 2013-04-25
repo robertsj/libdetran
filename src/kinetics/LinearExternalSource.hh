@@ -15,8 +15,6 @@
 namespace detran
 {
 
-//KINETICS_TEMPLATE class KINETICS_EXPORT std::vector<detran_utilities::SP<detran_external_source::ExternalSource> >;
-
 /**
  *  @class LinearExternalSource
  *  @brief Base class for time-dependent external sources

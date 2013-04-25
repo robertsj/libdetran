@@ -232,7 +232,7 @@ private:
 
 };
 
-TRANSPORT_TEMPLATE class TRANSPORT_EXPORT detran_utilities::SP<State>;
+TRANSPORT_TEMPLATE_EXPORT(detran_utilities::SP<State>)
 
 } // end namespace detran
 

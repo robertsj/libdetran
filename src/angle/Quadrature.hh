@@ -234,13 +234,14 @@ protected:
 
 };
 
-template class ANGLE_EXPORT detran_utilities::SP<Quadrature>;
+ANGLE_TEMPLATE_EXPORT(detran_utilities::SP<Quadrature>)
 
 } // end namespace detran_angle
 
 //---------------------------------------------------------------------------//
 // INLINE MEMBER DEFINITIONS
 //---------------------------------------------------------------------------//
+
 #include "Quadrature.i.hh"
 
 #endif /* detran_angle_QUADRATURE_HH_ */

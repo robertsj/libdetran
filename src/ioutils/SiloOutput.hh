@@ -134,6 +134,8 @@ private:
 
 };
 
+IOUTILS_TEMPLATE_EXPORT(detran_utilities::SP<SiloOutput>)
+
 } // end namespace detran_ioutils
 
 #endif // detran_ioutils_SILOOUTPUT_HH_

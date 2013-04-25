@@ -20,7 +20,12 @@ namespace callow
 
 //---------------------------------------------------------------------------//
 Matrix::Matrix()
-  : d_allocated(false)
+  : d_values(NULL)
+  , d_columns(NULL)
+  , d_rows(NULL)
+  , d_diagonals(NULL)
+  , d_nnz(0)
+  , d_allocated(false)
 {
   /* ... */
 }
@@ -28,6 +33,11 @@ Matrix::Matrix()
 //---------------------------------------------------------------------------//
 Matrix::Matrix(const int m, const int n)
   : MatrixBase(m, n)
+  , d_values(NULL)
+  , d_columns(NULL)
+  , d_rows(NULL)
+  , d_diagonals(NULL)
+  , d_nnz(0)
   , d_allocated(false)
 {
   /* ... */

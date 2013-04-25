@@ -9,7 +9,6 @@ set(LIB_NAME "boundary")
 #-----------------------------------------------------------------------------#
 
 set(SRC
-    BoundaryBase.cc
     BoundaryDiffusion.cc
     BoundarySN.cc
     BoundaryMOC.cc

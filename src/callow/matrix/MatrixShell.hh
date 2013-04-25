@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   MatrixShell.hh
- * \author robertsj
- * \date   Sep 18, 2012
- * \brief  MatrixShell class definition.
+/**
+ *  @file   MatrixShell.hh
+ *  @author robertsj
+ *  @date   Sep 18, 2012
+ *  @brief  MatrixShell class definition.
  */
 //---------------------------------------------------------------------------//
 
@@ -15,9 +15,9 @@
 namespace callow
 {
 
-/*!
- *  \class MatrixShell
- *  \brief Defines a matrix free operator
+/**
+ *  @class MatrixShell
+ *  @brief Defines a matrix free operator
  *
  *  For many iterative methods, only the action of the operator
  *  on a vector is required.  Frequently, constructing a matrix
@@ -112,7 +112,6 @@ private:
 
   /// context of my caller
   void* d_context;
-
   /// tell petsc about the operation, if applicable
   void set_operation();
 
@@ -123,6 +122,8 @@ private:
 // to our own shell operation
 inline PetscErrorCode shell_multiply_wrapper(Mat A, Vec x, Vec y);
 #endif
+
+CALLOW_TEMPLATE_EXPORT(detran_utilities::SP<MatrixShell>)
 
 } // end namespace callow
 
