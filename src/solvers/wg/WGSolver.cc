@@ -65,7 +65,7 @@ WGSolver<D>::WGSolver(SP_state                  state,
                        MtoD, d_multiply);
 
   if (q_f) d_sweepsource->set_fission_source(q_f);
-  Assert(!multiply or (multiply and q_f));
+  Assert(!multiply || (multiply && q_f));
 
   // Add any moment and discrete sources present.
   for (size_t i = 0; i < q_e.size(); ++i)

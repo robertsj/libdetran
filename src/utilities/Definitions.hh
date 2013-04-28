@@ -51,24 +51,29 @@ typedef std::vector<std::vector<std::vector<std::vector<size_t> > > > vec4_size_
 typedef std::vector<bool> vec_bool;
 
 // DLL exports
-UTILITIES_TEMPLATE_EXPORT(std::vector<std::vector<int> >)
-UTILITIES_TEMPLATE_EXPORT(std::vector<std::vector<std::vector<int> > >)
+UTILITIES_TEMPLATE_EXPORT(std::vector<int>)
+UTILITIES_TEMPLATE_EXPORT(std::vector<vec_int>)
+UTILITIES_TEMPLATE_EXPORT(std::vector<vec2_int>)
+UTILITIES_TEMPLATE_EXPORT(std::vector<vec3_int>)
 UTILITIES_TEMPLATE_EXPORT(std::vector<size_t>)
-UTILITIES_TEMPLATE_EXPORT(std::vector<std::vector<size_t> >)
-UTILITIES_TEMPLATE_EXPORT(std::vector<std::vector<std::vector<size_t> > >)
+UTILITIES_TEMPLATE_EXPORT(std::vector<vec_size_t>)
+UTILITIES_TEMPLATE_EXPORT(std::vector<vec2_size_t>)
 UTILITIES_TEMPLATE_EXPORT(std::vector<double>)
-UTILITIES_TEMPLATE_EXPORT(std::vector<std::vector<double> >)
-UTILITIES_TEMPLATE_EXPORT(std::vector<std::vector<std::vector<double> > >)
+UTILITIES_TEMPLATE_EXPORT(std::vector<vec_dbl>)
+UTILITIES_TEMPLATE_EXPORT(std::vector<vec2_dbl>)
+UTILITIES_TEMPLATE_EXPORT(std::vector<vec3_dbl>)
+UTILITIES_TEMPLATE_EXPORT(std::vector<vec4_dbl>)
 UTILITIES_TEMPLATE_EXPORT(std::basic_string<char, std::char_traits<char>, std::allocator<char> >)
 UTILITIES_TEMPLATE_EXPORT(std::map<std::string, int>)
 UTILITIES_TEMPLATE_EXPORT(std::map<std::string, double>)
 UTILITIES_TEMPLATE_EXPORT(std::map<std::string, vec_int>)
 UTILITIES_TEMPLATE_EXPORT(std::map<std::string, vec_dbl>)
 UTILITIES_TEMPLATE_EXPORT(std::map<std::string, std::string>)
+UTILITIES_TEMPLATE_EXPORT(std::vector<std::_Vbase, std::allocator<bool> >)
+UTILITIES_TEMPLATE_EXPORT(std::vector<bool>)
 
 //disable warnings on 255 char debug symbols
 #pragma warning (disable : 4244)
-
 
 } // end namespace detran_utilities
 

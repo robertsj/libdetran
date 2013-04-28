@@ -4,10 +4,16 @@ import numpy as np
 import mpl_toolkits.mplot3d.axes3d as p3
 import matplotlib.pyplot as plt
 
+global __detranuselatex__ = False
+
 try :
-    from matplotlib import rc
-    rc('text', usetex=True)
-    rc('font', family='serif')
+    import os
+    print "Checking for LaTeX for nicer plotting labels..."
+    if (os.system("latex")==0) :
+	    from matplotlib import rc
+	    rc('text', usetex=True)
+	    rc('font', family='serif')
+	    __detranuselatex__ = True
 except ImportError :
     print "Warning: LaTeX labels being skipped"
 
@@ -28,7 +34,10 @@ def plot_quadrature(quad) :
      wt = np.asarray(quad.weights())
      # Plot
      plt.plot(mu, wt, 'bo')
-     plt.xlabel('$\mu$')
+     if __detranuselatex__ :
+       plt.xlabel('$\mu$')
+     else :
+       plt.xlabel('mu')
      plt.ylabel('weight')
      plt.show()
 
@@ -46,8 +55,11 @@ def plot_quadrature(quad) :
      ax = p3.Axes3D(fig)
      ax.view_init(30, 60) 
      myplot = ax.scatter(mu,eta,xi,c=wt, s=100000*wt**2, marker='^')
-     ax.set_xlabel('$\mu$')
-     ax.set_ylabel('$\eta$')
-     ax.set_zlabel('$\\xi$')
+     labels = ['mu','eta','xi']
+     if __detranuselatex__ :
+       labels ['$\mu$', '$\eta$', '$\\xi$']
+	 ax.set_xlabel(labels[0])
+	 ax.set_ylabel(labels[1])
+	 ax.set_zlabel(labels[2])
      fig.colorbar(myplot)
      plt.show()

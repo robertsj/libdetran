@@ -40,7 +40,7 @@ public:
   }
 private:
   // Regular matrix.
-  typename Matrix::SP_matrix d_B;
+  Matrix::SP_matrix d_B;
 };
 
 } // end namespace callow

@@ -15,10 +15,10 @@ namespace callow
 {
 
 // test 1D finite difference stencil
-typename Matrix::SP_matrix test_matrix_1(int n = 5)
+Matrix::SP_matrix test_matrix_1(int n = 5)
 {
 
-  typename Matrix::SP_matrix A;
+  Matrix::SP_matrix A;
   A = new Matrix(n, n);
   A->preallocate(3);
 
@@ -60,7 +60,7 @@ typename Matrix::SP_matrix test_matrix_1(int n = 5)
  *  SigmaR    0.1  0.1
  *  Sigma21   0.1  n/a
  */
-typename Matrix::SP_matrix test_matrix_2(int n = 10)
+Matrix::SP_matrix test_matrix_2(int n = 10)
 {
   using std::cout;
   using std::endl;
@@ -69,7 +69,7 @@ typename Matrix::SP_matrix test_matrix_2(int n = 10)
   // total cells = 2 * n * n
   // mesh size   = n * n
   // num group   = 2
-  typename Matrix::SP_matrix A;
+  Matrix::SP_matrix A;
   int size = 2 * n * n;
   A = new Matrix(size, size);
   A->preallocate(2*2+2);

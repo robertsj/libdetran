@@ -1,29 +1,25 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   TestDriver.hh
- * \author Jeremy Roberts
- * \date   Jul 12, 2011
- * \brief  Simple functions and macro for testing and printing failures.
+/**
+ *  @file  TestDriver.hh
+ *  @brief Simple functions and macro for testing and printing failures.
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 
 #ifndef TESTDRIVER_HH_
 #define TESTDRIVER_HH_
 
-// Utilities
 #include "DBC.hh"
 #include "SoftEquivalence.hh"
-
-// System
 #include <iostream>
 #include <string>
 #include <sstream>
 #include <cstdlib>
 
-/*!
- *  \page testing Detran Testing Typedefs and Macros
+/**
+ *  @page testing Detran Testing Typedefs and Macros
  *
- *  \section testcreation Creating a Unit Test Set
+ *  @section testcreation Creating a Unit Test Set
  *
  *  To produce a set of unit tests,
  *  the client must define in the main test file
@@ -176,8 +172,8 @@ public:
   {
 
     // Get test number
-    Insist(argc > 1, "Tests should have at least one argument!");
-    d_test = std::atoi(argv[1]);
+	d_test = 0;
+	if (argc > 1) d_test = std::atoi(argv[1]);
 
     // Check if valid test identifier.
     Insist(d_test >= 0, "Test id must be nonnegative!");
@@ -306,12 +302,16 @@ int TestDriver::d_number_tests = 0;
 int TestDriver::d_number_fails = 0;
 int TestDriver::d_test = 0;
 
-
 } // end namespace testing
 
 //---------------------------------------------------------------------------//
 // TEST MACROS
 //---------------------------------------------------------------------------//
+
+// Visual Studio doesn't have "__func__"
+#if defined (WIN32)
+#define __func__ __FUNCTION__
+#endif
 
 /// Evaluate a statement expected to be true.
 #define TEST(c)      if(TestDriver::                               \

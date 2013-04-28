@@ -37,7 +37,7 @@ namespace detran_angle
  *    - quad_number_polar_octant -- number of abscissa per half space
  *    - gausschebyshev_normalize -- normalize half space weight to 1 [false]
  */
-class GaussChebyshev: public Quadrature
+class ANGLE_EXPORT GaussChebyshev: public Quadrature
 {
 
 public:

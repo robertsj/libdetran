@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   CurrentTally.hh
- *  @brief  CurrentTally
- *  @author Jeremy Roberts
- *  @date   Aug 7, 2012
+ *  @file  CurrentTally.hh
+ *  @brief CurrentTally class definition
+ *  @note  Copyright (C) Jeremy Roberts 2013
  */
 //---------------------------------------------------------------------------//
 

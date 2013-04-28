@@ -80,7 +80,7 @@ State::State(SP_input        input,
 //---------------------------------------------------------------------------//
 void State::clear()
 {
-  for (int g = 0; g < d_number_groups; ++g)
+  for (size_t g = 0; g < d_number_groups; ++g)
   {
     for (size_t i = 0; i < d_mesh->number_cells(); ++i)
     {
@@ -99,7 +99,7 @@ void State::clear()
 //---------------------------------------------------------------------------//
 void State::scale(const double f)
 {
-  for (int g = 0; g < d_number_groups; ++g)
+  for (size_t g = 0; g < d_number_groups; ++g)
   {
     for (size_t i = 0; i < d_mesh->number_cells(); ++i)
     {
@@ -138,7 +138,7 @@ void State::display() const
   printf("\n");
   printf("Scalar Flux Moments\n");
   printf("cell \\ g");
-  for (int g = 0; g < d_number_groups; g++)
+  for (size_t g = 0; g < d_number_groups; g++)
     printf(" %12i ", g);
   printf("\n");
   for (size_t g = 0; g < d_moments.size() + 1; g++)
@@ -147,7 +147,7 @@ void State::display() const
   for (size_t i = 0; i < d_mesh->number_cells(); i++)
   {
     printf("%10i", i);
-    for (int g = 0; g < d_number_groups; g++)
+    for (size_t g = 0; g < d_number_groups; g++)
     {
       printf(" %12.5e ", d_moments[g][i]);
     }
@@ -158,14 +158,14 @@ void State::display() const
   {
     printf("\n");
     for (size_t a = 0; a < d_angular_flux[0].size() + 1; a++)
-      printf("--------------", a);
+      printf("--------------");
     printf("\n");
     printf("Discrete Angular Flux\n");
     for (size_t a = 0; a < d_angular_flux[0].size() + 1; a++)
-      printf("--------------", a);
+      printf("--------------");
     printf("\n");
 
-    for (int g = 0; g < d_number_groups; g++)
+    for (size_t g = 0; g < d_number_groups; g++)
     {
       printf("group %4i \n", g);
       printf("cell \\ a");
@@ -173,7 +173,7 @@ void State::display() const
         printf(" %12i ", a);
       printf("\n");
       for (size_t a = 0; a < d_angular_flux[0].size() + 1; a++)
-        printf("--------------", a);
+        printf("--------------");
       printf("\n");
       for (size_t i = 0; i < d_mesh->number_cells(); i++)
       {

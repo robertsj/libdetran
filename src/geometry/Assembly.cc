@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- *  \file   Assembly.cc
- *  \author Jeremy Roberts
- *  \brief  Assembly class member definitions
- *  \date   Mar 23, 2012
+/**
+ *  @file  Assembly.cc
+ *  @brief Assembly class member definitions
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 

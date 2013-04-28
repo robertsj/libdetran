@@ -79,7 +79,7 @@ void test_monitor(void* data, TimeStepper<_2D>* ts, int step, double t,
     }
   }
   F *= detran_user::KAPPA / V;
-  if (F > maxp and conv) maxp = F;
+  if (F > maxp && conv) maxp = F;
   T_avg /= 17550.0;
 //  std::cout << " phi0=" << ts->state()->phi(0)[0] << " "
 //            << " phi1=" << ts->state()->phi(1)[0] << std::endl;

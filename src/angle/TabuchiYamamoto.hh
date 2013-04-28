@@ -1,14 +1,13 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   TabuchiYamamoto.hh
- *  @brief  TabuchiYamamoto class definition.
- *  @author Jeremy Roberts
- *  @date   Jun 22, 2012
+ *  @file  TabuchiYamamoto.hh
+ *  @brief TabuchiYamamoto class definition
+ *  @note  Copyright (C) Jeremy Roberts 2013
  */
 //---------------------------------------------------------------------------//
 
-#ifndef TABUCHIYAMAMOTO_HH_
-#define TABUCHIYAMAMOTO_HH_
+#ifndef detran_angle_TABUCHIYAMAMOTO_HH_
+#define detran_angle_TABUCHIYAMAMOTO_HH_
 
 #include "PolarQuadrature.hh"
 
@@ -27,10 +26,10 @@ namespace detran_angle
  *  Their original paper gives quadratures for 1, 2, and 3 abscissa.
  *  We extend that to 5 abscissa.  Additionally, we implement another
  *  size abscissa based on an L2 minimization of the error (rather
- *  than the infinity norm).
+ *  than the infinity norm)... not yet implemented.
  *
  */
-class TabuchiYamamoto: public PolarQuadrature
+class ANGLE_EXPORT TabuchiYamamoto: public PolarQuadrature
 {
 
 public:
@@ -54,7 +53,7 @@ private:
 
 } // end namespace detran
 
-#endif /* TABUCHIYAMAMOTO_HH_ */
+#endif /* detran_angle_TABUCHIYAMAMOTO_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of file TabuchiYamamoto.hh

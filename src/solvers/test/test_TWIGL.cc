@@ -88,7 +88,7 @@ public:
     double sa = 0.150;
     if (d_perturbation == 1) // RAMP
     {
-      if (t >= 0.1 and t < 0.3)
+      if (t >= 0.1 && t < 0.3)
         sa = 0.150 * (1.0 - 0.11667 * (t - 0.1));
       else if (t >= 0.3)
         sa = 0.150 * 0.97666;

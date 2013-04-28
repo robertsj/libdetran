@@ -27,7 +27,7 @@ namespace detran_angle
  *    - quad_number_polar_octant    -- number polar angles per octant
  *    - quad_number_azimuth_octant  -- number azimuths per octant
  */
-class ChebyshevDPN: public ProductQuadrature
+class ANGLE_EXPORT ChebyshevDPN: public ProductQuadrature
 {
 
 public:

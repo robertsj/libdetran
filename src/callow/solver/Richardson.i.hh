@@ -23,10 +23,17 @@ namespace callow
 inline void Richardson::solve_impl(const Vector &b, Vector &x)
 {
 
-  // scale rhs by relaxation factor
-  Vector B(b.size(), 0.0);
-  B.add(b);
-  B.scale(d_omega);
+  // precondition the right hand side or scale via the relaxation factor
+  Vector B(b);
+  if (d_P && d_pc_side == Base::LEFT)
+  {
+	//THROW("lalal");
+    d_P->apply(*const_cast<Vector*>(&b), B);
+  }
+  else
+  {
+    B.scale(d_omega);
+  }
 
   // temporary storage and pointers for swapping
   Vector temp(x.size(), 0.0);
@@ -51,8 +58,18 @@ inline void Richardson::solve_impl(const Vector &b, Vector &x)
 
     // X1 <-- A * X0
     d_A->multiply((*x0), (*x1));
-    // X1 <-- w * X1 = w * A * X0
-    x1->scale(d_omega);
+	// Apply preconditioning or relaxation
+	if (d_P && d_pc_side == Base::LEFT)
+	{
+		// X1 <-- P * X1 = P * A * X1
+		Vector t(*x1);
+		d_P->apply(t, *x1);
+	}
+	else
+	{
+      // X1 <-- w * X1 = w * A * X0
+      x1->scale(d_omega);
+	}
     // X1 <-- X1 - X0 =  (A - I) * X0
     x1->subtract(*x0);
     // X1 <-- X1 - b = (A - I) * X0 - b

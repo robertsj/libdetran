@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   TabuchiYamamoto.cc
- *  @brief  TabuchiYamamoto class definition.
- *  @author Jeremy Roberts
- *  @date   Jun 22, 2012
+ *  @file  TabuchiYamamoto.cc
+ *  @brief TabuchiYamamoto member definitions
+ *  @note  Copyright (C) Jeremy Roberts 2013
  */
 //---------------------------------------------------------------------------//
 

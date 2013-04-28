@@ -10,7 +10,6 @@
 #ifndef detran_angle_QUADRUPLERANGE_HH_
 #define detran_angle_QUADRUPLERANGE_HH_
 
-// Detran
 #include "ProductQuadrature.hh"
 
 namespace detran_angle
@@ -112,7 +111,7 @@ namespace detran_angle
  */
 //---------------------------------------------------------------------------//
 
-class QuadrupleRange : public ProductQuadrature
+class ANGLE_EXPORT QuadrupleRange : public ProductQuadrature
 {
 
 public:

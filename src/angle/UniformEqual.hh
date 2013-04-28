@@ -1,25 +1,23 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   UniformEqual.hh
- * \author robertsj
- * \date   May 22, 2012
- * \brief  UniformEqual class definition.
+/**
+ *  @file  UniformEqual.hh
+ *  @brief UniformEqual class definition
+ *  @note  Copyright (C) Jeremy Roberts 2013
  */
 //---------------------------------------------------------------------------//
 
-#ifndef UNIFORMEQUAL_HH_
-#define UNIFORMEQUAL_HH_
+#ifndef detran_angle_UNIFORMEQUAL_HH_
+#define detran_angle_UNIFORMEQUAL_HH_
 
-// Detran
 #include "Quadrature.hh"
 
 namespace detran_angle
 {
 
 //---------------------------------------------------------------------------//
-/*!
- * \class UniformEqual
- * \brief 2D/3D Uniform, Equal Weight (UEn) quadrature class.
+/**
+ *  @class UniformEqual
+ *  @brief 2D/3D Uniform, Equal Weight (UEn) quadrature class.
  *
  * As mentioned in \ref LevelSymmetric, a fundamental problem inherent
  * to LQn quadrature is presence of negative weights at high order.  These
@@ -48,7 +46,7 @@ namespace detran_angle
  */
 //---------------------------------------------------------------------------//
 
-class UniformEqual : public Quadrature
+class ANGLE_EXPORT UniformEqual : public Quadrature
 {
 
 public:
@@ -64,10 +62,10 @@ public:
   // PUBLIC INTERFACE
   //---------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Constructor.
-   *  \param    order       Quadrature order.
-   *  \param    dim         Problem dimension
+  /**
+   *  @brief Constructor.
+   *  @param    order       Quadrature order.
+   *  @param    dim         Problem dimension
    */
   UniformEqual(size_t order, size_t dim);
 
@@ -83,7 +81,7 @@ public:
 
 } // end namespace detran_angle
 
-#endif /* UNIFORMEQUAL_HH_ */
+#endif /* detran_angle_UNIFORMEQUAL_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of UniformEqual.hh

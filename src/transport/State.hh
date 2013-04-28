@@ -214,7 +214,7 @@ private:
   /// Spherical harmonic moment indexer
   SP_momentindexer d_momentindexer;
   /// Number of energy groups
-  int d_number_groups;
+  size_t d_number_groups;
   /// Number of moments per unknown
   size_t d_number_moments;
   /// Cell-center scalar flux moments, [energy, (space-moment)]

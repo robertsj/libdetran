@@ -35,7 +35,7 @@ namespace detran_angle
  *  Relevant database parameters:
  *    - quad_number_polar_octant -- number of abscissa per half space
  */
-class GaussLegendre: public Quadrature
+class ANGLE_EXPORT GaussLegendre: public Quadrature
 {
 
 public:

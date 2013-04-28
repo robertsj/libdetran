@@ -1,13 +1,13 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   LevelSymmetric.hh
- *  @author robertsj
- *  @date   May 22, 2012
- *  @brief  LevelSymmetric class definition.
+ *  @file  LevelSymmetric.hh
+ *  @brief LevelSymmetric class definition
+ *  @note  Copyright (C) Jeremy Roberts 2013
  */
 //---------------------------------------------------------------------------//
-#ifndef LEVELSYMMETRIC_HH_
-#define LEVELSYMMETRIC_HH_
+
+#ifndef detran_angle_LEVELSYMMETRIC_HH_
+#define detran_angle_LEVELSYMMETRIC_HH_
 
 #include "Quadrature.hh"
 
@@ -36,7 +36,7 @@ namespace detran_angle
  *  Relevant database parameters:
  *    - quad_number_polar_octant -- number of abscissa per half space
  */
-class LevelSymmetric : public Quadrature
+class ANGLE_EXPORT LevelSymmetric : public Quadrature
 {
 
 public:
@@ -70,7 +70,7 @@ private:
 
 } // end namespace detran_angle
 
-#endif /* LEVELSYMMETRIC_HH_ */
+#endif /* detran_angle_LEVELSYMMETRIC_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of Level_Symmetric_3D.hh

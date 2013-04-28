@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   PPMPlotter.cc
- *  @brief  PPMPlotter 
- *  @author Jeremy Roberts
- *  @date   Mar 12, 2013
+ *  @file  PPMPlotter.cc
+ *  @brief PPMPlotter member definitions
+ *  @note  Copyright (C) Jeremy Roberts 2013
  */
 //---------------------------------------------------------------------------//
 

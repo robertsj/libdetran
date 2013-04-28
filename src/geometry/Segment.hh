@@ -1,38 +1,39 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Segment.hh
- * \brief  Segment class definition.
- * \author Jeremy Roberts
- * \date   Jun 22, 2012
+/**
+ *  @file  Segment.hh
+ *  @brief Segment class definition.
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 
-#ifndef SEGMENT_HH_
-#define SEGMENT_HH_
+#ifndef detran_geometry_SEGMENT_HH_
+#define detran_geometry_SEGMENT_HH_
 
+#include "geometry/geometry_export.hh"
 #include "utilities/DBC.hh"
 #include "utilities/Definitions.hh"
 #include "utilities/SP.hh"
 #include <iomanip>
 #include <ostream>
+#include <vector>
 
 namespace detran_geometry
 {
 
 //---------------------------------------------------------------------------//
-/*!
- *  \class Segment
- *  \brief One segment along a track
+/**
+ *  @class Segment
+ *  @brief One segment along a track
  *
  *  Each segment traverses one flat source region.  To characterize
  *  the segment, we need its length and an index to the region.
  *
- *  \todo For acceleration purposes, we might also need to know what
+ *  @todo For acceleration purposes, we might also need to know what
  *        coarse mesh boundary it intersects, if any.
  */
 //---------------------------------------------------------------------------//
 
-class Segment
+class GEOMETRY_EXPORT Segment
 {
 
 public:
@@ -48,7 +49,12 @@ public:
   // PUBLIC INTERFACE
   //-------------------------------------------------------------------------//
 
-  Segment(const size_t r, double l)
+  Segment()
+  {
+    THROW("what's going on?");
+  }
+
+  Segment(const size_t r, const double l)
     : d_region(r)
     , d_length(l)
   {
@@ -81,14 +87,13 @@ private:
 
   /// Flat source region this segment crosses.
   size_t d_region;
-
   /// Length of this segment.
   double d_length;
 
 };
 
 /// Output stream for a segment
-inline std::ostream& operator<< (std::ostream &out, Segment s)
+inline std::ostream& operator<< (std::ostream &out, const Segment &s)
 {
   std::ios::fmtflags f(out.flags());
   out.setf(std::ios::fixed, std::ios::floatfield);
@@ -98,9 +103,14 @@ inline std::ostream& operator<< (std::ostream &out, Segment s)
   return out;
 }
 
+GEOMETRY_TEMPLATE_EXPORT(detran_utilities::SP<Segment>)
+GEOMETRY_TEMPLATE_EXPORT(std::vector<detran_utilities::SP<Segment> >)
+GEOMETRY_TEMPLATE_EXPORT(std::vector<Segment>)
+
+
 } // end namespace detran_geometry
 
-#endif /* SEGMENT_HH_ */
+#endif /* detran_geometry_SEGMENT_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of file Segment.hh

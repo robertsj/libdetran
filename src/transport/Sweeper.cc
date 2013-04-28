@@ -44,7 +44,7 @@ Sweeper<D>::Sweeper(SP_input input,
 
   // Check whether we keep psi.
   if (d_input->check("store_angular_flux"))
-    d_update_psi = d_input->get<int>("store_angular_flux");
+    d_update_psi = (0 != d_input->get<int>("store_angular_flux"));
 
   // Perform templated setup tasks.
   setup();

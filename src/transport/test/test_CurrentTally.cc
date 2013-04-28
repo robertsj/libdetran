@@ -91,7 +91,7 @@ int test_CurrentTally_1D(int argc, char *argv[])
   TEST(finemesh->number_cells() == 15);
 
   // Create an S4 quadrature.
-  CurrentTally_T::SP_quadrature quad(new GaussLegendre(4));
+  CurrentTally_T::SP_quadrature quad(new GaussLegendre(2));
 
   // Create the tally.
   CurrentTally_T::SP_currenttally tally(new CurrentTally_T(mesh, quad, 1));
@@ -186,7 +186,7 @@ int test_CurrentTally_2D(int argc, char *argv[])
   TEST(coarsemesh->number_cells() == 7*7);
 
   // Create an S2 quadrature.
-  CurrentTally_T::SP_quadrature quad(new LevelSymmetric(2, 2));
+  CurrentTally_T::SP_quadrature quad(new LevelSymmetric(1, 2));
 
   // Create the tally.
   CurrentTally_T::SP_currenttally tally(new CurrentTally_T(mesh, quad, 1));
@@ -210,7 +210,7 @@ int test_CurrentTally_2D(int argc, char *argv[])
       {
         // Pick left or right side
         size_t i = 0;
-        if (o == 1 or o == 2) i = finemesh->number_cells_x() - 1;
+        if (o == 1 || o == 2) i = finemesh->number_cells_x() - 1;
         // Loop over vertical
         for (size_t jj = 0; jj < finemesh->number_cells_y(); jj++)
         {
@@ -227,7 +227,7 @@ int test_CurrentTally_2D(int argc, char *argv[])
         for (size_t ii = 0; ii < finemesh->number_cells_x(); ii++)
         {
           size_t i = ii;
-          if (o == 1 or o == 2) i = finemesh->number_cells_x() - i - 1;
+          if (o == 1 || o == 2) i = finemesh->number_cells_x() - i - 1;
           tally->tally(i, j, 0, 0, o, a, 1, 1.0);
         }
       }
@@ -242,7 +242,7 @@ int test_CurrentTally_2D(int argc, char *argv[])
         for (size_t ii = 0; ii < finemesh->number_cells_x(); ii++)
         {
           size_t i = ii;
-          if (o == 1 or o == 2) i = finemesh->number_cells_x() - i - 1;
+          if (o == 1 || o == 2) i = finemesh->number_cells_x() - i - 1;
 
           // TALLY THE OUTGOING CELL FLUX
           tally->tally(i, j, 0, 0, o, a, psi_out);
@@ -327,7 +327,7 @@ int test_CurrentTally_3D(int argc, char *argv[])
   TEST(coarsemesh->number_cells() == 7*7*7);
 
   // Create an S2 quadrature.
-  CurrentTally_T::SP_quadrature quad(new LevelSymmetric(2, 3));
+  CurrentTally_T::SP_quadrature quad(new LevelSymmetric(1, 3));
 
   // Create the tally.
   CurrentTally_T::SP_currenttally tally(new CurrentTally_T(mesh, quad, 1));
@@ -352,13 +352,13 @@ int test_CurrentTally_3D(int argc, char *argv[])
       {
         // Pick left or right side
         size_t i = 0;
-        if (o == 1 or o == 2 or o == 5 or o == 6)
+        if (o == 1 || o == 2 || o == 5 || o == 6)
           i = finemesh->number_cells_x() - 1;
         // Loop over vertical
         for (size_t jj = 0; jj < finemesh->number_cells_y(); jj++)
         {
           size_t j = jj;
-          if (o == 2 or o == 3 or o == 6 or o == 7)
+          if (o == 2 || o == 3 || o == 6 || o == 7)
             j = finemesh->number_cells_y() - j - 1;
           for (size_t kk = 0; kk < finemesh->number_cells_z(); kk++)
           {
@@ -373,13 +373,13 @@ int test_CurrentTally_3D(int argc, char *argv[])
       {
         // Pick left or right side
         size_t j = 0;
-        if (o == 2 or o == 3 or o == 6 or o == 7)
+        if (o == 2 || o == 3 || o == 6 || o == 7)
           j = finemesh->number_cells_y() - 1;
         // Loop over vertical
         for (size_t ii = 0; ii < finemesh->number_cells_x(); ii++)
         {
           size_t i = ii;
-          if (o == 1 or o == 2 or o == 5 or o == 6)
+          if (o == 1 || o == 2 || o == 5 || o == 6)
             i = finemesh->number_cells_x() - i - 1;
           for (size_t kk = 0; kk < finemesh->number_cells_z(); kk++)
           {
@@ -400,12 +400,12 @@ int test_CurrentTally_3D(int argc, char *argv[])
         for (size_t ii = 0; ii < finemesh->number_cells_x(); ii++)
         {
           size_t i = ii;
-          if (o == 1 or o == 2 or o == 5 or o == 6)
+          if (o == 1 || o == 2 || o == 5 || o == 6)
             i = finemesh->number_cells_x() - i - 1;
           for (size_t jj = 0; jj < finemesh->number_cells_y(); jj++)
           {
             size_t j = jj;
-            if (o == 2 or o == 3 or o == 6 or o == 7)
+            if (o == 2 || o == 3 || o == 6 || o == 7)
               j = finemesh->number_cells_y() - j - 1;
             tally->tally(i, j, k, 0, o, a, CurrentTally_T::Z_DIRECTED, 1.0);
           }
@@ -422,14 +422,14 @@ int test_CurrentTally_3D(int argc, char *argv[])
         for (size_t jj = 0; jj < finemesh->number_cells_y(); jj++)
         {
           size_t j = jj;
-          if (o == 2 or o == 3 or o == 6 or o == 7)
+          if (o == 2 || o == 3 || o == 6 || o == 7)
             j = finemesh->number_cells_y() - j - 1;
 
           // Loop over x.
           for (size_t ii = 0; ii < finemesh->number_cells_x(); ii++)
           {
             size_t i = ii;
-            if (o == 1 or o == 2 or o == 5 or o == 6)
+            if (o == 1 || o == 2 || o == 5 || o == 6)
               i = finemesh->number_cells_x() - i - 1;
 
             // TALLY THE OUTGOING CELL FLUX

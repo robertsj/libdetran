@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- *  \file   PinCell.cc
- *  \author Jeremy Roberts
- *  \brief  PinCell class member definitions
- *  \date   Mar 23, 2012
+/**
+ *  @file  PinCell.hh
+ *  @brief PinCell class member definitions
+ *  @note  Copyright (C) 2013 Jeremy Roberts  
  */
 //---------------------------------------------------------------------------//
 
@@ -16,7 +15,7 @@
 namespace detran_geometry
 {
 
-// Constructor
+//---------------------------------------------------------------------------//
 PinCell::PinCell(double pitch, vec_dbl radii, vec_int mat_map, bool fuel_flag)
   : d_pitch(pitch)
   , d_radii(radii)
@@ -27,7 +26,7 @@ PinCell::PinCell(double pitch, vec_dbl radii, vec_int mat_map, bool fuel_flag)
   Require(d_mat_map.size() == 1 + d_radii.size());
 }
 
-// Mesh the object
+//---------------------------------------------------------------------------//
 void PinCell::meshify(int number_meshes, bool flag)
 {
   Require(number_meshes > 0);
@@ -194,6 +193,7 @@ void PinCell::meshify(int number_meshes, bool flag)
 
 }
 
+//---------------------------------------------------------------------------//
 int PinCell::find_region(int i, int j, double width)
 {
   double x = (i + 0.5) * width;

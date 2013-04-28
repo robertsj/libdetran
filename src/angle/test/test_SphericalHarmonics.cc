@@ -45,7 +45,6 @@ int main(int argc, char *argv[])
 
 int test_SphericalHarmonics(int argc, char *argv[])
 {
-  double val;
   double mu  = 0.350021174581540677777041;
   double eta = 0.350021174581540677777041;
   double xi  = 0.868890300722201205229788;

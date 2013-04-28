@@ -1,14 +1,13 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   CurrentTally.i.hh
- *  @brief  CurrentTally inline member definitions
- *  @author Jeremy Roberts
- *  @date   Aug 9, 2012
+ *  @file  CurrentTally.i.hh
+ *  @brief CurrentTally inline member definitions
+ *  @note  Copyright (C) Jeremy Roberts 2013
  */
 //---------------------------------------------------------------------------//
 
-#ifndef CURRENTTALLY_I_HH_
-#define CURRENTTALLY_I_HH_
+#ifndef detran_CURRENTTALLY_I_HH_
+#define detran_CURRENTTALLY_I_HH_
 
 namespace detran
 {
@@ -134,7 +133,7 @@ CurrentTally<D>::tally(const size_t i,
 
   // Make direction triplet
   const size_t dim[] = {i, j, k};
-  Require( (dim[d0] == 0) or
+  Require( (dim[d0] == 0) ||
            (dim[d0] == d_coarsemesh->get_fine_mesh()->number_cells(d0) - 1) );
 
   // Increment for incident direction
@@ -163,14 +162,14 @@ CurrentTally<D>::tally(const size_t i,
   double area = d_coarsemesh->get_fine_mesh()->width(d1, dim[d1]) *
                 d_coarsemesh->get_fine_mesh()->width(d2, dim[d2]);
 
-  // Tally.
+  // Tally
   d_partial_current[d0][g][d_octant_shift[d0][o]][idx] +=
     psi * d_quadrature->cosines(d0)[a] * d_quadrature->weight(a) * area;
 }
 
 } // end namespace detran
 
-#endif // CURRENTTALLY_I_HH_ 
+#endif // detran_CURRENTTALLY_I_HH_ 
 
 //---------------------------------------------------------------------------//
 //              end of file CurrentTally.i.hh

@@ -117,9 +117,9 @@ bool EigenvalueManager<D>::solve()
 // Explicit instantiations
 //---------------------------------------------------------------------------//
 
-template class EigenvalueManager<_1D>;
-template class EigenvalueManager<_2D>;
-template class EigenvalueManager<_3D>;
+SOLVERS_INSTANTIATE_EXPORT(EigenvalueManager<_1D>)
+SOLVERS_INSTANTIATE_EXPORT(EigenvalueManager<_2D>)
+SOLVERS_INSTANTIATE_EXPORT(EigenvalueManager<_3D>)
 
 } // end namespace detran
 

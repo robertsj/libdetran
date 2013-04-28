@@ -24,7 +24,7 @@ namespace detran_angle
 inline void MomentToDiscrete::build(SP_quadrature q)
 {
   Require(q);
-  Require(q->dimension() >= 1 and q->dimension() <= 3);
+  Require(q->dimension() >= 1 && q->dimension() <= 3);
 
   // Store the angular mesh.
   d_quadrature = q;

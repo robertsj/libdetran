@@ -1,18 +1,15 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
  *  @file   IO_HDF5.cc
- *  @brief  IO_HDF5
+ *  @brief  IO_HDF5 member definitions
  *  @author Jeremy Roberts
  *  @date   Jul 29, 2012
  *  @todo   There is a lot of error checking that could be done more smoothly
  *  @todo   There is a lot of refactoring to do to reduce bulk
- *  @todo   The input reader doesn't read/write nested DB's
  */
 //---------------------------------------------------------------------------//
 
 #include "detran_config.hh"
-
-
 #include "IO_HDF5.hh"
 #include "geometry/Mesh1D.hh"
 #include "geometry/Mesh2D.hh"
@@ -361,9 +358,9 @@ detran_geometry::Mesh::SP_mesh IO_HDF5::read_mesh()
     "Number of y cells attribute missing from HDF5 file.");
   Insist(read_scalar_attribute(group, "number_cells_z", nz),
     "Number of z cells attribute missing from HDF5 file.");
-  Insist(nx > 0 and ny > 0 and nz > 0,
+  Insist(nx > 0 && ny > 0 && nz > 0,
     "The number of cells per direction must be positive");
-  Insist(dim == 1 or dim == 2 or dim == 3,
+  Insist(dim == 1 || dim == 2 || dim == 3,
     "The mesh dimension attribute must be 1, 2, or 3");
 
   // Read the discretization data.

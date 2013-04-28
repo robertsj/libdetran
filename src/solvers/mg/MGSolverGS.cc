@@ -29,7 +29,7 @@ MGSolverGS<D>::MGSolverGS(SP_state                  state,
     d_norm_type = d_input->template get<std::string>("outer_norm_type");
 
   // Post conditions
-  Ensure(d_norm_type == "Linf" or d_norm_type == "L1" or d_norm_type == "L2");
+  Ensure(d_norm_type == "Linf" || d_norm_type == "L1" || d_norm_type == "L2");
 }
 
 //---------------------------------------------------------------------------//

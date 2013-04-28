@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   TimeStepper.cc
- *  @brief  TimeStepper
- *  @author Jeremy Roberts
- *  @date   Nov 16, 2012
+ *  @file  TimeStepper.cc
+ *  @brief TimeStepper class member definitions
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 
@@ -645,9 +644,9 @@ void ts_default_monitor(void* data,
 // EXPLICIT INSTANTIATIONS
 //---------------------------------------------------------------------------//
 
-template class TimeStepper<_1D>;
-template class TimeStepper<_2D>;
-template class TimeStepper<_3D>;
+SOLVERS_INSTANTIATE_EXPORT(TimeStepper<_1D>)
+SOLVERS_INSTANTIATE_EXPORT(TimeStepper<_2D>)
+SOLVERS_INSTANTIATE_EXPORT(TimeStepper<_3D>)
 
 } // end namespace detran
 

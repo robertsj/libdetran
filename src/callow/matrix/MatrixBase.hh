@@ -49,7 +49,7 @@ public:
     , d_n(n)
     , d_is_ready(false)
   {
-    Require(m > 0 and n > 0);
+    Require(m > 0 && n > 0);
     d_sizes_set = true;
   }
 
@@ -68,7 +68,7 @@ public:
 
   virtual void set_size(const int m, const int n)
   {
-    Require(m > 0 and n > 0);
+    Require(m > 0 && n > 0);
     d_m = m;
     d_n = n;
     d_sizes_set = true;

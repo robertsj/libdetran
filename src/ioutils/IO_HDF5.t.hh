@@ -198,7 +198,7 @@ inline bool IO_HDF5::write_map<IO_HDF5::SP_input>
 
   // Loop and add
   typedef std::map<std::string, SP_input> map_T;
-  typename map_T::const_iterator it = map.begin();
+  map_T::const_iterator it = map.begin();
   int i = 0;
   for (; it != map.end(); ++it++, ++i)
   {

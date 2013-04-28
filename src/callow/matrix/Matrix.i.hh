@@ -164,14 +164,14 @@ inline void Matrix::assemble()
 inline int Matrix::start(const int i) const
 {
   Require(d_is_ready);
-  Require(i >= 0 and i < d_m);
+  Require(i >= 0 && i < d_m);
   return d_rows[i];
 }
 
 inline int Matrix::diagonal(const int i) const
 {
   Require(d_is_ready);
-  Require(i >= 0 and i < d_m);
+  Require(i >= 0 && i < d_m);
   return d_diagonals[i];
 }
 
@@ -179,7 +179,7 @@ inline int Matrix::diagonal(const int i) const
 inline int Matrix::end(const int i) const
 {
   Require(d_is_ready);
-  Require(i >= 0 and i < d_m);
+  Require(i >= 0 && i < d_m);
   return d_rows[i + 1];
 }
 
@@ -187,7 +187,7 @@ inline int Matrix::end(const int i) const
 inline int Matrix::column(const int p) const
 {
   Require(d_is_ready);
-  Require(p >= 0 and p < d_nnz);
+  Require(p >= 0 && p < d_nnz);
   return d_columns[p];
 }
 
@@ -195,7 +195,7 @@ inline int Matrix::column(const int p) const
 inline double Matrix::operator[](const int p) const
 {
   Require(d_is_ready);
-  Require(p >= 0 and p < d_nnz);
+  Require(p >= 0 && p < d_nnz);
   return d_values[p];
 }
 
@@ -207,8 +207,8 @@ inline double Matrix::operator[](const int p) const
 inline double Matrix::operator()(const int i, const int j) const
 {
   Require(d_is_ready);
-  Require(i >= 0 and i < d_m);
-  Require(j >= 0 and j < d_n);
+  Require(i >= 0 && i < d_m);
+  Require(j >= 0 && j < d_n);
   // loop through elements in this row
   if (i == j)
     return d_values[d_diagonals[i]];
@@ -295,8 +295,8 @@ inline bool Matrix::insert(int i, int j, double v, const int type)
 {
   Require(!d_is_ready);
   Require(d_allocated);
-  Require(i >= 0 and i < d_m);
-  Require(j >= 0 and j < d_n);
+  Require(i >= 0 && i < d_m);
+  Require(j >= 0 && j < d_n);
   // add to a current entry if found
   if (type == ADD)
   {
@@ -324,7 +324,7 @@ inline bool Matrix::insert(int i, int *j, double *v, int n, const int type)
 {
   Require(!d_is_ready);
   Require(d_allocated);
-  Require(i >= 0 and i < d_m);
+  Require(i >= 0 && i < d_m);
   if (type == ADD)
   {
     // loop through all columns given
@@ -352,7 +352,7 @@ inline bool Matrix::insert(int i, int *j, double *v, int n, const int type)
   // otherwise, add the entries
   for (int jj = 0; jj < n; ++jj)
   {
-    Require(j[jj] >= 0 and j[jj] < d_n);
+    Require(j[jj] >= 0 && j[jj] < d_n);
     d_aij[i][d_counter[i]].i = i;
     d_aij[i][d_counter[i]].j = j[jj];
     d_aij[i][d_counter[i]].v = v[jj];
@@ -366,12 +366,12 @@ inline bool Matrix::insert(int *i, int j, double *v, int n, const int type)
 {
   Require(!d_is_ready);
   Require(d_allocated);
-  Require(j >= 0 and j < d_n);
+  Require(j >= 0 && j < d_n);
   Insist(type == INSERT, "Cannot ADD by column");
   // return if storage unavailable
   for (int ii = 0; ii < n; ++ii)
   {
-    Require(i[ii] >= 0 and i[ii] < d_m);
+    Require(i[ii] >= 0 && i[ii] < d_m);
     if (d_counter[i[ii]] + 1 > d_aij[i[ii]].size())
       return false;
   }
@@ -396,8 +396,8 @@ inline bool Matrix::insert(int *i, int *j, double *v, int n, const int type)
   // \todo this assumes one entry per row---fix
   for (int k = 0; k < n; ++k)
   {
-    Require(i[k] >= 0 and i[k] < d_m);
-    Require(j[k] >= 0 and j[k] < d_n);
+    Require(i[k] >= 0 && i[k] < d_m);
+    Require(j[k] >= 0 && j[k] < d_n);
     if (d_counter[i[k]] + 1 > d_aij[i[k]].size())
       return false;
   }

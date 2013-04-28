@@ -34,9 +34,9 @@ FILE(GLOB_RECURSE files
 )
 #message("my files are ${files}")
 install(FILES       ${files} 
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/include/${LIB_NAME})
+        DESTINATION include/${LIB_NAME})
 install(TARGETS     ${LIB_NAME} 
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+        DESTINATION lib)
 
 # Setup for testing
 if(DETRAN_ENABLE_TEST)
@@ -52,9 +52,15 @@ if(DETRAN_ENABLE_PYTHON)
   swig_link_libraries(${LIB_NAME} ${PYTHON_LIBRARIES} ${LIB_NAME})
   # Install the module and library
   install(FILES ${CMAKE_BINARY_DIR}/${LIB_NAME}/${LIB_NAME}.py
-          DESTINATION ${CMAKE_INSTALL_PREFIX}/python/detran)
-  install(FILES ${CMAKE_BINARY_DIR}/${LIB_NAME}/_${LIB_NAME}.so
-          DESTINATION ${CMAKE_INSTALL_PREFIX}/python/detran)
+          DESTINATION python/detran)
+  set(PYEXT ".so")
+  set(PYPATH ${CMAKE_CURRENT_BINARY_DIR})
+  if (MSVC)
+    set(PYEXT ".pyd")
+    set(PYPATH "${CMAKE_CURRENT_BINARY_DIR}/Release")
+  endif()
+  install(FILES       ${PYPATH}/_${LIB_NAME}${PYEXT}
+          DESTINATION python/detran)
 endif()
 
 endfunction()

@@ -146,7 +146,7 @@ template <class T>
 inline T vec_sum(const std::vector<T> &v)
 {
   T s = 0;
-  for (int i = 0; i < v.size(); ++i)
+  for (size_t i = 0; i < v.size(); ++i)
     s += v[i];
   return s;
 }

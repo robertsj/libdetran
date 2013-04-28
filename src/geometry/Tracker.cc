@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Tracker.cc
- * \brief  Tracker 
- * \author Jeremy Roberts
- * \date   Jun 22, 2012
+/**
+ *  @file  Tracker.cc
+ *  @brief Tracker class member definitions
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 

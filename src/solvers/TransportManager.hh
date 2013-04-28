@@ -10,6 +10,7 @@
 #ifndef detran_TRANSPORTMANAGER_HH_
 #define detran_TRANSPORTMANAGER_HH_
 
+#include "solvers/solvers_export.hh"
 #include "callow/utils/Initialization.hh"
 
 namespace detran
@@ -22,7 +23,7 @@ namespace detran
  *  The purpose of an untemplated base mesh is to simplify
  *  initialization of libraries, etc.
  */
-class TransportManager
+class SOLVERS_EXPORT TransportManager
 {
 
 public:

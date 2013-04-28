@@ -10,7 +10,6 @@
 #ifndef detran_angle_DTN_HH_
 #define detran_angle_DTN_HH_
 
-// Angle headers
 #include "Quadrature.hh"
 
 namespace detran_angle
@@ -38,7 +37,7 @@ namespace detran_angle
  *    - quad_number_polar_octant -- number of abscissa per half space
  *    - gausschebyshev_normalize -- normalize half space weight to 1 [false]
  */
-class DTN: public Quadrature
+class ANGLE_EXPORT DTN: public Quadrature
 {
 
 public:

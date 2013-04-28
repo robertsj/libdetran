@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   test_InputDB.cc
- * \author Jeremy Roberts
- * \date   Jul 14, 2011
- * \brief  Test of InputDB
+/**
+ *  @file  test_InputDB.cc
+ *  @brief Test of InputDB
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 

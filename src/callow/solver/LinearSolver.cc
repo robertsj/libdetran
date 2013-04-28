@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   LinearSolver.cc
- * \brief  LinearSolver member definitions
- * \author Jeremy Roberts
- * \date   Sep 26, 2012
+/**
+ *  @file  LinearSolver.cc
+ *  @brief LinearSolver member definitions
+ *  @note  Copyright (C) Jeremy Roberts 2013
  */
 //---------------------------------------------------------------------------//
 

@@ -38,7 +38,7 @@ ReactionRates::region_power(std::string key, double scale)
   // Compute the fission rate.
   vec_int mat_map = b_mesh->mesh_map("MATERIAL");
   detran::State::moments_type fission_rate(b_mesh->number_cells(), 0.0);
-  for(int g = 0; g < b_material->number_groups(); g++)
+  for(size_t g = 0; g < b_material->number_groups(); g++)
   {
     detran::State::moments_type phi = b_state->phi(g);
     for (int cell = 0; cell < b_mesh->number_cells(); cell++)
@@ -109,11 +109,11 @@ ReactionRates::edit(std::string key,
   vec_dbl edit_region_function(number, 0.0);
   vec_dbl edit_region_volume(number, 0.0);
 
-  for (int k = 0; k < b_mesh->number_cells_z(); k++)
+  for (size_t k = 0; k < b_mesh->number_cells_z(); k++)
   {
-    for (int j = 0; j < b_mesh->number_cells_y(); j++)
+    for (size_t j = 0; j < b_mesh->number_cells_y(); j++)
     {
-      for (int i = 0; i < b_mesh->number_cells_x(); i++)
+      for (size_t i = 0; i < b_mesh->number_cells_x(); i++)
       {
         // Define the mesh cell and volume
         int cell = b_mesh->index(i, j, k);

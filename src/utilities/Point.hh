@@ -1,16 +1,15 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Point.hh
- * \brief  Point 
- * \author Jeremy Roberts
- * \date   Jun 22, 2012
+/**
+ *  @file  Point.hh
+ *  @brief Point class definition 
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 
 #ifndef POINT_HH_
 #define POINT_HH_
 
-// System
+#include "utilities/utilities_export.hh"
 #include <cmath>
 #include <ostream>
 #include <iomanip>
@@ -18,38 +17,36 @@
 namespace detran_utilities
 {
 
-/*!
- *  \class Point
- *  \brief Represent a point in three-space
+/**
+ *  @class Point
+ *  @brief Represent a point in three-space
  */
-class Point
+class UTILITIES_EXPORT Point
 {
 
 public:
 
-
-  Point(double xval = 0.0, double yval = 0.0, double zval = 0.0)
-    : d_x(xval)
-    , d_y(yval)
-    , d_z(zval)
-  { /* ... */ }
+  /// Constructor
+  Point(const double xval = 0.0, 
+	    const double yval = 0.0, 
+		const double zval = 0.0);
 
   Point operator*(double scale) const
   {
     return Point(d_x*scale, d_y*scale, d_z*scale);
   }
 
-  Point operator*(Point p) const
+  Point operator*(const Point &p) const
   {
     return Point(d_x*p.x(), d_y*p.y(), d_z*p.z());
   }
 
-  Point operator+(Point p) const
+  Point operator+(const Point &p) const
   {
     return Point(d_x+p.x(), d_y+p.y(), d_z+p.z());
   }
 
-  Point operator-(Point p) const
+  Point operator-(const Point &p) const
   {
     return Point(d_x-p.x(), d_y-p.y(), d_z-p.z());
   }
@@ -68,42 +65,24 @@ public:
   }
 
 private:
-
-  /// \name Private Data
-  /// \{
-
+ 
+  /// X coordinate
   double d_x;
+  /// Y coordinate
   double d_y;
+  /// Z coordinate
   double d_z;
-
-  /// \}
 
 };
 
 /// Scale a point.
-inline Point operator*(double scale, Point p)
-{
-  return Point(p.x()*scale, p.y()*scale);
-}
+UTILITIES_EXPORT Point operator*(double scale, const Point &p);
 
 /// Distance between two points.
-inline double distance(Point p1, Point p2)
-{
-  double dx = p2.x()-p1.x();
-  double dy = p2.y()-p1.y();
-  double dz = p2.z()-p1.z();
-  return std::sqrt(dx*dx + dy*dy + dz*dz);
-}
+UTILITIES_EXPORT double distance(const Point &p1, const Point &p2);
 
-inline std::ostream& operator<< (std::ostream &out, Point p)
-{
-  std::ios::fmtflags f(out.flags());
-  out.setf(std::ios::fixed, std::ios::floatfield);
-  out.setf(std::ios::showpoint);
-  out << "(" << p.x() << ", " << p.y() << ", " << p.z() << ")";
-  out.flags(f);
-  return out;
-}
+/// Pretty print of a point
+UTILITIES_EXPORT std::ostream& operator<< (std::ostream &out, const Point &p);
 
 } // end namespace detran_utilities
 

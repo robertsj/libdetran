@@ -210,6 +210,8 @@ protected:
 
 };
 
+CALLOW_TEMPLATE_EXPORT(detran_utilities::SP<Matrix>)
+
 } // end namespace callow
 
 // Inline members

@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- *  \file   Core.cc
- *  \author Jeremy Roberts
- *  \brief  Core class member definitions
- *  \date   Apr 16, 2012
+/**
+ *  @file  Core.cc
+ *  @brief Core class member definitions
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 
@@ -14,6 +13,7 @@
 namespace detran_geometry
 {
 
+//---------------------------------------------------------------------------//
 Core::Core(int dimension, vec_assembly assemblies, vec_int assembly_map)
   : d_dimension(dimension)
   , d_assemblies(assemblies)
@@ -23,18 +23,21 @@ Core::Core(int dimension, vec_assembly assemblies, vec_int assembly_map)
   finalize(assembly_map);
 }
 
+//---------------------------------------------------------------------------//
 Core::Core(int dimension)
  : d_dimension(dimension)
 {
   Require(d_dimension > 0);
 }
 
+//---------------------------------------------------------------------------//
 void Core::add_assembly(SP_assembly assembly)
 {
   Require(assembly);
   d_assemblies.push_back(assembly);
 }
 
+//---------------------------------------------------------------------------//
 void Core::finalize(vec_int assembly_map)
 {
   using std::cout;

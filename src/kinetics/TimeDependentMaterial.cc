@@ -42,7 +42,7 @@ void TimeDependentMaterial::update(const double t,
   update_impl();
 
   // BDF coefficient
-  Assert(order >= 1 and order <= 6);
+  Assert(order >= 1 && order <= 6);
   double a_0 = bdf_coefs[order - 1][0];
 
   // Add synthetic components

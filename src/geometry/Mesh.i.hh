@@ -134,7 +134,7 @@ inline Mesh::size_t Mesh::cell_to_i(size_t cell) const
 {
   Require(cell >= 0);
   Require(cell < d_number_cells);
-  int i = cell % d_number_cells_x;
+  size_t i = cell % d_number_cells_x;
   Ensure(i < d_number_cells_x);
   return i;
 }
@@ -142,9 +142,9 @@ inline Mesh::size_t Mesh::cell_to_j(size_t cell) const
 {
   Require(cell >= 0);
   Require(cell < d_number_cells);
-  int j = cell % (d_number_cells_x * d_number_cells_y);
+  size_t j = cell % (d_number_cells_x * d_number_cells_y);
   double tmp = std::floor(double(j)/double(d_number_cells_x));
-  j = int(tmp);
+  j = size_t(tmp);
   Ensure(j < d_number_cells_y);
   return j;
 }
@@ -153,7 +153,7 @@ inline Mesh::size_t Mesh::cell_to_k(size_t cell) const
   Require(cell >= 0);
   Require(cell < d_number_cells);
   double tmp = std::floor(double(cell)/double(d_number_cells_x*d_number_cells_y));
-  int k = int(tmp);
+  size_t k = size_t(tmp);
   Ensure(k < d_number_cells_z);
   return k;
 }

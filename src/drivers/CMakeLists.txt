@@ -21,7 +21,7 @@ set(SRC
 add_executable(${EXE_NAME} 
                ${SRC}
 )
-target_link_libraries(${EXE_NAME}
+target_link_libraries(${EXE_NAME} 
                       solvers
                       transport
                       material
@@ -31,8 +31,10 @@ target_link_libraries(${EXE_NAME}
                       ioutils
                       ${GPERFTOOLS_LIBRARIES}                        
 )
-INSTALL_TARGETS(/bin xdetran)
-
+install(TARGETS     xdetran
+        DESTINATION bin)
+install(FILES       detran.bat
+        DESTINATION .)
 #-----------------------------------------------------------------------------#
 # TESTING
 #-----------------------------------------------------------------------------#

@@ -10,6 +10,7 @@
 #ifndef POLARQUADRATURE_HH_
 #define POLARQUADRATURE_HH_
 
+#include "angle/angle_export.hh"
 #include "utilities/DBC.hh"
 #include "utilities/Definitions.hh"
 #include "utilities/SP.hh"
@@ -22,7 +23,7 @@ namespace detran_angle
  *  \class PolarQuadrature
  *  \brief Polar quadrature definition, nominally for MOC
  */
-class PolarQuadrature
+class ANGLE_EXPORT PolarQuadrature
 {
 
 public:
@@ -83,7 +84,7 @@ public:
    *  \brief Return a polar weight
    *  \param p  Polar index in octant
    */
-  double weight(int p) const
+  double weight(size_t p) const
   {
     Require(p < d_number_polar);
     return d_weight[p];
@@ -105,6 +106,8 @@ protected:
   std::vector<double> d_weight;
 
 };
+
+ANGLE_TEMPLATE_EXPORT(detran_utilities::SP<PolarQuadrature>)
 
 } // end namespace detran_angle
 

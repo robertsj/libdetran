@@ -52,7 +52,7 @@ inline void SyntheticMomentSource::build(const double dt,
   Require(states.size() >= order);
   // If the precursors are present, they must be the same size as the state
   size_t size_precursor = precursors.size();
-  Require((size_precursor == size_state) or (size_precursor == 0));
+  Require((size_precursor == size_state) || (size_precursor == 0));
 
   // Number of precursors
   size_t np = 0;

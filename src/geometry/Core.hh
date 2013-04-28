@@ -1,14 +1,13 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- *  \file   Core.hh
- *  \author Jeremy Roberts
- *  \brief  Core class definition
- *  \date   Apr 16, 2012
+/**
+ *  @file   Core.hh
+ *  @brief  Core class definition
+ *  @note   Copyright (C) 2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 
-#ifndef CORE_HH_
-#define CORE_HH_
+#ifndef detran_geometry_CORE_HH_
+#define detran_geometry_CORE_HH_
 
 #include "Mesh2D.hh"
 #include "Assembly.hh"
@@ -16,11 +15,11 @@
 namespace detran_geometry
 {
 
-/*!
- *  \class Core
- *  \brief Simple 2-D core of assemblies.
+/**
+ *  @class Core
+ *  @brief Simple 2-D core of assemblies.
  */
-class Core
+class GEOMETRY_EXPORT Core
 {
 
 public:
@@ -40,13 +39,13 @@ public:
   // PUBLIC INTERFACE
   //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Constructor.
+  /**
+   *  @brief Constructor.
    *
-   *  \param    pitch       Pin cell pitch (assumed square)
-   *  \param    radii       Vector of fuel pin radii (can be zero length)
-   *  \param    mat_map     Region material map (cell-center outward)
-   *  \param    meshes      Number of evenly-spaced meshes per direction
+   *  @param    pitch       Pin cell pitch (assumed square)
+   *  @param    radii       Vector of fuel pin radii (can be zero length)
+   *  @param    mat_map     Region material map (cell-center outward)
+   *  @param    meshes      Number of evenly-spaced meshes per direction
    */
   Core(int dimension, vec_assembly assemblies, vec_int assembly_map);
 
@@ -91,22 +90,16 @@ private:
 
   /// Meshed object
   Mesh2D::SP_mesh d_mesh;
-
   /// Dimension, e.g. 17 in 17x17. Number assemblies along one dimension.
   int d_dimension;
-
   /// Vector of SP pointers to pin cells in the assembly
   vec_assembly d_assemblies;
-
   /// Logically 2-D map of pin cell locations
   vec_int d_assembly_map;
-
   /// Number of pins along one dimension of core
   int d_number_pincells_dim;
-
   /// Number of assemblies in the core
   int d_number_assemblies;
-
   /// Number of pincells in the core
   int d_number_pincells;
 
@@ -114,4 +107,4 @@ private:
 
 } // end namespace detran_geometry
 
-#endif /* CORE_HH_ */
+#endif /* detran_geometry_CORE_HH_ */

@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   LinearSolver.hh
- *  @author robertsj
- *  @date   Sep 13, 2012
- *  @brief  LinearSolver class definition.
+ *  @file  LinearSolver.hh
+ *  @brief LinearSolver class definition
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 

@@ -22,8 +22,8 @@ inline const double& MatrixDense::operator()(const int i, const int j) const
 {
   // Preconditions
   Require(d_is_ready);
-  Require(i >= 0 and i < d_m);
-  Require(j >= 0 and j < d_n);
+  Require(i >= 0 && i < d_m);
+  Require(j >= 0 && j < d_n);
 
   return d_values[j + i * d_n];
 }
@@ -32,8 +32,8 @@ inline double& MatrixDense::operator()(const int i, const int j)
 {
   // Preconditions
   Require(d_is_ready);
-  Require(i >= 0 and i < d_m);
-  Require(j >= 0 and j < d_n);
+  Require(i >= 0 && i < d_m);
+  Require(j >= 0 && j < d_n);
 
   return d_values[j + i * d_n];
 }
@@ -43,7 +43,7 @@ inline const double& MatrixDense::operator[](const int p) const
 {
   // Preconditions
   Require(d_is_ready);
-  Require(p >= 0 and p < d_n * d_m);
+  Require(p >= 0 && p < d_n * d_m);
 
   return d_values[p];
 }
@@ -52,7 +52,7 @@ inline double& MatrixDense::operator[](const int p)
 {
   // Preconditions
   Require(d_is_ready);
-  Require(p >= 0 and p < d_n * d_m);
+  Require(p >= 0 && p < d_n * d_m);
 
   return d_values[p];
 }
@@ -125,8 +125,8 @@ inline bool MatrixDense::insert(int i, int j, double v, const int type)
 {
   // Preconditions
   Require(d_is_ready);
-  Require(i >= 0 and i < d_m);
-  Require(j >= 0 and j < d_n);
+  Require(i >= 0 && i < d_m);
+  Require(j >= 0 && j < d_n);
 
   if (type == ADD)
     d_values[j + i * d_n] += v;
@@ -141,7 +141,7 @@ inline bool MatrixDense::insert_row(int i, double *v, const int type)
 {
   // Preconditions
   Require(d_is_ready);
-  Require(i >= 0 and i < d_m);
+  Require(i >= 0 && i < d_m);
 
   for (int j = 0; j < d_n; ++j)
     insert(i, j, v[j], type);
@@ -154,7 +154,7 @@ inline bool MatrixDense::insert_col(int j, double *v, const int type)
 {
   // Preconditions
   Require(d_is_ready);
-  Require(j >= 0 and j < d_n);
+  Require(j >= 0 && j < d_n);
 
   for (int i = 0; i < d_n; ++i)
     insert(i, j, v[i], type);

@@ -410,10 +410,10 @@ int test_FixedSourceManager_iterate(int argc, char *argv[])
 
   typedef FixedSourceManager<_1D>       Manager_T;
   typedef BoundarySN<_1D>               B_T;
-  typedef typename B_T::SP_boundary     SP_boundary;
+  typedef B_T::SP_boundary     SP_boundary;
 
   // Input, materials, and mesh
-  typename Manager_T::SP_input input = test_FixedSourceManager_input();
+  Manager_T::SP_input input = test_FixedSourceManager_input();
   SP_material mat = test_FixedSourceManager_material();
   SP_mesh mesh = test_FixedSourceManager_mesh(1);
   input->put<int>("number_groups", mat->number_groups());

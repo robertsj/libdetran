@@ -88,8 +88,11 @@ int test_Richardson(int argc, char *argv[])
   Vector B(n, 1.0);
   db = get_db();
   db->put<std::string>("linear_solver_type", "richardson");
+  //db->put<int>("linear_solver_monitor_level", 1);
   solver = LinearSolverCreator::Create(db);
   solver->set_operators(test_matrix_1(n));
+  //Preconditioner::SP_preconditioner pcilu0(new PCILU0(test_matrix_1(n)));
+  //solver->set_preconditioner(pcilu0, LinearSolver::LEFT);
   int status = solver->solve(B, X);
   TEST(status == 0);
   for (int i = 0; i < 20; ++i)
@@ -163,6 +166,7 @@ int test_GMRES(int argc, char *argv[])
   db->put<int>("linear_solver_maxit", 50);
   db->put<int>("linear_solver_gmres_restart", 16);
   // NO PC
+  std::cout << "*** GMRES + NO PC ***" << std::endl;
   solver = LinearSolverCreator::Create(db);
   solver->set_operators(test_matrix_1(n));
   int status = solver->solve(B, X);
@@ -178,6 +182,7 @@ int test_GMRES(int argc, char *argv[])
   pcjacobi = new PCJacobi(A);
 
   // PCILU0 -- LEFT
+  std::cout << "*** GMRES + ILU(0) on LEFT ***" << std::endl;
   X.set(0.0);
   solver->set_preconditioner(pcilu0, GMRES::LEFT);
   status = solver->solve(B, X);
@@ -188,6 +193,7 @@ int test_GMRES(int argc, char *argv[])
   }
 
   // PCILU0 -- RIGHT
+  std::cout << "*** GMRES + ILU(0) on RIGHT ***" << std::endl;
   X.set(0.0);
   solver->set_preconditioner(pcilu0, GMRES::RIGHT);
   status = solver->solve(B, X);
@@ -198,6 +204,7 @@ int test_GMRES(int argc, char *argv[])
   }
 
   // PCJacobi -- LEFT
+  std::cout << "*** GMRES + Jacobi on LEFT ***" << std::endl;
   X.set(0.0);
   solver->set_preconditioner(pcjacobi, GMRES::LEFT);
   status = solver->solve(B, X);
@@ -208,6 +215,7 @@ int test_GMRES(int argc, char *argv[])
   }
 
   // PCJacobi -- RIGHT
+  std::cout << "*** GMRES + Jacobi on RIGHT ***" << std::endl;
   X.set(0.0);
   solver->set_preconditioner(pcjacobi, GMRES::RIGHT);
   status = solver->solve(B, X);

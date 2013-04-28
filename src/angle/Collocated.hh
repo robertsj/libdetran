@@ -51,7 +51,7 @@ namespace detran_angle
  * accuracy.
  *
  */
-class Collocated: public QuadratureMOC
+class ANGLE_EXPORT Collocated: public QuadratureMOC
 {
 
 public:

@@ -28,6 +28,7 @@ BoundaryMOC<D>::BoundaryMOC(SP_input        input,
   , d_bc(2*D::dimension)
 {
   Require(d_quadrature);
+  Insist(D::dimension == 2, "MOC is for 2D only.");
 
   // Allocated the flux container.
   initialize();
@@ -73,26 +74,6 @@ BoundaryMOC<D>::BoundaryMOC(SP_input        input,
     }
   }
 
-}
-
-//---------------------------------------------------------------------------//
-template <>
-BoundaryMOC<_1D>::BoundaryMOC(SP_input        input,
-                              SP_mesh         mesh,
-                              SP_quadrature   quadrature)
-  : Base(input, mesh)
-{
-  THROW("MOC unavailable in 1D.");
-}
-
-//---------------------------------------------------------------------------//
-template <>
-BoundaryMOC<_3D>::BoundaryMOC(SP_input        input,
-                              SP_mesh         mesh,
-                              SP_quadrature   quadrature)
-  : Base(input, mesh)
-{
-  THROW("MOC unavailable in 3D.");
 }
 
 //---------------------------------------------------------------------------//

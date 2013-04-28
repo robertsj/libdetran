@@ -70,7 +70,7 @@ build(SP_quadrature &q, SP_input input, const int dimension)
   // not to normalize the weights.
   bool cheb_norm = false;
   if (input->check("quad_chebyshev_normalize"))
-    cheb_norm = input->get<int>("quad_chebyshev_normalize");
+    cheb_norm = (0 != input->get<int>("quad_chebyshev_normalize"));
 
   // First, check whether this is an MOC quadrature or not.  If it
   // is, we need different parameters.

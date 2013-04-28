@@ -1,14 +1,13 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Track.hh
- * \brief  Track class definition.
- * \author Jeremy Roberts
- * \date   Jun 22, 2012
+/**
+ *  @file  Track.hh
+ *  @brief Track class definition.
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 
-#ifndef TRACK_HH_
-#define TRACK_HH_
+#ifndef detran_geometry_TRACK_HH_
+#define detran_geometry_TRACK_HH_
 
 #include "utilities/Point.hh"
 #include "Segment.hh"
@@ -21,11 +20,11 @@
 namespace detran_geometry
 {
 
-/*!
- *  \class Track
- *  \brief Represents a track across a domain, consisting of several segments
+/**
+ *  @class Track
+ *  @brief Represents a track across a domain, consisting of several segments
  */
-class Track
+class GEOMETRY_EXPORT Track
 {
 
 public:
@@ -46,10 +45,10 @@ public:
   // PUBLIC INTERFACE
   //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Constructor
-   *  \param r0  Entrance point
-   *  \param r1   Exit point
+  /**
+   *  @brief Constructor
+   *  @param r0   Entrance point
+   *  @param r1   Exit point
    */
   Track(Point r0, Point r1)
     : d_enter(r0)
@@ -173,9 +172,13 @@ inline std::ostream& operator<< (std::ostream &out, Track &t)
   return out;
 }
 
+GEOMETRY_TEMPLATE_EXPORT(detran_utilities::SP<Track>)
+GEOMETRY_TEMPLATE_EXPORT(std::vector<detran_utilities::SP<Track> >)
+GEOMETRY_TEMPLATE_EXPORT(std::vector<std::vector<detran_utilities::SP<Track> > >)
+
 } // end namespace detran_geometry
 
-#endif /* TRACK_HH_ */
+#endif /* detran_geometry_TRACK_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of file Track.hh

@@ -12,6 +12,7 @@
 #define detran_utilities_GENEXCEPTION_HH
 
 #include "utilities/utilities_export.hh"
+#include "utilities/Definitions.hh"
 #include <iostream>
 #include <exception>
 #include <string>

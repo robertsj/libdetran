@@ -39,7 +39,7 @@ Uniform::Uniform(size_t dim,
   vec_dbl phi_quadrant(d_number_azimuths_octant, 0.0);
   double delta = 0.5 * detran_utilities::pi / d_number_azimuths_octant;
   phi_quadrant[0] = delta/2;
-  for (int a = 1; a < d_number_azimuths_octant; a++)
+  for (size_t a = 1; a < d_number_azimuths_octant; a++)
   {
     phi_quadrant[a] = phi_quadrant[a-1] + delta;
   }
@@ -50,7 +50,7 @@ Uniform::Uniform(size_t dim,
   vec_int num_y(d_number_azimuths_octant, 0);
   vec_dbl phi(d_number_azimuths_octant, 0.0);
 
-  for (int a = 0; a < d_number_azimuths_octant; a++)
+  for (size_t a = 0; a < d_number_azimuths_octant; a++)
   {
 
     if (db) cout << " a = " << a << endl;
@@ -89,11 +89,11 @@ Uniform::Uniform(size_t dim,
 
     // Loop over polar angles.  Polar is on the inner, since that's
     // where it is in the sweeps.
-    for (int p = 0; p < d_number_polar; p++)
+    for (size_t p = 0; p < d_number_polar; p++)
     {
 
       // Cardinal Index
-      int angle = a * d_number_polar + p;
+      size_t angle = a * d_number_polar + p;
 
       // Fill the angles.  Note, we work with theta being the
       // angle with respect to the xy plane, which is not
@@ -110,7 +110,7 @@ Uniform::Uniform(size_t dim,
 
   } // end azimuth
 
-  for (int a = 1; a < d_number_azimuths_octant; a++)
+  for (size_t a = 1; a < d_number_azimuths_octant; a++)
   {
     Insist(!detran_utilities::soft_equiv(phi[a], phi[a-1]),
       "Repeated azimuths.  Increase space parameter or try an odd number.");
@@ -119,12 +119,12 @@ Uniform::Uniform(size_t dim,
   // Calculate intercepts on a square.
   d_enter.resize(2*d_number_azimuths_octant, vec_point(num_space));
   d_exit.resize(2*d_number_azimuths_octant,  vec_point(num_space));
-  d_number_enter.resize(2*d_number_azimuths_octant, vec_int(2, 0));
-  d_number_exit.resize(2*d_number_azimuths_octant, vec_int(2, 0));
+  d_number_enter.resize(2*d_number_azimuths_octant, vec_size_t(2, 0));
+  d_number_exit.resize(2*d_number_azimuths_octant, vec_size_t(2, 0));
 
   // First quadrant
   if (db) std::cout << std::endl;
-  for (int a = 0; a < d_number_azimuths_octant; a++)
+  for (size_t a = 0; a < d_number_azimuths_octant; a++)
   {
     double dx = 1.0 / num_x[a];
     double dy = 1.0 / num_y[a];
@@ -150,7 +150,7 @@ Uniform::Uniform(size_t dim,
     d_number_exit[a][1]  = num_x[a];
   }
   // Second quadrant, placed as mirror image.
-  for (int a = 0; a < d_number_azimuths_octant;  a++)
+  for (size_t a = 0; a < d_number_azimuths_octant;  a++)
   {
     int a2 = a + d_number_azimuths_octant;
 

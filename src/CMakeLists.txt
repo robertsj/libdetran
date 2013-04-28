@@ -52,6 +52,11 @@ set(DETRAN_ENABLE_BOOST NO CACHE BOOL       "Enable BOOST.")
 include(GetTheDate)
 get_the_date(DETRAN_COMPILED_D DETRAN_COMPILED_M DETRAN_COMPILED_Y)
 
+set(DETRAN_WINDOWS NO)
+if(WIN32)
+  set(DETRAN_WINDOWS YES)
+endif()
+
 # Write config file, install it, and include that directory for all source
 set(DETRAN_CONFIG_IN  
     "${CMAKE_CURRENT_SOURCE_DIR}/detran_config/detran_config.hh.in")
@@ -229,6 +234,37 @@ add_subdirectory(drivers)
 # Python things for installation
 if(DETRAN_ENABLE_PYTHON)
   add_subdirectory(python)
+endif()
+
+#------------------------------------------------------------------------------#
+# CPACK -- Packs up the build for installation elsewhere
+#------------------------------------------------------------------------------#
+
+if (PACKUP_DETRAN)
+  set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Detran: a DETerministic TRANsport tool")
+  set(CPACK_PACKAGE_NAME "Detran")
+  set(CPACK_PACKAGE_VENDOR "Jeremy Roberts")
+  set(CPACK_PACKAGE_VERSION "0.2.1")
+  set(CPACK_PACKAGE_VERSION_MAJOR "0")
+  set(CPACK_PACKAGE_VERSION_MINOR "2")
+  set(CPACK_PACKAGE_VERSION_PATCH "1")
+  set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/../LICENSE")
+  set(CPACK_RESOURCE_FILE_README  "${CMAKE_CURRENT_SOURCE_DIR}/../README")
+  if (WIN32)
+    set(CPACK_NSIS_DISPLAY_NAME "Detran")
+    set(CPACK_NSIS_HELP_LINK 
+        "http:\\\\\\\\www.github.com/robertsj/libdetran")
+    set(CPACK_NSIS_URL_INFO_ABOUT 
+        "http:\\\\\\\\www.github.com/robertsj/libdetran")
+    set(CPACK_NSIS_CONTACT "robertsj@mit.edu")
+    set(CPACK_NSIS_MODIFY_PATH ON)
+    set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS 
+        " \${EnvVarUpdate} \"$0\" \"LALALALALA\"  \"A\" \"HKCU\" \"${CPACK_PACKAGE_INSTALL_DIRECTORY}\\\\python\" ")
+    set(CPACK_NSIS_MENU_LINKS "detran.bat;Detran")
+  else()
+    set(CPACK_GENERATOR "TGZ")
+  endif()
+  include(CPack)
 endif()
 
 #------------------------------------------------------------------------------#

@@ -207,9 +207,9 @@ void Mesh::setup()
   for (size_t j = 0; j < d_yfm.size(); j++)
   {
     // Fine mesh y range for this Jth coarse mesh.
-    int j1 = ph;
-    int j2 = ph + d_yfm[j];
-    for (int jj = j1; jj < j2; jj++)
+    size_t j1 = ph;
+    size_t j2 = ph + d_yfm[j];
+    for (size_t jj = j1; jj < j2; jj++)
     {
       Assert(jj < d_number_cells_y);
       d_dy[jj] = (d_ycme[j + 1] - d_ycme[j]) / d_yfm[j];

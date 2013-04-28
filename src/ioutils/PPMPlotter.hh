@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   PPMPlotter.hh
- *  @brief  PPMPlotter 
- *  @author Jeremy Roberts
- *  @date   Mar 12, 2013
+ *  @file  PPMPlotter.hh
+ *  @brief PPMPlotter class definition
+ *  @note  Copyright (C) Jeremy Roberts 2013
  */
 //---------------------------------------------------------------------------//
 
@@ -22,6 +21,7 @@ namespace detran_ioutils
 /**
  *  @class PPMPlotter
  *  @brief Produces 2-D plots in the PPM format
+ *  @todo  Add capability to do xz and yz planes for 3-D
  */
 class IOUTILS_EXPORT PPMPlotter
 {

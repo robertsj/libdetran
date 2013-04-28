@@ -1,14 +1,13 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- *  \file   PinCell.hh
- *  \author Jeremy Roberts
- *  \brief  PinCell class definition
- *  \date   Mar 23, 2012
+/**
+ *  @file  PinCell.hh
+ *  @brief PinCell class definition
+ *  @note  Copyright (C) 2013 Jeremy Roberts  
  */
 //---------------------------------------------------------------------------//
 
-#ifndef PinCell_HH_
-#define PinCell_HH_
+#ifndef detran_geometry_PinCell_HH_
+#define detran_geometry_PinCell_HH_
 
 #include "Mesh2D.hh"
 
@@ -16,9 +15,9 @@ namespace detran_geometry
 {
 
 //---------------------------------------------------------------------------//
-/*!
- *  \class PinCell
- *  \brief Two-dimensional Cartesian mesh.
+/**
+ *  @class PinCell
+ *  @brief Two-dimensional Cartesian mesh.
  *
  *  This is mostly a convenience interface for producing a 2D pin cell
  *  mesh.  Two discretization options are provided.
@@ -51,7 +50,7 @@ namespace detran_geometry
  *  width was arbitrary.
  */
 //---------------------------------------------------------------------------//
-class PinCell
+class GEOMETRY_EXPORT PinCell
 {
 
 public:
@@ -69,13 +68,13 @@ public:
   // PUBLIC INTERFACE
   //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Constructor.
+  /**
+   *  @brief Constructor.
    *
-   *  \param    pitch       Pin cell pitch (assumed square)
-   *  \param    radii       Vector of fuel pin radii (can be zero length)
-   *  \param    mat_map     Region material map (cell-center outward)
-   *  \param    fuel_flag   Designates this as a fuel pin
+   *  @param    pitch       Pin cell pitch (assumed square)
+   *  @param    radii       Vector of fuel pin radii (can be zero length)
+   *  @param    mat_map     Region material map (cell-center outward)
+   *  @param    fuel_flag   Designates this as a fuel pin
    */
   PinCell(double pitch, vec_dbl radii, vec_int mat_map, bool fuel_flag = true);
 
@@ -93,10 +92,10 @@ public:
     return d_mesh;
   }
 
-  /*!
-   *  \brief Mesh the pin cell.
-   *  \param number_meshes  Number of meshes per direction.
-   *  \param flag           Switch between uniform and "best fit"
+  /**
+   *  @brief Mesh the pin cell.
+   *  @param number_meshes  Number of meshes per direction.
+   *  @param flag           Switch between uniform and "best fit"
    */
   void meshify(int number_meshes, bool flag = false);
 
@@ -113,16 +112,12 @@ private:
 
   /// Underlying meshed object
   Mesh2D::SP_mesh d_mesh;
-
   /// Pin cell pitch.
   double d_pitch;
-
   /// Pin shell radii.
   vec_dbl d_radii;
-
   // Region material map.
   vec_int d_mat_map;
-
   /// Fuel flag (true if fuel).
   bool d_fuel_flag;
 
@@ -130,21 +125,24 @@ private:
   // IMPLEMENTATION
   //-------------------------------------------------------------------------//
 
-  /*!
-   * \brief Determine in what region a mesh center resides.
+  /**
+   *  @brief Determine in what region a mesh center resides.
    *
    *
-   * \param  i  Horizontal index.
-   * \param  j  Vertical index.
-   * \return      Region index.
+   *  @param  i  Horizontal index.
+   *  @param  j  Vertical index.
+   *  @return      Region index.
    */
   int find_region(int i, int j, double width);
 
 };
 
+GEOMETRY_TEMPLATE_EXPORT(detran_utilities::SP<PinCell>)
+GEOMETRY_TEMPLATE_EXPORT(std::vector<detran_utilities::SP<PinCell> >)
+
 } // end namespace detran_geometry
 
-#endif /* PinCell_HH_ */
+#endif /* detran_geometry_PinCell_HH_ */
 
 //---------------------------------------------------------------------------//
 //              end of PinCell.hh

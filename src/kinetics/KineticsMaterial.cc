@@ -117,7 +117,7 @@ void KineticsMaterial::finalize()
       if (d_sigma_f[g][m] > 0.0) has_fission = true;
       v += d_chi[g][m];
     }
-    Assert(v > 0.0 or !has_fission);
+    Assert(v > 0.0 || !has_fission);
 
     for (size_t i = 0; i < d_number_precursor_groups; ++i)
     {
@@ -126,7 +126,7 @@ void KineticsMaterial::finalize()
       {
         v += d_chi_d[g][i][m];
       }
-      Assert(v > 0.0 or !has_fission);
+      Assert(v > 0.0 || !has_fission);
     }
   }
 

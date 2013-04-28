@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   LevelSymmetric.cc
- * \author robertsj
- * \date   May 22, 2012
- * \brief  LevelSymmetric class definition.
+/**
+ *  @file  LevelSymmetric.cc
+ *  @brief LevelSymmetric member definitions
+ *  @note  Copyright (C) Jeremy Roberts 2013
  */
 //---------------------------------------------------------------------------//
 

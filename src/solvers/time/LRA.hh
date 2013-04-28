@@ -47,7 +47,7 @@ const double VELOCITY1 = 3.0e5;
 const int ROD = 5;
 const int REFLECTOR = 4;
 
-class LRA: public detran::TimeDependentMaterial
+class SOLVERS_EXPORT LRA: public detran::TimeDependentMaterial
 {
 
 public:

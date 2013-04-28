@@ -52,7 +52,7 @@ namespace detran_angle
  *    - quad_number_azimuth_octant  -- number azimuths per octant
  *
  */
-class ProductQuadrature: public Quadrature
+class ANGLE_EXPORT ProductQuadrature: public Quadrature
 {
 
 public:

@@ -53,7 +53,7 @@ void QuadratureMOC::display_tracks() const
   cout << "MOC Quadrature: " << d_name << endl;
   cout << endl;
   cout << "Unscaled track data: " << endl;
-  for (int a = 0; a < 2*d_number_azimuths_octant; ++a)
+  for (size_t a = 0; a < 2*d_number_azimuths_octant; ++a)
   {
     cout << "*** azimuth = " << a << endl;
     cout << "        phi = " << d_phi[a] << endl;

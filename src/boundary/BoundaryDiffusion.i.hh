@@ -56,8 +56,8 @@ inline void BoundaryDiffusion<_3D>::clear(const size_t g)
 {
   for (int inout = 0; inout < 2; ++inout)
     for (int side = 0; side < 6; ++side)
-      for (int j = 0; j < d_boundary_flux[inout][side][g].size(); ++j)
-        for (int i = 0; i < d_boundary_flux[inout][side][g][0].size(); ++i)
+      for (size_t j = 0; j < d_boundary_flux[inout][side][g].size(); ++j)
+        for (size_t i = 0; i < d_boundary_flux[inout][side][g][0].size(); ++i)
           d_boundary_flux[inout][side][g][j][i] = 0.0;
 
 }
@@ -68,7 +68,7 @@ inline void BoundaryDiffusion<_2D>::clear(const size_t g)
 {
   for (int inout = 0; inout < 2; ++inout)
     for (int side = 0; side < 4; ++side)
-      for (int i = 0; i < d_boundary_flux[inout][side][g].size(); ++i)
+      for (size_t i = 0; i < d_boundary_flux[inout][side][g].size(); ++i)
         d_boundary_flux[inout][side][g][i] = 0.0;
 }
 

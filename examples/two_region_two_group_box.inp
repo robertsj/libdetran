@@ -3,24 +3,26 @@
 # A simple 2-d, 2 region, 2 group box with uniform isotropic source.
 
 # Input
-int number_groups   2
-int dimension       2
-str problem_type    eigenvalue
-str equation        dd
-int inner_max_iters 1
-dbl inner_tolerance 1e-6
-int inner_print_out 0
-int outer_max_iters 1
-dbl outer_tolerance 1e-6
-int outer_print_out 0
-int eigen_max_iters 100
-dbl eigen_tolerance 1e-6
-str bc_left         reflect
-str bc_right        reflect
-str bc_bottom       reflect
-str bc_top          reflect
-str quad_type       quadruplerange
-int quad_order      8
+int number_groups               2
+int dimension                   2
+str problem_type                eigenvalue
+str equation                    dd
+int inner_max_iters             1
+dbl inner_tolerance             1e-9
+int inner_print_level           0
+int outer_max_iters             0
+dbl outer_tolerance             1e-6
+int outer_print_level           0
+int eigen_max_iters             1000
+dbl eigen_tolerance             1e-9
+int eigen_print_interval        5
+str bc_west                     reflect
+str bc_east                     vacuum
+str bc_south                    reflect
+str bc_north                    vacuum
+str quad_type                   chebyshevdpn
+int quad_number_polar_octant    3
+int quad_number_azimuth_octant  3
 
 # Mesh
 vec_dbl mesh_xcme    0.0 5.0 10.0 15.0 20.0

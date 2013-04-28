@@ -19,6 +19,9 @@
 namespace detran_angle
 {
 
+ANGLE_TEMPLATE_EXPORT(std::vector<detran_utilities::Point>)
+ANGLE_TEMPLATE_EXPORT(std::vector<std::vector<detran_utilities::Point> >)
+
 /*!
  *  \class QuadratureMOC
  *  \brief Quadrature specification for MOC transport
@@ -55,8 +58,8 @@ public:
   typedef detran_utilities::Point                       Point;
   typedef std::vector<Point>                            vec_point;
   typedef std::vector<vec_point>                        vec2_point;
-  typedef detran_utilities::vec_int                     vec_int;
-  typedef detran_utilities::vec2_int                    vec2_int;
+  typedef detran_utilities::vec_size_t                  vec_size_t;
+  typedef detran_utilities::vec2_size_t                 vec2_size_t;
 
   //-------------------------------------------------------------------------//
   // PUBLIC INTERFACE
@@ -95,14 +98,14 @@ public:
   size_t number_enter(size_t a, size_t xy) const
   {
     Require(a < 2*d_number_azimuths_octant);
-    Require(xy == 0 or xy == 1);
+    Require(xy == 0 || xy == 1);
     return d_number_enter[a][xy];
   }
 
   int number_exit(size_t a, size_t xy) const
   {
     Require(a < 2*d_number_azimuths_octant);
-    Require(xy == 0 or xy == 1);
+    Require(xy == 0 || xy == 1);
     return d_number_exit[a][xy];
   }
 
@@ -206,17 +209,17 @@ protected:
   /// Azimuth weights
   vec_dbl d_azimuth_weight;
   /// Number of azimuths per octant
-  int d_number_azimuths_octant;
+  size_t d_number_azimuths_octant;
   /// Number of polar angles
-  int d_number_polar;
+  size_t d_number_polar;
   /// Track entrance points.
   vec2_point d_enter;
   /// Track exit points.
   vec2_point d_exit;
   /// Number of entrance points per angle per side.
-  vec2_int d_number_enter;
+  vec2_size_t d_number_enter;
   /// Number of exit points per angle per side.
-  vec2_int d_number_exit;
+  vec2_size_t d_number_exit;
 
 };
 

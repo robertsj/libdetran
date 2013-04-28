@@ -19,7 +19,7 @@ namespace detran_angle
  *  \class Uniform
  *  \brief Uniformly-spaced azimuthal quadrature set.
  */
-class Uniform: public QuadratureMOC
+class ANGLE_EXPORT Uniform: public QuadratureMOC
 {
 
 public:
