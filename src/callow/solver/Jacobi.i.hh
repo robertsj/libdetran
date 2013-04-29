@@ -46,7 +46,7 @@ inline void Jacobi::solve_impl(const Vector &b, Vector &x)
   }
 
   // perform iterations
-  for (int iteration = 1; iteration <= d_maximum_iterations; ++iteration)
+  for (iteration = 1; iteration <= d_maximum_iterations; ++iteration)
   {
 
     //---------------------------------------------------//

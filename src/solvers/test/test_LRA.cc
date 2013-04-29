@@ -60,7 +60,7 @@ void test_monitor(void* data, TimeStepper<_2D>* ts, int step, double t,
   TimeStepper<_2D>::vec_int cmm = ts->mesh()->mesh_map("COARSEMESH");
 
   vec_dbl &T = ts->multiphysics()->variable(0);
-  TimeStepper<_2D>::size_t N = 0;
+  //TimeStepper<_2D>::size_t N = 0;
   double T_avg = 0;
   double T_max = 0;
   double V = 0;

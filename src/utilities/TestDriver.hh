@@ -144,15 +144,6 @@ static std::string itoa(int i)
   return out.str();
 }
 
-/// double to string
-static std::string dtoa(double d)
-{
-  std::stringstream out;
-  out << d;
-  return out.str();
-}
-
-
 /*!
  *  \class TestDriver
  *  \brief Drives a test set

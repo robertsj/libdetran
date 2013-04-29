@@ -75,7 +75,6 @@ void MomentIndexer::construct_2D()
 {
   d_number_moments = (d_legendre_order + 1) * (d_legendre_order + 2) / 2;
   d_m_index.resize(d_legendre_order + 1);
-  int lo = d_legendre_order;
   for (int l = 0; l <= (int)d_legendre_order; ++l)
     for (int m = -l; m <= l; m++)
       if ((m + l) % 2 == 0) d_m_index[l].push_back(m);

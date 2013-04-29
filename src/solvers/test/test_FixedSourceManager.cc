@@ -202,10 +202,6 @@ double compute_leakage(typename BoundarySN<D>::SP_boundary b,
   int remdims[3][2] = {{1,2}, {0,2}, {0,1}};
   // Cell indices
   int ijk[3] = {0, 0, 0};
-  int &i = ijk[0];
-  int &j = ijk[1];
-  int &k = ijk[2];
-
   // Loop over all dimensions
   for (int dim0 = 0; dim0 < D::dimension; ++dim0)
   {
@@ -222,7 +218,7 @@ double compute_leakage(typename BoundarySN<D>::SP_boundary b,
 
       // Index and width along this direction
       ijk[dim0] = bound[dir];
-      double W  = mesh->width(dim0, ijk[dim0]);
+      //double W  = mesh->width(dim0, ijk[dim0]);
       // Loop over secondaries dimensions on this surface
       for (ijk[dim1] = 0; ijk[dim1] < mesh->number_cells(dim1); ++ijk[dim1])
       {

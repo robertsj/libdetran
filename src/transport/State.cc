@@ -23,9 +23,9 @@ State::State(SP_input        input,
   , d_quadrature(quadrature)
   , d_number_groups(0)
   , d_number_moments(1)
+  , d_eigenvalue(0.0)
   , d_store_angular_flux(false)
   , d_store_current(false)
-  , d_eigenvalue(0.0)
 {
   // Preconditions
   Require(d_input);

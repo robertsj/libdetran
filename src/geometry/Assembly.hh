@@ -102,7 +102,7 @@ private:
   /// Dimension, e.g. 17 in 17x17.
   int d_dimension;
   /// Assembly pitch
-  double d_pitch;
+  //double d_pitch;
   /// Vector of SP pointers to pin cells in the assembly
   vec_pincell d_pincells;
   /// Logically 2-D map of pin cell locations

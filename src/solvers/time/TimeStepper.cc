@@ -27,9 +27,9 @@ TimeStepper<D>::TimeStepper(SP_input       input,
   : d_input(input)
   , d_material(material)
   , d_mesh(mesh)
-  , d_multiply(multiply)
   , d_discrete(false)
   , d_number_groups(0)
+  , d_multiply(multiply)
   , d_dt(1.0)
   , d_step_factor(1.0)
   , d_final_time(10.0)
@@ -41,9 +41,9 @@ TimeStepper<D>::TimeStepper(SP_input       input,
   , d_residual_norm(0.0)
   , d_monitor(NULL)
   , d_monitor_level(1)
-  , d_update_multiphysics_rhs(NULL)
-  , d_maximum_iterations(1)
   , d_tolerance(1e-4)
+  , d_maximum_iterations(1)
+  , d_update_multiphysics_rhs(NULL)
 {
   // Preconditions
   Require(d_input);
@@ -518,8 +518,9 @@ void TimeStepper<D>::extrapolate()
       {
         for (size_t a = 0; a < d_quadrature->number_angles_octant(); ++a)
         {
-          int angle = d_quadrature->index(o, a);
+          // Updated flux
           State::angular_flux_type &psi  = d_state->psi(g, o, a);
+          // Previous flux
           const State::angular_flux_type &psi0 = d_states[0]->psi(g, o, a);
           for (size_t i = 0; i < d_mesh->number_cells(); ++i)
           {

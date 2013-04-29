@@ -39,7 +39,7 @@ int test_LinearMaterial(int argc, char *argv[])
   // Kinetics data
   double lambda[]   = {0.1, 1.0};
   double beta[]     = {0.003, 0.004};
-  double beta_total =  0.007;
+  //double beta_total =  0.007;
   double vel[2]     = {1.0e6, 1.0e4};
 
   // Cross sections

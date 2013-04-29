@@ -214,6 +214,10 @@ inline void Reflective<_1D>::setup_octant()
     d_octants[0][1] = 0;
   }
 }
+    
+BOUNDARY_INSTANTIATE_EXPORT(Reflective<_1D>)
+BOUNDARY_INSTANTIATE_EXPORT(Reflective<_2D>)
+BOUNDARY_INSTANTIATE_EXPORT(Reflective<_3D>)
 
 } // end namespace detran
 

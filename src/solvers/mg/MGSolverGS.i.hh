@@ -92,7 +92,7 @@ void MGSolverGS<D>::solve(const double keff)
 
       if (d_print_level > 1  && iteration % d_print_interval == 0)
       {
-        printf("  GS Iter: %3i  Error: %12.9f \n", iteration, nres);
+        printf("  GS Iter: %3i  Error: %12.9f \n", (int)iteration, nres);
       }
       if (nres < d_tolerance) break;
 
@@ -110,7 +110,7 @@ void MGSolverGS<D>::solve(const double keff)
   if (d_print_level > 0)
   {
     printf("  GS Final: Number Iters: %3i  Error: %12.9f  Sweeps: %6i \n",
-           iteration, nres, number_sweeps());
+           (int)iteration, nres, number_sweeps());
   }
 
 }

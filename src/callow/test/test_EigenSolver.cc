@@ -54,7 +54,6 @@ int test_PowerIteration(int argc, char *argv[])
   EigenSolver::SP_solver solver = EigenSolverCreator::Create(db);
   solver->set_operators(test_matrix_1(n));
   solver->set_monitor_level(2);
-  int status = solver->solve(X, X0);
   cout << solver->eigenvalue() << endl;
   return 0;
 }
@@ -71,7 +70,6 @@ int test_SlepcSolver(int argc, char *argv[])
   EigenSolver::SP_solver solver = EigenSolverCreator::Create(db);
   solver->set_operators(test_matrix_1(n));
   solver->set_monitor_level(1);
-  int status = solver->solve(X, X0);
   cout << solver->eigenvalue() << endl;
   return 0;
 }

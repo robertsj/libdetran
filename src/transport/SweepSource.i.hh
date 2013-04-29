@@ -11,7 +11,10 @@
 #define detran_SWEEPSOURCE_I_HH_
 
 #include <iostream>
+#ifdef DETRAN_ENABLE_OPENMP
+// Xcode apparently doesn't have OpenMP by default
 #include <omp.h>
+#endif
 
 namespace detran
 {

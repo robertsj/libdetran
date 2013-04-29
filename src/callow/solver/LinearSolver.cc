@@ -22,16 +22,16 @@ LinearSolver::LinearSolver(const double atol,
                            const double rtol,
                            const int    maxit,
                            std::string  name)
-  : d_absolute_tolerance(atol)
+  : d_name(name)
+  , d_absolute_tolerance(atol)
   , d_relative_tolerance(rtol)
   , d_maximum_iterations(maxit)
   , d_residual(maxit + 1, 0)
   , d_number_iterations(0)
+  , d_pc_side(NONE)
   , d_monitor_level(2)
   , d_monitor_diverge(true)
   , d_norm_type(L2)
-  , d_name(name)
-  , d_pc_side(NONE)
 {
   Require(d_absolute_tolerance >= 0.0);
   Require(d_relative_tolerance >= 0.0);

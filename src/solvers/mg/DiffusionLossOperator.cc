@@ -24,10 +24,10 @@ DiffusionLossOperator::DiffusionLossOperator(SP_input       input,
   : d_input(input)
   , d_material(material)
   , d_mesh(mesh)
-  , d_include_fission(include_fission)
   , d_group_cutoff(cutoff)
-  , d_adjoint(adjoint)
+  , d_include_fission(include_fission)
   , d_keff(keff)
+  , d_adjoint(adjoint)
 {
   // Preconditions
   Require(d_input);
@@ -164,10 +164,9 @@ void DiffusionLossOperator::build()
 
       // Index arrays to help determine if a cell surface is on the boundary.
       int bound[6] = {i, i, j, j, k, k};
-      int nxyz[3][2] = {0, d_mesh->number_cells_x()-1,
-                        0, d_mesh->number_cells_y()-1,
-                        0, d_mesh->number_cells_z()-1};
-
+      int nxyz[3][2] = {{0, d_mesh->number_cells_x()-1},
+                        {0, d_mesh->number_cells_y()-1},
+                        {0, d_mesh->number_cells_z()-1}};
 
       // Flag for insertion status.  If false, it means we didn't add
       // the value and should counter accordingly (here, we assert)
@@ -303,11 +302,6 @@ void DiffusionLossOperator::build()
 
         // Define the data for this cell.
         int m = mat_map[cell];
-
-        // Get the directional indices.
-        int i = d_mesh->cell_to_i(cell);
-        int j = d_mesh->cell_to_j(cell);
-        int k = d_mesh->cell_to_k(cell);
 
         // Loop through source group.
         for (int gp = d_group_cutoff; gp < d_number_groups; gp++)

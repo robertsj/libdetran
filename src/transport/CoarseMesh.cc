@@ -50,11 +50,11 @@ CoarseMesh::CoarseMesh(SP_mesh fine_mesh, const size_t level)
 
     // Try dividing the mesh by the level, recording any remainder.
     number_fine[d]   = d_fine_mesh->number_cells(d);
-    remainder[d]     = number_fine[d] % level;
-    number_coarse[d] = (number_fine[d] - remainder[d]) / level;
+    remainder[d]     = number_fine[d] % d_level;
+    number_coarse[d] = (number_fine[d] - remainder[d]) / d_level;
 
     // Set fine meshes per coarse to be level.
-    number_fine_coarse[d].resize(number_coarse[d], level);
+    number_fine_coarse[d].resize(number_coarse[d], d_level);
 
     // Distribute any remaining fine meshes.
     for (int i = 0; i < remainder[d]; i++)

@@ -18,14 +18,25 @@ namespace detran
 {
 
 /// Class for constructing boundaries and boundary conditions
-template <typename D, template <typename D> class B>
+template <typename D, template <typename> class B>
 class BoundaryFactory
 {
+    
 public:
+    
+  //---------------------------------------------------------------------------//
+  // TYPEDEFS
+  //---------------------------------------------------------------------------//
+
   typedef typename B<D>::SP_boundary                    SP_boundary;
   typedef detran_utilities::InputDB::SP_input           SP_input;
   typedef detran_geometry::Mesh::SP_mesh                SP_mesh;
   typedef detran_angle::Quadrature::SP_quadrature       SP_quadrature;
+    
+  //---------------------------------------------------------------------------//
+  // PUBLIC FUNCTIONS
+  //---------------------------------------------------------------------------//
+
   static SP_boundary build(SP_input input, SP_mesh mesh, SP_quadrature quad)
   {
     THROW("NOT IMPLEMENTED");

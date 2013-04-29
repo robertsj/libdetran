@@ -174,7 +174,6 @@ protected:
 
     size_t nx = d_coarsemesh->get_coarse_mesh()->number_cells_x();
     size_t ny = d_coarsemesh->get_coarse_mesh()->number_cells_y();
-    size_t nz = d_coarsemesh->get_coarse_mesh()->number_cells_z();
     if (axis == 0)
       return i + j * (nx + 1) + k * (nx + 1) * ny;
     else if (axis == 1)
@@ -201,11 +200,6 @@ BoundaryTally<D>::BoundaryTally(SP_coarsemesh   coarsemesh,
   Require(d_quadrature);
 
   SP_mesh mesh = d_coarsemesh->get_coarse_mesh();
-
-  size_t nx = d_coarsemesh->get_coarse_mesh()->number_cells_x();
-  size_t ny = d_coarsemesh->get_coarse_mesh()->number_cells_y();
-  size_t nz = d_coarsemesh->get_coarse_mesh()->number_cells_z();
-  size_t n[] = { (nx+1)*ny*nz, nx*(ny+1)*nz, nx*ny*(nz+1) };
 
   // Octant shift
   d_octant_shift.resize(3, vec_int(8, 0));

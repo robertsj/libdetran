@@ -122,10 +122,7 @@ inline void Matrix::assemble()
   d_diagonals = new int[d_m];
 
   // fill the csr storage
-  int aij_idx = 0;
-  int val_idx = 0;
   d_rows[0] = 0;
-
   // pointer to value index
   int p = 0;
   // for all rows

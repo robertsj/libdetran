@@ -19,9 +19,9 @@ GMRES::GMRES(const double  atol,
              const int     restart)
   : LinearSolver(atol, rtol, maxit, "solver_gmres")
   , d_restart(restart)
+  , d_reorthog(1)
   , d_c(restart+1, 0.0)
   , d_s(restart+1, 0.0)
-  , d_reorthog(1)
 {
   Insist(d_restart > 2, "Need a restart of > 2");
   d_H = new double*[(restart + 1)];

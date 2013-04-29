@@ -100,7 +100,6 @@ int test_Matrix(int argc, char *argv[])
     }
 
     // Indexing
-    double *a = A.values();
     for (int i = 0; i < A.number_rows(); i++)
     {
       std::cout << i << " " << A.diagonal(i) << std::endl;

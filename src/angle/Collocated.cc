@@ -39,7 +39,7 @@ Collocated::Collocated(size_t dim,
 
   Insist(multiplier > 0, "The multiplier must be positive");
 
-  int num_space = std::pow(3, d_number_azimuths_octant / 2);
+  int num_space = std::pow((float)3, (int)(d_number_azimuths_octant / 2));
   Ensure(   num_space ==  3
          || num_space ==  9
          || num_space == 27
@@ -60,8 +60,8 @@ Collocated::Collocated(size_t dim,
   for (size_t i = 0; i < d_number_azimuths_octant / 2; i++)
   {
     size_t a = d_number_azimuths_octant - i - 1;
-    num_y[a] = std::pow((int)3, i); // 3^(i-1);
-    num_x[i] = std::pow((int)3, i);
+    num_y[a] = std::pow((float)3, (int)i); // 3^(i-1);
+    num_x[i] = std::pow((float)3, (int)i);
   }
 
   //-------------------------------------------------------------------------//

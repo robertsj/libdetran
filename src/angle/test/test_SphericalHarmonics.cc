@@ -52,10 +52,6 @@ int test_SphericalHarmonics(int argc, char *argv[])
   TEST(soft_equiv(SphericalHarmonics::Y_lm(1,-1, mu, eta, xi), eta));
   TEST(soft_equiv(SphericalHarmonics::Y_lm(1, 0, mu, eta, xi), xi));
   TEST(soft_equiv(SphericalHarmonics::Y_lm(1, 1, mu, eta, xi), mu));
-
-  double phi = std::acos(mu / std::sqrt(1.0 - xi*xi));
-  double theta = std::acos(xi);
-
   return 0;
 }
 
@@ -120,7 +116,7 @@ int test_SphericalHarmonics_integration(int argc, char *argv[])
         for (int a = 0; a < Q->number_angles_octant(); ++a)
         {
           double mu  = Q->mu(o, a);
-          double eta = Q->eta(o, a);
+          //double eta = Q->eta(o, a);
           double xi  = Q->xi(o, a);
           val += Q->weight(a) * std::pow(mu, m) * std::pow(xi, l);
         }

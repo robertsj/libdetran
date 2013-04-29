@@ -19,7 +19,7 @@ ProductQuadrature::ProductQuadrature(const size_t dim,
                                      const size_t na,
                                      const size_t np,
                                      std::string  name)
-  : Quadrature(dim, na * np * std::pow(2, dim), name)
+  : Quadrature(dim, na * np * std::pow((float)2, (int)dim), name)
   , d_number_azimuth_octant(na)
   , d_number_polar_octant(np)
   , d_phi(na, 0.0)

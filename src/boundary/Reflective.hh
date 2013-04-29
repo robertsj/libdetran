@@ -96,10 +96,6 @@ private:
 
 };
 
-BOUNDARY_INSTANTIATE_EXPORT(Reflective<_1D>)
-BOUNDARY_INSTANTIATE_EXPORT(Reflective<_2D>)
-BOUNDARY_INSTANTIATE_EXPORT(Reflective<_3D>)
-
 } // end namespace detran
 
 //---------------------------------------------------------------------------//

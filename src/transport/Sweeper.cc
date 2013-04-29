@@ -31,7 +31,7 @@ Sweeper<D>::Sweeper(SP_input input,
   , d_adjoint(false)
   , d_number_sweeps(0)
   , d_update_boundary(false)
-  , d_ordered_octants(std::pow(2, D::dimension), 0)
+  , d_ordered_octants(std::pow((float)2, (int)D::dimension), 0)
 {
   // Preconditions
   Require(d_input);

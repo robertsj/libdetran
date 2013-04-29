@@ -21,7 +21,7 @@ Quadrature::Quadrature(const size_t      dim,
                        const std::string name)
   : d_dimension(dim)
   , d_number_angles(number_angles)
-  , d_number_octants(std::pow(2.0, dim))
+  , d_number_octants(std::pow((float)2, (int)dim))
   , d_number_angles_octant(number_angles/d_number_octants)
   , d_weight(d_number_angles_octant, 0.0)
   , d_mu(d_number_angles_octant, 0.0)

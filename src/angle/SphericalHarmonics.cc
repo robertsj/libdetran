@@ -143,6 +143,7 @@ double SphericalHarmonics::get_Y_lm(const int    l,
 	return 0;
 #endif
   }
+  return 0;
 }
 
 } // end namespace detran_angle

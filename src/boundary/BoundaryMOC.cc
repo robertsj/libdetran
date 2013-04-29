@@ -134,16 +134,15 @@ void BoundaryMOC<D>::setup_indices()
 
   int number_octants        = d_quadrature->number_octants();
   int number_angles_octant  = d_quadrature->number_angles_octant();
-  int number_azimuth_octant = d_quadrature->number_azimuths_octant();
 
   d_feed_into.resize(number_octants, vec3_int(number_angles_octant));
   d_feed_from.resize(number_octants, vec3_int(number_angles_octant));
 
   // Mirrored octants
-  int oct[4][2] = {3, 1,
-                   2, 0,
-                   3, 1,
-                   2, 0};
+  int oct[4][2] = {{3, 1},
+                   {2, 0},
+                   {3, 1},
+                   {2, 0}};
 
   // Loop over all angles
   for (int o = 0; o < number_octants; o++)
@@ -212,7 +211,6 @@ void BoundaryMOC<D>::setup_indices()
       // Get the azimuth index for this angle within octant
       int az = d_quadrature->azimuth(a);
 
-
       // Number of exit intercepts on horizontal and vertical surface.
       int nx = d_quadrature->number_enter(az, 0);
       int ny = d_quadrature->number_enter(az, 1);
@@ -243,10 +241,10 @@ void BoundaryMOC<D>::setup_side_indices()
 
 
   // Incident octants; left to right from incident perspective.
-  int oct[4][2] = {0, 3,
-                   1, 2,
-                   0, 1,
-                   3, 2};
+  int oct[4][2] = {{0, 3},
+                   {1, 2},
+                   {0, 1},
+                   {3, 2}};
 
   d_side_index.resize(4);
 
@@ -307,8 +305,6 @@ void BoundaryMOC<D>::setup_side_indices()
       int nx = d_quadrature->number_enter(azimuth, 0);
       int ny = d_quadrature->number_enter(azimuth, 1);
       int n  = nx + ny;
-      int t_start = n - 1;
-      int t_end   = ny;
       for (int t = n - 1; t >= ny; t--)
       {
         triplet[0] = o;
@@ -351,10 +347,6 @@ void BoundaryMOC<D>::setup_side_indices()
     {
       int azimuth = d_quadrature->azimuth(a);
       int nx = d_quadrature->number_enter(azimuth, 0);
-      int ny = d_quadrature->number_enter(azimuth, 1);
-      int n  = nx + ny;
-      int t_start = n - 1;
-      int t_end   = ny;
       for (int t = 0; t < nx; t++)
       {
         triplet[0] = o;
@@ -372,8 +364,6 @@ void BoundaryMOC<D>::setup_side_indices()
     {
       int azimuth = d_quadrature->azimuth(a);
       int nx = d_quadrature->number_enter(azimuth, 0);
-      int ny = d_quadrature->number_enter(azimuth, 1);
-      int n  = nx + ny;
       for (int t = 0; t < nx; t++)
       {
         triplet[0] = o;

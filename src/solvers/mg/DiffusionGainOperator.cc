@@ -74,11 +74,6 @@ void DiffusionGainOperator::build()
       // Define the data for this cell.
       int m = mat_map[cell];
 
-      // Get the directional indices.
-      int i = d_mesh->cell_to_i(cell);
-      int j = d_mesh->cell_to_j(cell);
-      int k = d_mesh->cell_to_k(cell);
-
       // Loop through source group.
       for (int gp = 0; gp < d_number_groups; gp++)
       {

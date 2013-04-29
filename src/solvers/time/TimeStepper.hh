@@ -212,16 +212,16 @@ private:
   monitor_pointer d_monitor;
   /// Monitor data
   void* d_monitor_data;
-  /// Multiphysics callback
-  multiphysics_pointer d_update_multiphysics_rhs;
-  /// Multiphysics data
-  void* d_multiphysics_data;
   /// Monitor level (only on or off right now)
   size_t d_monitor_level;
   /// Tolerance for nonlinear iterations
   double d_tolerance;
   /// Maximum nonlinear iterations
   size_t d_maximum_iterations;
+  /// Multiphysics callback
+  multiphysics_pointer d_update_multiphysics_rhs;
+  /// Multiphysics data
+  void* d_multiphysics_data;
 
   //-------------------------------------------------------------------------//
   // IMPLEMENTATION

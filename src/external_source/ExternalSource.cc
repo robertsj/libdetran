@@ -15,9 +15,9 @@ ExternalSource::ExternalSource(size_t        number_groups,
                                SP_mesh       mesh,
                                SP_quadrature quadrature,
                                bool          discrete)
-  : d_number_groups(number_groups)
-  , d_mesh(mesh)
+  : d_mesh(mesh)
   , d_quadrature(quadrature)
+  , d_number_groups(number_groups)
   , d_number_angles(-1)
   , d_discrete(discrete)
 {

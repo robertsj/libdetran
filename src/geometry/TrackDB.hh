@@ -64,17 +64,17 @@ public:
   typedef detran_utilities::vec_dbl                   vec_dbl;
 
   //-------------------------------------------------------------------------//
-  // PUBLIC INTERFACE
+  // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  /*!
-   *  \brief Constructor
-   *  \param num_azimuths   Number of azimuths in first two octants
+  /**
+   *  @brief Constructor
+   *  @param num_azimuths   Number of azimuths in first two octants
    */
   TrackDB(int num_azimuths, int num_regions, SP_quadrature quad)
-    : d_number_azimuths(num_azimuths)
+    : d_quadrature(quad)
+    , d_number_azimuths(num_azimuths)
     , d_number_regions(num_regions)
-    , d_quadrature(quad)
     , d_tracks(num_azimuths)
     , d_cos_phi(num_azimuths, 0.0)
     , d_sin_phi(num_azimuths, 0.0)
@@ -86,8 +86,10 @@ public:
 
   ~TrackDB(){}
 
-  /// \name Getters
-  /// \{
+    
+  //-------------------------------------------------------------------------//
+  // PUBLIC FUNCTIONS
+  //-------------------------------------------------------------------------//
 
   SP_track track(size_t a, size_t t)
   {
@@ -112,8 +114,6 @@ public:
     Require(a < d_spacing.size());
     return d_spacing[a];
   }
-
-  /// \}
 
   void add_track(size_t a, SP_track t)
   {

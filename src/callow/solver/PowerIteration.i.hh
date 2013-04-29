@@ -39,9 +39,6 @@ inline void PowerIteration::solve_impl(Vector &x, Vector &x0)
   lambda = x0.norm(L1);
   x0.scale(1.0 / lambda);
 
-  // Next iteration to check eigenvector convergence.
-  int check_error = 0;
-
   // Do power iterations
   for (int i = 0; i < d_maximum_iterations; ++i)
   {

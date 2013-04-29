@@ -102,7 +102,7 @@ Matrix::SP_matrix test_matrix_2(int n = 10)
       double jo[4] = {0.0, 0.0, 0.0, 0.0};
       // Index arrays to help determine if a cell surface is on the boundary.
       int bound[4] = {i, i, j, j};
-      int nxyz[2][2] = {0, n-1, 0, n-1};
+      int nxyz[2][2] = {{0, n-1}, {0, n-1}};
       // leak --> 0=-x, 1=+x, 2=-y, 3=+y
       for (int leak = 0; leak < 4; leak++)
       {

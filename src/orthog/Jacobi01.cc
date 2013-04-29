@@ -60,7 +60,7 @@ Jacobi01::Jacobi01(const size_t order,
     {
       for (size_t j = 0; j <= l; ++j)
       {
-        (*d_basis)(l, i) += jacobi_coefs[l][j] * std::pow(d_x[i], j) *
+        (*d_basis)(l, i) += jacobi_coefs[l][j] * std::pow(d_x[i], (int)j) *
                             std::sqrt(l+1);
       }
     }

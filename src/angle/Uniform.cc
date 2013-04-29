@@ -30,8 +30,6 @@ Uniform::Uniform(size_t dim,
   using std::cout;
   using std::endl;
 
-  const double pi = detran_utilities::pi;
-
   bool db = false;
 
   // Define evenly-spaced azimuthal angles over [0, pi/2].  These

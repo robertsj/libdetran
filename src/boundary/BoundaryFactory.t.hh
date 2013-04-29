@@ -88,8 +88,6 @@ BoundaryFactory<D, BoundarySN>::build(SP_input      input,
   names[Mesh::TOP]    = "bc_top";
 
   // Assign boundary conditions.
-  bool vacuum = false;
-  bool reflect = false;
   for(int side = 0; side < 2*D::dimension; side++)
   {
     // Vacuum is default.
@@ -118,7 +116,6 @@ BoundaryFactory<D, BoundarySN>::build(SP_input      input,
     b->set_bc(side, bc);
     Ensure(b->bc(side));
   }
-
 
   return b;
 }

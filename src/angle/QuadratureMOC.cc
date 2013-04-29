@@ -19,15 +19,15 @@ QuadratureMOC::QuadratureMOC(size_t dim,
                              std::string name,
                              std::string polar)
   : Quadrature(dim,
-               num_polar*num_azimuths_octant*int(std::pow(2.0, dim)),
+               num_polar*num_azimuths_octant*int(std::pow((float)2, (int)dim)),
                name+"-"+polar)
-  , d_number_azimuths_octant(num_azimuths_octant)
-  , d_number_polar(num_polar)
   , d_phi(2*num_azimuths_octant, 0.0)
   , d_cos_phi(2*num_azimuths_octant, 0.0)
   , d_sin_phi(2*num_azimuths_octant, 0.0)
   , d_spacing(2*num_azimuths_octant, 0.0)
   , d_azimuth_weight(2*num_azimuths_octant, 0.0)
+  , d_number_azimuths_octant(num_azimuths_octant)
+  , d_number_polar(num_polar)
 {
 
   // Support for 2D right now

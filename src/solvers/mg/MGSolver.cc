@@ -21,8 +21,8 @@ MGSolver<D>::MGSolver(SP_state                  state,
                       SP_fissionsource          q_f,
                       bool                      multiply)
   : Base(state, material, boundary, q_e, q_f)
-  , d_multiply(multiply)
   , d_downscatter(false)
+  , d_multiply(multiply)
 {
 
   // Get relevant input parameters.

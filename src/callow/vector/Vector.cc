@@ -19,9 +19,9 @@ namespace callow
 //---------------------------------------------------------------------------//
 Vector::Vector()
   : d_size(0)
+  , d_value(NULL)
   , d_temporary(false)
   , d_temporary_petsc(false)
-  , d_value(NULL)
 {
   /* ... */
 }

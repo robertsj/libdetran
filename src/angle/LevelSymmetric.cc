@@ -18,7 +18,7 @@ namespace detran_angle
 //---------------------------------------------------------------------------//
 LevelSymmetric::LevelSymmetric(const size_t np, const size_t dim)
   : Quadrature(dim,
-               2 * np * (2 * np + 2) / 8 * size_t(std::pow(float(2), dim)),
+               2 * np * (2 * np + 2) / 8 * size_t(std::pow((float)2, (int)dim)),
                "LevelSymmetric")
 {
   int order = 2 * np;

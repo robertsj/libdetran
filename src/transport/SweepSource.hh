@@ -128,10 +128,10 @@ public:
     ,  d_mesh(mesh)
     ,  d_quadrature(quadrature)
     ,  d_MtoD(MtoD)
-    ,  d_implicit_fission(implicit_fission)
     ,  d_source(mesh->number_cells(), 0.0)
     ,  d_fixed_group_source(mesh->number_cells(), 0.0)
     ,  d_scatter_group_source(mesh->number_cells(), 0.0)
+    ,  d_implicit_fission(implicit_fission)
     ,  d_scattersource(new ScatterSource(mesh, material, state))
   {
     Require(d_state);

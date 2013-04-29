@@ -173,7 +173,7 @@ int test_CurrentTally_2D(int argc, char *argv[])
   CurrentTally_T::SP_coarsemesh mesh = coarsemesh_2d();
   TEST(mesh);
 
-  int ceflag[] = {0, -1, 1, -1, 2};
+  //int ceflag[] = {0, -1, 1, -1, 2};
 
   // Get the fine mesh.
   CoarseMesh::SP_mesh finemesh = mesh->get_fine_mesh();
@@ -192,7 +192,7 @@ int test_CurrentTally_2D(int argc, char *argv[])
   CurrentTally_T::SP_currenttally tally(new CurrentTally_T(mesh, quad, 1));
 
   // Create the face flux.
-  CurrentTally_T::face_flux_type psi_in, psi_out;
+  CurrentTally_T::face_flux_type psi_out;
 
   // Now, fake a sweep.
 
@@ -333,7 +333,7 @@ int test_CurrentTally_3D(int argc, char *argv[])
   CurrentTally_T::SP_currenttally tally(new CurrentTally_T(mesh, quad, 1));
 
   // Create the face flux.
-  CurrentTally_T::face_flux_type psi_in, psi_out;
+  CurrentTally_T::face_flux_type psi_out;
 
   // Now, fake a sweep.
 

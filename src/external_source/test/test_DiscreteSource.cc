@@ -60,7 +60,7 @@ int test_DiscreteSource(int argc, char *argv[])
   vec3_dbl spectra(num_spectra,
                    vec2_dbl(num_groups,
                             vec_dbl(quad->number_angles(), 0.0)));
-  double ref_moment[] = {0.0, 0.0};
+
   for (int g = 0; g < 2; g++)
     for (int o = 0; o < 4; o++)
       for (int a = 0; a < quad->number_angles_octant(); a++)

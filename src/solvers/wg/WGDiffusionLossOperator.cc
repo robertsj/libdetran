@@ -127,10 +127,9 @@ void WGDiffusionLossOperator::build()
 
     // Index arrays to help determine if a cell surface is on the boundary.
     int bound[6] = {i, i, j, j, k, k};
-    int nxyz[3][2] = {0, d_mesh->number_cells_x()-1,
-                      0, d_mesh->number_cells_y()-1,
-                      0, d_mesh->number_cells_z()-1};
-
+    int nxyz[3][2] = {{0, d_mesh->number_cells_x()-1},
+                      {0, d_mesh->number_cells_y()-1},
+                      {0, d_mesh->number_cells_z()-1}};
 
     // For each spatial cell, there are 6 faces that connect the
     // cell to a neighbor or the global boundary.  Looping through

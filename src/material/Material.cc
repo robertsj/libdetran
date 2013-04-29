@@ -24,9 +24,9 @@ namespace detran_material
 Material::Material(const size_t number_materials,
                    const size_t number_groups,
                    std::string  name)
- : d_number_materials(number_materials)
+ : d_name(name)
  , d_number_groups(number_groups)
- , d_name(name)
+ , d_number_materials(number_materials)
  , d_downscatter(false)
  , d_sigma_t(number_groups, vec_dbl(number_materials, 0.0))
  , d_sigma_a(number_groups, vec_dbl(number_materials, 0.0))
@@ -34,10 +34,10 @@ Material::Material(const size_t number_materials,
  , d_sigma_f(number_groups, vec_dbl(number_materials, 0.0))
  , d_nu(number_groups, vec_dbl(number_materials, 1.0))
  , d_chi(number_groups, vec_dbl(number_materials, 0.0))
- , d_diff_coef(number_groups, vec_dbl(number_materials, 0.0))
  , d_sigma_s(number_groups,
 		     vec2_dbl(number_groups,
 		    		  vec_dbl(number_materials, 0.0)))
+ , d_diff_coef(number_groups, vec_dbl(number_materials, 0.0))
  , d_scatter_bounds(number_groups, vec_size_t(2, 0))
  , d_upscatter_cutoff(0)
  , d_finalized(false)

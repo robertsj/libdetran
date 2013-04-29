@@ -69,9 +69,6 @@ void BoundarySN<D>::display(bool inout) const
   int remdims[3][2] = {{1,2}, {0,2}, {0,1}};
   // Cell indices
   size_t ijk[3] = {0, 0, 0};
-  size_t &i = ijk[0];
-  size_t &j = ijk[1];
-  size_t &k = ijk[2];
   // Loop over all dimensions
   for (int dim0 = 0; dim0 < D::dimension; ++dim0)
   {
@@ -88,11 +85,10 @@ void BoundarySN<D>::display(bool inout) const
       std::cout << " SURFACE = " << surface << std::endl;
       // Index and width along this direction
       ijk[dim0] = bound[dir];
-      double W  = d_mesh->width(dim0, ijk[dim0]);
       for (size_t g = 0; g < d_number_groups; g++)
       {
         std::cout << "   GROUP = " << g << std::endl;
-        for (int oo = 0; oo < std::pow(2, D::dimension-1); ++oo)
+        for (int oo = 0; oo < std::pow((float)2, (int)(D::dimension-1)); ++oo)
         {
           int o = d_quadrature->outgoing_octant(surface)[oo];
           if (inout)

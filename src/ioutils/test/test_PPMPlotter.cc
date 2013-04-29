@@ -40,7 +40,6 @@ int test_PPMPlotter(int argc, char *argv[])
     for (int i = 0; i < N; ++i)
     {
       double x = double(i)/double(N);
-      double y = double(j)/double(N);
       double v = x;
       if (i < N/2 && j < N/2) v = -1.0;
       plotter.set_pixel(i, j, v);
