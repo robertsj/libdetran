@@ -67,6 +67,10 @@ include_directories("${PROJECT_BINARY_DIR}")
 include_directories("${PROJECT_BINARY_DIR}/detran_config")
 install(FILES       ${PROJECT_BINARY_DIR}/detran_config/detran_config.hh
         DESTINATION include)
+install(FILES       "${CMAKE_CURRENT_SOURCE_DIR}/../README"
+        DESTINATION .)
+install(FILES 	        "${CMAKE_CURRENT_SOURCE_DIR}/../LICENSE"
+      	DESTINATION .)
 
 #------------------------------------------------------------------------------#
 # EXTERNAL LIBRARIES
@@ -77,12 +81,24 @@ if(DETRAN_ENABLE_PYTHON)
     find_package(SWIG REQUIRED)
     include(${SWIG_USE_FILE})
     find_package(PythonLibs REQUIRED)
+    # find numpy/arrayobject.h
+    exec_program(python 
+                 ARGS            -c "'import numpy; print numpy.get_include()'"
+                 OUTPUT_VARIABLE NPARRAYPATHHINT)
+    find_path(NPARRAYPATH NAMES numpy/arrayobject.h PATHS ${NPARRAYPATHHINT})
+    if (${NPARRAYPATH-NOTFOUND})
+      message("!! Numpy could not be found and is needed for Python builds." 
+              FATAL_ERROR)
+    else()
+      message("-- Found Numpy include: ${NPARRAYPATH}")
+      include_directories(${NPARRAYPATH})
+    endif()
     include_directories(${PYTHON_INCLUDE_PATH})
     include_directories(${PROJECT_BINARY_DIR}/detran_config)
     set(CMAKE_SWIG_FLAGS "-v")
   else()
     set(DETRAN_ENABLE_PYTHON OFF)
-    message(STATUS "Disabling Python since it required shared libraries.")
+    message(STATUS "** Disabling Python since it required shared libraries.")
   endif()
 endif()
 
@@ -261,6 +277,13 @@ if (PACKUP_DETRAN)
     set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS 
         " \${EnvVarUpdate} \"$0\" \"LALALALALA\"  \"A\" \"HKCU\" \"${CPACK_PACKAGE_INSTALL_DIRECTORY}\\\\python\" ")
     set(CPACK_NSIS_MENU_LINKS "detran.bat;Detran")
+  #elseif(APPLE)
+  #  set(CPACK_GENERATOR "Bundle")
+  #  include(AppleBundleMacro)
+  #  ConfigureMacOSXBundlePlist("Detran", 
+  #                             "_debug", 
+  #                             "${CMAKE_CURRENT_SOURCE_DIR}/cmake/bundle.png"
+  #                             "0.2.1")
   else()
     set(CPACK_GENERATOR "TGZ")
   endif()

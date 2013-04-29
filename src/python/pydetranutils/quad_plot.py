@@ -1,8 +1,15 @@
 # This provides utilities for plotting things on a 
 # 1D or 2D mesh or a slice of a 3D mesh.
-import numpy as np
-import mpl_toolkits.mplot3d.axes3d as p3
-import matplotlib.pyplot as plt
+
+try :
+  import numpy as np
+except ImportError :
+  print "Error importing Numpy"
+try :
+  import mpl_toolkits.mplot3d.axes3d as p3
+  import matplotlib.pyplot as plt
+except ImportError :
+  print "Error importing matplotlib"
 
 global __detranuselatex__ = False
 

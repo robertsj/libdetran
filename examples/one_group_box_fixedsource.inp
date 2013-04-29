@@ -11,19 +11,20 @@ str equation                sc
 # inner
 int inner_max_iters         100
 dbl inner_tolerance         1e-6
-int inner_print_out         1
+int inner_print_level       1
 # outer
 int outer_max_iters         1
 dbl outer_tolerance         1e-6
-int outer_print_out         1
+int outer_print_level       1
 # boundaries
-str bc_left                 vacuum
-str bc_right                vacuum
-str bc_bottom               vacuum
-str bc_top                  vacuum
+str bc_west                 vacuum
+str bc_east                 vacuum
+str bc_south                vacuum
+str bc_north                vacuum
 # quadrature
-str quad_type               uniformequal
-int quad_order              20
+str quad_type                  chebyshevdpn
+int quad_number_polar_octant   3
+int quad_number_azimuth_octant 3
 
 # Mesh
 vec_dbl mesh_xcme       0.0 10.0

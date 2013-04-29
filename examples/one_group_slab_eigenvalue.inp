@@ -16,8 +16,8 @@ int outer_print_out       0
 int eigen_max_iters       1000
 dbl eigen_tolerance       1e-9
 int eigen_print_interval  50
-str bc_left               reflect
-str bc_right              reflect
+str bc_west               reflect
+str bc_east               reflect
 str quad_type             gausslegendre
 int quad_order            8
 

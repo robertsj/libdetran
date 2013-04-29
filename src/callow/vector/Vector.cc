@@ -76,29 +76,29 @@ Vector::Vector(const Vector &x)
 #endif
 }
 
-//---------------------------------------------------------------------------//
-Vector::Vector(Vector &x)
-  : d_size(x.size())
-  , d_temporary(false)
-  , d_temporary_petsc(false)
-{
-  // nothing to do if x has no elements
-  if (!d_size) return;
-#ifdef CALLOW_ENABLE_PETSC
-  // create the vector and initialize values
-  PetscErrorCode ierr;
-  Vec x_v = x.petsc_vector();
-  ierr = VecDuplicate(x_v, &d_petsc_vector);
-  ierr = VecCopy(x_v, d_petsc_vector);
-  // Grab the underlying storage
-  ierr = VecGetArray(d_petsc_vector, &d_value);
-  ierr = VecRestoreArray(d_petsc_vector, PETSC_NULL);
-#else
-  d_value = new double[d_size];
-  set(0.0);
-  add(x);
-#endif
-}
+////---------------------------------------------------------------------------//
+//Vector::Vector(Vector &x)
+//  : d_size(x.size())
+//  , d_temporary(false)
+//  , d_temporary_petsc(false)
+//{
+//  // nothing to do if x has no elements
+//  if (!d_size) return;
+//#ifdef CALLOW_ENABLE_PETSC
+//  // create the vector and initialize values
+//  PetscErrorCode ierr;
+//  Vec x_v = x.petsc_vector();
+//  ierr = VecDuplicate(x_v, &d_petsc_vector);
+//  ierr = VecCopy(x_v, d_petsc_vector);
+//  // Grab the underlying storage
+//  ierr = VecGetArray(d_petsc_vector, &d_value);
+//  ierr = VecRestoreArray(d_petsc_vector, PETSC_NULL);
+//#else
+//  d_value = new double[d_size];
+//  set(0.0);
+//  add(x);
+//#endif
+//}
 
 //---------------------------------------------------------------------------//
 Vector::Vector(const std::vector<double> &x)

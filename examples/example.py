@@ -3,23 +3,18 @@
 # The problem we'll solve is a one group, homogeneous slab, with
 # a uniform, isotropic source, and vacuum boundaries.
 
-# We first import the required modules:
-
-
-import numpy as np
 from detran import *
-
 
 # Next, create an input database, and fill it with some basic entries.
 
-inp = InputDB.Create()
+inp = InputDB.Create("optional_db_name")
 inp.put_int("number_groups",   1)
 inp.put_str("equation",        "dd")
 inp.put_int("inner_max_iters", 100)
 inp.put_dbl("inner_tolerance", 1e-4)
 inp.put_int("inner_print_out", 0)
-inp.put_str("bc_left",         "vacuum")
-inp.put_str("bc_right",        "vacuum")
+inp.put_str("bc_west",         "vacuum")
+inp.put_str("bc_east",         "vacuum")
 
 
 # Now, we need the mesh.  The calling sequence gives the number
@@ -42,7 +37,7 @@ mesh = Mesh1D.Create([100], [0.0, 10.0], [0])
 # to `finalize` does things like adjust group bounds for
 # outer iterations, but isn't too relevant here.
 
-mat = Material.Create(1, 1, False)
+mat = Material.Create(1, 1, "optional_material_name")
 mat.set_sigma_t(0, 0,    1.0)
 mat.set_sigma_s(0, 0, 0, 0.5)
 mat.finalize()
@@ -56,46 +51,34 @@ mat.finalize()
 # functions have the same signature as constructors but 
 # return a smart pointer.
 
-# For the quadrature, we'll use Gauss-Legendre (with 32 angles).
 
-quad = GaussLegendre.Create(32)
+# Finally, we can do some setup.  We first make the solver and
+# perform initial setup.  This gets all the base stuff built,
+# including the quadrature that is defined based on user input.
 
+solver = Fixed1D(inp, mat, mesh)
+solver.setup()
 
-# Finally, we can do some setup.  Eventually, this stuff might 
-# go into a manager utility, but for now, there's a lot of
-# explicit construction.  The `State` class contains all
-# the fluxes, the eigenvalue (if applicable), and any other
-# data that defines the solution.  The `ConstantSource`
-# class is really a utility class that puts a constant
-# source in all groups across all space.  Finally,
-# the `Boundary1D` class and its 2D and 3D relatives
-# contain the boundary fluxes.  In some sense, this
-# could be viewed as an extension of the `State`.  The
-# solver is a standard Gauss-Seidel solver with Source 
-# Iteration for the inners.  Since this a one group 
-# problem, the outer solver does essentially nothing.
-
-state = State.Create(inp, mesh, quad)
-q_e = ConstantSource.Create(mesh, quad, 1, 1.0)
-q_f = FissionSource.Create(state, mesh, mat)
-bound = Boundary1D.Create(inp, mesh, quad)
-solver = GaussSeidel1D.Create(inp, state, mesh, mat, quad, bound, q_e, q_f)
-
+# We get the quadrature, which we put into a constant source.
+# This is isotropic and uniform over all groups and space. The
+# quadrature is needed in general since sources can be discrete.
+# For diffusion problems, quad can be omitted for applicable
+# source types (including ConstantSource and IsotropicSource).
+# The source is set, and the solver gets a final setup.
+quad = solver.quadrature()
+#                    (number_groups, mesh, strength, quad)
+q_e = ConstantSource.Create(1, mesh, 1.0, quad)
+solver.set_source(q_e)
+solver.set_solver()
 
 # Now, solving is easy.
-
 solver.solve()
 
+# For fun, we can plot the flux.  Note, since Detran uses C++
+# vectors for fluxes, we cast to Numpy arrays for plotting. There
+# may be a less copy-intensive solution, but for the largest data
+# sets, Python plotting would likely not be the best answer; rather
+# the Silo interface is suggested for use with Visit or Paraview.
+phi = np.asarray(solver.state().phi(0)) # "0" is for group 0
+plot_mesh_function(mesh, phi)
 
-# For fun, we can plot the flux. 
-import matplotlib.pyplot as plt
-phi = state.phi(0)
-x   = np.linspace(0.0, 10.0, 101)
-x   = 0.5*x[1] + x[0:100]
-plt.plot(x, phi, linewidth = 2)
-plt.grid(True)
-plt.xlabel('x [cm]')
-plt.ylabel('$\phi(x)$')
-plt.title('A Monoenergetic Slab')
-plt.savefig('tutorial.png')
-plt.show()

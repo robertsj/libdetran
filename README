@@ -17,3 +17,41 @@ Current features:
   - Executable input via HDF5 or a somewhat limited text-based input
   - Full access via a SWIG-generated Python front end
   - Output to Silo for visualization in Visit or Paraview
+
+
+INSTALLATION
+------------
+
+The up-to-date source is available at github.com/robertsj/libdetran.  If 
+you are using a binary distribution, follow the relevant directions below.
+
+Windows Users
+-------------
+
+The installer is essentially self-contained.  Execute it and allow a short
+cut to be put in the menu.  Two items are added "Detran" and a link to 
+uninstall.  "Detran" opens up a command window with the appropriate paths
+set for using either the executable (xdetran) or the Python libraries.
+
+Linux and OS X
+--------------
+
+The tarball is a complete build.  Simply do
+
+>>> cd /path/to/where/you/want/detran
+>>> cp /path/to/Detran-X.Y.Z-Arch.tar.gz .
+>>> tar -xf Detran-X.Y.Z-Arch.tar.gz
+
+Before you can use Detran, make sure to set the environment variables.
+On Linux, that means 
+
+>>> export PATH=$PATH:/path/to/detran/bin
+>>> export LD_LIBRARY_PATH:$LD_LIBRARY_PATH:/path/to/detran/lib
+>>> export PYTHONPATH:/path/to/detran/python
+
+and on OS X, do the same but with DYLD_LIBRARY_PATH in place of 
+LD_LIBRARY_PATH.  Of course, to make these permanent, add the
+above lines to your .bash_profile (in Linux), .profile (in OS X),
+or some similar file.  These are located in /home/yourname
+or /User/yourname.
+

@@ -1,18 +1,21 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   Matrix.i
- *  @author Jeremy Roberts
- *  @brief  Python interface for callow Matrix
+ *  @file  Matrix.i
+ *  @brief Python interface for callow Matrix
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 
 %include "detran_utilities.i"
 
+%ignore *::operator[];
+
 %include "MatrixBase.hh"
 %include "Matrix.hh"
 %include "MatrixDense.hh"
 
-%extend Matrix
+
+%extend callow::Matrix
 {
    double  __getitem__(int i, int j) 
    { 
@@ -20,7 +23,7 @@
    }
 }
 
-%extend MatrixDense
+%extend callow::MatrixDense
 {
    double  __getitem__(int i, int j) 
    { 
