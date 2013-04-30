@@ -26,17 +26,19 @@ generate_export_header(${LIB_NAME}
                        STATIC_DEFINE     ${CAP_LIB_NAME}_BUILT_AS_STATIC
 )
 
-# Install
+# Install headers and other includes
 FILE(GLOB_RECURSE files 
      RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
      ${CMAKE_CURRENT_SOURCE_DIR}/*.hh
      ${CMAKE_CURRENT_SOURCE_DIR}/*.i
 )
-#message("my files are ${files}")
 install(FILES       ${files} 
         DESTINATION include/${LIB_NAME})
 install(TARGETS     ${LIB_NAME} 
         DESTINATION lib)
+install(FILES       ${CMAKE_CURRENT_BINARY_DIR}/${LIB_NAME}_export.hh
+        DESTINATION include/${LIB_NAME})
+
 
 # Setup for testing
 if(DETRAN_ENABLE_TEST)
