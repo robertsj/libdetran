@@ -32,6 +32,9 @@
 // Windows?
 #cmakedefine DETRAN_WINDOWS
 
+// Git version
+#define DETRAN_GIT_SHA1 "${DETRAN_WC_REVISION_HASH}"
+
 #endif // DETRAN_CONFIG_HH 
 
 //---------------------------------------------------------------------------//

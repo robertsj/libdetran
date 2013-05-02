@@ -1,11 +1,11 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
  *  @file  detran.cc
  *  @brief Detran executable driver
- *  @note  Copyright (C) 2013 Jeremy Roberts
+ *  @note  Copyright (C) Jeremy Roberts 2012-2013
  */
-//---------------------------------------------------------------------------//
-//
+//----------------------------------------------------------------------------//
+
 #include "detran_config.hh"
 #include "StupidParser.hh"
 #include "Execute.hh"
@@ -19,6 +19,7 @@
 
 void print_welcome();
 
+//----------------------------------------------------------------------------//
 int main(int argc, char **argv)
 {
  
@@ -33,7 +34,7 @@ int main(int argc, char **argv)
 
   try
   {
-	detran::StupidParser parser(argc, argv);
+	  detran::StupidParser parser(argc, argv);
     detran::Execute boss(parser);
     if (boss.dimension() == 1)
       boss.solve<detran::_1D>();
@@ -62,6 +63,7 @@ int main(int argc, char **argv)
   return 0;
 }
 
+//----------------------------------------------------------------------------//
 void print_welcome()
 {
   using std::cout;
@@ -69,16 +71,17 @@ void print_welcome()
   std::time_t t;
   std::time(&t);
   cout << endl << endl;
-  cout << "       _|              _|                                    " << endl;
-  cout << "   _|_|_|    _|_|    _|_|_|_|  _|  _|_|    _|_|_|  _|_|_|    " << endl;
-  cout << " _|    _|  _|_|_|_|    _|      _|_|      _|    _|  _|    _|  " << endl;
-  cout << " _|    _|  _|          _|      _|        _|    _|  _|    _|  " << endl;
-  cout << "   _|_|_|    _|_|_|      _|_|  _|          _|_|_|  _|    _|  " << endl;
+  cout << "       _|              _|                                  " << endl;
+  cout << "   _|_|_|    _|_|    _|_|_|_|  _|  _|_|    _|_|_|  _|_|_|  " << endl;
+  cout << " _|    _|  _|_|_|_|    _|      _|_|      _|    _|  _|    _|" << endl;
+  cout << " _|    _|  _|          _|      _|        _|    _|  _|    _|" << endl;
+  cout << "   _|_|_|    _|_|_|      _|_|  _|          _|_|_|  _|    _|" << endl;
   cout << " a DETerministic TRANsport tool"    << endl;
-  cout << " Copyright (C) Jeremy Roberts 2013" << endl;
+  cout << " Copyright (C) Jeremy Roberts 2012-2013" << endl;
   cout << " Built on: " << DETRAN_COMPILED_M << "/"
                         << DETRAN_COMPILED_D << "/"
                         << DETRAN_COMPILED_Y << endl;
+  cout << " Git SHA1: " << DETRAN_GIT_SHA1   << endl;
   cout << "   Run on: " << std::ctime(&t) << endl << endl;
 }
 

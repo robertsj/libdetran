@@ -57,6 +57,12 @@ if(WIN32)
   set(DETRAN_WINDOWS YES)
 endif()
 
+set(DETRAN_WC_REVISION_HASH "unknown")
+find_package(Git)
+if(GIT_FOUND)
+  GIT_WC_INFO(${CMAKE_CURRENT_SOURCE_DIR} "DETRAN")
+endif()
+
 # Write config file, install it, and include that directory for all source
 set(DETRAN_CONFIG_IN  
     "${CMAKE_CURRENT_SOURCE_DIR}/detran_config/detran_config.hh.in")
@@ -246,6 +252,7 @@ add_subdirectory(kinetics)
 add_subdirectory(solvers)
 add_subdirectory(postprocess)
 add_subdirectory(drivers)
+add_subdirectory(cmake)
 
 # Python things for installation
 if(DETRAN_ENABLE_PYTHON)
