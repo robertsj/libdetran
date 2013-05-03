@@ -1,11 +1,11 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
  *  @file   FixedSourceManager.cc
  *  @author robertsj
  *  @date   Oct 10, 2012
  *  @brief  FixedSourceManager class definition.
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #include "FixedSourceManager.hh"
 #include "angle/QuadratureFactory.hh"
@@ -24,10 +24,10 @@
 namespace detran
 {
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 template <class D>
-FixedSourceManager<D>::FixedSourceManager(int argc,
-                                          char *argv[],
+FixedSourceManager<D>::FixedSourceManager(int         argc,
+                                          char       *argv[],
                                           SP_input    input,
                                           SP_material material,
                                           SP_mesh     mesh,
@@ -51,7 +51,7 @@ FixedSourceManager<D>::FixedSourceManager(int argc,
   Require(d_mesh);
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 template <class D>
 FixedSourceManager<D>::FixedSourceManager(SP_input    input,
                                           SP_material material,
@@ -76,14 +76,14 @@ FixedSourceManager<D>::FixedSourceManager(SP_input    input,
 }
 
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 template <class D>
 void FixedSourceManager<D>::setup()
 {
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // DISCRETIZATION
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   std::string eq = "dd";
   d_discretization = SN;
@@ -94,9 +94,9 @@ void FixedSourceManager<D>::setup()
   else if (eq == "diffusion")
     d_discretization = DIFF;
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // QUADRATURE
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   // Setup the quadrature if needed
   if (d_discretization != DIFF)
@@ -116,9 +116,9 @@ void FixedSourceManager<D>::setup()
     }
   }
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // BOUNDARY AND STATE
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   // Setup the boundary conditions
   if (d_discretization == MOC)
@@ -140,9 +140,9 @@ void FixedSourceManager<D>::setup()
   // Setup the state vector.
   d_state = new State(d_input, d_mesh, d_quadrature);
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // FISSION SOURCE
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   if (d_fission)
     d_fissionsource = new FissionSource(d_state, d_mesh, d_material);
@@ -158,7 +158,7 @@ void FixedSourceManager<D>::setup()
   Ensure(d_state);
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 template <class D>
 void FixedSourceManager<D>::set_source(SP_source q)
 {
@@ -171,7 +171,7 @@ void FixedSourceManager<D>::set_source(SP_source q)
   d_sources.push_back(q);
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 template <class D>
 bool FixedSourceManager<D>::set_solver()
 {
@@ -218,7 +218,7 @@ bool FixedSourceManager<D>::set_solver()
   return d_is_ready;
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 template <class D>
 bool FixedSourceManager<D>::solve(const double keff)
 {
@@ -236,7 +236,7 @@ bool FixedSourceManager<D>::solve(const double keff)
   return true;
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 template <class D>
 double FixedSourceManager<D>::iterate(const int generation)
 {
@@ -293,9 +293,9 @@ double FixedSourceManager<D>::iterate(const int generation)
   return norm_delta_phi;
 }
 
-//---------------------------------------------------------------------------//
-// Explicit instantiations
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
+// EXPLICIT INSTANTIATIONS
+//----------------------------------------------------------------------------//
 
 SOLVERS_INSTANTIATE_EXPORT(FixedSourceManager<_1D>)
 SOLVERS_INSTANTIATE_EXPORT(FixedSourceManager<_2D>)

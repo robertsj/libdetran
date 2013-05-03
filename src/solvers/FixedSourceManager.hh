@@ -86,8 +86,8 @@ public:
    *  @param multiply   flag for multiplying fixed source problem
    *  @param fission    ensure a fission source is built (e.g. for eigen)
    */
-  FixedSourceManager(int argc,
-                     char *argv[],
+  FixedSourceManager(int         argc,
+                     char       *argv[],
                      SP_input    input,
                      SP_material material,
                      SP_mesh     mesh,

@@ -32,17 +32,22 @@ TARGET_LINK_LIBRARIES(test_Equation_SC_1D       transport)
 ADD_EXECUTABLE(test_Homogenization                   test_Homogenization.cc)
 TARGET_LINK_LIBRARIES(test_Homogenization            transport)
 
+ADD_EXECUTABLE(test_ScatterSource                   test_ScatterSource.cc)
+TARGET_LINK_LIBRARIES(test_ScatterSource            transport)
+
 #------------------------------------------------------------------------------#
 # Define tests
 #------------------------------------------------------------------------------#
 
-ADD_TEST(test_State_basic          test_State           0)
-ADD_TEST(test_Sweeper2D_basic      test_Sweeper2D       0)
-ADD_TEST(test_Sweeper3D_basic      test_Sweeper3D       0)
-ADD_TEST(test_CoarseMesh           test_CoarseMesh      0)
-ADD_TEST(test_CurrentTally_1D      test_CurrentTally    0)
-ADD_TEST(test_CurrentTally_2D      test_CurrentTally    1)
-ADD_TEST(test_CurrentTally_3D      test_CurrentTally    2)
-ADD_TEST(test_Equation_DD_1D       test_Equation_DD_1D  0)
-ADD_TEST(test_Equation_SC_1D       test_Equation_SC_1D  0)
-ADD_TEST(test_Homogenization       test_Homogenization  0)
+ADD_TEST(test_State_basic               test_State           0)
+ADD_TEST(test_Sweeper2D_basic           test_Sweeper2D       0)
+ADD_TEST(test_Sweeper3D_basic           test_Sweeper3D       0)
+ADD_TEST(test_CoarseMesh                test_CoarseMesh      0)
+ADD_TEST(test_CurrentTally_1D           test_CurrentTally    0)
+ADD_TEST(test_CurrentTally_2D           test_CurrentTally    1)
+ADD_TEST(test_CurrentTally_3D           test_CurrentTally    2)
+ADD_TEST(test_Equation_DD_1D            test_Equation_DD_1D  0)
+ADD_TEST(test_Equation_SC_1D            test_Equation_SC_1D  0)
+ADD_TEST(test_Homogenization            test_Homogenization  0)
+ADD_TEST(test_ScatterSource_forward     test_ScatterSource   0)
+ADD_TEST(test_ScatterSource_adjoint     test_ScatterSource   1)

@@ -27,7 +27,6 @@ Material::Material(const size_t number_materials,
  : d_name(name)
  , d_number_groups(number_groups)
  , d_number_materials(number_materials)
- , d_downscatter(false)
  , d_sigma_t(number_groups, vec_dbl(number_materials, 0.0))
  , d_sigma_a(number_groups, vec_dbl(number_materials, 0.0))
  , d_nu_sigma_f(number_groups, vec_dbl(number_materials, 0.0))
@@ -38,13 +37,15 @@ Material::Material(const size_t number_materials,
 		     vec2_dbl(number_groups,
 		    		  vec_dbl(number_materials, 0.0)))
  , d_diff_coef(number_groups, vec_dbl(number_materials, 0.0))
- , d_scatter_bounds(number_groups, vec_size_t(2, 0))
- , d_upscatter_cutoff(0)
+ , d_scatter_bounds(number_groups, vec_size_t(4, 0))
  , d_finalized(false)
 {
-  // Postconditions
   Ensure(d_sigma_t.size() == number_groups);
   Ensure(d_sigma_t[0].size() == number_materials);
+  d_downscatter[0] = false;
+  d_downscatter[1] = false;
+  d_upscatter_cutoff[0] = d_number_groups;
+  d_upscatter_cutoff[1] = d_number_groups;
 }
 
 //---------------------------------------------------------------------------//
@@ -218,19 +219,35 @@ void Material::set_diff_coef(size_t m, vec_dbl &v)
 //----------------------------------------------------------------------------//
 
 //----------------------------------------------------------------------------//
-Material::size_t Material::lower(size_t g) const
+Material::size_t Material::lower(size_t g, bool tran) const
 {
   Require(d_finalized);
   Require(g < d_number_groups);
+  if (tran) return d_scatter_bounds[g][2];
   return d_scatter_bounds[g][0];
 }
 
 //----------------------------------------------------------------------------//
-Material::size_t Material::upper(size_t g) const
+Material::size_t Material::upper(size_t g, bool tran) const
 {
   Require(d_finalized);
   Require(g < d_number_groups);
+  if (tran) return d_scatter_bounds[g][3];
   return d_scatter_bounds[g][1];
+}
+
+//----------------------------------------------------------------------------//
+bool Material::downscatter(bool tran) const
+{
+  if (tran) return d_downscatter[1];
+  return d_downscatter[0];
+}
+
+//----------------------------------------------------------------------------//
+Material::size_t Material::upscatter_cutoff(bool tran) const
+{
+  if (tran) return d_downscatter[1];
+  return d_upscatter_cutoff[0];
 }
 
 //----------------------------------------------------------------------------//
@@ -268,7 +285,7 @@ void Material::finalize()
   /*
    * Set the scatter group bounds.  For each group, we compute the
    * lowest index (highest energy) that leads to downscatter.  We also
-   * compute the highest index (lowest energy) that upscatters size_to the
+   * compute the highest index (lowest energy) that upscatters into the
    * group.  Knowing these bounds eliminates a bit of computation in
    * computing the scattering source.
    *
@@ -277,27 +294,34 @@ void Material::finalize()
   {
     size_t lower = g;
     size_t upper = g;
-
     for (size_t m = 0; m < d_number_materials; m++)
     {
       // Downscatter from gp to g
       for (size_t gp = 0; gp < g; gp++)
-      {
         if (d_sigma_s[g][gp][m] > 0.0) lower = std::min(gp, lower);
-      }
-
       // Upscatter from gp to g
       for (size_t gp = 0; gp < d_number_groups; gp++)
-      {
         if (d_sigma_s[g][gp][m] > 0.0) upper = std::max(gp, upper);
-      }
-
-      // Compute nu*sigma_f
-      d_nu_sigma_f[g][m] = d_nu[g][m] * d_sigma_f[g][m];
-
     }
-    d_scatter_bounds[g][0] = lower;
-    d_scatter_bounds[g][1] = upper;
+    d_scatter_bounds[g][0] = lower;           // lowest gp into a row g
+    d_scatter_bounds[g][1] = upper;           // highest gp into a row g
+  }
+  // Now for the transpose
+  for (size_t gp = 0; gp < d_number_groups; gp++)
+  {
+    size_t lower = gp;
+    size_t upper = gp;
+    for (size_t m = 0; m < d_number_materials; m++)
+    {
+      // Downscatter from g to gp
+      for (size_t g = 0; g < gp; g++)
+        if (d_sigma_s[g][gp][m] > 0.0) lower = std::min(g, lower);
+      // Upscatter from gp to g
+      for (size_t g = 0; g < d_number_groups; g++)
+        if (d_sigma_s[g][gp][m] > 0.0) upper = std::max(g, upper);
+    }
+    d_scatter_bounds[gp][2] = lower;
+    d_scatter_bounds[gp][3] = upper;
   }
 
   /*
@@ -307,27 +331,34 @@ void Material::finalize()
    * this occurs is the upscatter cutoff.
    *
    */
-  d_upscatter_cutoff = d_number_groups;
   for (size_t g = 0; g < d_number_groups; g++)
   {
     if (d_scatter_bounds[g][1] > g)
     {
-      d_upscatter_cutoff = g;
+      d_upscatter_cutoff[0] = g;
+      break;
+    }
+  }
+  // Now for transpose
+  for (size_t g = 0; g < d_number_groups; g++)
+  {
+    if (d_scatter_bounds[g][3] > g)
+    {
+      d_upscatter_cutoff[1] = g;
       break;
     }
   }
 
-  // If our materials have no upscatter, then we set the
-  // downscatter-only flag.
-  if (d_upscatter_cutoff == d_number_groups)
-  {
-//    if (d_downscatter == false)
-//    {
-//      detran_utilities::warning(detran_utilities::USER_INPUT,
-//        "Upscatter is being turned off since no upscatter exists in the data.");
-//    }
-    d_downscatter = true;
-  }
+  // If our materials have no upscatter, then we set the downscatter-only flag.
+  if (d_upscatter_cutoff[0] == d_number_groups)
+    d_downscatter[0] = true;
+  if (d_upscatter_cutoff[1] == d_number_groups)
+    d_downscatter[1] = true;
+
+  // Compute nu*sigma_f
+  for (size_t g = 0; g < d_number_groups; g++)
+    for (size_t m = 0; m < d_number_materials; m++)
+      d_nu_sigma_f[g][m] = d_nu[g][m] * d_sigma_f[g][m];
 
   d_finalized = true;
 }
@@ -419,7 +450,7 @@ void Material::material_display()
   for (size_t g = 0; g < d_number_groups; g++)
     printf("  group %3i  lower = %3i  upper %3i \n", g, lower(g), upper(g));
   printf("\n");
-  printf("upscatter cutoff %4i : \n", d_upscatter_cutoff);
+  printf("upscatter cutoff %4i : \n", d_upscatter_cutoff[0]);
 }
 
 } // end namespace detran_material
