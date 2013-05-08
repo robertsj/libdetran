@@ -1,14 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   Reflective.hh
- *  @author robertsj
- *  @date   Apr 9, 2012
- *  @brief  Reflective class definition.
+ *  @file  Periodic.hh
+ *  @brief Periodic class definition
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 
-#ifndef detran_REFLECTIVE_HH_
-#define detran_REFLECTIVE_HH_
+
+#ifndef detran_PERIODIC_HH_
+#define detran_PERIODIC_HH_
 
 #include "BoundaryCondition.hh"
 
@@ -17,13 +17,13 @@ namespace detran
 
 //---------------------------------------------------------------------------//
 /**
- *  @class Reflective
- *  @brief Reflective boundary condition so SN problems.
+ *  @class Periodic
+ *  @brief Periodic boundary condition for SN problems.
  */
 //---------------------------------------------------------------------------//
 
 template <class D>
-class Reflective : public BoundaryCondition<D>
+class Periodic : public Reflective<D>
 {
 
 public:
@@ -32,7 +32,7 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef BoundaryCondition<D>                Base;
+  typedef Reflective<D>                       Base;
   typedef typename Base::SP_bc                SP_bc;
   typedef typename Base::Boundary_T           Boundary_T;
   typedef typename Base::SP_boundary          SP_boundary;
@@ -51,22 +51,32 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  Reflective(SP_boundary boundary,
-             const size_t side,
-             SP_input input,
-             SP_mesh mesh,
-             SP_quadrature quadrature)
+  Periodic(SP_boundary boundary,
+           const size_t side,
+           SP_input input,
+           SP_mesh mesh,
+           SP_quadrature quadrature)
     : Base(boundary, side, input, mesh, quadrature)
-    , d_octants(quadrature->number_octants()/2, vec_int(2, 0))
   {
-    setup_octant();
+    if (d_side == detran_geometry::Mesh::WEST)
+      d_periodic_side = detran_geometry::Mesh::EAST;
+    else if (d_side == detran_geometry::Mesh::EAST)
+      d_periodic_side = detran_geometry::Mesh::WEST;
+    else if (d_side == detran_geometry::Mesh::SOUTH)
+      d_periodic_side = detran_geometry::Mesh::NORTH;
+    else if (d_side == detran_geometry::Mesh::NORTH)
+      d_periodic_side = detran_geometry::Mesh::SOUTH;
+    else if (d_side == detran_geometry::Mesh::BOTTOM)
+      d_periodic_side = detran_geometry::Mesh::TOP;
+    else
+      d_periodic_side = detran_geometry::Mesh::BOTTOM;
   }
 
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL BOUNDARY CONDITIONS MUST IMPLEMENT THESE
   //-------------------------------------------------------------------------//
 
-  /// Set initial and/or fixed boundary condition.  Reflective does nothing.
+  /// Set initial and/or fixed boundary condition.  Periodic does nothing.
   void set(const size_t g){};
 
   /// Update a boundary following a sweep.
@@ -75,17 +85,14 @@ public:
   /// Update a boundary for a given angle following a sweep.
   void update(const size_t g, const size_t o, const size_t a);
 
-protected:
+private:
 
   //-------------------------------------------------------------------------//
   // DATA
   //-------------------------------------------------------------------------//
 
-  // Index of octant reflection pairs.
-  vec2_int d_octants;
-
-  // Set up the octant indices.
-  void setup_octant();
+  // Periodic side
+  size_t d_periodic_side;
 
   // Make inherited data visible
   using Base::d_boundary;
@@ -93,6 +100,7 @@ protected:
   using Base::d_input;
   using Base::d_mesh;
   using Base::d_quadrature;
+  using Base::d_octants;
 
 };
 
@@ -102,6 +110,6 @@ protected:
 // INLINE FUNCTIONS
 //---------------------------------------------------------------------------//
 
-#include "Reflective.i.hh"
+#include "Periodic.i.hh"
 
-#endif /* detran_REFLECTIVE_HH_ */
+#endif /* detran_PERIODIC_HH_ */

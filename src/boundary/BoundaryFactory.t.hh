@@ -18,6 +18,7 @@
 #include "Reflective.hh"
 #include "Vacuum.hh"
 #include "FixedBoundary.hh"
+#include "Periodic.hh"
 
 namespace detran
 {
@@ -106,6 +107,10 @@ BoundaryFactory<D, BoundarySN>::build(SP_input      input,
     else if (type == "fixed")
     {
       bc = new FixedBoundary<D>(b, side, input, mesh, quad);
+    }
+    else if (type == "periodic")
+    {
+      bc = new Periodic<D>(b, side, input, mesh, quad);
     }
     else
     {
