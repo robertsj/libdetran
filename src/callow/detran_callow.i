@@ -57,6 +57,13 @@ void callow_finalize();
        {(int *j, double *v, int n)}
 %apply (int* IN_ARRAY1, int* IN_ARRAY2, double* IN_ARRAY3, int DIM1) 
        {(int *i, int *j, double* v, int n)}
+// Vector views.  These give us direct access to C arrays of 
+// basic types via Numpy arrays.  We'll apply these below to 
+// expose C++ std::vectors of those types.
+%apply (double** ARGOUTVIEW_ARRAY1, int *DIM1) 
+       {(double** a, int *n)}
+%apply (int** ARGOUTVIEW_ARRAY1, int *DIM1) 
+       {(int** a, int *n)}
 
 //---------------------------------------------------------------------------//
 // definitions
@@ -83,3 +90,26 @@ void callow_finalize();
 %include "preconditioner/Preconditioner.i"
 %include "solver/Solver.i"
 
+
+%inline
+{
+  // Vectors to arrays (and then to Numpy). Careful, or you'll end up
+  // in memory management pergatory.  These are used for plotting, etc.
+  // Usage:
+  //   v = vec_dbl(10, 1.23)
+  //   a = vec_asarray(v)
+  //   a[0] = 2.34
+  //   # do something in Numpy with a.  Then for good measure, do
+  //   del a
+  //   # and no matter what, don't use a after v is out of scope!
+  void vec_asarray(std::vector<double> &v, double **a, int *n)
+  {
+    *n = v.size();
+    *a = &v[0];
+  }
+  void vec_asarray(std::vector<int> &v, int **a, int *n)
+  {
+    *n = v.size();
+    *a = &v[0];
+  }
+}
