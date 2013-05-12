@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   FixedSourceManager.hh
- *  @author robertsj
- *  @date   Sep 25, 2012
- *  @brief  FixedSourceManager class definition.
+ *  @file  FixedSourceManager.hh
+ *  @brief FixedSourceManager class definition
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 

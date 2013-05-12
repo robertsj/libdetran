@@ -1,7 +1,7 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
  *  @file   WGSolverGMRES.i.hh
- *  @author robertsj
+ *  @note Copyright(C) 2012-2013 Jeremy Roberts
  *  @date   Apr 4, 2012
  *  @brief  WGSolverGMRES inline member definitions.
  */

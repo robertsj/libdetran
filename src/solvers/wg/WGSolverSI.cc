@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   SourceIteration.cc
- *  @author robertsj
- *  @date   Apr 4, 2012
- *  @brief  SourceIteration class definition.
+ *  @file  WGSolverSI.cc
+ *  @brief WGSolverSI member definitions
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 
@@ -28,6 +27,8 @@ WGSolverSI<D>::WGSolverSI(SP_state                  state,
 
 //---------------------------------------------------------------------------//
 // EXPLICIT INSTANTIATIONS
+//---------------------------------------------------------------------------//
+
 template class WGSolverSI<_1D>;
 template class WGSolverSI<_2D>;
 template class WGSolverSI<_3D>;
@@ -36,5 +37,5 @@ template class WGSolverSI<_3D>;
 } // end namespace detran
 
 //---------------------------------------------------------------------------//
-//              end of SourceIteration.cc
+//              end of WGSolverSI.cc
 //---------------------------------------------------------------------------//

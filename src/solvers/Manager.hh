@@ -13,6 +13,7 @@
 #include "detran_config.hh"
 #include "utilities/Profiler.hh"
 #include "callow/utils/Initialization.hh"
+#include <iostream>
 
 namespace detran
 {

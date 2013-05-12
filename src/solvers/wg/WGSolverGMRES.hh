@@ -1,7 +1,7 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
  *  @file   WGSolverGMRES.hh
- *  @author robertsj
+ *  @note Copyright(C) 2012-2013 Jeremy Roberts
  *  @date   Apr 4, 2012
  *  @brief  WGSolverGMRES class definition.
  */

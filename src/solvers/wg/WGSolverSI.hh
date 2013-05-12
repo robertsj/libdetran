@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
  *  @file   WGSolverSI.hh
- *  @author robertsj
- *  @date   Apr 4, 2012
  *  @brief  WGSolverSI class definition.
+ *  @note   Copyright(C) 2012-2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 

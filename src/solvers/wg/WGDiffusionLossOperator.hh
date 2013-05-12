@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   WGDiffusionLossOperator.hh
- *  @brief  WGDiffusionLossOperator class definition
- *  @author Jeremy Roberts
- *  @date   Jul 25, 2012
+ *  @file  WGDiffusionLossOperator.hh
+ *  @brief WGDiffusionLossOperator class definition
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 
@@ -73,9 +72,9 @@ public:
    *  @param group            Group of operator
    */
   WGDiffusionLossOperator(SP_input    input,
-                         SP_material  material,
-                         SP_mesh      mesh,
-                         size_t       group);
+                          SP_material material,
+                          SP_mesh     mesh,
+                          size_t      group);
 
   //---------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS

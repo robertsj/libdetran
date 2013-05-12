@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   PC_DSA.hh
- *  @brief  PC_DSA
- *  @author Jeremy Roberts
- *  @date   Aug 5, 2012
+ *  @file  PC_DSA.hh
+ *  @brief PC_DSA class definition
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 

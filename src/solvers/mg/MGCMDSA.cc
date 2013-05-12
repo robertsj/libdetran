@@ -1,25 +1,24 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   CMMGDSA.cc
- *  @brief  CMMGDSA 
- *  @author Jeremy Roberts
- *  @date   Mar 26, 2013
+ *  @file  MGCMDSA.cc
+ *  @brief MGCMDSA member definitions
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 
-#include "CMMGDSA.hh"
+#include "MGCMDSA.hh"
 
 namespace detran
 {
 
 //---------------------------------------------------------------------------//
-CMMGDSA::CMMGDSA(SP_input         input,
+MGCMDSA::MGCMDSA(SP_input         input,
                  SP_material      material,
                  SP_mesh          mesh,
                  SP_scattersource source,
                  size_t           cutoff,
                  bool             include_fission)
-  : Base(input, material, mesh, cutoff, "CMMGDSA")
+  : Base(input, material, mesh, cutoff, "MGCMDSA")
 {
   Require(d_scattersource);
 
@@ -36,7 +35,7 @@ CMMGDSA::CMMGDSA(SP_input         input,
 
 }
 
-void CMMGDSA::apply(Vector &b, Vector &x)
+void MGCMDSA::apply(Vector &b, Vector &x)
 {
 
 }
@@ -44,5 +43,5 @@ void CMMGDSA::apply(Vector &b, Vector &x)
 } // end namespace detran
 
 //---------------------------------------------------------------------------//
-//              end of file CMMGDSA.cc
+//              end of file MGCMDSA.cc
 //---------------------------------------------------------------------------//

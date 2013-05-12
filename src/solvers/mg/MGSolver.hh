@@ -46,6 +46,7 @@ public:
   typedef typename Base::SP_externalsource          SP_externalsource;
   typedef typename Base::vec_externalsource         vec_externalsource;
   typedef typename Base::SP_fissionsource           SP_fissionsource;
+  typedef typename Base::size_t                     size_t;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR

@@ -35,6 +35,12 @@ ADD_EXECUTABLE(test_TWIGL                      	test_TWIGL.cc)
 TARGET_LINK_LIBRARIES(test_TWIGL              	solvers)
 ADD_EXECUTABLE(test_LRA                      	test_LRA.cc)
 TARGET_LINK_LIBRARIES(test_LRA              	solvers)
+
+#
+ADD_EXECUTABLE(test_MGSolverGS          test_MGSolverGS.cc)
+TARGET_LINK_LIBRARIES(test_MGSolverGS   solvers)
+ADD_TEST(test_MGSolverGS                test_MGSolverGS 0)
+
 #------------------------------------------------------------------------------#
 # Define tests
 #------------------------------------------------------------------------------#

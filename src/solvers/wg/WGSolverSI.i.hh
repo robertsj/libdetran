@@ -1,16 +1,14 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
  *  @file   WGSolverSI.i.hh
- *  @author robertsj
- *  @date   Apr 4, 2012
- *  @brief  WGSolverSI inline member definitions.
+ *  @brief  WGSolverSI inline member definitions
+ *  @note   Copyright(C) 2012-2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 
 #ifndef detran_WGSOLVERSI_I_HH
 #define detran_WGSOLVERSI_I_HH
 
-// System
 #include <algorithm>
 #include <cstdio>
 #include <iostream>

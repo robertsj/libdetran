@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   FixedSourceManager.cc
- *  @author robertsj
- *  @date   Oct 10, 2012
- *  @brief  FixedSourceManager class definition.
+ *  @file  FixedSourceManager.cc
+ *  @brief FixedSourceManager class definition
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
 //----------------------------------------------------------------------------//
 
@@ -45,7 +44,6 @@ FixedSourceManager<D>::FixedSourceManager(int         argc,
   , d_is_ready(false)
   , d_generation(0)
 {
-  // Preconditions
   Require(d_input);
   Require(d_material);
   Require(d_mesh);
@@ -69,7 +67,6 @@ FixedSourceManager<D>::FixedSourceManager(SP_input    input,
   , d_is_ready(false)
   , d_generation(0)
 {
-  // Preconditions
   Require(d_input);
   Require(d_material);
   Require(d_mesh);

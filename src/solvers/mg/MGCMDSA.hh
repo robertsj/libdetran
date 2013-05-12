@@ -1,14 +1,13 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   CMMGDSA.hh
- *  @brief  CMMGDSA 
- *  @author Jeremy Roberts
- *  @date   Mar 26, 2013
+ *  @file  MGCMDSA.hh
+ *  @brief MGCMDSA class definition
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 
-#ifndef detran_CMMGDSA_HH_
-#define detran_CMMGDSA_HH_
+#ifndef detran_MGCMDSA_HH_
+#define detran_MGCMDSA_HH_
 
 #include "MGPreconditioner.hh"
 #include "DiffusionLossOperator.hh"
@@ -22,7 +21,7 @@ namespace detran
 {
 
 /**
- *  @class CMMGDSA
+ *  @class MGCMDSA
  *  @brief Coarse mesh, multigroup diffusion synthetic acceleration
  *
  *  The multigroup DSA preconditioning process \$ \mathbf{P}^{-1} \$
@@ -37,13 +36,15 @@ namespace detran
  *  This operator treats group-to-group scattering and, if requested,
  *  fission implicitly.
  *
- *
- *  @note This inherits from the shell matrix (for now) so that the
- *        action can be used to construct an explicit operator for
- *        detailed numerical studies
+ *  The restriction space is based on a user-specific level defining the
+ *  number of fine cells per coarse cell.  The same is true for energy.
+ *  The current implementation uses only unity-weighted cross section
+ *  collapsing.  It would be possible to use some sort of approximate
+ *  spectral shape as well based on infinite medium calculations in one
+ *  or more material mixture.
  */
 
-class CMMGDSA: public MGPreconditioner
+class MGCMDSA: public MGPreconditioner
 {
 
 public:
@@ -53,7 +54,7 @@ public:
   //-------------------------------------------------------------------------//
 
   typedef MGPreconditioner                  Base;
-  typedef detran_utilities::SP<CMMGDSA>     SP_pc;
+  typedef detran_utilities::SP<MGCMDSA>     SP_pc;
   typedef ScatterSource::SP_scattersource   SP_scattersource;
   typedef DiffusionLossOperator             Operator_T;
   typedef CoarseMesh::SP_coarsemesh         SP_coarsemesh;
@@ -66,18 +67,14 @@ public:
   /**
    *  @brief Constructor
    *
-   *  Assuming the within-group transport problem is set up,
-   *  a KSP object exists from which the PC is extracted.  This
-   *  PC is passed here to be constructed and for its application
-   *  operator to be assigned.
-   *
-   *  @param input      Input database
-   *  @param material   Material database
-   *  @param mesh       Cartesian mesh
-   *  @param source     Scattering source
-   *  @param cutoff     First group included in solve
+   *  @param input            Input database
+   *  @param material         Material database
+   *  @param mesh             Cartesian mesh
+   *  @param source           Scattering source
+   *  @param cutoff           First group included in solve
+   *  @param include_fission  Treat fission like scatter
    */
-  CMMGDSA(SP_input          input,
+  MGCMDSA(SP_input          input,
           SP_material       material,
           SP_mesh           mesh,
           SP_scattersource  source,
@@ -85,7 +82,7 @@ public:
           bool              include_fission);
 
   /// virtual destructor
-  virtual ~CMMGDSA(){}
+  virtual ~MGCMDSA(){}
 
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL PRECONDITIONERS MUST IMPLEMENT THIS
@@ -128,8 +125,8 @@ private:
 
 } // end namespace detran
 
-#endif // detran_CMMGDSA_HH_
+#endif // detran_MGCMDSA_HH_
 
 //---------------------------------------------------------------------------//
-//              end of file CMMGDSA.hh
+//              end of file MGCMDSA.hh
 //---------------------------------------------------------------------------//

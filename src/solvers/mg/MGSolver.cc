@@ -35,7 +35,7 @@ MGSolver<D>::MGSolver(SP_state                  state,
   if (d_input->check("outer_print_interval"))
     d_print_interval = d_input->template get<int>("outer_print_interval");
   if (d_input->check("adjoint"))
-    d_adjoint = d_input->template get<int>("adjoint");
+    d_adjoint = 0 != d_input->template get<int>("adjoint");
 
   // We can turn off downscatter even if the material has
   // it and is set to use it.  This might be desirable when
