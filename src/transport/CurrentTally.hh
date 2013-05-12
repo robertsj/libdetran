@@ -52,7 +52,7 @@ namespace detran
  *
  */
 /**
- *  @example /transport/test/test_CurrentTally.cc
+ *  @example transport/test/test_CurrentTally.cc
  *
  *  Test of CurrentTally.
  */

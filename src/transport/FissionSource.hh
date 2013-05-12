@@ -195,6 +195,8 @@ private:
   SP_mesh d_mesh;
   /// Materials
   SP_material d_material;
+  /// Material map
+  vec_int d_mat_map;
   /// @f$ q_{fg} = norm \times \chi_g \sum_g \nu \Sigma_{fg} \phi_g @f$ .
   vec_moments_type d_source;
   /// @f$ d = \sum_g \nu \Sigma_{fg} \phi_g @f$ .
@@ -203,6 +205,17 @@ private:
   double d_scale;
   /// Number of groups.
   size_t d_number_groups;
+  /// Adjoint flag
+  bool d_adjoint;
+
+  //--------------------------------------------------------------------------//
+  // IMPLEMENTATION
+  //--------------------------------------------------------------------------//
+
+  /// The "from" group
+  size_t g_from(const size_t g, const size_t gp) const;
+  /// the "to" group
+  size_t g_to(const size_t g, const size_t gp) const;
 
 };
 

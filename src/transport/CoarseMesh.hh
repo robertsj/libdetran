@@ -70,14 +70,21 @@ public:
   }
 
   /**
-   *  @brief Get the coarse mesh index for a fine mesh
+   *  @brief Get the coarse mesh index for a fine mesh in one dimension
+   *
+   *  This functionality is useful when sweeping through the fine mesh. Any
+   *  cell (i, j, k) can have up to three surfaces (in x, y, and z) coincident
+   *  with a coarse cell (I, J, K).  For tallying surface integrals, the
+   *  surface area contribution of (i, j, k) is needed, and this method
+   *  allows the user to query the fine mesh cell and hence dimensions in a
+   *  general fashion.
+   *
    *  @param  ijk fine mesh index
    *  @param  dim dimension of index
-   *  @return     coarse mesh index
+   *  @return     coarse mesh index along the dimension of interest
    */
   size_t fine_to_coarse(const size_t ijk, const size_t dim) const
   {
-    //Require(dim < d_fine_mesh->dimension());
     Require(ijk < d_fine_mesh->number_cells(dim));
     return d_fine_to_coarse[dim][ijk];
   }

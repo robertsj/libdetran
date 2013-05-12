@@ -138,7 +138,7 @@ void Sweeper<D>::setup_spatial_indices()
     for (size_t dim = 0; dim < D::dimension; ++dim)
     {
       if ((o == oct[dim][0] || o == oct[dim][1]  ||
-           o == oct[dim][2] || o == oct[dim][3]   ) && !d_adjoint)
+           o == oct[dim][2] || o == oct[dim][3]   ))// && !d_adjoint)
       {
         d_space_ranges[o][dim][0] = 0;
         d_space_ranges[o][dim][1] = 1;

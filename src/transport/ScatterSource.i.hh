@@ -34,20 +34,9 @@ build_in_scatter_source(const size_t  g,
 {
   Require(g < d_material->number_groups());
 
-  // Add downscatter.
-  for (size_t gp = lower(g); gp < g; ++gp)
+  for (size_t gp = lower(g); gp <= upper(g); ++gp)
   {
-    const size_t g_f = g_from(g, gp);
-    const size_t g_t = g_to(g, gp);
-    const moments_type &phi = d_state->phi(gp);
-    for (size_t cell = 0; cell < d_mesh->number_cells(); ++cell)
-    {
-      s[cell] += phi[cell] * d_material->sigma_s(d_mat_map[cell], g_t, g_f);
-    }
-  }
-  // Add upscatter.
-  for (size_t gp = g + 1; gp <= upper(g); ++gp)
-  {
+    if (g == gp) continue;
     const size_t g_f = g_from(g, gp);
     const size_t g_t = g_to(g, gp);
     const moments_type &phi = d_state->phi(gp);

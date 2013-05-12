@@ -26,6 +26,11 @@ namespace detran
  *
  *  Homogenization is based on flux or current weighting.
  */
+/**
+ *  @example transport/test/test_Homogenization.cc
+ *
+ *  Test of Homogenize.
+ */
 class TRANSPORT_EXPORT Homogenize
 {
 
