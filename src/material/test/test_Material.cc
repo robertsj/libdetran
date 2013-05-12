@@ -88,7 +88,7 @@ int test_Material_bounds(int argc, char *argv[])
 
   // Get the 7g material.
   SP_material mat = material_fixture_7g();
-  mat->display();
+
   // Test scattering bounds
   TEST(mat->lower(0)       == 0);
   TEST(mat->upper(0)       == 0);
@@ -125,8 +125,9 @@ int test_Material_bounds(int argc, char *argv[])
   TEST(mat->lower(6, true) == 5);
   TEST(mat->upper(6, true) == 6);
 
-  // Test cutoff
-  TEST(mat->upscatter_cutoff() == 3);
+  // Test cutoff;
+  TEST(mat->upscatter_cutoff(false) == 3);
+  TEST(mat->upscatter_cutoff(true)  == 6);
 
   return 0;
 }

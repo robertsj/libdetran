@@ -12,6 +12,8 @@
 #include "material/detran_material.hh"
 %}
 
+%feature("autodoc", "3");
+
 // Hide templates from SWIG
 %inline
 {

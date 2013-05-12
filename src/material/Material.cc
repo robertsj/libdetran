@@ -1,8 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   Material.cc
- *  @author Jeremy Roberts
- *  @brief  Material class member definitions.
+ *  @file  Material.cc
+ *  @brief Material class member definitions
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 
@@ -34,8 +34,8 @@ Material::Material(const size_t number_materials,
  , d_nu(number_groups, vec_dbl(number_materials, 1.0))
  , d_chi(number_groups, vec_dbl(number_materials, 0.0))
  , d_sigma_s(number_groups,
-		     vec2_dbl(number_groups,
-		    		  vec_dbl(number_materials, 0.0)))
+		         vec2_dbl(number_groups,
+		    		          vec_dbl(number_materials, 0.0)))
  , d_diff_coef(number_groups, vec_dbl(number_materials, 0.0))
  , d_scatter_bounds(number_groups, vec_size_t(4, 0))
  , d_finalized(false)
@@ -45,7 +45,7 @@ Material::Material(const size_t number_materials,
   d_downscatter[0] = false;
   d_downscatter[1] = false;
   d_upscatter_cutoff[0] = d_number_groups;
-  d_upscatter_cutoff[1] = d_number_groups;
+  d_upscatter_cutoff[1] = 0;
 }
 
 //---------------------------------------------------------------------------//
@@ -246,7 +246,7 @@ bool Material::downscatter(bool tran) const
 //----------------------------------------------------------------------------//
 Material::size_t Material::upscatter_cutoff(bool tran) const
 {
-  if (tran) return d_downscatter[1];
+  if (tran) return d_upscatter_cutoff[1];
   return d_upscatter_cutoff[0];
 }
 
@@ -331,7 +331,7 @@ void Material::finalize()
    * this occurs is the upscatter cutoff.
    *
    */
-  for (size_t g = 0; g < d_number_groups; g++)
+  for (size_t g = 0; g < d_number_groups; ++g)
   {
     if (d_scatter_bounds[g][1] > g)
     {
@@ -339,10 +339,11 @@ void Material::finalize()
       break;
     }
   }
-  // Now for transpose
-  for (size_t g = 0; g < d_number_groups; g++)
+  // Now for transpose.  Here, we want the highest energy group from which
+  // there is no downscatter.
+  for (int g = d_number_groups - 1; g >= 0; --g)
   {
-    if (d_scatter_bounds[g][3] > g)
+    if (d_scatter_bounds[g][2] < g)
     {
       d_upscatter_cutoff[1] = g;
       break;
@@ -407,38 +408,38 @@ void Material::material_display()
 
     printf("\n  total  ");
     for (size_t g = 0; g < d_number_groups; g++)
-      printf("%13.10f ", sigma_t(m, g));
+      printf("%13.6e ", sigma_t(m, g));
 
     printf("\n  absrb  ");
     for (size_t g = 0; g < d_number_groups; g++)
-      printf("%13.10f ", sigma_a(m, g));
+      printf("%13.6e ", sigma_a(m, g));
 
     printf("\n  nufis  ");
     for (size_t g = 0; g < d_number_groups; g++)
-      printf("%13.10f ", nu_sigma_f(m, g));
+      printf("%13.6e ", nu_sigma_f(m, g));
 
     printf("\n  fiss   ");
     for (size_t g = 0; g < d_number_groups; g++)
-      printf("%13.10f ", sigma_f(m, g));
+      printf("%13.6e ", sigma_f(m, g));
 
     printf("\n  nu     ");
     for (size_t g = 0; g < d_number_groups; g++)
-      printf("%13.10f ", nu(m, g));
+      printf("%13.6e ", nu(m, g));
 
     printf("\n  chi    ");
     for (size_t g = 0; g < d_number_groups; g++)
-      printf("%13.10f ", chi(m, g));
+      printf("%13.6e ", chi(m, g));
 
     printf("\n  dc     ");
     for (size_t g = 0; g < d_number_groups; g++)
-      printf("%13.10f ", diff_coef(m, g));
+      printf("%13.6e ", diff_coef(m, g));
 
     printf("\n");
     for (size_t gp = 0; gp < d_number_groups; gp++)
     {
       printf("%3i<-gp  ", gp);
       for (size_t g = 0; g < d_number_groups; g++)
-        printf("%13.10f ", sigma_s(m, gp, g));
+        printf("%13.6e ", sigma_s(m, gp, g));
       printf("\n");
     }
     printf("\n");
@@ -450,7 +451,13 @@ void Material::material_display()
   for (size_t g = 0; g < d_number_groups; g++)
     printf("  group %3i  lower = %3i  upper %3i \n", g, lower(g), upper(g));
   printf("\n");
-  printf("upscatter cutoff %4i : \n", d_upscatter_cutoff[0]);
+  printf("upscatter cutoff %4i : \n\n", d_upscatter_cutoff[0]);
+
+  printf("adjoint scattering bounds: \n");
+  for (size_t g = 0; g < d_number_groups; g++)
+    printf("  group %3i  lower = %3i  upper %3i \n", g, lower(g, true), upper(g, true));
+  printf("\n");
+  printf("downscatter cutoff %4i : \n", d_upscatter_cutoff[1]);
 }
 
 } // end namespace detran_material

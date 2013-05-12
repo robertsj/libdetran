@@ -171,7 +171,11 @@ public:
   /// Do we do only downscatter?
   bool downscatter(bool tran = false) const;
 
-  /// Index below which upscatter doesn't occur for any material.
+  /**
+   *  @brief Index below which upscatter doesn't occur for any material.
+   *
+   *  For adjoint problems, this is the group above which
+   */
   size_t upscatter_cutoff(bool tran = false) const;
 
   /**
