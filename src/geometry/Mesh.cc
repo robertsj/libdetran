@@ -144,7 +144,7 @@ bool Mesh::mesh_map_exists(std::string map_key)
 //---------------------------------------------------------------------------//
 const Mesh::vec_int& Mesh::mesh_map(std::string map_key)
 {
-  // Add the new value.
+  Insist(mesh_map_exists(map_key), "Mesh map key not found:" + map_key);
   return d_mesh_map[map_key];
 }
 
