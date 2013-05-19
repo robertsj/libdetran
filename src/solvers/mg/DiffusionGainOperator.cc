@@ -1,17 +1,17 @@
-//----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   DiffusionGainOperator.cc
- * \brief  DiffusionGainOperator 
- * \author Jeremy Roberts
- * \date   Sep 10, 2012
+//----------------------------------*-C++-*-----------------------------------//
+/**
+ *  @file  DiffusionGainOperator.cc
+ *  @brief DiffusionGainOperator
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #include "DiffusionGainOperator.hh"
 
 namespace detran
 {
 
+//----------------------------------------------------------------------------//
 DiffusionGainOperator::DiffusionGainOperator(SP_input      input,
                                              SP_material   material,
                                              SP_mesh       mesh,
@@ -21,7 +21,6 @@ DiffusionGainOperator::DiffusionGainOperator(SP_input      input,
   , d_mesh(mesh)
   , d_adjoint(adjoint)
 {
-  // Preconditions
   Require(d_input);
   Require(d_material);
   Require(d_mesh);
@@ -46,13 +45,13 @@ DiffusionGainOperator::DiffusionGainOperator(SP_input      input,
 
   // Build the matrix with the initial keff guess.
   build();
-
 }
 
 //---------------------------------------------------------------------------//
 // IMPLEMENTATION
 //---------------------------------------------------------------------------//
 
+//----------------------------------------------------------------------------//
 void DiffusionGainOperator::build()
 {
   using std::cout;
@@ -98,11 +97,10 @@ void DiffusionGainOperator::build()
   } // group loop
 
   assemble();
-
 }
 
 } // end namespace detran
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file DiffusionGainOperator.cc
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

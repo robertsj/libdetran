@@ -2,26 +2,6 @@
 # libdetran/src/solvers/test/CMakeLists.txt
 #------------------------------------------------------------------------------#
 
-#------------------------------------------------------------------------------#
-# Create test executables
-#------------------------------------------------------------------------------#
-
-#ADD_EXECUTABLE(test_SourceIteration 			test_SourceIteration.cc)
-#TARGET_LINK_LIBRARIES(test_SourceIteration 		solvers )
-
-#ADD_EXECUTABLE(test_PowerIteration 				test_PowerIteration.cc)
-#TARGET_LINK_LIBRARIES(test_PowerIteration  		solvers)
-
-
-#ADD_EXECUTABLE(test_InnerGMRES                 test_InnerGMRES.cc)
-#TARGET_LINK_LIBRARIES(test_InnerGMRES          solvers)
-
-#ADD_EXECUTABLE(test_DiffusionFixedSourceSolver          test_DiffusionFixedSourceSolver.cc)
-#TARGET_LINK_LIBRARIES(test_DiffusionFixedSourceSolver   solvers)
-
-#ADD_EXECUTABLE(test_DiffusionEigensolver          test_DiffusionEigensolver.cc)
-#TARGET_LINK_LIBRARIES(test_DiffusionEigensolver   solvers)
-
 ADD_EXECUTABLE(test_FixedSourceManager          test_FixedSourceManager.cc)
 TARGET_LINK_LIBRARIES(test_FixedSourceManager   solvers)
 
@@ -33,13 +13,27 @@ TARGET_LINK_LIBRARIES(test_TimeStepper    		solvers)
 
 ADD_EXECUTABLE(test_TWIGL                      	test_TWIGL.cc)
 TARGET_LINK_LIBRARIES(test_TWIGL              	solvers)
+
 ADD_EXECUTABLE(test_LRA                      	test_LRA.cc)
 TARGET_LINK_LIBRARIES(test_LRA              	solvers)
 
-#
-ADD_EXECUTABLE(test_MGSolverGS          test_MGSolverGS.cc)
-TARGET_LINK_LIBRARIES(test_MGSolverGS   solvers)
-ADD_TEST(test_MGSolverGS                test_MGSolverGS 0)
+# Test of Gauss-Seidel
+ADD_EXECUTABLE(test_MGSolverGS                  test_MGSolverGS.cc)
+TARGET_LINK_LIBRARIES(test_MGSolverGS           solvers)
+ADD_TEST(test_MGSolverGS_1g                     test_MGSolverGS 0)
+ADD_TEST(test_MGSolverGS_7g_forward             test_MGSolverGS 1)
+ADD_TEST(test_MGSolverGS_7g_forward_multiply    test_MGSolverGS 2)
+ADD_TEST(test_MGSolverGS_7g_adjoint             test_MGSolverGS 3)
+ADD_TEST(test_MGSolverGS_7g_adjoint_multiply    test_MGSolverGS 4)
+
+# Test of Multigroup GMRES
+ADD_EXECUTABLE(test_MGSolverGMRES               test_MGSolverGMRES.cc)
+TARGET_LINK_LIBRARIES(test_MGSolverGMRES        solvers)
+ADD_TEST(test_MGSolverGMRES_1g                  test_MGSolverGMRES 0)
+ADD_TEST(test_MGSolverGMRES_7g_forward          test_MGSolverGMRES 1)
+ADD_TEST(test_MGSolverGMRES_7g_forward_multiply test_MGSolverGMRES 2)
+ADD_TEST(test_MGSolverGMRES_7g_adjoint          test_MGSolverGMRES 3)
+ADD_TEST(test_MGSolverGMRES_7g_adjoint_multiply test_MGSolverGMRES 4)
 
 #------------------------------------------------------------------------------#
 # Define tests

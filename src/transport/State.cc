@@ -26,6 +26,7 @@ State::State(SP_input        input,
   , d_eigenvalue(0.0)
   , d_store_angular_flux(false)
   , d_store_current(false)
+  , d_adjoint(false)
 {
   // Preconditions
   Require(d_input);
@@ -75,6 +76,9 @@ State::State(SP_input        input,
 			               moments_type(d_mesh->number_cells(), 0.0)));
   }
 
+  // Check for adjoint calculation
+  if (d_input->check("adjoint"))
+    d_adjoint = 0 != d_input->get<int>("adjoint");
 }
 
 //---------------------------------------------------------------------------//

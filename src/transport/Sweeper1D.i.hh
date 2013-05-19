@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   Sweeper1D.i.hh
- *  @author Jeremy Roberts
- *  @date   Mar 24, 2012
- *  @brief  Sweeper1D inline member definitions.
+ *  @file  Sweeper1D.i.hh
+ *  @brief Sweeper1D inline member definitions
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 

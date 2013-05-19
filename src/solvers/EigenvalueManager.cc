@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   EigenvalueManager.cc
- *  @author robertsj
- *  @date   Oct 24, 2012
- *  @brief  EigenvalueManager class definition.
+ *  @file  EigenvalueManager.cc
+ *  @brief EigenvalueManager class definition
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 
@@ -26,15 +25,16 @@ namespace detran
 
 //---------------------------------------------------------------------------//
 template <class D>
-EigenvalueManager<D>::EigenvalueManager(int argc,
-                                        char *argv[],
-                                        SP_input    input,
-                                        SP_material material,
-                                        SP_mesh     mesh)
+EigenvalueManager<D>::EigenvalueManager(int          argc,
+                                        char        *argv[],
+                                        SP_input     input,
+                                        SP_material  material,
+                                        SP_mesh      mesh)
   : TransportManager(argc, argv)
+  , d_adjoint(false)
   , d_discretization(0)
+  , d_is_setup(false)
 {
-  // Preconditions
   Require(input);
   Require(material);
   Require(mesh);
@@ -45,7 +45,6 @@ EigenvalueManager<D>::EigenvalueManager(int argc,
   d_mg_solver->set_solver();
   d_discretization = d_mg_solver->discretization();
 
-  // Postconditions
   Ensure(d_mg_solver);
 }
 
@@ -54,9 +53,10 @@ template <class D>
 EigenvalueManager<D>::EigenvalueManager(SP_input    input,
                                         SP_material material,
                                         SP_mesh     mesh)
-  : d_discretization(0)
+  : d_adjoint(false)
+  , d_discretization(0)
+  , d_is_setup(false)
 {
-  // Preconditions
   Require(input);
   Require(material);
   Require(mesh);
@@ -67,7 +67,6 @@ EigenvalueManager<D>::EigenvalueManager(SP_input    input,
   d_mg_solver->set_solver();
   d_discretization = d_mg_solver->discretization();
 
-  // Postconditions
   Ensure(d_mg_solver);
 }
 

@@ -15,7 +15,8 @@
         FUNC(test_norm_residual_L2) \
         FUNC(test_norm_residual_L1) \
         FUNC(test_norm_residual_Linf) \
-        FUNC(test_linspace)
+        FUNC(test_linspace) \
+        FUNC(test_range)
 
 
 // Detran headers
@@ -109,8 +110,39 @@ int test_linspace(int argc, char *argv[])
   return 0;
 }
 
+int test_range(int argc, char *argv[])
+{
+  vec_int v = range<int>(0, 4);
+  TEST(v.size() == 4);
+  TEST(v[0] == 0);
+  TEST(v[1] == 1);
+  TEST(v[2] == 2);
+  TEST(v[3] == 3);
+
+  v = range<int>(4, 0);
+  TEST(v.size() == 4);
+  TEST(v[0] == 4);
+  TEST(v[1] == 3);
+  TEST(v[2] == 2);
+  TEST(v[3] == 1);
+
+  v = range<int>(0, 4, true);
+  TEST(v.size() == 5);
+  TEST(v[0] == 0);
+  TEST(v[1] == 1);
+  TEST(v[2] == 2);
+  TEST(v[3] == 3);
+  TEST(v[4] == 4);
+
+  v = range<int>(0, 0);
+  TEST(v.size() == 0);
+
+  return 0;
+}
+
+
 //---------------------------------------------------------------------------//
-//              end of testMathUtilities.cc
+//              end of test_MathUtilities.cc
 //---------------------------------------------------------------------------//
 
 

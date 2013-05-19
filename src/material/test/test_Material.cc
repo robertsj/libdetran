@@ -92,38 +92,38 @@ int test_Material_bounds(int argc, char *argv[])
   // Test scattering bounds
   TEST(mat->lower(0)       == 0);
   TEST(mat->upper(0)       == 0);
-  TEST(mat->lower(0, true) == 0);
-  TEST(mat->upper(0, true) == 4);
+  TEST(mat->lower(0, true) == 4);
+  TEST(mat->upper(0, true) == 0);
 
   TEST(mat->lower(1) == 0);
   TEST(mat->upper(1) == 1);
-  TEST(mat->lower(1, true) == 1);
-  TEST(mat->upper(1, true) == 6);
+  TEST(mat->lower(1, true) == 6);
+  TEST(mat->upper(1, true) == 1);
 
   TEST(mat->lower(2) == 0);
   TEST(mat->upper(2) == 2);
-  TEST(mat->lower(2, true) == 2);
-  TEST(mat->upper(2, true) == 6);
+  TEST(mat->lower(2, true) == 6);
+  TEST(mat->upper(2, true) == 2);
 
   TEST(mat->lower(3) == 0);
   TEST(mat->upper(3) == 4);
-  TEST(mat->lower(3, true) == 3);
-  TEST(mat->upper(3, true) == 6);
+  TEST(mat->lower(3, true) == 6);
+  TEST(mat->upper(3, true) == 3);
 
   TEST(mat->lower(4) == 0);
   TEST(mat->upper(4) == 5);
-  TEST(mat->lower(4, true) == 3);
-  TEST(mat->upper(4, true) == 6);
+  TEST(mat->lower(4, true) == 6);
+  TEST(mat->upper(4, true) == 3);
 
   TEST(mat->lower(5) == 1);
   TEST(mat->upper(5) == 6);
-  TEST(mat->lower(5, true) == 4);
-  TEST(mat->upper(5, true) == 6);
+  TEST(mat->lower(5, true) == 6);
+  TEST(mat->upper(5, true) == 4);
 
   TEST(mat->lower(6) == 1);
   TEST(mat->upper(6) == 6);
-  TEST(mat->lower(6, true) == 5);
-  TEST(mat->upper(6, true) == 6);
+  TEST(mat->lower(6, true) == 6);
+  TEST(mat->upper(6, true) == 5);
 
   // Test cutoff;
   TEST(mat->upscatter_cutoff(false) == 3);

@@ -15,6 +15,8 @@
 #include "external_source/IsotropicSource.hh"
 %}
 
+%feature("autodoc", "3");
+
 // Hide templates from SWIG
 %inline
 {

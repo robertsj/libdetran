@@ -1,11 +1,12 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   CoarseMesh.hh
- *  @brief  CoarseMesh
- *  @author Jeremy Roberts
- *  @date   Aug 8, 2012
+ *  @file  CoarseMesh.hh
+ *  @brief CoarseMesh class definition
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
+ *
+ *  \todo Rename to CoarseMesher
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_COARSEMESH_HH_
 #define detran_COARSEMESH_HH_
@@ -19,14 +20,31 @@
 namespace detran
 {
 
+/**
+ *  @class CoarseMesh
+ *  @brief Create a coarse mesh for acceleration
+ *
+ *  This is used for nonlinear acceleration schemes, and,
+ *  in principle, could be used to develop multigrid
+ *  preconditioners for Krylov solvers.
+ *
+ *  This is a very limited interface.  A possible second
+ *  approach (for the user) would be to assign
+ *  a coarse mesh map (independent of the coarse mesh
+ *  used for material assignment)
+ */
+/**
+ *  @example transport/test/test_CoarseMesh.cc
+ *  @brief   Test of CoarseMesh class
+ */
 class TRANSPORT_EXPORT CoarseMesh
 {
 
 public:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // TYPEDEFS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   typedef detran_utilities::SP<CoarseMesh>  SP_coarsemesh;
   typedef detran_geometry::Mesh::SP_mesh    SP_mesh;
@@ -36,22 +54,14 @@ public:
   typedef detran_utilities::vec_dbl         vec_dbl;
   typedef detran_utilities::vec2_dbl        vec2_dbl;
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /**
-   *  @class CoarseMesh
-   *  @brief Create a coarse mesh for acceleration
-   *
-   *  This is used for nonlinear acceleration schemes, and,
-   *  in principle, could be used to develop multigrid
-   *  preconditioners for Krylov solvers.
-   *
-   *  This is a very limited interface.  A possible second
-   *  approach (for the user) would be to assign
-   *  a coarse mesh map (independent of the coarse mesh
-   *  used for material assignment)
+   *  @brief Constructor
+   *  @param fine_mesh    The original fine mesh
+   *  @param level        Number of fine meshes desired per coarse mesh
    */
   CoarseMesh(SP_mesh fine_mesh, const size_t level);
 
@@ -104,6 +114,10 @@ public:
 
 private:
 
+  //--------------------------------------------------------------------------//
+  // DATA
+  //--------------------------------------------------------------------------//
+
   /// Fine mesh
   SP_mesh d_fine_mesh;
   /// Coarse mesh
@@ -121,6 +135,6 @@ private:
 
 #endif // detran_COARSEMESH_HH_
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file CoarseMesh.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

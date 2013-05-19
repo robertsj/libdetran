@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   MGSolverGMRES.cc
- *  @author robertsj
- *  @date   Jun 19, 2012
- *  @brief  MGSolverGMRES member definitions.
+ *  @file  MGSolverGMRES.cc
+ *  @brief MGSolverGMRES member definitions
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #include "MGSolverGMRES.hh"
 #include "MGDSA.hh"
@@ -14,7 +13,7 @@
 namespace detran
 {
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 template <class D>
 MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
                                 SP_material               material,
@@ -27,58 +26,94 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
   , d_moments_size_group(0)
   , d_boundary_size(0)
   , d_boundary_size_group(0)
+  , d_lower(0)
+  , d_upper(d_number_groups)
   , d_reflective_solve_iterations(0)
-  , d_update_boundary_flux(false)
+  , d_update_angular_flux(false)
 {
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // DETERMINE ENERGY GROUP BOUNDS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   // Set the bounds for the downscatter GS portion and upscatter Krylov
   // portion.  The default is to use GS on the downscatter block and Krylov
-  // on the upscatter block.
-  d_krylov_group_cutoff = material->upscatter_cutoff();
+  // on the upscatter block.  Note, if this is a multiplying problem, the
+  // cutoff is automatically set to zero, i.e. GS is not used at all.
+  d_krylov_group_cutoff = material->upscatter_cutoff(d_adjoint);
   if (d_input->check("outer_krylov_group_cutoff"))
   {
-    d_krylov_group_cutoff = d_input->template get<int>("outer_krylov_group_cutoff");
-    Insist((d_krylov_group_cutoff >= 0) &&
-           (d_krylov_group_cutoff <= d_material->upscatter_cutoff()),
-           "Upscatter cutoff must be >= 0 and <= material upscatter cutoff");
+    d_krylov_group_cutoff =
+      d_input->template get<int>("outer_krylov_group_cutoff");
+    if (!d_adjoint)
+    {
+      Insist((d_krylov_group_cutoff >= 0) &&
+             (d_krylov_group_cutoff <= d_material->upscatter_cutoff(d_adjoint)),
+             "Upscatter cutoff must be >= 0 and <= material cutoff");
+    }
+    else
+    {
+      Insist((d_krylov_group_cutoff <= d_number_groups) &&
+             (d_krylov_group_cutoff >= d_material->upscatter_cutoff(d_adjoint)),
+             "Downscatter cutoff must be < # groups and >= material cutoff");
+    }
   }
-  d_number_active_groups = d_number_groups - d_krylov_group_cutoff;
+  if (multiply)
+  {
+    d_krylov_group_cutoff = 0;
+    if (d_adjoint) d_krylov_group_cutoff = d_number_groups - 1;
+  }
 
-  //-------------------------------------------------------------------------//
+  if (d_adjoint)
+  {
+    d_lower = d_number_groups - 1;
+    d_upper = -1;
+  }
+
+  d_number_active_groups = std::abs(d_upper - d_krylov_group_cutoff);
+
+
+  //--------------------------------------------------------------------------//
   // SETUP SWEEPER FOR MULTIGROUP OPERATOR
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   d_sweeper = d_wg_solver->get_sweeper();
   d_sweepsource = d_wg_solver->get_sweepsource();
 
   if (d_number_active_groups)
   {
-    //-----------------------------------------------------------------------//
+    //------------------------------------------------------------------------//
     // SETUP SOLVER
-    //-----------------------------------------------------------------------//
+    //------------------------------------------------------------------------//
 
     // Create operator
     d_operator = new Operator_T(d_state,
                                 d_boundary,
                                 d_sweeper,
                                 d_sweepsource,
-                                d_krylov_group_cutoff);
-
-    //d_operator->compute_explicit("MGTO.out");
+                                d_krylov_group_cutoff,
+                                d_adjoint);
 
     // Create temporary unknown and right hand size vectors
     d_x = new callow::Vector(d_operator->number_rows(), 0.0);
     d_b = new callow::Vector(d_operator->number_rows(), 0.0);
 
-    // Get callow solver parameter database
+    // Get callow solver parameter database.  If not present, create a new
+    // one based on default outer solver parameters.  This way, we can
+    // use the basic outer_max_iters and outer_tolerance parameters.
     SP_input db;
     if (d_input->check("outer_solver_db"))
     {
       db = d_input->template get<SP_input>("outer_solver_db");
+    }
+    else
+    {
+      db = new detran_utilities::InputDB("mgsolvergmres_db");
+      db->template put<double>("linear_solver_rtol", d_tolerance);
+      db->template put<double>("linear_solver_atol", d_tolerance);
+      db->template put<int>("linear_solver_maxit", d_maximum_iterations);
+      db->template put<int>("linear_solver_monitor_level", d_print_level);
+      d_input->template put<SP_input>("outer_solver_db", db);
     }
     d_solver = callow::LinearSolverCreator::Create(db);
     Assert(d_solver);
@@ -108,6 +143,7 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
     if (d_input->check("outer_pc_side"))
       pc_side = d_input->template get<int>("outer_pc_side");
 
+    // Multigroup DSA
     if (pc_type == "mgdsa")
     {
       Assert(d_sweepsource->get_scatter_source());
@@ -118,6 +154,9 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
                        d_krylov_group_cutoff,
                        d_multiply);
     }
+    // Multigroup Coarse Mesh DSA
+
+    // Multigroup Coarse Mesh TSA
 
     if (d_pc)
       d_solver->set_preconditioner(d_pc, pc_side);
@@ -130,14 +169,15 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
   {
     if (d_input->template get<int>("compute_boundary_flux"))
     {
-      d_update_boundary_flux =
+      d_update_angular_flux =
         d_input->template get<int>("compute_boundary_flux");
     }
   }
-
+  if (d_state->store_angular_flux())
+    d_update_angular_flux = true;
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 template <class D>
 int MGSolverGMRES<D>::number_sweeps() const
 {
@@ -145,9 +185,9 @@ int MGSolverGMRES<D>::number_sweeps() const
   return d_sweeper->number_sweeps();
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 // EXPLICIT INSTANTIATIONS
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 template class MGSolverGMRES<_1D>;
 template class MGSolverGMRES<_2D>;
@@ -155,6 +195,6 @@ template class MGSolverGMRES<_3D>;
 
 } // end namespace detran
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of MGSolverGMRES.cc
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

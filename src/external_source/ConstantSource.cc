@@ -25,6 +25,18 @@ ConstantSource::ConstantSource(size_t number_groups,
   /* ... */
 }
 
+//---------------------------------------------------------------------------//
+ConstantSource::SP_externalsource
+ConstantSource::Create(size_t         number_groups,
+                       SP_mesh        mesh,
+                       double         source,
+                       SP_quadrature  quadrature)
+{
+  SP_externalsource
+    p(new ConstantSource(number_groups, mesh, source, quadrature));
+  return p;
+}
+
 } // end namespace detran_external_source
 
 //---------------------------------------------------------------------------//

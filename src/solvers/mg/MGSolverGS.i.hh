@@ -1,10 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
  *  @file  MGSolverGS.i.hh
  *  @brief MGSolverGS inline member definitions
  *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_MGSolverGS_I_HH_
 #define detran_MGSolverGS_I_HH_
@@ -37,11 +37,10 @@ void MGSolverGS<D>::solve(const double keff)
   if (d_multiply) d_fissionsource->setup_outer(1.0 / keff);
 
   // Initial sweep through all groups.
-  vec_size_t groups = range<unsigned int>(d_lower, d_upper, 1);
+  vec_size_t groups = range<size_t>(d_lower, d_upper);
   vec_size_t::iterator g_it = groups.begin();
   for (; g_it != groups.end(); ++g_it)
   {
-    //if (d_multiply) d_fissionsource->update();
     d_wg_solver->solve(*g_it);
   }
 
@@ -50,8 +49,8 @@ void MGSolverGS<D>::solve(const double keff)
   if (d_iterate)
   {
     // Update group bounds for the possibly truncated iteration block.
-    groups = range<size_t>(d_lower_upscatter, d_upper, 1);
-
+    //groups = range<size_t>(d_lower_upscatter, d_upper);
+    groups = range<size_t>(0, 7);
     for (iteration = 1; iteration <= d_maximum_iterations; ++iteration)
     {
       detran_utilities::vec_scale(nres, 0.0);
@@ -97,3 +96,7 @@ void MGSolverGS<D>::solve(const double keff)
 } // end namespace detran
 
 #endif /* detran_MGSolverGS_I_HH_ */
+
+//----------------------------------------------------------------------------//
+//              end of MGSolverGS.i.hh
+//----------------------------------------------------------------------------//

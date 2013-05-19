@@ -25,13 +25,13 @@ namespace detran
 
 //----------------------------------------------------------------------------//
 template <class D>
-FixedSourceManager<D>::FixedSourceManager(int         argc,
-                                          char       *argv[],
-                                          SP_input    input,
-                                          SP_material material,
-                                          SP_mesh     mesh,
-                                          bool        multiply,
-                                          bool        fission)
+FixedSourceManager<D>::FixedSourceManager(int          argc,
+                                          char        *argv[],
+                                          SP_input     input,
+                                          SP_material  material,
+                                          SP_mesh      mesh,
+                                          bool         multiply,
+                                          bool         fission)
   : TransportManager(argc, argv)
   , d_input(input)
   , d_material(material)
@@ -77,7 +77,6 @@ FixedSourceManager<D>::FixedSourceManager(SP_input    input,
 template <class D>
 void FixedSourceManager<D>::setup()
 {
-
   //--------------------------------------------------------------------------//
   // DISCRETIZATION
   //--------------------------------------------------------------------------//
@@ -150,7 +149,6 @@ void FixedSourceManager<D>::setup()
   // Ensure a solver is rebuilt
   d_is_ready = false;
 
-  // Postconditions
   Ensure(d_boundary);
   Ensure(d_state);
 }

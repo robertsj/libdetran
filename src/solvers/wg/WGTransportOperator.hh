@@ -1,8 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   WGTransportOperator.hh
- *  @brief  WGTransportOperator class definition
- *  @note   Copyright (C) 2012-2013 Jeremy Roberts
+ *  @file  WGTransportOperator.hh
+ *  @brief WGTransportOperator class definition
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 

@@ -125,10 +125,6 @@ private:
   /// Determines which norm to use (default is Linf)
   std::string d_norm_type;
 
-  //--------------------------------------------------------------------------//
-  // IMPLEMENTATION
-  //--------------------------------------------------------------------------//
-
 };
 
 } // namespace detran

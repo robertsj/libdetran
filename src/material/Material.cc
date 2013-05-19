@@ -320,8 +320,8 @@ void Material::finalize()
       for (size_t g = 0; g < d_number_groups; g++)
         if (d_sigma_s[g][gp][m] > 0.0) upper = std::max(g, upper);
     }
-    d_scatter_bounds[gp][2] = lower;
-    d_scatter_bounds[gp][3] = upper;
+    d_scatter_bounds[gp][2] = upper; // Numerically, the bounds are
+    d_scatter_bounds[gp][3] = lower; // in reverse order for adjoint.
   }
 
   /*
@@ -343,7 +343,7 @@ void Material::finalize()
   // there is no downscatter.
   for (int g = d_number_groups - 1; g >= 0; --g)
   {
-    if (d_scatter_bounds[g][2] < g)
+    if (d_scatter_bounds[g][3] < g)
     {
       d_upscatter_cutoff[1] = g;
       break;

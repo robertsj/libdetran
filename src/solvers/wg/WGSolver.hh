@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   WGSolver.hh
- *  @note Copyright(C) 2012-2013 Jeremy Roberts
- *  @date   Apr 4, 2012
- *  @brief  WGSolver class definition.
+ *  @file  WGSolver.hh
+ *  @brief WGSolver class definition
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 

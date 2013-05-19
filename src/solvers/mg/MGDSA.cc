@@ -1,11 +1,10 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   MGDSA.cc
- *  @brief  MGDSA
- *  @author Jeremy Roberts
- *  @date   Nov 12, 2012
+ *  @file  MGDSA.cc
+ *  @brief MGDSA member definitions
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #include "MGDSA.hh"
 #include "callow/solver/LinearSolverCreator.hh"
@@ -14,17 +13,16 @@
 namespace detran
 {
 
-//---------------------------------------------------------------------------//
-MGDSA::MGDSA(SP_input input,
-             SP_material material,
-             SP_mesh mesh,
+//----------------------------------------------------------------------------//
+MGDSA::MGDSA(SP_input         input,
+             SP_material      material,
+             SP_mesh          mesh,
              SP_scattersource source,
-             size_t cutoff,
-             bool include_fission)
+             size_t           cutoff,
+             bool             include_fission)
   : Base(input, material, mesh, cutoff, "MG-DSA")
   , d_scattersource(source)
 {
-  // Preconditions
   Require(d_scattersource);
 
   // Compute the diffusion coefficients.
@@ -60,7 +58,7 @@ MGDSA::MGDSA(SP_input input,
   // d_operator->print_matlab("mg.out");
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 void MGDSA::apply(Vector &V_in, Vector &V_out)
 {
 
@@ -109,6 +107,6 @@ void MGDSA::apply(Vector &V_in, Vector &V_out)
 
 } // end namespace detran
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file MGDSA.cc
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

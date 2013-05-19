@@ -1,17 +1,17 @@
 //----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file  test_MGSolverGS.cc
- *  @brief Test of MGSolverGS
+ *  @file  test_MGSolverGMRES.cc
+ *  @brief Test of MGSolverGMRES
  *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
 //----------------------------------------------------------------------------//
 // LIST OF TEST FUNCTIONS
-#define TEST_LIST                                 \
-        FUNC(test_MGSolverGS_1g)                  \
-        FUNC(test_MGSolverGS_7g_forward)          \
-        FUNC(test_MGSolverGS_7g_forward_multiply) \
-        FUNC(test_MGSolverGS_7g_adjoint)          \
-        FUNC(test_MGSolverGS_7g_adjoint_multiply)
+#define TEST_LIST                                    \
+        FUNC(test_MGSolverGMRES_1g)                  \
+        FUNC(test_MGSolverGMRES_7g_forward)          \
+        FUNC(test_MGSolverGMRES_7g_forward_multiply) \
+        FUNC(test_MGSolverGMRES_7g_adjoint)          \
+        FUNC(test_MGSolverGMRES_7g_adjoint_multiply)
 
 #include "TestDriver.hh"
 #include "solvers/FixedSourceManager.hh"
@@ -35,10 +35,10 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------------------------------------//
 
-int test_MGSolverGS_1g(int argc, char *argv[])
+int test_MGSolverGMRES_1g(int argc, char *argv[])
 {
   FixedSourceData data = get_fixedsource_data(1, 1);
-  data.input->put<std::string>("outer_solver", "GS");
+  data.input->put<std::string>("outer_solver", "GMRES");
   data.input->put<double>("inner_tolerance", 1e-14);
   data.input->put<double>("outer_tolerance", 1e-14);
   data.input->put<int>("inner_max_iters", 1000000);
@@ -52,16 +52,17 @@ int test_MGSolverGS_1g(int argc, char *argv[])
   return 0;
 }
 
-int test_MGSolverGS_7g_forward(int argc, char *argv[])
+int test_MGSolverGMRES_7g_forward(int argc, char *argv[])
 {
   FixedSourceData data = get_fixedsource_data(1, 7);
-  data.input->put<std::string>("outer_solver", "GS");
+  data.input->put<std::string>("outer_solver", "GMRES");
   data.input->put<std::string>("bc_west", "reflect");
   data.input->put<std::string>("bc_east", "reflect");
   data.input->put<double>("inner_tolerance", 1e-14);
   data.input->put<double>("outer_tolerance", 1e-14);
   data.input->put<int>("inner_max_iters", 1000000);
   data.input->put<int>("outer_max_iters", 1000000);
+  data.input->put<int>("outer_print_level", 2);
   FixedSourceManager<_1D> manager(data.input, data.material, data.mesh);
   manager.setup();
   manager.set_source(data.source);
@@ -73,21 +74,23 @@ int test_MGSolverGS_7g_forward(int argc, char *argv[])
       4.015682491688769e+00 };
   for (int g = 0; g < 7; ++g)
   {
+    printf("%4i %20.12e  %20.12e \n", g, ref[g], manager.state()->phi(g)[0]);
     TEST(soft_equiv(ref[g], manager.state()->phi(g)[0]));
   }
   return 0;
 }
 
-int test_MGSolverGS_7g_forward_multiply(int argc, char *argv[])
+int test_MGSolverGMRES_7g_forward_multiply(int argc, char *argv[])
 {
   FixedSourceData data = get_fixedsource_data(1, 7);
-  data.input->put<std::string>("outer_solver", "GS");
+  data.input->put<std::string>("outer_solver", "GMRES");
   data.input->put<std::string>("bc_west", "reflect");
   data.input->put<std::string>("bc_east", "reflect");
   data.input->put<double>("inner_tolerance", 1e-14);
   data.input->put<double>("outer_tolerance", 1e-14);
   data.input->put<int>("inner_max_iters", 1000000);
   data.input->put<int>("outer_max_iters", 1000000);
+  data.input->put<int>("outer_print_level", 2);
   FixedSourceManager<_1D> manager(data.input, data.material, data.mesh, true);
   manager.setup();
   manager.set_source(data.source);
@@ -99,12 +102,13 @@ int test_MGSolverGS_7g_forward_multiply(int argc, char *argv[])
       4.020322297305944e+00 };
   for (int g = 0; g < 7; ++g)
   {
+    printf("%4i %20.12e  %20.12e \n", g, ref[g], manager.state()->phi(g)[0]);
     TEST(soft_equiv(ref[g], manager.state()->phi(g)[0]));
   }
   return 0;
 }
 
-int test_MGSolverGS_7g_adjoint(int argc, char *argv[])
+int test_MGSolverGMRES_7g_adjoint(int argc, char *argv[])
 {
   FixedSourceData data = get_fixedsource_data(1, 7);
   data.input->put<std::string>("outer_solver", "GS");
@@ -126,13 +130,12 @@ int test_MGSolverGS_7g_adjoint(int argc, char *argv[])
       3.681286723043155e+00 };
   for (int g = 0; g < 7; ++g)
   {
-    printf("%4i %20.12e  %20.12e \n", g, ref[g], manager.state()->phi(g)[0]);
     TEST(soft_equiv(ref[g], manager.state()->phi(g)[0]));
   }
   return 0;
 }
 
-int test_MGSolverGS_7g_adjoint_multiply(int argc, char *argv[])
+int test_MGSolverGMRES_7g_adjoint_multiply(int argc, char *argv[])
 {
   FixedSourceData data = get_fixedsource_data(1, 7);
   data.input->put<std::string>("outer_solver", "GS");
@@ -160,5 +163,5 @@ int test_MGSolverGS_7g_adjoint_multiply(int argc, char *argv[])
 }
 
 //----------------------------------------------------------------------------//
-//              end of test_MGSolverGS.cc
+//              end of test_MGSolverGMRES.cc
 //----------------------------------------------------------------------------//

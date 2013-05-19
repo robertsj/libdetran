@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   EigenPI.i.hh
- *  @author robertsj
- *  @date   Apr 10, 2012
- *  @brief  EigenPI inline member definitions.
+ *  @file  EigenPI.i.hh
+ *  @brief EigenPI inline member definitions
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_EIGENPI_I_HH_
 #define detran_EIGENPI_I_HH_
@@ -119,3 +118,8 @@ void EigenPI<D>::solve()
 } // end namespace detran
 
 #endif /* detran_EIGENPI_I_HH_ */
+
+//----------------------------------------------------------------------------//
+//              end of file EigenPI.i.hh
+//----------------------------------------------------------------------------//
+

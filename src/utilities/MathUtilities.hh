@@ -56,6 +56,13 @@ inline void vec_scale(vec_dbl &x, double scale)
     x[i] = x[i] * scale;
 }
 
+/// Set a double vector.
+inline void vec_set(vec_dbl &x, double value)
+{
+  for (size_t i = 0; i < x.size(); ++i)
+    x[i] = value;
+}
+
 
 /// Norm of the residual of two double vectors.
 inline double norm_residual(vec_dbl &x, vec_dbl &y, std::string flag = "L2")
@@ -190,6 +197,32 @@ inline std::vector<double> linspace_center(double a, double b, int n = 10)
   std::vector<double> v(n, 0.5*dx);
   for (int i = 1; i < n; ++i)
     v[i] = v[i-1] + dx;
+  return v;
+}
+
+/**
+ *  @brief Create a range vector
+ *
+ *  Example: range(0, 4)       = {0, 1, 2, 3}
+ *           range(4, 0)       = {4, 3, 2, 1}
+ *           range(0, 4, true) = {0, 1, 2, 3, 4}
+ *
+ *  @param  a    start of range
+ *  @param  b    end of range
+ */
+template <class T>
+inline std::vector<T> range(const int a, const int b, bool inclusive = false)
+{
+  int size = std::abs(a-b);
+  if (inclusive) ++size;
+  std::vector<T> v(size, 0);
+  typename std::vector<T>::iterator it = v.begin();
+  int del = a < b ? 1 : -1;
+  int i = a;
+  for (; it != v.end(); ++it, i += del)
+  {
+    *it = i;
+  }
   return v;
 }
 

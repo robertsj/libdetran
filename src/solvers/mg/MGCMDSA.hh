@@ -27,14 +27,12 @@ namespace detran
  *  The multigroup DSA preconditioning process \$ \mathbf{P}^{-1} \$
  *  is defined to be
  *  @f[
- *      (\mathbf{I} - \mathbf{R}^T \mathbf{C}^{-1} \mathbf{R} \mathbf{S}) \, ,
+ *      (\mathbf{I} - \mathbf{P} \mathbf{C}^{-1} \mathbf{R} \mathbf{S}) \, ,
  *  @f]
  *  where \f$ \mathbf{C} \f$ is the multigroup diffusion operator on
  *  a coarse spatial mesh and
- *  \f$ \mathbf{R} \f$ and its transpose represent a spatial restriction
- *  and projection, respectively.
- *  This operator treats group-to-group scattering and, if requested,
- *  fission implicitly.
+ *  \f$ \mathbf{R} \f$ and  \f$ \mathbf{P} \f$ represent the space-energy
+ *  restriction and projection operators, respectively.
  *
  *  The restriction space is based on a user-specific level defining the
  *  number of fine cells per coarse cell.  The same is true for energy.
@@ -42,6 +40,14 @@ namespace detran
  *  collapsing.  It would be possible to use some sort of approximate
  *  spectral shape as well based on infinite medium calculations in one
  *  or more material mixture.
+ *
+ *  The restriction in space is based either on a user-defined state vector,
+ *  possibly from an initial guess, partial solution, or other approximation,
+ *  or uniform volume weighting.
+ *
+ *  The restriction in energy is based either on the same user defined state
+ *  vector or a set of material-dependent spectra based on infinite medium
+ *  calculations for each material.
  */
 
 class MGCMDSA: public MGPreconditioner
@@ -59,6 +65,7 @@ public:
   typedef DiffusionLossOperator             Operator_T;
   typedef CoarseMesh::SP_coarsemesh         SP_coarsemesh;
   typedef CoarseMesh::SP_mesh               SP_mesh;
+  typedef State::SP_state                   SP_state;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -116,7 +123,7 @@ private:
   //-------------------------------------------------------------------------//
 
   /// Coarse mesh
-
+  SP_coarsemesh d_coarsemesher;
 
   /// Scatter source
   SP_scattersource d_scattersource;

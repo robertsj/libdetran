@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   ScatterSource.cc
- *  @author robertsj
- *  @date   Apr 4, 2012
- *  @brief  ScatterSource class definition.
+ *  @file  ScatterSource.cc
+ *  @brief ScatterSource class definition
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
 //----------------------------------------------------------------------------//
 
@@ -25,8 +24,7 @@ ScatterSource::ScatterSource(SP_mesh     mesh,
   Require(d_material);
   Require(d_state);
   d_mat_map = d_mesh->mesh_map("MATERIAL");
-  if (d_state->get_input()->check("adjoint"))
-    d_adjoint = 0 != d_state->get_input()->get<int>("adjoint");
+  d_adjoint = d_state->adjoint();
 }
 
 } // end namespace detran

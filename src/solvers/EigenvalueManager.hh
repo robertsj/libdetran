@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   EigenvalueManager.hh
- *  @author robertsj
- *  @date   Oct 24, 2012
- *  @brief  EigenvalueManager class definition.
+ *  @file  EigenvalueManager.hh
+ *  @brief EigenvalueManager class definition
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 

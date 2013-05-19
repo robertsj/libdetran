@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   Homogenize.cc
- *  @brief  Homogenize 
- *  @author Jeremy Roberts
- *  @date   Mar 26, 2013
+ *  @file  Homogenize.cc
+ *  @brief Homogenize member definitions
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #include "Homogenize.hh"
 #include "utilities/MathUtilities.hh"
@@ -14,25 +13,26 @@
 namespace detran
 {
 
-//---------------------------------------------------------------------------//
-Homogenize::Homogenize(SP_material material)
+//----------------------------------------------------------------------------//
+Homogenize::Homogenize(SP_material material, const size_t dc_weight)
   : d_material(material)
+  , d_dc_weight(dc_weight)
 {
+  Require(dc_weight < END_DIFF_COEF_WEIGHTING);
   d_number_groups = d_material->number_groups();
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 Homogenize::SP_material
 Homogenize::homogenize(SP_state     state,
                        SP_mesh      mesh,
                        std::string  key,
-                       vec_int      coarsegroup,
-                       size_t       dc_weight)
+                       vec_int      coarsegroup)
 {
   Require(state);
   Require(mesh);
+  if (!coarsegroup.size()) coarsegroup = vec_int(d_number_groups, 1);
   Require(detran_utilities::vec_sum(coarsegroup) == d_number_groups);
-  Require(dc_weight < END_DIFF_COEF_WEIGHTING);
 
   using detran_material::Material;
 
@@ -79,7 +79,7 @@ Homogenize::homogenize(SP_state     state,
     for (int gg = 0; gg < coarsegroup[cg]; ++gg, ++fg)
     {
       const vec_dbl &phi_fg = state->phi(fg);
-      const vec_dbl &J_fg   = current(state, fg, dc_weight);
+      const vec_dbl &J_fg   = current(state, fg, d_dc_weight);
 
       for (size_t fi = 0; fi < mesh->number_cells(); ++fi)
       {
@@ -97,7 +97,7 @@ Homogenize::homogenize(SP_state     state,
         chi[ci]        += mesh->volume(fi) * d_material->chi(m, fg);
         for (size_t gp = 0; gp < d_number_groups; ++gp)
           sigma_s[ci][fg_to_cg[gp]] += pv * d_material->sigma_s(m, gp, fg);
-        if (dc_weight == PHI_D || dc_weight == CURRENT_D)
+        if (d_dc_weight == PHI_D || d_dc_weight == CURRENT_D)
           diff_coef[ci] += jv * d_material->diff_coef(m, fg);
       }
     }
@@ -119,7 +119,7 @@ Homogenize::homogenize(SP_state     state,
         cmat->set_chi(ci, cg, chi[ci]/vol[ci]);
         for (size_t cgp = 0; cgp < number_coarse_groups; ++cgp)
           cmat->set_sigma_s(ci, cgp, cg, sigma_s[ci][cgp]/phi_vol[ci]);
-        if (dc_weight == PHI_D || dc_weight == CURRENT_D)
+        if (d_dc_weight == PHI_D || d_dc_weight == CURRENT_D)
           cmat->set_diff_coef(ci, cg, diff_coef[ci]/cur_vol[ci]);
         else
           cmat->set_diff_coef(ci, cg, 1.0/(3.0*cmat->sigma_t(ci, cg)));
@@ -143,18 +143,14 @@ Homogenize::homogenize(SP_state     state,
   return cmat;
 }
 
-//---------------------------------------------------------------------------//
-Homogenize::SP_material
-Homogenize::homogenize(SP_state     state,
-                       SP_mesh      mesh,
-                       std::string  key,
-                       size_t       dc_weight)
+//----------------------------------------------------------------------------//
+void Homogenize::set_dc_weight(const size_t dc_weight)
 {
-  vec_int coarsegroup(d_number_groups, 1);
-  return homogenize(state, mesh, key, coarsegroup, dc_weight);
+  Require(dc_weight < END_DIFF_COEF_WEIGHTING);
+  d_dc_weight = dc_weight;
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 const Homogenize::vec_dbl&
 Homogenize::current(SP_state state, size_t g, size_t dc_weight) const
 {
@@ -169,6 +165,6 @@ Homogenize::current(SP_state state, size_t g, size_t dc_weight) const
 
 } // end namespace detran
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file Homogenize.cc
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

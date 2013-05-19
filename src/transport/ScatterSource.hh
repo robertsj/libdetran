@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   ScatterSource.hh
- *  @author robertsj
- *  @date   Apr 4, 2012
- *  @brief  ScatterSource class definition.
+ *  @file  ScatterSource.hh
+ *  @brief ScatterSource class definition
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
 //----------------------------------------------------------------------------//
 
@@ -15,6 +14,7 @@
 #include "material/Material.hh"
 #include "geometry/Mesh.hh"
 #include "utilities/DBC.hh"
+#include "utilities/MathUtilities.hh"
 #include "utilities/SP.hh"
 #include <iostream>
 
@@ -26,7 +26,7 @@ namespace detran
  *  @class ScatterSource
  *  @brief Methods for constructing various scattering sources.
  *
- *
+ *  See the individual methods for detailed information.
  */
 //----------------------------------------------------------------------------//
 
@@ -45,7 +45,10 @@ public:
   typedef State::SP_state                           SP_state;
   typedef State::moments_type                       moments_type;
   typedef detran_utilities::vec_int                 vec_int;
+  typedef detran_utilities::vec_size_t              vec_size_t;
   typedef detran_utilities::size_t                  size_t;
+  typedef vec_size_t                                groups_t;
+  typedef groups_t::iterator                        groups_iter;
 
   //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -132,7 +135,7 @@ public:
    *      q_g = \sum^G_{g'} \mathbf{S}_{gg'}\phi_{g'} \, .
    *  @f]
    *
-   *  Because Gauss-Seidell can be used to solve downscatter blocks,
+   *  Because Gauss-Seidel can be used to solve downscatter blocks,
    *  a cutoff group is passed to exclude the solved portion of
    *  the problem.
    *
@@ -163,6 +166,8 @@ protected:
   vec_int d_mat_map;
   /// Adjoint
   bool d_adjoint;
+  /// Vector of group indices for in-scatter, down-scatter, and total-scatter
+  groups_t d_groups;
 
   //--------------------------------------------------------------------------//
   // IMPLEMENTATION
@@ -176,6 +181,9 @@ protected:
   size_t g_from(const size_t g, const size_t gp) const;
   /// the "to" group
   size_t g_to(const size_t g, const size_t gp) const;
+  /// Set group index vector
+  groups_iter groups(const size_t g_start, const size_t g_finish, bool inc);
+
 };
 
 TRANSPORT_TEMPLATE_EXPORT(detran_utilities::SP<ScatterSource>)

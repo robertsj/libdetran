@@ -1,15 +1,15 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   test_Homogenization.cc
- *  @author Jeremy Roberts
- *  @date   Mar 27, 2013
- *  @brief  Test of Homogenization.
+ *  @file  test_Homogenization.cc
+ *  @brief Test of Homogenization
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
-#define TEST_LIST                     \
-        FUNC(test_Homogenization)
+#define TEST_LIST                       \
+        FUNC(test_Homogenization)       \
+        FUNC(test_HomogenizeCoarseMesh)
 
 #include "utilities/TestDriver.hh"
 #include "Homogenize.hh"
@@ -19,8 +19,10 @@
 // Setup
 #include "geometry/test/mesh_fixture.hh"
 #include "angle/test/quadrature_fixture.hh"
+#include "transport/test/coarsemesh_fixture.hh"
 
 using namespace detran;
+using namespace detran_geometry;
 using namespace detran_material;
 using namespace detran_utilities;
 using namespace detran_test;
@@ -30,9 +32,9 @@ int main(int argc, char *argv[])
   RUN(argc, argv);
 }
 
-//----------------------------------------------//
+//----------------------------------------------------------------------------//
 // TEST DEFINITIONS
-//----------------------------------------------//
+//----------------------------------------------------------------------------//
 
 int test_Homogenization(int argc, char *argv[])
 {
@@ -58,7 +60,6 @@ int test_Homogenization(int argc, char *argv[])
   mat->compute_sigma_a();
   mat->compute_diff_coef();
   mat->finalize();
-//  mat->display();
 
   // Mesh              |  mat 0  |  mat1  |
   //                   0         5       10
@@ -96,7 +97,6 @@ int test_Homogenization(int argc, char *argv[])
 
   vec_int cg(1, 2);
   Material::SP_material mat3 = H.homogenize(state, mesh, "MATERIAL", cg);
-//  mat3->display();
 
   TEST(soft_equiv(mat3->sigma_t(0, 0),     1.5));
   TEST(soft_equiv(mat3->sigma_t(1, 0),     3.0));
@@ -107,9 +107,54 @@ int test_Homogenization(int argc, char *argv[])
   TEST(soft_equiv(mat3->diff_coef(0, 0),   0.25));
   TEST(soft_equiv(mat3->diff_coef(1, 0),   0.125));
 
+  {
+
+  }
   return 0;
 }
 
-//---------------------------------------------------------------------------//
-//              end of test_State.cc
-//---------------------------------------------------------------------------//
+/*
+ *  This tests the use of homogenization given a coarse mesh.
+ */
+int test_HomogenizeCoarseMesh(int argc, char *argv[])
+{
+  // Input
+  InputDB::SP_input input = InputDB::Create();
+  input->put<int>("number_groups", 1);
+
+  // Fine mesh material
+  Material::SP_material mat = Material::Create(2, 1);
+  mat->set_sigma_t(0, 0, 1.0);
+  mat->set_sigma_a(0, 0, 0.5);
+  mat->set_sigma_t(1, 0, 2.0);
+  mat->finalize();
+
+  // Fine mesh and coarse mesh
+  vec_int fm(1, 5);
+  vec_dbl cm(2, 0.0); cm[1] = 100.0;
+  vec_int mt(1, 0);
+  Mesh::SP_mesh mesh = Mesh1D::Create(fm, cm, mt);
+  //Mesh::SP_mesh mesh = Mesh2D::Create(fm, fm, cm, cm, mt);
+
+  CoarseMesh::SP_coarsemesh mesher(new CoarseMesh(mesh, 3));
+  mesher->get_coarse_mesh()->display();
+  return 0;
+  vec_int mat_map(mesh->number_cells(), 0);
+  State::SP_state state(new State(input, mesh));
+  for (int cell = 0; cell < mesh->number_cells(); ++cell)
+  {
+    mat_map[cell] = cell % 2;
+    state->phi(0)[cell] = 1.0 + mesh->cell_to_i(cell) +  mesh->cell_to_j(cell);
+  }
+  mesh->add_mesh_map("MATERIAL", mat_map);
+  Homogenize H(mat);
+  Material::SP_material mat2 = H.homogenize(state, mesh, "COARSEMESH");
+  mat2->display();
+  TEST(mat2->number_materials() == 4);
+
+  return 0;
+}
+
+//----------------------------------------------------------------------------//
+//              end of test_Homogenization.cc
+//----------------------------------------------------------------------------//

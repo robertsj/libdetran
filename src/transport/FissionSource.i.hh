@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   FissionSource.i.hh
- *  @author robertsj
- *  @date   Oct 14, 2012
- *  @brief  FissionSource inline member definitions
+ *  @file  FissionSource.i.hh
+ *  @brief FissionSource inline member definitions
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
 //----------------------------------------------------------------------------//
 
@@ -143,3 +142,7 @@ FissionSource::g_to(const size_t g, const size_t gp) const
 } // namespace detran
 
 #endif /* detran_FISSIONSOURCE_I_HH_ */
+
+//----------------------------------------------------------------------------//
+//              end of FissionSource.i.hh
+//----------------------------------------------------------------------------//

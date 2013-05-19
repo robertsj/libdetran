@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   QuadratureFactory.cc
- *  @author robertsj
- *  @date   Apr 11, 2012
- *  @brief  QuadratureFactory member definitions.
+ *  @file  QuadratureFactory.cc
+ *  @brief QuadratureFactory member definitions
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 
@@ -76,32 +75,21 @@ build(SP_quadrature &q, SP_input input, const int dimension)
   // is, we need different parameters.
   if (quad_type == "uniform" || quad_type == "collocated")
   {
-
     // We're using an MOC quadrature (but that doesn't mean this
     // is an MOC problem.
     moc = true;
 
-    // Set the number of azimuths per octant
-    if (input->check("quad_azimuths_octant"))
-      azimuths_octant = input->get<int>("quad_azimuths_octant");
-
-    // Set the number of polar angles per octant
-    if (input->check("quad_polar_octant"))
-      polar_octant = input->get<int>("quad_polar_octant");
-
     // Set the polar type
     if (input->check("polar_type"))
       polar_type = input->get<string>("quad_polar_type");
+  }
 
-  }
-  else
-  {
-    // Get the number of polar and/or azimuths
-    if (input->check("quad_number_polar_octant"))
-      np = input->get<int>("quad_number_polar_octant");
-    if (input->check("quad_number_azimuth_octant"))
-      na = input->get<int>("quad_number_azimuth_octant");
-  }
+  // Get the number of polar and/or azimuths
+  if (input->check("quad_number_polar_octant"))
+    np = input->get<int>("quad_number_polar_octant");
+  if (input->check("quad_number_azimuth_octant"))
+    na = input->get<int>("quad_number_azimuth_octant");
+
 
   //-------------------------------------------------------------------------//
   // 1D QUADRATURES
@@ -171,7 +159,7 @@ build(SP_quadrature &q, SP_input input, const int dimension)
   else if (quad_type == "collocated")
   {
     Insist(dimension > 1, "Collocated only for 2D or 3D.");
-    q = new Collocated(dimension, azimuths_octant, 1, polar_octant, polar_type);
+    q = new Collocated(dimension, na, 1, np, polar_type);
   }
   else if (quad_type == "uniform")
   {
@@ -179,7 +167,7 @@ build(SP_quadrature &q, SP_input input, const int dimension)
     int num_space = 10;
     if (input->check("quad_uniform_number_space"))
       num_space = input->get<int>("quad_uniform_number_space");
-    q = new Uniform(dimension, azimuths_octant, num_space, polar_octant, polar_type);
+    q = new Uniform(dimension, na, num_space, np, polar_type);
   }
   else
   {
@@ -201,7 +189,7 @@ void QuadratureFactory::help() const
   std::cout << "  uniformequal" << std::endl;
   std::cout << "  chebyshevlegendre" << std::endl;
   std::cout << "  chebyshevdpn" << std::endl;
-
+  std::cout << "  uniform (2D MOC) " << std::endl;
 }
 
 } // end namespace detran_angle

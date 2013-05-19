@@ -15,6 +15,8 @@
 #include "ioutils/PPMOutput.hh"
 %}
 
+%feature("autodoc", "3");
+
 // Hide templates from SWIG
 %inline
 {
