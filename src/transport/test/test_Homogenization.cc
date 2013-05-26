@@ -80,36 +80,49 @@ int test_Homogenization(int argc, char *argv[])
     (state->phi(1))[i] = 1.0;
   }
 
+  // Spectrum (over materials)
+  vec2_dbl spectrum(2, vec_dbl(2, 1.0));
+
   // Homogenization.  This should produce the same material.
   Homogenize H(mat);
-  Material::SP_material mat2 = H.homogenize(state, mesh, "MATERIAL");
 
-  for (int m = 0; m < 2; ++m)
+  // Loop over state and spectrum based homogenization
+  for (int type = 0; type < 2; ++type)
   {
-    for (int g = 0; g < 2; ++g)
+    Material::SP_material mat2;
+    if (type == 0)
+      mat2 = H.homogenize(state, mesh, "MATERIAL");
+    else
+      mat2 = H.homogenize(spectrum, "MATERIAL", mesh, "MATERIAL");
+
+    for (int m = 0; m < 2; ++m)
     {
-      TEST(soft_equiv(mat->sigma_t(m, g), mat2->sigma_t(m, g)));
-      TEST(soft_equiv(mat->sigma_a(m, g), mat2->sigma_a(m, g)));
-      TEST(soft_equiv(mat->sigma_s(m, 0, g), mat2->sigma_s(m, 0, g)));
-      TEST(soft_equiv(mat->sigma_s(m, 1, g), mat2->sigma_s(m, 1, g)));
+      for (int g = 0; g < 2; ++g)
+      {
+        TEST(soft_equiv(mat->sigma_t(m, g),    mat2->sigma_t(m, g)));
+        TEST(soft_equiv(mat->sigma_a(m, g),    mat2->sigma_a(m, g)));
+        TEST(soft_equiv(mat->sigma_s(m, 0, g), mat2->sigma_s(m, 0, g)));
+        TEST(soft_equiv(mat->sigma_s(m, 1, g), mat2->sigma_s(m, 1, g)));
+      }
     }
+
+    vec_int cg(1, 2);
+    Material::SP_material mat3;
+    if (type == 0)
+      mat3 = H.homogenize(state, mesh, "MATERIAL", cg);
+    else
+      mat3 = H.homogenize(spectrum, "MATERIAL", mesh, "MATERIAL", cg);
+
+    TEST(soft_equiv(mat3->sigma_t(0, 0),     1.5));
+    TEST(soft_equiv(mat3->sigma_t(1, 0),     3.0));
+    TEST(soft_equiv(mat3->sigma_s(0, 0, 0),  0.5));
+    TEST(soft_equiv(mat3->sigma_s(1, 0, 0),  1.0));
+    TEST(soft_equiv(mat3->sigma_a(0, 0),     1.0));
+    TEST(soft_equiv(mat3->sigma_a(1, 0),     2.0));
+    TEST(soft_equiv(mat3->diff_coef(0, 0),   0.25));
+    TEST(soft_equiv(mat3->diff_coef(1, 0),   0.125));
   }
 
-  vec_int cg(1, 2);
-  Material::SP_material mat3 = H.homogenize(state, mesh, "MATERIAL", cg);
-
-  TEST(soft_equiv(mat3->sigma_t(0, 0),     1.5));
-  TEST(soft_equiv(mat3->sigma_t(1, 0),     3.0));
-  TEST(soft_equiv(mat3->sigma_s(0, 0, 0),  0.5));
-  TEST(soft_equiv(mat3->sigma_s(1, 0, 0),  1.0));
-  TEST(soft_equiv(mat3->sigma_a(0, 0),     1.0));
-  TEST(soft_equiv(mat3->sigma_a(1, 0),     2.0));
-  TEST(soft_equiv(mat3->diff_coef(0, 0),   0.25));
-  TEST(soft_equiv(mat3->diff_coef(1, 0),   0.125));
-
-  {
-
-  }
   return 0;
 }
 

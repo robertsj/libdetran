@@ -18,13 +18,13 @@ namespace detran
 {
 
 //---------------------------------------------------------------------------//
-inline void Equation_SC_2D::solve(const size_t i,
-                                  const size_t j,
-                                  const size_t k,
-                                  moments_type &source,
-                                  face_flux_type &psi_in,
-                                  face_flux_type &psi_out,
-                                  moments_type &phi,
+inline void Equation_SC_2D::solve(const size_t       i,
+                                  const size_t       j,
+                                  const size_t       k,
+                                  moments_type      &source,
+                                  face_flux_type    &psi_in,
+                                  face_flux_type    &psi_out,
+                                  moments_type      &phi,
                                   angular_flux_type &psi)
 {
   // Preconditions.  (The client *must* set group and angles.)

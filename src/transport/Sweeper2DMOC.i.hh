@@ -172,10 +172,13 @@ inline void Sweeper2DMOC<EQ>::sweep(moments_type &phi)
         // *** UPDATE THE BOUNDARY WITH psi_out
         (*d_boundary)(d_g, o, a, BoundaryMOC<_2D>::OUT, t) = psi_out;
 
+
         //cout << "      psi_out = " << psi_out << endl;
 
       } // end track
 
+      // Update the angular flux.
+      if (d_update_psi) d_state->psi(d_g, o, a) = psi;
 
 
     } // end angle loop
