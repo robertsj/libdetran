@@ -30,7 +30,6 @@ MGDiffusionSolver<D>::MGDiffusionSolver(SP_state                  state,
   , d_keff(1.0)
   , d_fill_boundary(false)
 {
-
   // Set the problem dimension
   d_problem_size = d_mesh->number_cells() * d_material->number_groups();
 
@@ -38,21 +37,34 @@ MGDiffusionSolver<D>::MGDiffusionSolver(SP_state                  state,
   d_phi = new Vector_T(d_problem_size, 0.0);
   d_Q   = new Vector_T(d_problem_size, 0.0);
 
-  // Create multigroup diffusion operator
+  // Create multigroup diffusion operator.  Note, the full energy range
+  // is included.
+  size_t cutoff = d_adjoint ? d_number_groups - 1 : 0;
   d_M   = new DiffusionLossOperator(d_input,
                                     d_material,
                                     d_mesh,
                                     d_multiply,
-                                    0,          // Full energy spectrum
+                                    cutoff,
                                     d_adjoint,
                                     1.0);       // Default to k=1
 
-  // Create solver and set operator.
+  // Get or create solver database.
   SP_input db;
   if (d_input->check("outer_solver_db"))
   {
     db = d_input->template get<SP_input>("outer_solver_db");
   }
+  else
+  {
+    db = new detran_utilities::InputDB("mgdiffusionsolver_db");
+    db->template put<double>("linear_solver_rtol", d_tolerance);
+    db->template put<double>("linear_solver_atol", d_tolerance);
+    db->template put<int>("linear_solver_maxit", d_maximum_iterations);
+    db->template put<int>("linear_solver_monitor_level", d_print_level);
+    d_input->template put<SP_input>("outer_solver_db", db);
+  }
+
+  // Build solver
   d_solver = Creator_T::Create(db);
   d_solver->set_operators(d_M, db);
 
@@ -61,7 +73,6 @@ MGDiffusionSolver<D>::MGDiffusionSolver(SP_state                  state,
   {
     d_fill_boundary = d_input->template get<int>("compute_boundary_flux");
   }
-
 }
 
 //----------------------------------------------------------------------------//
@@ -74,7 +85,6 @@ void MGDiffusionSolver<D>::refresh()
   d_M = new DiffusionLossOperator(d_input, d_material, d_mesh,
                                   d_multiply, 0, d_adjoint, d_keff);
   d_solver->set_operators(d_M);
-
 }
 
 //----------------------------------------------------------------------------//
@@ -109,7 +119,6 @@ void MGDiffusionSolver<D>::solve(const double keff)
 //---------------------------------------------------------------------------//
 // IMPLEMENTATION
 //---------------------------------------------------------------------------//
-
 
 //---------------------------------------------------------------------------//
 template <class D>
@@ -228,15 +237,10 @@ void MGDiffusionSolver<D>::build_boundary_source()
             (*d_Q)[row] += (8.0 * DC * Jinc) / ((4.0 * DC + W) * W);
 
           } // end group loop
-
         } // end dim2 loop
-
       } // end dim1 loop
-
     } // end dir loop
-
   } // end dim0 loop
-
 }
 
 //---------------------------------------------------------------------------//

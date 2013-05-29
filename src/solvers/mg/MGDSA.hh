@@ -11,7 +11,6 @@
 
 #include "MGPreconditioner.hh"
 #include "DiffusionLossOperator.hh"
-#include "transport/ScatterSource.hh"
 #include "callow/solver/LinearSolver.hh"
 #include "callow/preconditioner/Preconditioner.hh"
 #include "callow/matrix/MatrixShell.hh"
@@ -26,7 +25,7 @@ namespace detran
  *  The multigroup DSA preconditioning process \$ \mathbf{P}^{-1} \$
  *  is defined to be
  *  @f[
- *      (\mathbf{I} - \mathbf{C}^{-1} \mathbf{S}) \, ,
+ *      (\mathbf{I} + \mathbf{C}^{-1} \mathbf{S}) \, ,
  *  @f]
  *  where \f$ \mathbf{C} \f$ is the multigroup diffusion operator.  This
  *  operator treats group-to-group scattering and, if requested,
@@ -35,13 +34,10 @@ namespace detran
  *  Because this performs a diffusion solve on the same mesh as
  *  the transport problem, the resulting system can be very
  *  large.  Hence, it is likely to perform best for relatively
- *  small systems.  A coarse mesh version is under development, but
- *  this implementation will serve as the upper bound for the
- *  efficacy of diffusion-based multigroup preconditioning.
- *
- *  @note This inherits from the shell matrix (for now) so that the
- *        action can be used to construct an explicit operator for
- *        detailed numerical studies
+ *  small systems.  A coarse mesh version is available (@ref MGCMDSA),
+ *  so MGDSA should provide an upper bound for the efficacy of
+ *  a diffusion-based preconditioner with respect to spectral sharpening,
+ *  though its net computational efficiency may be poor.
  */
 
 class MGDSA: public MGPreconditioner
@@ -55,7 +51,6 @@ public:
 
   typedef MGPreconditioner                  Base;
   typedef detran_utilities::SP<MGDSA>       SP_pc;
-  typedef ScatterSource::SP_scattersource   SP_scattersource;
   typedef DiffusionLossOperator             Operator_T;
 
   //--------------------------------------------------------------------------//
@@ -64,24 +59,23 @@ public:
 
   /**
    *  @brief Constructor
-   *
-   *  Assuming the within-group transport problem is set up,
-   *  a KSP object exists from which the PC is extracted.  This
-   *  PC is passed here to be constructed and for its application
-   *  operator to be assigned.
-   *
-   *  @param input      Input database
-   *  @param material   Material database
-   *  @param mesh       Cartesian mesh
-   *  @param source     Scattering source
-   *  @param cutoff     First group included in solve
+   *  @param input            Input database
+   *  @param material         Material database
+   *  @param mesh             Cartesian mesh
+   *  @param ssource          Scattering source
+   *  @param fsource          Fission source
+   *  @param cutoff           First group included in solve
+   *  @param include_fission  Flag to treat fission like scatter
+   *  @param adjoint          Flag for adjoint problems
    */
-  MGDSA(SP_input input,
-        SP_material material,
-        SP_mesh mesh,
-        SP_scattersource source,
-        size_t cutoff,
-        bool include_fission);
+  MGDSA(SP_input         input,
+        SP_material      material,
+        SP_mesh          mesh,
+        SP_scattersource ssource,
+        SP_fissionsource fsource,
+        size_t           cutoff,
+        bool             include_fission,
+        bool             adjoint);
 
   /// virtual destructor
   virtual ~MGDSA(){}
@@ -90,26 +84,11 @@ public:
   // ABSTRACT INTERFACE -- ALL PRECONDITIONERS MUST IMPLEMENT THIS
   //--------------------------------------------------------------------------//
 
-  /// solve Px = b
+  /// Solve Px = b
   void apply(Vector &b, Vector &x);
 
-  //--------------------------------------------------------------------------//
-  // ABSTRACT INTERFACE -- ALL SHELL MATRICES MUST IMPLEMENT THIS
-  //--------------------------------------------------------------------------//
-
-  // the client must implement the action y <-- A * x
-  void multiply(const Vector &x,  Vector &y)
-  {
-    Vector b(x.size(), 0.0);
-    b.copy(x);
-    apply(b, y);
-  }
-
-  // the client must implement the action y <-- A' * x
-  void multiply_transpose(const Vector &x, Vector &y)
-  {
-    THROW("NOT IMPLEMENTED");
-  }
+  /// build the preconditioner for a new keff
+  void build(const double keff = 1.0, SP_state state = SP_state(0)){}
 
 private:
 
@@ -117,8 +96,8 @@ private:
   // DATA
   //--------------------------------------------------------------------------//
 
-  /// Scatter source
-  SP_scattersource d_scattersource;
+  /// Flag to include fission
+  bool d_include_fission;
 
 };
 

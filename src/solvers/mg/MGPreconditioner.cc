@@ -8,32 +8,44 @@
 
 
 #include "MGPreconditioner.hh"
+#include <cmath>
 
 namespace detran
 {
 
 //----------------------------------------------------------------------------//
-MGPreconditioner::MGPreconditioner(SP_input input,
-                                   SP_material material,
-                                   SP_mesh mesh,
-                                   size_t cutoff,
-                                   std::string name)
+MGPreconditioner::MGPreconditioner(SP_input         input,
+                                   SP_material      material,
+                                   SP_mesh          mesh,
+                                   SP_scattersource ssource,
+                                   SP_fissionsource fsource,
+                                   size_t           cutoff,
+                                   bool             include_fission,
+                                   bool             adjoint,
+                                   std::string      name)
   : Base(name)
   , d_input(input)
   , d_material(material)
   , d_mesh(mesh)
+  , d_scattersource(ssource)
+  , d_fissionsource(fsource)
   , d_group_cutoff(cutoff)
+  , d_include_fission(include_fission)
+  , d_adjoint(adjoint)
 {
-  // Preconditions
   Require(d_input);
   Require(d_material);
   Require(d_mesh);
+  Require(d_scattersource);
+  Require(d_fissionsource);
 
   // Number of groups
   d_number_groups = d_material->number_groups();
 
   // Number of active groups
-  d_number_active_groups = d_number_groups - d_group_cutoff;
+  int upper = d_number_groups;
+  if (d_adjoint) upper = -1;
+  d_number_active_groups = std::abs(upper - d_group_cutoff);
 
 }
 

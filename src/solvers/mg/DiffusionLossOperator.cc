@@ -7,6 +7,7 @@
 //----------------------------------------------------------------------------//
 
 #include "DiffusionLossOperator.hh"
+#include "utilities/MathUtilities.hh"
 #include <iostream>
 
 namespace detran
@@ -28,16 +29,17 @@ DiffusionLossOperator::DiffusionLossOperator(SP_input       input,
   , d_keff(keff)
   , d_adjoint(adjoint)
 {
-  // Preconditions
   Require(d_input);
   Require(d_material);
   Require(d_mesh);
 
-  // Set the dimension and group count
+  // Set the dimension and group count and indices
   d_dimension = d_mesh->dimension();
   d_number_groups = d_material->number_groups();
-  d_number_active_groups = d_number_groups - d_group_cutoff;
-  d_group_size    = d_mesh->number_cells();
+  int upper = d_adjoint ? -1 : d_number_groups;
+  d_groups = detran_utilities::range<size_t>(d_group_cutoff, upper);
+  d_number_active_groups = d_groups.size();
+  d_group_size = d_mesh->number_cells();
 
   // Set matrix dimensions
   Base::set_size(d_number_active_groups*d_group_size,
@@ -45,14 +47,11 @@ DiffusionLossOperator::DiffusionLossOperator(SP_input       input,
 
   // Default albedos to 1.0.  For dimensions in play, this will be
   // overwritten by the default boundary.
-  d_albedo.resize(6,  vec_dbl(d_number_active_groups, 1.0));
+  d_albedo.resize(6,  vec_dbl(d_number_groups, 1.0));
 
-  // Nonzeros.  We have up to
+  // Preallocate.  The number of nonzeros is
   //   diagonal + 2*dim neighbors + num_groups coupling from scatter/fission
   vec_int nnz(d_m, 1 + 2 * d_dimension + d_number_active_groups);
-
-  // Preallocate the matrix.  Note, PETSc documentation suggests getting
-  // this right is extremely important.
   preallocate(&nnz[0]);
 
   // Set the albedo.  First, check if the input has an albedo
@@ -74,30 +73,27 @@ DiffusionLossOperator::DiffusionLossOperator(SP_input       input,
     boundary_name[Mesh::NORTH]  = "bc_north";
     boundary_name[Mesh::BOTTOM] = "bc_bottom";
     boundary_name[Mesh::TOP]    = "bc_top";
-    for (int g = d_group_cutoff; g < d_number_groups; g++)
+    for (groups_iter g = d_groups.begin(); g != d_groups.end(); ++g)
     {
       for (int b = 0; b < d_mesh->dimension() * 2; b++)
       {
-        d_albedo[b][g - d_group_cutoff] = 0.0;
+        d_albedo[b][*g] = 0.0;
         if (d_input->check(boundary_name[b]))
         {
           if (d_input->get<std::string>(boundary_name[b]) == "reflect")
           {
-            d_albedo[b][g - d_group_cutoff] = 1.0;
+            d_albedo[b][*g] = 1.0;
           }
           else
           {
-            if (zero_flux) d_albedo[b][g - d_group_cutoff] = -1.0;
+            if (zero_flux) d_albedo[b][*g] = -1.0;
           }
-
         }
       }
     }
   }
-
   // Build the matrix with the initial keff guess.
   build();
-
 }
 
 //----------------------------------------------------------------------------//
@@ -107,8 +103,6 @@ void DiffusionLossOperator::construct(const double keff)
   build();
 }
 
-
-
 //----------------------------------------------------------------------------//
 // IMPLEMENTATION
 //----------------------------------------------------------------------------//
@@ -116,30 +110,31 @@ void DiffusionLossOperator::construct(const double keff)
 //----------------------------------------------------------------------------//
 void DiffusionLossOperator::build()
 {
-
   using std::cout;
   using std::endl;
+  using detran_utilities::range;
 
   // Get the material map.
-  vec_int mat_map = d_mesh->mesh_map("MATERIAL");
-
-  //d_material->display();
+  const vec_int &mat_map = d_mesh->mesh_map("MATERIAL");
 
   bool db = false;
 
-  for (int gg = 0; gg < d_number_active_groups; gg++)
+  for (groups_iter g_it = d_groups.begin(); g_it != d_groups.end(); ++g_it)
   {
-    int g = gg + d_group_cutoff;
+    // actual group
+    int g = *g_it;
+    // index within active range
+    int gg = d_adjoint ? g : g - d_group_cutoff;
 
     // Loop over all cells.
     for (int cell = 0; cell < d_group_size; cell++)
     {
-      if (db) cout << "  cell = " << cell << endl;
+      if (db) cout << "cell = " << cell << endl;
 
       // Compute row index.
       int row = cell + gg * d_group_size;
 
-      if (db) cout << "    row = " << row << endl;
+      if (db) cout << "row = " << row << endl;
 
       // Define the data for this cell.
       size_t m = mat_map[cell];
@@ -147,8 +142,7 @@ void DiffusionLossOperator::build()
       double cell_dc = d_material->diff_coef(m, g);
 
       Assert(cell_dc > 0.0);
-      double cell_sr = d_material->sigma_t(m, g) -
-                       d_material->sigma_s(m, g, g);
+      double cell_sr = d_material->sigma_t(m, g) - d_material->sigma_s(m, g, g);
 
       // Get the directional indices.
       size_t i = d_mesh->cell_to_i(cell);
@@ -180,9 +174,7 @@ void DiffusionLossOperator::build()
       // leak --> 0=-x, 1=+x, 2=-y, 3=+y, 4=-z, 5=+z
       for (int leak = 0; leak < 6; leak++)
       {
-
-        // Determine whether this is a left/right, bottom/top,
-        // or south/north boundary.
+        // Determine whether this is a W/E, S/N, or B/T face
         int xyz_idx = std::floor(leak / 2);
 
         // Determine the direction, e.g. left (-) vs right (+).
@@ -204,14 +196,15 @@ void DiffusionLossOperator::build()
         double dtilde = 0.0;
         if (bound[leak] == nxyz[xyz_idx][dir_idx])
         {
-
-          dtilde = ( 2.0 * cell_dc * (1.0 - d_albedo[leak][gg]) ) /
-                   ( 4.0 * cell_dc * (1.0 + d_albedo[leak][gg]) +
-                    (1.0 - d_albedo[leak][gg]) * cell_hxyz[xyz_idx] );
+          // on a boundary
+          dtilde = ( 2.0 * cell_dc * (1.0 - d_albedo[leak][g]) )  /
+                   ( 4.0 * cell_dc * (1.0 + d_albedo[leak][g]) +
+                    (1.0 - d_albedo[leak][g]) * cell_hxyz[xyz_idx]);
 
         }
-        else // not a boundary
+        else
         {
+          // not on a boundary
 
           // Get the neighbor data.
           size_t neig_cell = d_mesh->index(neig_idx[0], neig_idx[1], neig_idx[2]);
@@ -250,84 +243,83 @@ void DiffusionLossOperator::build()
 
      // Compute and set the diagonal matrix value.
      double val = jnet + cell_sr;
-     //val = 1.0;
+
      if (db) cout << "      col = " << row << " " << gg <<  endl;
-    // cout << " jnet=" << jnet << " cellsr=" << cell_sr << endl;
+
      flag = insert(row, row, val, INSERT);
      Assert(flag);
 
-     // Add downscatter component.
-     int lower = d_material->lower(g);
-     if (d_group_cutoff > lower) lower = d_group_cutoff;
-     for (int gp = lower; gp < g; gp++)
+     // Add down/up scatter components
+     int lower =
+         d_adjoint ? std::min(d_material->lower(g, d_adjoint), d_group_cutoff)
+                   : std::max(d_material->lower(g, d_adjoint), d_group_cutoff);
+     groups_t g_s = range<size_t>(lower, d_material->upper(g, d_adjoint), true);
+     groups_iter g_s_it = g_s.begin();
+     for (; g_s_it != g_s.end(); ++g_s_it)
      {
-       int col = cell + (gp - d_group_cutoff) * d_group_size;
+       // actual group
+       int gp = *g_s_it;
+       // index within active range
+       int gpi = d_adjoint ? gp : gp - d_group_cutoff;
+       // skip diagonal
+       if (gp == g) continue;
+       int col = cell + gpi * d_group_size;
        if (db) cout << "  ds  col = " << col << endl;
-       double val = -d_material->sigma_s(m, g, gp);
-       if (!d_adjoint)
-         flag = insert(row, col, val, INSERT);
-       else
-         flag = insert(col, row, val, INSERT);
-       Assert(flag);
-     }
-
-     // Add upscatter component.
-     for (int gp = g + 1; gp <= d_material->upper(g); gp++)
-     {
-       int col = cell + (gp - d_group_cutoff) * d_group_size;
-       double val = -d_material->sigma_s(m, g, gp);
-       if (db) cout << "  us  col = " << col << endl;
-       if (!d_adjoint)
-         flag = insert(row, col, val, INSERT);
-       else
-         flag = insert(col, row, val, INSERT);
+       double val = d_adjoint ? -d_material->sigma_s(m, gp, g)
+                              : -d_material->sigma_s(m, g, gp);
+       flag = insert(row, col, val, INSERT);
        Assert(flag);
      }
 
     } // row loop
-
   } // group loop
 
   if (d_include_fission)
   {
     // Loop over all groups
-    for (int g = d_group_cutoff; g < d_number_groups; g++)
+    for (groups_iter g_it = d_groups.begin(); g_it != d_groups.end(); ++g_it)
     {
+      // Actual group and index within the active group
+      int g  = *g_it;
+      int gg = d_adjoint ? g : g - d_group_cutoff;
+
       // Loop over all cells.
       for (int cell = 0; cell < d_group_size; cell++)
       {
         // Compute row index.
-        int row = cell + (g - d_group_cutoff) * d_group_size;
+        int row = cell + gg * d_group_size;
 
         // Define the data for this cell.
         int m = mat_map[cell];
 
         // Loop through source group.
-        for (int gp = d_group_cutoff; gp < d_number_groups; gp++)
+        groups_iter gp_it = d_groups.begin();
+        for (d_groups.begin(); gp_it != d_groups.end(); ++gp_it)
         {
+          int gp  = *gp_it;
+          int gpi = d_adjoint ? gp : gp - d_group_cutoff;
           // Compute column index.
-          int col = cell + (gp - d_group_cutoff) * d_group_size;
+          int col = cell + gpi * d_group_size;
           if (db) cout << "      col = " << col << endl;
           // Fold the fission density with the spectrum.  Note that
           // we scale by keff and take the negative, since it's on the
           // left hand side.
-          double val = -d_material->nu_sigma_f(m, gp) *
-                        d_material->chi(m, g) / d_keff;
-
+          double v = 0.0;
+          if (d_adjoint)
+          {
+            v = -d_material->nu_sigma_f(m, g) * d_material->chi(m, gp) / d_keff;
+          }
+          else
+          {
+            v = -d_material->nu_sigma_f(m, gp) * d_material->chi(m, g) / d_keff;
+          }
           // Set the value. Note, we now have to add the value, since
           // in general fission contributes to nonzero cells.
-          bool flag;
-          if (!d_adjoint)
-            flag = insert(row, col, val, ADD);
-          else
-            flag = insert(col, row, val, ADD);
+          bool flag = insert(row, col, v, ADD);
           Assert(flag);
         }
-
       } // row loop
-
     } // group loop
-
   } // end fission block
 
   // Assemble.

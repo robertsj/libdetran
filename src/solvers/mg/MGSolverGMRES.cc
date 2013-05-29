@@ -93,6 +93,7 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
                                 d_sweepsource,
                                 d_krylov_group_cutoff,
                                 d_adjoint);
+    //d_operator->compute_explicit("transport.out");
 
     // Create temporary unknown and right hand size vectors
     d_x = new callow::Vector(d_operator->number_rows(), 0.0);
@@ -151,8 +152,10 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
                        d_material,
                        d_mesh,
                        d_sweepsource->get_scatter_source(),
+                       d_fissionsource,
                        d_krylov_group_cutoff,
-                       d_multiply);
+                       d_multiply,
+                       d_adjoint);
     }
     // Multigroup Coarse Mesh DSA
 

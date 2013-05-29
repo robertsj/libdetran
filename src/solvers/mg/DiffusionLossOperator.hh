@@ -56,6 +56,8 @@ public:
   typedef detran_utilities::vec_int                     vec_int;
   typedef detran_utilities::vec_dbl                     vec_dbl;
   typedef detran_utilities::vec2_dbl                    vec2_dbl;
+  typedef detran_utilities::vec_size_t                  groups_t;
+  typedef groups_t::iterator                            groups_iter;
 
   //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -117,6 +119,8 @@ private:
   size_t d_number_groups;
   /// Cutoff
   size_t d_group_cutoff;
+  /// Group indices
+  groups_t d_groups;
   /// Active groups
   size_t d_number_active_groups;
   /// One group spatial size

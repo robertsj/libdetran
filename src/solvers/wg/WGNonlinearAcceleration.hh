@@ -11,28 +11,31 @@
 #define detran_WGNONLINEARACCELERATION_HH_
 
 #include "boundary/BoundaryBase.hh"
+#include "callow/LinearSolverCreator.hh"
 #include "external_source/ExternalSource.hh"
 #include "geometry/Mesh.hh"
 #include "material/Material.hh"
 #include "transport/FissionSource.hh"
+#include "transport/BoundaryTally.hh"
 #include "utilities/DBC.hh"
 #include "utilities/Definitions.hh"
 #include "utilities/InputDB.hh"
+#include "solvers/solvers_export.hh"
 
 namespace detran
 {
 
 /**
  *  @class WGNonlinearAcceleration
- *  @brief Base class for within-group acceleration schemes
+ *  @brief Base class for within-group acceleration schemes.
  */
 template <class D>
 class WGNonlinearAcceleration
 {
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // TYPEDEFS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   typedef detran_utilities::InputDB::SP_input         SP_input;
   typedef State::SP_state                             SP_state;
@@ -49,7 +52,9 @@ class WGNonlinearAcceleration
   typedef typename Sweeper<D>::SP_sweeper             SP_sweeper;
   typedef typename SweepSource<D>::SP_sweepsource     SP_sweepsource;
   typedef State::moments_type                         moments_type;
-
+  typedef BoundaryTally<D>::SP_tally                  SP_tally;
+  typedef callow::LinearSolver::SP_solver             SP_solver;
+  typedef callow::MatrixBase::SP_matrix               SP_matrix;
 
   //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -58,22 +63,37 @@ class WGNonlinearAcceleration
   /**
    *  @brief Constructor
    *  @param state             State vectors, etc.
-   *  @param mat               Material definitions.
-   *  @param quadrature        Angular mesh.
+   *  @param material          Material definitions.
    *  @param boundary          Boundary fluxes.
    *  @param external_source   User-defined external source.
    *  @param fission_source    Fission source.
    *  @param multiply          Flag for fixed source multiplying problem
    */
-  WGNonlinearAcceleration(SP_material               material,
-                          SP_quadrature             quadrature,
+  WGNonlinearAcceleration(SP_state                  state,
+                          SP_material               material,
                           SP_boundary               boundary,
-                          const vec_externalsource &q_e,
-                          SP_fissionsource          q_f,
-                          bool                      multiply);
+                          SP_sweeper                sweeper,
+                          SP_sweepsource            sweepsource,
+                          bool                      multiply)
+    : d_state(state)
+    , d_material(material)
+    , d_boundary(boundary)
+    , d_sweeper(sweeper)
+    , d_sweepsource(sweepsource)
+    , d_multiply(multiply)
+  {
+    Require(d_state);
+    Require(d_material);
+    Require(d_boundary);
+    Require(d_sweeper);
+    Require(d_sweepsource);
+    Require(d_multiply);
+    d_input = d_state->get_input();
+    d_mesh  = d_state->get_mesh();
+  }
 
   //--------------------------------------------------------------------------//
-  // ABSTRACT INTERFACE -- ALL WITHIN-GROUP SOLVERS MUST IMPLEMENT
+  // ABSTRACT INTERFACE -- ALL WITHIN-GROUP ACCELERATORS MUST IMPLEMENT
   //--------------------------------------------------------------------------//
 
   /**
@@ -81,16 +101,25 @@ class WGNonlinearAcceleration
    *  @param  g     Group of current withing-group problem
    *  @param  phi   Flux moments to update
    */
-  void update(const size_t g, moments_type &phi);
+  void update(const size_t g, moments_type &phi) = 0;
 
-private:
+protected:
 
   //--------------------------------------------------------------------------//
   // DATA
   //--------------------------------------------------------------------------//
 
-  SP_state    d_state;
-  SP_material d_material;
+  SP_state        d_state;
+  SP_material     d_material;
+  SP_boundary     d_boundary;
+  SP_sweeper      d_sweeper;
+  SP_sweepsource  d_sweepsource;
+  bool            d_multiply;
+  SP_input        d_input;
+  SP_mesh         d_mesh;
+  SP_tally        d_tally;
+  SP_solver       d_solver;
+
 };
 
 } // namespace detran

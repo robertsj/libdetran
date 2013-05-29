@@ -21,9 +21,27 @@ namespace detran
  *  @class WGSolverSI
  *  @brief Solve the within-group transport equation via source iteration.
  *
+ *  Source iteration (or Richardson iteration) solves the transport
+ *  equation (see \ref WGSolver)
+ *
+ *  \f[
+ *      (\mathbf{I} - \mathbf{D}\mathbf{L}^{-1}\mathbf{MS})\phi
+ *        = \mathbf{D} \mathbf{L}^{-1} Q \, .
+ *  \f]
+ *
+ *  via the process
+ *
+ *  \f[
+ *      \phi^{(n+1)} = \mathbf{D}\mathbf{L}^{-1}\mathbf{MS})\phi^{(n)}
+ *        + \mathbf{D} \mathbf{L}^{-1} Q \, .
+ *  \f]
+ *
  *  This is a "hand-coded" implementation.  Essentially the same solver
  *  can be had via callow's Richardson iteration (and via callow's
  *  interface to PETSc's Richardson).
+ *
+ *  This implementation is useful because it provides access to various
+ *  nonlinear acceleration schemes not applicable to nonstationary solvers.
  */
 
 template <class D>
