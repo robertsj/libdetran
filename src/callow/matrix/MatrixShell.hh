@@ -108,7 +108,7 @@ protected:
   using MatrixBase::d_petsc_matrix;
 #endif
 
-private:
+protected:
 
   /// context of my caller
   void* d_context;

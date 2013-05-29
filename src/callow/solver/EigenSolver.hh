@@ -72,7 +72,7 @@ public:
   typedef LinearSolver::SP_solver                 SP_linearsolver;
   typedef Vector::SP_vector                       SP_vector;
   typedef detran_utilities::InputDB::SP_input     SP_db;
-
+  typedef detran_utilities::size_t                size_t;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR

@@ -20,7 +20,6 @@ inline void EigenSolver::set_operators(SP_matrix    A,
                                        SP_matrix    B,
                                        SP_db        db)
 {
-  // Preconditions
   Insist(A, "The operator A cannot be null");
   d_A = A;
   Ensure(d_A->number_rows() == d_A->number_columns());
