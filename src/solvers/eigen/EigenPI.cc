@@ -19,13 +19,11 @@ EigenPI<D>::EigenPI(SP_mg_solver mg_solver)
   , d_aitken(false)
   , d_omega(1.0)
 {
-
   if (d_input->check("eigen_pi_aitken"))
     d_aitken = d_input->template get<int>("eigen_pi_aitken");
 
   if (d_input->check("eigen_pi_omega"))
     d_omega = d_input->template get<double>("eigen_pi_omega");
-
 }
 
 //----------------------------------------------------------------------------//

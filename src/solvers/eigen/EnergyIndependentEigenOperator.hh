@@ -21,7 +21,7 @@ namespace detran
  *
  *  This operator represents the action of
  *  @f[
- *      \mathbf{f}^T (\mathbf{I} - \mathbf{TMS})^{-1}
+ *      \mathbf{F}^T (\mathbf{I} - \mathbf{TMS})^{-1}
  *      \mathbf{TM} \boldsymbol{\chi} \, .
  *  @f]
  *

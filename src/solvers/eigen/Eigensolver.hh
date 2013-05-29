@@ -62,16 +62,17 @@ namespace detran
  *  @f]
  *  so that
  *  @f[
- *      \overbrace{(\mathbf{I} - \mathbf{DL}^{-1}\mathbf{MS})^{-1}
- *        \mathbf{DL}^{-1}\mathbf{M}\chi }^{\mathbf{A}} d =
- *        k d \, .
+ *      \overbrace{\mathbf{F}^T (\mathbf{I} - \mathbf{DL}^{-1}\mathbf{MS})^{-1}
+ *        \mathbf{DL}^{-1}\mathbf{M}\chi }^{\mathbf{A}_{\text{ei}}} d =
+ *        k d \, ,
  *  @f]
+ *  where @f$ \mathbf{A}_{\text{ei}} @f$ is the
+ *  @ref EnergyIndependentEigenOperator.
  *
- *  We choose the second approach, since it represents a smaller
+ *  We only implement the second approach, since it represents a smaller
  *  system independent of energy and represents the more canonical
  *  formulation of the problem.  The former approach would be
- *  of value when parallelizing over energy, as in Denovo, but
- *  that is not our focus here.
+ *  of value when parallelizing over energy, which is not our focus here.
  *
  *  @section anoteaboutthemultigroupsolve A Note About the Multigroup Solve
  *
@@ -108,18 +109,17 @@ namespace detran
  *  problem represents an entirely different operator \f$ \mathbf{A} \f$,
  *  and hence will yield an entirely different spectrum.
  *
- *  @section eigensolverinput Eigensolver Input Entries
- *
+ *  @section eigensolverinput Eigensolver Parameters
  *
  *  @f[
-    @begin{tabular}{llll}
+    \begin{tabular}{llll}
       Key                     & Type  & Description                         & Default \\
-    @hline
-      eigen\_max\_iters       & int   & Maximum iterations allowed          & 100     @\
-      eigen\_tolerance        & dbl   & Tolerance on residual               & 1e-5    @\
-      eigen\_print\_out       & int   & Diagnostic print level              & 0       @\
-      eigen\_print\_interval  & int   & Iteration interval for diagonostics & 10      @\
-    @end{tabular}
+    \hline
+      eigen\_max\_iters       & int   & Maximum iterations allowed          & 100     \\
+      eigen\_tolerance        & dbl   & Tolerance on residual               & 1e-5    \\
+      eigen\_print\_out       & int   & Diagnostic print level              & 0       \\
+      eigen\_print\_interval  & int   & Iteration interval for diagonostics & 10      \\
+    \end{tabular}
     @f]
  *
  */

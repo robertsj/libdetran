@@ -101,7 +101,7 @@ void EigenPI<D>::solve()
   if (d_print_level > 0)
   {
     printf("*********************************************************************\n");
-    printf(" PI Final: Number Iters: %3i  Error: %12.9f keff: %12.9f \n",
+    printf(" PI Final: Number Iters: %3i  Error: %12.9e keff: %12.9f \n",
            iteration, error, keff);
     printf("*********************************************************************\n");
   }
