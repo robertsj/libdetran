@@ -54,10 +54,10 @@ public:
   /**
    *  @brief Constructor
    */
-  Equation_MOC(SP_mesh mesh,
-               SP_material material,
+  Equation_MOC(SP_mesh       mesh,
+               SP_material   material,
                SP_quadrature quadrature,
-               bool update_psi)
+               bool          update_psi)
     :  d_mesh(mesh)
     ,  d_tracks(mesh->tracks())
     ,  d_material(material)
@@ -85,18 +85,20 @@ public:
    *
    *  @param   region      Flat source region (cardinal mesh index)
    *  @param   length      Segment length
+   *  @param   width       Track width
    *  @param   source      Reference to sweep source vector for this group
    *  @param   psi_in      Incident flux for this cell
    *  @param   psi_out     Outgoing flux from this cell
    *  @param   phi         Reference to flux moments for this group
    *  @param   psi         Reference to angular flux for this group
    */
-  virtual inline void solve(const size_t region,
-                            const double length,
-                            moments_type &source,
-                            double &psi_in,
-                            double &psi_out,
-                            moments_type &phi,
+  virtual inline void solve(const size_t       region,
+                            const double       length,
+                            const double       width,
+                            moments_type      &source,
+                            double            &psi_in,
+                            double            &psi_out,
+                            moments_type      &phi,
                             angular_flux_type &psi) = 0;
 
   /**

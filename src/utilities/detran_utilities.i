@@ -126,6 +126,8 @@ namespace std
   free((char *) $2);
 }
 
+// see http://embedded.eecs.berkeley.edu/Alumni/pinhong/scriptEDA/pyTypemapFAQ.html#32
+
 //---------------------------------------------------------------------------//
 //              end of detran_utilities.i
 //---------------------------------------------------------------------------//

@@ -84,6 +84,9 @@ UTILITIES_EXPORT double distance(const Point &p1, const Point &p2);
 /// Pretty print of a point
 UTILITIES_EXPORT std::ostream& operator<< (std::ostream &out, const Point &p);
 
+/// Pretty print a point
+std::ostream& operator<< (std::ostream &out, const Point &p);
+
 } // end namespace detran_utilities
 
 #endif // POINT_HH_ 

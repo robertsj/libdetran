@@ -1,10 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
  *  @file  Tracker.cc
  *  @brief Tracker class member definitions
- *  @note  Copyright (C) 2013 Jeremy Roberts
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #include "Tracker.hh"
 #include "utilities/SoftEquivalence.hh"
@@ -13,6 +13,7 @@
 namespace detran_geometry
 {
 
+//----------------------------------------------------------------------------//
 Tracker::Tracker(SP_mesh mesh, SP_quadrature quadrature)
   : d_mesh(mesh)
   , d_quadrature(quadrature)
@@ -28,9 +29,9 @@ Tracker::Tracker(SP_mesh mesh, SP_quadrature quadrature)
   using std::cout;
   using std::endl;
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // CREATE TRACK DATABASE AND INITIALIZE TRACKS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   // Doing first two quadrants (eta > 0)
   d_trackdb = new TrackDB(2 * d_number_azimuths,
@@ -47,8 +48,7 @@ Tracker::Tracker(SP_mesh mesh, SP_quadrature quadrature)
     // Add angular information.
     d_trackdb->setup_angle(a,
                            d_quadrature->cos_phi(a),
-                           d_quadrature->sin_phi(a),
-                           width*d_quadrature->spacing(a));
+                           d_quadrature->sin_phi(a));
 
     for (size_t t = 0; t < d_quadrature->number_tracks(a); t++)
     {
@@ -59,7 +59,7 @@ Tracker::Tracker(SP_mesh mesh, SP_quadrature quadrature)
       Point exit = width * d_quadrature->exit(a, t);
 
       // Create new track
-      SP_track track(new Track(enter, exit));
+      SP_track track(new Track(enter, exit, width*d_quadrature->spacing(a)));
 
       // Add the track to the database.
       d_trackdb->add_track(a, track);
@@ -68,12 +68,19 @@ Tracker::Tracker(SP_mesh mesh, SP_quadrature quadrature)
 
   } // end angle
 
-
   // Do the actual track generation.
   generate_tracks();
 
 }
 
+//----------------------------------------------------------------------------//
+Tracker::SP_tracker Tracker::Create(SP_mesh mesh, SP_quadrature quadrature)
+{
+  SP_tracker p(new Tracker(mesh, quadrature));
+  return p;
+}
+
+//----------------------------------------------------------------------------//
 void Tracker::normalize()
 {
   vec_dbl volume(d_mesh->number_cells(), 0.0);
@@ -83,9 +90,9 @@ void Tracker::normalize()
   d_trackdb->normalize(volume);
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 // IMPLEMENTATION
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 void Tracker::generate_tracks()
 {
@@ -292,6 +299,6 @@ void Tracker::find_starting_cell(Point enter, double tan_phi, int *IJ)
 
 } // end namespace detran_geometry
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file Tracker.cc
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

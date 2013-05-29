@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   TrackDB.cc
- * \brief  TrackDB 
- * \author Jeremy Roberts
- * \date   Jun 23, 2012
+//----------------------------------*-C++-*-----------------------------------//
+/**
+ *  @file  TrackDB.cc
+ *  @brief TrackDB member definitions
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #include "TrackDB.hh"
 #include <iostream>
@@ -13,7 +12,62 @@
 namespace detran_geometry
 {
 
-void TrackDB::normalize(vec_dbl &volume)
+//----------------------------------------------------------------------------//
+TrackDB::TrackDB(const size_t  num_azimuths,
+                 const size_t  num_regions,
+                 SP_quadrature quad)
+  : d_quadrature(quad)
+  , d_number_azimuths(num_azimuths)
+  , d_tracks(num_azimuths)
+  , d_cos_phi(num_azimuths, 0.0)
+  , d_sin_phi(num_azimuths, 0.0)
+{
+  Require(d_number_azimuths > 0);
+  Require(d_number_regions > 0);
+}
+
+//----------------------------------------------------------------------------//
+TrackDB::SP_track TrackDB::track(const size_t a, const size_t t)
+{
+  Require(a < d_tracks.size());
+  Require(t < d_tracks[a].size());
+  return d_tracks[a][t];
+}
+
+//----------------------------------------------------------------------------//
+TrackDB::size_t TrackDB::number_tracks_angle(const size_t a) const
+{
+  Require(a < d_tracks.size());
+  return d_tracks[a].size();
+}
+
+//----------------------------------------------------------------------------//
+TrackDB::size_t TrackDB::number_angles() const
+{
+  return d_tracks.size();
+}
+
+//----------------------------------------------------------------------------//
+void TrackDB::add_track(const size_t a, SP_track t)
+{
+  Require(a < d_tracks.size());
+  Require(t);
+  d_tracks[a].push_back(t);
+}
+
+//----------------------------------------------------------------------------//
+void TrackDB::setup_angle(const size_t a,
+                          const double c_phi,
+                          const double s_phi)
+{
+  Require(a < d_tracks.size());
+  Require(space > 0.0);
+  d_cos_phi[a] = c_phi;
+  d_sin_phi[a] = s_phi;
+}
+
+//----------------------------------------------------------------------------//
+void TrackDB::normalize(const vec_dbl &volume)
 {
   vec_dbl appx_volume(volume.size(), 0.0);
   for (size_t a = 0; a < d_tracks.size(); a++)
@@ -23,9 +77,9 @@ void TrackDB::normalize(vec_dbl &volume)
       for (int s = 0; s < d_tracks[a][t]->number_segments(); s++)
       {
         int region = d_tracks[a][t]->segment(s).region();
-        Assert(region < d_number_regions);
+        Assert(region < volume.size());
         appx_volume[region] +=
-          d_tracks[a][t]->segment(s).length() * d_spacing[a] *
+          d_tracks[a][t]->segment(s).length() * d_tracks[a][t]->width() *
             d_quadrature->azimuth_weight(a) / detran_utilities::pi;
       }
     }
@@ -47,9 +101,9 @@ void TrackDB::normalize(vec_dbl &volume)
       }
     }
   }
-
 }
 
+//----------------------------------------------------------------------------//
 void TrackDB::display() const
 {
   using std::cout;

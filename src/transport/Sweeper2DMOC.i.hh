@@ -144,6 +144,8 @@ inline void Sweeper2DMOC<EQ>::sweep(moments_type &phi)
 
         //cout << "      PSI_IN: " << psi_out << endl;
 
+        double width = track->width();
+
         // Sweep all segments on the track.
         int s = 0;
         for (int ss = 0; ss < track->number_segments(); ss++)
@@ -163,7 +165,8 @@ inline void Sweeper2DMOC<EQ>::sweep(moments_type &phi)
           double length = track->segment(s).length();
 
           // Solve.
-          equation.solve(region, length, source, psi_in, psi_out, phi_local, psi);
+          equation.solve(region, length, width, source,
+                         psi_in, psi_out, phi_local, psi);
 
           //cout << "        PSI_OUT: " << psi_out << endl;
 

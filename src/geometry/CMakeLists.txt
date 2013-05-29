@@ -16,6 +16,8 @@ SET(SRC
     PinCell.cc
     Assembly.cc
     Core.cc
+    Segment.cc
+    Track.cc
     TrackDB.cc
     Tracker.cc
 )

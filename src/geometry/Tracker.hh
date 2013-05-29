@@ -1,14 +1,13 @@
-//----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Tracker.hh
- * \brief  Tracker class definition.
- * \author Jeremy Roberts
- * \date   Jun 22, 2012
+//----------------------------------*-C++-*-----------------------------------//
+/**
+ *  @file  Tracker.hh
+ *  @brief Tracker class definition
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
-#ifndef TRACKER_HH_
-#define TRACKER_HH_
+#ifndef detran_geometry_TRACKER_HH_
+#define detran_geometry_TRACKER_HH_
 
 #include "Track.hh"
 #include "TrackDB.hh"
@@ -21,18 +20,18 @@
 namespace detran_geometry
 {
 
-/*!
- *  \class Tracker
- *  \brief Track a mesh.
+/**
+ *  @class Tracker
+ *  @brief Track a mesh
  */
 class GEOMETRY_EXPORT Tracker
 {
 
 public:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // TYPEDEFS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   typedef detran_utilities::SP<Tracker>               SP_tracker;
   typedef Mesh::SP_mesh                               SP_mesh;
@@ -42,19 +41,23 @@ public:
   typedef detran_utilities::vec_dbl                   vec_dbl;
   typedef detran_utilities::Point                     Point;
 
-  //-------------------------------------------------------------------------//
-  // PUBLIC INTERFACE
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //--------------------------------------------------------------------------//
 
+  /**
+   *  @brief Constructor
+   *  @param    mesh            mesh to track
+   *  @param    quadrature      product quadrature
+   */
   Tracker(SP_mesh mesh, SP_quadrature quadrature);
 
-  static SP_tracker
-  Create(SP_mesh       mesh,
-         SP_quadrature quadrature)
-  {
-    SP_tracker p(new Tracker(mesh, quadrature));
-    return p;
-  }
+  /// SP constructor
+  static SP_tracker Create(SP_mesh mesh, SP_quadrature quadrature);
+
+  //--------------------------------------------------------------------------//
+  // PUBLIC FUNCTIONS
+  //--------------------------------------------------------------------------//
 
   SP_trackdb trackdb() const
   {
@@ -74,9 +77,9 @@ public:
 
 private:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // DATA
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   SP_mesh d_mesh;
   SP_quadrature d_quadrature;
@@ -86,9 +89,9 @@ private:
   vec_dbl d_x;
   vec_dbl d_y;
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // IMPLEMENTATION
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   void generate_tracks();
   void find_starting_cell(Point enter, double tan_phi, int *IJ);
@@ -97,8 +100,8 @@ private:
 
 } // end namespace detran_geometry
 
-#endif /* TRACKER_HH_ */
+#endif /* detran_geometry_TRACKER_HH_ */
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file Tracker.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
