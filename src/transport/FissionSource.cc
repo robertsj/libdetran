@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
  * @file   FissionSource.cc
- * @author robertsj
- * @date   Apr 10, 2012
- * @brief  FissionSource class definition.
+ * @brief  FissionSource class definition
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 

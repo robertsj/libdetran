@@ -20,8 +20,9 @@ inline void FissionSource::setup_outer(const double scale)
   {
     for (size_t cell = 0; cell < d_mesh->number_cells(); ++cell)
     {
-      d_source[g][cell] = d_scale * d_density[cell] *
-                          d_material->chi(d_mat_map[cell], g);
+      double v = d_adjoint ? d_material->nu_sigma_f(d_mat_map[cell], g)
+                           : d_material->chi(d_mat_map[cell], g);
+      d_source[g][cell] = d_scale * d_density[cell] * v;
     }
   }
 }
@@ -36,7 +37,9 @@ inline void FissionSource::update()
     State::moments_type phi = d_state->phi(g);
     for (size_t cell = 0; cell < d_mesh->number_cells(); cell++)
     {
-      d_density[cell] += phi[cell] * d_material->nu_sigma_f(d_mat_map[cell], g);
+      double v = d_adjoint ? d_material->chi(d_mat_map[cell], g)
+                           : d_material->nu_sigma_f(d_mat_map[cell], g);
+      d_density[cell] += phi[cell] * v;
     }
   }
 }
@@ -45,12 +48,6 @@ inline void FissionSource::update()
 inline const State::moments_type& FissionSource::source(const size_t g)
 {
   Require(g < d_number_groups);
-//  vec_int mat_map = d_mesh->mesh_map("MATERIAL");
-//  for (int cell = 0; cell < d_mesh->number_cells(); cell++)
-//  {
-//    d_source[cell] = d_scale * d_density[cell] *
-//                     d_material->chi(mat_map[cell], g);
-//  }
   return d_source[g];
 }
 
@@ -137,7 +134,6 @@ FissionSource::g_to(const size_t g, const size_t gp) const
 {
   return d_adjoint ? gp : g;
 }
-
 
 } // namespace detran
 

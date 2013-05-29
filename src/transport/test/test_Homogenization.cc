@@ -70,7 +70,6 @@ int test_Homogenization(int argc, char *argv[])
   vec_int mt(2, 0);
   mt[1] = 1;
   SP_mesh mesh = detran_geometry::Mesh1D::Create(fm, cm, mt);
-//  mesh->display();
 
   // State
   State::SP_state state(new State(input, mesh));
@@ -122,6 +121,27 @@ int test_Homogenization(int argc, char *argv[])
     TEST(soft_equiv(mat3->diff_coef(0, 0),   0.25));
     TEST(soft_equiv(mat3->diff_coef(1, 0),   0.125));
   }
+
+  // Test homogenization over partial groups
+  vec_int cg(1, 1);
+  vec_size_t fgroups(1, 0);
+  Material::SP_material mat4;
+  //   only 0th fine group
+  mat4 = H.homogenize(spectrum, "MATERIAL", mesh, "MATERIAL", cg, fgroups);
+  TEST(soft_equiv(mat4->sigma_t(0, 0), mat->sigma_t(0, 0)));
+  TEST(soft_equiv(mat4->sigma_t(1, 0), mat->sigma_t(1, 0)));
+  //   only 1st fine group
+  fgroups[0] = 1;
+  mat4 = H.homogenize(spectrum, "MATERIAL", mesh, "MATERIAL", cg, fgroups);
+  TEST(soft_equiv(mat4->sigma_t(0, 0), mat->sigma_t(0, 1)));
+  TEST(soft_equiv(mat4->sigma_t(1, 0), mat->sigma_t(1, 1)));
+  //   over both, in reverse
+  cg[0] = 2;
+  fgroups.resize(2, 0);
+  fgroups[0] = 1;
+  mat4 = H.homogenize(spectrum, "MATERIAL", mesh, "MATERIAL", cg, fgroups);
+  TEST(soft_equiv(mat4->sigma_t(0, 0), 1.5));
+  TEST(soft_equiv(mat4->sigma_t(1, 0), 3.0));
 
   return 0;
 }

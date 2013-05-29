@@ -75,6 +75,7 @@ public:
   typedef detran_utilities::vec_int                 vec_int;
   typedef detran_utilities::vec_dbl                 vec_dbl;
   typedef detran_utilities::vec2_dbl                vec2_dbl;
+  typedef detran_utilities::vec_size_t              vec_size_t;
   typedef detran_utilities::size_t                  size_t;
 
   //--------------------------------------------------------------------------//
@@ -97,12 +98,14 @@ public:
    *  @param state          State vector for flux weighting
    *  @param mesh           Fine mesh with appropriate coarse mesh map
    *  @param regionkey      Edit region mesh map key
-   *  @param coarsegroup    Vector of fine groups per coarse group
+   *  @param coarsegroup    Optional vector of fine groups per coarse group
+   *  @param groups         Optional vector of groups over which to homogenize
    */
   SP_material homogenize(SP_state           state,
                          SP_mesh            mesh,
                          const std::string &regionkey,
-                         vec_int            coarsegroup = vec_int(0));
+                         vec_int            coarsegroup = vec_int(0),
+                         vec_size_t         groups = vec_size_t(0));
 
   /**
    *  @brief Homogenize the material on a coarser space and energy mesh
@@ -110,13 +113,15 @@ public:
    *  @param spectrumkey    Spectrum region mesh map key
    *  @param mesh           Fine mesh with appropriate mesh maps
    *  @param regionkey      Edit region mesh map key
-   *  @param coarsegroup    Vector of fine groups per coarse group
+   *  @param coarsegroup    Optional vector of fine groups per coarse group
+   *  @param groups         Optional vector of groups over which to homogenize
    */
   SP_material homogenize(const vec2_dbl    &spectrum,
                          const std::string &spectrumkey,
                          SP_mesh            mesh,
                          const std::string &regionkey,
-                         vec_int            coarsegroup = vec_int(0));
+                         vec_int            coarsegroup = vec_int(0),
+                         vec_size_t         groups = vec_size_t(0));
 
   /// Reset the weighting method for diffusion coefficient generation
   void set_option_dc(const size_t option_dc);
@@ -155,14 +160,15 @@ private:
    */
   SP_material homogenize(SP_mesh            mesh,
                          const std::string &region,
-                         vec_int            coarsegroup);
+                         vec_int            coarsegroup,
+                         vec_size_t         groups);
 
   /**
    *  @brief Return the flux spectrum used for weighting in a cell and group
    *  @param cell     Mesh cell being evaluated
    *  @param g        Energy group being evaluated
    */
-  double spectrum(const size_t cell, const size_t g) const;
+  double spectrum(const size_t g, const size_t cell) const;
 
   /**
    *  @brief Return the current spectrum used for weighting in a cell and group

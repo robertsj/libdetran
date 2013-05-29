@@ -28,7 +28,6 @@ State::State(SP_input        input,
   , d_store_current(false)
   , d_adjoint(false)
 {
-  // Preconditions
   Require(d_input);
   Require(d_mesh);
 

@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- * @file   FissionSource.hh
- * @author robertsj
- * @date   Apr 4, 2012
- * @brief  FissionSource class definition.
+ *  @file  FissionSource.hh
+ *  @brief FissionSource class definition
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_FISSIONSOURCE_HH_
 #define detran_FISSIONSOURCE_HH_
@@ -30,9 +29,9 @@ class TRANSPORT_EXPORT FissionSource
 
 public:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // TYPEDEFS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   typedef detran_utilities::SP<FissionSource>       SP_fissionsource;
   typedef State::SP_state                           SP_state;
@@ -43,9 +42,9 @@ public:
   typedef State::moments_type                       moments_type;
   typedef State::vec_moments_type                   vec_moments_type;
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /**
    *  @brief Constructor
@@ -58,15 +57,15 @@ public:
   FissionSource(SP_state state, SP_mesh mesh, SP_material material);
 
   /// SP Constructor
-  static SP_fissionsource Create(SP_state state,
-                                 SP_mesh mesh,
+  static SP_fissionsource Create(SP_state    state,
+                                 SP_mesh     mesh,
                                  SP_material material);
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // PUBLIC INTERFACE
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
-  /// Methods to treat fission in an outer iteration (e.g. power iteration)
+  // METHODS FOR OUTER ITERATIONS (FISSION *FIXED*)
 
   /// Initialize to sum of cell nu*fission cross-section, normalized.
   void initialize();
@@ -126,10 +125,10 @@ public:
     d_density = f;
   }
 
-  /// Methods to treat fission like scatter
+  // METHODS TO TREAT FISSION LIKE SCATTER
 
   /**
-   *  \brief Build the within group fission source.
+   *  @brief Build the within group fission source.
    *
    *  This constructs
    *  @f[
@@ -141,9 +140,9 @@ public:
    *  @param   source   Mutable reference to moments source.
    *
    */
-  void build_within_group_source(const size_t g,
+  void build_within_group_source(const size_t        g,
                                  const moments_type &phi,
-                                 moments_type &source);
+                                 moments_type       &source);
 
   /**
    *  \brief Build the in-fission source.
@@ -159,7 +158,7 @@ public:
    *  @param   source   Mutable reference to moments source.
    *
    */
-  void build_in_fission_source(const size_t g,
+  void build_in_fission_source(const size_t  g,
                                moments_type &source);
 
   /**
@@ -176,18 +175,18 @@ public:
    *   @param   phi     multigroup fluxes
    *   @param   source  moment vector of group source to contribute to
    */
-  void build_total_group_source(const size_t g,
+  void build_total_group_source(const size_t                   g,
                                 const State::vec_moments_type &phi,
-                                State::moments_type &source);
+                                State::moments_type           &source);
 
   /// Get the state
   SP_state state() {return d_state;}
 
 private:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // DATA
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /// State vector
   SP_state d_state;
@@ -227,6 +226,6 @@ TRANSPORT_TEMPLATE_EXPORT(detran_utilities::SP<FissionSource>)
 
 #endif /* detran_FISSIONSOURCE_HH_ */
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of FissionSource.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
