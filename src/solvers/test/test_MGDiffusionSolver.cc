@@ -1,18 +1,18 @@
 //----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file  test_MGSolverGS.cc
- *  @brief Test of MGSolverGS
+ *  @file  test_MGDiffusionSolver.cc
+ *  @brief Test of MGDiffusionSolver
  *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
 //----------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
-#define TEST_LIST                                 \
-        FUNC(test_MGSolverGS_1g)                  \
-        FUNC(test_MGSolverGS_7g_forward)          \
-        FUNC(test_MGSolverGS_7g_forward_multiply) \
-        FUNC(test_MGSolverGS_7g_adjoint)          \
-        FUNC(test_MGSolverGS_7g_adjoint_multiply)
+#define TEST_LIST                                        \
+        FUNC(test_MGDiffusionSolver_1g)                  \
+        FUNC(test_MGDiffusionSolver_7g_forward)          \
+        FUNC(test_MGDiffusionSolver_7g_forward_multiply) \
+        FUNC(test_MGDiffusionSolver_7g_adjoint)          \
+        FUNC(test_MGDiffusionSolver_7g_adjoint_multiply)
 
 #include "TestDriver.hh"
 #include "solvers/FixedSourceManager.hh"
@@ -36,32 +36,28 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------------------------------------//
 
-int test_MGSolverGS_1g(int argc, char *argv[])
+int test_MGDiffusionSolver_1g(int argc, char *argv[])
 {
   FixedSourceData data = get_fixedsource_data(1, 1);
-  data.input->put<std::string>("outer_solver", "GS");
-  data.input->put<double>("inner_tolerance", 1e-14);
+  data.input->put<std::string>("equation", "diffusion");
   data.input->put<double>("outer_tolerance", 1e-14);
-  data.input->put<int>("inner_max_iters", 1000000);
   data.input->put<int>("outer_max_iters", 1000000);
   FixedSourceManager<_1D> manager(data.input, data.material, data.mesh);
   manager.setup();
   manager.set_source(data.source);
   manager.set_solver();
   manager.solve();
-  TEST(soft_equiv(manager.state()->phi(0)[0], 3.6060798202396613));
+  TEST(soft_equiv(manager.state()->phi(0)[0], 4.1213258286429006));
   return 0;
 }
 
-int test_MGSolverGS_7g_forward(int argc, char *argv[])
+int test_MGDiffusionSolver_7g_forward(int argc, char *argv[])
 {
   FixedSourceData data = get_fixedsource_data(1, 7);
-  data.input->put<std::string>("outer_solver", "GS");
+  data.input->put<std::string>("equation", "diffusion");
   data.input->put<std::string>("bc_west", "reflect");
   data.input->put<std::string>("bc_east", "reflect");
-  data.input->put<double>("inner_tolerance", 1e-14);
   data.input->put<double>("outer_tolerance", 1e-14);
-  data.input->put<int>("inner_max_iters", 1000000);
   data.input->put<int>("outer_max_iters", 1000000);
   FixedSourceManager<_1D> manager(data.input, data.material, data.mesh);
   manager.setup();
@@ -79,15 +75,13 @@ int test_MGSolverGS_7g_forward(int argc, char *argv[])
   return 0;
 }
 
-int test_MGSolverGS_7g_forward_multiply(int argc, char *argv[])
+int test_MGDiffusionSolver_7g_forward_multiply(int argc, char *argv[])
 {
   FixedSourceData data = get_fixedsource_data(1, 7);
-  data.input->put<std::string>("outer_solver", "GS");
+  data.input->put<std::string>("equation", "diffusion");
   data.input->put<std::string>("bc_west", "reflect");
   data.input->put<std::string>("bc_east", "reflect");
-  data.input->put<double>("inner_tolerance", 1e-14);
   data.input->put<double>("outer_tolerance", 1e-14);
-  data.input->put<int>("inner_max_iters", 1000000);
   data.input->put<int>("outer_max_iters", 1000000);
   FixedSourceManager<_1D> manager(data.input, data.material, data.mesh, true);
   manager.setup();
@@ -105,15 +99,13 @@ int test_MGSolverGS_7g_forward_multiply(int argc, char *argv[])
   return 0;
 }
 
-int test_MGSolverGS_7g_adjoint(int argc, char *argv[])
+int test_MGDiffusionSolver_7g_adjoint(int argc, char *argv[])
 {
   FixedSourceData data = get_fixedsource_data(1, 7);
-  data.input->put<std::string>("outer_solver", "GS");
+  data.input->put<std::string>("equation", "diffusion");
   data.input->put<std::string>("bc_west", "reflect");
   data.input->put<std::string>("bc_east", "reflect");
-  data.input->put<double>("inner_tolerance", 1e-14);
   data.input->put<double>("outer_tolerance", 1e-14);
-  data.input->put<int>("inner_max_iters", 1000000);
   data.input->put<int>("outer_max_iters", 1000000);
   data.input->put<int>("adjoint", 1);
   FixedSourceManager<_1D> manager(data.input, data.material, data.mesh);
@@ -133,15 +125,13 @@ int test_MGSolverGS_7g_adjoint(int argc, char *argv[])
   return 0;
 }
 
-int test_MGSolverGS_7g_adjoint_multiply(int argc, char *argv[])
+int test_MGDiffusionSolver_7g_adjoint_multiply(int argc, char *argv[])
 {
   FixedSourceData data = get_fixedsource_data(1, 7);
-  data.input->put<std::string>("outer_solver", "GS");
+  data.input->put<std::string>("equation", "diffusion");
   data.input->put<std::string>("bc_west", "reflect");
   data.input->put<std::string>("bc_east", "reflect");
-  data.input->put<double>("inner_tolerance", 1e-14);
   data.input->put<double>("outer_tolerance", 1e-14);
-  data.input->put<int>("inner_max_iters", 100000);
   data.input->put<int>("outer_max_iters", 1000000);
   data.input->put<int>("adjoint", 1);
   FixedSourceManager<_1D> manager(data.input, data.material, data.mesh, true);
@@ -161,5 +151,5 @@ int test_MGSolverGS_7g_adjoint_multiply(int argc, char *argv[])
 }
 
 //----------------------------------------------------------------------------//
-//              end of test_MGSolverGS.cc
+//              end of test_MGDiffusionSolver.cc
 //----------------------------------------------------------------------------//

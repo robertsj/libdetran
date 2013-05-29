@@ -35,6 +35,22 @@ ADD_TEST(test_MGSolverGMRES_7g_forward_multiply test_MGSolverGMRES 2)
 ADD_TEST(test_MGSolverGMRES_7g_adjoint          test_MGSolverGMRES 3)
 ADD_TEST(test_MGSolverGMRES_7g_adjoint_multiply test_MGSolverGMRES 4)
 
+# Test of Multigroup Diffusion
+ADD_EXECUTABLE(test_MGDiffusionSolver               test_MGDiffusionSolver.cc)
+TARGET_LINK_LIBRARIES(test_MGDiffusionSolver        solvers)
+ADD_TEST(test_MGDiffusionSolver_1g                  test_MGDiffusionSolver 0)
+ADD_TEST(test_MGDiffusionSolver_7g_forward          test_MGDiffusionSolver 1)
+ADD_TEST(test_MGDiffusionSolver_7g_forward_multiply test_MGDiffusionSolver 2)
+ADD_TEST(test_MGDiffusionSolver_7g_adjoint          test_MGDiffusionSolver 3)
+ADD_TEST(test_MGDiffusionSolver_7g_adjoint_multiply test_MGDiffusionSolver 4)
+
+# Test of Power Iteration
+ADD_EXECUTABLE(test_EigenPI               test_EigenPI.cc)
+TARGET_LINK_LIBRARIES(test_EigenPI        solvers)
+ADD_TEST(test_EigenPI_1g                  test_EigenPI 0)
+ADD_TEST(test_EigenPI_7g_forward          test_EigenPI 1)
+ADD_TEST(test_EigenPI_7g_adjoint          test_EigenPI 2)
+
 #------------------------------------------------------------------------------#
 # Define tests
 #------------------------------------------------------------------------------#

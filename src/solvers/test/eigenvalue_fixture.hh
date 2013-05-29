@@ -1,81 +1,85 @@
-//----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   eigenproblem_fixture.hh
- * \author Jeremy Roberts
- * \date   Jul 28, 2012
- * \brief  Eigenproblem for testing.
+//----------------------------------*-C++-*-----------------------------------//
+/**
+ *  @file  eigenvalue_fixture.hh
+ *  @brief Various data for an eigenvalue problem
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
-#ifndef EIGENPROBLEM_FIXTURE_HH_
-#define EIGENPROBLEM_FIXTURE_HH_
+#ifndef EIGENVALUE_FIXTURE_HH_
+#define EIGENVALUE_FIXTURE_HH_
 
-// Detran
-#include "PowerIteration.hh"
-#include "PinCell.hh"
-
-// Detran utilities
-#include "DBC.hh"
-
-// Fixtures
-#include "angle/test/quadrature_fixture.hh"
+#include "geometry/Mesh1D.hh"
+#include "geometry/Mesh2D.hh"
+#include "geometry/Mesh3D.hh"
+#include "material/Material.hh"
+#include "utilities/InputDB.hh"
 #include "material/test/material_fixture.hh"
-#include "geometry/test/mesh_fixture.hh"
 
-using namespace detran_test;
-using namespace detran_postprocess;
+using namespace detran_utilities;
+using namespace detran_material;
+using namespace detran_geometry;
 using namespace detran;
-using namespace std;
 
 namespace detran_test
 {
 
-//typedef detran::Eigensolver<_2D>::SP_solver SP_eigensolver;
+/// Container for fixed source problem input
+struct EigenvalueData
+{
+  InputDB::SP_input input;
+  Material::SP_material material;
+  Mesh::SP_mesh mesh;
+};
 
-//// Return a power iteration solver for the test pin cell
-//static SP_eigensolver eigenproblem_fixture()
-//{
-//  typedef PowerIteration<_2D> solver_T;
-//
-//  // Get fixtures
-//  solver_T::SP_material mat = material_fixture_2g();
-//  PinCell::SP_pincell pin = pincell_fixture();
-//  solver_T::SP_mesh mesh = pin->mesh();
-//  solver_T::SP_quadrature quad = quadruplerange_fixture();
-//
-//  // Input
-//  solver_T::SP_input inp(new InputDB());
-//  inp->put<string>("bc_left",   "reflect");
-//  inp->put<string>("bc_right",  "reflect");
-//  inp->put<string>("bc_bottom", "reflect");
-//  inp->put<string>("bc_top",    "reflect");
-//
-//  // State
-//  solver_T::SP_state state(new State(inp, mesh, quad));
-//
-//  // Boundary
-//  solver_T::SP_boundary
-//    boundary(new Boundary<_2D>(inp, mesh, quad));
-//
-//  // Fission source
-//  solver_T::SP_fissionsource
-//    q_f(new FissionSource(state, mesh, mat));
-//
-//  // Solver
-//  SP_eigensolver
-//    solver(new solver_T(inp, state, mesh, mat,
-//                        quad, boundary, q_f));
-//
-//  return solver;
-//
-//}  // material_fixture_1g
+/// Data based on dimension and number of groups
+EigenvalueData get_eigenvalue_data(unsigned int dim, unsigned int ng)
+{
+  Require(dim >= 0 && dim <= 3);
+  Require(ng == 1 || ng == 2 || ng == 7);
 
+  EigenvalueData data;
 
+  // input
+  data.input = InputDB::Create();
+  data.input->put<int>("number_groups",      ng);
+  data.input->put<int>("outer_print_level",  1);
+  data.input->put<int>("inner_print_level",  0);
+  data.input->put<std::string>("bc_west",    "reflect");
+  data.input->put<std::string>("bc_east",    "reflect");
+  data.input->put<double>("inner_tolerance", 1e-18);
+  data.input->put<double>("outer_tolerance", 1e-18);
+  data.input->put<double>("eigen_tolerance", 1e-18);
+  data.input->put<int>("inner_max_iters",    1000000);
+  data.input->put<int>("outer_max_iters",    1000000);
+  data.input->put<int>("eigen_max_iters",    1000000);
+
+  // material
+  if (ng == 1)
+    data.material = material_fixture_1g(); //
+  else if (ng == 2)
+    data.material = material_fixture_2g();
+  else if (ng == 7)
+    data.material = material_fixture_7g();
+  data.material->compute_diff_coef();
+
+  // mesh
+  vec_dbl cm(2, 0.0); cm[1] = 5.0;
+  vec_int fm(1, 5);
+  vec_int mt(1, 2);
+  if (dim == 1)
+    data.mesh = Mesh1D::Create(fm, cm, mt);
+  else if (dim == 2)
+    data.mesh = Mesh2D::Create(fm, fm, cm, cm, mt);
+  else if (dim == 3)
+    data.mesh = Mesh3D::Create(fm, fm, fm, cm, cm, cm, mt);
+
+  return data;
+}
 
 } // end namespace detran_test
 
-#endif /* MATERIAL_FIXTURE_HH_ */
+#endif /* EIGENVALUE_FIXTURE_HH_ */
 
-//---------------------------------------------------------------------------//
-//              end of material_fixture.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
+//              end of eigenvalue_fixture.hh
+//----------------------------------------------------------------------------//

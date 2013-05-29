@@ -1,9 +1,9 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
  *  @file  fixedsource_fixture.hh
  *  @brief Various data for a fixed source problem
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef FIXEDSOURCE_FIXTURE_HH_
 #define FIXEDSOURCE_FIXTURE_HH_
@@ -55,6 +55,7 @@ FixedSourceData get_fixedsource_data(unsigned int dim, unsigned int ng)
     data.material = material_fixture_2g();
   else if (ng == 7)
     data.material = material_fixture_7g();
+  data.material->compute_diff_coef();
 
   // mesh
   vec_dbl cm(2, 0.0); cm[1] = 5.0;
@@ -75,8 +76,8 @@ FixedSourceData get_fixedsource_data(unsigned int dim, unsigned int ng)
 
 } // end namespace detran_test
 
-#endif /* MATERIAL_FIXTURE_HH_ */
+#endif /* FIXEDSOURCE_FIXTURE_HH_ */
 
-//---------------------------------------------------------------------------//
-//              end of material_fixture.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
+//              end of fixedsource_fixture.hh
+//----------------------------------------------------------------------------//
