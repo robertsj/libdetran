@@ -382,9 +382,9 @@ static SP_material material_fixture_7g()
   mat->set_sigma_s(m, 5, 5, 2.49751E-01);
   mat->set_sigma_s(m, 5, 6, 8.86450E-03);
   //   7 <- g'
-  mat->set_sigma_s(3, 6, 4, 9.00160E-09);
-  mat->set_sigma_s(3, 6, 5, 1.31140E-02);
-  mat->set_sigma_s(3, 6, 6, 2.59529E-01);
+  mat->set_sigma_s(m, 6, 4, 9.00160E-09);
+  mat->set_sigma_s(m, 6, 5, 1.31140E-02);
+  mat->set_sigma_s(m, 6, 6, 2.59529E-01);
 
   // --------------------------------------------
   // Material 3: 8.7 w/o MOX fuel-clad
