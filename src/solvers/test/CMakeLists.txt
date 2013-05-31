@@ -51,6 +51,17 @@ ADD_TEST(test_EigenPI_1g                  test_EigenPI 0)
 ADD_TEST(test_EigenPI_7g_forward          test_EigenPI 1)
 ADD_TEST(test_EigenPI_7g_adjoint          test_EigenPI 2)
 
+# Test of coarse mesh preconditioner
+ADD_EXECUTABLE(test_MGCoarseMeshPreconditioner 
+               test_MGCoarseMeshPreconditioner.cc)
+TARGET_LINK_LIBRARIES(test_MGCoarseMeshPreconditioner solvers)
+ADD_TEST(test_MGCoarseMeshPreconditioner_no_condense 
+         test_MGCoarseMeshPreconditioner 0)
+ADD_TEST(test_MGCoarseMeshPreconditioner_space
+         test_MGCoarseMeshPreconditioner 1)
+ADD_TEST(test_MGCoarseMeshPreconditioner_space_energy
+         test_MGCoarseMeshPreconditioner 2)                  
+
 #------------------------------------------------------------------------------#
 # Define tests
 #------------------------------------------------------------------------------#

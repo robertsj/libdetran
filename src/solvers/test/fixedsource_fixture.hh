@@ -2,6 +2,7 @@
 /**
  *  @file  fixedsource_fixture.hh
  *  @brief Various data for a fixed source problem
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
 //----------------------------------------------------------------------------//
 

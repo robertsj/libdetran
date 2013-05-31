@@ -36,8 +36,7 @@ MGPreconditioner::MGPreconditioner(SP_input         input,
   Require(d_input);
   Require(d_material);
   Require(d_mesh);
-  Require(d_scattersource);
-  Require(d_fissionsource);
+  // The scatter and fission sources aren't necessarily required.
 
   // Number of groups
   d_number_groups = d_material->number_groups();

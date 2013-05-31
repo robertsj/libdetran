@@ -26,11 +26,13 @@ namespace detran
  *  When condensing to a coarse mesh, the cross section data needs to be
  *  averaged over space and energy in some way.
  *
+ *
  *  @section mgcmpc_space Spatial Condensation
  *
  *  Restriction space is based on a user-specific level defining the
  *  number of fine cells per coarse cell.  Then, averaging over space
  *  is based on volume-integration with an assumed space-dependent spectrum.
+ *
  *
  *  @section mgcmpc_energy Energy Condensation
  *
@@ -70,9 +72,10 @@ public:
   enum condensation_options
   {
     CONDENSE_WITH_STATE,          // condense with fine mesh/group state
-    CONDENSE_WITH_UNITY_SPECTRUM, // condense with unity flux
+    CONDENSE_WITH_FLAT_SPECTRUM,  // condense with a flat flux
     CONDENSE_WITH_GS_SPECTRUM,    // condense with material gauss-seidel mode
     CONDENSE_WITH_B0_SPECTRUM,    // condense with region B0 mode
+    CONDENSE_WITH_USER_SPECTRUM,  // condense with user-defined spectrum via db
     END_CONDENSATION_OPTIONS
   };
 
@@ -132,15 +135,51 @@ protected:
   // DATA
   //--------------------------------------------------------------------------//
 
-  /// Coarse mesher
+  /// Material condensation option
+  size_t d_condensation_option;
+  /// Active groups
+  groups_t d_groups;
+  /// Fine group counts
+  vec_int d_fine_per_coarse;
+  /// Fine to coarse group map
+  groups_t d_f2c_group_map;
+  /// State for condensation
+  SP_state d_state;
+  /// Spectrum for condensation
+  vec2_dbl d_spectrum;
+  /// Spectrum for condensation
+  vec2_dbl d_coarse_spectrum;
+  /// Spectrum coarse mesh key
+  std::string d_key;
+  /// Coarse mesh
   SP_mesh d_coarsemesh;
   /// Coarse material
-  SP_material d_coarsematerial;
+  SP_material d_c_material;
+  /// Fine mesh active problem size
+  size_t d_size_fine;
+  /// Coarse mesh active problem size
+  size_t d_size_coarse;
   /// Restriction operator
   SP_matrix d_restrict;
   /// Prolongation operator
   SP_matrix d_prolong;
 
+  //--------------------------------------------------------------------------//
+  // IMPLEMENTATION
+  //--------------------------------------------------------------------------//
+
+  void build_restrict();
+  void build_prolong();
+
+  /**
+   *  @brief Get the spectral shape factor in a fine mesh/group
+   *  @param    i_f     fine mesh index
+   *  @param    g_f     fine group index
+   *  @param    i_c     coarse mesh index
+   *  @param    g_c     coarse group index
+   */
+  double shape(const size_t i_f, const size_t g_f,
+               const size_t i_c, const size_t g_c);
 };
 
 } // end namespace detran
