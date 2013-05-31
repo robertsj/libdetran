@@ -100,7 +100,7 @@ public:
   // action y <-- A' * x
   void multiply_transpose(const Vector &x, Vector &y);
   // pretty print to screen
-  void display() const;
+  void display(bool forceprint = false) const;
 
 protected:
 

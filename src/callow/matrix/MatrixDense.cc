@@ -83,7 +83,7 @@ MatrixDense::Create(const int m, const int n, const double v)
 
 
 //---------------------------------------------------------------------------//
-void MatrixDense::display() const
+void MatrixDense::display(bool forceprint) const
 {
   Require(d_is_ready);
   printf(" Dense matrix \n");
@@ -91,7 +91,7 @@ void MatrixDense::display() const
   printf("      number rows = %5i \n",   d_m);
   printf("   number columns = %5i \n",   d_n);
   printf("\n");
-  if (d_m > 20 || d_n > 20)
+  if ((d_m > 20 || d_n > 20) && !forceprint)
   {
     printf("  *** matrix not printed for m or n > 20 *** \n");
     return;

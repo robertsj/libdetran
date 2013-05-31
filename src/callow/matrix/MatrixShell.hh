@@ -80,7 +80,7 @@ public:
     /* ... */
   }
   // default shell display gives just the sizes
-  virtual void display() const
+  virtual void display(bool forceprint = false) const
   {
     std::cout << "MatrixShell:" << std::endl
               << "  # rows = " << d_m << std::endl
