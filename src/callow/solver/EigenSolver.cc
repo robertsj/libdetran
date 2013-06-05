@@ -23,7 +23,7 @@ EigenSolver::EigenSolver(const double    tol,
   , d_number_iterations(0)
   , d_monitor_level(2)
   , d_lambda(0.0)
-  , d_status(0)
+  , d_status(RUNNING)
 {
   Require(d_tolerance >= 0.0);
   Require(d_maximum_iterations > 0);

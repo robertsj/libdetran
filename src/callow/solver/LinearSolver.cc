@@ -1,10 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
  *  @file  LinearSolver.cc
  *  @brief LinearSolver member definitions
  *  @note  Copyright (C) Jeremy Roberts 2013
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #include "LinearSolver.hh"
 // preconditioners
@@ -14,10 +14,7 @@
 namespace callow
 {
 
-//-------------------------------------------------------------------------//
-// CONSTRUCTOR & DESTRUCTOR
-//-------------------------------------------------------------------------//
-
+//----------------------------------------------------------------------------//
 LinearSolver::LinearSolver(const double atol,
                            const double rtol,
                            const int    maxit,
@@ -32,21 +29,16 @@ LinearSolver::LinearSolver(const double atol,
   , d_monitor_level(2)
   , d_monitor_diverge(true)
   , d_norm_type(L2)
+  , d_status(RUNNING)
 {
   Require(d_absolute_tolerance >= 0.0);
   Require(d_relative_tolerance >= 0.0);
   Require(d_maximum_iterations >  0);
 }
 
-//-------------------------------------------------------------------------//
-// PUBLIC FUNCTIONS
-//-------------------------------------------------------------------------//
-
-void LinearSolver::
-set_operators(SP_matrix A,
-              SP_db db)
+//----------------------------------------------------------------------------//
+void LinearSolver::set_operators(SP_matrix A, SP_db db)
 {
-  // Preconditions
   Require(A);
   d_A = A;
   Ensure(d_A->number_rows() == d_A->number_columns());
@@ -76,6 +68,7 @@ set_operators(SP_matrix A,
 
 }
 
+//----------------------------------------------------------------------------//
 void LinearSolver::
 set_tolerances(const double atol, const double rtol, const int maxit)
 {
@@ -87,7 +80,7 @@ set_tolerances(const double atol, const double rtol, const int maxit)
   Require(d_maximum_iterations >= 0);
 }
 
-// print out iteration and residual for initial
+//----------------------------------------------------------------------------//
 bool LinearSolver::monitor_init(double r)
 {
   d_residual[0] = r;

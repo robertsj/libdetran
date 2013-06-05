@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   EigenSolver.i.hh
- *  @author robertsj
- *  @date   Sep 25, 2012
- *  @brief  EigenSolver.i class definition.
+ *  @file  EigenSolver.i.hh
+ *  @brief EigenSolver inline member definitions
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef callow_EIGENSOLVER_I_HH_
 #define callow_EIGENSOLVER_I_HH_
@@ -15,7 +14,7 @@
 namespace callow
 {
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 inline void EigenSolver::set_operators(SP_matrix    A,
                                        SP_matrix    B,
                                        SP_db        db)
@@ -39,7 +38,7 @@ inline void EigenSolver::set_operators(SP_matrix    A,
   }
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 inline int EigenSolver::solve(Vector &x, Vector &x0)
 {
   Require(x.size() == d_A->number_rows());
@@ -55,7 +54,7 @@ inline int EigenSolver::solve(Vector &x, Vector &x0)
   return d_status;
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 inline bool EigenSolver::monitor(int it, double l, double r)
 {
   // record the iteration and residual norm
@@ -63,8 +62,16 @@ inline bool EigenSolver::monitor(int it, double l, double r)
   d_residual_norm[it] = r;
   // echo the residual
   if (d_monitor_level > 1)
-    printf("iteration: %5i  eigenvalue: %12.8e    residual: %12.8e \n", it, l, r);
+  {
+    printf("iteration: %5i  eigenvalue: %12.8e    residual: %12.8e \n",
+           it, l, r);
+  }
   // send a signal
+  if (it == d_maximum_iterations)
+  {
+    d_status = MAXIT;
+    return true;
+  }
   if (r < d_tolerance)
   {
     if (d_monitor_level > 0)
@@ -81,3 +88,8 @@ inline bool EigenSolver::monitor(int it, double l, double r)
 } // end namespace callow
 
 #endif /* callow_EIGENSOLVER_I_HH_ */
+
+
+//----------------------------------------------------------------------------//
+//              end of file EigenSolver.i.hh
+//----------------------------------------------------------------------------//

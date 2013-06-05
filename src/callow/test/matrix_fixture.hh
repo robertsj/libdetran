@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   matrix_fixture.hh
- * \brief  matrix_fixture 
- * \author Jeremy Roberts
- * \date   Sep 13, 2012
+/**
+ *  @file  matrix_fixture.hh
+ *  @brief Matrices for testing
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 #ifndef MATRIX_FIXTURE_HH_

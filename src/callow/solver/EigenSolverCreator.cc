@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   EigenSolverCreator.cc
- * \brief  EigenSolverCreator 
- * \author Jeremy Roberts
- * \date   Oct 26, 2012
+//----------------------------------*-C++-*-----------------------------------//
+/**
+ *  @file  EigenSolverCreator.cc
+ *  @brief EigenSolverCreator
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #include "EigenSolverCreator.hh"
 #include "callow/callow_config.hh"
@@ -18,12 +17,7 @@
 namespace callow
 {
 
-/**
-  *  Create a solver
-  *
-  *  @param  tol     tolerance
-  *  @param  maxit   maximum number of iterations
-  */
+//----------------------------------------------------------------------------//
 EigenSolverCreator::SP_solver
 EigenSolverCreator::Create(SP_db db)
 {
@@ -68,6 +62,6 @@ EigenSolverCreator::Create(SP_db db)
 
 } // end namespace callow
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file EigenSolverCreator.cc
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

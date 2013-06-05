@@ -12,7 +12,7 @@ SET(SOLVER_SRC
   ${SRC_DIR}/EigenSolver.cc
   ${SRC_DIR}/PowerIteration.cc
   ${SRC_DIR}/EigenSolverCreator.cc
-  ${SRC_DIR}/JacobiDavidson.cc
+  ${SRC_DIR}/NonlinearArnoldi.cc
   PARENT_SCOPE
 )
 

@@ -135,7 +135,7 @@ public:
   //-------------------------------------------------------------------------//
 
   /// Pretty print to stdout
-  void display() const;
+  void display(const std::string &name = "") const;
   /// Formatted write to ascii for matlab
   void print_matlab(std::string filename="vector.out") const;
 

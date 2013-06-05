@@ -34,4 +34,7 @@ ADD_EXECUTABLE(test_EigenSolver         test_EigenSolver.cc)
 TARGET_LINK_LIBRARIES(test_EigenSolver  callow )
 ADD_TEST(test_PowerIteration            test_EigenSolver 0)
 
+ADD_EXECUTABLE(test_NonlinearArnoldi         test_NonlinearArnoldi.cc)
+TARGET_LINK_LIBRARIES(test_NonlinearArnoldi  callow )
+ADD_TEST(test_NonlinearArnoldi               test_NonlinearArnoldi 0)
 

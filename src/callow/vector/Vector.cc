@@ -199,9 +199,9 @@ void Vector::resize(const int n, const double v)
 // IO
 //---------------------------------------------------------------------------//
 
-void Vector::display() const
+void Vector::display(const std::string &name) const
 {
-  printf(" Vector \n");
+  printf(" Vector: %s \n", name.c_str());
   printf(" ---------------------------\n");
   printf("      number rows = %5i \n\n", d_size);
   if (d_size > 100)

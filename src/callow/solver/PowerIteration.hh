@@ -1,7 +1,7 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
  *  @file   PowerIteration.hh
- *  @brief  PowerIteration
+ *  @brief  PowerIteration class definition
  *  @author Jeremy Roberts
  *  @date   Sep 24, 2012
  */
@@ -38,8 +38,8 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //-------------------------------------------------------------------------//
 
-  PowerIteration(const double    tol = 1e-6,
-                 const int       maxit = 100);
+  PowerIteration(const double tol   = 1e-6,
+                 const int    maxit = 100);
 
   virtual ~PowerIteration(){}
 

@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   SlepcSolver.cc
- *  @author robertsj
- *  @date   Sep 25, 2012
- *  @brief  SlepcSolver class definition.
+ *  @file  SlepcSolver.cc
+ *  @brief SlepcSolver member definitions
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #include "callow/callow_config.hh"
 
@@ -16,10 +15,7 @@
 namespace callow
 {
 
-//---------------------------------------------------------------------------//
-// CONSTRUCTOR & DESTRUCTOR
-//---------------------------------------------------------------------------//
-
+//----------------------------------------------------------------------------//
 SlepcSolver::SlepcSolver(const double  tol,
                          const int     maxit)
   : EigenSolver(tol, maxit, "solver_slepc")
@@ -42,18 +38,17 @@ SlepcSolver::SlepcSolver(const double  tol,
 
 }
 
+//----------------------------------------------------------------------------//
 SlepcSolver::~SlepcSolver()
 {
-  std::cout << "*** DESTROYING SLEPC ***" << std::endl;
   EPSDestroy(&d_slepc_solver);
 }
 
-
+//----------------------------------------------------------------------------//
 void SlepcSolver::set_operators(SP_matrix    A,
                                 SP_matrix    B,
                                 SP_db        db)
 {
-  // Preconditions
   Insist(A, "First operator cannot be null");
 
   // Store the operators
@@ -75,7 +70,8 @@ void SlepcSolver::set_operators(SP_matrix    A,
     // generalized Ax=LBx, nonhermitian evp
     ierr = EPSSetProblemType(d_slepc_solver, EPS_GNHEP);
     Insist(!ierr, "Error setting EPS problem type.");
-    ierr = EPSSetOperators(d_slepc_solver, d_A->petsc_matrix(), d_B->petsc_matrix());
+    ierr = EPSSetOperators(d_slepc_solver,
+                           d_A->petsc_matrix(), d_B->petsc_matrix());
     Insist(!ierr, "Error setting EPS operator.");
   }
 
@@ -88,3 +84,8 @@ void SlepcSolver::set_operators(SP_matrix    A,
 } // end namespace callow
 
 #endif // CALLOW_ENABLE_SLEPC
+
+//----------------------------------------------------------------------------//
+//              end of file SlepcSolver.cc
+//----------------------------------------------------------------------------//
+

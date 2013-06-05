@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   SlepcSolver.i.hh
- *  @author robertsj
- *  @date   Sep 25, 2012
- *  @brief  SlepcSolver inline member definitions
+ *  @file  SlepcSolver.i.hh
+ *  @brief SlepcSolver inline member definitions
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef callow_SLEPCSOLVER_I_HH_
 #define callow_SLEPCSOLVER_I_HH_
@@ -13,6 +12,7 @@
 namespace callow
 {
 
+//----------------------------------------------------------------------------//
 inline void SlepcSolver::solve_impl(Vector &x, Vector &x0)
 {
 
@@ -46,7 +46,11 @@ inline void SlepcSolver::solve_impl(Vector &x, Vector &x0)
 
 }
 
-
 } // end namespace callow
 
 #endif /* callow_SLEPCSOLVER_I_HH_ */
+
+//----------------------------------------------------------------------------//
+//              end of file SlepcSolver.i.hh
+//----------------------------------------------------------------------------//
+
