@@ -1,10 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
  *  @file  Point.hh
  *  @brief Point class definition 
  *  @note  Copyright (C) 2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef POINT_HH_
 #define POINT_HH_
@@ -28,8 +28,8 @@ public:
 
   /// Constructor
   Point(const double xval = 0.0, 
-	    const double yval = 0.0, 
-		const double zval = 0.0);
+        const double yval = 0.0,
+        const double zval = 0.0);
 
   Point operator*(double scale) const
   {
@@ -79,7 +79,7 @@ private:
 UTILITIES_EXPORT Point operator*(double scale, const Point &p);
 
 /// Distance between two points.
-UTILITIES_EXPORT double distance(const Point &p1, const Point &p2);
+UTILITIES_EXPORT double distance(const Point &p1, const Point &p2 = Point());
 
 /// Pretty print of a point
 UTILITIES_EXPORT std::ostream& operator<< (std::ostream &out, const Point &p);
@@ -91,6 +91,6 @@ std::ostream& operator<< (std::ostream &out, const Point &p);
 
 #endif // POINT_HH_ 
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file Point.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

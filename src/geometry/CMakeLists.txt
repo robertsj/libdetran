@@ -20,6 +20,7 @@ SET(SRC
     Track.cc
     TrackDB.cc
     Tracker.cc
+    QuadraticSurface.cc
 )
 
 #-----------------------------------------------------------------------------#
@@ -28,6 +29,7 @@ SET(SRC
 
 set(LINKED_LIBS
     angle
+    callow
     utilities
 )
 

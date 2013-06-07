@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   ChebyshevLegendre.hh
- *  @author robertsj
- *  @date   Oct 10, 2012
- *  @brief  ChebyshevLegendre class definition.
+ *  @file  ChebyshevLegendre.hh
+ *  @brief ChebyshevLegendre class definition
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_angle_CHEBYSHEVLEGENDRE_HH_
 #define detran_angle_CHEBYSHEVLEGENDRE_HH_
@@ -32,9 +31,9 @@ class ANGLE_EXPORT ChebyshevLegendre: public ProductQuadrature
 
 public:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /**
    *  @brief Constructor
@@ -42,9 +41,7 @@ public:
    *  @param na     Number of azimuths per octant
    *  @param np     Number of polar angles per octant
    */
-  ChebyshevLegendre(const size_t dim,
-                    const size_t na,
-                    const size_t np);
+  ChebyshevLegendre(const size_t dim, const size_t na, const size_t np);
 
   /// Virtual destructor
   virtual ~ChebyshevLegendre(){};

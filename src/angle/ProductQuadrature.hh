@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   ProductQuadrature.hh
- *  @author robertsj
- *  @date   Oct 10, 2012
- *  @brief  ProductQuadrature class definition.
+ *  @file  ProductQuadrature.hh
+ *  @brief ProductQuadrature class definition
+ *  @note  Copyright (C) Jeremy Roberts 2012-2013
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_angle_PRODUCTQUADRATURE_HH_
 #define detran_angle_PRODUCTQUADRATURE_HH_
@@ -22,7 +21,7 @@ namespace detran_angle
  *  For the discrete ordinates and characteristics methods, a collocation
  *  in angle is used, and approximations of the integral
  *  @f[
- *      \int^{\pi}_0 \sin \phi d\phi \int^{2\pi}_{0} d\theta \,
+ *      \int^{\pi}_0 \sin \theta d\theta \int^{2\pi}_{0} d\phi \,
  *  @f]
  *  are needed over a discrete set of angular abscissa @f$ \hat{\Omega}_n @f$
  *  where
@@ -51,23 +50,25 @@ namespace detran_angle
  *    - quad_number_polar_octant    -- number polar angles per octant
  *    - quad_number_azimuth_octant  -- number azimuths per octant
  *
+ *  @tparam   A     Azimuthal Quadrature
+ *  @tparam   P     Polar Quadrature
  */
+//template <class A, class P>
 class ANGLE_EXPORT ProductQuadrature: public Quadrature
 {
 
 public:
 
-  //-------------------------------------------------------------------------//
-  // ENUMERATIONS
-  //-------------------------------------------------------------------------//
-
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // TYPEDEFS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
-  //-------------------------------------------------------------------------//
+//  typedef A   azimuth_q_T;
+//  typedef P   polar_q_T;
+
+  //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /**
    *  @brief Constructor
@@ -85,9 +86,9 @@ public:
   virtual ~ProductQuadrature() = 0;
 
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /// Cardinal angle within octant given azimuth and polar.
   size_t angle(const size_t a, const size_t p) const;
@@ -107,9 +108,9 @@ public:
 
 protected:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // DATA
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /// Number of azimuths per octant
   size_t d_number_azimuth_octant;
@@ -130,9 +131,9 @@ protected:
   /// Polar weights
   vec_dbl d_polar_weight;
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // IMPLEMENTATION
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /// Build the product quadrature parameters from polar and azimuth values
   void build_product_quadrature();
@@ -149,3 +150,7 @@ private:
 #include "ProductQuadrature.i.hh"
 
 #endif /* detran_angle_PRODUCTQUADRATURE_HH_ */
+
+//----------------------------------------------------------------------------//
+//              end of ProductQuadrature.hh
+//----------------------------------------------------------------------------//

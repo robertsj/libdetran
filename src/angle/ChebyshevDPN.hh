@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   ChebyshevDPN.hh
- *  @brief  ChebyshevDPN
- *  @author Jeremy Roberts
- *  @date   Oct 11, 2012
+ *  @file  ChebyshevDPN.hh
+ *  @brief ChebyshevDPN class definition
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_angle_CHEBYSHEVDPN_HH_
 #define detran_angle_CHEBYSHEVDPN_HH_
@@ -32,23 +31,17 @@ class ANGLE_EXPORT ChebyshevDPN: public ProductQuadrature
 
 public:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /**
    *  @brief Constructor
    *  @param dim    Dimension (2 or 3)
    *  @param na     Number of azimuths per octant
    *  @param np     Number of polar angles per octant
-   *  @param name   Quadrature name
    */
-  ChebyshevDPN(const size_t dim,
-               const size_t na,
-               const size_t np);
-
-  /// Virtual destructor
-  virtual ~ChebyshevDPN(){};
+  ChebyshevDPN(const size_t dim, const size_t na, const size_t np);
 
   /// SP constructor
   static SP_quadrature Create(const size_t dim,
@@ -62,6 +55,6 @@ public:
 
 #endif // detran_angle_CHEBYSHEVDPN_HH_
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file ChebyshevDPN.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

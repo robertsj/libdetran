@@ -2,7 +2,7 @@
 /**
  *  @file  Assembly.hh
  *  @brief Assembly class definition
- *  @note  Copyright (C) 2013 Jeremy Roberts
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 

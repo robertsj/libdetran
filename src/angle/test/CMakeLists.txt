@@ -33,6 +33,10 @@ TARGET_LINK_LIBRARIES(test_SphericalHarmonics angle)
 ADD_EXECUTABLE(test_ProductQuadratures        test_ProductQuadratures.cc)
 TARGET_LINK_LIBRARIES(test_ProductQuadratures angle)
 
+ADD_EXECUTABLE(test_BaseQuadrature        test_BaseQuadrature.cc)
+TARGET_LINK_LIBRARIES(test_BaseQuadrature angle)
+ADD_TEST(test_BaseQuadrature_GL           test_BaseQuadrature      0)
+
 #------------------------------------------------------------------------------#
 # Define tests
 #------------------------------------------------------------------------------#

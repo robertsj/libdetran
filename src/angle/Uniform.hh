@@ -1,25 +1,30 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Uniform.hh
- * \brief  Uniform class definition.
- * \author Jeremy Roberts
- * \date   Jun 22, 2012
+/**
+ *  @file  Uniform.hh
+ *  @brief Uniform class definition
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 
-#ifndef UNIFORM_HH_
-#define UNIFORM_HH_
+#ifndef detran_angle_UNIFORM_HH_
+#define detran_angle_UNIFORM_HH_
 
-#include "QuadratureMOC.hh"
+#include "ProductQuadrature.hh"
 
 namespace detran_angle
 {
 
-/*!
- *  \class Uniform
- *  \brief Uniformly-spaced azimuthal quadrature set.
+/**
+ *  @class Uniform
+ *  @brief Uniform azimuthal quadrature set for cyclic tracking
+ *
+ *  Cyclic tracking is not explicitly implemented in Detran, but by
+ *  adjusting azimuths so that tracking is cyclic, any interpolation at
+ *  the boundary becomes essentially exact for the case of even track
+ *  spacing.
+ *
  */
-class ANGLE_EXPORT Uniform: public QuadratureMOC
+class ANGLE_EXPORT Uniform: public ProductQuadrature
 {
 
 public:
@@ -63,7 +68,7 @@ private:
 
 } // end namespace detran_angle
 
-#endif // UNIFORM_HH_ 
+#endif // detran_angle_UNIFORM_HH_
 
 //---------------------------------------------------------------------------//
 //              end of file Uniform.hh

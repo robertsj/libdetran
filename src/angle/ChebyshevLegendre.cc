@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   ChebyshevLegendre.cc
- *  @author robertsj
- *  @date   Oct 10, 2012
- *  @brief  ChebyshevLegendre class definition.
+ *  @file  ChebyshevLegendre.cc
+ *  @brief ChebyshevLegendre member definitions
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #include "ChebyshevLegendre.hh"
 #include "GenerateGaussLegendre.hh"
@@ -19,9 +18,9 @@ ChebyshevLegendre::ChebyshevLegendre(const size_t dim,
   : ProductQuadrature(dim, na, np, "ChebyshevLegendre")
 {
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // AZIMUTH QUADRATURE
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   // Chebyshev points are just equally spaced phi's in the first quadrant
   using detran_utilities::pi;
@@ -33,9 +32,9 @@ ChebyshevLegendre::ChebyshevLegendre(const size_t dim,
     d_azimuth_weight[i] = 0.5 * pi / na;
   }
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // POLAR QUADRATURE
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   // temporary arrays
   vec_dbl x(2*np, 0.0);
@@ -53,19 +52,17 @@ ChebyshevLegendre::ChebyshevLegendre(const size_t dim,
     d_polar_weight[j] = w[i];
   }
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // PRODUCT QUADRATURE
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   build_product_quadrature();
 
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 ChebyshevLegendre::SP_quadrature
-ChebyshevLegendre::Create(const size_t dim,
-                          const size_t na,
-                          const size_t np)
+ChebyshevLegendre::Create(const size_t dim, const size_t na, const size_t np)
 {
   ChebyshevLegendre::SP_quadrature p(new ChebyshevLegendre(dim, na, np));
   return p;

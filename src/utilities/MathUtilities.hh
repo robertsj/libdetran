@@ -1,11 +1,13 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   MathUtilities.hh
- *  @author robertsj
- *  @date   Apr 4, 2012
- *  @brief  Provides several useful math functions
+ *  @file  MathUtilities.hh
+ *  @brief Provides several useful math functions
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
+ *
+ *  @todo There is some overlap with callow vector methods.  It might be
+ *        a good idea to move all math extras to callow
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_utilities_MATHUTILITIES_HH_
 #define detran_utilities_MATHUTILITIES_HH_
@@ -187,7 +189,7 @@ inline std::vector<double> linspace_center(double a, double b, int n = 10)
     dx = b-a;
   else
     dx = (b-a)/double(n);
-  std::vector<double> v(n, 0.5*dx);
+  std::vector<double> v(n, a + 0.5*dx);
   for (int i = 1; i < n; ++i)
     v[i] = v[i-1] + dx;
   return v;
@@ -197,6 +199,6 @@ inline std::vector<double> linspace_center(double a, double b, int n = 10)
 
 #endif /* detran_utilities_MATHUTILITIES_HH_ */
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of MathUtilities.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

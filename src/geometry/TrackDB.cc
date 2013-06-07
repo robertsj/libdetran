@@ -61,7 +61,6 @@ void TrackDB::setup_angle(const size_t a,
                           const double s_phi)
 {
   Require(a < d_tracks.size());
-  Require(space > 0.0);
   d_cos_phi[a] = c_phi;
   d_sin_phi[a] = s_phi;
 }

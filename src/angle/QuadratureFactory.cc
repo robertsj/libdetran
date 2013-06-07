@@ -1,15 +1,15 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   QuadratureFactory.cc
- *  @author robertsj
- *  @date   Apr 11, 2012
- *  @brief  QuadratureFactory member definitions.
+ *  @file  QuadratureFactory.cc
+ *  @brief QuadratureFactory member definitions
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 // Detran
 #include "QuadratureFactory.hh"
 // 1D
+#include "PolarQuadrature.hh"
 #include "GaussLegendre.hh"
 #include "GaussChebyshev.hh"
 #include "DPN.hh"
@@ -23,25 +23,24 @@
 #include "ChebyshevDPN.hh"
 #include "LegendreDTN.hh"
 // MOC
-#include "Collocated.hh"
-#include "Uniform.hh"
+//#include "Collocated.hh"
+//#include "Uniform.hh"
+
+#include "BaseGL.hh"
+#include "BaseCL.hh"
+#include "BaseUniform.hh"
+#include "TabuchiYamamoto.hh"
 
 namespace detran_angle
 {
 
-// Build a quadrature
+//----------------------------------------------------------------------------//
 QuadratureFactory::SP_quadrature QuadratureFactory::
 build(SP_input input, const int dimension)
 {
-  SP_quadrature q;
-  build(q, input, dimension);
-  return q;
-}
-// Build a quadrature
-void QuadratureFactory::
-build(SP_quadrature &q, SP_input input, const int dimension)
-{
   using std::string;
+
+  SP_quadrature q;
 
   // Set the quadrature type.
   string quad_type = "notset";
@@ -104,25 +103,25 @@ build(SP_quadrature &q, SP_input input, const int dimension)
   }
 
   //-------------------------------------------------------------------------//
-  // 1D QUADRATURES
+  // 1D (i.e. POLAR) QUADRATURES
   //-------------------------------------------------------------------------//
 
-  if (quad_type == "gausslegendre")
+  if (quad_type == "gl")
   {
     Insist(dimension == 1, "GaussLegendre only for 1D.");
-    q = new GaussLegendre(np);
+    q = new PolarQuadrature<BaseGL>(np);
   }
-  else if (quad_type == "gausschebyshev")
+  else if (quad_type == "gc")
   {
     Insist(dimension == 1, "GaussLegendre only for 1D.");
     q = new GaussChebyshev(np, cheb_norm);
   }
-  else if (quad_type == "dpn")
+  else if (quad_type == "dgl")
   {
     Insist(dimension == 1, "DPN only for 1D.");
     q = new DPN(np);
   }
-  else if (quad_type == "dtn")
+  else if (quad_type == "dgc")
   {
     Insist(dimension == 1, "DTN only for 1D.");
     q = new DTN(np, cheb_norm);
@@ -167,45 +166,61 @@ build(SP_quadrature &q, SP_input input, const int dimension)
   //-------------------------------------------------------------------------//
   // MOC QUADRATURES
   //-------------------------------------------------------------------------//
-
-  else if (quad_type == "collocated")
-  {
-    Insist(dimension > 1, "Collocated only for 2D or 3D.");
-    q = new Collocated(dimension, azimuths_octant, 1, polar_octant, polar_type);
-  }
-  else if (quad_type == "uniform")
-  {
-    Insist(dimension > 1, "Uniform only for 2D or 3D.");
-    int num_space = 10;
-    if (input->check("quad_uniform_number_space"))
-      num_space = input->get<int>("quad_uniform_number_space");
-    q = new Uniform(dimension, azimuths_octant, num_space, polar_octant, polar_type);
-  }
+//
+//  else if (quad_type == "collocated")
+//  {
+//    Insist(dimension > 1, "Collocated only for 2D or 3D.");
+//    q = new Collocated(dimension, azimuths_octant, 1, polar_octant, polar_type);
+//  }
+//  else if (quad_type == "uniform")
+//  {
+//    Insist(dimension > 1, "Uniform only for 2D or 3D.");
+//    int num_space = 10;
+//    if (input->check("quad_uniform_number_space"))
+//      num_space = input->get<int>("quad_uniform_number_space");
+//    q = new Uniform(dimension, azimuths_octant, num_space, polar_octant, polar_type);
+//  }
   else
   {
     THROW("Unsupported quadrature selected: " + quad_type);
   }
 
+  return q;
 }
 
-void QuadratureFactory::help() const
+//----------------------------------------------------------------------------//
+QuadratureFactory::SP_basequadrature
+QuadratureFactory::build_base(const std::string &type,
+                              const size_t       n,
+                              const double       a,
+                              const double       b)
 {
-
-  std::cout << "Available quadratures are: " << std::endl;
-  std::cout << "  gausslegendre (1D)" << std::endl;
-  std::cout << "  gausschebyshev (1D)" << std::endl;
-  std::cout << "  dpn (1D)" << std::endl;
-  std::cout << "  dtn (1D)" << std::endl;
-  std::cout << "  levelsymmetric" << std::endl;
-  std::cout << "  quadruplerange" << std::endl;
-  std::cout << "  uniformequal" << std::endl;
-  std::cout << "  chebyshevlegendre" << std::endl;
-  std::cout << "  chebyshevdpn" << std::endl;
-
+  Require(n > 0);
+  SP_basequadrature q;
+  if (type == "gl")
+    q = new BaseGL();
+  else if (type == "dgl")
+    q = new BaseDGL();
+  else if (type == "gc")
+    q = new BaseCL();
+  else if (type == "dgc")
+    q = new BaseDCL();
+  else if (type == "uniform")
+    q = new BaseUniform();
+  else if (type == "uniformcosine")
+    q = new BaseUniformCosine();
+  else if (type == "simpson")
+    q = new BaseSimpson();
+  else if (type == "ty")
+    q = new TabuchiYamamoto();
+  else
+    THROW("Unsupported base quadrature type: " + type);
+  q->build(a, b, n);
+  return q;
 }
 
 } // end namespace detran_angle
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of QuadratureFactory.cc
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

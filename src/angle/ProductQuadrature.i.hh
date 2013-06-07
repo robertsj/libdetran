@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   ProductQuadrature.i.hh
- *  @author robertsj
- *  @date   Oct 10, 2012
- *  @brief  ProductQuadrature.i class definition.
+ *  @file  ProductQuadrature.i.hh
+ *  @brief ProductQuadrature class definition
+ *  @note  Copyright (C) Jeremy Roberts 2012-2013
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_angle_PRODUCTQUADRATURE_I_HH_
 #define detran_angle_PRODUCTQUADRATURE_I_HH_
@@ -83,5 +82,8 @@ ProductQuadrature::number_polar_octant() const
 
 } // end namespace detran_angle
 
-
 #endif /* detran_angle_PRODUCTQUADRATURE_I_HH_ */
+
+//----------------------------------------------------------------------------//
+//              end of ProductQuadrature.i.hh
+//----------------------------------------------------------------------------//

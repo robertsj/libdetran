@@ -23,7 +23,7 @@ Point::Point(const double xval, const double yval, const double zval)
 //---------------------------------------------------------------------------//
 Point operator*(double scale, const Point &p)
 {
-  return Point(p.x()*scale, p.y()*scale);
+  return Point(p.x()*scale, p.y()*scale, p.z()*scale);
 }
 
 //---------------------------------------------------------------------------//

@@ -11,8 +11,8 @@
 
 #include "Track.hh"
 #include "TrackDB.hh"
-#include "MeshMOC.hh"
-#include "angle/QuadratureMOC.hh"
+#include "Mesh.hh"
+#include "angle/ProductQuadrature.hh"
 #include "utilities/DBC.hh"
 #include "utilities/SP.hh"
 #include <vector>
@@ -33,13 +33,15 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<Tracker>               SP_tracker;
-  typedef Mesh::SP_mesh                               SP_mesh;
-  typedef detran_angle::QuadratureMOC::SP_quadrature  SP_quadrature;
+  typedef detran_utilities::SP<Tracker>                   SP_tracker;
+  typedef Mesh::SP_mesh                                   SP_mesh;
+  typedef detran_utilities::SP<detran_angle::ProductQuadrature>  SP_quadrature;
   typedef Track::SP_track                             SP_track;
   typedef TrackDB::SP_trackdb                         SP_trackdb;
   typedef detran_utilities::vec_dbl                   vec_dbl;
+  typedef detran_utilities::vec2_dbl                  vec2_dbl;
   typedef detran_utilities::Point                     Point;
+  typedef detran_utilities::size_t                    size_t;
 
   //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -68,7 +70,7 @@ public:
   SP_mesh meshmoc()
   {
     // Create the MOC mesh
-    SP_mesh newmesh(new MeshMOC(d_mesh, d_trackdb));
+    SP_mesh newmesh;//(new MeshMOC(d_mesh, d_trackdb));
     return newmesh;
   }
 
@@ -85,9 +87,10 @@ private:
   SP_quadrature d_quadrature;
   SP_trackdb d_trackdb;
   // Number azimuths per octant
-  int d_number_azimuths;
+  size_t d_number_azimuths;
   vec_dbl d_x;
   vec_dbl d_y;
+  double d_delta_max;
 
   //--------------------------------------------------------------------------//
   // IMPLEMENTATION
@@ -95,6 +98,18 @@ private:
 
   void generate_tracks();
   void find_starting_cell(Point enter, double tan_phi, int *IJ);
+
+  // compute number of points on a side
+  size_t number_points(const double phi,
+                       const double L,
+                       const size_t flag = 0);
+
+  // generate points for a given azimuth
+  void generate_points(const double W,
+                       const double H,
+                       const size_t a);
+
+  void segmentize(SP_track);
 
 };
 
