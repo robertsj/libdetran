@@ -7,6 +7,7 @@
 //----------------------------------------------------------------------------//
 
 #include "TabuchiYamamoto.hh"
+#include "utilities/SoftEquivalence.hh"
 
 namespace detran_angle
 {
@@ -15,7 +16,11 @@ namespace detran_angle
 void TabuchiYamamoto::build_impl(c_dbl a, c_dbl b)
 {
   Insist(d_m % 2 == 0, "T-Y is only available for even numbers of points.");
-  Require(d_m / 2 <= 6);
+  Insist(detran_utilities::soft_equiv(a, -1.0) &&
+         detran_utilities::soft_equiv(b,  1.0),
+         "T_Y is defined only for polar angles, i.e. [-1, 1].");
+  Insist(d_m / 2 < 6, "T-Y defined only for up to 5 points.");
+
 
   // polar cosines (the paper lists sines).  4 & 5 point are my own.
   double x[5][5] =

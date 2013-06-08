@@ -9,7 +9,9 @@
 #ifndef detran_angle_PRODUCTQUADRATURE_HH_
 #define detran_angle_PRODUCTQUADRATURE_HH_
 
-#include "Quadrature.hh"
+#include "angle/Quadrature.hh"
+#include "angle/PolarQuadrature.hh"
+#include "angle/AzimuthalQuadrature.hh"
 
 namespace detran_angle
 {
@@ -34,9 +36,9 @@ namespace detran_angle
  *
  *  A product quadrature separates the angular variables, defining
  *  one dimensional quadrature formulas for each and combining the two
- *  as a product.
+ *  as an outer product.
  *
- *  As in all quadratures in Detran, we enforce octant symmetry.  Hence,
+ *  As in all quadratures in Detran, octant symmetry is enforced.  Hence,
  *  the azimuthal and polar quadratures are defined only within an
  *  octant.
  *
@@ -53,7 +55,8 @@ namespace detran_angle
  *  @tparam   A     Azimuthal Quadrature
  *  @tparam   P     Polar Quadrature
  */
-//template <class A, class P>
+
+template <class A, class P>
 class ANGLE_EXPORT ProductQuadrature: public Quadrature
 {
 
@@ -63,8 +66,8 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-//  typedef A   azimuth_q_T;
-//  typedef P   polar_q_T;
+  typedef A   quadrature_a_t;
+  typedef P   quadrature_p_t;
 
   //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -72,23 +75,41 @@ public:
 
   /**
    *  @brief Constructor
-   *  @param dim    Dimension (2 or 3)
-   *  @param na     Number of azimuths per octant
-   *  @param np     Number of polar angles per octant
-   *  @param name   Quadrature name
+   *  @param    dim       Dimension (2 or 3)
+   *  @param    na        Number of azimuths per octant
+   *  @param    np        Number of polar angles per octant
+   *  @param    normalize Ensure normalization of polar and azimuthal sets
    */
   ProductQuadrature(const size_t dim,
                     const size_t na,
                     const size_t np,
-                    std::string  name);
+                    const bool   normalize = false);
 
-  /// Pure virtual destructor
-  virtual ~ProductQuadrature() = 0;
-
+  ~ProductQuadrature(){/* ... */}
 
   //--------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
   //--------------------------------------------------------------------------//
+
+  //@{
+  ///  Azimuthal angle, cosine, sine, or weight via azimuthal index
+  double phi(const size_t a) const;
+  double cos_phi(const size_t a) const;
+  double sin_phi(const size_t a) const;
+  double azimuth_weight(const size_t a) const;
+  //@}
+
+  //@{
+  ///  Polar cosine, sine  or weight via polar index
+  double cos_theta(const size_t p) const;
+  double sin_theta(const size_t p) const;
+  double polar_weight(const size_t p) const;
+  //@}
+
+  /// Number of azimuths per octant
+  size_t number_azimuths_octant() const {return d_number_azimuth_octant;}
+  /// Number of polar angles per octant
+  size_t number_polar_octant() const {return d_number_polar_octant;}
 
   /// Cardinal angle within octant given azimuth and polar.
   size_t angle(const size_t a, const size_t p) const;
@@ -96,17 +117,8 @@ public:
   size_t azimuth(const size_t angle) const;
   /// Polar index from cardinal within octant
   size_t polar(const size_t angle) const;
-  double sin_theta(const size_t p) const;
-  double cos_theta(const size_t p) const;
-  double phi(const size_t a) const;
-  double sin_phi(const size_t a) const;
-  double cos_phi(const size_t a) const;
-  size_t number_azimuths_octant() const;
-  size_t number_polar_octant() const;
-  double polar_weight(const size_t p) const;
-  double azimuth_weight(const size_t a) const;
 
-protected:
+private:
 
   //--------------------------------------------------------------------------//
   // DATA
@@ -135,19 +147,38 @@ protected:
   // IMPLEMENTATION
   //--------------------------------------------------------------------------//
 
-  /// Build the product quadrature parameters from polar and azimuth values
-  void build_product_quadrature();
-
-private:
-
   /// Verify the correct ordering.
   void verify() const;
 
 };
 
-} // end namespace detran_angle
+//----------------------------------------------------------------------------//
+// CONVENIENCE TYPEDEFS
+//----------------------------------------------------------------------------//
 
-#include "ProductQuadrature.i.hh"
+typedef ProductQuadrature<AzimuthalGL, PolarGL>         Product_GL_GL;
+typedef ProductQuadrature<AzimuthalGL, PolarDGL>        Product_GL_DGL;
+typedef ProductQuadrature<AzimuthalGL, PolarU>          Product_GL_U;
+typedef ProductQuadrature<AzimuthalGL, PolarTY>         Product_GL_TY;
+//
+typedef ProductQuadrature<AzimuthalDGL, PolarGL>        Product_DGL_GL;
+typedef ProductQuadrature<AzimuthalDGL, PolarDGL>       Product_DGL_DGL;
+typedef ProductQuadrature<AzimuthalDGL, PolarU>         Product_DGL_U;
+typedef ProductQuadrature<AzimuthalDGL, PolarTY>        Product_DGL_TY;
+//
+typedef ProductQuadrature<AzimuthalU, PolarGL>          Product_U_GL;
+typedef ProductQuadrature<AzimuthalU, PolarDGL>         Product_U_DGL;
+typedef ProductQuadrature<AzimuthalU, PolarU>           Product_U_U;
+typedef ProductQuadrature<AzimuthalU, PolarTY>          Product_U_TY;
+//
+typedef ProductQuadrature<AzimuthalS, PolarGL>          Product_S_GL;
+typedef ProductQuadrature<AzimuthalS, PolarDGL>         Product_S_DGL;
+typedef ProductQuadrature<AzimuthalS, PolarU>           Product_S_U;
+typedef ProductQuadrature<AzimuthalS, PolarTY>          Product_S_TY;
+//
+typedef ProductQuadrature<AzimuthalASQR, PolarASDR>     Product_ASQR_ASDR;
+
+} // end namespace detran_angle
 
 #endif /* detran_angle_PRODUCTQUADRATURE_HH_ */
 

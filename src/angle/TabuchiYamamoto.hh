@@ -38,7 +38,7 @@ public:
   static std::string name() {return "ty";}
 
 private:
-  size_t ksksks;
+
   void build_impl(c_dbl a, c_dbl b);
 
 };

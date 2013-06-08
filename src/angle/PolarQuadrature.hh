@@ -10,6 +10,12 @@
 #define detran_angle_POLARQUADRATURE_HH_
 
 #include "angle/Quadrature.hh"
+// Various base quadratures
+#include "angle/BaseGL.hh"
+#include "angle/BaseGC.hh"
+#include "angle/BaseUniform.hh"
+#include "angle/TabuchiYamamoto.hh"
+#include "angle/AbuShumaysDoubleRange.hh"
 
 namespace detran_angle
 {
@@ -30,50 +36,45 @@ class ANGLE_EXPORT PolarQuadrature: public Quadrature
 
 public:
 
-  //--------------------------------------------------------------------------//
-  // PUBLIC INTERFACE
-  //--------------------------------------------------------------------------//
-
-  /**
-   *  @brief Constructor
-   *  @param    number_polar   Number of angles in positive half space
-   *  @param    normalize      Flag to normalize quadrant weights to unity
-   */
+  /// Constructor, with optional normalization of weights to unity
   PolarQuadrature(const size_t number_polar, bool normalize = false);
-
   /// Number of polar angles per half space
   size_t number_polar() const;
-
-  /**
-   *  @brief Return a polar sine
-   *  @param    p  Polar index in octant
-   */
-  double sin_theta(const size_t p) const;
-
-  /**
-   *  @brief Return a polar cosine
-   *  @param    p  Polar index in octant
-   */
-  double cos_theta(const size_t p) const;
+  /// Get polar sines
+  const vec_dbl& sin_theta() const;
+  /// Get polar cosines
+  const vec_dbl& cos_theta() const;
+  /// Return base name
+  static std::string name() {return B::name();}
 
 private:
 
-  //--------------------------------------------------------------------------//
-  // DATA
-  //--------------------------------------------------------------------------//
-
   /// Number of polar angles for a single half space.
   size_t d_number_polar;
-  /// Vector of polar sines
-  std::vector<double> d_sin_theta;
   /// Vector of polar cosines
-  std::vector<double> d_cos_theta;
+  vec_dbl d_cos_theta;
+  /// Vector of polar sines
+  vec_dbl d_sin_theta;
 
 };
 
+//----------------------------------------------------------------------------//
+// CONVENIENCE TYPEDEFS
+//----------------------------------------------------------------------------//
+
+typedef PolarQuadrature<BaseGL>                 PolarGL;
+typedef PolarQuadrature<BaseDGL>                PolarDGL;
+typedef PolarQuadrature<BaseGC>                 PolarGC;
+typedef PolarQuadrature<BaseDGC>                PolarDGC;
+typedef PolarQuadrature<BaseUniform>            PolarU;
+typedef PolarQuadrature<BaseUniformCosine>      PolarUC;
+typedef PolarQuadrature<BaseSimpson>            PolarS;
+typedef PolarQuadrature<TabuchiYamamoto>        PolarTY;
+typedef PolarQuadrature<AbuShumaysDoubleRange>  PolarASDR;
+
 } // end namespace detran_angle
 
-#endif /* POLARQUADRATURE_HH_ */
+#endif /* detran_angle_POLARQUADRATURE_HH_ */
 
 //----------------------------------------------------------------------------//
 //              end of PolarQuadrature.hh

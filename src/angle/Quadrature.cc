@@ -138,12 +138,6 @@ void Quadrature::set_adjoint(const bool v)
 }
 
 //----------------------------------------------------------------------------//
-std::string Quadrature::name() const
-{
-  return d_name;
-}
-
-//----------------------------------------------------------------------------//
 const Quadrature::vec_int&
 Quadrature::incident_octant(const size_t s)
 {

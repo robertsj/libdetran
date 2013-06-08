@@ -1,10 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file  Uniform.hh
- *  @brief Uniform class definition
+ *  @file  UniformCyclic.hh
+ *  @brief UniformCyclic class definition
  *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_angle_UNIFORM_HH_
 #define detran_angle_UNIFORM_HH_
@@ -15,23 +15,26 @@ namespace detran_angle
 {
 
 /**
- *  @class Uniform
- *  @brief Uniform azimuthal quadrature set for cyclic tracking
+ *  @class UniformCyclic
+ *  @brief Azimuthal quadrature set for cyclic tracking in 2-D MOC
  *
  *  Cyclic tracking is not explicitly implemented in Detran, but by
  *  adjusting azimuths so that tracking is cyclic, any interpolation at
  *  the boundary becomes essentially exact for the case of even track
- *  spacing.
+ *  spacing.  This is limited to the case of uniformly-spaced tracks in
+ *  square cells.  The client must know a priori how many tracks are
+ *  created for each azimuth in a quadrant, and hence, this is mostly
+ *  a class for development.
  *
  */
-class ANGLE_EXPORT Uniform: public ProductQuadrature
+class ANGLE_EXPORT UniformCyclic
 {
 
 public:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // PUBLIC INTERFACE
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /*!
    *  \brief Constructor
@@ -41,7 +44,7 @@ public:
    *  \param num_polar            Number of polar angles in half space
    *  \param polar                Polar quadrature string identifier
    */
-  Uniform(size_t dim,
+  UniformCyclic(size_t dim,
           size_t num_azimuths_octant,
           size_t num_space,
           size_t num_polar,
@@ -56,11 +59,11 @@ public:
            std::string polar)
   {
     SP_quadrature
-      p(new Uniform(dim, num_azimuths_octant, num_space, num_polar, polar));
+      p(new UniformCyclic(dim, num_azimuths_octant, num_space, num_polar, polar));
     return p;
   }
 
-  ~Uniform(){};
+  ~UniformCyclic(){};
 
 private:
 
@@ -71,5 +74,5 @@ private:
 #endif // detran_angle_UNIFORM_HH_
 
 //---------------------------------------------------------------------------//
-//              end of file Uniform.hh
+//              end of file UniformCyclic.hh
 //---------------------------------------------------------------------------//

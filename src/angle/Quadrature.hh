@@ -29,8 +29,7 @@ namespace detran_angle
  *  @brief Base quadrature class for transport calculations
  *
  *  For all Detran quadratures, octant symmetry is assumed.  As a result,
- *  only the first octant abscissa and weights are stored.  This applies
- *  to specializations for product and MOC-specific quadratures.
+ *  only the first octant abscissa and weights are stored.
  *
  *  The octants are ordered as follows, with
  *
@@ -58,8 +57,8 @@ namespace detran_angle
  *  helpful for streamlining quadrature sums over all angles.
  *
  *  Because of this ordering, *only the first octant values are stored*.  All
- *  other values are found by multiply by the appropriate octant-dependent
- *  sign.  This assumes, of course, symmetric quadratures.
+ *  other values are found by multiplying by the appropriate octant-dependent
+ *  sign.
  *
  */
 
@@ -98,8 +97,8 @@ public:
    *   @param    number_angles   Total number of angles
    *   @param    name            Descriptive name
    */
-  Quadrature(const size_t dim,
-             const size_t number_angles,
+  Quadrature(const size_t      dim,
+             const size_t      number_angles,
              const std::string name);
 
   /// Pure virtual destructor
@@ -191,9 +190,6 @@ public:
   {
     return d_adjoint;
   }
-
-  // Return my name
-  std::string name() const;
 
   /// Pretty print of the first octant parameters.
   virtual void display() const;

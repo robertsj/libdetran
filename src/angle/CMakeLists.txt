@@ -9,6 +9,8 @@ set(LIB_NAME "angle")
 #------------------------------------------------------------------------------#
 
 set(SRC
+    AbuShumaysDoubleRange.cc
+    AbuShumaysQuadrupleRange.cc
     #Collocated.cc
     DPN.cc
     DTN.cc
@@ -19,17 +21,18 @@ set(SRC
     Quadrature.cc
     QuadratureFactory.cc
     #QuadratureMOC.cc
-    QuadrupleRange.cc
+    #QuadrupleRange.cc
     SphericalHarmonics.cc
     TabuchiYamamoto.cc
     #Uniform.cc
     UniformEqual.cc
-    ProductQuadrature.cc
-    ChebyshevLegendre.cc
-    ChebyshevDPN.cc
+    #ChebyshevLegendre.cc
+    #ChebyshevDPN.cc
     MomentIndexer.cc
-    LegendreDTN.cc
+    #LegendreDTN.cc
     PolarQuadrature.t.cc
+    AzimuthalQuadrature.t.cc
+    ProductQuadrature.t.cc
 )
 
 #------------------------------------------------------------------------------#

@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-------------------=---------------//
 /**
- *  @file   test_SphericalHarmonics.cc
- *  @author Jeremy Roberts
- *  @date   Apr 1, 2012
- *  @brief  Test of SphericalHarmonics class.
+ *  @file  test_SphericalHarmonics.cc
+ *  @brief Test of SphericalHarmonics class.
+ *  @note  Copyright (C) Jeremy Roberts 2012-2013
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
 #define TEST_LIST                                 \
@@ -23,7 +22,7 @@ using boost::math::spherical_harmonic_i;
 using boost::math::factorial;
 #endif
 #include "utilities/Constants.hh"
-#include "cstdio"
+#include <cstdio>
 // Setup
 /* ... */
 
@@ -39,9 +38,9 @@ int main(int argc, char *argv[])
   RUN(argc, argv);
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 // TEST DEFINITIONS
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 int test_SphericalHarmonics(int argc, char *argv[])
 {
@@ -75,12 +74,10 @@ int test_SphericalHarmonics(int argc, char *argv[])
 int test_SphericalHarmonics_integration(int argc, char *argv[])
 {
   InputDB::SP_input inp(new InputDB());
-  inp->put<int>("quad_number_polar_octant",   3);
+  inp->put<int>("quad_number_polar_octant",   4);
   inp->put<int>("quad_number_azimuth_octant", 4);
-  inp->put<std::string>("quad_type", "levelsymmetric");
-  QuadratureFactory qf;
-  QuadratureFactory::SP_quadrature Q;
-  qf.build(Q, inp, 3);
+  inp->put<std::string>("quad_type", "asqr-asdr");
+  QuadratureFactory::SP_quadrature Q = QuadratureFactory::build(inp, 3);
 
   int L = 6;
 
@@ -149,6 +146,6 @@ int test_SphericalHarmonics_integration(int argc, char *argv[])
   return 0;
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of test_SphericalHarmonics.cc
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
