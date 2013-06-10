@@ -13,13 +13,13 @@ namespace detran_geometry
 {
 
 //----------------------------------------------------------------------------//
-inline Track::Point Track::enter() const
+inline Point Track::enter() const
 {
   return d_enter;
 }
 
 //----------------------------------------------------------------------------//
-inline Track::Point Track::exit() const
+inline Point Track::exit() const
 {
   return d_exit;
 }

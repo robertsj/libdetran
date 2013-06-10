@@ -1,38 +1,38 @@
-//----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   test_Equation_DD_2D.cc
- * \author Jeremy Roberts
- * \date   Apr 1, 2012
- * \brief  Test of Equation_DD_2D
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+//----------------------------------*-C++-*-----------------------------------//
+/**
+ *  @file  test_Equation_DD_2D.cc
+ *  @brief Test of Equation_DD_2D
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
 #define TEST_LIST                     \
         FUNC(test_Equation_DD_2D_basic)
 
-// Detran headers
 #include "TestDriver.hh"
 #include "Equation_DD_2D.hh"
-
-// Setup
 #include "geometry/test/mesh_fixture.hh"
 #include "material/test/material_fixture.hh"
-#include "angle/test/quadrature_fixture.hh"
+#include "angle/LevelSymmetric.hh"
 
 using namespace detran;
+using namespace detran_utilities;
+using namespace detran_material;
+using namespace detran_geometry;
+using namespace detran_angle;
 using namespace detran_test;
 using namespace std;
+
 
 int main(int argc, char *argv[])
 {
   RUN(argc, argv);
 }
 
-//----------------------------------------------//
+//----------------------------------------------------------------------------//
 // TEST DEFINITIONS
-//----------------------------------------------//
+//----------------------------------------------------------------------------//
 
 int test_Equation_DD_2D_basic(int argc, char *argv[])
 {
@@ -40,7 +40,7 @@ int test_Equation_DD_2D_basic(int argc, char *argv[])
 
   SP_mesh mesh      = mesh_2d_fixture();
   SP_material mat   = material_fixture_1g();
-  SP_quadrature q   = quadruplerange_fixture();
+  LevelSymmetric::SP_quadrature q(new detran_angle::LevelSymmetric(2, 2));
 
   TEST(mesh);
   TEST(mat);
@@ -87,6 +87,6 @@ int test_Equation_DD_2D_basic(int argc, char *argv[])
   return 0;
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of test_Equation_DD_2D.cc
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

@@ -159,7 +159,7 @@ inline Mesh::size_t Mesh::cell_to_k(size_t cell) const
 }
 
 //---------------------------------------------------------------------------//
-inline int Mesh::find_cell(detran_utilities::Point p)
+inline int Mesh::find_cell(Point p)
 {
   // Default is -1, meaning not found
   int cell;

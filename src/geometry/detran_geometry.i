@@ -1,10 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
  *  @file   detran_geometry.i
- *  @author Jeremy Roberts
- *  @brief  Python interface for detran geometry.
+ *  @brief  Python interface for detran geometry
+ *  @note   Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 %module(directors="1", allprotected="1", package="detran") geometry
 %{
@@ -22,6 +22,11 @@
 #include "geometry/Track.hh"
 #include "geometry/TrackDB.hh"
 #include "geometry/Tracker.hh"
+#include "geometry/Geometry.hh"
+#include "geometry/Region.hh"
+#include "geometry/CSG.hh"
+#include "geometry/Point.hh"
+#include "geometry/QuadraticSurfaceFactory.hh"
 %}
 
 // Hide templates from SWIG
@@ -36,6 +41,7 @@
 %import "utilities/detran_utilities.i"
 %import "angle/detran_angle.i"
 
+%include "Point.hh"
 %include "Mesh.hh"
 %include "Mesh1D.hh"
 %include "Mesh2D.hh"
@@ -49,6 +55,14 @@
 %include "Track.hh"
 %include "TrackDB.hh"
 %include "Tracker.hh"
+//
+
+%include "Surface.hh"
+%include "QuadraticSurface.hh"
+%include "QuadraticSurfaceFactory.hh"
+%include "CSG.hh"
+%include "Region.hh"
+%include "Geometry.hh"
 
 %template(MeshSP)     detran_utilities::SP<detran_geometry::Mesh>;
 %template(Mesh1DSP)   detran_utilities::SP<detran_geometry::Mesh1D>;
@@ -58,10 +72,13 @@
 %template(AssemblySP) detran_utilities::SP<detran_geometry::Assembly>;
 %template(CoreSP)     detran_utilities::SP<detran_geometry::Core>;
 
-%template(SegmentSP)  detran_utilities::SP<detran_geometry::Tracker>;
 %template(TrackSP)    detran_utilities::SP<detran_geometry::Track>;
 %template(TrackDBSP)  detran_utilities::SP<detran_geometry::TrackDB>;
 %template(TrackerSP)  detran_utilities::SP<detran_geometry::Tracker>;
+
+%template(GeometrySP)   detran_utilities::SP<detran_geometry::Geometry>;
+%template(RegionSP)     detran_utilities::SP<detran_geometry::Region>;
+%template(SurfaceSP)    detran_utilities::SP<detran_geometry::Surface>;
 
 //---------------------------------------------------------------------------//
 //              end of detran_geometry.i

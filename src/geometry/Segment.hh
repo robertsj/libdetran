@@ -45,17 +45,11 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<Segment>     SP_segment;
   typedef detran_utilities::size_t          size_t;
 
   //--------------------------------------------------------------------------//
   // PUBLIC INTERFACE
   //--------------------------------------------------------------------------//
-
-//  Segment()
-//  {
-//    THROW("what's going on?");
-//  }
 
   /**
    *  @brief Constructor

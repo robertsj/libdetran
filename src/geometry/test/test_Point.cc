@@ -1,24 +1,19 @@
-//----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   test_Point.cc
- * \author Jeremy Roberts
- * \date   Jun 22, 2012
- * \brief  Test of Point class
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+//----------------------------------*-C++-*-----------------------------------//
+/**
+ *  @file   test_Point.cc
+ *  @author Jeremy Roberts
+ *  @note   Copyright (C) 2012 Jeremy Roberts.
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
-#define TEST_LIST                     \
+#define TEST_LIST         \
         FUNC(test_Point)
 
-// Detran headers
 #include "TestDriver.hh"
 #include "Point.hh"
 
-// Setup
-/* ... */
-
+using namespace detran_geometry;
 using namespace detran_utilities;
 using namespace detran_test;
 
@@ -27,9 +22,9 @@ int main(int argc, char *argv[])
   RUN(argc, argv);
 }
 
-//----------------------------------------------//
+//----------------------------------------------------------------------------//
 // TEST DEFINITIONS
-//----------------------------------------------//
+//----------------------------------------------------------------------------//
 
 int test_Point(int argc, char *argv[])
 {

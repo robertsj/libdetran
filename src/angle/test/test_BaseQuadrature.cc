@@ -57,10 +57,9 @@ double integrand(const double x, const int id)
   return y;
 }
 
-int number_types = 8;
+int number_types = 7;
 const char* types[] = {"gl", "dgl", "gc", "dgc",
-                       "uniform", "uniformcosine", "simpson",
-                       "ty"};
+                       "uniform", "uniformcosine", "simpson"};
 
 //----------------------------------------------------------------------------//
 int test_BaseQuadrature_regression(int argc, char *argv[])

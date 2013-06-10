@@ -11,9 +11,9 @@
 
 #include "geometry/geometry_export.hh"
 #include "geometry/TrackDB.hh"
+#include "geometry/Point.hh"
 #include "utilities/Definitions.hh"
 #include "utilities/DBC.hh"
-#include "utilities/Point.hh"
 #include "utilities/SP.hh"
 #include "utilities/Warning.hh"
 #include <cmath>
@@ -218,7 +218,7 @@ public:
   size_t cell_to_k(size_t cell) const;
 
   /// Find the cell containing a point
-  int find_cell(detran_utilities::Point p);
+  int find_cell(Point p);
 
   /// Check if fine mesh map exists.
   bool mesh_map_exists(std::string map_key);

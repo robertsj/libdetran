@@ -25,7 +25,7 @@ Sweeper2DMOC<EQ>::Sweeper2DMOC(SP_input input,
   : Base(input, mesh, material, quadrature, state, boundary, sweepsource)
   , d_boundary(boundary)
 {
-    d_tracks = mesh->tracks();
+    //d_tracks = mesh->tracks();
 }
 
 //---------------------------------------------------------------------------//

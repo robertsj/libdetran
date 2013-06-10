@@ -12,10 +12,6 @@ set(SRC
     AbuShumaysDoubleRange.cc
     AbuShumaysQuadrupleRange.cc
     #Collocated.cc
-    DPN.cc
-    DTN.cc
-    GaussChebyshev.cc
-    GaussLegendre.cc
     LevelSymmetric.cc
     MomentToDiscrete.cc
     Quadrature.cc
@@ -32,7 +28,8 @@ set(SRC
     #LegendreDTN.cc
     PolarQuadrature.t.cc
     AzimuthalQuadrature.t.cc
-    ProductQuadrature.t.cc
+    ProductQuadrature.cc
+    ProductQuadratureAP.t.cc
 )
 
 #------------------------------------------------------------------------------#

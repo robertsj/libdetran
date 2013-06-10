@@ -11,7 +11,7 @@
 
 #include "geometry/geometry_export.hh"
 #include "geometry/Track.hh"
-#include "angle/QuadratureMOC.hh"
+#include "angle/ProductQuadrature.hh"
 #include "utilities/DBC.hh"
 #include "utilities/Definitions.hh"
 #include "utilities/SP.hh"
@@ -54,14 +54,14 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<TrackDB>               SP_trackdb;
-  typedef detran_angle::QuadratureMOC::SP_quadrature  SP_quadrature;
-  typedef Track::SP_track                             SP_track;
-  typedef std::vector<SP_track>                       vec_track;
-  typedef std::vector<vec_track>                      vec2_track;
-  typedef detran_utilities::size_t                    size_t;
-  typedef detran_utilities::vec_int                   vec_int;
-  typedef detran_utilities::vec_dbl                   vec_dbl;
+  typedef detran_utilities::SP<TrackDB>                   SP_trackdb;
+  typedef detran_angle::ProductQuadrature::SP_quadrature  SP_quadrature;
+  typedef Track::SP_track                                 SP_track;
+  typedef std::vector<SP_track>                           vec_track;
+  typedef std::vector<vec_track>                          vec2_track;
+  typedef detran_utilities::size_t                        size_t;
+  typedef detran_utilities::vec_int                       vec_int;
+  typedef detran_utilities::vec_dbl                       vec_dbl;
 
   //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR

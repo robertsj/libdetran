@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   PPMOutput.hh
- *  @author robertsj
- *  @date   Mar 13, 2013
- *  @brief  PPMOutput class definition.
+ *  @file  PPMOutput.hh
+ *  @brief PPMOutput class definition
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_ioutils_PPMOUTPUT_HH_
 #define detran_ioutils_PPMOUTPUT_HH_
@@ -14,6 +13,7 @@
 #include "ioutils/PPMPlotter.hh"
 #include "transport/State.hh"
 #include "geometry/Mesh.hh"
+#include "geometry/Geometry.hh"
 
 namespace detran_ioutils
 {
@@ -31,54 +31,60 @@ class IOUTILS_EXPORT PPMOutput
 
 public:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // TYPEDEFS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
-  typedef PPMPlotter::SP_ppmplotter         SP_ppmplotter;
-  typedef detran_utilities::size_t          size_t;
-  typedef detran_utilities::vec_dbl         vec_dbl;
-  typedef detran_utilities::vec_int         vec_int;
-  typedef detran_geometry::Mesh::SP_mesh    SP_mesh;
-  typedef detran::State::SP_state           SP_state;
+  typedef PPMPlotter::SP_ppmplotter               SP_ppmplotter;
+  typedef detran_utilities::size_t                size_t;
+  typedef detran_utilities::vec_dbl               vec_dbl;
+  typedef detran_utilities::vec_int               vec_int;
+  typedef detran_geometry::Mesh::SP_mesh          SP_mesh;
+  typedef detran_geometry::Geometry::SP_geometry  SP_geometry;
+  typedef detran::State::SP_state                 SP_state;
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // CONSTRUCTOR AND DESTRUCTOR
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
-  PPMOutput(SP_mesh mesh);
+  PPMOutput(const std::string &prefix = "detran");
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
-  /// Initialize file
-  bool initialize(const std::string filename = "detran", size_t n = 1);
+  /// Initialize file for writing mesh data
+  bool initialize(SP_mesh mesh, const size_t n = 1);
+
+  /// Initialize file for writing geometry data
+  bool initialize(SP_geometry geo, const double delta = 0.1);
 
   /**
    *  @brief Write a mesh map to file.
    *  @param key  Key of the map to write
    *  @return     True for successful write
    */
-  bool write_mesh_map(const std::string &key);
+  bool write_mesh_map(SP_mesh mesh, const std::string &key);
 
   /**
    *  @brief Write the multigroup scalar flux moments to file.
    *  @param state  State vector container
    *  @return     True for successful write
    */
-  bool write_scalar_flux(SP_state state);
+  bool write_scalar_flux(SP_mesh mesh, SP_state state);
+
+  bool draw_geometry(SP_geometry geo, bool flag);
 
 private:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // DATA
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
+  /// Filename prefix
+  std::string d_prefix;
   /// Plotter
   SP_ppmplotter d_plotter;
-  /// Filename base
-  std::string d_filename;
   /// Mesh
   SP_mesh d_mesh;
   /// Mesh resolution
@@ -99,3 +105,7 @@ private:
 } // end namespace detran_ioutils
 
 #endif /* detran_ioutils_PPMOUTPUT_HH_ */
+
+//----------------------------------------------------------------------------//
+//              end of file PPMOutput.hh
+//----------------------------------------------------------------------------//

@@ -12,9 +12,9 @@
 
 #include "transport/transport_export.hh"
 #include "DimensionTraits.hh"
-#include "angle/QuadratureMOC.hh"
+#include "angle/ProductQuadrature.hh"
 #include "material/Material.hh"
-#include "geometry/MeshMOC.hh"
+#include "geometry/Mesh.hh"
 #include "geometry/TrackDB.hh"
 #include "geometry/Track.hh"
 #include "utilities/Definitions.hh"
@@ -39,13 +39,13 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_material::Material::SP_material        SP_material;
-  typedef detran_geometry::MeshMOC::SP_mesh             SP_mesh;
-  typedef detran_geometry::TrackDB::SP_trackdb          SP_trackdb;
-  typedef detran_angle::QuadratureMOC::SP_quadrature    SP_quadrature;
-  typedef detran_utilities::vec_dbl                     moments_type;
-  typedef detran_utilities::vec_dbl                     angular_flux_type;
-  typedef detran_utilities::size_t                      size_t;
+  typedef detran_material::Material::SP_material          SP_material;
+  typedef detran_geometry::Mesh::SP_mesh                  SP_mesh;
+  typedef detran_geometry::TrackDB::SP_trackdb            SP_trackdb;
+  typedef detran_angle::ProductQuadrature::SP_quadrature  SP_quadrature;
+  typedef detran_utilities::vec_dbl                       moments_type;
+  typedef detran_utilities::vec_dbl                       angular_flux_type;
+  typedef detran_utilities::size_t                        size_t;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -59,7 +59,7 @@ public:
                SP_quadrature quadrature,
                bool          update_psi)
     :  d_mesh(mesh)
-    ,  d_tracks(mesh->tracks())
+//    ,  d_tracks(mesh->tracks())
     ,  d_material(material)
     ,  d_quadrature(quadrature)
     ,  d_update_psi(update_psi)

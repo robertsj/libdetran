@@ -40,7 +40,6 @@ public:
   typedef TrackDB::SP_trackdb                         SP_trackdb;
   typedef detran_utilities::vec_dbl                   vec_dbl;
   typedef detran_utilities::vec2_dbl                  vec2_dbl;
-  typedef detran_utilities::Point                     Point;
   typedef detran_utilities::size_t                    size_t;
 
   //--------------------------------------------------------------------------//

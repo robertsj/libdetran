@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   test_Homogenization.cc
- *  @author Jeremy Roberts
- *  @date   Mar 27, 2013
- *  @brief  Test of Homogenization.
+ *  @file  test_Homogenization.cc
+ *  @brief Test of Homogenization
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
 #define TEST_LIST                     \
@@ -15,10 +14,7 @@
 #include "Homogenize.hh"
 #include "geometry/Mesh1D.hh"
 #include "material/Material.hh"
-
-// Setup
 #include "geometry/test/mesh_fixture.hh"
-#include "angle/test/quadrature_fixture.hh"
 
 using namespace detran;
 using namespace detran_material;
@@ -30,9 +26,9 @@ int main(int argc, char *argv[])
   RUN(argc, argv);
 }
 
-//----------------------------------------------//
+//----------------------------------------------------------------------------//
 // TEST DEFINITIONS
-//----------------------------------------------//
+//----------------------------------------------------------------------------//
 
 int test_Homogenization(int argc, char *argv[])
 {
@@ -110,6 +106,6 @@ int test_Homogenization(int argc, char *argv[])
   return 0;
 }
 
-//---------------------------------------------------------------------------//
-//              end of test_State.cc
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
+//              end of test_Homogenization.cc
+//----------------------------------------------------------------------------//

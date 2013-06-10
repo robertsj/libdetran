@@ -6,22 +6,22 @@
  */
 //----------------------------------------------------------------------------//
 
-#ifndef POINT_HH_
-#define POINT_HH_
+#ifndef detran_geometry_POINT_HH_
+#define detran_geometry_POINT_HH_
 
-#include "utilities/utilities_export.hh"
+#include "geometry/geometry_export.hh"
 #include <cmath>
 #include <ostream>
 #include <iomanip>
 
-namespace detran_utilities
+namespace detran_geometry
 {
 
 /**
  *  @class Point
  *  @brief Represent a point in three-space
  */
-class UTILITIES_EXPORT Point
+class GEOMETRY_EXPORT Point
 {
 
 public:
@@ -76,20 +76,20 @@ private:
 };
 
 /// Scale a point.
-UTILITIES_EXPORT Point operator*(double scale, const Point &p);
+GEOMETRY_EXPORT Point operator*(double scale, const Point &p);
 
 /// Distance between two points.
-UTILITIES_EXPORT double distance(const Point &p1, const Point &p2 = Point());
+GEOMETRY_EXPORT double distance(const Point &p1, const Point &p2 = Point());
 
 /// Pretty print of a point
-UTILITIES_EXPORT std::ostream& operator<< (std::ostream &out, const Point &p);
+GEOMETRY_EXPORT std::ostream& operator<< (std::ostream &out, const Point &p);
 
 /// Pretty print a point
 std::ostream& operator<< (std::ostream &out, const Point &p);
 
-} // end namespace detran_utilities
+} // end namespace detran_geometry
 
-#endif // POINT_HH_ 
+#endif // detran_geometry_POINT_HH_
 
 //----------------------------------------------------------------------------//
 //              end of file Point.hh

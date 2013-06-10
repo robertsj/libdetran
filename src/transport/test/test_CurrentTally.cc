@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   test_CurrentTally.cc
- * \author Jeremy Roberts
- * @date   Apr 1, 2012
- * \brief  Test of CurrentTally
+//----------------------------------*-C++-*-----------------------------------//
+/**
+ *  @file  test_CurrentTally.cc
+ *  @brief Test of CurrentTally class
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
 #define TEST_LIST                     \
@@ -15,11 +14,9 @@
 
 #include "utilities/TestDriver.hh"
 #include "CurrentTally.hh"
-#include "angle/GaussLegendre.hh"
+#include "angle/PolarQuadrature.hh"
 #include "angle/LevelSymmetric.hh"
 #include "utilities/Definitions.hh"
-
-// Setup
 #include "coarsemesh_fixture.hh"
 
 using namespace detran;
@@ -33,9 +30,9 @@ int main(int argc, char *argv[])
   RUN(argc, argv);
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 // TEST DEFINITIONS
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 int test_CurrentTally_1D(int argc, char *argv[])
 {
@@ -74,11 +71,13 @@ int test_CurrentTally_1D(int argc, char *argv[])
    */
 
   // Reference partial currents
-  double Jright[] = {2.73843733182052E+00, 2.73843733182052E+00, 2.73843733182052E+00,
-                     6.84609332955131E-01, 1.71152333238783E-01, 4.27880833096957E-02,
+  double Jright[] = {2.73843733182052E+00, 2.73843733182052E+00,
+                     2.73843733182052E+00, 6.84609332955131E-01,
+                     1.71152333238783E-01, 4.27880833096957E-02,
                      1.06970208274239E-02, 2.67425520685598E-03};
-  double Jleft[]  = {5.35792775340790E-02, 5.35792775340790E-02, 5.35792775340790E-02,
-                     2.14317110136316E-01, 8.57268440545264E-01, 3.42907376218105E+00,
+  double Jleft[]  = {5.35792775340790E-02, 5.35792775340790E-02,
+                     5.35792775340790E-02, 2.14317110136316E-01,
+                     8.57268440545264E-01, 3.42907376218105E+00,
                      1.37162950487242E+01, 5.48651801948969E+01};
 
   // Get the coarse mesh
@@ -91,7 +90,7 @@ int test_CurrentTally_1D(int argc, char *argv[])
   TEST(finemesh->number_cells() == 15);
 
   // Create an S4 quadrature.
-  CurrentTally_T::SP_quadrature quad(new GaussLegendre(2));
+  CurrentTally_T::SP_quadrature quad(new PolarGL(2));
 
   // Create the tally.
   CurrentTally_T::SP_currenttally tally(new CurrentTally_T(mesh, quad, 1));
@@ -503,6 +502,6 @@ int test_CurrentTally_3D(int argc, char *argv[])
   return 0;
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of test_CurrentTally.cc
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

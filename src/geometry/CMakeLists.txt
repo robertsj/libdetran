@@ -21,6 +21,10 @@ SET(SRC
     TrackDB.cc
     Tracker.cc
     QuadraticSurface.cc
+    Point.cc
+    CSG.cc
+    Region.cc
+    Geometry.cc
 )
 
 #-----------------------------------------------------------------------------#

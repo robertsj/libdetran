@@ -39,3 +39,7 @@ ADD_TEST(test_QuadraticSurface_circle       test_QuadraticSurface 1)
 ADD_EXECUTABLE(test_Point                   test_Point.cc)
 TARGET_LINK_LIBRARIES(test_Point            geometry utilities angle)
 ADD_TEST(test_Point                         test_Point 0)
+
+ADD_EXECUTABLE(test_CSG                     test_CSG.cc)
+TARGET_LINK_LIBRARIES(test_CSG              geometry utilities angle)
+ADD_TEST(test_CSG_1                         test_CSG 0)

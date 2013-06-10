@@ -16,11 +16,11 @@ namespace detran_geometry
 //---------------------------------------------------------------------------//
 Mesh::Mesh(size_t  dim,
            vec_int xfm,  
-		   vec_int yfm,  
-		   vec_int zfm,
+           vec_int yfm,
+           vec_int zfm,
            vec_dbl xcme, 
-		   vec_dbl ycme, 
-		   vec_dbl zcme,
+           vec_dbl ycme,
+           vec_dbl zcme,
            vec_int mat_map)
   : d_dimension(dim)
   , d_xfm(xfm)
@@ -41,8 +41,8 @@ Mesh::Mesh(size_t  dim,
 //---------------------------------------------------------------------------//
 Mesh::Mesh(size_t  dim,
            vec_dbl xfme, 
-		   vec_dbl yfme, 
-		   vec_dbl zfme,
+           vec_dbl yfme,
+           vec_dbl zfme,
            vec_int mat_map)
   : d_dimension(dim)
   , d_xfm(vec_int(xfme.size()-1, 1))

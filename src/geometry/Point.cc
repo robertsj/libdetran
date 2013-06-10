@@ -8,7 +8,7 @@
 
 #include "Point.hh"
 
-namespace detran_utilities
+namespace detran_geometry
 {
 
 //---------------------------------------------------------------------------//
@@ -46,4 +46,8 @@ std::ostream& operator<< (std::ostream &out, const Point &p)
   return out;
 }
 
-} // end namespace detran_utilities
+} // end namespace detran_geometry
+
+//----------------------------------------------------------------------------//
+//              end of file Point.cc
+//----------------------------------------------------------------------------//

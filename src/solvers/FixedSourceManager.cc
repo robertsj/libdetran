@@ -101,8 +101,8 @@ void FixedSourceManager<D>::setup()
   // Setup the quadrature if needed
   if (d_discretization != DIFF)
   {
-    detran_angle::QuadratureFactory quad_factory;
-    quad_factory.build(d_quadrature, d_input, D::dimension);
+    d_quadrature =
+      detran_angle::QuadratureFactory::build(d_input, D::dimension);
     Assert(d_quadrature);
     if (d_discretization == MOC)
     {

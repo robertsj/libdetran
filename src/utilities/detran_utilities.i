@@ -14,7 +14,6 @@
 #include "utilities/DBC.hh"
 #include "utilities/InputDB.hh"
 #include "utilities/MathUtilities.hh"
-#include "utilities/Point.hh"
 #include "utilities/SP.hh"
 %}
 
@@ -91,7 +90,6 @@ namespace std
 %template(put_spdb)     detran_utilities::InputDB::put<detran_utilities::InputDB::SP_input>;
 
 %include "MathUtilities.hh"
-%include "Point.hh"
 
 // Anyhere in C/C++ that we need (argc, argv)
 %typemap(in) (int argc, char *argv[]) 

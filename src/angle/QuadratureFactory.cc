@@ -14,12 +14,8 @@
 #include "TabuchiYamamoto.hh"
 // 1D
 #include "PolarQuadrature.hh"
-#include "GaussLegendre.hh"
-#include "GaussChebyshev.hh"
-#include "DPN.hh"
-#include "DTN.hh"
 // 2D/3D
-#include "ProductQuadrature.hh"
+#include "ProductQuadratureAP.hh"
 #include "LevelSymmetric.hh"
 #include "UniformEqual.hh"
 

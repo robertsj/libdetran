@@ -95,13 +95,13 @@ inline void
 BoundaryMOC<D>::feed_into(const size_t  o1, const size_t  a1, const size_t  t1,
                                 size_t &o2,       size_t &a2,       size_t &t2)
 {
-  Require(o1 < d_quadrature->number_octants());
-  Require(a1 < d_quadrature->number_angles_octant());
-  int azimuth = d_quadrature->azimuth(a1);
-  Require(t1 < d_quadrature->number_tracks(azimuth));
-  o2 = d_feed_into[o1][a1][t1][0];
-  a2 = d_feed_into[o1][a1][t1][1];
-  t2 = d_feed_into[o1][a1][t1][2];
+//  Require(o1 < d_quadrature->number_octants());
+//  Require(a1 < d_quadrature->number_angles_octant());
+//  int azimuth = d_quadrature->azimuth(a1);
+//  Require(t1 < d_quadrature->number_tracks(azimuth));
+//  o2 = d_feed_into[o1][a1][t1][0];
+//  a2 = d_feed_into[o1][a1][t1][1];
+//  t2 = d_feed_into[o1][a1][t1][2];
 }
 
 //---------------------------------------------------------------------------//
@@ -110,13 +110,13 @@ inline void
 BoundaryMOC<D>::feed_from(const size_t  o1, const size_t  a1, const size_t  t1,
                                 size_t &o2,       size_t &a2,       size_t &t2)
 {
-  Require(o1 < d_quadrature->number_octants());
-  Require(a1 < d_quadrature->number_angles_octant());
-  int azimuth = d_quadrature->azimuth(a1);
-  Require(t1 < d_quadrature->number_tracks(azimuth));
-  o2 = d_feed_from[o1][a1][t1][0];
-  a2 = d_feed_from[o1][a1][t1][1];
-  t2 = d_feed_from[o1][a1][t1][2];
+//  Require(o1 < d_quadrature->number_octants());
+//  Require(a1 < d_quadrature->number_angles_octant());
+//  int azimuth = d_quadrature->azimuth(a1);
+//  Require(t1 < d_quadrature->number_tracks(azimuth));
+//  o2 = d_feed_from[o1][a1][t1][0];
+//  a2 = d_feed_from[o1][a1][t1][1];
+//  t2 = d_feed_from[o1][a1][t1][2];
 }
 
 } // end namespace detran

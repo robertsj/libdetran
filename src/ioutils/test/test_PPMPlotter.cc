@@ -1,17 +1,15 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   test_SiloOutput.cc
- *  @author Jeremy Roberts
- *  @date   Apr 1, 2012
- *  @brief  Test of PPMPlotter class.
+ *  @file  test_SiloOutput.cc
+ *  @brief Test of PPMPlotter class
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
 #define TEST_LIST                  \
         FUNC(test_PPMPlotter)
 
-// Detran headers
 #include "utilities/TestDriver.hh"
 #include "ioutils/PPMPlotter.hh"
 #include <iostream>
@@ -26,9 +24,9 @@ int main(int argc, char *argv[])
   RUN(argc, argv);
 }
 
-//----------------------------------------------//
+//----------------------------------------------------------------------------//
 // TEST DEFINITIONS
-//----------------------------------------------//
+//----------------------------------------------------------------------------//
 
 int test_PPMPlotter(int argc, char *argv[])
 {
@@ -50,7 +48,6 @@ int test_PPMPlotter(int argc, char *argv[])
   return 0;
 }
 
-
 //---------------------------------------------------------------------------//
-//              end of test_SiloOutput.cc
+//              end of test_PPMPlotter.cc
 //---------------------------------------------------------------------------//

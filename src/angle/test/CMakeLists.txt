@@ -11,6 +11,9 @@ TARGET_LINK_LIBRARIES(test_MomentToDiscrete angle)
 
 ADD_EXECUTABLE(test_MomentIndexer           test_MomentIndexer.cc)
 TARGET_LINK_LIBRARIES(test_MomentIndexer    angle)
+ADD_TEST(test_MomentIndexer_1D              test_MomentIndexer      0)
+ADD_TEST(test_MomentIndexer_1D              test_MomentIndexer      1)
+ADD_TEST(test_MomentIndexer_1D              test_MomentIndexer      2)
 
 ADD_EXECUTABLE(test_SphericalHarmonics        test_SphericalHarmonics.cc)
 TARGET_LINK_LIBRARIES(test_SphericalHarmonics angle)
@@ -31,5 +34,4 @@ ADD_TEST(test_PolarQuadrature_basic         test_PolarQuadrature      0)
 #------------------------------------------------------------------------------#
 
 ADD_TEST(test_MomentToDiscrete      test_MomentToDiscrete   0)
-ADD_TEST(test_MomentIndexer         test_MomentIndexer      0)
 ADD_TEST(test_SphericalHarmonics    test_SphericalHarmonics 0)

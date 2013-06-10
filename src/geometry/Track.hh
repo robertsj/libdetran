@@ -9,8 +9,8 @@
 #ifndef detran_geometry_TRACK_HH_
 #define detran_geometry_TRACK_HH_
 
-#include "utilities/Point.hh"
-#include "Segment.hh"
+#include "geometry/Point.hh"
+#include "geometry/Segment.hh"
 #include "utilities/DBC.hh"
 #include "utilities/SP.hh"
 #include <iomanip>
@@ -40,8 +40,6 @@ public:
   //--------------------------------------------------------------------------//
 
   typedef detran_utilities::SP<Track>         SP_track;
-  typedef Segment::SP_segment                 SP_segment;
-  typedef detran_utilities::Point             Point;
   typedef std::vector<Segment>                vec_segment;
   typedef vec_segment::const_iterator         iterator;
   typedef vec_segment::const_reverse_iterator riterator;
@@ -72,37 +70,26 @@ public:
 
   /// Add a segment
   void add_segment(const Segment &s);
-
   /// Mutable reference to segment
   Segment& segment(const size_t i);
-
   /// Const reference to segment
   const Segment& segment(const size_t i) const;
-
   /// Return my entrance point
   Point enter() const;
-
   /// Return my exit point
   Point exit() const;
-
   /// Iterator to the beginning of the track
   iterator begin();
-
   /// Iterator to the end of the track
   riterator rbegin();
-
   /// Return the track cosine
   double cos_phi() const;
-
   /// Return the track sine
   double sin_phi() const;
-
   /// Number of segments along this track
   size_t number_segments() const;
-
   /// Indentifier
   size_t identifier() const;
-
   /// Return the track width
   double width() const;
 
