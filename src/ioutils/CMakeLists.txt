@@ -13,6 +13,7 @@ set(SRC
     SiloOutput.cc
     PPMPlotter.cc
     PPMOutput.cc
+    ColorMap.cc
 )
 
 #-----------------------------------------------------------------------------#

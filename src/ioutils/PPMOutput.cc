@@ -144,11 +144,11 @@ bool PPMOutput::write_scalar_flux(SP_mesh mesh, SP_state state)
 }
 
 //----------------------------------------------------------------------------//
-bool PPMOutput::draw_geometry(SP_geometry geo, bool flag)
+bool PPMOutput::draw_geometry(SP_geometry geo, bool flag, const size_t cmap)
 {
   Require(geo);
 
-  d_plotter->initialize(d_nx, d_ny, d_prefix+"_geometry"+".ppm");
+  d_plotter->initialize(d_nx, d_ny, d_prefix+"_geometry"+".ppm", cmap);
   vec_dbl data(d_cells.size());
   for (size_t i = 0; i < d_cells.size(); ++i)
   {

@@ -10,6 +10,7 @@
 #define detran_ioutils_PPMPLOTTER_HH_
 
 #include "ioutils/ioutils_export.hh"
+#include "ioutils/ColorMap.hh"
 #include "utilities/DBC.hh"
 #include "utilities/Definitions.hh"
 #include "utilities/SP.hh"
@@ -48,9 +49,10 @@ public:
   //--------------------------------------------------------------------------//
 
   /// Initialize an image of nx by ny pixels
-  void initialize(const size_t nx,
-                  const size_t ny,
-                  std::string  name = "plot.ppm");
+  void initialize(const size_t       nx,
+                  const size_t       ny,
+                  const std::string &name = "plot.ppm",
+                  const size_t       scheme = ColorMap::DEFAULT);
 
   /**
    *  @brief Set the value for pixel (i, j)
@@ -86,6 +88,12 @@ private:
   vec_dbl d_image;
   /// Name
   std::string d_name;
+  /// Color scheme
+  size_t d_scheme;
+
+  //--------------------------------------------------------------------------//
+  // IMPLEMENTATION
+  //--------------------------------------------------------------------------//
 
 };
 

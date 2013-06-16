@@ -73,7 +73,8 @@ public:
    */
   bool write_scalar_flux(SP_mesh mesh, SP_state state);
 
-  bool draw_geometry(SP_geometry geo, bool flag);
+  /// Draw a geometry (in the xy plane) using region index or material
+  bool draw_geometry(SP_geometry geo, bool flag, const size_t cmap = 0);
 
 private:
 
