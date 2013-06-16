@@ -7,6 +7,7 @@
 //---------------------------------------------------------------------------//
 
 #include "Point.hh"
+#include "DBC.hh"
 
 namespace detran_geometry
 {
@@ -18,6 +19,15 @@ Point::Point(const double xval, const double yval, const double zval)
   , d_z(zval)
 { 
 	/* ... */ 
+}
+
+//---------------------------------------------------------------------------//
+const double Point::operator[](const size_t dim) const
+{
+  Require(dim < 3);
+  if (dim == 0) return d_x;
+  if (dim == 1) return d_y;
+  return d_z;
 }
 
 //---------------------------------------------------------------------------//

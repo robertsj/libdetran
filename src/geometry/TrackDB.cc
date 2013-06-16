@@ -13,17 +13,19 @@ namespace detran_geometry
 {
 
 //----------------------------------------------------------------------------//
-TrackDB::TrackDB(const size_t  num_azimuths,
-                 const size_t  num_regions,
-                 SP_quadrature quad)
+TrackDB::TrackDB(SP_quadrature quad,
+                 const size_t  num_regions)
   : d_quadrature(quad)
-  , d_number_azimuths(num_azimuths)
-  , d_tracks(num_azimuths)
-  , d_cos_phi(num_azimuths, 0.0)
-  , d_sin_phi(num_azimuths, 0.0)
+  , d_number_regions(num_regions)
 {
-  Require(d_number_azimuths > 0);
+  Require(d_quadrature);
   Require(d_number_regions > 0);
+  d_number_azimuths = d_quadrature->number_azimuths_octant() * 2;
+
+
+  d_tracks.resize(d_number_azimuths);
+
+  Ensure(d_number_azimuths > 0);
 }
 
 //----------------------------------------------------------------------------//
@@ -50,7 +52,7 @@ TrackDB::size_t TrackDB::number_angles() const
 //----------------------------------------------------------------------------//
 void TrackDB::add_track(const size_t a, SP_track t)
 {
-  Require(a < d_tracks.size());
+  Requirev(a < d_tracks.size(), AsString(a)+" !< "+AsString(d_tracks.size()));
   Require(t);
   d_tracks[a].push_back(t);
 }

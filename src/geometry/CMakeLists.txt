@@ -24,6 +24,7 @@ SET(SRC
     Point.cc
     CSG.cc
     Region.cc
+    RegionFactory.cc
     Geometry.cc
 )
 

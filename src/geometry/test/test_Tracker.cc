@@ -1,24 +1,23 @@
 //----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   test_Tracker.cc
- *  @brief  Test of Tracker class
- *  @note   Copyright (C) 2012 Jeremy Roberts.
+ *  @file  test_Tracker.cc
+ *  @brief Test of Tracker class
+ *  @note  Copyright (C) 2012 Jeremy Roberts.
  */
 //----------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
-#define TEST_LIST                     \
-        FUNC(test_Tracker_2x2)        \
-        FUNC(test_Tracker_3x3)
+#define TEST_LIST               \
+        FUNC(test_Tracker_2x2)  \
+        FUNC(test_Tracker_3x3)  \
+        FUNC(test_Tracker_pin)
 
 #include "TestDriver.hh"
 #include "Tracker.hh"
-//
 #include "Mesh2D.hh"
-//#include "Uniform.hh"
-
-// Setup
-/* ... */
+#include "csg_fixture.hh"
+#include "angle/QuadratureFactory.hh"
+#include "ioutils/PSPlotter.hh"
 
 using namespace detran_geometry;
 using namespace detran_angle;
@@ -129,6 +128,34 @@ int test_Tracker_3x3(int argc, char *argv[])
 //  tracker.normalize();
 //  tracks->display();
 //  TEST(soft_equiv(tracks->track(0, 0)->segment(0).length(), 0.662538659999938));
+  return 0;
+}
+
+// Test the tracking of a pin
+int test_Tracker_pin(int argc, char *argv[])
+{
+  Geometry::SP_geometry pin = test_2D_pincell_simple();
+
+  InputDB::SP_input db = InputDB::Create();
+  db->put<double>("tracker_maximum_spacing", 0.3);
+  db->put<std::string>("tracker_spatial_quad_type", "gl");
+  db->put<std::string>("quad_type", "u-dgl");
+  db->put<int>("quad_number_azimuth_octant", 3);
+
+  Tracker::SP_quadrature q = detran_angle::QuadratureFactory::build(db, 2);
+
+  Tracker tracker(db, q);
+
+  tracker.trackit(pin);
+
+  vec_dbl bbox(4, 0.0);
+  bbox[1] = 1.27;
+  bbox[3] = 1.27;
+  detran_ioutils::PSPlotter plt("tracks.eps", bbox);
+  Tracker::SP_track track = tracker.trackdb()->track(0, 0);
+  plt.draw_line(track->enter(), track->exit());
+  plt.finalize();
+
   return 0;
 }
 

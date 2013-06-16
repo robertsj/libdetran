@@ -143,7 +143,12 @@ static SP_pincell pincell_fixture()
   mat_map[0] = 1; // pin (fuel I)
   mat_map[1] = 0; // mod
   bool fuel_flag = true; // this is a fuel pin (i.e. not a moderator box)
-  SP_pincell pin(new detran_geometry::PinCell(pitch, radii, mat_map, fuel_flag));
+//  PinCell(const Point      &pitch,
+//          const vec_int    &mat_map,
+//          const vec_dbl    &radii = vec_dbl(0),
+//          const size_t      division = DIVISION_NONE,
+//          const Point      &pincenter = Point(0));
+  SP_pincell pin(new detran_geometry::PinCell(pitch, mat_map, radii));
   pin->meshify(7, true);
   return pin;
 }

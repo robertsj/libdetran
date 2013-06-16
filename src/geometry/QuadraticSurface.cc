@@ -61,7 +61,7 @@ QuadraticSurface::intersections(const Point  &r,
   d_M.multiply(D, M_D);
   double a = D.dot(M_D), b = D.dot(M_R) + R.dot(M_D), c = R.dot(M_R);
   double t[] = {0.0, 0.0};
-  std::cout << " a=" << a << " b=" << b << " c=" << c << std::endl;
+//  std::cout << " a=" << a << " b=" << b << " c=" << c << std::endl;
 
   if (std::abs(a) < 1.0e-13)
   {
@@ -72,7 +72,7 @@ QuadraticSurface::intersections(const Point  &r,
     t[0] = (-b + std::sqrt(b*b - 4.0*a*c)) / (2.0*a);
     t[1] = (-b - std::sqrt(b*b - 4.0*a*c)) / (2.0*a);
   }
-  std::cout << " t0=" << t[0] << " t1=" << t[1] << std::endl;
+//  std::cout << " t0=" << t[0] << " t1=" << t[1] << std::endl;
   vec_point points;
   bool idx[] = {t[1] <= t[0], t[1] > t[0]};
   for (size_t i = 0; i < 2; ++i)
@@ -81,11 +81,11 @@ QuadraticSurface::intersections(const Point  &r,
     if (tt <= 0.0) continue; // neglect intersections behind us
     if (max_t < 0 || tt <= max_t) points.push_back(r + tt*d);
   }
-  std::cout << "intersections = " << std::endl;
-  for (size_t i = 0; i < points.size(); ++i)
-  {
-    std::cout << points[i] << std::endl;
-  }
+//  std::cout << "intersections = " << std::endl;
+//  for (size_t i = 0; i < points.size(); ++i)
+//  {
+//    std::cout << points[i] << std::endl;
+//  }
   return points;
 }
 

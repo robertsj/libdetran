@@ -99,22 +99,16 @@ private:
 
 /**
  *  @class CSG_Operator
- *  @brief An intermediate node representing operation between two nodes
+ *  @brief An intermediate node representing an operation between two nodes
  */
 class CSG_Operator: public CSG_Node
 {
-
 public:
-
   CSG_Operator(SP_node L, SP_node R);
-  //virtual bool contains(c_Point &r) const = 0;
   vec_point intersections(c_Point &r, c_Point &d, c_double t_max);
-
 protected:
-
   SP_node d_L;
   SP_node d_R;
-
 };
 
 /// Union of two nodes
@@ -139,6 +133,24 @@ class CSG_Difference: public CSG_Operator
 public:
   CSG_Difference(SP_node L, SP_node R);
   bool contains(c_Point &r) const;
+};
+
+/**
+ *  @class CSG_Translation
+ *  @brief An intermediate node representing translation of a node by a point
+ */
+class CSG_Translation: public CSG_Node
+{
+public:
+  /// For a node with natural origin at R_0, translates to R_0 + R_t
+  CSG_Translation(SP_node node, c_Point &translation);
+  vec_point intersections(c_Point &r, c_Point &d, c_double t_max);
+  bool contains(c_Point &r) const;
+private:
+  /// Node to be translated
+  SP_node d_node;
+  /// Translation
+  c_Point d_translation;
 };
 
 } // end namespace detran_geometry

@@ -33,87 +33,58 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------------------------------------//
 
-// Get segments
-CSG_Node::vec_point ray_cast(CSG_Node::SP_node  node,
-                             const Point       &start,
-                             const Point       &end)
-{
-  // define direction
-  double length = distance(end, start);
-  Point d = (end - start) * (1.0/length);
-
-  // get all intersections with the node constituents
-  CSG_Node::vec_point points = node->intersections(start, d, length);
-
-  // using the midpoint of each consecutive pair, determine the midpoint
-  // and use this to check if it's in or out of the node.  This is a
-  // simple way to handle concave regions, multiple adjoining body regions, etc.
-
-  CSG_Node::vec_point midpoints;
-  vec_dbl segments;
-  for (int i = 0; i < points.size() - 1; ++i)
-  {
-    // make sure we have proper order
-    Assert(distance(points[i], start) < distance(points[i+1], start));
-    Point mid = 0.5*(points[i]+points[i+1]);
-    std::cout << "mid=" << mid << std::endl;
-    if (node->contains(mid))
-    {
-      segments.push_back(distance(points[i], points[i+1]));
-      midpoints.push_back(mid);
-    }
-  }
-  return midpoints;
-}
-
-
 int test_CSG(int argc, char *argv[])
 {
   typedef QuadraticSurfaceFactory QSF;
+  typedef CSG_Node::SP_node  SP_node;
+
   // Create a box via surfaces (simulates Region innards)
-  Surface::vec_surface surfaces(6);
+  Surface::vec_surface surfaces(7);
 
   // Surfaces
-  surfaces[0] = QSF::PlaneX(0.0);
-  surfaces[1] = QSF::PlaneX(1.0);
-  surfaces[2] = QSF::PlaneY(0.0);
-  surfaces[3] = QSF::PlaneY(1.0);
-  surfaces[4] = QSF::PlaneZ(0.0);
-  surfaces[5] = QSF::PlaneZ(1.0);
+  surfaces[0] = QSF::CreatePlaneX(0.0);
+  surfaces[1] = QSF::CreatePlaneX(1.0);
+  surfaces[2] = QSF::CreatePlaneY(0.0);
+  surfaces[3] = QSF::CreatePlaneY(1.0);
+  surfaces[4] = QSF::CreatePlaneZ(0.0);
+  surfaces[5] = QSF::CreatePlaneZ(1.0);
+  surfaces[6] = QSF::CreateSphere(0.5, 0.5, 0.5, 0.45);
 
   // Senses
   vec_size_t sense(surfaces.size(), 1);
   sense[1] = false;
   sense[3] = false;
   sense[5] = false;
+  sense[6] = true;
 
   // Primitives
-  std::vector<CSG_Node::SP_node> primitives;
-  for (int i = 0; i < surfaces.size(); ++i)
+  std::vector<SP_node> primitives;
+  for (int i = 0; i < 7; ++i)
   {
-    CSG_Node::SP_node tmp(new CSG_Primitive(surfaces[i], sense[i]));
+    SP_node tmp(new CSG_Primitive(surfaces[i], sense[i]));
     primitives.push_back(tmp);
   }
 
   // Box node
-  CSG_Node::SP_node node(new CSG_Intersection(primitives[0], primitives[1]));
-  for (int i = 2; i < surfaces.size(); ++i)
+  SP_node box(new CSG_Intersection(primitives[0], primitives[1]));
+  for (int i = 2; i < 6; ++i)
   {
-    node = new CSG_Intersection(node, primitives[i]);
+    box = new CSG_Intersection(box, primitives[i]);
   }
+  TEST(box->contains(Point(0.5, 0.5, 0.5)));
+  TEST(!box->contains(Point(2.0, 2.0, 2.0)));
 
-  TEST(node->contains(Point(0.5, 0.5, 0.5)));
-  TEST(!node->contains(Point(2.0, 2.0, 2.0)));
+  // In box, outside sphere
+  SP_node box_no_sphere(new CSG_Intersection(box, primitives[6]));
+  TEST(!box_no_sphere->contains(Point(0.5, 0.5, 0.5)));
+  TEST(box_no_sphere->contains(Point(0.01, 0.01, 0.01)));
 
-  CSG_Node::vec_point points =
-    ray_cast(node, Point(-0.5, 0.5, 0.0), Point(1.5, 0.5, 0.0));
-  std::cout << "final midpoints = " << std::endl;
-  for (int i = 0; i < points.size(); ++i)
-  {
-    std::cout << points[i] << std::endl;
-  }
+  // Shift the whole thing (0, 0, 0) --> (10, 10, 10)
+  SP_node shifted(new CSG_Translation(box_no_sphere, Point(10,10,10)));
+  TEST(!shifted->contains(Point(10.5, 10.5, 10.5)));
+  TEST(shifted->contains(Point(10.01, 10.01, 10.01)));
+
   return 0;
-
 }
 
 //----------------------------------------------------------------------------//

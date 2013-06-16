@@ -35,6 +35,8 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------------------------------------//
 
+
+//----------------------------------------------------------------------------//
 // Ax^2 + By^2 + Cz^2 + Dxy + Exz + Fyz + Gx + Hy + Iz + J
 int test_QuadraticSurface_plane(int argc, char *argv[])
 {
@@ -83,10 +85,11 @@ int test_QuadraticSurface_plane(int argc, char *argv[])
   return 0;
 }
 
+//----------------------------------------------------------------------------//
 int test_QuadraticSurface_circle(int argc, char *argv[])
 {
   typedef QuadraticSurfaceFactory QSF;
-  QSF::SP_surface c = QSF::CylinderZ(0.0, 0.0, 1.0);
+  QSF::SP_surface c = QSF::CreateCylinderZ(0.0, 0.0, 1.0);
   Point r0(0, 0.99, 0);
   Point r1(0, 1.01, 0);
   TEST(c->sense(r0) == false);
@@ -96,6 +99,7 @@ int test_QuadraticSurface_circle(int argc, char *argv[])
   QuadraticSurface::vec_point points = c->intersections(r, d);
   return 0;
 }
+
 //----------------------------------------------------------------------------//
-//              end of test_Segment.cc
+//              end of test_QuadraticSurface.cc
 //----------------------------------------------------------------------------//

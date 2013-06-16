@@ -112,7 +112,7 @@ void FixedSourceManager<D>::setup()
       tracker.normalize();
       // Replace the mesh with the tracked one.  This suggests refactoring
       // to have a (possibly null) trackdb in Mesh.
-      d_mesh = tracker.meshmoc();
+      //d_mesh = tracker.meshmoc();
     }
   }
 

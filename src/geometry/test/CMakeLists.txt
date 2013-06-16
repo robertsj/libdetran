@@ -43,3 +43,11 @@ ADD_TEST(test_Point                         test_Point 0)
 ADD_EXECUTABLE(test_CSG                     test_CSG.cc)
 TARGET_LINK_LIBRARIES(test_CSG              geometry utilities angle)
 ADD_TEST(test_CSG_1                         test_CSG 0)
+
+ADD_EXECUTABLE(test_RegionFactory           test_RegionFactory.cc)
+TARGET_LINK_LIBRARIES(test_RegionFactory    geometry utilities angle)
+ADD_TEST(test_RegionFactory_PinCell         test_RegionFactory 0)
+
+ADD_EXECUTABLE(test_Region                  test_Region.cc)
+TARGET_LINK_LIBRARIES(test_Region           geometry utilities angle)
+ADD_TEST(test_Region                        test_Region 0)

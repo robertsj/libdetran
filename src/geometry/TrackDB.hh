@@ -69,13 +69,11 @@ public:
 
   /**
    *  @brief Constructor
-   *  @param    num_azimuths   number of azimuths in first two octants
-   *  @param    num_regions    number of flat source regions
    *  @param    quad           product quadrature
+   *  @param    num_regions    number of flat source regions
    */
-  TrackDB(const size_t  num_azimuths,
-          const size_t  num_regions,
-          SP_quadrature quad);
+  TrackDB(SP_quadrature quad,
+          const size_t  num_regions);
 
   //--------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
@@ -132,9 +130,9 @@ private:
   /// Quadrature
   SP_quadrature d_quadrature;
   /// Number of azimuths in first two octants
-  int d_number_azimuths;
+  size_t d_number_azimuths;
   /// Number of flat source regions
-  int d_number_regions;
+  size_t d_number_regions;
   /// Tracks by [azimuth][space]
   vec2_track d_tracks;
   /// Azimuthal cosines.

@@ -23,12 +23,14 @@
 %import "utilities/detran_utilities.i"
 
 // Base angle classes and utilities
+%include "BaseQuadrature.hh"
 %include "Quadrature.hh"
 %include "ProductQuadrature.hh"
 %include "MomentToDiscrete.hh"
 %include "QuadratureFactory.hh"
 %include "MomentIndexer.hh"
 
+%template(BaseQuadratureSP)     detran_utilities::SP<detran_angle::BaseQuadrature>;
 %template(QuadratureSP)         detran_utilities::SP<detran_angle::Quadrature>;
 %template(ProductQuadratureSP)  detran_utilities::SP<detran_angle::ProductQuadrature>;
 %template(MomentToDiscreteSP)   detran_utilities::SP<detran_angle::MomentToDiscrete>;

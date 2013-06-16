@@ -7,12 +7,13 @@
 //----------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
-#define TEST_LIST                          \
+#define TEST_LIST         \
         FUNC(test_Region)
 
 #include "TestDriver.hh"
 #include "geometry/Region.hh"
 #include "geometry/CSG.hh"
+#include "geometry/QuadraticSurfaceFactory.hh"
 #include <cmath>
 
 using namespace detran_geometry;
@@ -30,56 +31,38 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------------------------------------//
 
-// Given a ray and solid, ray cast returns the segment lengths and start
-// points
-void ray_cast(Region::SP_region region,
-              const Point      &start,
-              const Point      &end)
-{
-
-}
-
-//
-CSG_Node::vec_point ray_cast(Region::SP_node  node,
-                             const Point      &start,
-                             const Point      &end)
-{
-  // define direction
-  double length = distance(end, start);
-  Point d = (end - start) / length;
-  // get intersections
-  CSG_Node::vec_point points = node->intersections(start, d, length);
-  return points;
-}
 
 
 int test_Region(int argc, char *argv[])
 {
-  // Create a box via surfaces
+  typedef QuadraticSurfaceFactory QSF;
 
-  // Surfaces
-  Surface::SP_surface W(new PlaneX(0.0));
-  Surface::SP_surface E(new PlaneX(1.0));
-  Surface::SP_surface S(new PlaneY(0.0));
-  Surface::SP_surface N(new PlaneY(0.0));
-  Surface::SP_surface B(new PlaneZ(0.0));
-  Surface::SP_surface T(new PlaneZ(1.0));
+  // Create a cube
 
-  // Node
-  CSG_Node::SP_node n_W(new CSG_Primitive(W, true));
-  CSG_Node::SP_node n_E(new CSG_Primitive(E, false));
-  CSG_Node::SP_node n_S(new CSG_Primitive(S, true));
-  CSG_Node::SP_node n_N(new CSG_Primitive(N, false));
-  CSG_Node::SP_node n_B(new CSG_Primitive(B, true));
-  CSG_Node::SP_node n_T(new CSG_Primitive(T, false));
+  Surface::SP_surface W = QSF::CreatePlaneX(0.0);
+  Surface::SP_surface E = QSF::CreatePlaneX(1.0);
+  Surface::SP_surface S = QSF::CreatePlaneY(0.0);
+  Surface::SP_surface N = QSF::CreatePlaneY(1.0);
+  Surface::SP_surface B = QSF::CreatePlaneZ(0.0);
+  Surface::SP_surface T = QSF::CreatePlaneZ(1.0);
+  Surface::SP_surface C = QSF::CreateCylinderZ(0.5, 0.5, 0.4);
 
-  CSG_Node::SP_node node(new Union())
+  Region::SP_region region0 = Region::Create(0);
+  region0->append(C, false);
 
-  // Region [W ^ -E ^ S ^ -N ^ B ^ -T]
-  // Region box((W, Intersect
+  Region::SP_region region1 = Region::Create(1);
+  region1->append(W, true);
+  region1->append(E, false);
+  region1->append(S, true);
+  region1->append(N, false);
+  region1->append(B, true);
+  region1->append(T, false);
+  region1->append(C, true);
+
+  TEST(region0->contains(Point(0.5, 0.5, 0.5)));
+  TEST(region1->contains(Point(0.1, 0.1, 0.1)));
 
   return 0;
-
 }
 
 //----------------------------------------------------------------------------//

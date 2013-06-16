@@ -12,8 +12,10 @@
 #include "Track.hh"
 #include "TrackDB.hh"
 #include "Mesh.hh"
+#include "Geometry.hh"
 #include "angle/ProductQuadrature.hh"
 #include "utilities/DBC.hh"
+#include "utilities/InputDB.hh"
 #include "utilities/SP.hh"
 #include <vector>
 
@@ -22,7 +24,12 @@ namespace detran_geometry
 
 /**
  *  @class Tracker
- *  @brief Track a mesh
+ *  @brief Track a Cartesian mesh or a CSG-based geometry
+ *
+ *  Relevant database enteries:
+ *    - tracker_maximum_spacing   [double]
+ *    - tracker_spatial_quad_type [string]
+ *    - tracker_normalize_lengths [int]
  */
 class GEOMETRY_EXPORT Tracker
 {
@@ -34,13 +41,15 @@ public:
   //--------------------------------------------------------------------------//
 
   typedef detran_utilities::SP<Tracker>                   SP_tracker;
+  typedef detran_utilities::InputDB::SP_input             SP_db;
   typedef Mesh::SP_mesh                                   SP_mesh;
-  typedef detran_utilities::SP<detran_angle::ProductQuadrature>  SP_quadrature;
-  typedef Track::SP_track                             SP_track;
-  typedef TrackDB::SP_trackdb                         SP_trackdb;
-  typedef detran_utilities::vec_dbl                   vec_dbl;
-  typedef detran_utilities::vec2_dbl                  vec2_dbl;
-  typedef detran_utilities::size_t                    size_t;
+  typedef Geometry::SP_geometry                           SP_geometry;
+  typedef detran_angle::ProductQuadrature::SP_quadrature  SP_quadrature;
+  typedef Track::SP_track                                 SP_track;
+  typedef TrackDB::SP_trackdb                             SP_trackdb;
+  typedef detran_utilities::vec_dbl                       vec_dbl;
+  typedef detran_utilities::vec2_dbl                      vec2_dbl;
+  typedef detran_utilities::size_t                        size_t;
 
   //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -48,33 +57,37 @@ public:
 
   /**
    *  @brief Constructor
-   *  @param    mesh            mesh to track
-   *  @param    quadrature      product quadrature
+   *  @param    db    Parameter database
+   *  @param    q     Product quadrature
    */
-  Tracker(SP_mesh mesh, SP_quadrature quadrature);
+  Tracker(SP_db db, SP_quadrature q);
 
   /// SP constructor
-  static SP_tracker Create(SP_mesh mesh, SP_quadrature quadrature);
+  static SP_tracker Create(SP_db db, SP_quadrature q);
 
   //--------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
   //--------------------------------------------------------------------------//
 
+  /// Track a Cartesian mesh
+  void trackit(SP_mesh mesh){}
+
+  /// Track a CSG tree
+  void trackit(SP_geometry geo);
+
   SP_trackdb trackdb() const
   {
-    Require(d_trackdb);
-    return d_trackdb;
-  }
-
-  SP_mesh meshmoc()
-  {
-    // Create the MOC mesh
-    SP_mesh newmesh;//(new MeshMOC(d_mesh, d_trackdb));
-    return newmesh;
+    Require(d_tracks);
+    return d_tracks;
   }
 
   // Normalize the track segments based on actual volumes.
   void normalize();
+
+  /// Cast a track across the domain and create segments
+  void segmentize(SP_track track);
+
+  double maximum_spacing() const {return d_maximum_spacing;}
 
 private:
 
@@ -82,14 +95,26 @@ private:
   // DATA
   //--------------------------------------------------------------------------//
 
-  SP_mesh d_mesh;
+  SP_db d_db;
   SP_quadrature d_quadrature;
-  SP_trackdb d_trackdb;
+
+  SP_mesh d_mesh;
+  SP_geometry d_geometry;
+
+  std::string d_spatial_quad_type;
+
+  //@{
+  ///  Bounding box dimensions
+  double d_X;
+  double d_Y;
+  double d_Z;
+  //@}
+
+  SP_trackdb d_tracks;
   // Number azimuths per octant
-  size_t d_number_azimuths;
   vec_dbl d_x;
   vec_dbl d_y;
-  double d_delta_max;
+  double d_maximum_spacing;
 
   //--------------------------------------------------------------------------//
   // IMPLEMENTATION
@@ -98,17 +123,15 @@ private:
   void generate_tracks();
   void find_starting_cell(Point enter, double tan_phi, int *IJ);
 
-  // compute number of points on a side
+  // compute number of points on a (segment of one) side
   size_t number_points(const double phi,
                        const double L,
                        const size_t flag = 0);
 
-  // generate points for a given azimuth
-  void generate_points(const double W,
-                       const double H,
-                       const size_t a);
+  // generate points
+  void generate_points();
 
-  void segmentize(SP_track);
+
 
 };
 

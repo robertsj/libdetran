@@ -31,7 +31,7 @@ public:
         const double yval = 0.0,
         const double zval = 0.0);
 
-  Point operator*(double scale) const
+  Point operator*(const double scale) const
   {
     return Point(d_x*scale, d_y*scale, d_z*scale);
   }
@@ -64,6 +64,9 @@ public:
     return d_z;
   }
 
+  /// Get value for a dimension
+  const double operator[](const size_t dim) const;
+
 private:
  
   /// X coordinate
@@ -76,7 +79,7 @@ private:
 };
 
 /// Scale a point.
-GEOMETRY_EXPORT Point operator*(double scale, const Point &p);
+GEOMETRY_EXPORT Point operator*(const double scale, const Point &p);
 
 /// Distance between two points.
 GEOMETRY_EXPORT double distance(const Point &p1, const Point &p2 = Point());

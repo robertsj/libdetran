@@ -29,11 +29,11 @@ Geometry::Create(const double x, const double y, const double z)
 }
 
 //----------------------------------------------------------------------------//
-void Geometry::add_region(SP_region r, const size_t m)
+void Geometry::add_region(SP_region r)
 {
   Require(r);
   d_regions.push_back(r);
-  d_material_map.push_back(m);
+  //d_material_map.push_back(m);
 }
 
 //----------------------------------------------------------------------------//

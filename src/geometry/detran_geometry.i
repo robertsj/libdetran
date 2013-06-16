@@ -13,7 +13,6 @@
 #include "geometry/Assembly.hh"
 #include "geometry/Core.hh"
 #include "geometry/Mesh.hh"
-#include "geometry/MeshMOC.hh"
 #include "geometry/Mesh1D.hh" 
 #include "geometry/Mesh2D.hh" 
 #include "geometry/Mesh3D.hh"   
@@ -42,6 +41,7 @@
 %import "angle/detran_angle.i"
 
 %include "Point.hh"
+//
 %include "Mesh.hh"
 %include "Mesh1D.hh"
 %include "Mesh2D.hh"
@@ -50,35 +50,34 @@
 %include "Assembly.hh"
 %include "Core.hh"
 //
-%include "MeshMOC.hh"
-%include "Segment.hh"
-%include "Track.hh"
-%include "TrackDB.hh"
-%include "Tracker.hh"
-//
-
 %include "Surface.hh"
 %include "QuadraticSurface.hh"
 %include "QuadraticSurfaceFactory.hh"
 %include "CSG.hh"
 %include "Region.hh"
 %include "Geometry.hh"
+//
+%include "Segment.hh"
+%include "Track.hh"
+%include "TrackDB.hh"
+%include "Tracker.hh"
 
 %template(MeshSP)     detran_utilities::SP<detran_geometry::Mesh>;
 %template(Mesh1DSP)   detran_utilities::SP<detran_geometry::Mesh1D>;
 %template(Mesh2DSP)   detran_utilities::SP<detran_geometry::Mesh2D>;
 %template(Mesh3DSP)   detran_utilities::SP<detran_geometry::Mesh3D>;
+
 %template(PinCellSP)  detran_utilities::SP<detran_geometry::PinCell>;
 %template(AssemblySP) detran_utilities::SP<detran_geometry::Assembly>;
 %template(CoreSP)     detran_utilities::SP<detran_geometry::Core>;
 
+%template(SurfaceSP)    detran_utilities::SP<detran_geometry::Surface>;
+%template(RegionSP)     detran_utilities::SP<detran_geometry::Region>;
+%template(GeometrySP)   detran_utilities::SP<detran_geometry::Geometry>;
+
 %template(TrackSP)    detran_utilities::SP<detran_geometry::Track>;
 %template(TrackDBSP)  detran_utilities::SP<detran_geometry::TrackDB>;
 %template(TrackerSP)  detran_utilities::SP<detran_geometry::Tracker>;
-
-%template(GeometrySP)   detran_utilities::SP<detran_geometry::Geometry>;
-%template(RegionSP)     detran_utilities::SP<detran_geometry::Region>;
-%template(SurfaceSP)    detran_utilities::SP<detran_geometry::Surface>;
 
 //---------------------------------------------------------------------------//
 //              end of detran_geometry.i

@@ -16,7 +16,7 @@ namespace detran_geometry
 
 /**
  *  @class Geometry
- *  @brief Generic object for describing
+ *  @brief Represents a complete geometry comprised of @ref Region objects
  */
 class GEOMETRY_EXPORT Geometry
 {
@@ -41,8 +41,8 @@ public:
   Geometry(const double x, const double y, const double z);
   /// SP constructor
   static SP_geometry Create(const double x, const double y, const double z);
-  /// Add a region with its material id
-  void add_region(SP_region r, const size_t m);
+  /// Add a region
+  void add_region(SP_region r);
   /// Get region
   SP_region region(const size_t r);
   /// Find region containing cell. Returns index >= 0 or -1 if none found
@@ -51,10 +51,13 @@ public:
   size_t number_regions() const;
   /// Return material index for a region
   size_t material_index(const size_t r) const;
-  ///
+  //@{
+  /// Get geometry bounding box coordinates
   double width_x() const {return d_x;}
   double width_y() const {return d_y;}
   double width_z() const {return d_z;}
+  //@}
+  size_t dimension() const {return 2;}
 
 private:
 

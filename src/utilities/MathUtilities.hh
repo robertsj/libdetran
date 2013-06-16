@@ -153,6 +153,14 @@ inline T vec_sum(const std::vector<T> &v)
   return s;
 }
 
+/// Add a constant to a vector
+template <class T>
+inline void vec_plus_a(std::vector<T> &v, const T a)
+{
+  for (size_t i = 0; i < v.size(); ++i)
+    v[i] += a;
+}
+
 /// Return the unique elements of a vector
 template <class T>
 inline std::vector<T> vec_unique(const std::vector<T> &v)

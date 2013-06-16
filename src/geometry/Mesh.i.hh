@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   Mesh.i.hh
- * \brief  Mesh inline member definitions
- * \author Jeremy Roberts
- * \date   Aug 25, 2012
+//----------------------------------*-C++-*-----------------------------------//
+/**
+ *  @file  Mesh.i.hh
+ *  @brief Mesh inline member definitions
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_geometry_MESH_I_HH_
 #define detran_geometry_MESH_I_HH_
@@ -13,13 +12,13 @@
 namespace detran_geometry
 {
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 inline Mesh::size_t Mesh::number_cells() const
 {
   return d_number_cells;
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 inline Mesh::size_t Mesh::number_cells(size_t dim) const
 {
   if (dim == 0)
@@ -30,7 +29,7 @@ inline Mesh::size_t Mesh::number_cells(size_t dim) const
     return d_number_cells_z;
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 inline Mesh::size_t Mesh::number_cells_x() const
 {
   return d_number_cells_x;
@@ -44,7 +43,7 @@ inline Mesh::size_t Mesh::number_cells_z() const
   return d_number_cells_z;
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 inline double Mesh::width(size_t dim, size_t ijk) const
 {
@@ -72,7 +71,7 @@ inline double Mesh::dz(size_t k) const
   return d_dz[k];
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 inline const Mesh::vec_dbl& Mesh::dx() const
 {
   return d_dx;
@@ -86,7 +85,7 @@ inline const Mesh::vec_dbl& Mesh::dz() const
   return d_dz;
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 inline double Mesh::volume(size_t cell) const
 {
   Require(cell < d_number_cells);
@@ -97,7 +96,7 @@ inline double Mesh::volume(size_t cell) const
   return v;
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 inline double Mesh::total_width_x() const
 {
   return d_total_width_x;
@@ -111,13 +110,13 @@ inline double Mesh::total_width_z() const
   return d_total_width_z;
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 inline Mesh::size_t Mesh::dimension() const
 {
   return d_dimension;
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 inline Mesh::size_t Mesh::index(size_t i, size_t j, size_t k)
 {
   Require(i >= 0);
@@ -129,7 +128,7 @@ inline Mesh::size_t Mesh::index(size_t i, size_t j, size_t k)
   return i + j * d_number_cells_x + k * d_number_cells_x * d_number_cells_y;
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 inline Mesh::size_t Mesh::cell_to_i(size_t cell) const
 {
   Require(cell >= 0);
@@ -158,7 +157,7 @@ inline Mesh::size_t Mesh::cell_to_k(size_t cell) const
   return k;
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 inline int Mesh::find_cell(Point p)
 {
   // Default is -1, meaning not found
@@ -205,6 +204,6 @@ inline const Mesh::mesh_map_type& Mesh::get_mesh_map() const
 
 #endif // MESH_I_HH_ 
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file Mesh.i.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
