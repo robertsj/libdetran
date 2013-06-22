@@ -41,30 +41,47 @@ namespace detran_utilities
  */
 //===========================================================================//
 
+/// Compile time boolean (straight from Alexandrescu's Modern C++ Design
+template <bool> struct StaticChecker {StaticChecker(...);};
+template <> struct StaticChecker<false> { };
+
 #ifdef DETRAN_ENABLE_DEBUG
 
 // DBC Macros
-#define Assert(c)     if (!(c)) throw detran_utilities::GenException( __LINE__, __FILE__,#c)
-#define Require(c)    Assert(c)
-#define Ensure(c)     Assert(c)
+#define Assert(c) if (!(c)) throw detran_utilities::GenException( __LINE__, __FILE__,#c)
+#define Require(c) Assert(c)
+#define Ensure(c)  Assert(c)
 
 // Verbose DBC Macros (i.e. with an additional message)
-#define Assertv(c, m)  if (!(c)) throw detran_utilities::GenException( __LINE__, __FILE__,std::string(#c)+", "+std::string(m))
+#define Assertv(c, m) if (!(c)) throw detran_utilities::GenException( __LINE__, __FILE__, std::string(#c) +", " + std::string(m))
 #define Requirev(c, m) Assertv(c, m)
 #define Ensurev(c, m)  Assertv(c, m)
 
+// Macro for compile time assertions (from Alexandrescu)
+#define StaticAssert(c)                                                        \
+{                                                                              \
+  class ERROR_Compile_time{};                                                  \
+  (void)sizeof detran_utilities::StaticChecker<(c)!=0>((ERROR_Compile_time()));\
+}
+#define StaticAssertv(c, m)                                             \
+{                                                                       \
+  class ERROR_##m{};                                                    \
+  (void)sizeof detran_utilities::StaticChecker<(c)!=0>((ERROR_##m()) ); \
+}
+
 #else
 
-#define Assert(c)       ((void) 0)
-#define Require(c)      ((void) 0)
-#define Ensure(c)       ((void) 0)
-#define Assertv(c, m)   ((void) 0)
-#define Requirev(c, m)  ((void) 0)
-#define Ensurev(c, m)   ((void) 0)
+#define Assert(c)           ((void) 0);
+#define Require(c)          ((void) 0);
+#define Ensure(c)           ((void) 0);
+#define Assertv(c, m)       ((void) 0);
+#define Requirev(c, m)      ((void) 0);
+#define Ensurev(c, m)       ((void) 0);
+#define StaticAssert(c, m)  ((void) 0);
 
 #endif
 
-#define Insist(c,m)   if (!(c)) {std::cerr << m << std::endl; throw detran_utilities::GenException( __LINE__, __FILE__,#c);}
+#define Insist(c,m) if (!(c)) {std::cerr << m << std::endl; throw detran_utilities::GenException( __LINE__, __FILE__, #c);}
 
 template <class T>
 inline std::string as_string(T v)
