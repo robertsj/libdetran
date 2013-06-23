@@ -1,21 +1,16 @@
-//----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   test_Testing.cc
- * \author Jeremy Roberts
- * \date   Jul 14, 2011
- * \brief  Test of the simple Testing utilities.
+//----------------------------------*-C++-*-----------------------------------//
+/**
+ *  @file  test_Testing.cc
+ *  @brief Test of TestDriver and related macros
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
 #define TEST_LIST                \
         FUNC(test_Testing_pass)  \
         FUNC(test_Testing_fail)
 
-// Detran headers
 #include "TestDriver.hh"
-
-// System headers
 #include <iostream>
 #include <cstdlib>
 
@@ -27,18 +22,20 @@ int main(int argc, char *argv[])
   RUN(argc, argv);
 }
 
-// Test definitions.
+//----------------------------------------------------------------------------//
+// TEST DEFINITIONS
+//----------------------------------------------------------------------------//
 
 int test_Testing_pass(int argc, char *argv[])
 {
- TEST(1==1);
- return 0;
+  TEST(1==1)
+  return 0;
 }
 
 int test_Testing_fail(int argc, char *argv[])
 {
- TESTFALSE(1==0);
- return 0;
+  TESTFALSE(1==0)
+  return 0;
 }
 
 //---------------------------------------------------------------------------//
