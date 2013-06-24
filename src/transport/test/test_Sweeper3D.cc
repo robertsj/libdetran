@@ -1,11 +1,11 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   test_Sweeper3D.cc
- *  @author Jeremy Roberts
- *  @date   Apr 1, 2012
- *  @brief  Test of test_Sweeper3D
+ *  @file  test_Sweeper3D.cc
+ *  @brief test_Sweeper3D
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
+
 
 // LIST OF TEST FUNCTIONS
 #define TEST_LIST                     \
@@ -14,12 +14,9 @@
 #include "utilities/TestDriver.hh"
 #include "Sweeper3D.hh"
 #include "Equation_DD_3D.hh"
-
 #include "angle/LevelSymmetric.hh"
 #include "external_source/ConstantSource.hh"
 #include "geometry/Mesh3D.hh"
-
-// Setup
 #include "geometry/test/mesh_fixture.hh"
 #include "material/test/material_fixture.hh"
 
@@ -37,9 +34,9 @@ int main(int argc, char *argv[])
   RUN(argc, argv);
 }
 
-//----------------------------------------------//
+//----------------------------------------------------------------------------//
 // TEST DEFINITIONS
-//----------------------------------------------//
+//----------------------------------------------------------------------------//
 
 int test_Sweeper3D_basic(int argc, char *argv[])
 {
@@ -109,3 +106,7 @@ int test_Sweeper3D_basic(int argc, char *argv[])
 //  out.finalize();
   return 0;
 }
+
+//----------------------------------------------------------------------------//
+//              end of test_Sweeper3D.cc
+//----------------------------------------------------------------------------//

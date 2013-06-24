@@ -15,11 +15,7 @@
 #include "Homogenize.hh"
 #include "geometry/Mesh1D.hh"
 #include "material/Material.hh"
-
-// Setup
 #include "geometry/test/mesh_fixture.hh"
-#include "angle/test/quadrature_fixture.hh"
-#include "transport/test/coarsemesh_fixture.hh"
 
 using namespace detran;
 using namespace detran_geometry;

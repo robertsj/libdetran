@@ -2,6 +2,7 @@
 # libdetran/src/solvers/test/CMakeLists.txt
 #------------------------------------------------------------------------------#
 
+<<<<<<< HEAD
 ADD_EXECUTABLE(test_FixedSourceManager          test_FixedSourceManager.cc)
 TARGET_LINK_LIBRARIES(test_FixedSourceManager   solvers)
 
@@ -62,15 +63,3 @@ ADD_TEST(test_MGCoarseMeshPreconditioner_space
 ADD_TEST(test_MGCoarseMeshPreconditioner_space_energy
          test_MGCoarseMeshPreconditioner 2)                  
 
-#------------------------------------------------------------------------------#
-# Define tests
-#------------------------------------------------------------------------------#
-
-#ADD_TEST(test_SourceIteration_1D  test_SourceIteration 0)
-#ADD_TEST(test_SourceIteration_2D  test_SourceIteration 0)
-#ADD_TEST(test_SourceIteration_3D  test_SourceIteration 3)
-#ADD_TEST(test_PowerIteration_2D test_PowerIteration 0)
-ADD_TEST(test_FixedSourceManager_1D        test_FixedSourceManager 0)
-ADD_TEST(test_EigenvalueManager_1D         test_EigenvalueManager 0)
-ADD_TEST(test_TimeStepper_BDF              test_TimeStepper 1)
-#ADD_TEST(test_TWIGL              test_TWIGL 0)

@@ -1,7 +1,7 @@
 //----------------------------------*-C++-*-----------------------------------//
 /**
  *  @file  test_CoarseMesh.cc
- *  @brief Test of CoarseMesh
+ *  @brief Test of CoarseMesh class
  *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
 //----------------------------------------------------------------------------//
@@ -16,7 +16,6 @@
 #include "geometry/Mesh2D.hh"
 #include "geometry/Mesh3D.hh"
 
-// Setup
 #include "coarsemesh_fixture.hh"
 
 using namespace detran;

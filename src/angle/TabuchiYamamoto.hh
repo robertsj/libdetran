@@ -1,15 +1,15 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
  *  @file  TabuchiYamamoto.hh
  *  @brief TabuchiYamamoto class definition
- *  @note  Copyright (C) Jeremy Roberts 2013
+ *  @note  Copyright (C) Jeremy Roberts 2012-2013
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_angle_TABUCHIYAMAMOTO_HH_
 #define detran_angle_TABUCHIYAMAMOTO_HH_
 
-#include "PolarQuadrature.hh"
+#include "angle/BaseQuadrature.hh"
 
 namespace detran_angle
 {
@@ -29,25 +29,17 @@ namespace detran_angle
  *  than the infinity norm)... not yet implemented.
  *
  */
-class ANGLE_EXPORT TabuchiYamamoto: public PolarQuadrature
+class ANGLE_EXPORT TabuchiYamamoto: public BaseQuadrature
 {
 
 public:
 
-  explicit TabuchiYamamoto(size_t number_polar);
-
-  /// SP Constructor.
-  static detran_utilities::SP<PolarQuadrature>
-  Create(size_t num_polar)
-  {
-    detran_utilities::SP<TabuchiYamamoto>
-      p(new TabuchiYamamoto(num_polar));
-    return p;
-  }
-
-  ~TabuchiYamamoto(){};
+  /// Return the quadrature name.
+  static std::string name() {return "ty";}
 
 private:
+
+  void build_impl(c_dbl a, c_dbl b);
 
 };
 
@@ -55,6 +47,6 @@ private:
 
 #endif /* detran_angle_TABUCHIYAMAMOTO_HH_ */
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file TabuchiYamamoto.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

@@ -94,12 +94,18 @@ int test_norm_residual_Linf(int argc, char *argv[])
 }
 int test_linspace(int argc, char *argv[])
 {
+  //
   vec_dbl v = linspace(0, 4, 5);
   for (unsigned int i = 0; i < v.size(); ++i)
   {
     std::cout << v[i] << " " << i << std::endl;
     TEST(soft_equiv(v[i], double(i)));
   }
+  //
+  v = linspace(-2, 2, 5);
+  TEST(soft_equiv(v[0], -2.0));
+  TEST(soft_equiv(v[1], -1.0));
+  //
   double ref[] = {0.4, 1.2, 2.0, 2.8, 3.6};
   v = linspace_center(0, 4, 5);
   for (unsigned int i = 0; i < v.size(); ++i)
@@ -107,6 +113,10 @@ int test_linspace(int argc, char *argv[])
     std::cout << v[i] << " " << ref[i] << std::endl;
     TEST(soft_equiv(v[i], ref[i]));
   }
+  //
+  v = linspace_center(-2, 2, 4); // -1.5 -0.5 0.5 1.5
+  TEST(soft_equiv(v[0], -1.5));
+  TEST(soft_equiv(v[1], -0.5));
   return 0;
 }
 

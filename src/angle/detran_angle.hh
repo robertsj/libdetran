@@ -1,34 +1,19 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   detran_angle.hh
- *  @brief  Utility header including Detran angular headers
- *  @author Jeremy Roberts
- *  @date   Oct 10, 2012
+ *  @file  detran_angle.hh
+ *  @brief Utility header including Detran angular headers
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef DETRAN_ANGLE_HH_
 #define DETRAN_ANGLE_HH_
 
-// 1D
-#include "angle/GaussLegendre.hh"
-#include "angle/GaussChebyshev.hh"
-#include "angle/DPN.hh"
-#include "angle/DTN.hh"
-// 3D
-#include "angle/LevelSymmetric.hh"
-#include "angle/QuadrupleRange.hh"
-#include "angle/UniformEqual.hh"
-#include "angle/ChebyshevLegendre.hh"
-#include "angle/LegendreDTN.hh"
-// MOC
-#include "angle/Collocated.hh"
-#include "angle/Uniform.hh"
-#include "angle/TabuchiYamamoto.hh"
-// Other
+#include "angle/Quadrature.hh"
+#include "angle/ProductQuadrature.hh"
+#include "angle/QuadratureFactory.hh"
 #include "angle/SphericalHarmonics.hh"
 #include "angle/MomentToDiscrete.hh"
-#include "angle/QuadratureFactory.hh"
 #include "angle/MomentIndexer.hh"
 
 #endif // DETRAN_ANGLE_HH_ 

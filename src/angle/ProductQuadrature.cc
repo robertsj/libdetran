@@ -1,51 +1,123 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   ProductQuadrature.cc
- *  @author robertsj
- *  @date   Oct 10, 2012
- *  @brief  ProductQuadrature class definition.
+ *  @file  ProductQuadrature.cc
+ *  @brief ProductQuadrature
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
-#include "ProductQuadrature.hh"
+#include "angle/ProductQuadrature.hh"
 #include "utilities/SoftEquivalence.hh"
-#include <cmath>
 
 namespace detran_angle
 {
 
-//---------------------------------------------------------------------------//
-ProductQuadrature::ProductQuadrature(const size_t dim,
-                                     const size_t na,
-                                     const size_t np,
-                                     std::string  name)
-  : Quadrature(dim, na * np * std::pow((float)2, (int)dim), name)
+//----------------------------------------------------------------------------//
+ProductQuadrature::ProductQuadrature(const size_t       dim,
+                                     const size_t       na,
+                                     const size_t       np,
+                                     const std::string &name,
+                                     const bool         normalize)
+  : Quadrature(dim,
+               na * np * std::pow((float)2, (int)dim),
+               name)
   , d_number_azimuth_octant(na)
   , d_number_polar_octant(np)
-  , d_phi(na, 0.0)
-  , d_cos_phi(na, 0.0)
-  , d_sin_phi(na, 0.0)
-  , d_azimuth_weight(na, 0.0)
-  , d_cos_theta(np, 0.0)
-  , d_sin_theta(np, 0.0)
-  , d_polar_weight(np, 0.0)
+  , d_phi(d_number_azimuth_octant, 0.0)
+  , d_cos_phi(d_number_azimuth_octant, 0.0)
+  , d_sin_phi(d_number_azimuth_octant, 0.0)
+  , d_azimuth_weight(d_number_azimuth_octant, 0.0)
+  , d_cos_theta(d_number_polar_octant, 0.0)
+  , d_sin_theta(d_number_polar_octant, 0.0)
+  , d_polar_weight(d_number_polar_octant, 0.0)
 {
-  // Preconditions
   Insist(dim > 1, "Product quadratures make no sense in one dimension");
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 ProductQuadrature::~ProductQuadrature()
 {
   /* ... */
 }
 
-//---------------------------------------------------------------------------//
-void ProductQuadrature::build_product_quadrature()
+//----------------------------------------------------------------------------//
+double ProductQuadrature::phi(const size_t a) const
 {
+  Require(a < 2 * d_number_azimuth_octant);
+  return d_phi[a];
+}
+//----------------------------------------------------------------------------//
+double ProductQuadrature::cos_phi(const size_t a) const
+{
+  Require(a < 2 * d_number_azimuth_octant);
+  return d_cos_phi[a];
+}
+//----------------------------------------------------------------------------//
+double ProductQuadrature::sin_phi(const size_t a) const
+{
+  Require(a < 2 * d_number_azimuth_octant);
+  return d_sin_phi[a];
+}
+//----------------------------------------------------------------------------//
+double ProductQuadrature::azimuth_weight(const size_t a) const
+{
+  Require(a < d_number_azimuth_octant);
+  return d_azimuth_weight[a];
+}
+
+//----------------------------------------------------------------------------//
+double ProductQuadrature::cos_theta(const size_t p) const
+{
+  Require(p < d_number_polar_octant);
+  return d_cos_theta[p];
+}
+//----------------------------------------------------------------------------//
+double ProductQuadrature::sin_theta(const size_t p) const
+{
+  Require(p < d_number_polar_octant);
+  return d_sin_theta[p];
+}
+//----------------------------------------------------------------------------//
+double ProductQuadrature::polar_weight(const size_t p) const
+{
+  Require(p < d_number_polar_octant);
+  return d_polar_weight[p];
+}
+
+//----------------------------------------------------------------------------//
+ProductQuadrature::size_t
+ProductQuadrature::angle(const size_t a, const size_t p) const
+{
+  Require(a < d_number_azimuth_octant);
+  Require(p < d_number_polar_octant);
+  return p + a * d_number_polar_octant;
+}
+//----------------------------------------------------------------------------//
+ProductQuadrature::size_t
+ProductQuadrature::azimuth(const size_t angle) const
+{
+  Require(angle < d_number_angles_octant);
+  size_t tmp = (angle % d_number_angles_octant) / d_number_polar_octant;
+  Ensure(tmp < d_number_azimuth_octant);
+  return tmp;
+}
+//----------------------------------------------------------------------------//
+ProductQuadrature::size_t
+ProductQuadrature::polar(const size_t angle) const
+{
+  Require(angle < d_number_angles_octant);
+  size_t tmp = angle % d_number_polar_octant;
+  Ensure(tmp < d_number_polar_octant);
+  return tmp;
+}
+
+//----------------------------------------------------------------------------//
+void ProductQuadrature::build()
+{
+  // Construct the product set
   double scale = 1.0;
   if (d_dimension == 2) scale = 2.0;
-  double weight_tot = 0.0;
+  double wt_tot = 0.0;
   size_t n = 0;
   for (size_t a = 0; a < number_azimuths_octant(); ++a)
   {
@@ -55,31 +127,16 @@ void ProductQuadrature::build_product_quadrature()
       d_eta[n]    = d_sin_theta[p] * d_sin_phi[a];
       d_xi[n]     = d_cos_theta[p];
       d_weight[n] = scale * d_polar_weight[p] * d_azimuth_weight[a];
-      weight_tot += d_weight[n];
+      wt_tot += d_weight[n];
     } // end polar loop
   } // end azimuth loop
-  weight_tot *= d_number_octants;
+  wt_tot *= d_number_octants;
 
   verify();
-
-  Ensure(detran_utilities::soft_equiv(weight_tot, 1.0/angular_norm(d_dimension)));
+  Ensure(detran_utilities::soft_equiv(wt_tot, 1.0/angular_norm(d_dimension)));
 }
 
-//---------------------------------------------------------------------------//
-double ProductQuadrature::polar_weight(const size_t p) const
-{
-  Require(p < d_number_polar_octant);
-  return d_polar_weight[p];
-}
-
-//---------------------------------------------------------------------------//
-double ProductQuadrature::azimuth_weight(const size_t a) const
-{
-  Require(a < d_number_azimuth_octant);
-  return d_azimuth_weight[a];
-}
-
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 void ProductQuadrature::verify() const
 {
   // verify polar ordering
@@ -99,5 +156,8 @@ void ProductQuadrature::verify() const
 }
 
 
-} // end namespace detran_angle
+} // namespace detran_angle
 
+//----------------------------------------------------------------------------//
+//              end of ProductQuadrature.cc
+//----------------------------------------------------------------------------//

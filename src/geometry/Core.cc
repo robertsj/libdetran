@@ -15,19 +15,22 @@ namespace detran_geometry
 
 //---------------------------------------------------------------------------//
 Core::Core(int dimension, vec_assembly assemblies, vec_int assembly_map)
-  : d_dimension(dimension)
+  : d_number_x(dimension)
+  , d_number_y(dimension)
   , d_assemblies(assemblies)
 {
-  Require(d_dimension > 0);
+  Require(d_number_x > 0);
   Require(d_assemblies.size() > 0);
   finalize(assembly_map);
 }
 
 //---------------------------------------------------------------------------//
 Core::Core(int dimension)
- : d_dimension(dimension)
+ : d_number_x(dimension)
+ , d_number_y(dimension)
+
 {
-  Require(d_dimension > 0);
+  Require(d_number_x > 0);
 }
 
 //---------------------------------------------------------------------------//
@@ -43,7 +46,7 @@ void Core::finalize(vec_int assembly_map)
   using std::cout;
   using std::endl;
 
-  Insist(assembly_map.size() == d_dimension*d_dimension,
+  Insist(assembly_map.size() == d_number_x*d_number_y,
     "Assembly map is wrong size.");
   d_assembly_map = assembly_map;
 
@@ -57,27 +60,27 @@ void Core::finalize(vec_int assembly_map)
   int number_cells = number_cells_x * number_cells_y;
 
   // Number of pins per dimension
-  d_number_assemblies   = d_dimension * d_dimension;
+  d_number_assemblies   = d_number_x*d_number_y;
   d_number_pincells     =
     d_number_assemblies * d_assemblies[0]->number_pincells();
-  d_number_pincells_dim = d_dimension * d_assemblies[0]->dimension();
+
   int ass_dim = d_assemblies[0]->dimension();
 
 
   // Create map from the assembly pin indices to the core level.
   vec_int core_pins(d_number_pincells, -1);
   // Loop through all pins.
-  for (int j = 0; j < d_number_pincells_dim; j++)
+  for (int j = 0; j < d_number_y; j++)
   {
-    for (int i = 0; i < d_number_pincells_dim; i++)
+    for (int i = 0; i < d_number_x; i++)
     {
       // What pin?
-      int pin = i + j * d_number_pincells_dim;
+      int pin = i + j * d_number_x;
 
       // What assembly?
       int a_i = std::floor(i / ass_dim);
       int a_j = std::floor(j / ass_dim);
-      int a   = a_i + a_j * d_dimension;
+      int a   = a_i + a_j * d_number_y;
 
       // What pin within the assembly?
       int p_i = i % ass_dim;

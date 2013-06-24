@@ -12,9 +12,9 @@
 
 #include "transport/transport_export.hh"
 #include "DimensionTraits.hh"
-#include "angle/QuadratureMOC.hh"
+#include "angle/ProductQuadrature.hh"
 #include "material/Material.hh"
-#include "geometry/MeshMOC.hh"
+#include "geometry/Mesh.hh"
 #include "geometry/TrackDB.hh"
 #include "geometry/Track.hh"
 #include "utilities/Definitions.hh"
@@ -39,13 +39,13 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_material::Material::SP_material        SP_material;
-  typedef detran_geometry::MeshMOC::SP_mesh             SP_mesh;
-  typedef detran_geometry::TrackDB::SP_trackdb          SP_trackdb;
-  typedef detran_angle::QuadratureMOC::SP_quadrature    SP_quadrature;
-  typedef detran_utilities::vec_dbl                     moments_type;
-  typedef detran_utilities::vec_dbl                     angular_flux_type;
-  typedef detran_utilities::size_t                      size_t;
+  typedef detran_material::Material::SP_material          SP_material;
+  typedef detran_geometry::Mesh::SP_mesh                  SP_mesh;
+  typedef detran_geometry::TrackDB::SP_trackdb            SP_trackdb;
+  typedef detran_angle::ProductQuadrature::SP_quadrature  SP_quadrature;
+  typedef detran_utilities::vec_dbl                       moments_type;
+  typedef detran_utilities::vec_dbl                       angular_flux_type;
+  typedef detran_utilities::size_t                        size_t;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -54,12 +54,12 @@ public:
   /**
    *  @brief Constructor
    */
-  Equation_MOC(SP_mesh mesh,
-               SP_material material,
+  Equation_MOC(SP_mesh       mesh,
+               SP_material   material,
                SP_quadrature quadrature,
-               bool update_psi)
+               bool          update_psi)
     :  d_mesh(mesh)
-    ,  d_tracks(mesh->tracks())
+//    ,  d_tracks(mesh->tracks())
     ,  d_material(material)
     ,  d_quadrature(quadrature)
     ,  d_update_psi(update_psi)
@@ -85,18 +85,20 @@ public:
    *
    *  @param   region      Flat source region (cardinal mesh index)
    *  @param   length      Segment length
+   *  @param   width       Track width
    *  @param   source      Reference to sweep source vector for this group
    *  @param   psi_in      Incident flux for this cell
    *  @param   psi_out     Outgoing flux from this cell
    *  @param   phi         Reference to flux moments for this group
    *  @param   psi         Reference to angular flux for this group
    */
-  virtual inline void solve(const size_t region,
-                            const double length,
-                            moments_type &source,
-                            double &psi_in,
-                            double &psi_out,
-                            moments_type &phi,
+  virtual inline void solve(const size_t       region,
+                            const double       length,
+                            const double       width,
+                            moments_type      &source,
+                            double            &psi_in,
+                            double            &psi_out,
+                            moments_type      &phi,
                             angular_flux_type &psi) = 0;
 
   /**

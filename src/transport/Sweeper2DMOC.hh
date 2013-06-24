@@ -11,9 +11,9 @@
 #define detran_SWEEPER2DMOC_HH_
 
 #include "transport/Sweeper.hh"
-#include "angle/QuadratureMOC.hh"
+#include "angle/ProductQuadrature.hh"
 #include "boundary/BoundaryMOC.hh"
-#include "geometry/MeshMOC.hh"
+#include "geometry/Mesh.hh"
 #include "geometry/TrackDB.hh"
 #include "geometry/Track.hh"
 
@@ -39,7 +39,6 @@ public:
   typedef typename Base::SP_state                       SP_state;
   typedef typename Base::SP_input                       SP_input;
   typedef typename Base::SP_material                    SP_material;
-  typedef typename Base::Mesh                           Mesh;
   typedef typename Base::SP_sweepsource                 SP_sweepsource;
   typedef typename Base::moments_type                   moments_type;
   typedef typename Base::angular_flux_type              angular_flux_type;
@@ -51,8 +50,8 @@ public:
   typedef EQ                                            Equation_T;
   typedef BoundaryMOC<_2D>                              Boundary_T;
   typedef typename Boundary_T::SP_boundary              SP_boundary;
-  typedef detran_geometry::MeshMOC::SP_mesh             SP_mesh;
-  typedef detran_angle::QuadratureMOC::SP_quadrature    SP_quadrature;
+  typedef detran_geometry::Mesh::SP_mesh                SP_mesh;
+  typedef detran_angle::ProductQuadrature::SP_quadrature SP_quadrature;
   typedef detran_geometry::TrackDB::SP_trackdb          SP_trackdb;
   typedef detran_geometry::Track::SP_track              SP_track;
 
