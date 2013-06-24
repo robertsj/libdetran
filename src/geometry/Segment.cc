@@ -12,12 +12,6 @@ namespace detran_geometry
 {
 
 //----------------------------------------------------------------------------//
-//Segment::Segment()
-//{
-//  THROW("what's going on?");
-//}
-
-//----------------------------------------------------------------------------//
 Segment::Segment(const size_t r, const double l)
   : d_region(r)
   , d_length(l)

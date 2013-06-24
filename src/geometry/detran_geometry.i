@@ -25,7 +25,15 @@
 #include "geometry/Region.hh"
 #include "geometry/CSG.hh"
 #include "geometry/Point.hh"
+#include "geometry/Ray.hh"
 #include "geometry/QuadraticSurfaceFactory.hh"
+#include "geometry/RegionFactory.hh"
+// Fix for missing SWIGPY_SLICE_ARG with some versions of swig.
+#if PY_VERSION_HEX >= 0x03020000
+# define SWIGPY_SLICE_ARG(obj) ((PyObject*) (obj))
+#else
+# define SWIGPY_SLICE_ARG(obj) ((PySliceObject*) (obj))
+#endif
 %}
 
 // Hide templates from SWIG
@@ -39,8 +47,10 @@
 
 %import "utilities/detran_utilities.i"
 %import "angle/detran_angle.i"
+%include "std_vector.i"
 
 %include "Point.hh"
+%include "Ray.hh"
 //
 %include "Mesh.hh"
 %include "Mesh1D.hh"
@@ -55,12 +65,17 @@
 %include "QuadraticSurfaceFactory.hh"
 %include "CSG.hh"
 %include "Region.hh"
+
+
 %include "Geometry.hh"
 //
 %include "Segment.hh"
 %include "Track.hh"
 %include "TrackDB.hh"
 %include "Tracker.hh"
+//
+%include "RegionFactory.hh"
+
 
 %template(MeshSP)     detran_utilities::SP<detran_geometry::Mesh>;
 %template(Mesh1DSP)   detran_utilities::SP<detran_geometry::Mesh1D>;
@@ -71,9 +86,10 @@
 %template(AssemblySP) detran_utilities::SP<detran_geometry::Assembly>;
 %template(CoreSP)     detran_utilities::SP<detran_geometry::Core>;
 
-%template(SurfaceSP)    detran_utilities::SP<detran_geometry::Surface>;
-%template(RegionSP)     detran_utilities::SP<detran_geometry::Region>;
-%template(GeometrySP)   detran_utilities::SP<detran_geometry::Geometry>;
+%template(SurfaceSP)  detran_utilities::SP<detran_geometry::Surface>;
+%template(RegionSP)   detran_utilities::SP<detran_geometry::Region>;
+%template(vec_region) std::vector<detran_utilities::SP<detran_geometry::Region> >;
+%template(GeometrySP) detran_utilities::SP<detran_geometry::Geometry>;
 
 %template(TrackSP)    detran_utilities::SP<detran_geometry::Track>;
 %template(TrackDBSP)  detran_utilities::SP<detran_geometry::TrackDB>;

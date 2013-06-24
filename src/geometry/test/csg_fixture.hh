@@ -38,12 +38,12 @@ static Geometry::SP_geometry test_2D_pincell_simple()
   SP_surface C = QSF::CreateCylinderZ(HP, HP, R);
 
   // Pin
-  SP_region pin = Region::Create(0);
+  SP_region pin = Region::Create(0, Point(0,0,0)-1.0e-8, Point(P,P,0)+1.0e-8);
   pin->append(C, false);
   geo->add_region(pin);
 
   // Moderator
-  SP_region mod = Region::Create(1);
+  SP_region mod = Region::Create(1, Point(0,0,0)-1.0e-8, Point(P,P,0)+1.0e-8);
   mod->append(C, true);
   mod->append(W, true);
   mod->append(E, false);
@@ -97,7 +97,8 @@ static Geometry::SP_geometry test_2D_pincell_complex()
   // Build the geometry
   for (int r = 0; r < 12; ++r)
   {
-    SP_region tmp = Region::Create(mat[r]);
+    SP_region tmp =
+      Region::Create(mat[r], Point(0,0,0)-1.0e-8, Point(P,P,0)+1.0e-8);
     for (int s = 0; s < 5; ++s)
     {
       if (slist[r][s] == 9) break;
@@ -159,21 +160,27 @@ static Geometry::SP_geometry test_2D_assembly()
 
   PinCell::SP_pincell M, F_I, F_II;
   M    = PinCell::Create(P, mat_M);
-  F_I  = PinCell::Create(P, mat_I, radii, PinCell::DIVISION_HV);
-  F_II = PinCell::Create(P, mat_I, radii, PinCell::DIVISION_DIAG);
+  F_I  = PinCell::Create(P, mat_I, radii, PinCell::DIVISION_HV_DIAG);
+  F_II = PinCell::Create(P, mat_I, radii, PinCell::DIVISION_HV_DIAG);
 
-  int n = 8;
+  int n = 3;
   Assembly::SP_assembly a = Assembly::Create(n, n);
+//  int pin_map_a[] =
+//  {
+//      2, 1, 1, 1, 1, 1, 1, 2,
+//      1, 0, 1, 1, 1, 1, 0, 1,
+//      1, 1, 1, 1, 1, 1, 1, 1,
+//      1, 1, 1, 2, 2, 1, 1, 1,
+//      1, 1, 1, 2, 2, 1, 1, 1,
+//      1, 1, 1, 1, 1, 1, 1, 1,
+//      1, 0, 1, 1, 1, 1, 0, 1,
+//      2, 1, 1, 1, 1, 1, 1, 2
+//  };
   int pin_map_a[] =
   {
-      2, 1, 1, 1, 1, 1, 1, 2,
-      1, 0, 1, 1, 1, 1, 0, 1,
-      1, 1, 1, 1, 1, 1, 1, 1,
-      1, 1, 1, 2, 2, 1, 1, 1,
-      1, 1, 1, 2, 2, 1, 1, 1,
-      1, 1, 1, 1, 1, 1, 1, 1,
-      1, 0, 1, 1, 1, 1, 0, 1,
-      2, 1, 1, 1, 1, 1, 1, 2
+      1, 1, 1,
+      1, 1, 1,
+      1, 1, 1
   };
   Assembly::vec_int pin_map(n * n);
   for (int i = 0; i < pin_map.size(); ++i)

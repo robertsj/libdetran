@@ -12,17 +12,22 @@ namespace detran_geometry
 {
 
 //----------------------------------------------------------------------------//
+Track::size_t Track::d_number_tracks = 0;
+
+//----------------------------------------------------------------------------//
 Track::Track(const Point &r0,
              const Point &r1,
              const double w)
   : d_enter(r0)
   , d_exit(r1)
   , d_width(w)
+  , d_identifier(d_number_tracks++)
 {
   double d = distance(r0, r1);
   Point p = r1 - r0;
-  d_cos_phi = p.x() / d;
-  d_sin_phi = p.y() / d;
+  d_mu  = p.x() / d;
+  d_eta = p.y() / d;
+  d_xi  = p.z() / d;
 }
 
 //----------------------------------------------------------------------------//

@@ -97,13 +97,11 @@ public:
    *  which is just a quadratic equation in @f$ t @f$ that yields 0, 1,
    *  or two roots (intersections).
    *
-   *  @param    r       Starting point
-   *  @param    d       Direction
+   *  @param    ray     Ray
    *  @param    t_max   Optional maximum ray length to consider
    *  @return           Vector of intersection points
    */
-  virtual vec_point intersections(c_Point   &r,
-                                  c_Point   &d,
+  virtual vec_point intersections(const Ray &ray,
                                   c_double   t_max = -1);
 
 

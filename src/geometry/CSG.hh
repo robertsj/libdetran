@@ -10,7 +10,7 @@
 #define detran_geometry_CSG_HH_
 
 #include "Point.hh"
-#include "QuadraticSurface.hh"
+#include "Surface.hh"
 #include "utilities/DBC.hh"
 
 namespace detran_geometry
@@ -37,8 +37,9 @@ public:
   typedef detran_utilities::SP<CSG_Node>    SP_node;
   typedef detran_utilities::size_t          size_t;
   typedef std::vector<Point>                vec_point;
+  typedef const Ray                         c_Ray;
   typedef const Point                       c_Point;
-  typedef const double                      c_double;
+  typedef const double                      c_dbl;
 
   //--------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
@@ -49,7 +50,7 @@ public:
   /// Does the node contain the point?
   virtual bool contains(c_Point &r) const = 0;
   /// Where does the node intersect the ray?
-  virtual vec_point intersections(c_Point &r, c_Point &d, c_double t_max) = 0;
+  virtual vec_point intersections(c_Ray &r, c_dbl t_max) = 0;
 
 };
 
@@ -86,7 +87,7 @@ public:
   /// Constructor.  The node is "in" (true) or "out" (false) of the surface.
   CSG_Primitive(SP_surface surface, bool sense);
   bool contains(c_Point &r) const;
-  vec_point intersections(c_Point &r, c_Point &d, c_double t_max);
+  vec_point intersections(c_Ray &r, c_dbl t_max);
 
 private:
 
@@ -105,7 +106,7 @@ class CSG_Operator: public CSG_Node
 {
 public:
   CSG_Operator(SP_node L, SP_node R);
-  vec_point intersections(c_Point &r, c_Point &d, c_double t_max);
+  vec_point intersections(c_Ray &r, c_dbl t_max);
 protected:
   SP_node d_L;
   SP_node d_R;
@@ -127,7 +128,7 @@ public:
   bool contains(c_Point &r) const;
 };
 
-/// Difference of two nodes
+/// Difference of two nodes (specifically, L - R)
 class CSG_Difference: public CSG_Operator
 {
 public:
@@ -144,7 +145,7 @@ class CSG_Translation: public CSG_Node
 public:
   /// For a node with natural origin at R_0, translates to R_0 + R_t
   CSG_Translation(SP_node node, c_Point &translation);
-  vec_point intersections(c_Point &r, c_Point &d, c_double t_max);
+  vec_point intersections(c_Ray &r, c_dbl t_max);
   bool contains(c_Point &r) const;
 private:
   /// Node to be translated

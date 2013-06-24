@@ -82,9 +82,9 @@ RegionFactory::CreatePinCell(SP_pincell pin)
   vec_region regions;
 
   // bounding box for all regions is the same and is just the pin cell + eps
-  vec_dbl bounding_box(6);
-  for (size_t i = 0; i < 6; ++i)
-    bounding_box[i] = (i % 2 ? pitch[i/2] + 0.01 : -0.01);
+  double eps = 1e-8;
+  Point bbox_min = Point(0) - eps;
+  Point bbox_max = pitch + eps;
 
   size_t number_divisions = std::max(1, (int)(2 * partitions.size()));
   size_t number_regions   = (1 + radii.size()) * number_divisions;
@@ -96,7 +96,7 @@ RegionFactory::CreatePinCell(SP_pincell pin)
     for (size_t a = 0; a < number_divisions; ++a)
     {
       Assert(r < pin->mat_map().size());
-      SP_region region = Region::Create(pin->mat_map()[r], bounding_box);
+      SP_region region = Region::Create(pin->mat_map()[r], bbox_min, bbox_max);
 
       // cylinder bounds
       if (r < radii.size())
@@ -169,15 +169,44 @@ RegionFactory::CreateAssembly(SP_assembly assembly)
 }
 
 //----------------------------------------------------------------------------//
+RegionFactory::vec_region
+RegionFactory::CreateCore(SP_core core)
+{
+  Require(core);
+  vec_region regions;
+
+  // Get all the unique regions
+  std::vector<vec_region> assembly_regions;
+  Core::vec_assembly assemblies = core->assemblies();
+  for (size_t i = 0; i < assemblies.size(); ++i)
+  {
+    assembly_regions.push_back(CreatePinCell(assemblies[i]));
+  }
+  Point pitch = assemblies[0]->pitch();
+
+  for (size_t i = 0; i < core->dimension(0); ++i)
+  {
+    for (size_t j = 0; j < core->dimension(1); ++j)
+    {
+      Point O(pitch.x()*i, pitch.y()*j);
+      size_t p = core->assembly_map()[i + j*core->dimension(0)];
+      for (size_t r = 0; r < assembly_regions[p].size(); ++r)
+      {
+        regions.push_back(CreateTranslatedRegion(assembly_regions[p][r], O));
+      }
+    }
+  }
+
+  return regions;
+}
+
+//----------------------------------------------------------------------------//
 RegionFactory::SP_region
 RegionFactory::CreateTranslatedRegion(SP_region r, const Point &origin)
 {
   Require(r);
   size_t m = r->attribute("MATERIAL");
-  vec_dbl bbox;// =  r->bounding_box();
-//  for (size_t i = 0; i < bbox.size(); ++i)
-//    bbox[i] += origin[i/2];
-  SP_region new_r(new Region(m, bbox));
+  SP_region new_r(new Region(m, r->bound_min()-origin, r->bound_max()-origin));
   Region::SP_node new_n(new CSG_Translation(r->top_node(), origin));
   new_r->append(new_n, INTERSECTION);
   return new_r;

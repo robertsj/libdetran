@@ -7,6 +7,7 @@
 //----------------------------------------------------------------------------//
 
 #include "CSG.hh"
+#include <algorithm>
 
 namespace detran_geometry
 {
@@ -31,13 +32,9 @@ bool CSG_Primitive::contains(c_Point &r) const
 
 //----------------------------------------------------------------------------//
 CSG_Primitive::vec_point
-CSG_Primitive::intersections(c_Point &r, c_Point &d, c_double t_max)
+CSG_Primitive::intersections(c_Ray &r, c_dbl t_max)
 {
-//  std::cout << " prim r = " << r << std::endl;
-  CSG_Primitive::vec_point points =  d_surface->intersections(r, d);
-//  for (int i = 0; i < points.size(); ++i)
-//    std::cout << " prim intersection " << i << " " << points[i] << std::endl;
-  return points;
+  return d_surface->intersections(r, t_max);
 }
 
 //----------------------------------------------------------------------------//
@@ -55,42 +52,15 @@ CSG_Operator::CSG_Operator(SP_node L, SP_node R)
 
 //----------------------------------------------------------------------------//
 CSG_Operator::vec_point
-CSG_Operator::intersections(c_Point &r, c_Point &d, c_double t_max)
+CSG_Operator::intersections(c_Ray &r, c_dbl t_max)
 {
-//  std::cout << "op_int r = " << r  << " d = " << d << std::endl;
-
-  // get intersections with left node and eliminate those not contained
-  vec_point pointsL = d_L->intersections(r, d, t_max);
-
-//  for (int i = 0; i < pointsL.size(); ++i)
-//    std::cout << " opL intersection " << i << " " << pointsL[i] << std::endl;
-
-//  for (vec_point::iterator p = pointsL.begin(); p != pointsL.end(); ++p)
-//    if (!contains(*p)) p = pointsL.erase(p);
-
-//  for (int i = 0; i < pointsL.size(); ++i)
-//    std::cout << " opL intersection2 " << i << " " << pointsL[i] << std::endl;
-
-  // do the same for the right
-  vec_point pointsR = d_R->intersections(r, d, t_max);
-
-//  for (int i = 0; i < pointsR.size(); ++i)
-//    std::cout << " opR intersection " << i << " " << pointsR[i] << std::endl;
-
-
-//  for (vec_point::iterator p = pointsR.begin(); p != pointsR.end(); ++p)
-//    if (!contains(*p)) p = pointsR.erase(p);
-
-//  for (int i = 0; i < pointsR.size(); ++i)
-//    std::cout << " opR intersection 2 " << i << " " << pointsR[i] << std::endl;
-
+  // get intersections with left and right nodes
+  vec_point pointsL = d_L->intersections(r, t_max);
+  vec_point pointsR = d_R->intersections(r, t_max);
 
   // concatenate the results and sort by increasing distance from origin r
   pointsL.insert(pointsL.end(), pointsR.begin(), pointsR.end());
-  std::sort(pointsL.begin(), pointsL.end(), IntersectionPointCompare(r));
-
-//  for (int i = 0; i < pointsL.size(); ++i)
-//    std::cout << " op final intersection " << i << " " << pointsL[i] << std::endl;
+  std::sort(pointsL.begin(), pointsL.end(), IntersectionPointCompare(r.origin));
 
   return pointsL;
 }
@@ -143,8 +113,9 @@ CSG_Difference::CSG_Difference(SP_node L, SP_node R)
 //----------------------------------------------------------------------------//
 bool CSG_Difference::contains(const Point &r) const
 {
-  return (d_L->contains(r) && !d_R->contains(r)) ||
-         (d_R->contains(r) && !d_L->contains(r));
+  // Difference consists of those points in L but not in R.  It's equivalent
+  // to (L .intersection. (.not. R)), but we don't have a .not. operator.
+  return d_L->contains(r) && !d_R->contains(r);
 }
 
 //----------------------------------------------------------------------------//
@@ -161,9 +132,13 @@ CSG_Translation::CSG_Translation(SP_node node, c_Point &translation)
 
 //----------------------------------------------------------------------------//
 CSG_Translation::vec_point
-CSG_Translation::intersections(c_Point &r, c_Point &d, c_double t_max)
+CSG_Translation::intersections(c_Ray &r, c_dbl t_max)
 {
-  return d_node->intersections(r - d_translation, d, t_max);
+  Ray r_tran = Ray(r.origin-d_translation, r.direction);
+  vec_point points = d_node->intersections(r_tran, t_max);
+  for (size_t i = 0; i < points.size(); ++i)
+    points[i] = points[i] + d_translation;
+  return points;
 }
 
 //----------------------------------------------------------------------------//

@@ -1,18 +1,22 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
  *  @file  Point.cc
  *  @brief Point class member definitions
  *  @note  Copyright (C) 2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
-#include "Point.hh"
-#include "DBC.hh"
+#include "geometry/Point.hh"
+#include "utilities/DBC.hh"
 
 namespace detran_geometry
 {
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
+// POINT MEMBERS
+//----------------------------------------------------------------------------//
+
+//----------------------------------------------------------------------------//
 Point::Point(const double xval, const double yval, const double zval)
   : d_x(xval)
   , d_y(yval)
@@ -21,22 +25,31 @@ Point::Point(const double xval, const double yval, const double zval)
 	/* ... */ 
 }
 
-//---------------------------------------------------------------------------//
-const double Point::operator[](const size_t dim) const
+//----------------------------------------------------------------------------//
+const double& Point::operator[](const size_t dim) const
 {
   Require(dim < 3);
-  if (dim == 0) return d_x;
-  if (dim == 1) return d_y;
-  return d_z;
+  return dim == 0 ? d_x : (dim == 1 ? d_y : d_z);
 }
 
-//---------------------------------------------------------------------------//
-Point operator*(double scale, const Point &p)
+//----------------------------------------------------------------------------//
+double& Point::operator[](const size_t dim)
+{
+  Require(dim < 3);
+  return dim == 0 ? d_x : (dim == 1 ? d_y : d_z);
+}
+
+//----------------------------------------------------------------------------//
+// POINT HELPERS
+//----------------------------------------------------------------------------//
+
+//----------------------------------------------------------------------------//
+Point operator*(const double scale, const Point &p)
 {
   return Point(p.x()*scale, p.y()*scale, p.z()*scale);
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 double distance(const Point &p1, const Point &p2)
 {
   double dx = p2.x()-p1.x();
@@ -45,7 +58,7 @@ double distance(const Point &p1, const Point &p2)
   return std::sqrt(dx*dx + dy*dy + dz*dz);
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 std::ostream& operator<< (std::ostream &out, const Point &p)
 {
   std::ios::fmtflags f(out.flags());
@@ -54,6 +67,30 @@ std::ostream& operator<< (std::ostream &out, const Point &p)
   out << "(" << p.x() << ", " << p.y() << ", " << p.z() << ")";
   out.flags(f);
   return out;
+}
+
+//----------------------------------------------------------------------------//
+bool operator< (const Point &P0, const Point &P1)
+{
+  return (P0.x() < P1.x()) && (P0.y() < P1.y()) && (P0.z() < P1.z());
+}
+
+//----------------------------------------------------------------------------//
+bool operator<= (const Point &P0, const Point &P1)
+{
+  return (P0.x() <= P1.x()) && (P0.y() <= P1.y()) && (P0.z() <= P1.z());
+}
+
+//----------------------------------------------------------------------------//
+bool operator> (const Point &P0, const Point &P1)
+{
+  return (P0.x() > P1.x()) && (P0.y() > P1.y()) && (P0.z() > P1.z());
+}
+
+//----------------------------------------------------------------------------//
+bool operator>= (const Point &P0, const Point &P1)
+{
+  return (P0.x() >= P1.x()) && (P0.y() >= P1.y()) && (P0.z() >= P1.z());
 }
 
 } // end namespace detran_geometry

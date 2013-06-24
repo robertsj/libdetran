@@ -31,13 +31,9 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------------------------------------//
 
-
-
 int test_Region(int argc, char *argv[])
 {
   typedef QuadraticSurfaceFactory QSF;
-
-  // Create a cube
 
   Surface::SP_surface W = QSF::CreatePlaneX(0.0);
   Surface::SP_surface E = QSF::CreatePlaneX(1.0);
@@ -47,10 +43,12 @@ int test_Region(int argc, char *argv[])
   Surface::SP_surface T = QSF::CreatePlaneZ(1.0);
   Surface::SP_surface C = QSF::CreateCylinderZ(0.5, 0.5, 0.4);
 
-  Region::SP_region region0 = Region::Create(0);
+  Region::SP_region region0 =
+    Region::Create(0, Point(0, 0, 0) - 0.1, Point(1, 1, 1) + 0.1);
   region0->append(C, false);
 
-  Region::SP_region region1 = Region::Create(1);
+  Region::SP_region region1 =
+    Region::Create(1, Point(0, 0, 0) - 0.1, Point(1, 1, 1) + 0.1);
   region1->append(W, true);
   region1->append(E, false);
   region1->append(S, true);
@@ -59,8 +57,13 @@ int test_Region(int argc, char *argv[])
   region1->append(T, false);
   region1->append(C, true);
 
+  // test contains
   TEST(region0->contains(Point(0.5, 0.5, 0.5)));
   TEST(region1->contains(Point(0.1, 0.1, 0.1)));
+
+  // test bounding box intersections
+  Ray r(Point(-2.0, 0.5, 0.5), Point(1, 0, 0));
+  TEST(region0->intersects_bounding_box(r, 20.0));
 
   return 0;
 }

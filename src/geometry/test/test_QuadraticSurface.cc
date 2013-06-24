@@ -50,8 +50,8 @@ int test_QuadraticSurface_plane(int argc, char *argv[])
   {
 
     QuadraticSurface x_plane(0, 0, 0,   0, 0, 0,   1, 0, 0,  -1.0);
-    QuadraticSurface z_plane(0, 0, 0,   0, 0, 0,   0, 1, 0,  -1.0);
-    QuadraticSurface y_plane(0, 0, 0,   0, 0, 0,   0, 0, 1,  -1.0);
+    QuadraticSurface y_plane(0, 0, 0,   0, 0, 0,   0, 1, 0,  -1.0);
+    QuadraticSurface z_plane(0, 0, 0,   0, 0, 0,   0, 0, 1,  -1.0);
 
     // The starting point is at the origin, and we're going in a 45
     // degree angle w/r to each axis.
@@ -71,14 +71,14 @@ int test_QuadraticSurface_plane(int argc, char *argv[])
     TEST(y_plane.sense(r1) == true);
     TEST(y_plane.sense(r1) == true);
 
-    vec_point x_int = x_plane.intersections(r0, d);
+    vec_point x_int = x_plane.intersections(Ray(r0, d));
     TEST(x_int.size() == 1);
     cout << x_int[0] << " " << x_plane.f(x_int[0]) << endl;
     TEST(soft_equiv(x_int[0].x(), 1.0));
     TEST(soft_equiv(x_int[0].y(), 1.0));
     TEST(soft_equiv(x_int[0].z(), 1.0));
 
-    x_int = x_plane.intersections(r1, d);
+    x_int = x_plane.intersections(Ray(r1, d));
     TEST(x_int.size() == 0);
   }
 
@@ -96,7 +96,7 @@ int test_QuadraticSurface_circle(int argc, char *argv[])
   TEST(c->sense(r1) == true);
   Point r(-2, -2, 0);
   Point d(1, 1, 0); d = d * (1.0 / distance(d));
-  QuadraticSurface::vec_point points = c->intersections(r, d);
+  QuadraticSurface::vec_point points = c->intersections(Ray(r, d));
   return 0;
 }
 

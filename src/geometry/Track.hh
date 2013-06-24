@@ -12,6 +12,7 @@
 #include "geometry/Point.hh"
 #include "geometry/Segment.hh"
 #include "utilities/DBC.hh"
+#include "utilities/Iterators.hh"
 #include "utilities/SP.hh"
 #include <iomanip>
 #include <ostream>
@@ -39,11 +40,10 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<Track>         SP_track;
-  typedef std::vector<Segment>                vec_segment;
-  typedef vec_segment::const_iterator         iterator;
-  typedef vec_segment::const_reverse_iterator riterator;
-  typedef detran_utilities::size_t            size_t;
+  typedef detran_utilities::SP<Track>                 SP_track;
+  typedef std::vector<Segment>                        vec_segment;
+  typedef detran_utilities::Reversible<vec_segment>   iterator;
+  typedef detran_utilities::size_t                    size_t;
 
   //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -53,7 +53,7 @@ public:
    *  @brief Constructor
    *  @param r0   entrance point
    *  @param r1   exit point
-   *  @param w    track width
+   *  @param w    track width (or, in 3-d, its area)
    */
   Track(const Point  &r0,
         const Point  &r1,
@@ -79,19 +79,21 @@ public:
   /// Return my exit point
   Point exit() const;
   /// Iterator to the beginning of the track
-  iterator begin();
+  iterator begin(bool forward = true);
   /// Iterator to the end of the track
-  riterator rbegin();
+  iterator end(bool forward = true);
   /// Return the track cosine
-  double cos_phi() const;
+  double mu() const;
   /// Return the track sine
-  double sin_phi() const;
+  double eta() const;
+  /// Return the track polar cosine
+  double xi() const;
   /// Number of segments along this track
   size_t number_segments() const;
-  /// Indentifier
-  size_t identifier() const;
   /// Return the track width
   double width() const;
+  /// Indentifier
+  size_t identifier() const;
 
 private:
 
@@ -105,14 +107,18 @@ private:
   Point d_enter;
   /// Track exit point
   Point d_exit;
-  /// Cosine of the track angle with respect to x
-  double d_cos_phi;
-  /// Sine of the track angle with respect to y
-  double d_sin_phi;
+  /// Cosine with respect to x
+  double d_mu;
+  /// Cosine with respect to y
+  double d_eta;
+  /// Cosine with respect to z
+  double d_xi;
   /// Track width
   double d_width;
   /// Unique identifier
   size_t d_identifier;
+  /// Counts every track added
+  static size_t d_number_tracks;
 
   //--------------------------------------------------------------------------//
   // IMPLEMENTATION

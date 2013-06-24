@@ -1,10 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
  *  @file  test_Track.cc
  *  @brief Test of Track class
  *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
 #define TEST_LIST        \
@@ -35,7 +35,11 @@ int test_Track(int argc, char *argv[])
   Track track(enter, exit, 0.123);
   TEST(soft_equiv(track.enter().x(), 0.0));
   TEST(soft_equiv(track.exit().y(),  1.0));
+  TEST(soft_equiv(track.exit().z(),  0.0));
   TEST(soft_equiv(track.width(),     0.123));
+  TEST(soft_equiv(track.mu(),  0.5 * sqrt(2.0)));
+  TEST(soft_equiv(track.eta(), 0.5 * sqrt(2.0)));
+  TEST(soft_equiv(track.xi(),  0.0));
 
   // Test track addition of segments.
   track.add_segment(Segment(0, 1.0));
@@ -46,15 +50,15 @@ int test_Track(int argc, char *argv[])
   TEST(soft_equiv(track.segment(0).length(), 1.0));
   TEST(soft_equiv(track.segment(1).length(), 2.0));
 
-  // Test iterators.
+  // Test iterator
   Track::iterator it = track.begin();
   TEST((*it).region() == 0);
   it++;
   TEST((*it).region() == 1);
-  Track::riterator rit = track.rbegin();
-  TEST((*rit).region() == 1);
-  rit++;
-  TEST((*rit).region() == 0);
+  it = track.begin(false);
+  TEST((*it).region() == 1);
+  it++;
+  TEST((*it).region() == 0);
 
   return 0;
 }

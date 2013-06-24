@@ -13,6 +13,7 @@
 #include "ioutils/SiloOutput.hh"
 #include "ioutils/PPMPlotter.hh"
 #include "ioutils/PPMOutput.hh"
+#include "ioutils/ColorMap.hh"
 %}
 
 // Hide templates from SWIG
@@ -37,6 +38,7 @@
 
 %include "PPMPlotter.hh"
 %include "PPMOutput.hh"
+%include "ColorMap.hh"
 
 //----------------------------------------------------------------------------//
 //              end of detran_ioutils.i

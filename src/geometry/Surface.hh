@@ -9,7 +9,7 @@
 #ifndef detran_geometry_SURFACE_HH_
 #define detran_geometry_SURFACE_HH_
 
-#include "geometry/Point.hh"
+#include "geometry/Ray.hh"
 #include "utilities/SP.hh"
 
 namespace detran_geometry
@@ -28,9 +28,9 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<Surface> SP_surface;
-  typedef std::vector<SP_surface>       vec_surface;
-  typedef std::vector<Point>            vec_point;
+  typedef detran_utilities::SP<Surface>   SP_surface;
+  typedef std::vector<SP_surface>         vec_surface;
+  typedef std::vector<Point>              vec_point;
 
   //--------------------------------------------------------------------------//
   // CONSTRUCTOR AND DESTRUCTOR
@@ -67,12 +67,10 @@ public:
 
   /**
    *  @brief Compute intersection points made with a ray in order
-   *  @param    r       Starting point
-   *  @param    d       Direction
+   *  @param    ray     Ray being cast
    *  @param    t_max   Optional maximum ray length to consider
    */
-  virtual vec_point intersections(const Point  &r,
-                                  const Point  &d,
+  virtual vec_point intersections(const Ray    &ray,
                                   const double  t_max = -1) = 0;
 
 };

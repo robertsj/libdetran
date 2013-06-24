@@ -45,27 +45,33 @@ inline const Segment& Track::segment(const size_t i) const
 }
 
 //----------------------------------------------------------------------------//
-inline Track::iterator Track::begin()
+inline Track::iterator Track::begin(bool forward)
 {
-  return d_segments.begin();
+  return iterator(&d_segments, forward);
 }
 
 //----------------------------------------------------------------------------//
-inline Track::riterator Track::rbegin()
+inline Track::iterator Track::end(bool forward)
 {
-  return d_segments.rbegin();
+  return iterator(&d_segments, forward) + d_segments.size();
 }
 
 //----------------------------------------------------------------------------//
-inline double Track::cos_phi() const
+inline double Track::mu() const
 {
-  return d_cos_phi;
+  return d_mu;
 }
 
 //----------------------------------------------------------------------------//
-inline double Track::sin_phi() const
+inline double Track::eta() const
 {
-  return d_sin_phi;
+  return d_eta;
+}
+
+//----------------------------------------------------------------------------//
+inline double Track::xi() const
+{
+  return d_xi;
 }
 
 //----------------------------------------------------------------------------//

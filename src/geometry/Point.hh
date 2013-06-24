@@ -27,9 +27,9 @@ class GEOMETRY_EXPORT Point
 public:
 
   /// Constructor
-  Point(const double xval = 0.0, 
-        const double yval = 0.0,
-        const double zval = 0.0);
+  explicit Point(const double xval = 0.0,
+                 const double yval = 0.0,
+                 const double zval = 0.0);
 
   Point operator*(const double scale) const
   {
@@ -51,6 +51,16 @@ public:
     return Point(d_x-p.x(), d_y-p.y(), d_z-p.z());
   }
 
+  Point operator+(const double p) const
+  {
+    return Point(d_x+p, d_y+p, d_z+p);
+  }
+
+  Point operator-(const double p) const
+  {
+    return Point(d_x-p, d_y-p, d_z-p);
+  }
+
   double x() const
   {
     return d_x;
@@ -64,8 +74,11 @@ public:
     return d_z;
   }
 
+  //@{
   /// Get value for a dimension
-  const double operator[](const size_t dim) const;
+  const double& operator[](const size_t dim) const;
+  double& operator[](const size_t dim);
+  //@}
 
 private:
  
@@ -83,6 +96,14 @@ GEOMETRY_EXPORT Point operator*(const double scale, const Point &p);
 
 /// Distance between two points.
 GEOMETRY_EXPORT double distance(const Point &p1, const Point &p2 = Point());
+
+GEOMETRY_EXPORT bool operator> (const Point &P0, const Point &P1);
+
+GEOMETRY_EXPORT bool operator<= (const Point &P0, const Point &P1);
+
+GEOMETRY_EXPORT bool operator< (const Point &P0, const Point &P1);
+
+GEOMETRY_EXPORT bool operator>= (const Point &P0, const Point &P1);
 
 /// Pretty print of a point
 GEOMETRY_EXPORT std::ostream& operator<< (std::ostream &out, const Point &p);

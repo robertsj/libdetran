@@ -12,20 +12,27 @@ namespace detran_geometry
 {
 
 //----------------------------------------------------------------------------//
-Region::Region(const size_t mat, const vec_dbl &bbox)
-  : d_bounding_box(bbox)
+Region::Region(const size_t mat, const Point &b_min, const Point &b_max)
+  : d_bounds(b_min, b_max)
+  , d_have_bound(false)
+  , d_have_bound_z(false)
 {
-  if (d_bounding_box.size())
+  if (distance(d_bounds[0], d_bounds[1]) > 0.0)
+    d_have_bound = true;
+  if (d_have_bound)
   {
-    Require(d_bounding_box.size() == 6);
+    Require(d_bounds[0] <= d_bounds[1]);
+    if (d_bounds[1].z() > d_bounds[0].z())
+      d_have_bound_z = true;
   }
   add_attribute("MATERIAL", mat);
 }
 
 //----------------------------------------------------------------------------//
-Region::SP_region Region::Create(const size_t mat, const vec_dbl &bbox)
+Region::SP_region
+Region::Create(const size_t mat, const Point &b_min, const Point &b_max)
 {
-  SP_region p(new Region(mat, bbox));
+  SP_region p(new Region(mat, b_min, b_max));
   return p;
 }
 
@@ -57,17 +64,45 @@ void Region::append(SP_surface s, bool sense)
 bool Region::contains(const Point &r)
 {
   Require(d_node);
+
   // If we have a bounding box, eliminate any points not in the box
-  if (d_bounding_box.size())
-  {
-    if (r.x() > d_bounding_box[0] && r.x() < d_bounding_box[1] &&
-        r.y() > d_bounding_box[2] && r.y() < d_bounding_box[3] &&
-        r.z() > d_bounding_box[4] && r.z() < d_bounding_box[5])
-    {
+  if (d_have_bound)
+    if (r > d_bounds[0] && r < d_bounds[1])
       return d_node->contains(r);
-    }
-  }
   return d_node->contains(r);
+}
+
+//----------------------------------------------------------------------------//
+bool Region::intersects_bounding_box(const Ray &r, const double max_length)
+{
+  // This is nearly verbatim to the code given in:
+  //
+  // Williams et al. "An Efficient and Robust Ray-Box Intersection
+  //   Algorithm", Journal of Graphics, GPU, and Game Tools, 10 (2005)
+  //
+  double tmin, tmax, tymin, tymax, tzmin, tzmax;
+  tmin  = (d_bounds[    r.sign[0]].x() - r.origin.x()) * r.inv_direction.x();
+  tmax  = (d_bounds[1 - r.sign[0]].x() - r.origin.x()) * r.inv_direction.x();
+  tymin = (d_bounds[    r.sign[1]].y() - r.origin.y()) * r.inv_direction.y();
+  tymax = (d_bounds[1 - r.sign[1]].y() - r.origin.y()) * r.inv_direction.y();
+  if ((tmin > tymax) || (tymin > tmax))
+    return false;
+  if (tymin > tmin)
+    tmin = tymin;
+  if (tymax < tmax)
+    tmax = tymax;
+  if (d_have_bound_z)
+  {
+    tzmin = (d_bounds[    r.sign[2]].z() - r.origin.z()) * r.inv_direction.z();
+    tzmax = (d_bounds[1 - r.sign[2]].z() - r.origin.z()) * r.inv_direction.z();
+    if ((tmin > tzmax) || (tzmin > tmax))
+      return false;
+    if (tzmin > tmin)
+      tmin = tzmin;
+    if (tzmax < tmax)
+      tmax = tzmax;
+  }
+  return ((tmin < max_length) && (tmax > 0.0));
 }
 
 //----------------------------------------------------------------------------//
@@ -125,9 +160,15 @@ int Region::attribute(const std::string &key) const
 }
 
 //----------------------------------------------------------------------------//
-Region::vec_dbl Region::bounding_box() const
+Point Region::bound_min() const
 {
-  return d_bounding_box;
+  return d_bounds[0];
+}
+
+//----------------------------------------------------------------------------//
+Point Region::bound_max() const
+{
+  return d_bounds[1];
 }
 
 } // end namespace detran_geometry

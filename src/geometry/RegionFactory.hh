@@ -14,6 +14,7 @@
 #include "QuadraticSurfaceFactory.hh"
 #include "PinCell.hh"
 #include "Assembly.hh"
+#include "Core.hh"
 
 namespace detran_geometry
 {
@@ -26,17 +27,12 @@ struct RegionFactory
 {
 
   //--------------------------------------------------------------------------//
-  // ENUMERATIONS
-  //--------------------------------------------------------------------------//
-
-
-
-  //--------------------------------------------------------------------------//
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
   typedef PinCell::SP_pincell               SP_pincell;
   typedef Assembly::SP_assembly             SP_assembly;
+  typedef Core::SP_core                     SP_core;
   typedef Region::SP_region                 SP_region;
   typedef Region::vec_region                vec_region;
   typedef QuadraticSurface                  QS;
@@ -46,9 +42,7 @@ struct RegionFactory
   typedef detran_utilities::size_t          size_t;
   typedef detran_utilities::vec_dbl         vec_dbl;
   typedef detran_utilities::vec_int         vec_int;
-
   typedef QuadraticSurfaceFactory           QF;
-
 
   //--------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
@@ -66,7 +60,9 @@ struct RegionFactory
    *  @param   pin      Pin cell
    *  @return           Region representation of pin cell
    */
-  static vec_region CreateAssembly(SP_assembly  assembly);
+  static vec_region CreateAssembly(SP_assembly assembly);
+
+  static vec_region CreateCore(SP_core core);
 
   /// Translate a region to a new origin
   static SP_region CreateTranslatedRegion(SP_region r, const Point &origin);

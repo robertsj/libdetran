@@ -46,6 +46,14 @@ int test_Point(int argc, char *argv[])
   p2 = Point(0.50, 0.50);
   TEST(soft_equiv(distance(p2, p1), 0.559016994374947));
   TEST(soft_equiv(distance(p1, p2), 0.559016994374947));
+  p1 = p2 + 0.5;
+  TEST(soft_equiv(p1.x(), 1.0));
+  TEST(soft_equiv(p1.y(), 1.0));
+  TEST(soft_equiv(p1.z(), 0.5));
+  p2 = p1 - 0.1;
+  TEST(soft_equiv(p2.x(), 0.9));
+  TEST(soft_equiv(p2.y(), 0.9));
+  TEST(soft_equiv(p2.z(), 0.4));
 
   return 0;
 }
