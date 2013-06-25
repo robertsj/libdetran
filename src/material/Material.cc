@@ -200,7 +200,6 @@ void Material::set_sigma_s(size_t m, size_t g, vec_dbl &v)
   Require(m < d_number_materials);
   Require(g < d_number_groups);
   Require(v.size() == d_number_groups);
-  d_sigma_s[m][g] = v;
   for (size_t gp = 0; gp < d_number_groups; gp++)
     d_sigma_s[g][gp][m] = v[gp];
 }
