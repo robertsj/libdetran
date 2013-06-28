@@ -22,6 +22,7 @@ using namespace detran_utilities;
 using namespace detran_test;
 using std::cout;
 using std::endl;
+#define COUT(c) cout << c << endl;
 
 int main(int argc, char *argv[])
 {
@@ -32,6 +33,7 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------------------------------------//
 
+//----------------------------------------------------------------------------//
 ScatterSource::SP_material get_material()
 {
   // Material
@@ -52,8 +54,10 @@ ScatterSource::SP_material get_material()
   return mat;
 }
 
+//----------------------------------------------------------------------------//
 State::SP_state get_state(int adjoint)
 {
+  // Flux is just [1, 2, 3]
   vec_int mt(1, 0);
   vec_int fm(1, 1);
   vec_dbl cm(2, 0); cm[1] = 1.0;
@@ -67,6 +71,7 @@ State::SP_state get_state(int adjoint)
   return state;
 }
 
+//----------------------------------------------------------------------------//
 int test_ScatterSource_forward(int argc, char *argv[])
 {
   // Setup
@@ -80,29 +85,29 @@ int test_ScatterSource_forward(int argc, char *argv[])
   // Within-group source
   // g = 0
   source.build_within_group_source(0, state->phi(0), s);
-  TEST(soft_equiv(s[0], 1.0*1.0));
+  TEST(soft_equiv(s[0], 1.0));
   s[0] = 0.0;
   // g = 1
   source.build_within_group_source(1, state->phi(1), s);
-  TEST(soft_equiv(s[0], 2.0*4.0));
+  TEST(soft_equiv(s[0], 8.0));
   s[0] = 0.0;
   // g = 2
   source.build_within_group_source(2, state->phi(2), s);
-  TEST(soft_equiv(s[0], 3.0*8.0));
+  TEST(soft_equiv(s[0], 24.0));
   s[0] = 0.0;
 
   // In-scatter source
   // g = 0
   source.build_in_scatter_source(0, s);
-  TEST(soft_equiv(s[0], 2.0*2.0));
+  TEST(soft_equiv(s[0], 4.0));
   s[0] = 0.0;
   // g = 1
   source.build_in_scatter_source(1, s);
-  TEST(soft_equiv(s[0], 1.0*3.0 + 3.0*5.0));
+  TEST(soft_equiv(s[0], 18.0));
   s[0] = 0.0;
   // g = 2
   source.build_in_scatter_source(2, s);
-  TEST(soft_equiv(s[0], 1.0*6.0 + 2.0*7.0));
+  TEST(soft_equiv(s[0], 20.0));
   s[0] = 0.0;
 
   // Downscatter source
@@ -112,30 +117,31 @@ int test_ScatterSource_forward(int argc, char *argv[])
   s[0] = 0.0;
   // g = 1
   source.build_downscatter_source(1, 1, s);
-  TEST(soft_equiv(s[0], 1.0*3.0));
+  TEST(soft_equiv(s[0], 3.0));
   s[0] = 0.0;
   // g = 2
   source.build_downscatter_source(2, 2, s);
-  TEST(soft_equiv(s[0], 1.0*6.0 + 2.0*7.0));
+  TEST(soft_equiv(s[0], 20.0));
   s[0] = 0.0;
 
   // Total group source
   // g = 0
   source.build_total_group_source(0, 0, state->all_phi(), s);
-  TEST(soft_equiv(s[0], 1.0*1.0 + 2.0*2.0));
+  TEST(soft_equiv(s[0], 5.0));
   s[0] = 0.0;
   // g = 1
   source.build_total_group_source(1, 0, state->all_phi(), s);
-  TEST(soft_equiv(s[0], 1.0*3.0 + 2.0*4.0 + 3.0*5.0));
+  TEST(soft_equiv(s[0], 26.0));
   s[0] = 0.0;
   // g = 2
   source.build_total_group_source(2, 0, state->all_phi(), s);
-  TEST(soft_equiv(s[0], 1.0*6.0 + 2.0*7.0 + 3.0*8.0));
+  TEST(soft_equiv(s[0], 44.0));
   s[0] = 0.0;
 
   return 0;
 }
 
+//----------------------------------------------------------------------------//
 int test_ScatterSource_adjoint(int argc, char *argv[])
 {
   // Setup
@@ -149,61 +155,62 @@ int test_ScatterSource_adjoint(int argc, char *argv[])
   // Within-group source
   // g = 0
   source.build_within_group_source(0, state->phi(0), s);
-  TEST(soft_equiv(s[0], 1.0*1.0));
+  TEST(soft_equiv(s[0], 1.0));
   s[0] = 0.0;
   // g = 1
   source.build_within_group_source(1, state->phi(1), s);
-  TEST(soft_equiv(s[0], 2.0*4.0));
+  TEST(soft_equiv(s[0], 8.0));
   s[0] = 0.0;
   // g = 2
   source.build_within_group_source(2, state->phi(2), s);
-  TEST(soft_equiv(s[0], 3.0*8.0));
+  TEST(soft_equiv(s[0], 24.0));
   s[0] = 0.0;
 
   // In-scatter source
   // g = 0
   source.build_in_scatter_source(0, s);
-  TEST(soft_equiv(s[0], 2.0*3.0 + 3.0*6.0));
+  TEST(soft_equiv(s[0], 24.0));
   s[0] = 0.0;
   // g = 1
   source.build_in_scatter_source(1, s);
-  TEST(soft_equiv(s[0], 1.0*2.0 + 3.0*7.0));
+  TEST(soft_equiv(s[0], 23.0));
   s[0] = 0.0;
   // g = 2
   source.build_in_scatter_source(2, s);
-  TEST(soft_equiv(s[0], 2.0*5.0));
+  TEST(soft_equiv(s[0], 10.0));
   s[0] = 0.0;
 
-  // Downscatter source
+  // Upscatter source
   // g = 0
   source.build_downscatter_source(0, 0, s);
-  TEST(soft_equiv(s[0], 0.0));
+  TEST(soft_equiv(s[0], 24.0));
   s[0] = 0.0;
   // g = 1
   source.build_downscatter_source(1, 1, s);
-  TEST(soft_equiv(s[0], 1.0*2.0));
+  TEST(soft_equiv(s[0], 21.0));
   s[0] = 0.0;
   // g = 2
   source.build_downscatter_source(2, 2, s);
-  TEST(soft_equiv(s[0], 2.0*5.0));
+  TEST(soft_equiv(s[0], 0.0));
   s[0] = 0.0;
 
   // Total group source
   // g = 0
-  source.build_total_group_source(0, 0, state->all_phi(), s);
-  TEST(soft_equiv(s[0], 1.0*1.0 + 2.0*3.0 + 3.0*6.0));
+  source.build_total_group_source(0, 2, state->all_phi(), s);
+  TEST(soft_equiv(s[0], 25.0));
   s[0] = 0.0;
   // g = 1
-  source.build_total_group_source(1, 0, state->all_phi(), s);
-  TEST(soft_equiv(s[0], 1.0*2.0 + 2.0*4.0 + 3.0*7.0));
+  source.build_total_group_source(1, 2, state->all_phi(), s);
+  TEST(soft_equiv(s[0], 31.0));
   s[0] = 0.0;
   // g = 2
-  source.build_total_group_source(2, 0, state->all_phi(), s);
-  TEST(soft_equiv(s[0], 2.0*5.0 + 3.0*8.0));
+  source.build_total_group_source(2, 2, state->all_phi(), s);
+  TEST(soft_equiv(s[0], 34.0));
   s[0] = 0.0;
 
   return 0;
 }
-//---------------------------------------------------------------------------//
-//              end of test_State.cc
-//---------------------------------------------------------------------------//
+
+//----------------------------------------------------------------------------//
+//              end of test_ScatterSource.cc
+//----------------------------------------------------------------------------//

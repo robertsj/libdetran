@@ -55,7 +55,7 @@ int test_Equation_DD_1D(int argc, char *argv[])
   // Setup group, octant, and angle.
   eq.setup_group(0);
   eq.setup_octant(0);
-  eq.setup_angle(0);
+  eq.setup_angle(1);
 
   // Create a phi and psi vector
   Equation_DD_1D::moments_type      phi(mesh->number_cells(), 0.0);

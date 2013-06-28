@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   MatrixDense.i.hh
- *  @brief  MatrixDense.i
- *  @author Jeremy Roberts
- *  @date   Jan 7, 2013
+ *  @file  MatrixDense.i.hh
+ *  @brief MatrixDense inline member definitions
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef callow_MATRIXDENSE_I_HH_
 #define callow_MATRIXDENSE_I_HH_
@@ -13,60 +12,51 @@
 namespace callow
 {
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 // ACCESS
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 inline const double& MatrixDense::operator()(const int i, const int j) const
 {
-  // Preconditions
   Require(d_is_ready);
-  Require(i >= 0 && i < d_m);
-  Require(j >= 0 && j < d_n);
-
+  Requirev(i >= 0 && i < d_m,  "0 <= " + AsString(i) + " < " + AsString(d_m));
+  Requirev(j >= 0 && j < d_n,  "0 <= " + AsString(j) + " < " + AsString(d_n));
   return d_values[j + i * d_n];
 }
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 inline double& MatrixDense::operator()(const int i, const int j)
 {
-  // Preconditions
   Require(d_is_ready);
-  Require(i >= 0 && i < d_m);
-  Require(j >= 0 && j < d_n);
-
+  Requirev(i >= 0 && i < d_m,  "0 <= " + AsString(i) + " < " + AsString(d_m));
+  Requirev(j >= 0 && j < d_n,  "0 <= " + AsString(j) + " < " + AsString(d_n));
   return d_values[j + i * d_n];
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 inline const double& MatrixDense::operator[](const int p) const
 {
-  // Preconditions
   Require(d_is_ready);
   Require(p >= 0 && p < d_n * d_m);
-
   return d_values[p];
 }
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 inline double& MatrixDense::operator[](const int p)
 {
-  // Preconditions
   Require(d_is_ready);
   Require(p >= 0 && p < d_n * d_m);
-
   return d_values[p];
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 // MULTIPLY
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 // These and other routines could be substituted via BLAS
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 inline void MatrixDense::multiply(const Vector &x, Vector &y)
 {
-  // Preconditions
   Require(d_is_ready);
   Require(x.size() == d_n);
   Require(y.size() == d_m);
@@ -90,10 +80,9 @@ inline void MatrixDense::multiply(const Vector &x, Vector &y)
 #endif
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 inline void MatrixDense::multiply_transpose(const Vector &x, Vector &y)
 {
-  // Preconditions [m, n] -> [n, m] * x m
   Require(d_is_ready);
   Require(x.size() == d_m);
   Require(y.size() == d_n);
@@ -116,11 +105,11 @@ inline void MatrixDense::multiply_transpose(const Vector &x, Vector &y)
 #endif
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 // INSERTING VALUES
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 inline bool MatrixDense::insert(int i, int j, double v, const int type)
 {
   // Preconditions
@@ -136,10 +125,9 @@ inline bool MatrixDense::insert(int i, int j, double v, const int type)
   return true;
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 inline bool MatrixDense::insert_row(int i, double *v, const int type)
 {
-  // Preconditions
   Require(d_is_ready);
   Require(i >= 0 && i < d_m);
 
@@ -149,10 +137,9 @@ inline bool MatrixDense::insert_row(int i, double *v, const int type)
   return true;
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 inline bool MatrixDense::insert_col(int j, double *v, const int type)
 {
-  // Preconditions
   Require(d_is_ready);
   Require(j >= 0 && j < d_n);
 
@@ -166,6 +153,6 @@ inline bool MatrixDense::insert_col(int j, double *v, const int type)
 
 #endif // callow_MATRIXDENSE_I_HH_
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file MatrixDense.i.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

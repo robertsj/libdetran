@@ -179,7 +179,8 @@ endif()
 
 OPTION (USE_TESTING "Build testing" ON)
 if (DETRAN_ENABLE_TEST)
-  set (CTEST_INITIAL_CACHE "COVERAGE_COMMAND:FILEPATH=/usr/bin/gcov")
+  set(MEMCHECK_COMMAND "/usr/bin/valgrind --leak-check=full")
+  set(CTEST_INITIAL_CACHE "COVERAGE_COMMAND:FILEPATH=/usr/bin/gcov")
   enable_testing()
   include(CTest)
   # is there a better way?

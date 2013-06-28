@@ -1,16 +1,18 @@
 //----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   test_Matrix.cc
- *  @brief  Test of Matrix class
+ *  @file  test_Matrix.cc
+ *  @brief Test of Matrix class
  *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
 //----------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
-#define TEST_LIST         \
-        FUNC(test_Matrix)
+#define TEST_LIST             \
+        FUNC(test_Matrix)     \
+        FUNC(test_MatrixDiff) \
 
 #include "TestDriver.hh"
+#include "matrix_fixture.hh"
 #include "matrix/Matrix.hh"
 #include "utils/Initialization.hh"
 #include <iostream>
@@ -69,6 +71,19 @@ int test_Matrix(int argc, char *argv[])
       }
     }
     A.assemble();
+    A.display();
+    // Ensure no repeated columns
+    for (int i = 0; i < A.number_rows(); ++i)
+    {
+      int c0 = -1, c1 = 0;
+      for (int p = A.start(i); p < A.end(i); ++p)
+      {
+        c1 = A.column(p);
+        TEST(c1 > c0);
+        c0 = c1;
+      }
+    }
+
 
     // Create two vectors
     Vector X(n, 0.0);
@@ -193,6 +208,15 @@ int test_Matrix(int argc, char *argv[])
     A.display();
   }
 
+  return 0;
+}
+
+int test_MatrixDiff(int argc, char *argv[])
+{
+  Matrix::SP_matrix L = test_matrix_2(10);
+  Matrix::SP_matrix F = test_matrix_3(10);
+  L->print_matlab("L.out");
+  F->print_matlab("F.out");
   return 0;
 }
 

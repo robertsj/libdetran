@@ -27,7 +27,6 @@ namespace callow
 
 inline void Matrix::preallocate(const int nnzrow)
 {
-  // preconditions
   Require(d_sizes_set);
   Require(!d_allocated);
   Require(nnzrow > 0);
@@ -40,7 +39,6 @@ inline void Matrix::preallocate(const int nnzrow)
 
 inline void Matrix::preallocate(int* nnzrows)
 {
-  // preconditions
   Require(d_sizes_set);
   Require(!d_allocated);
   // set number of nonzeros, preallocate triplets, and initialize counter
@@ -98,14 +96,27 @@ inline void Matrix::assemble()
 
     // find and/or insert the diagonal
     Assert(d_aij[i].size());
-    size_t d = 0;     // if diag exists, d = diag; else, one before diag
-    size_t shift = 0; // shift=0 if added diag is first element stored; else=1.
-    for (; d < d_aij[i].size(); ++d)
-      if (d_aij[i][d].j >= d_aij[i][d].i) break;
-    if (d) ++shift;
-    if (d) --d;
-    if (d_aij[i][d].i != d_aij[i][d].j && i < d_n)
-      d_aij[i].insert(d_aij[i].begin()+d+shift, triplet_T(i, i, 0.0));
+    if (i < d_n)
+    {
+      int d = 0;
+      while(d < d_aij[i].size())
+      {
+        if (d_aij[i][d].j == d_aij[i][d].i)
+        {
+          d = 0;
+          break;
+        }
+        else if (d_aij[i][d].j > d_aij[i][d].i)
+        {
+          d = d + 1;
+          break;
+        }
+        ++d;
+      }
+      --d;
+      if (d >= 0 && i < d_n)
+        d_aij[i].insert(d_aij[i].begin()+d, triplet_T(i, i, 0.0));
+    }
 
 //    std::cout << " after diag" << std::endl;
 //    for (int j = 0; j < d_aij[i].size(); ++j)

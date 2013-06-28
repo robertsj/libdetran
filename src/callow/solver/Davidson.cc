@@ -1,20 +1,21 @@
 //----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file  NonlinearArnoldi.cc
- *  @brief NonlinearArnoldi member definitions
+ *  @file  Davidson.cc
+ *  @brief Davidson member definitions
  *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
 //----------------------------------------------------------------------------//
 
-#include "NonlinearArnoldi.hh"
+#include "Davidson.hh"
 #include "callow/matrix/MatrixDense.hh"
+#include "callow/solver/Eispack.hh"
 #include "EigenSolverCreator.hh"
 
 namespace callow
 {
 
 //----------------------------------------------------------------------------//
-NonlinearArnoldi::NonlinearArnoldi(const double    tol,
+Davidson::Davidson(const double    tol,
                                    const int       maxit,
                                    const int       subspace_size)
   : Base(tol, maxit, "nonlinear-arnoldi")
@@ -33,7 +34,7 @@ NonlinearArnoldi::NonlinearArnoldi(const double    tol,
 }
 
 //----------------------------------------------------------------------------//
-void NonlinearArnoldi::set_operators(SP_matrix A,
+void Davidson::set_operators(SP_matrix A,
                                      SP_matrix B,
                                      SP_db     db)
 {
@@ -45,20 +46,20 @@ void NonlinearArnoldi::set_operators(SP_matrix A,
   // Set operators
   d_A = A;
   d_B = B;
-  d_A_minus_ritz_times_B = new NonlinearArnoldiResidual(d_A, d_B, this);
+  d_A_minus_ritz_times_B = new DavidsonResidual(d_A, d_B, this);
   // Create the default preconditioner
-  d_P = new NonlinearArnoldiDefaultP(d_A_minus_ritz_times_B, NULL, db);
+  d_P = new DavidsonDefaultP(d_A_minus_ritz_times_B, NULL, db);
 }
 
 //----------------------------------------------------------------------------//
-void NonlinearArnoldi::set_preconditioner(SP_pc P)
+void Davidson::set_preconditioner(SP_pc P)
 {
   Require(P);
   d_P = P;
 }
 
 //----------------------------------------------------------------------------//
-void NonlinearArnoldi::solve_impl(Vector &u, Vector &x0)
+void Davidson::solve_impl(Vector &u, Vector &x0)
 {
   // problem size
   const size_t m = u.size();
@@ -90,7 +91,7 @@ void NonlinearArnoldi::solve_impl(Vector &u, Vector &x0)
     for (size_t i = 0; i < d_subspace_size; ++i, ++it)
     {
       std::cout << "it=" << it << " o=" << o << " i=" << i << std::endl;
-      // construct the projected problem
+      // construct the projected problem, Ax=eBx
       A = new MatrixDense(i+1, i+1, 0.0);
       B = new MatrixDense(i+1, i+1, 0.0);
       for (size_t row = 0; row < i+1; ++row)
@@ -173,5 +174,5 @@ void NonlinearArnoldi::solve_impl(Vector &u, Vector &x0)
 } // end namespace callow
 
 //----------------------------------------------------------------------------//
-//              end of file NonlinearArnoldi.cc
+//              end of file Davidson.cc
 //----------------------------------------------------------------------------//

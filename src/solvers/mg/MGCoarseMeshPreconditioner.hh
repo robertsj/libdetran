@@ -29,7 +29,7 @@ namespace detran
  *
  *  @section mgcmpc_space Spatial Condensation
  *
- *  Restriction space is based on a user-specific level defining the
+ *  Restriction in space is based on a user-specified level defining the
  *  number of fine cells per coarse cell.  Then, averaging over space
  *  is based on volume-integration with an assumed space-dependent spectrum.
  *

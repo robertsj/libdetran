@@ -60,6 +60,10 @@ public:
 // TEST DEFINITIONS
 //----------------------------------------------------------------------------//
 
+/*
+ *  This tests the restriction and prolongation matrices directly to ensure
+ *  they each represent identity matrices of full dimension.
+ */
 int test_MGCoarseMeshPreconditioner_no_condense(int argc, char *argv[])
 {
   FixedSourceData data = get_fixedsource_data(1, 7);

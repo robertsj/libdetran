@@ -1,7 +1,7 @@
 //----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   PowerIteration.cc
- *  @brief  PowerIteration member definitions
+ *  @file  PowerIteration.cc
+ *  @brief PowerIteration member definitions
  *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
 //----------------------------------------------------------------------------//

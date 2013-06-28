@@ -15,30 +15,6 @@ namespace callow
 {
 
 //----------------------------------------------------------------------------//
-inline void EigenSolver::set_operators(SP_matrix    A,
-                                       SP_matrix    B,
-                                       SP_db        db)
-{
-  Insist(A, "The operator A cannot be null");
-  d_A = A;
-  Ensure(d_A->number_rows() == d_A->number_columns());
-
-  // Setup linear system if this is a generalized eigenproblem
-  if (B)
-  {
-    d_B = B;
-    Ensure(d_B->number_rows() == d_B->number_columns());
-    Ensure(d_B->number_rows() == d_A->number_columns());
-    // Create linear solver.  Defaults can be changed by
-    // extracting the solver and resetting.  The same goes
-    // for the preconditioner, which is null by default.
-
-    d_solver = LinearSolverCreator::Create(db);
-    d_solver->set_operators(d_B, db);
-  }
-}
-
-//----------------------------------------------------------------------------//
 inline int EigenSolver::solve(Vector &x, Vector &x0)
 {
   Require(x.size() == d_A->number_rows());

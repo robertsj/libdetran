@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   EigenSolverCreator.hh
- *  @author robertsj
- *  @date   Sep 25, 2012
- *  @brief  EigenSolverCreator class definition.
+ *  @file  EigenSolverCreator.hh
+ *  @brief EigenSolverCreator class definition
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 
@@ -45,5 +44,8 @@ public:
 
 } // end namespace callow
 
-
 #endif /* callow_EIGENSOLVERCREATOR_HH_ */
+
+//----------------------------------------------------------------------------//
+//              end of file EigenSolverCreator.hh
+//----------------------------------------------------------------------------//

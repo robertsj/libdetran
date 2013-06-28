@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   Preconditioner.hh
- *  @brief  Preconditioner
- *  @author Jeremy Roberts
- *  @date   Sep 18, 2012
+ *  @file  Preconditioner.hh
+ *  @brief Preconditioner class definition
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef callow_PRECONDITIONER_HH_
 #define callow_PRECONDITIONER_HH_
@@ -52,7 +51,8 @@ namespace callow
  *  available along with user-defined shell preconditioners.
  *  If built with PETSc, all preconditioners are available (to PETSc)
  *  as shells.  Otherwise, the user can set PETSc preconditioners
- *  with PetscSolver parameters.
+ *  with PetscSolver parameters.  If built with SLEPc, preconditioners
+ *  are available for spectral transformations.
  */
 
 class CALLOW_EXPORT Preconditioner
@@ -60,41 +60,35 @@ class CALLOW_EXPORT Preconditioner
 
 public:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // TYPEDEFS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   typedef detran_utilities::SP<Preconditioner>  SP_preconditioner;
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
+  /// Constructor
   Preconditioner(std::string name)
-    : d_name(name)
-  {
-    /* ... */
-  };
-
+    : d_name(name), d_petsc_pc(NULL), d_slepc_st(NULL) {}
+  /// Virtual destructor
   virtual ~Preconditioner(){};
-
-#ifdef DETRAN_ENABLE_PETSC
-  /**
-   *  set the PETSc preconditioner and do other setup
-   *
-   *  this should only be called by PetscSolver
-   */
+  /// set PETSc preconditioner and other setup (called by PetscSolver)
   void set_petsc_pc(PC pc);
-  /// return petsc preconditioner
+  /// set SLEPc spectral transformer and other setup (called by SlepcSolver)
+  void set_slepc_st(ST st);
+  /// return PETSc preconditioner
   PC petsc_pc() {return d_petsc_pc;}
-#endif
-
-  /// Return the PC name
+  /// return SLEPc spectral transformer
+  ST slepc_st() {return d_slepc_st;}
+  /// return the preconditioner name
   std::string name() const {return d_name;}
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL PRECONDITIONERS MUST IMPLEMENT THIS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /// solve Px = b
   virtual void apply(Vector &b, Vector &x) = 0;
@@ -103,20 +97,19 @@ protected:
 
   /// pc name
   std::string d_name;
-
-#ifdef DETRAN_ENABLE_PETSC
   /// PETSc preconditioner
   PC d_petsc_pc;
-#endif
+  /// SLEPc spectral transformation
+  ST d_slepc_st;
 
 };
 
-#ifdef DETRAN_ENABLE_PETSC
-// this is the function petsc actual calls; internally, it redirects
-// to our own operation.  all callow preconditioners are viewed by
-// petsc as shells.
+//@{
+/// These are the methods actually called by PETSc or SLEPc.  The callow
+/// preconditioners are viewed as shells.
 PetscErrorCode pc_apply_wrapper(PC pc, Vec b, Vec x);
-#endif
+PetscErrorCode st_apply_wrapper(ST st, Vec b, Vec x);
+//@}
 
 CALLOW_TEMPLATE_EXPORT(detran_utilities::SP<Preconditioner>)
 
@@ -126,6 +119,6 @@ CALLOW_TEMPLATE_EXPORT(detran_utilities::SP<Preconditioner>)
 
 #endif // callow_PRECONDITIONER_HH_
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file Preconditioner.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

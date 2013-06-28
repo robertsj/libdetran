@@ -175,27 +175,27 @@ RegionFactory::CreateCore(SP_core core)
   Require(core);
   vec_region regions;
 
-  // Get all the unique regions
-  std::vector<vec_region> assembly_regions;
-  Core::vec_assembly assemblies = core->assemblies();
-  for (size_t i = 0; i < assemblies.size(); ++i)
-  {
-    assembly_regions.push_back(CreatePinCell(assemblies[i]));
-  }
-  Point pitch = assemblies[0]->pitch();
-
-  for (size_t i = 0; i < core->dimension(0); ++i)
-  {
-    for (size_t j = 0; j < core->dimension(1); ++j)
-    {
-      Point O(pitch.x()*i, pitch.y()*j);
-      size_t p = core->assembly_map()[i + j*core->dimension(0)];
-      for (size_t r = 0; r < assembly_regions[p].size(); ++r)
-      {
-        regions.push_back(CreateTranslatedRegion(assembly_regions[p][r], O));
-      }
-    }
-  }
+//  // Get all the unique regions
+//  std::vector<vec_region> assembly_regions;
+//  Core::vec_assembly assemblies = core->assemblies();
+//  for (size_t i = 0; i < assemblies.size(); ++i)
+//  {
+//    assembly_regions.push_back(CreatePinCell(assemblies[i]));
+//  }
+//  Point pitch = assemblies[0]->pitch();
+//
+//  for (size_t i = 0; i < core->dimension(0); ++i)
+//  {
+//    for (size_t j = 0; j < core->dimension(1); ++j)
+//    {
+//      Point O(pitch.x()*i, pitch.y()*j);
+//      size_t p = core->assembly_map()[i + j*core->dimension(0)];
+//      for (size_t r = 0; r < assembly_regions[p].size(); ++r)
+//      {
+//        regions.push_back(CreateTranslatedRegion(assembly_regions[p][r], O));
+//      }
+//    }
+//  }
 
   return regions;
 }

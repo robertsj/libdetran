@@ -36,6 +36,9 @@ EigenDiffusion<D>::EigenDiffusion(SP_mg_solver mg_solver)
   d_M = mg_diff->lossoperator();
   d_F = new DiffusionGainOperator(d_input, d_material, d_mesh, d_adjoint);
 
+  d_M->print_matlab("L.out");
+  d_F->print_matlab("F.out");
+
   // Create callow eigensolver and set operators
   SP_input db;
   if (d_input->check("eigen_solver_db"))

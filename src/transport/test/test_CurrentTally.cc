@@ -91,7 +91,7 @@ int test_CurrentTally_1D(int argc, char *argv[])
 
   // Create an S4 quadrature.
   CurrentTally_T::SP_quadrature quad(new PolarGL(2));
-
+  quad->display();
   // Create the tally.
   CurrentTally_T::SP_currenttally tally(new CurrentTally_T(mesh, quad, 1));
 
@@ -107,9 +107,9 @@ int test_CurrentTally_1D(int argc, char *argv[])
     // Loop through azimuths in an octant.
     for (size_t a = 0; a < 2; a++)
     {
-
+      size_t aa = a == 0 ? 1 : 0;
       // Start with a fixed psi at the boundary.
-      psi_out = 100.0 * (double) o + 10.0 * (double) a + 1.0;
+      psi_out = 100.0 * (double) o + 10.0 * (double) aa + 1.0;
 
       // TALLY THE INCIDENT BOUNDARY
       size_t io = 0;
@@ -135,6 +135,7 @@ int test_CurrentTally_1D(int argc, char *argv[])
   // Test
   for (int i = 0; i < 8; i++)
   {
+    printf("%20.12f %20.12f \n", Jright[i], tally->partial_current(i, 0, 0, 0, 0, true));
     TEST(soft_equiv(Jright[i], tally->partial_current(i, 0, 0, 0, 0, true)));
     TEST(soft_equiv(Jleft[i],  tally->partial_current(i, 0, 0, 0, 0, false)));
   }

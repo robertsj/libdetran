@@ -155,11 +155,10 @@ void PetscSolver::set_operators(SP_matrix A, SP_db db)
 
 //---------------------------------------------------------------------------//
 void PetscSolver::set_preconditioner(SP_preconditioner P,
-                                     const int side)
+                                     const int         side)
 {
-  // Preconditions
   Require(P);
-  Require(side == LEFT or side == RIGHT);
+  Require(side == LEFT || side == RIGHT);
 
   // Keep the pc and its side
   d_P = P;
@@ -173,11 +172,11 @@ void PetscSolver::set_preconditioner(SP_preconditioner P,
   d_P->set_petsc_pc(pc);
 
   // Set the preconditioner side.
-  if (side == Base::LEFT) ierr = KSPSetPCSide(d_petsc_solver, PC_LEFT);
+  if (side == Base::LEFT)
+    ierr = KSPSetPCSide(d_petsc_solver, PC_LEFT);
   else
     ierr = KSPSetPCSide(d_petsc_solver, PC_RIGHT);
 
-  // Postconditions
   Ensure(!ierr);
 }
 

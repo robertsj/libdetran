@@ -1,26 +1,23 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   MatrixDense.cc
- *  @brief  MatrixDense
- *  @author Jeremy Roberts
- *  @date   Jan 7, 2013
+ *  @file  MatrixDense.cc
+ *  @brief MatrixDense member definitins
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #include "MatrixDense.hh"
 
 namespace callow
 {
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 MatrixDense::MatrixDense(const int m, const int n, const double v)
   : MatrixBase(m, n)
 {
-  // Preconditions
   Require(d_m > 0);
   Require(d_n > 0);
 
-  // Allocate the values and initialize
   int N = m * n;
   d_values = new double[N];
   for (int i = 0; i < N; ++i) d_values[i] = v;
@@ -35,20 +32,18 @@ MatrixDense::MatrixDense(const int m, const int n, const double v)
   d_is_ready = true;
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 MatrixDense::MatrixDense(const MatrixDense &A)
   : MatrixBase(A.number_rows(), A.number_columns())
   , d_values(NULL)
 {
-  // Preconditions
   Require(d_m > 0);
   Require(d_n > 0);
 
-  // Allocate the values and initialize
+  d_values = new double[d_m * d_n];
   for (int i = 0; i < d_m; ++i)
     for (int j = 0; j < d_n; ++j)
       d_values[j + i * d_n] = A(i, j);
-
   d_is_ready = true;
 
 #ifdef CALLOW_ENABLE_PETSC
@@ -59,7 +54,7 @@ MatrixDense::MatrixDense(const MatrixDense &A)
 #endif
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 MatrixDense::~MatrixDense()
 {
   if (d_is_ready)
@@ -73,7 +68,7 @@ MatrixDense::~MatrixDense()
   }
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 MatrixDense::SP_matrix
 MatrixDense::Create(const int m, const int n, const double v)
 {
@@ -82,7 +77,7 @@ MatrixDense::Create(const int m, const int n, const double v)
 }
 
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 void MatrixDense::display(bool forceprint) const
 {
   Require(d_is_ready);
@@ -109,7 +104,7 @@ void MatrixDense::display(bool forceprint) const
   printf("\n");
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 inline void MatrixDense::print_matlab(std::string filename) const
 {
   Require(d_is_ready);
@@ -130,6 +125,6 @@ inline void MatrixDense::print_matlab(std::string filename) const
 
 } // end namespace callow
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file MatrixDense.cc
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

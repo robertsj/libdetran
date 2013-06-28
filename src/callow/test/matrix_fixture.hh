@@ -76,10 +76,10 @@ Matrix::SP_matrix test_matrix_2(int n = 10)
   // cell width
   double h = 100.0 / n;
   // diffusion coefficient
-  double D[] = {1.0 / ( 3*0.1890), 1.0 / ( 3*1.4633)};
+  double D[] = {1.0 / ( 3*0.2263), 1.0 / ( 3*1.0119)};
   // removal cross section
-  double sigma_r[] = {0.1890 - 0.1507,  1.4633-1.4536};
-  double sigma_s21 = 0.0380;
+  double sigma_r[] = {0.2263 - 0.2006,  1.0119-0.9355};
+  double sigma_s21 = 0.0161;
   // boundary condition
   double albedo[] = {1, 0, 1, 0};
 
@@ -165,6 +165,53 @@ Matrix::SP_matrix test_matrix_2(int n = 10)
   return A;
 }
 
+/*
+ *  sample 2D neutron diffusion matrix
+ *
+ *  100 cm by 100 cm with reflecting conditions on left and right
+ *  group:    0    1
+ *  D         1.5  0.4
+ *  SigmaR    0.1  0.1
+ *  Sigma21   0.1  n/a
+ */
+Matrix::SP_matrix test_matrix_3(int n = 10)
+{
+  using std::cout;
+  using std::endl;
+
+  cout << " preallocating... " << endl;
+  // total cells = 2 * n * n
+  // mesh size   = n * n
+  // num group   = 2
+  Matrix::SP_matrix A;
+  int size = 2 * n * n;
+  A = new Matrix(size, size, 2);
+  double h = 100.0 / n;
+  double sigma_f[] = {0.0067,  0.1241};
+  double chi[] = {1.0, 0.0};
+  for (int g = 0; g < 2; g++)
+  {
+    // Loop over all cells.
+    for (int cell = 0; cell < n*n; cell++)
+    {
+      // Compute row index.
+      int row = cell + g * n * n;
+      // Loop through source group.
+      for (int gp = 0; gp < 2; gp++)
+      {
+        // Compute column index.
+        int col = cell + gp *  n * n;
+        // Fold the fission density with the spectrum.
+        double val = sigma_f[g] * chi[gp];
+        // Set the value.
+        bool flag = A->insert(row, col, val, A->INSERT);
+        Assert(flag);
+      }
+    } // row loop
+  } // group loop
+  A->assemble();
+  return A;
+}
 
 
 } // end namespace detran

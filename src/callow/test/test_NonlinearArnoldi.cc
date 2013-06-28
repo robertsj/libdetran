@@ -62,28 +62,33 @@ private:
  */
 int test_NonlinearArnoldi(int argc, char *argv[])
 {
-  int n = 100;
-  Vector X(n, 1.0);
-  Vector X0(n, 1.0);
-  Matrix::SP_matrix A = test_matrix_1(n);
+  Matrix::SP_matrix A = test_matrix_2(10);
 
+  int n = A->number_columns();
+  Vector X (n, 1.0);
+  Vector X0(n, 1.0);
+
+  A->print_matlab("A.out");
   // let's see if we can do Ax - eIx = 0 with it.  This means B = I.
-  if (0) {
+  if (1) {
     double ref[] =
     { 1.000000000000000, -1.872738525887991, 2.554768633964161 };
     Matrix::SP_matrix B(new Matrix(n, n, 1));
-    for (int i = 0; i < n; ++i) B->insert(i, i, 1.0);
+    for (int i = 0; i < n; ++i) B->insert(i, i, 1);
     B->assemble();
-    NonlinearArnoldi solver(1e-8, 10, 20);
+    NonlinearArnoldi solver(1e-8, 50, 20);
     solver.set_operators(A, B);
     solver.solve(X, X0);
     X.scale(1.0/X[0]);
     for (int i = 0; i < 3; ++i)
+    {
+      printf("%16.8f  %16.8f \n", X[i], ref[i]);
       TEST(soft_equiv(X[i], ref[i], 1.0e-6));
+    }
   }
 
   // let's see if we can do Ax - eIx = 0 with it.  This means B = I.
-  if (1) {
+  if (0) {
     double ref[] =
     { 1.000000000000000, -1.872738525887991, 2.554768633964161 };
     Matrix::SP_matrix B(new Matrix(n, n, 2));

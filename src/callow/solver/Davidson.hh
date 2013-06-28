@@ -1,7 +1,7 @@
 //----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file  NonlinearArnoldi.hh
- *  @brief NonlinearArnoldi class definition
+ *  @file  Davidson.hh
+ *  @brief Davidson class definition
  *  @note  Copyright (C) 2013 Jeremy Roberts
  */
 //----------------------------------------------------------------------------//
@@ -17,7 +17,7 @@ namespace callow
 {
 
 /**
- *  @class NonlinearArnoldi
+ *  @class Davidson
  *  @brief Solves generalized eigenvalue problems via nonlinear Arnoldi method
  *
  *  Consider the generalized eigenvalue problem
@@ -56,7 +56,7 @@ namespace callow
  *  efficient.
  *
  */
-class NonlinearArnoldi: public EigenSolver
+class Davidson: public EigenSolver
 {
 
 public:
@@ -75,11 +75,11 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //--------------------------------------------------------------------------//
 
-  NonlinearArnoldi(const double  tol = 1e-6,
+  Davidson(const double  tol = 1e-6,
                    const int     maxit = 100,
                    const int     subspace_size = 20);
 
-  virtual ~NonlinearArnoldi(){}
+  virtual ~Davidson(){}
 
   //--------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
@@ -125,12 +125,12 @@ private:
 };
 
 /// Wraps the action of r = (A-lambda*B)*x
-class NonlinearArnoldiResidual: public MatrixShell
+class DavidsonResidual: public MatrixShell
 {
 
 public:
 
-  NonlinearArnoldiResidual(MatrixBase::SP_matrix A,
+  DavidsonResidual(MatrixBase::SP_matrix A,
                            MatrixBase::SP_matrix B,
                            void*                 context)
     : MatrixShell(context, A->number_rows(), A->number_columns())
@@ -144,7 +144,7 @@ public:
 
   void multiply(const Vector &x,  Vector &y)
   {
-    double ritz = ((NonlinearArnoldi*)MatrixShell::d_context)->eigenvalue();
+    double ritz = ((Davidson*)MatrixShell::d_context)->eigenvalue();
     // dummy <-- A*x
     d_A->multiply(x, y);
     // y  <-- B*x
@@ -160,6 +160,10 @@ public:
 
 private:
 
+  //--------------------------------------------------------------------------//
+  // DATA
+  //--------------------------------------------------------------------------//
+
   /// Right hand side operator
   MatrixBase::SP_matrix d_A;
   /// Left hand side operator
@@ -170,7 +174,7 @@ private:
 };
 
 /**
- *  @class NonlinearArnoldiDefaultP
+ *  @class DavidsonDefaultP
  *  @brief Provides default preconditioning process for nonlinear Arnoldi
  *
  *  The correction is defined by the approximate solve
@@ -180,7 +184,7 @@ private:
  *  Here, a very coarse GMRES solve is performed, using a large tolerance
  *  and low iteration limit.
  */
-class NonlinearArnoldiDefaultP: public PCShell
+class DavidsonDefaultP: public PCShell
 {
 
 public:
@@ -189,7 +193,7 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef NonlinearArnoldi::SP_db   SP_db;
+  typedef Davidson::SP_db   SP_db;
   typedef MatrixBase::SP_matrix     SP_matrix;
 
   /**
@@ -198,7 +202,7 @@ public:
    *  @param    B         right hand operator
    *  @param    context   user context
    */
-  NonlinearArnoldiDefaultP(MatrixBase::SP_matrix  A_minus_ritz_times_B,
+  DavidsonDefaultP(MatrixBase::SP_matrix  A_minus_ritz_times_B,
                            void*                  context,
                            SP_db                  db = SP_db(0))
     : PCShell("nonlinear-arnoldi-default", context)
@@ -239,5 +243,5 @@ private:
 #endif /* callow_NONLINEARARNOLDI_HH_ */
 
 //----------------------------------------------------------------------------//
-//              end of file NonlinearArnoldi.hh
+//              end of file Davidson.hh
 //----------------------------------------------------------------------------//

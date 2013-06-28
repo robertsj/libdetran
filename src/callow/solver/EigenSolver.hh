@@ -68,6 +68,7 @@ public:
   typedef detran_utilities::SP<EigenSolver>       SP_solver;
   typedef MatrixBase::SP_matrix                   SP_matrix;
   typedef LinearSolver::SP_solver                 SP_linearsolver;
+  typedef Preconditioner::SP_preconditioner       SP_preconditioner;
   typedef Vector::SP_vector                       SP_vector;
   typedef detran_utilities::InputDB::SP_input     SP_db;
   typedef detran_utilities::size_t                size_t;
@@ -76,10 +77,17 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //--------------------------------------------------------------------------//
 
-  EigenSolver(const double    tol = 1e-6,
+  /**
+   *   @brief Constructor
+   *   @param     tol     tolerance
+   *   @param     maxit   maximum number of iterations
+   *   @param     name    solver name
+   */
+  EigenSolver(const double    tol   = 1e-6,
               const int       maxit = 100,
-              std::string     name = "solver");
+              std::string     name  = "solver");
 
+  /// Destructor
   virtual ~EigenSolver(){}
 
   //--------------------------------------------------------------------------//
@@ -94,10 +102,18 @@ public:
    *  @param B      optional right side operator (to be inverted)
    *  @param db     optional database for solver and preconditioner options
    */
-  virtual void set_operators(SP_matrix A,
-                             SP_matrix B = SP_matrix(0),
-                             SP_db db = SP_db(0));
+  virtual void set_operators(SP_matrix  A,
+                             SP_matrix  B  = SP_matrix(0),
+                             SP_db      db = SP_db(0));
 
+
+  /// Set the preconditioner for a generalized eigenvalue problem
+  virtual void set_preconditioner(SP_preconditioner P,
+                                  const int         side = LinearSolver::LEFT);
+
+  /// Set the preconditioner matrix for a generalized eigenvalue problem
+  virtual void set_preconditioner_matrix(SP_matrix P,
+                                         const int side = LinearSolver::LEFT);
 
   /**
    *  @brief Set the convergence criteria

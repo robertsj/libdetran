@@ -2,21 +2,20 @@
 # libdetran/src/solvers/test/CMakeLists.txt
 #------------------------------------------------------------------------------#
 
-<<<<<<< HEAD
-ADD_EXECUTABLE(test_FixedSourceManager          test_FixedSourceManager.cc)
-TARGET_LINK_LIBRARIES(test_FixedSourceManager   solvers)
-
-ADD_EXECUTABLE(test_EigenvalueManager           test_EigenvalueManager.cc)
-TARGET_LINK_LIBRARIES(test_EigenvalueManager    solvers)
-
-ADD_EXECUTABLE(test_TimeStepper           		test_TimeStepper.cc)
-TARGET_LINK_LIBRARIES(test_TimeStepper    		solvers)
-
-ADD_EXECUTABLE(test_TWIGL                      	test_TWIGL.cc)
-TARGET_LINK_LIBRARIES(test_TWIGL              	solvers)
-
-ADD_EXECUTABLE(test_LRA                      	test_LRA.cc)
-TARGET_LINK_LIBRARIES(test_LRA              	solvers)
+#ADD_EXECUTABLE(test_FixedSourceManager          test_FixedSourceManager.cc)
+#TARGET_LINK_LIBRARIES(test_FixedSourceManager   solvers)
+#
+#ADD_EXECUTABLE(test_EigenvalueManager           test_EigenvalueManager.cc)
+#TARGET_LINK_LIBRARIES(test_EigenvalueManager    solvers)
+#
+#ADD_EXECUTABLE(test_TimeStepper           		test_TimeStepper.cc)
+#TARGET_LINK_LIBRARIES(test_TimeStepper    		solvers)
+#
+#ADD_EXECUTABLE(test_TWIGL                      	test_TWIGL.cc)
+#TARGET_LINK_LIBRARIES(test_TWIGL              	solvers)
+#
+#ADD_EXECUTABLE(test_LRA                      	test_LRA.cc)
+#TARGET_LINK_LIBRARIES(test_LRA              	solvers)
 
 # Test of Gauss-Seidel
 ADD_EXECUTABLE(test_MGSolverGS                  test_MGSolverGS.cc)
