@@ -143,6 +143,10 @@ void MGCoarseMeshPreconditioner::build(const double keff, SP_state state)
         }
       }
     }
+    else
+    {
+      THROW("Invalid condensation option: " + AsString(d_condensation_option));
+    }
 
     // Condense to coarse spectrum for shapes
     d_coarse_spectrum.resize(d_fine_per_coarse.size(),

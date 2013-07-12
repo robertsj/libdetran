@@ -20,7 +20,8 @@ DiffusionLossOperator::DiffusionLossOperator(SP_input       input,
                                              const bool     include_fission,
                                              const size_t   cutoff,
                                              const bool     adjoint,
-                                             const double   keff)
+                                             const double   keff,
+                                             const size_t   sf_flag)
   : d_input(input)
   , d_material(material)
   , d_mesh(mesh)
@@ -28,6 +29,7 @@ DiffusionLossOperator::DiffusionLossOperator(SP_input       input,
   , d_include_fission(include_fission)
   , d_keff(keff)
   , d_adjoint(adjoint)
+  , d_sf_flag(sf_flag)
 {
   Require(d_input);
   Require(d_material);
@@ -97,9 +99,10 @@ DiffusionLossOperator::DiffusionLossOperator(SP_input       input,
 }
 
 //----------------------------------------------------------------------------//
-void DiffusionLossOperator::construct(const double keff)
+void DiffusionLossOperator::construct(const double keff, const size_t flag)
 {
   d_keff = keff;
+  d_sf_flag = flag;
   build();
 }
 
@@ -142,7 +145,8 @@ void DiffusionLossOperator::build()
       double cell_dc = d_material->diff_coef(m, g);
 
       Assert(cell_dc > 0.0);
-      double cell_sr = d_material->sigma_t(m, g) - d_material->sigma_s(m, g, g);
+      double cell_sr = d_material->sigma_t(m, g);
+      if (d_sf_flag == 0) cell_sr -= d_material->sigma_s(m, g, g);
 
       // Get the directional indices.
       size_t i = d_mesh->cell_to_i(cell);
@@ -250,31 +254,35 @@ void DiffusionLossOperator::build()
      Assert(flag);
 
      // Add down/up scatter components
-     int lower =
-         d_adjoint ? std::min(d_material->lower(g, d_adjoint), d_group_cutoff)
-                   : std::max(d_material->lower(g, d_adjoint), d_group_cutoff);
-     groups_t g_s = range<size_t>(lower, d_material->upper(g, d_adjoint), true);
-     groups_iter g_s_it = g_s.begin();
-     for (; g_s_it != g_s.end(); ++g_s_it)
+     if (d_sf_flag == 0)
      {
-       // actual group
-       int gp = *g_s_it;
-       // index within active range
-       int gpi = d_adjoint ? gp : gp - d_group_cutoff;
-       // skip diagonal
-       if (gp == g) continue;
-       int col = cell + gpi * d_group_size;
-       if (db) cout << "  ds  col = " << col << endl;
-       double val = d_adjoint ? -d_material->sigma_s(m, gp, g)
-                              : -d_material->sigma_s(m, g, gp);
-       flag = insert(row, col, val, INSERT);
-       Assert(flag);
+       int lower = d_adjoint ?
+                   std::min(d_material->lower(g, d_adjoint), d_group_cutoff)
+                 : std::max(d_material->lower(g, d_adjoint), d_group_cutoff);
+       groups_t g_s =
+         range<size_t>(lower, d_material->upper(g, d_adjoint), true);
+       groups_iter g_s_it = g_s.begin();
+       for (; g_s_it != g_s.end(); ++g_s_it)
+       {
+         // actual group
+         int gp = *g_s_it;
+         // index within active range
+         int gpi = d_adjoint ? gp : gp - d_group_cutoff;
+         // skip diagonal
+         if (gp == g) continue;
+         int col = cell + gpi * d_group_size;
+         if (db) cout << "  ds  col = " << col << endl;
+         double val = d_adjoint ? -d_material->sigma_s(m, gp, g)
+                                : -d_material->sigma_s(m, g, gp);
+         flag = insert(row, col, val, INSERT);
+         Assert(flag);
+       }
      }
 
     } // row loop
   } // group loop
 
-  if (d_include_fission)
+  if (d_include_fission && d_sf_flag == 0)
   {
     // Loop over all groups
     for (groups_iter g_it = d_groups.begin(); g_it != d_groups.end(); ++g_it)

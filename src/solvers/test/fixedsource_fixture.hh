@@ -36,7 +36,10 @@ struct FixedSourceData
 };
 
 /// Data based on dimension and number of groups
-FixedSourceData get_fixedsource_data(unsigned int dim, unsigned int ng)
+FixedSourceData get_fixedsource_data(unsigned int dim,
+                                     unsigned int ng,
+                                     unsigned int nfm = 5,
+                                     double       cmb = 5.0)
 {
   Require(dim >= 0 && dim <= 3);
   Require(ng == 1 || ng == 2 || ng == 7);
@@ -59,8 +62,8 @@ FixedSourceData get_fixedsource_data(unsigned int dim, unsigned int ng)
   data.material->compute_diff_coef();
 
   // mesh
-  vec_dbl cm(2, 0.0); cm[1] = 5.0;
-  vec_int fm(1, 5);
+  vec_dbl cm(2, 0.0); cm[1] = cmb;
+  vec_int fm(1, nfm);
   vec_int mt(1, 0);
   if (dim == 1)
     data.mesh = Mesh1D::Create(fm, cm, mt);

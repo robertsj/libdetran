@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   Vector.cc
- *  @author robertsj
- *  @date   Sep 13, 2012
- *  @brief  Vector member definitions
+ *  @file  Vector.cc
+ *  @brief Vector member definitions
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 

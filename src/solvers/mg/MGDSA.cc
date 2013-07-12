@@ -57,6 +57,16 @@ MGDSA::MGDSA(SP_input         input,
 //----------------------------------------------------------------------------//
 void MGDSA::apply(Vector &V, Vector &V_out)
 {
+  //V_out.copy(V);
+
+//  Operator_T::SP_matrix C(new Operator_T(d_input, d_material, d_mesh,
+//                          d_include_fission,d_group_cutoff, d_adjoint,1.0, 1));
+//  Vector tmp(V);
+//  C->multiply(V, tmp);
+//  d_solver->solve(tmp, V_out);
+//
+//  return;
+
   // Currently, DSA is only used on the flux moments, not on the boundaries.
   size_t size_moments = d_mesh->number_cells();
   V_out.set(0.0);
@@ -98,6 +108,7 @@ void MGDSA::apply(Vector &V, Vector &V_out)
 
   for (int i = 0; i < size_moments * d_number_active_groups; ++i)
     V_out[i] = V[i] + invC_S_V[i];
+
 
 }
 

@@ -20,13 +20,11 @@ MGCMDSA::MGCMDSA(SP_input         input,
                  SP_scattersource ssource,
                  SP_fissionsource fsource,
                  size_t           cutoff,
-                 bool             include_fission)
-  : Base(input, material, mesh, ssource, fsource, cutoff, "MG-CMDSA")
+                 bool             include_fission,
+                 bool             adjoint)
+  : Base(input, material, mesh, ssource, fsource, cutoff, adjoint, "MG-CMDSA")
   , d_include_fission(include_fission)
 {
-  // Compute the diffusion coefficients.
-  d_material->compute_diff_coef();
-
   if (d_input->check("mgdsa_disable_fission") and d_include_fission)
     d_include_fission = (0 == d_input->get<int>("mgdsa_disable_fission"));
 
@@ -44,13 +42,13 @@ void MGCMDSA::build(const double keff, SP_state state)
     db = d_input->get<SP_input>("outer_pc_db");
 
   // Create coarse mesh diffusion operator
-  d_operator = new Operator_T(d_input,
-                              d_coarsematerial,
-                              d_coarsemesh,
-                              d_include_fission,
-                              d_group_cutoff,
-                              false,  // adjoint
-                              keff);
+  d_operator = new Operator(d_input,
+                            d_c_material,
+                            d_coarsemesh,
+                            d_include_fission,
+                            d_group_cutoff,
+                            d_adjoint,
+                            keff);
 
   // Create the linear solver for inverting diffusion operator
   d_solver = callow::LinearSolverCreator::Create(db);
@@ -63,6 +61,11 @@ void MGCMDSA::build(const double keff, SP_state state)
 //----------------------------------------------------------------------------//
 void MGCMDSA::apply(Vector &V_h, Vector &V_h_out)
 {
+  std::cout << " hello" << std::endl;
+  /*
+   *  fine mesh dsa:    (I-inv(C)*S)*phi
+   *  coarse mesh dsa:  (I-P*inv(C)*R*S)*phi
+   */
 
   // Currently, DSA is only used on the flux moments, not on the boundaries.
   size_t size_moments = d_mesh->number_cells();
@@ -75,7 +78,7 @@ void MGCMDSA::apply(Vector &V_h, Vector &V_h_out)
       phi[g][i] = V_h[(g - d_group_cutoff) * size_moments + i];
 
   //--------------------------------------------------------------------------//
-  // Construct scatter source: SV_h <-- S * V_in
+  // Construct scatter source: SV_h <-- S * V_h
   //--------------------------------------------------------------------------//
 
   // Create the total group source on the fine mesh
@@ -92,28 +95,31 @@ void MGCMDSA::apply(Vector &V_h, Vector &V_h_out)
   // Restrict scatter source: SV_H <-- R * SV_h
   //--------------------------------------------------------------------------//
 
+  Vector SV_H(d_size_coarse, 0.0);
+  d_restrict->multiply(SV_h, SV_H);
 
 
   //--------------------------------------------------------------------------//
   // Solve coarse mesh diffusion equation: invC_SV_H <-- inv(C_H) * R * SV_h
   //--------------------------------------------------------------------------//
+
   Vector invC_SV_H(size_moments * d_number_active_groups, 0.0);
-  d_solver->solve(Z, Z_out);
+  d_solver->solve(SV_H, invC_SV_H);
 
   //--------------------------------------------------------------------------//
   // Project the result: invC_SV_h <-- P * inv(C_H) * R * SV_h
   //--------------------------------------------------------------------------//
 
+  Vector invC_SV_h(d_size_fine, 0.0);
+  d_restrict->multiply(invC_SV_H, invC_SV_h);
 
   //--------------------------------------------------------------------------//
-  // Add result to output: V_h_out <--- V_h_in + P * inv(C_H) * R * SV_h
+  // Add result to output: V_h_out <--- V_h + P * inv(C_H) * R * SV_h
   //--------------------------------------------------------------------------//
 
-  // \todo Implement an interface for swapping internal pointers a la PETSc
-  V_h_out.copy(V_h_in);
+  V_h_out.copy(V_h);
   for (int i = 0; i < size_moments * d_number_active_groups; ++i)
-    V_out[i] += invC_SV_h[i];
-
+    V_h_out[i] += invC_SV_h[i];
 
 }
 

@@ -12,6 +12,12 @@
 namespace callow
 {
 
+#ifdef MATRIXDENSE_COLMAJ
+#define MDIDX(i, j) i + j * d_m
+#else
+#define MDIDX(i, j) j + i * d_n
+#endif
+
 //----------------------------------------------------------------------------//
 // ACCESS
 //----------------------------------------------------------------------------//
@@ -22,7 +28,7 @@ inline const double& MatrixDense::operator()(const int i, const int j) const
   Require(d_is_ready);
   Requirev(i >= 0 && i < d_m,  "0 <= " + AsString(i) + " < " + AsString(d_m));
   Requirev(j >= 0 && j < d_n,  "0 <= " + AsString(j) + " < " + AsString(d_n));
-  return d_values[j + i * d_n];
+  return d_values[MDIDX(i, j)];
 }
 //----------------------------------------------------------------------------//
 inline double& MatrixDense::operator()(const int i, const int j)

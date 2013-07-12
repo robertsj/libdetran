@@ -79,7 +79,8 @@ public:
                         const bool    include_fission,
                         const size_t  cutoff = 0,
                         const bool    adjoint = false,
-                        const double  keff = 1.0);
+                        const double  keff = 1.0,
+                        const size_t  sf_flag = 0);
 
   //--------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
@@ -94,8 +95,9 @@ public:
    *  the pseudo-coefficients changes with time.
    *
    *  @param keff   Scaling parameter for fission source
+   *  @param flag   Optionally omit any scatter and fission terms
    */
-  void construct(double keff = 1.0);
+  void construct(double keff = 1.0, const size_t flag = 0);
 
   double albedo(const size_t side, const size_t g) const;
 
@@ -131,7 +133,7 @@ private:
   double d_keff;
   /// Adjoint flag
   bool d_adjoint;
-
+  size_t d_sf_flag;
   //--------------------------------------------------------------------------//
   // IMPLEMENTATION
   //--------------------------------------------------------------------------//

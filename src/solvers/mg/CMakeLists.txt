@@ -12,6 +12,7 @@ SET(MG_SRC
   ${SRC_DIR}/MGPreconditioner.cc
   ${SRC_DIR}/MGCoarseMeshPreconditioner.cc
   ${SRC_DIR}/MGDSA.cc
+  ${SRC_DIR}/MGCMDSA.cc
   PARENT_SCOPE
 )
 

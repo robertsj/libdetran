@@ -62,8 +62,11 @@ typedef int PetscErrorCode;
 #define CALLOW_ENABLE_SLEPC
 #include "slepc.h"
 #else
+namespace callow
+{
 typedef int* EPS;
 typedef int* ST;
+}
 #endif
 
 //#define CALLOW_ENABLE_PETSC_OPS

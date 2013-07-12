@@ -24,14 +24,28 @@ namespace detran
  *  @brief A base preconditioner for processes using a coarse space/energy mesh
  *
  *  When condensing to a coarse mesh, the cross section data needs to be
- *  averaged over space and energy in some way.
+ *  averaged over space and energy in some way.  In all coarse mesh
+ *  preconditioning schemes, the preconditioner operates on a fine mesh
+ *  vector @f$ u_h \in \mathcal{R}^{n} @f$, where @f$ n @f$ is the fine
+ *  mesh dimension.  In general, this action has
+ *  the form
+ *  @f[
+ *    u_h \leftarrow P M R u_h \, ,
  *
+ *  @f]
+ *  where
+ *  @f$R \in  \mathbb{R}^{m\times n} @f$ is the restriction operator,
+ *  @f$P \in  \mathbb{R}^{n\times m} @f$ is the prolongation operator,
+ *  @f$M \in  \mathbb{R}^{m\times m} @f$ is the coarse mesh preconditioning
+ *  operator, and @f$ m @f$ is the coarse mesh dimension.  Derived
+ *  classes provide implementations of @f$ M @f$.
  *
  *  @section mgcmpc_space Spatial Condensation
  *
  *  Restriction in space is based on a user-specified level defining the
- *  number of fine cells per coarse cell.  Then, averaging over space
- *  is based on volume-integration with an assumed space-dependent spectrum.
+ *  number of fine cells per coarse cell in each dimension. Averaging over
+ *  space is based on volume-integration with an assumed space-dependent
+ *  spectrum.
  *
  *
  *  @section mgcmpc_energy Energy Condensation
@@ -120,14 +134,25 @@ public:
   virtual ~MGCoarseMeshPreconditioner();
 
   //--------------------------------------------------------------------------//
+  // PUBLIC FUNCTIONS
+  //--------------------------------------------------------------------------//
+
+  //--------------------------------------------------------------------------//
   // ABSTRACT INTERFACE --- ALL MULTIGROUP PRECONDITIONERS MUST IMPLEMENT
   //--------------------------------------------------------------------------//
 
   /// Solve Px = b
   virtual void apply(Vector &b, Vector &x) = 0;
 
-  /// Build the PC, possibly using a fine mesh state to homogenize
-  void build(const double keff = 1.0, SP_state state = SP_state(0));
+  /**
+   *  @brief Setup base components of the preconditioner
+   *
+   *  Using a spectrum or state vector, this base implementation condenses
+   *  the materials on a coarse mesh in space and energy, producing the
+   *  restriction and prolongation operators.  The derived implementation
+   *  should call this if the default coarse meshing is desired.
+   */
+  virtual void build(const double keff = 1.0, SP_state state = SP_state(0)) = 0;
 
 protected:
 

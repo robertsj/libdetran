@@ -62,3 +62,12 @@ ADD_TEST(test_MGCoarseMeshPreconditioner_space
 ADD_TEST(test_MGCoarseMeshPreconditioner_space_energy
          test_MGCoarseMeshPreconditioner 2)                  
 
+
+# Test of MGDSA
+ADD_EXECUTABLE(test_MGDSA test_MGDSA.cc)
+TARGET_LINK_LIBRARIES(test_MGDSA solvers)
+ADD_TEST(test_MGDSA_1g                  test_MGDSA 0)
+ADD_TEST(test_MGDSA_7g_forward          test_MGDSA 1)
+ADD_TEST(test_MGDSA_7g_forward_multiply test_MGDSA 2)
+ADD_TEST(test_MGDSA_7g_adjoint          test_MGDSA 3)
+ADD_TEST(test_MGDSA_7g_adjoint_multiply test_MGDSA 4)    

@@ -21,6 +21,7 @@
 #include "TrackDB.hh"
 #include "Tracker.hh"
 #include "MeshMOC.hh"
+#include "Point.hh"
 
 #endif // DETRAN_GEOMETRY_HH_ 
 

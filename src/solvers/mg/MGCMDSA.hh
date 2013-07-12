@@ -43,7 +43,7 @@ public:
   //-------------------------------------------------------------------------//
 
   typedef MGCoarseMeshPreconditioner        Base;
-  typedef DiffusionLossOperator             Operator_T;
+  typedef DiffusionLossOperator             Operator;
   typedef callow::Matrix                    Matrix;
   typedef Matrix::SP_matrix                 SP_matrix;
 
@@ -67,7 +67,8 @@ public:
           SP_scattersource  ssource,
           SP_fissionsource  fsource,
           size_t            cutoff,
-          bool              include_fission);
+          bool              include_fission,
+          bool              adjoint);
 
   /// virtual destructor
   virtual ~MGCMDSA(){}

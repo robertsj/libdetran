@@ -41,6 +41,7 @@ void MGSolverGS<D>::solve(const double keff)
   vec_size_t::iterator g_it = groups.begin();
   for (; g_it != groups.end(); ++g_it)
   {
+    std::cout << " G = " << *g_it << std::endl;
     d_wg_solver->solve(*g_it);
   }
 
@@ -49,8 +50,8 @@ void MGSolverGS<D>::solve(const double keff)
   if (d_iterate)
   {
     // Update group bounds for the possibly truncated iteration block.
-    //groups = range<size_t>(d_lower_upscatter, d_upper);
-    groups = range<size_t>(0, 7);
+    groups = range<size_t>(d_lower_upscatter, d_upper);
+    //groups = range<size_t>(0, 7);
     for (iteration = 1; iteration <= d_maximum_iterations; ++iteration)
     {
       detran_utilities::vec_scale(nres, 0.0);

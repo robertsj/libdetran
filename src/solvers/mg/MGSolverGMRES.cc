@@ -8,6 +8,7 @@
 
 #include "MGSolverGMRES.hh"
 #include "MGDSA.hh"
+#include "MGCMDSA.hh"
 #include "callow/solver/LinearSolverCreator.hh"
 
 namespace detran
@@ -156,6 +157,17 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
                        d_krylov_group_cutoff,
                        d_multiply,
                        d_adjoint);
+    }
+    else if (pc_type == "mgcmdsa")
+    {
+      d_pc = new MGCMDSA(d_input,
+                         d_material,
+                         d_mesh,
+                         d_sweepsource->get_scatter_source(),
+                         d_fissionsource,
+                         d_krylov_group_cutoff,
+                         d_multiply,
+                         d_adjoint);
     }
     // Multigroup Coarse Mesh DSA
 

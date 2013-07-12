@@ -17,6 +17,7 @@
 namespace callow
 {
 
+//#define MATRIXDENSE_COLMAJ
 
 /**
  *  @class MatrixDense
@@ -118,6 +119,8 @@ protected:
 
   /// matrix elements
   double* d_values;
+
+private:
 
 };
 
