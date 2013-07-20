@@ -14,10 +14,9 @@ SET(SOLVER_SRC
   ${SRC_DIR}/EigenSolverCreator.cc
   ${SRC_DIR}/Davidson.cc
   ${SRC_DIR}/Eispack.cc
+  ${SRC_DIR}/Eispack.f90
   PARENT_SCOPE
 )
 
 # Install
 INSTALL_FILES(/include/callow/solver .hh)
-
-

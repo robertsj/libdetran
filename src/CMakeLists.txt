@@ -44,6 +44,8 @@ set(DETRAN_ENABLE_SILO NO CACHE BOOL        "Enable SILO.")
 set(DETRAN_ENABLE_HDF5 NO CACHE BOOL        "Enable HDF5.")
 # Options for Boost. On or Off.
 set(DETRAN_ENABLE_BOOST NO CACHE BOOL       "Enable BOOST.")
+# Enable Fortran for Callow features
+set(DETRAN_ENABLE_FORTRAN YES CACHE BOOL    "Enable Fortran.")
 
 #------------------------------------------------------------------------------#
 # CONFIGURATION
@@ -77,6 +79,11 @@ install(FILES       "${CMAKE_CURRENT_SOURCE_DIR}/../README"
         DESTINATION .)
 install(FILES 	        "${CMAKE_CURRENT_SOURCE_DIR}/../LICENSE"
       	DESTINATION .)
+
+# Enable Fortran (on by default)
+if(DETRAN_ENABLE_FORTRAN)
+  enable_language (Fortran)
+endif()
 
 #------------------------------------------------------------------------------#
 # EXTERNAL LIBRARIES

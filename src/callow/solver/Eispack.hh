@@ -12,17 +12,16 @@
 #include "EigenSolver.hh"
 #include "matrix/MatrixDense.hh"
 #include <cmath>
-#include <limits>
 
 namespace callow
 {
 
 /**
  *  @class Eispack
- *  @brief Solve a dense eigenvalue problem with the QZ method
+ *  @brief Solve a dense eigenvalue problem with either QR or QZ
  *
- *  The basic algorithm was influence from the old Eispack software.  Some
- *  things have been improved and adapted as needed.
+ *  This class is just a wrapper around old Eispack functionality.  We could
+ *  link to LAPACK, but it's nice to have it all self-contained.
  */
 
 class Eispack: public EigenSolver
@@ -43,25 +42,17 @@ public:
   // PUBLIC FUNCTIONS
   //--------------------------------------------------------------------------//
 
-  /**
-   *  @brief Dense matrices A and B to upper hessenberg H and upper triangle T
-   *
-   *  Householder reflections are used to triangulate B.
-   *
-   *  @param A    right hand matrix to become upper hessenberg
-   *  @param B    left hand matrix to become upper triangle
-   *  @param Z    contains the product of the right hand transformations, needed
-   *              for producing the vectors
-   */
-  static void qzhes(MatrixDense &A, MatrixDense &B, MatrixDense &Z);
+  /// Sets the operators for the problem.  Eispack requires dense matrices.
+  void set_operators(SP_matrix  A,
+                     SP_matrix  B  = SP_matrix(0),
+                     SP_db      db = SP_db(0));
 
+  /// Solve for the complete eigenspectrum
+  void solve_complete(MatrixDense &V_R,
+                      MatrixDense &V_I,
+                      Vector      &E_R,
+                      Vector      &E_I);
 
-  static void LZHES(MatrixDense &A, MatrixDense &B, MatrixDense &X);
-  static void  LZIT(MatrixDense &A,
-                    MatrixDense &B,
-                    MatrixDense &X,
-                    MatrixDense &V,
-                    Vector      &L);
 private:
 
   //--------------------------------------------------------------------------//
@@ -70,25 +61,24 @@ private:
 
   void solve_impl(Vector &x, Vector &x0);
 
+  //--------------------------------------------------------------------------//
+  // EXTERNAL CALLS
+  //--------------------------------------------------------------------------//
+
 };
 
-/// Return value of a with sign of b
-inline double sign(const double a, const double b)
+extern "C"
 {
-  double s = (b < 0) ? -1 : 1;
-  return std::abs(a) * s;
-}
+// SUBROUTINE rg (nm, n, a, wr, wi, matz, z, iv1, fv1, ierr)
+void rg_(const int* nm, const int* n, double* a, double* wr, double* wi,
+         const int* matz, double* z, int* iv1, double* fv1, int* ierr);
 
-/// Estimate unit roundoff in quantities of size x
-inline double epslon(const double x)
-{
-  return std::numeric_limits<double>::epsilon() * std::abs(x);
+// SUBROUTINE rgg (nm, n, a, b, alfr, alfi, beta, matz, z, ierr)
+void rgg_(const int* nm, const int* n, double* a, double* b, double* alfr,
+          double* alfi, double* beta, const int* matz, double* z, int* ierr);
 }
-
 
 } // end namespace callow
-
-#include "Eispack.i.hh"
 
 #endif /* callow_EISPACK_HH_ */
 
