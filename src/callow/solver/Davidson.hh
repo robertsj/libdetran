@@ -6,8 +6,8 @@
  */
 //----------------------------------------------------------------------------//
 
-#ifndef callow_NONLINEARARNOLDI_HH_
-#define callow_NONLINEARARNOLDI_HH_
+#ifndef callow_DAVIDSON_HH_
+#define callow_DAVIDSON_HH_
 
 #include "EigenSolver.hh"
 #include "callow/preconditioner/PCShell.hh"
@@ -76,8 +76,8 @@ public:
   //--------------------------------------------------------------------------//
 
   Davidson(const double  tol = 1e-6,
-                   const int     maxit = 100,
-                   const int     subspace_size = 20);
+           const int     maxit = 100,
+           const int     subspace_size = 20);
 
   virtual ~Davidson(){}
 
@@ -203,8 +203,8 @@ public:
    *  @param    context   user context
    */
   DavidsonDefaultP(MatrixBase::SP_matrix  A_minus_ritz_times_B,
-                           void*                  context,
-                           SP_db                  db = SP_db(0))
+                   void*                  context,
+                   SP_db                  db = SP_db(0))
     : PCShell("nonlinear-arnoldi-default", context)
   {
     if (!db)
@@ -240,7 +240,7 @@ private:
 
 } // end namespace callow
 
-#endif /* callow_NONLINEARARNOLDI_HH_ */
+#endif /* callow_DAVIDSON_HH_ */
 
 //----------------------------------------------------------------------------//
 //              end of file Davidson.hh

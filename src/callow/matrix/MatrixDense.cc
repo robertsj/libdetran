@@ -41,9 +41,11 @@ MatrixDense::MatrixDense(const MatrixDense &A)
   Require(d_n > 0);
 
   d_values = new double[d_m * d_n];
-  for (int i = 0; i < d_m; ++i)
-    for (int j = 0; j < d_n; ++j)
-      d_values[j + i * d_n] = A(i, j);
+//  for (int i = 0; i < d_m; ++i)
+//    for (int j = 0; j < d_n; ++j)
+//      d_values[MDIDX(i, j)] = A(i, j);
+  for (int i = 0; i < d_m*d_n; ++i)
+    d_values[i] = A[i];
   d_is_ready = true;
 
 #ifdef CALLOW_ENABLE_PETSC
@@ -96,7 +98,7 @@ void MatrixDense::display(bool forceprint) const
     printf(" row  %3i | ", i);
     for (int j = 0; j < d_n; j++)
     {
-      double v = d_values[j + i * d_n];
+      double v = d_values[MDIDX(i, j)];
       printf(" %3i (%13.6e)", j, v);
     }
     printf("\n");
@@ -114,7 +116,7 @@ inline void MatrixDense::print_matlab(std::string filename) const
   {
     for (int j = 0; j < d_n; ++j)
     {
-      double v = d_values[j + i * d_n];
+      double v = d_values[MDIDX(i, j)];
       fprintf(f, "%8i   %8i    %23.16e \n", i+1, j+1, v);
     }
   }

@@ -17,18 +17,14 @@
 namespace callow
 {
 
-//#define MATRIXDENSE_COLMAJ
+#define MATRIXDENSE_COLMAJ
 
 /**
  *  @class MatrixDense
  *  @brief Dense matrix
  *
- *  This is a simple matrix stored in row-major format.  It should
- *  be easy enough to use BLAS routines.
- *
- *  Note, PETSc is accessible, but note that PETSc uses a column-major
- *  order (like Fortran).  Hence, we switch the sizes and use transpose
- *  by default.
+ *  This class uses a column-major storage format lie Fortran.  This makes
+ *  it easier to couple with PETSc, BLAS, etc.
  */
 
 class CALLOW_EXPORT MatrixDense: public MatrixBase

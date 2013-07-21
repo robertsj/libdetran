@@ -1882,6 +1882,7 @@
 !
 !     ------------------------------------------------------------------
 !
+
       IF (n.le.nm) goto 10
       ierr = 10 * n
       GOTO 50
@@ -1890,13 +1891,13 @@
 !     .......... find eigenvalues only ..........
       tf = .false.
       CALL qzhes (nm, n, a, b, tf, z)
-      CALL qzit (nm, n, a, b, 0.0d0, tf, z, ierr)
+      CALL qzit (nm, n, a, b, 1.0e-14_8, tf, z, ierr)
       CALL qzval (nm, n, a, b, alfr, alfi, beta, tf, z)
       GOTO 50
 !     .......... find both eigenvalues and eigenvectors ..........
    20 tf = .true.
       CALL qzhes (nm, n, a, b, tf, z)
-      CALL qzit (nm, n, a, b, 0.0d0, tf, z, ierr)
+      CALL qzit (nm, n, a, b, 1.0e-14_8, tf, z, ierr)
       CALL qzval (nm, n, a, b, alfr, alfi, beta, tf, z)
       IF (ierr.ne.0) goto 50
       CALL qzvec (nm, n, a, b, alfr, alfi, beta, z)
@@ -2359,7 +2360,7 @@
       END SUBROUTINE hqr2
 
 
-      SUBROUTINE CDIV (AR, AI, BR, BI, CR, CI)
+      SUBROUTINE cdiv (AR, AI, BR, BI, CR, CI)
 !     BEGIN PROLOGUE  CDIV
 !     SUBSIDIARY
 !     PURPOSE  Compute the complex quotient of two complex numbers.
@@ -2379,7 +2380,7 @@
 !   END PROLOGUE  CDIV
       DOUBLE PRECISION :: AR,AI,BR,BI,CR,CI
 !
-      DOUBLE PRECISION S,ARS,AIS,BRS,BIS
+      DOUBLE PRECISION :: S,ARS,AIS,BRS,BIS
 !   FIRST EXECUTABLE STATEMENT  CDIV
       S = ABS(BR) + ABS(BI)
       ARS = AR/S
@@ -2390,4 +2391,4 @@
       CR = (ARS*BRS + AIS*BIS)/S
       CI = (AIS*BRS - ARS*BIS)/S
       RETURN
-      END
+      END SUBROUTINE cdiv

@@ -56,14 +56,17 @@ public:
 private:
 
   //--------------------------------------------------------------------------//
+  // DATA
+  //--------------------------------------------------------------------------//
+
+  /// Indicates largest, smallest, etc.
+  int d_which_value;
+
+  //--------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL EIGENSOLVERS MUST IMPLEMENT THIS
   //--------------------------------------------------------------------------//
 
   void solve_impl(Vector &x, Vector &x0);
-
-  //--------------------------------------------------------------------------//
-  // EXTERNAL CALLS
-  //--------------------------------------------------------------------------//
 
 };
 
@@ -74,8 +77,21 @@ void rg_(const int* nm, const int* n, double* a, double* wr, double* wi,
          const int* matz, double* z, int* iv1, double* fv1, int* ierr);
 
 // SUBROUTINE rgg (nm, n, a, b, alfr, alfi, beta, matz, z, ierr)
-void rgg_(const int* nm, const int* n, double* a, double* b, double* alfr,
-          double* alfi, double* beta, const int* matz, double* z, int* ierr);
+void rgg_(int*, int*, double*, double*, double*, double*, double*, int*,
+          double*, int*);
+
+// SUBROUTINE qzhes (nm, n, a, b, matz, z)
+void qzhes_(int*, int*, double*, double*, bool*, double*);
+
+// SUBROUTINE qzit (nm, n, a, b, eps1, matz, z, ierr)
+void qzit_(int*, int*, double*, double*, double*, bool*, double*, int*);
+
+// SUBROUTINE qzval (nm, n, a, b, alfr, alfi, beta, matz, z)
+void qzval_(const int* nm, const int* n, double* a, double* b, double* alfr,
+            double* alfi, double* beta, const bool* matz, double* z);
+
+
+
 }
 
 } // end namespace callow
