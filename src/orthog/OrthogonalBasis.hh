@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   OrthogonalBasis.hh
- *  @brief  OrthogonalBasis
- *  @author Jeremy Roberts
- *  @date   Jan 8, 2013
+ *  @file  OrthogonalBasis.hh
+ *  @brief OrthogonalBasis class definition
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_orthog_ORTHOGONALBASIS_HH_
 #define detran_orthog_ORTHOGONALBASIS_HH_
@@ -18,7 +17,7 @@
 #include "utilities/SP.hh"
 
 /**
- *  @namespace detran_ortho
+ *  @namespace detran_orthog
  *  @brief Contains basic utilities for performing orthogonal expansions
  */
 namespace detran_orthog
@@ -44,10 +43,10 @@ namespace detran_orthog
  *  has @f$ a_l = 1 @f$.
  *
  *  Suppose @f$ f \in R^{n} @f$ and
- *  @f$ \mathbf{P} \in R^{n\times n} = [P_0 P_1 \ldots]^T @f$.
+ *  @f$ \mathbf{P} \in R^{n\times n} = [P_0 P_1 \ldots] @f$.
  *  The transform into the basis is represented as
  *  @f[
- *      \tilde{f} =  \mathbf{P} \mathbf{W} f \, ,
+ *      \tilde{f} =  \mathbf{P}^{T} \mathbf{W} f \, ,
  *  @f]
  *  where @f$ \mathbf{W} @f$ represents the diagonal weight
  *  operator.
@@ -59,7 +58,7 @@ namespace detran_orthog
  *  To get back our initial vector (or its approximation),
  *  we perform the inverse transform
  *  @f[
- *      f =   \mathbf{P}^{T} \mathbf{A}^{-1} \tilde{f} \, ,
+ *      f =   \mathbf{P}\mathbf{A}^{-1} \tilde{f} \, ,
  *  @f]
  *  where @f$ \mathbf{A} @f$ represents the diagonal operator
  *  of the   @f$ a_l @f$ coefficients.
@@ -70,9 +69,9 @@ class ORTHOG_EXPORT OrthogonalBasis
 
 public:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // TYPEDEFS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   typedef detran_utilities::SP<OrthogonalBasis> SP_basis;
   typedef callow::Vector                        Vector;
@@ -81,9 +80,9 @@ public:
   typedef detran_utilities::size_t              size_t;
   typedef detran_utilities::vec_dbl             vec_dbl;
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /**
    *   @brief Constructor.
@@ -93,14 +92,14 @@ public:
    */
   OrthogonalBasis(const size_t order,
                   const size_t size,
-                  const bool orthonormal = false);
+                  const bool   orthonormal = false);
 
   /// Pure virtual destructor
   virtual ~OrthogonalBasis() = 0;
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /**
    *  @brief Fold a vector with one row of the basis.
@@ -110,14 +109,14 @@ public:
    *      \tilde{f}_l =  \mathbf{P}_{l,:} \mathbf{W} f \, ,
    *  @f]
    *
-   *  @param  row   Row index of the basis operator
-   *  @param  V     Vector to fold
+   *  @param  column   Column index of the basis operator (i.e. the order)
+   *  @param  V        Vector to fold
    */
-  virtual double fold(const size_t row, const Vector &V);
+  virtual double fold(const size_t column, const Vector &V);
   /// Interface for SP vectors
-  double fold(const size_t row, SP_vector V);
+  double fold(const size_t column, SP_vector V);
   /// Interface for std vector
-  double fold(const size_t row, const vec_dbl &V);
+  double fold(const size_t column, const vec_dbl &V);
 
   /**
    *  @brief (Un)fold a vector with one column of the basis
@@ -127,14 +126,14 @@ public:
    *      f_l =  \mathbf{P}^T_{:, l} \mathbf{A}^{-1} \tilde{f} \, ,
    *  @f]
    *
-   *  @param  column  Column index of the basis operator
-   *  @param  V       Vector to fold
+   *  @param  row   Row index of the basis operator
+   *  @param  V     Vector to fold
    */
-  virtual double unfold(const size_t column, const Vector &V);
+  virtual double unfold(const size_t row, const Vector &V);
   /// Interface for SP vectors
-  double unfold(const size_t column, SP_vector V);
+  double unfold(const size_t row, SP_vector V);
   /// Interface for std vector
-  double unfold(const size_t column, const vec_dbl &V);
+  double unfold(const size_t row, const vec_dbl &V);
 
 
   /**
@@ -188,9 +187,9 @@ public:
 
 protected:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // DATA
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /// Order of the basis (i.e. the highest degree polynomial stored)
   size_t d_order;
@@ -205,9 +204,9 @@ protected:
   /// Orthonormal flag
   bool d_orthonormal;
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // IMPLEMENTATION
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /// Compute the normalization coefficients directly
   void compute_a();
@@ -222,6 +221,6 @@ ORTHOG_TEMPLATE_EXPORT(detran_utilities::SP<OrthogonalBasis>)
 
 #endif // detran_orthog_ORTHOGONALBASIS_HH_
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file OrthogonalBasis.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

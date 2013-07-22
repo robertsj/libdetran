@@ -1,13 +1,13 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   CLP.cc
- *  @brief  CLP
- *  @author Jeremy Roberts
- *  @date   Jan 8, 2013
+ *  @file  CLP.cc
+ *  @brief CLP member definitions
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #include "CLP.hh"
+#include "utilities/DBC.hh"
 #ifdef DETRAN_ENABLE_BOOST
 #include <boost/math/special_functions/legendre.hpp>
 #endif
@@ -15,7 +15,7 @@
 namespace detran_orthog
 {
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 CLP::CLP(const size_t   order,
          const vec_dbl &x,
          const vec_dbl &qw,
@@ -29,7 +29,7 @@ CLP::CLP(const size_t   order,
   Require(x_1 > x_0);
 
   // Allocate the basis matrix
-  d_basis = new callow::MatrixDense(d_order + 1, d_size, 0.0);
+  d_basis = new callow::MatrixDense(d_size, d_order + 1, 0.0);
 
   // Allocate the normalization array
   d_a = Vector::Create(d_order + 1, 0.0);
@@ -47,18 +47,18 @@ CLP::CLP(const size_t   order,
   {
     for (size_t i = 0; i < d_size; ++i)
     {
-      (*d_basis)(l, i) = boost::math::legendre_p(l, d_x[i]);
+      (*d_basis)(i, l) = boost::math::legendre_p(l, d_x[i]);
     }
     // Inverse of normalization coefficient.
     (*d_a)[l] = (2.0 * l + 1.0) / 2.0;
   }
-  d_orthonormal = true;
+  //d_orthonormal = true;
   compute_a();
 #endif
 }
 
 } // end namespace detran_orthog
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file CLP.cc
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

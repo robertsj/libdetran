@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   Jacobi01.hh
- *  @brief  Jacobi01 class definition
- *  @author Jeremy Roberts
- *  @date   Jan 21, 2013
+ *  @file  Jacobi01.hh
+ *  @brief Jacobi01 class definition
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_orthog_Jacobi01_HH_
 #define detran_orthog_Jacobi01_HH_
@@ -26,23 +25,23 @@ class ORTHOG_EXPORT Jacobi01: public ContinuousOrthogonalBasis
 
 public:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /**
-   *   @brief Constructor.
+   *   @brief Constructor
    *   @param   order   Order of the basis
-   *   @param   x_0     Lower bound
-   *   @param   x_1     Upper bound
    *   @param   x       Grid on which basis is defined
    *   @param   w       Associated weights
+   *   @param   x_0     Lower bound
+   *   @param   x_1     Upper bound
    */
-  Jacobi01(const size_t order,
+  Jacobi01(const size_t   order,
            const vec_dbl &x,
            const vec_dbl &qw,
-           const double x_0 = -1.0,
-           const double x_1 =  1.0);
+           const double   x_0 = -1.0,
+           const double   x_1 =  1.0);
 
   /// Virtual destructor
   virtual ~Jacobi01(){}
@@ -54,6 +53,6 @@ public:
 
 #endif // detran_orthog_Jacobi01_HH_
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file Jacobi01.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

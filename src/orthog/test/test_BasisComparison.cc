@@ -1,15 +1,14 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   test_BasisComparison.cc
- *  @author Jeremy Roberts
- *  @date   Apr 1, 2012
- *  @brief  Test of DLP class
+ *  @file  test_BasisComparison.cc
+ *  @brief Comparison of several basis sets
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
 #define TEST_LIST                               \
-        FUNC(test_BasisComparisonAnalytic  )    \
+        FUNC(test_BasisComparisonAnalytic)      \
         FUNC(test_BasisComparisonDiscontinuous)
 
 #include "utilities/TestDriver.hh"
@@ -33,9 +32,9 @@ int main(int argc, char *argv[])
   callow_finalize();
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 // TEST DEFINITIONS
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 /*
  *  This test compares the accuracy of all the basis sets on
@@ -133,6 +132,6 @@ int test_BasisComparisonDiscontinuous(int argc, char *argv[])
   return 0;
 }
 
-//---------------------------------------------------------------------------//
-//              end of test_MomentIndexer.cc
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
+//              end of test_BasicComparison.cc
+//----------------------------------------------------------------------------//

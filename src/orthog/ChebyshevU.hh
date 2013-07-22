@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   ChebyshevU.hh
- *  @brief  ChebyshevU class definition
- *  @author Jeremy Roberts
- *  @date   Jan 23, 2013
+ *  @file  ChebyshevU.hh
+ *  @brief ChebyshevU class definition
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_orthog_ChebyshevU_HH_
 #define detran_orthog_ChebyshevU_HH_
@@ -24,24 +23,25 @@ class ORTHOG_EXPORT ChebyshevU: public ContinuousOrthogonalBasis
 
 public:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /**
    *   @brief Constructor.
    *   @param   order   Order of the basis
-   *   @param   x_0     Lower bound
-   *   @param   x_1     Upper bound
    *   @param   x       Grid on which basis is defined
    *   @param   w       Associated weights
+   *   @param   x_0     Lower bound
+   *   @param   x_1     Upper bound
+   *   @param   flag    If true, uses only every other order for symmetry
    */
-  ChebyshevU(const size_t order,
+  ChebyshevU(const size_t   order,
              const vec_dbl &x,
              const vec_dbl &qw,
-             const double x_0 = -1.0,
-             const double x_1 =  1.0,
-             const bool flag = false);
+             const double   x_0 = -1.0,
+             const double   x_1 =  1.0,
+             const bool     flag = false);
 
   /// Virtual destructor
   virtual ~ChebyshevU(){}
@@ -56,6 +56,6 @@ private :
 
 #endif // detran_orthog_ChebyshevU_HH_
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file ChebyshevU.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
