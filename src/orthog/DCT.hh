@@ -27,17 +27,15 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //--------------------------------------------------------------------------//
 
-  /**
-   *   @brief Constructor.
-   *   @param   order   Order of the basis
-   *   @param   size    Size of the basis vectors
-   */
-  DCT(const size_t order, const size_t size);
+  /// Constructor
+  DCT(const Parameters &p);
 
   /// Virtual destructor
   virtual ~DCT(){}
 
 };
+
+REGISTER_CLASS(OrthogonalBasis, DCT, "dct");
 
 } // end namespace detran_orthog
 

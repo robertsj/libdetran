@@ -34,6 +34,7 @@ public:
   typedef SP<Foo> SP_foo;
   // A REQUIRED typedef that tells the factory what the function type is
   typedef SP_foo (*CreateFunction)(int n);
+  // A REQUIRED typedef that defines the factory
   typedef Factory<Foo>  Factory_T;
   Foo(int n) : d_n(n) { }
   virtual ~Foo(){}

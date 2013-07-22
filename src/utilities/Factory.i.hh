@@ -53,6 +53,21 @@ Factory<B>::GetCreateFunction(const std::string &key)
 
 //----------------------------------------------------------------------------//
 template <class B>
+void Factory<B>::ShowRegistered()
+{
+  typename CreateFunctionMap::const_iterator it =
+    Factory<B>::Instance().d_callbacks.begin();
+  std::cout << "Registered classes: " << std::endl;
+  int i = 0;
+  for (; it != Factory<B>::Instance().d_callbacks.end(); ++it, ++i)
+  {
+    std::string key = it->first;
+    std::cout << i << " " << key << std::endl;
+  }
+}
+
+//----------------------------------------------------------------------------//
+template <class B>
 bool Factory<B>::Register_private(const std::string &key, CreateFunction create)
 {
   return d_callbacks.insert(CreateFunctionMapPair(key, create)).second;

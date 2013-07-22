@@ -58,6 +58,8 @@ public:
   static bool IsRegistered(const std::string &key);
   /// Get the factory creation function
   CreateFunction GetCreateFunction(const std::string &key);
+  /// Show all registered keys
+  static void ShowRegistered();
 
 private:
 
@@ -86,7 +88,7 @@ private:
 
 /// Convenience macro for registering derived class classes
 #define REGISTER_CLASS(B, D, S) \
-        const bool D##_registered = Factory<B>::Register(S, Create<D>);
+        const bool D##_registered = detran_utilities::Factory<B>::Register(S, Create<D>);
 
 } // end namespace detran_utilities
 

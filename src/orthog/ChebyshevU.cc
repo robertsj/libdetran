@@ -12,30 +12,23 @@ namespace detran_orthog
 {
 
 //----------------------------------------------------------------------------//
-ChebyshevU::ChebyshevU(const size_t order,
-                       const vec_dbl &x,
-                       const vec_dbl &qw,
-                       const double x_0,
-                       const double x_1,
-                       const bool flag)
-  : ContinuousOrthogonalBasis(order, x, qw)
+ChebyshevU::ChebyshevU(const Parameters &p)
+  : ContinuousOrthogonalBasis(p)
 {
-
   size_t even = 1;
-  if (flag) even = 2;
-  //d_orthonormal = true;
+  if (d_even_only) even = 2;
 
   // Allocate the basis matrix
-  d_basis = new callow::MatrixDense(d_order + 1, d_size, 0.0);
+  d_basis = new callow::MatrixDense(d_size, d_order + 1, 0.0);
 
   // Allocate the normalization array
   d_a = Vector::Create(d_order + 1, 0.0);
 
   // The weights are the quadrature weights times the actual weight
-  double L = x_1 - x_0;
+  double L = d_upper_bound - d_lower_bound;
   for (size_t i = 0; i < d_w->size(); ++i)
   {
-    d_x[i] = 2.0 * (d_x[i] - x_0) / L - 1.0;
+    d_x[i] = 2.0 * (d_x[i] - d_lower_bound) / L - 1.0;
     (*d_w)[i] = 2.0 * d_qw[i] * std::sqrt(1.0 - d_x[i] * d_x[i]);
   }
 

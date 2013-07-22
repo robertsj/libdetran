@@ -29,25 +29,15 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //--------------------------------------------------------------------------//
 
-  /**
-   *   @brief Constructor
-   *   @param   order   Order of the basis
-   *   @param   x       Grid on which basis is defined
-   *   @param   w       Associated weights
-   *   @param   x_0     Lower bound
-   *   @param   x_1     Upper bound
-   */
-  Jacobi01(const size_t   order,
-           const vec_dbl &x,
-           const vec_dbl &qw,
-           const double   x_0 = -1.0,
-           const double   x_1 =  1.0);
+  /// Constructor
+  Jacobi01(const Parameters &p);
 
   /// Virtual destructor
   virtual ~Jacobi01(){}
 
 };
 
+REGISTER_CLASS(OrthogonalBasis, Jacobi01, "jacobi");
 
 } // end namespace detran_orthog
 

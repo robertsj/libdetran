@@ -28,16 +28,14 @@ public:
   //--------------------------------------------------------------------------//
 
   /// Constructor
-  CLP(const size_t   order,
-      const vec_dbl &x,
-      const vec_dbl &qw,
-      const double   x_0 = -1.0,
-      const double   x_1 = 1.0);
+  CLP(const Parameters &p);
 
   /// Virtual destructor
   virtual ~CLP(){}
 
 };
+
+REGISTER_CLASS(OrthogonalBasis, CLP, "clp")
 
 } // end namespace detran_orthog
 

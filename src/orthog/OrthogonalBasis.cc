@@ -13,12 +13,11 @@ namespace detran_orthog
 {
 
 //----------------------------------------------------------------------------//
-OrthogonalBasis::OrthogonalBasis(const size_t order,
-                                 const size_t size,
-                                 const bool   orthonormal)
-  : d_order(order)
-  , d_size(size)
-  , d_orthonormal(orthonormal)
+OrthogonalBasis::OrthogonalBasis(const Parameters &p)
+  : d_order(p.order)
+  , d_size(p.size)
+  , d_orthonormal(p.orthonormal)
+  , d_even_only(p.even_only)
 {
   Requirev(d_order < d_size, AsString(d_order)+" < "+AsString(d_size));
 }
@@ -46,14 +45,16 @@ void OrthogonalBasis::compute_a()
     {
       tmp.multiply(d_w);
     }
-    double val = 1.0 / std::sqrt(tmp.dot(column));
+    double val = 1.0 / tmp.dot(column);
 
     if (d_orthonormal)
     {
-      column.scale(val);
+      // Then scale V so that V'V = 1
+      column.scale(std::sqrt(val));
     }
     else
     {
+      // Scale so that value * V'V = 1
       (*d_a)[i] = val;
     }
   }

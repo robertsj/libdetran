@@ -27,21 +27,8 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //--------------------------------------------------------------------------//
 
-  /**
-   *   @brief Constructor.
-   *   @param   order   Order of the basis
-   *   @param   x       Grid on which basis is defined
-   *   @param   w       Associated weights
-   *   @param   x_0     Lower bound
-   *   @param   x_1     Upper bound
-   *   @param   flag    If true, uses only every other order for symmetry
-   */
-  ChebyshevU(const size_t   order,
-             const vec_dbl &x,
-             const vec_dbl &qw,
-             const double   x_0 = -1.0,
-             const double   x_1 =  1.0,
-             const bool     flag = false);
+  /// Constructor
+  ChebyshevU(const Parameters &p);
 
   /// Virtual destructor
   virtual ~ChebyshevU(){}
@@ -51,6 +38,8 @@ private :
   double cheby_u(const size_t l, const double x);
 
 };
+
+REGISTER_CLASS(OrthogonalBasis, ChebyshevU, "cheby")
 
 } // end namespace detran_orthog
 

@@ -56,15 +56,8 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //--------------------------------------------------------------------------//
 
-  /**
-   *   @brief Constructor.
-   *   @param   order     Order of the basis
-   *   @param   x         Grid on which basis is defined
-   *   @param   qw        Quadrature weights
-   */
-  ContinuousOrthogonalBasis(const size_t order,
-                            const vec_dbl &x,
-                            const vec_dbl &qw);
+  /// @brief Constructor
+  ContinuousOrthogonalBasis(const Parameters &p);
 
   /// Pure virtual destructor
   virtual ~ContinuousOrthogonalBasis() = 0;
@@ -79,6 +72,10 @@ protected:
   vec_dbl d_x;
   /// Quadrature weights
   vec_dbl d_qw;
+  /// Lower bound
+  double d_lower_bound;
+  /// Upper bound
+  double d_upper_bound;
 
 };
 

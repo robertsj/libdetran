@@ -15,6 +15,7 @@
 #include "callow/utils/CallowDefinitions.hh"
 #include "utilities/Definitions.hh"
 #include "utilities/SP.hh"
+#include "utilities/Factory.hh"
 
 /**
  *  @namespace detran_orthog
@@ -22,6 +23,37 @@
  */
 namespace detran_orthog
 {
+
+// Convenience structure for passing parameters to the basis
+struct OrthogonalBasisParameters
+{
+  OrthogonalBasisParameters()
+    : order(0)
+    , size(0)
+    , orthonormal(false)
+    , even_only(false)
+    , lower_bound(-1)
+    , upper_bound(1)
+  {}
+  /// Order of basis
+  size_t order;
+  /// Size of basis vector
+  size_t size;
+  /// Orthonormalize
+  bool orthonormal;
+  /// Use even orders only
+  bool even_only;
+  /// Points and weights for continuous bases
+  //@{
+  detran_utilities::vec_dbl x;
+  detran_utilities::vec_dbl qw;
+  //@}
+  /// Lower and upper bounds for continuous bases
+  //@{
+  double lower_bound;
+  double upper_bound;
+  //@}
+};
 
 /**
  *  @class OrthogonalBasis
@@ -79,20 +111,24 @@ public:
   typedef callow::MatrixDense::SP_matrix        SP_matrix;
   typedef detran_utilities::size_t              size_t;
   typedef detran_utilities::vec_dbl             vec_dbl;
+  typedef OrthogonalBasisParameters             Parameters;
+
+  // REQUIRED type defining the creation function
+  typedef SP_basis (*CreateFunction)(const Parameters &p);
+
+  // Factory
+  typedef detran_utilities::Factory<OrthogonalBasis>  Factory_T;
 
   //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
   //--------------------------------------------------------------------------//
 
-  /**
-   *   @brief Constructor.
-   *   @param   order       Order of the expansion
-   *   @param   size        Size of the basis vectors
-   *   @param   orthonormal Flag to indicate the basis should be orthonormal
-   */
-  OrthogonalBasis(const size_t order,
-                  const size_t size,
-                  const bool   orthonormal = false);
+  /// Creation function.  This is the client's access to the basis sets.
+  static SP_basis Create(const std::string &key,
+                         const Parameters  &p = Parameters())
+  {
+    return (Factory_T::Instance().GetCreateFunction(key))(p);
+  }
 
   /// Pure virtual destructor
   virtual ~OrthogonalBasis() = 0;
@@ -188,6 +224,18 @@ public:
 protected:
 
   //--------------------------------------------------------------------------//
+  // CONSTRUCTOR
+  //--------------------------------------------------------------------------//
+
+  /**
+   *   @brief Constructor
+   *   @param   order       Order of the expansion
+   *   @param   size        Size of the basis vectors
+   *   @param   orthonormal Flag to indicate the basis should be orthonormal
+   */
+  OrthogonalBasis(const Parameters &p);
+
+  //--------------------------------------------------------------------------//
   // DATA
   //--------------------------------------------------------------------------//
 
@@ -203,6 +251,8 @@ protected:
   SP_vector d_a;
   /// Orthonormal flag
   bool d_orthonormal;
+  /// Even only flag
+  bool d_even_only;
 
   //--------------------------------------------------------------------------//
   // IMPLEMENTATION
@@ -214,6 +264,14 @@ protected:
 };
 
 ORTHOG_TEMPLATE_EXPORT(detran_utilities::SP<OrthogonalBasis>)
+
+/// Creation function template
+template <typename D>
+OrthogonalBasis::SP_basis
+Create(const OrthogonalBasis::Parameters &p = OrthogonalBasis::Parameters())
+{
+  return OrthogonalBasis::SP_basis(new D(p));
+}
 
 } // end namespace detran_orthog
 

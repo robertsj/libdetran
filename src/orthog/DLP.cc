@@ -12,12 +12,9 @@ namespace detran_orthog
 {
 
 //----------------------------------------------------------------------------//
-DLP::DLP(const size_t   order,
-         const size_t   size,
-         const bool     orthonormal)
-  : OrthogonalBasis(order, size, orthonormal)
+DLP::DLP(const Parameters &p)
+  : OrthogonalBasis(p)
 {
-
   // Allocate the basis matrix
   d_basis = new callow::MatrixDense(d_size, d_order + 1, 1.0);
 

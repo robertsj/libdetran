@@ -1,18 +1,18 @@
 //----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file  test_DLP.cc
- *  @brief Test of DLP class
+ *  @file  test_TransformedBasis.cc
+ *  @brief Test of TransformedBasis class
  *  @note  Copyright (C) 2013 Jeremy Roberts
  */
 //----------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
 #define TEST_LIST                   \
-        FUNC(test_DLP)
+        FUNC(test_TransformedBasis)
 
 #include "utilities/TestDriver.hh"
 #include "utilities/Definitions.hh"
-#include "orthog/DLP.hh"
+#include "orthog/TransformedBasis.hh"
 #include "callow/utils/Initialization.hh"
 #include <cmath>
 
@@ -32,31 +32,36 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------------------------------------//
 
-int test_DLP(int argc, char *argv[])
+int test_TransformedBasis(int argc, char *argv[])
 {
-  DLP::Parameters p;
+  TransformedBasis::Parameters p;
   p.size = 10;
   p.order = 3;
   p.orthonormal = true;
-  OrthogonalBasis::Factory_T::ShowRegistered();
-  OrthogonalBasis::SP_basis P = OrthogonalBasis::Create("dlp", p);
-  P->basis()->display();
+  p.x.resize(p.size, 0.0);
+  double x[] = {7, 10, 6, 1, 0.5, 0.2, 0.1, 0.05, 0.001, 0.0001};
+  for (int i = 0; i < 10; ++i)
+    p.x[i] = x[i];
 
-  double ref[] = {0.316227766016838, 0.495433694306862, 0.522232967867093,
-      0.453425192941883};
+  OrthogonalBasis::Factory_T::ShowRegistered();
+  OrthogonalBasis::SP_basis P = OrthogonalBasis::Create("trans", p);
+  P->basis()->print_matlab("P.out");
+
+  double ref[] = {5.128480369198469e-01, 1.315046629466771e-01,
+      3.230793420994966e-01, 3.896332471932851e-01};
 
   for (int i = 0; i < 4; ++i)
   {
     TEST(soft_equiv((*P->basis())(0, i), ref[i]));
   }
 
-  double ref_coef[] = {0.133329146877664, 0.515402376383869, 0.222337198116035,
-      1.979100267734324};
+  double ref_coef[] = {6.432239496678253e-01, -1.967195237976410e-01,
+      5.457188438895422e-03, 2.181167781209342e+00};
 
-  double ref_appx[] = {1.310995817236610, -0.019654554407243,
-      -0.583141356287192, -0.593125045724381, -0.263266080039961,
-      0.192775083444925, 0.561337987409130, 0.628762174531506,
-      0.181387187490909, -0.994447431033812};
+  double ref_appx[] = {1.155625195331455e+00, 4.848937080558042e-01,
+      -5.211589957765328e-01, -9.819183888198760e-01, -5.030854757398791e-01,
+      3.768960079559328e-01, 9.220275148302088e-01, 6.852283179257563e-01,
+      -1.239559670944787e-01, -8.206175147406938e-01};
 
   callow::Vector f(p.size, 0.0);
   for (int i = 0; i < p.size; ++i)
@@ -86,5 +91,5 @@ int test_DLP(int argc, char *argv[])
 
 
 //----------------------------------------------------------------------------//
-//              end of test_DLP.cc
+//              end of test_TransformedBasis.cc
 //----------------------------------------------------------------------------//

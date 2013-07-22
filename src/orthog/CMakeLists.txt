@@ -17,6 +17,8 @@ set(SRC
   DCP.cc
   Jacobi01.cc
   ChebyshevU.cc
+  DDF.cc
+  TransformedBasis.cc
 )
 
 #-----------------------------------------------------------------------------#

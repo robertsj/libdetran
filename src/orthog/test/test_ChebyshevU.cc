@@ -12,6 +12,7 @@
 
 #include "utilities/TestDriver.hh"
 #include "utilities/Definitions.hh"
+#include "utilities/MathUtilities.hh"
 #include "orthog/ChebyshevU.hh"
 #include "callow/utils/Initialization.hh"
 #include <cmath>
@@ -35,65 +36,67 @@ int main(int argc, char *argv[])
 int test_ChebyshevU(int argc, char *argv[])
 {
 
-  if(0){
-    int N = 10;
-    int M = 6;
-    double width = 2.0 / N;
+  {
+    ChebyshevU::Parameters p;
+    p.size = 10;
+    p.order = 6;
+    p.x = linspace(-1, 1.0, (int)p.size);
+    p.qw = vec_dbl(p.size, p.x[1]-p.x[0]);
 
-    vec_dbl x(N, 0);
-    x[0] = -1.0 + width / 2.0;
-    for (int i = 1; i < N; ++i) x[i] = x[i-1] + width;
+    ChebyshevU P(p);
 
-    vec_dbl dx(N, width);
+    callow::Vector f(p.size, 0.0);
+    for (int i = 0; i < p.size; ++i)
+      f[i] = std::cos(p.x[i]);
 
-    ChebyshevU P(M, x, dx);
-
-    callow::Vector f(N, 0.0);
-    for (int i = 0; i < N; ++i) f[i] = std::cos(x[i]);
-
-    callow::Vector ft(M + 1, 0.0);
-    callow::Vector f2(N, 0.0);
+    callow::Vector ft(p.order + 1, 0.0);
+    callow::Vector fa(p.size, 0.0);
 
     P.transform(f, ft);
-    P.inverse(ft, f2);
+    P.inverse(ft, fa);
 
-    f.display();
-    ft.display();
-    f2.display();
+    f.display("F");
+    ft.display("FT");
+    fa.display("FA");
   }
 
   {
-    int N = 4;
-    int M = 3;
+    ChebyshevU::Parameters p;
+    p.size = 4;
+    p.order = 3;
+    p.x.resize(p.size, 0.0);
+    p.qw.resize(p.size, 0.0);
+    p.lower_bound = 0.0;
+    p.upper_bound = 1.0;
 
-    vec_dbl x(N);
-    vec_dbl w(N);
     double xa[] = {0.9619397662556434, 0.6913417161825449, 0.30865828381745514, 0.03806023374435663};
     double wa[] = {0.15027943247108658, 0.36280664401742885, 0.36280664401742885, 0.15027943247108658};
 //    double xa[] = {0.9305681557970262, 0.6699905217924281, 0.33000947820757187, 0.06943184420297371};
 //    double wa[] = {0.17392742256872687, 0.3260725774312732, 0.3260725774312732, 0.17392742256872687};
-    for (int i = 0; i < N; ++i)
+    for (int i = 0; i < p.size; ++i)
     {
-      x[i] = xa[i];
-      w[i] = wa[i];
+      p.x[i] = xa[i];
+      p.qw[i] = wa[i];
     }
 
-    ChebyshevU P(M, x, w, 0.0, 1.0);
+    ChebyshevU P(p);
 
-    callow::Vector f(N, 0.0);
-    for (int i = 0; i < N; ++i) f[i] = std::cos(x[i]);
-    callow::Vector ft(M + 1, 0.0);
-    callow::Vector f2(N, 0.0);
+    callow::Vector f(p.size, 0.0);
+    for (int i = 0; i < p.size; ++i)
+      f[i] = std::cos(p.x[i]);
+    callow::Vector ft(p.order + 1, 0.0);
+    callow::Vector fa(p.size, 0.0);
 
     P.transform(f, ft);
-    P.inverse(ft, f2);
+    P.inverse(ft, fa);
 
     std::cout << " **** " << std::endl;
-    f.display();
-    ft.display();
-    f2.display();
-    std::cout << " L2 res norm = " << f2.norm_residual(f) << std::endl;
+    f.display("F");
+    ft.display("FT");
+    fa.display("FA");
+    std::cout << " L2 res norm = " << fa.norm_residual(f) << std::endl;
 
+    TEST(soft_equiv(fa.norm_residual(f), 0.0));
   }
 
   return 0;

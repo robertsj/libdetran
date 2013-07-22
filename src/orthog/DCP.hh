@@ -17,6 +17,11 @@ namespace detran_orthog
 /**
  *  @class DCP
  *  @brief Discrete Chebyshev polynomial basis
+ *
+ *  Note, it turns out these are equivalent to @ref DLP.  Basically, given
+ *  a flat and linear starting basis, there can only be one next step
+ *  in the recursion (outside of normalization).  However, this
+ *  implementation is slightly more stable numerically.
  */
 class ORTHOG_EXPORT DCP: public OrthogonalBasis
 {
@@ -27,17 +32,15 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //--------------------------------------------------------------------------//
 
-  /**
-   *   @brief Constructor.
-   *   @param   order   Order of the basis
-   *   @param   size    Size of the basis vectors
-   */
-  DCP(const size_t order, const size_t size);
+  /// Constructor
+  DCP(const Parameters &p);
 
   /// Virtual destructor
   virtual ~DCP(){}
 
 };
+
+REGISTER_CLASS(OrthogonalBasis, DCP, "dcp");
 
 } // end namespace detran_orthog
 

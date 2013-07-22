@@ -13,8 +13,8 @@ namespace detran_orthog
 {
 
 //----------------------------------------------------------------------------//
-DCP::DCP(const size_t order, const size_t size)
-  : OrthogonalBasis(order, size)
+DCP::DCP(const Parameters &p)
+  : OrthogonalBasis(p)
 {
   double N = (double) d_size;
 

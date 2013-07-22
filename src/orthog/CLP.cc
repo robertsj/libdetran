@@ -16,17 +16,12 @@ namespace detran_orthog
 {
 
 //----------------------------------------------------------------------------//
-CLP::CLP(const size_t   order,
-         const vec_dbl &x,
-         const vec_dbl &qw,
-         const double   x_0,
-         const double   x_1)
-  : ContinuousOrthogonalBasis(order, x, qw)
+CLP::CLP(const Parameters &p)
+  : ContinuousOrthogonalBasis(p)
 {
 #ifndef DETRAN_ENABLE_BOOST
   THROW("CLP needs boost to be enabled.");
 #else
-  Require(x_1 > x_0);
 
   // Allocate the basis matrix
   d_basis = new callow::MatrixDense(d_size, d_order + 1, 0.0);
@@ -35,10 +30,10 @@ CLP::CLP(const size_t   order,
   d_a = Vector::Create(d_order + 1, 0.0);
 
   // The weights are just the qw's.
-  double L = x_1 - x_0;
+  double L = d_upper_bound - d_lower_bound;
   for (size_t i = 0; i < d_w->size(); ++i)
   {
-    d_x[i] =  2.0*(d_x[i] - x_0)/L - 1.0;
+    d_x[i] =  2.0*(d_x[i] - d_lower_bound)/L - 1.0;
     (*d_w)[i] = d_qw[i];
   }
 
@@ -53,7 +48,7 @@ CLP::CLP(const size_t   order,
     (*d_a)[l] = (2.0 * l + 1.0) / 2.0;
   }
   //d_orthonormal = true;
-  compute_a();
+  //compute_a();
 #endif
 }
 
