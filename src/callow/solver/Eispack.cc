@@ -49,7 +49,6 @@ void Eispack::solve_complete(MatrixDense &V_R,
   MatrixDense &A = *dynamic_cast<MatrixDense*>(d_A.bp());
   // Use copies so the originals are not overwritten
   MatrixDense tmp_A(A);
-  //MatrixDense &tmp_A = A;
   int m    = A.number_rows();
   int matz = 1; // positive to get the eigenvectors
   int ierr = 0;
@@ -68,25 +67,15 @@ void Eispack::solve_complete(MatrixDense &V_R,
          &E_R[0], &E_I[0], &E_D[0], &matz, &V_R[0], &ierr);
     Assert(!ierr);
     // scale the eigenvalues
-//    E_R.display("E_R");
-//    E_I.display("E_I");
-//    E_D.display("E_D");
     E_R.divide(E_D);
     E_I.divide(E_D);
-    E_R.display("E_R scaled");
-    E_I.display("E_I scaled");
-    V_R.display("lalala");
-    tmp_A.print_matlab("A2.out");
-    tmp_B.print_matlab("B2.out");
   }
   else
   {
-    //nm, n, a, wr, wi, matz, z, iv1, fv1, ierr)
     int* iv1(new int[m]);
     double *fv1(new double[m]);
     rg_(&m, &m, &tmp_A[0],
         &E_R[0], &E_I[0], &matz, &V_R[0], iv1, fv1, &ierr);
-    E_R.display("E_R");
     delete [] iv1;
     delete [] fv1;
   }
@@ -102,7 +91,7 @@ void Eispack::solve_impl(Vector &x, Vector &x0)
   Vector E_R(m, 0.0);
   Vector E_I(m, 0.0);
 
-  solve_complete(V_R, V_I, E_R, E_I); E_R.display(); E_I.display();
+  solve_complete(V_R, V_I, E_R, E_I);
 
   // Extract the eigenvector corresponding to the maximum real value
   double max_E = E_R[0];

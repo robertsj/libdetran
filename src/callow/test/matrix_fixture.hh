@@ -204,7 +204,7 @@ Matrix::SP_matrix test_matrix_3(int n = 10)
         // Fold the fission density with the spectrum.
         double val = sigma_f[g] * chi[gp];
         // Set the value.
-        bool flag = A->insert(row, col, val, A->INSERT);
+        bool flag = A->insert(col, row, val, A->INSERT);
         Assert(flag);
       }
     } // row loop

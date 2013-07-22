@@ -7,6 +7,7 @@
 //----------------------------------------------------------------------------//
 
 #include "Davidson.hh"
+#include "callow/matrix/Matrix.hh"
 #include "callow/matrix/MatrixDense.hh"
 #include "callow/solver/Eispack.hh"
 #include "EigenSolverCreator.hh"
@@ -16,14 +17,14 @@ namespace callow
 
 //----------------------------------------------------------------------------//
 Davidson::Davidson(const double    tol,
-                                   const int       maxit,
-                                   const int       subspace_size)
-  : Base(tol, maxit, "nonlinear-arnoldi")
+                   const int       maxit,
+                   const int       subspace_size)
+  : Base(tol, maxit, "davidson")
   , d_subspace_size(subspace_size)
 {
   // create projected system solver
   SP_db db = detran_utilities::InputDB::Create();
-  db->put<std::string>("eigen_solver_type",   "power");
+  db->put<std::string>("eigen_solver_type",   "eispack");
   db->put<double>("eigen_solver_tol",         d_tolerance);
   db->put<int>("eigen_solver_maxit",          10000);
   db->put<double>("linear_solver_atol",       d_tolerance);
@@ -35,18 +36,33 @@ Davidson::Davidson(const double    tol,
 
 //----------------------------------------------------------------------------//
 void Davidson::set_operators(SP_matrix A,
-                                     SP_matrix B,
-                                     SP_db     db)
+                             SP_matrix B,
+                             SP_db     db)
 {
   Insist(A, "The operator A cannot be null");
-  Insist(B, "The operator B cannot be null");
-  Assert(A->number_rows() == A->number_columns());
-  Assert(B->number_rows() == B->number_columns());
-  Assert(A->number_rows() == B->number_columns());
-  // Set operators
+  Require(A->number_rows() == A->number_columns());
   d_A = A;
-  d_B = B;
+  if (B)
+  {
+    Assert(B->number_rows() == B->number_columns());
+    Assert(A->number_rows() == B->number_columns());
+    d_B = B;
+  }
+  else
+  {
+    // Just use the identity matrix for the right hand operator so
+    // one set of code works for standard and generalized eigenvalue problems
+    int m = d_A->number_rows();
+    Matrix::SP_matrix BB(new Matrix(m, m, 1));
+    for (int i = 0; i < m; ++i)
+      BB->insert(i, i, 1.0, BB->INSERT);
+    d_B = BB;
+    d_B->assemble();
+  }
+
+  // Create the residual function
   d_A_minus_ritz_times_B = new DavidsonResidual(d_A, d_B, this);
+
   // Create the default preconditioner
   d_P = new DavidsonDefaultP(d_A_minus_ritz_times_B, NULL, db);
 }
@@ -70,6 +86,7 @@ void Davidson::solve_impl(Vector &u, Vector &x0)
   // working residual
   Vector r(m, 0.0);
   Vector t(m, 0.0);
+
   // initialize the orthogonal basis
   std::vector<Vector> V(d_subspace_size,   Vector(m, 0.0));
   std::vector<Vector> V_a(d_subspace_size, Vector(m, 0.0));

@@ -92,7 +92,7 @@ public:
    *  @param db     optional database for solver and preconditioner options
    */
   void set_operators(SP_matrix A,
-                     SP_matrix B,
+                     SP_matrix B  = SP_matrix(0),
                      SP_db     db = SP_db(0));
 
   /**
@@ -205,7 +205,7 @@ public:
   DavidsonDefaultP(MatrixBase::SP_matrix  A_minus_ritz_times_B,
                    void*                  context,
                    SP_db                  db = SP_db(0))
-    : PCShell("nonlinear-arnoldi-default", context)
+    : PCShell("davidson-default", context)
   {
     if (!db)
     {

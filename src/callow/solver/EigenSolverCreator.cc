@@ -11,6 +11,7 @@
 // solvers
 #include "PowerIteration.hh"
 #include "SlepcSolver.hh"
+#include "Eispack.hh"
 //
 #include <string>
 
@@ -58,6 +59,10 @@ EigenSolverCreator::Create(SP_db db)
 #else
     THROW("SLEPc solvers not available with this build");
 #endif
+  }
+  else if (solver_type == "eispack")
+  {
+    solver = new Eispack(tol, maxit);
   }
   else
     THROW("Unsupported solver type: " + solver_type);
