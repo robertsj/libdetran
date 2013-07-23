@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   ConstantSource.cc
- *  @brief  ConstantSource
- *  @author Jeremy Roberts
- *  @date   Sep 6, 2012
+ *  @file  ConstantSource.cc
+ *  @brief ConstantSource member definition
+ *  @note  Copyright (C) Jeremy Roberts 2012-2013
  */
 //---------------------------------------------------------------------------//
 

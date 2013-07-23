@@ -1,23 +1,22 @@
-//----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   BoundarySource.hh
- * \brief  BoundarySource class definition
- * \author Jeremy Roberts
- * \date   Sep 10, 2012
+//----------------------------------*-C++-*-----------------------------------//
+/**
+ *  @file  BoundarySource.hh
+ *  @brief BoundarySource class definition
+ *  @note  Copyright (C) Jeremy Roberts 2012-2013
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
-#ifndef BOUNDARYSOURCE_HH_
-#define BOUNDARYSOURCE_HH_
+#ifndef detran_external_source_BOUNDARYSOURCE_HH_
+#define detran_external_source_BOUNDARYSOURCE_HH_
 
 #include "utilities/Definitions.hh"
 
 namespace detran_external_source
 {
 
-/*!
- *  \class BoundarySource
- *  \brief Base boundary source class
+/**
+ *  @class BoundarySource
+ *  @brief Base boundary source class
  */
 class BoundarySource
 {
@@ -36,8 +35,8 @@ protected:
 
 } // end namespace detran_external_source
 
-#endif // BOUNDARYSOURCE_HH_ 
+#endif // detran_external_source_BOUNDARYSOURCE_HH_
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file BoundarySource.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

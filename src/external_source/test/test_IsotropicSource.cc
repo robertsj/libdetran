@@ -1,24 +1,19 @@
-//----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   test_IsotropicSource.cc
- * \author Jeremy Roberts
- * \date   Jun 22, 2012
- * \brief  Test of IsotropicSource
+//----------------------------------*-C++-*-----------------------------------//
+/**
+ *  @file  test_IsotropicSource.cc
+ *  @brief Test of IsotropicSource
+ *  @note  Copyright (C) Jeremy Roberts 2012-2013
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
-#define TEST_LIST                     \
+#define TEST_LIST                   \
         FUNC(test_IsotropicSource)
 
-// Detran headers
 #include "TestDriver.hh"
 #include "IsotropicSource.hh"
 #include "Mesh2D.hh"
 #include "QuadratureFactory.hh"
-
-// Setup
-/* ... */
 
 using namespace detran_external_source;
 using namespace detran_geometry;
@@ -32,9 +27,9 @@ int main(int argc, char *argv[])
   RUN(argc, argv);
 }
 
-//----------------------------------------------//
+//----------------------------------------------------------------------------//
 // TEST DEFINITIONS
-//----------------------------------------------//
+//----------------------------------------------------------------------------//
 
 int test_IsotropicSource(int argc, char *argv[])
 {
@@ -80,6 +75,6 @@ int test_IsotropicSource(int argc, char *argv[])
   return 0;
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of test_IsotropicSource.cc
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
