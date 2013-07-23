@@ -50,6 +50,7 @@ CLP::CLP(const Parameters &p)
   //d_orthonormal = true;
   //compute_a();
 #endif
+
 }
 
 } // end namespace detran_orthog

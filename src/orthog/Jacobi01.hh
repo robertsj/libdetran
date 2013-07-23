@@ -37,8 +37,6 @@ public:
 
 };
 
-REGISTER_CLASS(OrthogonalBasis, Jacobi01, "jacobi");
-
 } // end namespace detran_orthog
 
 #endif // detran_orthog_Jacobi01_HH_

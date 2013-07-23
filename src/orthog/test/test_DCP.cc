@@ -23,6 +23,7 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
+  std::cout << "HI" << std::endl;
   callow_initialize(argc, argv);
   RUN(argc, argv);
   callow_finalize();
@@ -34,12 +35,13 @@ int main(int argc, char *argv[])
 
 int test_DCP(int argc, char *argv[])
 {
-  DCP::Parameters p;
+  OrthogonalBasis::Parameters p;
   p.size = 10;
   p.order = 3;
   p.orthonormal = true;
-  OrthogonalBasis::Factory_T::ShowRegistered();
   OrthogonalBasis::SP_basis P = OrthogonalBasis::Create("dcp", p);
+  OrthogonalBasis::Factory_T::ShowRegistered();
+
   P->basis()->display();
 
   double ref[] = {0.316227766016838, -0.495433694306862, 0.522232967867093,

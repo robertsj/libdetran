@@ -35,8 +35,6 @@ public:
 
 };
 
-REGISTER_CLASS(OrthogonalBasis, DCT, "dct");
-
 } // end namespace detran_orthog
 
 #endif // detran_orthog_DCT_HH_

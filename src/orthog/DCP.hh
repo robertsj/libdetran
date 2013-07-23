@@ -40,8 +40,6 @@ public:
 
 };
 
-REGISTER_CLASS(OrthogonalBasis, DCP, "dcp");
-
 } // end namespace detran_orthog
 
 #endif // detran_orthog_DCP_HH_

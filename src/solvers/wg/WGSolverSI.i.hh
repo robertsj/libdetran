@@ -25,7 +25,7 @@ void WGSolverSI<D>::solve(const size_t g)
   using detran_utilities::norm_residual;
 
   if (d_print_level > 0) cout << "    Starting SI." << endl;
-  if (d_print_level > 0) cout << "      group " << g << endl;
+  if (d_print_level > 0) cout << "      group " << (int)g << endl;
 
   // Setup boundary conditions.  This sets any conditions fixed for the solve.
   d_boundary->set(g);

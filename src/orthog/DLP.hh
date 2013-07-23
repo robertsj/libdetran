@@ -35,8 +35,6 @@ public:
 
 };
 
-REGISTER_CLASS(OrthogonalBasis, DLP, "dlp")
-
 } // end namespace detran_orthog
 
 #endif // detran_orthog_DLP_HH_

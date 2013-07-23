@@ -7,10 +7,32 @@
 //----------------------------------------------------------------------------//
 
 #include "orthog/OrthogonalBasis.hh"
+// derived classes --- ugh!! autoregistration would be sooo nice
+#include "orthog/ChebyshevU.hh"
+#include "orthog/CLP.hh"
+#include "orthog/DCP.hh"
+#include "orthog/DCT.hh"
+#include "orthog/DDF.hh"
+#include "orthog/DLP.hh"
+#include "orthog/Jacobi01.hh"
+#include "orthog/TransformedBasis.hh"
+//
 #include <cmath>
 
 namespace detran_orthog
 {
+
+void InitFactory()
+{
+  REGISTER_CLASS(OrthogonalBasis, ChebyshevU,       "cheby")
+  REGISTER_CLASS(OrthogonalBasis, CLP,              "clp")
+  REGISTER_CLASS(OrthogonalBasis, DCP,              "dcp")
+  REGISTER_CLASS(OrthogonalBasis, DCT,              "dct")
+  REGISTER_CLASS(OrthogonalBasis, DDF,              "ddf")
+  REGISTER_CLASS(OrthogonalBasis, DLP,              "dlp")
+  REGISTER_CLASS(OrthogonalBasis, Jacobi01,         "jacobi")
+  REGISTER_CLASS(OrthogonalBasis, TransformedBasis, "trans")
+}
 
 //----------------------------------------------------------------------------//
 OrthogonalBasis::OrthogonalBasis(const Parameters &p)
@@ -26,6 +48,15 @@ OrthogonalBasis::OrthogonalBasis(const Parameters &p)
 OrthogonalBasis::~OrthogonalBasis()
 {
   /* ... */
+}
+
+//----------------------------------------------------------------------------//
+OrthogonalBasis::SP_basis
+OrthogonalBasis::Create(const std::string &key,
+                        const Parameters  &p)
+{
+  InitFactory();
+  return (Factory_T::Instance().GetCreateFunction(key))(p);
 }
 
 //----------------------------------------------------------------------------//

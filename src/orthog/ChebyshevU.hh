@@ -39,8 +39,6 @@ private :
 
 };
 
-REGISTER_CLASS(OrthogonalBasis, ChebyshevU, "cheby")
-
 } // end namespace detran_orthog
 
 #endif // detran_orthog_ChebyshevU_HH_

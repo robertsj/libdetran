@@ -25,7 +25,7 @@ inline void WGSolverGMRES<D>::solve(const size_t g)
   using std::endl;
 
   if (d_print_level > 0) std::cout << "    Starting GMRES." << std::endl;
-  if (d_print_level > 0) std::cout << "      group " << g << std::endl;
+  if (d_print_level > 0) std::cout << "      group " << (int)g << std::endl;
 
   // Set the group for this solve.
   d_g = g;

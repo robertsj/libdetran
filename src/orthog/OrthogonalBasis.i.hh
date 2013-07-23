@@ -114,7 +114,7 @@ inline double OrthogonalBasis::
 operator()(const size_t i, const size_t j) const
 {
   double v = (*d_basis)(i, j);
-  if (d_a) v *= (*d_a)[i];
+  if (d_a) v *= (*d_a)[j];
   return v;
 }
 

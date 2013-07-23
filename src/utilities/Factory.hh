@@ -86,9 +86,33 @@ private:
 
 };
 
-/// Convenience macro for registering derived class classes
+//--------------------------------------------------------------------------//
+template <class B, class D>
+class ComponentAutoRegister
+{
+public:
+    ComponentAutoRegister(std::string key, typename B::CreateFunction create);
+};
+
+//--------------------------------------------------------------------------//
+template <class B, class D>
+ComponentAutoRegister<B, D>::
+ComponentAutoRegister(std::string key, typename B::CreateFunction create)
+{
+  Factory<B>::Instance().Register(key, create);
+}
+
+/**
+ *  Macro for registering derived class from the source.  This requires
+ *  the derived class has a static bool member "registered".
+ */
+
+#define AUTO_REGISTER(B, D) \
+        static detran_utilities::ComponentAutoRegister<B, D> __auto_registration;
+
 #define REGISTER_CLASS(B, D, S) \
-        const bool D##_registered = detran_utilities::Factory<B>::Register(S, Create<D>);
+        const bool D##_registered = \
+          detran_utilities::Factory<B>::Register(S, Create<D>);
 
 } // end namespace detran_utilities
 

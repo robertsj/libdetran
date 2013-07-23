@@ -123,15 +123,13 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //--------------------------------------------------------------------------//
 
-  /// Creation function.  This is the client's access to the basis sets.
-  static SP_basis Create(const std::string &key,
-                         const Parameters  &p = Parameters())
-  {
-    return (Factory_T::Instance().GetCreateFunction(key))(p);
-  }
-
   /// Pure virtual destructor
   virtual ~OrthogonalBasis() = 0;
+
+  /// Creation function.  This is the client's access to the basis sets.
+  static SP_basis Create(const std::string &key,
+                         const Parameters  &p = Parameters());
+
 
   //--------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS

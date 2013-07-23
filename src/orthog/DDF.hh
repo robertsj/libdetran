@@ -39,8 +39,6 @@ public:
 
 };
 
-REGISTER_CLASS(OrthogonalBasis, DDF, "ddf");
-
 } // end namespace detran_orthog
 
 #endif // detran_orthog_DDF_HH_
