@@ -131,8 +131,8 @@ class DavidsonResidual: public MatrixShell
 public:
 
   DavidsonResidual(MatrixBase::SP_matrix A,
-                           MatrixBase::SP_matrix B,
-                           void*                 context)
+                   MatrixBase::SP_matrix B,
+                   void*                 context)
     : MatrixShell(context, A->number_rows(), A->number_columns())
     , d_A(A)
     , d_B(B)
@@ -193,8 +193,8 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef Davidson::SP_db   SP_db;
-  typedef MatrixBase::SP_matrix     SP_matrix;
+  typedef Davidson::SP_db        SP_db;
+  typedef MatrixBase::SP_matrix  SP_matrix;
 
   /**
    *  @brief Constructor

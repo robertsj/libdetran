@@ -12,6 +12,7 @@
 #include "callow/callow_export.hh"
 #include "callow/callow_config.hh"
 #include "callow/vector/Vector.hh"
+#include "callow/matrix/MatrixShell.hh"
 #include <string>
 
 namespace callow
@@ -65,14 +66,14 @@ public:
   //--------------------------------------------------------------------------//
 
   typedef detran_utilities::SP<Preconditioner>  SP_preconditioner;
+  typedef detran_utilities::size_t              size_t;
 
   //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
   //--------------------------------------------------------------------------//
 
   /// Constructor
-  Preconditioner(std::string name)
-    : d_name(name), d_petsc_pc(NULL), d_slepc_st(NULL) {}
+  Preconditioner(const std::string &name);
   /// Virtual destructor
   virtual ~Preconditioner(){};
   /// set PETSc preconditioner and other setup (called by PetscSolver)
@@ -85,6 +86,8 @@ public:
   ST slepc_st() {return d_slepc_st;}
   /// return the preconditioner name
   std::string name() const {return d_name;}
+  /// display the preconditioner operator
+  virtual void display(const std::string &name);
 
   //--------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL PRECONDITIONERS MUST IMPLEMENT THIS
@@ -101,6 +104,29 @@ protected:
   PC d_petsc_pc;
   /// SLEPc spectral transformation
   ST d_slepc_st;
+  /// System size
+  size_t d_size;
+
+private:
+
+  /// Shell matrix that allows us to write out the preconditioner
+  class MatrixShellPC: public MatrixShell
+  {
+  public:
+    MatrixShellPC(Preconditioner* p, const size_t m)
+      : MatrixShell(this, m, m)
+      , d_pc(p) {}
+    void multiply(const Vector &x,  Vector &y)
+    {
+      d_pc->apply(*(const_cast<Vector*>(&x)), y);
+    }
+    void multiply_transpose(const Vector &x, Vector &y)
+    {
+      THROW("not implemented");
+    }
+  private:
+    Preconditioner* d_pc;
+  };
 
 };
 
