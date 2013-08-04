@@ -58,6 +58,7 @@ public:
   /**
    *  @brief Constructor
    *  @param state      state vector
+   *  @param boundary   boundary container
    *  @param sweeper    transport sweeper
    *  @param source     sweep source
    *  @param cutoff     lowest group included in operator

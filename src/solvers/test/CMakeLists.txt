@@ -71,3 +71,22 @@ ADD_TEST(test_MGDSA_7g_forward          test_MGDSA 1)
 ADD_TEST(test_MGDSA_7g_forward_multiply test_MGDSA 2)
 ADD_TEST(test_MGDSA_7g_adjoint          test_MGDSA 3)
 ADD_TEST(test_MGDSA_7g_adjoint_multiply test_MGDSA 4)    
+
+# Test of MGCMDSA
+ADD_EXECUTABLE(test_MGCMDSA test_MGCMDSA.cc)
+TARGET_LINK_LIBRARIES(test_MGCMDSA solvers)
+ADD_TEST(test_MGCMDSA_1g                  test_MGCMDSA 0)
+ADD_TEST(test_MGCMDSA_7g_forward          test_MGCMDSA 1)
+ADD_TEST(test_MGCMDSA_7g_forward_multiply test_MGCMDSA 2)
+ADD_TEST(test_MCMGDSA_7g_adjoint          test_MGCMDSA 3)
+ADD_TEST(test_MGCMDSA_7g_adjoint_multiply test_MGCMDSA 4)    
+
+
+# Test of SpectrumGS
+ADD_EXECUTABLE(test_SpectrumGS test_SpectrumGS.cc)
+TARGET_LINK_LIBRARIES(test_SpectrumGS solvers)
+ADD_TEST(test_SpectrumGS                  test_SpectrumGS 0)
+# Test of SpectrumPinCell
+ADD_EXECUTABLE(test_SpectrumPinCell test_SpectrumPinCell.cc)
+TARGET_LINK_LIBRARIES(test_SpectrumPinCell solvers)
+ADD_TEST(test_SpectrumPinCell             test_SpectrumPinCell 0)

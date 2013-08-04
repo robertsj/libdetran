@@ -175,8 +175,9 @@ void Matrix::assemble()
     if (i < d_n)
     {
       int d = 0;
-      while(d <= d_aij[i].size())
+      while(d < d_aij[i].size())
       {
+
         if (d_aij[i][d].j == d_aij[i][d].i)
         {
           d = 0;
@@ -191,7 +192,11 @@ void Matrix::assemble()
       }
       --d;
       if (d >= 0 && i < d_n)
+      {
         d_aij[i].insert(d_aij[i].begin()+d, triplet_T(i, i, 0.0));
+        std::sort(d_aij[i].begin(), d_aij[i].end(), compare_triplet);
+
+      }
     }
 
     db_print_row(i, "after diag")
@@ -229,10 +234,10 @@ void Matrix::assemble()
   d_aij.clear();
 #ifdef CALLOW_ENABLE_PETSC
   PetscErrorCode ierr;
-  ierr = MatCreateSeqAIJWithArrays(PETSC_COMM_SELF, d_m, d_n,
-                                   d_rows, d_columns,
-                                   d_values, &d_petsc_matrix);
-  Assert(!ierr);
+//  ierr = MatCreateSeqAIJWithArrays(PETSC_COMM_SELF, d_m, d_n,
+//                                   d_rows, d_columns,
+//                                   d_values, &d_petsc_matrix);
+//  Assert(!ierr);
 #endif
   d_is_ready = true;
 }

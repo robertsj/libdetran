@@ -45,13 +45,15 @@ MGDSA::MGDSA(SP_input         input,
                               d_adjoint, // adjoint
                               1.0);      // keff
 
-
   // Create the linear solver for this group.
   d_solver = callow::LinearSolverCreator::Create(db);
 
   // Set the operators for this group.  The database is used
   // to set the preconditioner parameters for the diffusion solves.
   d_solver->set_operators(d_operator, db);
+
+  // Set the size of the operator
+  d_size = d_operator->number_columns();
 }
 
 //----------------------------------------------------------------------------//
@@ -110,6 +112,16 @@ void MGDSA::apply(Vector &V, Vector &V_out)
     V_out[i] = V[i] + invC_S_V[i];
 
 
+}
+
+//----------------------------------------------------------------------------//
+void MGDSA::build(const double keff, SP_state state)
+{
+  // Print the operator for debugging
+  if (d_input->check("mgpc_print_operators"))
+  {
+    d_operator->print_matlab("diffusion.out");
+  }
 }
 
 } // end namespace detran

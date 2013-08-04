@@ -10,6 +10,7 @@
 #define TEST_LIST                                          \
         FUNC(test_MGCoarseMeshPreconditioner_no_condense)  \
         FUNC(test_MGCoarseMeshPreconditioner_space)        \
+        FUNC(test_MGCoarseMeshPreconditioner_energy)       \
         FUNC(test_MGCoarseMeshPreconditioner_space_energy)
 
 #include "TestDriver.hh"
@@ -24,7 +25,7 @@ using namespace callow;
 using namespace std;
 using std::cout;
 using std::endl;
-#define DISP(c) cout << c << endl;
+#define COUT(c) cout << c << endl;
 
 int main(int argc, char *argv[])
 {
@@ -114,10 +115,16 @@ int test_MGCoarseMeshPreconditioner_space(int argc, char *argv[])
   data.input->put<vec_int>("mgpc_fine_per_coarse_group", f_per_c);
   TestPC pc(data.input, data.material, data.mesh);
   //pc.R()->display(true);
-  //pc.R()->print_matlab("R.out");
+
+  pc.R()->print_matlab("R.out");
+  COUT("lala");
   pc.build();
+  pc.R()->print_matlab("R.out");
+
+  COUT("lala");
+
   //pc.P()->display(true);
-  //pc.P()->print_matlab("P.out");
+  pc.P()->print_matlab("P.out");
   TEST(pc.R()->number_columns() == 35);
   TEST(pc.R()->number_rows()    == 14);
   TEST(pc.P()->number_columns() == 14);
@@ -141,6 +148,79 @@ int test_MGCoarseMeshPreconditioner_space(int argc, char *argv[])
     //DISP(pc.phi()[i] << " " << tmp_f[i]);
     TEST(soft_equiv(pc.phi()[i], tmp_f[i]));
   }
+
+  return 0;
+}
+
+
+/*
+ *  This tests condensation in space (1-D).  The fine mesh has 5 cells,
+ *  and we  use a level 2.  This implies the following mapping:
+ *   fine:   [0 1 2 3 4]
+ *   coarse: [0 0 0 1 1]
+ *  The flux starts as [1 1 1 1 1 2 2 ... 7 7 7 7 7]
+ *  and condenses to   [1 1 2 2 ... 7 7]
+ */
+int test_MGCoarseMeshPreconditioner_energy(int argc, char *argv[])
+{
+  FixedSourceData data = get_fixedsource_data(1, 7);
+
+  // Linear energy spectrum and key
+  vec_dbl spectrum(7, 0.0);
+  for (int i = 0; i < 7; ++i)
+    spectrum[i] = (double)(i+1) * 0.084515425472852;
+  std::string spectrum_key = "ALL";
+  vec_int spectrum_map(data.mesh->number_cells(), 0);
+  data.mesh->add_mesh_map(spectrum_key, spectrum_map);
+
+  // Mapping with [0 1 2 | 3 4 5 6] -> [0 | 1]
+  //vec_int f_per_c(2, 3); f_per_c[1] = 4;
+  vec_int f_per_c(1, 7);
+  data.input->put<vec_int>("mgpc_fine_per_coarse_group", f_per_c);
+
+  // Using our own spectrum
+  data.input->put<int>("mgpc_condensation_option",  5);
+  data.input->put<vec_dbl>("mgpc_spectrum",         spectrum);
+  data.input->put<string>("mgpc_spectrum_key",      spectrum_key);
+
+  // No coarse meshing in space
+  data.input->put<int>("mgpc_coarse_mesh_level", 1);
+
+  TestPC pc(data.input, data.material, data.mesh);
+
+  pc.R()->print_matlab("R.out");
+  COUT("lala");
+  pc.build();
+  pc.R()->print_matlab("R.out");
+
+  COUT("lala");
+
+  //pc.P()->display(true);
+  pc.P()->print_matlab("P.out");
+  return 0;
+  TEST(pc.R()->number_columns() == 35);
+  TEST(pc.R()->number_rows()    == 14);
+  TEST(pc.P()->number_columns() == 14);
+  TEST(pc.P()->number_rows()    == 35);
+  Vector phi_c(14, 0.0);
+  for (int g = 0; g < 7; ++g)
+    for (int i = 0; i < 2; ++i)
+      phi_c[2 * g + i] = g + 1;
+  Vector tmp_c(14, 0.0);
+  pc.R()->multiply(pc.phi(), tmp_c);
+//
+//  for (int i = 0; i < 14; ++i)
+//  {
+//    //DISP(phi_c[i] << " " << tmp_c[i]);
+//    TEST(soft_equiv(phi_c[i], tmp_c[i]));
+//  }
+//  Vector tmp_f(35, 0.0);
+//  pc.P()->multiply(tmp_c, tmp_f);
+//  for (int i = 0; i < 35; ++i)
+//  {
+//    //DISP(pc.phi()[i] << " " << tmp_f[i]);
+//    TEST(soft_equiv(pc.phi()[i], tmp_f[i]));
+//  }
 
   return 0;
 }

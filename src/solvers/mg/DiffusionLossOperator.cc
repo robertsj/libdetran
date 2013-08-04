@@ -143,8 +143,8 @@ void DiffusionLossOperator::build()
       size_t m = mat_map[cell];
 
       double cell_dc = d_material->diff_coef(m, g);
+      Assert(cell_dc != 0.0);
 
-      Assert(cell_dc > 0.0);
       double cell_sr = d_material->sigma_t(m, g);
       if (d_sf_flag == 0) cell_sr -= d_material->sigma_s(m, g, g);
 
@@ -335,6 +335,7 @@ void DiffusionLossOperator::build()
 
 }
 
+//----------------------------------------------------------------------------//
 double DiffusionLossOperator::albedo(const size_t side, const size_t g) const
 {
   Require(side < 6);

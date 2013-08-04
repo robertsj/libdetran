@@ -70,6 +70,8 @@ FixedSourceManager<D>::FixedSourceManager(SP_input    input,
   Require(d_input);
   Require(d_material);
   Require(d_mesh);
+  Insist(d_mesh->dimension() == D::dimension,
+         "Solver dimension != and mesh dimension.");
 }
 
 

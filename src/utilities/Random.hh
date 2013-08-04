@@ -95,7 +95,7 @@ protected:
 
   /// Seed
   I8 d_S;
-#pragma omp threadprivate (d_S);
+//#pragma omp threadprivate (d_S);
   /// Generator (or multiplier)
   I8 d_g;
   /// Adder (or increment)

@@ -13,6 +13,10 @@ SET(MG_SRC
   ${SRC_DIR}/MGCoarseMeshPreconditioner.cc
   ${SRC_DIR}/MGDSA.cc
   ${SRC_DIR}/MGCMDSA.cc
+  ${SRC_DIR}/MGScatterFissionOperator.cc
+  ${SRC_DIR}/SpectrumGS.cc
+  ${SRC_DIR}/SpectrumFS.cc
+  ${SRC_DIR}/SpectrumPinCell.cc
   PARENT_SCOPE
 )
 

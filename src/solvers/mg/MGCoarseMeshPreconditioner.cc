@@ -7,8 +7,13 @@
 //----------------------------------------------------------------------------//
 
 #include "MGCoarseMeshPreconditioner.hh"
+#include "SpectrumGS.hh"
+#include "SpectrumFS.hh"
+#include "SpectrumPinCell.hh"
 #include "transport/Homogenize.hh"
 #include "utilities/MathUtilities.hh"
+
+#define COUT(c) std::cout << c << std::endl;
 
 namespace detran
 {
@@ -72,7 +77,7 @@ MGCoarseMeshPreconditioner(SP_input         input,
 
   d_size_fine   = d_number_active_groups * d_mesh->number_cells();
   d_size_coarse = d_fine_per_coarse.size() * d_coarsemesh->number_cells();
-
+  d_size        = d_size_fine;
   build_restrict();
 }
 
@@ -85,9 +90,10 @@ MGCoarseMeshPreconditioner::~MGCoarseMeshPreconditioner()
 //----------------------------------------------------------------------------//
 void MGCoarseMeshPreconditioner::build(const double keff, SP_state state)
 {
-  using detran_utilities::vec_max;
-
   Require(keff != 0.0);
+
+  using detran_utilities::vec_max;
+  using detran_utilities::vec_unique;
 
   try
   {
@@ -132,6 +138,8 @@ void MGCoarseMeshPreconditioner::build(const double keff, SP_state state)
       number_regions = spectrum_1d.size() / d_number_groups;
       Assert(number_regions > 0);
       Assert(number_regions == vec_max(d_mesh->mesh_map(d_key))+1);
+      size_t number_unique = vec_unique(d_mesh->mesh_map(d_key)).size();
+      Assert(number_unique == number_regions);
 
       // reshape the spectrum from 1-d to 2-d
       d_spectrum.resize(d_number_groups, vec_dbl(number_regions, 0.0));
@@ -142,6 +150,27 @@ void MGCoarseMeshPreconditioner::build(const double keff, SP_state state)
           d_spectrum[g][r] = spectrum_1d[r + g * number_regions];
         }
       }
+    }
+    else if (d_condensation_option == CONDENSE_WITH_GS_SPECTRUM)
+    {
+      d_key = "MATERIAL";
+      number_regions = d_material->number_materials();
+      SpectrumGS S(d_input, d_material, d_mesh);
+      d_spectrum = S.spectrum();
+    }
+    else if (d_condensation_option == CONDENSE_WITH_FS_SPECTRUM)
+    {
+      d_key = "MATERIAL";
+      number_regions = d_material->number_materials();
+      SpectrumFS S(d_input, d_material, d_mesh);
+      d_spectrum = S.spectrum();
+    }
+    else if (d_condensation_option == CONDENSE_WITH_PINCELL_SPECTRUM)
+    {
+      d_key = "PINCELL_SPECTRUM";
+      number_regions = d_material->number_materials();
+      SpectrumPinCell S(d_input, d_material, d_mesh);
+      d_spectrum = S.spectrum();
     }
     else
     {
@@ -178,6 +207,18 @@ void MGCoarseMeshPreconditioner::build(const double keff, SP_state state)
   {
     d_c_material = H.homogenize(d_spectrum, d_key, d_mesh, "COARSEMESH",
                                 d_fine_per_coarse, d_groups);
+//    std::cout << " SPECTRUM = " << std::endl;
+//    for (int i = 0; i < d_spectrum.size(); ++i)
+//    {
+//      for (int j = 0; j < d_spectrum[i].size(); ++j)
+//      {
+//        std::cout << d_spectrum[i][j] << " ";
+//      }
+//      std::cout << std::endl;
+//    }
+//    std::cout << std::endl;
+//
+//    d_c_material->display();
   }
 
   // Prolongation
@@ -192,6 +233,13 @@ void MGCoarseMeshPreconditioner::build(const double keff, SP_state state)
   {
     std::cout << "Unknown exception!" << std::endl;
   }
+
+  if (d_input->check("mgpc_print_operators"))
+  {
+    d_restrict->print_matlab("restrict.out");
+    d_prolong->print_matlab("prolong.out");
+  }
+
 }
 
 //----------------------------------------------------------------------------//
@@ -212,7 +260,7 @@ void MGCoarseMeshPreconditioner::build(const double keff, SP_state state)
  *                                  |f2g2|
  * where vk = v_i / v_j, where fine mesh i is in coarse mesh j.  Hence,
  * this produces a spatial average.  In energy, we simply add.  The two
- * combined preserves as closely as possible reaction rates.
+ * combined preserve reaction rates as closely as possible.
  *
  * e.g   f = 1, g = 1  --> col = 3 * 1 + 1 = 4
  *                     --> row = 0 * 2 + 0 = 0
@@ -232,8 +280,8 @@ void MGCoarseMeshPreconditioner::build_restrict()
     {
       size_t c = coarse_map[i];
       size_t col = g * d_mesh->number_cells() + i;
-      size_t row = d_f2c_group_map[g]*d_coarsemesh->number_cells() + c;
-      double value = 1.0 / d_coarsemesh->volume(c);
+      size_t row = d_f2c_group_map[g] * d_coarsemesh->number_cells() + c;
+      double value = d_mesh->volume(i) / d_coarsemesh->volume(c);
       bool err = d_restrict->insert(row, col, value, callow::Matrix::INSERT);
       Assert(err);
     }

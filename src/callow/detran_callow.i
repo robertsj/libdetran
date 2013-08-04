@@ -31,7 +31,7 @@
 }
 
 %import "detran_utilities.i"
-%include "callow_config.hh"
+//%include "callow_config.hh"
 
 //---------------------------------------------------------------------------//
 // initialization
@@ -69,26 +69,26 @@ void callow_finalize();
 // definitions
 //---------------------------------------------------------------------------//
 
-%include "utils/CallowDefinitions.hh"
+//%include "utils/CallowDefinitions.hh"
 
 //---------------------------------------------------------------------------//
 // vector
 //---------------------------------------------------------------------------//
 
-%include "vector/Vector.i"
+//%include "vector/Vector.i"
 
 //---------------------------------------------------------------------------//
 // matrix
 //---------------------------------------------------------------------------//
 
-%include "matrix/Matrix.i"
+//%include "matrix/Matrix.i"
 
 //---------------------------------------------------------------------------//
 // linear solver
 //---------------------------------------------------------------------------//
 
-%include "preconditioner/Preconditioner.i"
-%include "solver/Solver.i"
+//%include "preconditioner/Preconditioner.i"
+//%include "solver/Solver.i"
 
 
 %inline

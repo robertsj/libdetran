@@ -74,10 +74,11 @@ template <> struct StaticChecker<false> { };
 #define Assert(c)           ((void) 0);
 #define Require(c)          ((void) 0);
 #define Ensure(c)           ((void) 0);
+#define StaticAssert(c)     ((void) 0);
 #define Assertv(c, m)       ((void) 0);
 #define Requirev(c, m)      ((void) 0);
 #define Ensurev(c, m)       ((void) 0);
-#define StaticAssert(c, m)  ((void) 0);
+#define StaticAssertv(c, m) ((void) 0);
 
 #endif
 

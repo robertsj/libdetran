@@ -79,23 +79,24 @@ class MGCoarseMeshPreconditioner: public MGPreconditioner
 
 public:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // ENUMERATIONS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   enum condensation_options
   {
-    CONDENSE_WITH_STATE,          // condense with fine mesh/group state
-    CONDENSE_WITH_FLAT_SPECTRUM,  // condense with a flat flux
-    CONDENSE_WITH_GS_SPECTRUM,    // condense with material gauss-seidel mode
-    CONDENSE_WITH_B0_SPECTRUM,    // condense with region B0 mode
-    CONDENSE_WITH_USER_SPECTRUM,  // condense with user-defined spectrum via db
+    CONDENSE_WITH_STATE,            // fine mesh/group state
+    CONDENSE_WITH_FLAT_SPECTRUM,    // flat flux
+    CONDENSE_WITH_GS_SPECTRUM,      // material-dependent gauss-seidel mode
+    CONDENSE_WITH_PINCELL_SPECTRUM, // region-dependent pincell spectrum
+    CONDENSE_WITH_FS_SPECTRUM,      // material-dependent flat fixed source mode
+    CONDENSE_WITH_USER_SPECTRUM,    // user-defined spectrum via db
     END_CONDENSATION_OPTIONS
   };
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // TYPEDEFS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   typedef MGPreconditioner                  Base;
   typedef FissionSource::SP_fissionsource   SP_fissionsource;

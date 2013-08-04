@@ -67,6 +67,12 @@ void FissionSource::initialize()
   detran_utilities::vec_scale(d_density, 1.0/norm_density);
 }
 
+//---------------------------------------------------------------------------//
+void FissionSource::set_scale(const double scale)
+{
+  d_scale = scale;
+}
+
 } // end namespace detran
 
 //---------------------------------------------------------------------------//

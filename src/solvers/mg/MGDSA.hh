@@ -88,7 +88,7 @@ public:
   void apply(Vector &b, Vector &x);
 
   /// build the preconditioner for a new keff
-  void build(const double keff = 1.0, SP_state state = SP_state(0)){}
+  void build(const double keff = 1.0, SP_state state = SP_state(0));
 
 private:
 

@@ -32,6 +32,7 @@ MGPreconditioner::MGPreconditioner(SP_input         input,
   , d_group_cutoff(cutoff)
   , d_include_fission(include_fission)
   , d_adjoint(adjoint)
+  , d_single_build(false)
 {
   Require(d_input);
   Require(d_material);
@@ -46,6 +47,11 @@ MGPreconditioner::MGPreconditioner(SP_input         input,
   if (d_adjoint) upper = -1;
   d_number_active_groups = std::abs(upper - d_group_cutoff);
 
+  // Check for a single build
+  if (d_input->check("outer_pc_single_build"))
+  {
+    d_single_build = 0 != d_input->get<int>("outer_pc_single_build");
+  }
 }
 
 } // end namespace detran

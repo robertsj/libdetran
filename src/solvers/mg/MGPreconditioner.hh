@@ -62,6 +62,7 @@ public:
    *  @param cutoff           First group included in solve
    *  @param include_fission  Flag to reat fission like scatter
    *  @param adjoint          Flag for adjoint calculations
+   *  @param name             Short name for the preconditioner
    */
   MGPreconditioner(SP_input         input,
                    SP_material      material,
@@ -124,6 +125,8 @@ protected:
   SP_solver d_solver;
   /// Preconditioning operator
   SP_operator d_operator;
+  /// Flag to allow a single build
+  bool d_single_build;
 
 };
 

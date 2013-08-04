@@ -14,6 +14,7 @@
 #include "geometry/Mesh3D.hh"
 #include "material/Material.hh"
 #include "utilities/InputDB.hh"
+#include "utilities/MathUtilities.hh"
 #include "external_source/ConstantSource.hh"
 #include "material/test/material_fixture.hh"
 
@@ -74,6 +75,23 @@ FixedSourceData get_fixedsource_data(unsigned int dim,
 
   // fixed source
   data.source = ConstantSource::Create(ng, data.mesh, 1.0);
+
+  return data;
+}
+
+/// Return a 7 group slab problem
+FixedSourceData get_fixedsource_data_het(unsigned int dim,
+                                         unsigned int ng,
+                                         unsigned int nfm = 5,
+                                         double       cmb = 5.0)
+{
+  FixedSourceData data;
+
+  // 20 pairs of 1.0 cm slabs of mod and fuel
+  vec_dbl cm = detran_utilities::linspace(0, 20, 22);
+
+
+  data.material = material_fixture_7g();
 
   return data;
 }

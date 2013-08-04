@@ -15,6 +15,7 @@
 #include "ioutils/PPMOutput.hh"
 #include "ioutils/ColorMap.hh"
 #include "geometry/test/csg_fixture.hh"
+#include "callow/utils/Initialization.hh"
 #include <iostream>
 
 using namespace detran_test;
@@ -25,7 +26,9 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
+  callow_initialize(argc, argv);
   RUN(argc, argv);
+  callow_finalize();
 }
 
 //----------------------------------------------------------------------------//
@@ -59,11 +62,12 @@ int test_PPMOutput_geo(int argc, char *argv[])
   // complex pin cell
   {
     //PPMOutput::SP_geometry geo = test_2D_pincell_via_factory(3, 3);
-    PPMOutput::SP_geometry geo = test_2D_assembly();
+    PPMOutput::SP_geometry geo = test_2D_assembly(3);
     PPMOutput ppm("test_2D_pincell_via_factory");
     ppm.initialize(geo, 0.01);
     ppm.draw_geometry(geo, true, ColorMap::RANDOM);
   }
+
 
   return 0;
 }

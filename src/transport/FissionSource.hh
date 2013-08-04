@@ -84,6 +84,12 @@ public:
   void setup_outer(const double scale = 1.0);
 
   /**
+   *   @brief Set the scaling factor only
+   *   @param scale     Scaling factor (typically 1/keff)
+   */
+  void set_scale(const double scale = 1.0);
+
+  /**
    *   @brief Return the fission source in a group.
    *
    *   The group fission source is just that component of the density

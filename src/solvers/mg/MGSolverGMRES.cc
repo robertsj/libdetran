@@ -169,7 +169,6 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
                          d_multiply,
                          d_adjoint);
     }
-    // Multigroup Coarse Mesh DSA
 
     // Multigroup Coarse Mesh TSA
 
