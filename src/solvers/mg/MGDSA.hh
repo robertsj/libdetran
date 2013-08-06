@@ -96,9 +96,6 @@ private:
   // DATA
   //--------------------------------------------------------------------------//
 
-  /// Flag to include fission
-  bool d_include_fission;
-
 };
 
 } // end namespace detran

@@ -107,12 +107,12 @@ inline void Matrix::multiply(const Vector &x, Vector &y)
   // row pointer
   int p = 0;
   // for all rows
-  #pragma omp for private(p)
-  for (int i = 0; i < d_m; i++)
+  #pragma omp for schedule(static) private(p)
+  for (int i = 0; i < d_m; ++i)
   {
     double temp = y[i];
     // for all columns
-    for (p = d_rows[i]; p < d_rows[i + 1]; p++)
+    for (p = d_rows[i]; p < d_rows[i + 1]; ++p)
     {
       int j = d_columns[p];
       temp += x[j] * d_values[p];

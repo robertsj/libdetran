@@ -234,10 +234,10 @@ void Matrix::assemble()
   d_aij.clear();
 #ifdef CALLOW_ENABLE_PETSC
   PetscErrorCode ierr;
-//  ierr = MatCreateSeqAIJWithArrays(PETSC_COMM_SELF, d_m, d_n,
-//                                   d_rows, d_columns,
-//                                   d_values, &d_petsc_matrix);
-//  Assert(!ierr);
+  ierr = MatCreateSeqAIJWithArrays(PETSC_COMM_SELF, d_m, d_n,
+                                   d_rows, d_columns,
+                                   d_values, &d_petsc_matrix);
+  Assert(!ierr);
 #endif
   d_is_ready = true;
 }

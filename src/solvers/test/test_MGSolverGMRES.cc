@@ -56,6 +56,7 @@ int test_MGSolverGMRES_1g(int argc, char *argv[])
 int test_MGSolverGMRES_7g_forward(int argc, char *argv[])
 {
   FixedSourceData data = get_fixedsource_data(1, 7);
+  data.input->put<std::string>("equation", "diffusion");
   data.input->put<std::string>("outer_solver", "GMRES");
   data.input->put<std::string>("bc_west", "reflect");
   data.input->put<std::string>("bc_east", "reflect");
@@ -83,6 +84,7 @@ int test_MGSolverGMRES_7g_forward(int argc, char *argv[])
 int test_MGSolverGMRES_7g_forward_multiply(int argc, char *argv[])
 {
   FixedSourceData data = get_fixedsource_data(1, 7);
+  data.input->put<std::string>("equation", "diffusion");
   data.input->put<std::string>("outer_solver", "GMRES");
   data.input->put<std::string>("bc_west", "reflect");
   data.input->put<std::string>("bc_east", "reflect");

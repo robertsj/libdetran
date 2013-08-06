@@ -70,7 +70,7 @@ MGCMDSA::MGCMDSA(SP_input         input,
     // Gauss-Seidel for the smoother
     //d_smoothing_solver = new callow::GaussSeidel(0.0, 0.0, n, w);
     //d_smoothing_solver = new callow::Richardson(0.0, 0.0, n, w);
-    d_smoothing_solver = new callow::Jacobi(0.0, 0.0, n);
+    d_smoothing_solver = new callow::Jacobi(0.0, 0.0, n, w);
     d_smoothing_solver->set_operators(d_smoothing_operator);
     d_smoothing_solver->set_monitor_level(0);
   }

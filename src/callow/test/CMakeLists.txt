@@ -47,5 +47,11 @@ ADD_TEST(test_Eispack                   test_Eispack 0)
 ADD_EXECUTABLE(test_Preconditioners         test_Preconditioners.cc)
 TARGET_LINK_LIBRARIES(test_Preconditioners  callow )
 ADD_TEST(test_PCJacobi                      test_Preconditioners  0)
-ADD_TEST(test_PCILU0                        test_Preconditioners  0)
+ADD_TEST(test_PCILU0                        test_Preconditioners  1)
+
+# Performance, etc.
+ADD_EXECUTABLE(test_Threading               test_Threading.cc)
+TARGET_LINK_LIBRARIES(test_Threading        callow )
+ADD_TEST(test_ThreadedMatVec                test_Threading  0)
+ADD_TEST(test_ThreadedJacobi                test_Threading  1)
 

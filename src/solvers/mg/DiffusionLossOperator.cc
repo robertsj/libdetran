@@ -10,6 +10,8 @@
 #include "utilities/MathUtilities.hh"
 #include <iostream>
 
+#define COUT(c) std::cout << c << std::endl;
+
 namespace detran
 {
 

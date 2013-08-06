@@ -73,7 +73,6 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
 
   d_number_active_groups = std::abs(d_upper - d_krylov_group_cutoff);
 
-
   //--------------------------------------------------------------------------//
   // SETUP SWEEPER FOR MULTIGROUP OPERATOR
   //--------------------------------------------------------------------------//

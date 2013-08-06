@@ -25,8 +25,10 @@ MGDSA::MGDSA(SP_input         input,
   : Base(input, material, mesh, ssource, fsource, cutoff,
          include_fission, adjoint, "MG-DSA")
 {
-  if (d_input->check("mgdsa_disable_fission") and d_include_fission)
+  if (d_input->check("mgdsa_disable_fission") && d_include_fission)
+  {
     d_include_fission = (0 == d_input->get<int>("mgdsa_disable_fission"));
+  }
 
   // Compute the diffusion coefficients.
   d_material->compute_diff_coef();
