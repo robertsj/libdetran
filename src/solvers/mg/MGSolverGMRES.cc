@@ -9,6 +9,7 @@
 #include "MGSolverGMRES.hh"
 #include "MGDSA.hh"
 #include "MGCMDSA.hh"
+#include "MGTCDSA.hh"
 #include "callow/solver/LinearSolverCreator.hh"
 
 namespace detran
@@ -168,8 +169,28 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
                          d_multiply,
                          d_adjoint);
     }
+    else if (pc_type == "mgtcdsa")
+    {
+      SP_pc P(new MGCMDSA(d_input,
+                          d_material,
+                          d_mesh,
+                          d_sweepsource->get_scatter_source(),
+                          d_fissionsource,
+                          d_krylov_group_cutoff,
+                          d_multiply,
+                          d_adjoint));
 
-    // Multigroup Coarse Mesh TSA
+      d_pc = new MGTCDSA<D>(d_input,
+                            d_material,
+                            d_mesh,
+                            d_sweepsource->get_scatter_source(),
+                            d_fissionsource,
+                            P,
+                            d_operator,
+                            d_krylov_group_cutoff,
+                            d_multiply,
+                            d_adjoint);
+    }
 
     if (d_pc)
       d_solver->set_preconditioner(d_pc, pc_side);
@@ -196,6 +217,13 @@ int MGSolverGMRES<D>::number_sweeps() const
 {
   Require(d_sweeper);
   return d_sweeper->number_sweeps();
+}
+
+//----------------------------------------------------------------------------//
+template <class D>
+typename MGSolverGMRES<D>::SP_operator MGSolverGMRES<D>::get_operator()
+{
+  return d_operator;
 }
 
 //----------------------------------------------------------------------------//

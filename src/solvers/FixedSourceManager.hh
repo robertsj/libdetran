@@ -181,7 +181,6 @@ public:
   /// Update operators, etc.
   void update()
   {
-    // Preconditions
     Require(d_solver);
 
     // Refresh the solver

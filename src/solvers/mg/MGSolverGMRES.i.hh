@@ -34,13 +34,16 @@ inline void MGSolverGMRES<D>::solve(const double keff)
   if (d_pc) d_pc->build(keff, d_state);
 
   // Debug printing of operators
+  bool flag = false;
   if (d_input->check("print_transport_operator"))
   {
-    d_operator->compute_explicit("tran.out");
+    flag = d_input->template get<int>("print_transport_operator") != 0;
+    if (flag != 0) d_operator->compute_explicit("tran.out");
   }
   if (d_input->check("print_preconditioner_operator"))
   {
-    if (d_pc) d_pc->display("pc.out");
+    flag = d_input->template get<int>("print_preconditioner_operator") != 0;
+    if (flag && d_pc) d_pc->display("pc.out");
   }
 
   //--------------------------------------------------------------------------//
