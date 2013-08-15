@@ -76,6 +76,11 @@ public:
   Preconditioner(const std::string &name);
   /// Virtual destructor
   virtual ~Preconditioner(){};
+
+  //--------------------------------------------------------------------------//
+  // PUBLIC FUNCTIONS
+  //--------------------------------------------------------------------------//
+
   /// set PETSc preconditioner and other setup (called by PetscSolver)
   void set_petsc_pc(PC pc);
   /// set SLEPc spectral transformer and other setup (called by SlepcSolver)
@@ -88,6 +93,8 @@ public:
   std::string name() const {return d_name;}
   /// display the preconditioner operator
   virtual void display(const std::string &name);
+  /// size of the operator
+  size_t size() const {return d_size;}
 
   //--------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL PRECONDITIONERS MUST IMPLEMENT THIS

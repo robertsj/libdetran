@@ -13,6 +13,8 @@
 namespace detran
 {
 
+#define COUT(c) std::cout << c << std::endl;
+
 //----------------------------------------------------------------------------//
 template <class D>
 MGTCDSA<D>::MGTCDSA(SP_input         input,
@@ -29,7 +31,8 @@ MGTCDSA<D>::MGTCDSA(SP_input         input,
          include_fission, adjoint)
   , d_A(A)
   , d_P(P)
-  , d_number_corrections(0)
+  , d_number_coarse_corrections(0)
+  , d_use_fine_correction(true)
   , d_A_count(0)
   , d_A_tilde_count(0)
   , d_P_count(0)
@@ -37,11 +40,16 @@ MGTCDSA<D>::MGTCDSA(SP_input         input,
   Require(d_A);
   Require(d_P);
 
-  if (d_input->check("mgpc_tcdsa_number_corrections"))
+  if (d_input->check("mgpc_tcdsa_number_coarse_corrections"))
   {
-    d_number_corrections =
-      d_input->template get<int>("mgpc_tcdsa_number_corrections");
+    d_number_coarse_corrections =
+      d_input->template get<int>("mgpc_tcdsa_number_coarse_corrections");
   }
+  if (d_input->check("mgpc_tcdsa_use_fine_correction"))
+    {
+      d_use_fine_correction =
+        0 != d_input->template get<int>("mgpc_tcdsa_use_fine_correction");
+    }
 
   // Build the approximate transport preconditioner
   {
@@ -72,24 +80,28 @@ MGTCDSA<D>::MGTCDSA(SP_input         input,
     Assert(d_A_tilde);
   }
 
+  d_size = d_P->size();
 }
 
 //----------------------------------------------------------------------------//
 template <class D>
 void MGTCDSA<D>::apply(Vector &b, Vector &x)
 {
-  Vector y(b);
-  apply(b, x, d_number_corrections);  // x <-- A*P*b
-  d_A->multiply(x, y);                // x <-- A*P*x
-  y.add_a_times_x(-2.0, b);           // x <-- A*P*x - 2I
-  y.scale(-1);                        // x <-- (2I-AP)x
-  apply(y, x, d_number_corrections);  // x <-- P(2I-AP)x
-  ++d_A_count;
+  apply(b, x, d_number_coarse_corrections);   // x <--  P*b
+  if (d_use_fine_correction)
+  {
+    Vector y(b);
+    d_A->multiply(x, y);                      // x <-- A*P*b
+    y.add_a_times_x(-2.0, b);                 // x <-- A*P*b - 2b
+    y.scale(-1);                              // x <-- (2I-AP)b
+    apply(y, x, d_number_coarse_corrections); // x <-- P(2I-AP)b
+    ++d_A_count;
+  }
 
-  std::cout << " A count  = " << d_A_count << std::endl;
-  std::cout << " At count = " << d_A_tilde_count << std::endl;
-  std::cout << " P count  = " << d_P_count << std::endl;
-
+  COUT(" A count  = "  << d_A_count)
+  COUT(" At count = "  << d_A_tilde_count)
+  COUT(" P count  = "  << d_P_count)
+  COUT(" At sweeps = " << d_A_tilde->sweeper()->number_sweeps())
 }
 
 //----------------------------------------------------------------------------//

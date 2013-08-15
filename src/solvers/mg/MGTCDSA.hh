@@ -98,7 +98,9 @@ private:
   /// Original (diffusion) preconditioner
   SP_base d_P;
   /// Number of low-order corrections
-  size_t d_number_corrections;
+  size_t d_number_coarse_corrections;
+  /// Use the high order correction
+  bool d_use_fine_correction;
   /// Count of A applications
   size_t d_A_count;
   /// Count of A_tilde applications
