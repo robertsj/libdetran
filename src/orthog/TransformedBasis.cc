@@ -28,15 +28,17 @@ TransformedBasis::TransformedBasis(const Parameters &p)
   double norm_x = x.norm(callow::L2);
   Assert(norm_x != 0.0);
 
-  // Allocate the base DCT matrix
-  DCT dct(p);
-  MatrixDense &P = *dct.basis();
+  // Allocate the base matrix
+  Insist(p.transformed_key != "trans",
+    "Cannot transform a transformed basis.");
+  SP_basis original = OrthogonalBasis::Create(p.transformed_key, p);
+  const MatrixDense &P = *(original->basis());
   d_basis = new callow::MatrixDense(P);
 
   // Allocate the normalization array
   d_a = Vector::Create(d_order + 1, 0.0);
 
-  // Set the zeroth order
+  // Set the zeroth order, located in the abscissa vector for now
   for (int i = 0; i < d_size; ++i)
   {
     (*d_basis)(i, 0) *= x[i];
@@ -47,7 +49,14 @@ TransformedBasis::TransformedBasis(const Parameters &p)
   // Orthogonalize via Gram-Schmidt
   for (int l = 1; l <= d_order; ++l)
   {
+    // Copy the next order basis from the original basis
     Vector B_l(d_size, &(*d_basis)(0, l));
+    // Optionally multiply this pointwise by the zeroth order
+    if (p.transformed_option == 1)
+    {
+      for (int i = 0; i < d_size; ++i)
+        B_l[i] *= B_0[i];
+    }
     for (int m = 0; m < l; ++m)
     {
       Vector B_m(d_size, &(*d_basis)(0, m));

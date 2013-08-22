@@ -33,7 +33,7 @@ public:
   /// Virtual destructor
   virtual ~TransformedBasis(){}
 
-  AUTO_REGISTER(TransformedBasis, OrthogonalBasis)
+  //AUTO_REGISTER(TransformedBasis, OrthogonalBasis)
 };
 
 } // end namespace detran_orthog

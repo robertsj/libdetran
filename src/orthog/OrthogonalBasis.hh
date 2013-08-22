@@ -10,6 +10,7 @@
 #define detran_orthog_ORTHOGONALBASIS_HH_
 
 #include "orthog/orthog_export.hh"
+#include "orthog/OrthogonalBasisParameters.hh"
 #include "callow/vector/Vector.hh"
 #include "callow/matrix/MatrixDense.hh"
 #include "callow/utils/CallowDefinitions.hh"
@@ -24,36 +25,6 @@
 namespace detran_orthog
 {
 
-// Convenience structure for passing parameters to the basis
-struct OrthogonalBasisParameters
-{
-  OrthogonalBasisParameters()
-    : order(0)
-    , size(0)
-    , orthonormal(false)
-    , even_only(false)
-    , lower_bound(-1)
-    , upper_bound(1)
-  {}
-  /// Order of basis
-  size_t order;
-  /// Size of basis vector
-  size_t size;
-  /// Orthonormalize
-  bool orthonormal;
-  /// Use even orders only
-  bool even_only;
-  /// Points and weights for continuous bases
-  //@{
-  detran_utilities::vec_dbl x;
-  detran_utilities::vec_dbl qw;
-  //@}
-  /// Lower and upper bounds for continuous bases
-  //@{
-  double lower_bound;
-  double upper_bound;
-  //@}
-};
 
 /**
  *  @class OrthogonalBasis
@@ -129,7 +100,6 @@ public:
   /// Creation function.  This is the client's access to the basis sets.
   static SP_basis Create(const std::string &key,
                          const Parameters  &p = Parameters());
-
 
   //--------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
