@@ -7,8 +7,9 @@
 //----------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
-#define TEST_LIST                    \
-        FUNC(test_ProductQuadratures)
+#define TEST_LIST                            \
+        FUNC(test_ProductQuadratures)        \
+        FUNC(test_ProductQuadratureIndexing)
 
 #include "TestDriver.hh"
 #include "QuadratureFactory.hh"
@@ -62,6 +63,71 @@ int test_ProductQuadratures(int argc, char *argv[])
   return 0;
 }
 
+/*
+ *  This is to test the ordering of azimuths and polar angles.  Basically,
+ *  given a dimension and surface, an easy way to access the angles in
+ *  order is crucial.
+ */
+int test_ProductQuadratureIndexing(int argc, char *argv[])
+{
+  InputDB::SP_input db = InputDB::Create();
+  db->put<int>("quad_number_azimuth_octant", 3);
+  db->put<int>("quad_number_polar_octant",   1);
+  db->put<std::string>("quad_type",          "u-dgl");
+
+  // 2-D
+  if (0) {
+    ProductQuadrature::SP_quadrature q = QuadratureFactory::build(db, 2);
+    printf(" s  azi pol  o   a        mu            eta          xi \n");
+    for (int s = 0; s < 4; ++s)
+    {
+      vec_dbl cos_phi(q->number_azimuths(s), 0.0);
+      vec_dbl cos_theta(q->number_polar(s), 0.0);
+      for (int azi = 0; azi < q->number_azimuths(s); ++azi)
+      {
+        for (int pol = 0; pol < q->number_polar(s); ++pol)
+        {
+          int o = q->incident_index(s, azi, pol).octant;
+          int a  = q->incident_index(s, azi, pol).angle;
+          int dim = s / 2;
+
+          printf("%2i  %2i  %2i  %2i  %2i %12.8f %12.8f %12.8f \n",
+                 s, azi, pol, o, a,
+                 q->mu(o, a), q->eta(o, a), q->xi(o, a));
+
+        }
+      }
+    }
+
+  }
+
+  // 3-D
+  if (1) {
+    ProductQuadrature::SP_quadrature q = QuadratureFactory::build(db, 3);
+    printf(" s  azi pol  o   a        mu            eta          xi \n");
+    for (int s = 0; s < 6; ++s)
+    {
+      vec_dbl cos_phi(q->number_azimuths(s), 0.0);
+      vec_dbl cos_theta(q->number_polar(s), 0.0);
+      for (int azi = 0; azi < q->number_azimuths(s); ++azi)
+      {
+        for (int pol = 0; pol < q->number_polar(s); ++pol)
+        {
+          int o = q->incident_index(s, azi, pol).octant;
+          int a  = q->incident_index(s, azi, pol).angle;
+          int dim = s / 2;
+
+          printf("%2i  %2i  %2i  %2i  %2i %12.8f %12.8f %12.8f \n",
+                 s, azi, pol, o, a,
+                 q->mu(o, a), q->eta(o, a), q->xi(o, a));
+
+        }
+      }
+    }
+  }
+
+  return 0;
+}
 
 //---------------------------------------------------------------------------//
 //              end of test_ProductQuadratures.cc
