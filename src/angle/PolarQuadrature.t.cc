@@ -20,7 +20,7 @@ template class PolarQuadrature<BaseUniformCosine>;
 template class PolarQuadrature<BaseSimpson>;
 template class PolarQuadrature<TabuchiYamamoto>;
 template class PolarQuadrature<AbuShumaysDoubleRange>;
-
+template class PolarQuadrature<TriGauss>;
 
 } // end namespace detran_angle
 

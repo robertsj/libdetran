@@ -140,6 +140,8 @@ public:
   index_t outgoing_index(const size_t s, const size_t a, const size_t p) const;
 
 
+  void display_indices();
+
 protected:
 
   //--------------------------------------------------------------------------//

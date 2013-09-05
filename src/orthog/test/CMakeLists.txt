@@ -34,3 +34,7 @@ ADD_EXECUTABLE(test_BasisComparison           test_BasisComparison.cc)
 TARGET_LINK_LIBRARIES(test_BasisComparison    orthog)
 ADD_TEST(test_BasisComparisonAnalytic        test_BasisComparison      0)
 ADD_TEST(test_BasisComparisonDiscontinuous   test_BasisComparison      1)
+
+ADD_EXECUTABLE(test_BasisIntegration           test_BasisIntegration.cc)
+TARGET_LINK_LIBRARIES(test_BasisIntegration    orthog angle)
+ADD_TEST(test_BasisIntegration                 test_BasisIntegration      0)

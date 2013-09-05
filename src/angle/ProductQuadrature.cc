@@ -162,7 +162,7 @@ ProductQuadrature::ProductQuadrature(const size_t       dim,
             azi_out = 2 * number_azimuths_octant() + azi_out;
           else if (o_out == 3 || o_out == 7)
             azi_out = 4 * number_azimuths_octant() - azi_out - 1;
-          printf("-- %2i %2i %2i %2i %2i %2i \n", s, oo, o_inc, o_out, azi_inc, azi_out);
+          //printf("-- %2i %2i %2i %2i %2i %2i \n", s, oo, o_inc, o_out, azi_inc, azi_out);
 
         }
         d_incident_indices[s][azi_inc][pol_inc].octant = o_inc;
@@ -176,6 +176,40 @@ ProductQuadrature::ProductQuadrature(const size_t       dim,
     } // octant
   } // side
 
+}
+
+void ProductQuadrature::display_indices()
+{
+  printf("INCIDENT INDICES\n");
+  for (int s = 0; s < 2 * d_dimension; ++s)
+  {
+    for (int az = 0; az < this->number_azimuths(s); ++az)
+    {
+      for (int p = 0; p < this->number_polar(s); ++p)
+      {
+        int o = incident_index(s, az, p).octant;
+        int a = incident_index(s, az, p).angle;
+        printf("-- %2i %2i %2i %2i %2i  %8.4f  %8.4f  %8.4f \n",
+                   s, o, a, az, p,
+                   mu(o, a), eta(o, a), xi(o, a));
+      }
+    }
+  }
+  printf("OUTGOING INDICES\n");
+  for (int s = 0; s < 2 * d_dimension; ++s)
+  {
+    for (int az = 0; az < this->number_azimuths(s); ++az)
+    {
+      for (int p = 0; p < this->number_polar(s); ++p)
+      {
+        int o = outgoing_index(s, az, p).octant;
+        int a = outgoing_index(s, az, p).angle;
+        printf("-- %2i %2i %2i %2i %2i  %8.4f  %8.4f  %8.4f \n",
+                   s, o, a, az, p,
+                   mu(o, a), eta(o, a), xi(o, a));
+      }
+    }
+  }
 }
 
 //----------------------------------------------------------------------------//
@@ -263,21 +297,30 @@ void ProductQuadrature::build()
   if (d_dimension == 2) scale = 2.0;
   double wt_tot = 0.0;
   size_t n = 0;
+  double pwt = 0.0;
   for (size_t a = 0; a < number_azimuths_octant(); ++a)
   {
+    pwt = 0;
     for (size_t p = 0; p < number_polar_octant(); ++p, ++n)
     {
       d_mu[n]     = d_sin_theta[p] * d_cos_phi[a];
       d_eta[n]    = d_sin_theta[p] * d_sin_phi[a];
       d_xi[n]     = d_cos_theta[p];
       d_weight[n] = scale * d_polar_weight[p] * d_azimuth_weight[a];
-      wt_tot += d_weight[n];
+      wt_tot += d_weight[n]; pwt += d_polar_weight[p];
+      //printf("%24.18e \n", d_sin_theta[p]);
     } // end polar loop
   } // end azimuth loop
   wt_tot *= d_number_octants;
-
+  //std::cout << "pwt=" <<  1.0-pwt << " " << pwt << std::endl;
   verify();
-  Ensure(detran_utilities::soft_equiv(wt_tot, 1.0/angular_norm(d_dimension)));
+//  if (!detran_utilities::soft_equiv(wt_tot, 1.0/angular_norm(d_dimension)))
+//  {
+//    std::cout << "***NOTICE*** sum of weights - 1/angular_norm = "
+//              << wt_tot-1.0/angular_norm(d_dimension) << std::endl;
+//  }
+//  Ensurev(detran_utilities::soft_equiv(wt_tot, 1.0/angular_norm(d_dimension), 1e-11),
+//    AsString(wt_tot) + " and not " + AsString(wt_tot-1.0/angular_norm(d_dimension)));
 }
 
 //----------------------------------------------------------------------------//

@@ -38,7 +38,7 @@ ChebyshevU::ChebyshevU(const Parameters &p)
       (*d_basis)(i, l) = cheby_u(even * l, d_x[i]);
 
 
-  d_orthonormal = true;
+  //d_orthonormal = true;
   compute_a();
 }
 
