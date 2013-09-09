@@ -5,7 +5,6 @@
  *  @note  Copyright (C) 2013 Jeremy Roberts
  */
 //----------------------------------------------------------------------------//
-
 // LIST OF TEST FUNCTIONS
 #define TEST_LIST                   \
         FUNC(test_BasisIntegration)
@@ -43,18 +42,25 @@ int test_BasisIntegration(int argc, char *argv[])
   // We expand psi(mu) in the Jacobi polynomials for mu in [0, 1].  Internally,
   // this is scaled to [-1, 1].  Hence, we expect a DGL quadrature to work
   // very well.
-  if (1) {
+  if (1)
+  {
+    cout << "---  1-D  ---" << endl;
+
     vector<string> qtypes;
     qtypes.push_back("gl");
     qtypes.push_back("dgl");
+    qtypes.push_back("gc");
+    qtypes.push_back("dgc");
     qtypes.push_back("asdr");
     qtypes.push_back("tg");
 
-    for (int nn = 1; nn < 5; ++nn)
+    for (int qt = 0; qt < qtypes.size(); ++qt)
     {
-      int n = nn;
-      for (int qt = 0; qt < qtypes.size(); ++qt)
+      cout << qtypes[qt] << endl;
+      for (int nn = 3; nn < 7; ++nn)
       {
+        int n = nn;
+
         // Define the 1-D quadrature to use
         InputDB::SP_input db(new InputDB());
         db->put<string>("quad_type", qtypes[qt]);
@@ -63,12 +69,16 @@ int test_BasisIntegration(int argc, char *argv[])
 
         // Define the basis set
         OrthogonalBasis::Parameters p;
-        p.size  = n; p.order = 0;
-        p.x.resize(p.size,  0.0); p.qw.resize(p.size, 0.0);
-        p.lower_bound = 0.0; p.upper_bound = 1.0;
+        p.size = n;
+        p.order = 2;
+        p.x.resize(p.size, 0.0);
+        p.qw.resize(p.size, 0.0);
+        p.lower_bound = 0.0;
+        p.upper_bound = 1.0;
         for (int i = 0; i < n; ++i)
         {
-          p.x[i] = q->mu(0, i); p.qw[i] = q->weight(i);
+          p.x[i] = q->mu(0, i);
+          p.qw[i] = q->weight(i);
         }
         OrthogonalBasis::SP_basis P = OrthogonalBasis::Create("jacobi", p);
 
@@ -77,7 +87,12 @@ int test_BasisIntegration(int argc, char *argv[])
         callow::Vector ft(p.order + 1, 0.0);
         callow::Vector fa(p.size, 0.0);
         P->transform(f, ft);
-        printf(" & %6.3e & %6.3e  ", ft[0], (ft[0]-0.5)/0.5*100);
+
+        callow::Vector ref(p.order + 1, 0.0);
+        callow::Vector err(ft);
+        ref[0] = 0.5;
+        err.subtract(ref);
+        printf(" %4i & %6.3e & %6.3e & %6.3e \\\\\n ", n, err[0], err[1], err[2]);
       }
       printf("\\\\ \n");
     }
@@ -145,19 +160,22 @@ int test_BasisIntegration(int argc, char *argv[])
 //  }
 
   // 2-D integration of Chebyshev moments
-  if (1){
+  if (1)
+  {
+    cout << "---  2-D  ---" << endl;
 
     vector<string> qtypes;
-    qtypes.push_back("u-tg");
+    qtypes.push_back("u-gl");
     qtypes.push_back("u-dgl");
     qtypes.push_back("u-asdr");
     qtypes.push_back("u-gc");
     qtypes.push_back("u-dgc");
+    qtypes.push_back("u-tg");
 
     for (int qt = 0; qt < qtypes.size(); ++qt)
     {
       cout << qtypes[qt] << " " << endl;
-      for (int nn = 3; nn < 6; ++nn)
+      for (int nn = 3; nn < 7; ++nn)
       {
         int n = nn;
         printf(" %4i ", n);
@@ -170,9 +188,12 @@ int test_BasisIntegration(int argc, char *argv[])
         //q->display();
         // Define the basis set
         OrthogonalBasis::Parameters p;
-        p.size  = n; p.order = 2;
-        p.x.resize(p.size,  0.0); p.qw.resize(p.size, 0.0);
-        p.lower_bound = -1.0; p.upper_bound = 1.0;
+        p.size = n;
+        p.order = 2;
+        p.x.resize(p.size, 0.0);
+        p.qw.resize(p.size, 0.0);
+        p.lower_bound = -1.0;
+        p.upper_bound = 1.0;
         p.even_only = true;
         p.orthonormal = false;
         int i = 0;
@@ -180,8 +201,7 @@ int test_BasisIntegration(int argc, char *argv[])
         {
           q->incident_index(0, 0, pol);
           p.x[i]  = q->cos_theta(pol);
-          p.qw[i] = q->polar_weight(pol);
-          //std::cout <<  p.x[i]  << " " << p.qw[i]  << std::endl;
+          p.qw[i] = 2 * q->polar_weight(pol);
         }
 
         OrthogonalBasis::SP_basis P = OrthogonalBasis::Create("cheby", p);
@@ -197,21 +217,90 @@ int test_BasisIntegration(int argc, char *argv[])
         callow::Vector err(ft);
         ref[0] = 1.570796326794897;
         err.subtract(ref);
-        printf(" & %9.2e & %9.2e & %9.2e  \\\\ \n ",  err[0], err[1], err[2]);
+        printf(" & %9.2e & %9.2e & %9.2e  \\\\ \n ", err[0], err[1], err[2]);
+      }
+      //printf("\\\\ \n");
+    }
+  }
+  std::cout << std::endl << std::endl;
+
+  // 3-D integration of Chebyshev moments
+  if (1)
+  {
+    cout << "---  3-D  ---" << endl;
+    vector<string> qtypes;
+//    qtypes.push_back("u-gl");
+//    qtypes.push_back("u-dgl");
+//    qtypes.push_back("u-asdr");
+    qtypes.push_back("u-gc");
+//    qtypes.push_back("u-dgc");
+//    qtypes.push_back("u-tg");
+
+    for (int qt = 0; qt < qtypes.size(); ++qt)
+    {
+      cout << qtypes[qt] << endl;
+      for (int nn = 2; nn < 7; ++nn)
+      {
+        int n = 2 * nn;
+        printf("%4i ", nn);
+        // Define the 2-D quadrature to use
+        InputDB::SP_input db(new InputDB());
+        db->put<string>("quad_type", qtypes[qt]);
+        db->put<int>("quad_number_polar_octant", nn);
+        db->put<int>("quad_number_azimuth_octant", 2);
+        //THROW("lala");
+        ProductQuadrature::SP_quadrature q = QuadratureFactory::build(db, 3);
+        //q->display();
+        // Define the basis set
+        OrthogonalBasis::Parameters p;
+        p.size = n;
+        p.order = 2;
+        p.x.resize(p.size, 0.0);
+        p.qw.resize(p.size, 0.0);
+        p.lower_bound = -1.0;
+        p.upper_bound = 1.0;
+        //p.even_only = true;
+        p.orthonormal = false;
+        int i = 0;
+//         q->display();
+//         q->display_indices();
+        int np = q->number_polar(0) / 2;
+        for (int pol = 0; pol < nn; ++pol, ++i)
+        {
+          q->incident_index(0, 0, pol);
+          p.x[nn - pol - 1]  = -q->cos_theta(pol);
+          p.x[pol + nn]      =  q->cos_theta(pol);
+          p.qw[nn - pol - 1] =  q->polar_weight(pol);
+          p.qw[pol + nn]     =  q->polar_weight(pol);
+        }
+//         for (int i = 0; i < n; ++i)
+//         {
+//           std::cout << i << " " << p.x[i] << " " <<  p.qw[i] << std::endl;
+//         }
+//         std::cout << " <--" << std::endl;
+
+        OrthogonalBasis::SP_basis P = OrthogonalBasis::Create("cheby", p);
+
+        // Isotropic flux, expansion coefficient, and approximation
+        callow::Vector f(p.size, 1.0);
+        callow::Vector ft(p.order + 1, 0.0);
+        callow::Vector fa(p.size, 0.0);
+
+        P->transform(f, ft);
+        //ft.display("F");
+        callow::Vector ref(p.order + 1, 0.0);
+        callow::Vector err(ft);
+        ref[0] = 1.570796326794897;
+        err.subtract(ref);
+        printf(" & %9.2e & %9.2e & %9.2e  \\\\\n ", err[0], err[1], err[2]);
       }
       //printf("\\\\ \n");
     }
   }
 
-  // 3-D integration of Chebyshev moments
-  {
-
-  }
-
   callow_finalize();
   return 0;
 }
-
 
 //----------------------------------------------------------------------------//
 //              end of test_Jacobi01.cc

@@ -29,7 +29,7 @@ ChebyshevU::ChebyshevU(const Parameters &p)
   for (size_t i = 0; i < d_w->size(); ++i)
   {
     d_x[i] = 2.0 * (d_x[i] - d_lower_bound) / L - 1.0;
-    (*d_w)[i] = 2.0 * d_qw[i] * std::sqrt(1.0 - d_x[i] * d_x[i]);
+    (*d_w)[i] = d_qw[i] * std::sqrt(1.0 - d_x[i] * d_x[i]);
   }
 
   // Build the basis

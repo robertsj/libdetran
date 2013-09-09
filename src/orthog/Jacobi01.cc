@@ -31,7 +31,7 @@ Jacobi01::Jacobi01(const Parameters &p)
 {
   Insist(d_order < 8, "Maximum of 8th order for Jacobi01.");
 
-  d_orthonormal = false;
+  //d_orthonormal = false;
 
   // Allocate the basis matrix
   d_basis = new callow::MatrixDense(d_size, d_order + 1, 0.0);
