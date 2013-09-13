@@ -79,14 +79,18 @@ ReactionRates::region_power(std::string key, double scale)
     }
   }
 
-  // Adjust the scaling factor.
-  scale /= total_fission_rate;
-
-  // Scale the power and return.
-  for (int region = 0; region < number; region++)
+  if (scale > 0)
   {
-    power[region] *= scale;
+    // Adjust the scaling factor.
+    scale /= total_fission_rate;
+
+    // Scale the power and return.
+    for (int region = 0; region < number; region++)
+    {
+      power[region] *= scale;
+    }
   }
+
   return power;
 }
 

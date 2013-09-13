@@ -120,7 +120,9 @@ void PetscSolver::set_operators(SP_matrix A, SP_db db)
       // Add more options, like hypre etc.
       else
       {
-        THROW("Unsupported PETSc preconditioner: " + petsc_pc_type);
+        //PCSetType(pc, petsc_pc_type.c_str());
+        PCSetFromOptions(pc);
+        //THROW("Unsupported PETSc preconditioner: " + petsc_pc_type);
       }
     }
     if (d_db->check("pc_side")) pc_side = d_db->get<int>("pc_side");

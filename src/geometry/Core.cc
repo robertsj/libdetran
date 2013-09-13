@@ -155,8 +155,10 @@ void Core::finalize(vec_int assembly_map)
           int cell = ii + jj*number_cells_x;
           core_mat_map[cell] = ass_mat[count];
           core_reg_map[cell] = ass_reg[count];
-          core_pin_map[cell] = core_pins[ass_pin[count] +
-                                 (assembly_count) * number_pins_assembly];
+          core_pin_map[cell] = ass_pin[count] +
+                               assembly_count * number_pins_assembly;
+//          core_pin_map[cell] = core_pins[ass_pin[count] +
+//                                 (assembly_count) * number_pins_assembly];
           core_ass_map[cell] = assembly_count;
           count++;
         }
