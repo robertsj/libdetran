@@ -45,7 +45,7 @@ MGPreconditioner::MGPreconditioner(SP_input         input,
   // Number of active groups
   int upper = d_number_groups;
   if (d_adjoint) upper = -1;
-  d_number_active_groups = std::abs(upper - d_group_cutoff);
+  d_number_active_groups = std::abs(upper - (int)d_group_cutoff);
 
   // Check for a single build
   if (d_input->check("outer_pc_single_build"))
