@@ -49,9 +49,13 @@ public:
 
   /**
    *  @brief Constructor
+   *  @param    input     parameter database
+   *  @param    material  cross sections
+   *  @param    mesh      geometry
    *  @param    S         scatter source
    *  @param    F         fission source
    *  @param    cutoff    first group included in solve
+   *  @param    sf_switch 0 for scatter only, 1 for both, 2 for fission only
    *  @param    adjoint   flag for adjoint problems
    */
   MGScatterFissionOperator(SP_input         input,
@@ -60,9 +64,8 @@ public:
                            SP_scattersource S,
                            SP_fissionsource F,
                            size_t           cutoff,
-                           bool             include_fission,
+                           size_t           sf_switch,
                            bool             adjoint);
-
 
   /// Virtual destructor
   virtual ~MGScatterFissionOperator(){}
@@ -92,6 +95,8 @@ private:
   SP_fissionsource d_F;
   /// Cutoff
   size_t d_group_cutoff;
+  /// Scatter flag
+  bool d_include_scatter;
   /// Fission flag
   bool d_include_fission;
   /// Adjoint flag
@@ -101,6 +106,8 @@ private:
   /// Number of active groups
   size_t d_number_active_groups;
   size_t d_moments_size;
+  /// Groups to sweep
+  groups_t d_groups;
 
 };
 

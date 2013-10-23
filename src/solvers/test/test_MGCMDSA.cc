@@ -79,9 +79,9 @@ int test_MGCMDSA_1g(int argc, char *argv[])
 
 int test_MGCMDSA_7g_forward(int argc, char *argv[])
 {
-  FixedSourceData data = get_fixedsource_data(1, 7, 100, 10.0);
+  FixedSourceData data = get_fixedsource_data(1, 7);
   //
-  data.input->put<std::string>("outer_solver", "GMRES");
+  data.input->put<std::string>("outer_solver", "GS");
   data.input->put<double>("inner_tolerance", 1e-14);
   data.input->put<double>("outer_tolerance", 1e-14);
   data.input->put<int>("inner_max_iters", 1000000);
@@ -99,75 +99,9 @@ int test_MGCMDSA_7g_forward(int argc, char *argv[])
   data.input->put<int>("mgpc_cmdsa_use_smoothing",      1);
   data.input->put<int>("mgpc_cmdsa_smoothing_iters",    2);
   data.input->put<double>("mgpc_cmdsa_smoothing_relax", 1.0);
+  //data.input->put<string>("outer_pc_type",              "mgcmdsa");
+  data.input->put<int>("mgpc_coarse_mesh_level",        2);
 
-//  InputDB::SP_input db(new InputDB());
-//  db->put<vec_dbl>("radii_0", vec_dbl(0));
-//  db->put<vec_int>("mat_map_0", vec_int(1, 0));
-//  db->put<double>("pitch_0", 1.26);
-//  data.input->put<InputDB::SP_input>("mgpc_spectrum_pincell_db", db);
-
-  double b_a[] = {1.3445e-01, -6.1801e-02, 2.4505e-01, 5.2122e-01, 1.7277e-01,
-                  3.8844e-01, 6.8239e-01};
-
-  vec_dbl b(7, 1.0);
-  for (int g = 0; g < 7; ++g) b[g] = b_a[g];
-
-  data.input->put<string>("outer_pc_type",                    "mgcmdsa");
-  data.input->put<int>("mgpc_coarse_mesh_level",              10);
-
-  int glev = 7;
-  vec_int fpc;
-  if (glev == 1)
-  {
-    fpc.resize(1, 7);
-  }
-  else if (glev == 2)
-  {
-    fpc.resize(2, 3);  fpc[1] = 4;
-  }
-  else if (glev == 3)
-  {
-    fpc.resize(3, 2);  fpc[0] = 3;
-  }
-  else if (glev == 4)
-  {
-    fpc.resize(4, 2);  fpc[3] = 1;
-  }
-  else if (glev == 5)
-  {
-    fpc.resize(5, 1);  fpc[3] = 2; fpc[4] = 2;
-  }
-  else if (glev == 6)
-  {
-    fpc.resize(6, 1);  fpc[5] = 2;
-  }
-  else if (glev == 7)
-  {
-    fpc.resize(7, 1);
-  }
-  data.input->put<vec_int>("mgpc_fine_per_coarse_group",      fpc);
-
-  // Linear energy spectrum and key
-  double sp[] = {0.1646, 0.6545, 0.5915, 0.3376, 0.3215, 0.2233, 0.1579};
-  vec_dbl spectrum(7, 1.0);
-  for (int i = 0; i < 7; ++i) spectrum[i] = sp[i];
-
-  std::string spectrum_key = "ALL";
-  vec_int spectrum_map(data.mesh->number_cells(), 0);
-  data.mesh->add_mesh_map(spectrum_key, spectrum_map);
-  data.input->put<vec_dbl>("mgpc_spectrum",         spectrum);
-  data.input->put<string>("mgpc_spectrum_key",      spectrum_key);
-
-  data.input->put<int>("mgpc_condensation_option",            5);
-  data.input->put<int>("print_preconditioner_operator",       1);
-  data.input->put<vec_dbl>("mgpc_spectrum_fixed_source",      b);
-  data.input->put<int>("mgpc_spectrum_include_fission",       0);
-  data.input->put<int>("mgpc_print_operators",                1);
-
-
-//  data.mesh->add_mesh_map("PINCELL_SPECTRUM",
-//                          vec_int(data.mesh->number_cells(), 0));
-  // solve
   FixedSourceManager<_1D> manager(data.input, data.material, data.mesh);
   manager.setup();
   manager.set_source(data.source);
