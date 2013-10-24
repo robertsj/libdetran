@@ -39,9 +39,9 @@ namespace detran
  *  through the callow interface as well.
  *
  *  For Krylov iterations to perform successfully, preconditioning
- *  is often required.  A good preconditioner $\f \mathbf{M} \f$
- *  is in some way "similar" to the operator $\f \mathbf{A} \f$, and
- *  applying its inverse $\f \mathbf{M}^{-1} $\f can be done cheaply.
+ *  is often required.  A good preconditioner @f$ \mathbf{M} @f$
+ *  is in some way "similar" to the operator @f$ \mathbf{A} @f$, and
+ *  applying its inverse @f$ \mathbf{M}^{-1} @f$ can be done cheaply.
  */
 //---------------------------------------------------------------------------//
 

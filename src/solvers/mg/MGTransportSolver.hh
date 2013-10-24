@@ -47,6 +47,8 @@ public:
   // transport-specific
   typedef detran_angle::Quadrature::SP_quadrature   SP_quadrature;
   typedef typename WGSolver<D>::SP_solver           SP_wg_solver;
+  typedef typename WGSolver<D>::SP_sweeper          SP_sweeper;
+  typedef typename WGSolver<D>::SP_sweepsource      SP_sweepsource;
 
   //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -77,6 +79,16 @@ public:
 
   /// Solve the multigroup equations.
   virtual void solve(const double keff = 1.0) = 0;
+
+  //--------------------------------------------------------------------------//
+  // PUBLIC FUNCTIONS
+  //--------------------------------------------------------------------------//
+
+  /// Return the sweeper
+  SP_sweeper sweeper() {return d_wg_solver->get_sweeper();}
+
+  /// Return the sweep source
+  SP_sweepsource sweepsource() {return d_wg_solver->get_sweepsource();}
 
 protected:
 

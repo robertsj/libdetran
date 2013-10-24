@@ -63,5 +63,3 @@ template class MGTransportSolver<_2D>;
 template class MGTransportSolver<_3D>;
 
 } // end namespace detran
-
-

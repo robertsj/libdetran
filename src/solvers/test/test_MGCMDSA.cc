@@ -79,28 +79,13 @@ int test_MGCMDSA_1g(int argc, char *argv[])
 
 int test_MGCMDSA_7g_forward(int argc, char *argv[])
 {
-  FixedSourceData data = get_fixedsource_data(1, 7);
-  //
-  data.input->put<std::string>("outer_solver", "GS");
-  data.input->put<double>("inner_tolerance", 1e-14);
-  data.input->put<double>("outer_tolerance", 1e-14);
-  data.input->put<int>("inner_max_iters", 1000000);
-  data.input->put<int>("outer_max_iters", 1000000);
-  data.input->put<int>("outer_print_level", 2);
-  // set pc info
-  data.input->put<int>("outer_pc_side",                     1);
-  data.input->put<int>("outer_krylov_group_cutoff",         0);
-  data.input->put<int>("print_transport_operator",          0);
-  data.input->put<int>("print_preconditioner_operator",     0);
-  // outer preconditioner parameters
-  InputDB::SP_input pcdb = get_pcdb();
-  data.input->put<InputDB::SP_input>("outer_pc_db",   pcdb);
-
-  data.input->put<int>("mgpc_cmdsa_use_smoothing",      1);
-  data.input->put<int>("mgpc_cmdsa_smoothing_iters",    2);
-  data.input->put<double>("mgpc_cmdsa_smoothing_relax", 1.0);
-  //data.input->put<string>("outer_pc_type",              "mgcmdsa");
-  data.input->put<int>("mgpc_coarse_mesh_level",        2);
+	FixedSourceData data = get_fixedsource_data(1, 7);
+	data.input->put<std::string>("outer_solver", "GMRES");
+	data.input->put<double>("inner_tolerance", 1e-14);
+	data.input->put<double>("outer_tolerance", 1e-14);
+	data.input->put<int>("inner_max_iters", 1000000);
+	data.input->put<int>("outer_max_iters", 1000000);
+	data.input->put<int>("outer_print_level", 2);
 
   FixedSourceManager<_1D> manager(data.input, data.material, data.mesh);
   manager.setup();

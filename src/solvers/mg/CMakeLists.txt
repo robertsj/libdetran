@@ -15,6 +15,7 @@ SET(MG_SRC
   ${SRC_DIR}/MGCMDSA.cc
   ${SRC_DIR}/MGTCDSA.cc
   ${SRC_DIR}/MGScatterFissionOperator.cc
+  ${SRC_DIR}/MGSweepOperator.cc
   ${SRC_DIR}/SpectrumGS.cc
   ${SRC_DIR}/SpectrumFS.cc
   ${SRC_DIR}/SpectrumPinCell.cc

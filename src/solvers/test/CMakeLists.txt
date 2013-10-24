@@ -90,3 +90,7 @@ ADD_TEST(test_SpectrumGS                  test_SpectrumGS 0)
 ADD_EXECUTABLE(test_SpectrumPinCell test_SpectrumPinCell.cc)
 TARGET_LINK_LIBRARIES(test_SpectrumPinCell solvers)
 ADD_TEST(test_SpectrumPinCell             test_SpectrumPinCell 0)
+
+ADD_EXECUTABLE(test_MGSweepOperator          	test_MGSweepOperator.cc)
+TARGET_LINK_LIBRARIES(test_MGSweepOperator   	solvers)
+ADD_TEST(test_MGSweepOperator             		test_MGSweepOperator 0)

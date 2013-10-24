@@ -255,6 +255,10 @@ public:
   {
     return d_fixed_group_source;
   }
+  moments_type& fixed_group_source()
+  {
+    return d_fixed_group_source;
+  }
 
   /// Return the scatter source for the current group
   const moments_type& scatter_group_source() const
