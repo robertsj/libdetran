@@ -93,6 +93,11 @@ void Eispack::solve_impl(Vector &x, Vector &x0)
 
   solve_complete(V_R, V_I, E_R, E_I);
 
+  for (int i = 0; i < E_I.size(); ++i)
+  {
+    printf(" %4i  %12.4e %12.4e  \n ", i, E_R[i],  E_I[i]);
+  }
+
   // Extract the eigenvector corresponding to the maximum real value
   double max_E = E_R[0];
   int    max_i = 0;

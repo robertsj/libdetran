@@ -1,6 +1,6 @@
 //----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file  test_EigenArnoldi.cc
+ *  @file  test_EigenGD.cc
  *  @brief Test of EigenPI
  *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
@@ -8,9 +8,9 @@
 
 // LIST OF TEST FUNCTIONS
 #define TEST_LIST                              \
-        FUNC(test_EigenArnoldi_1g)                  \
-        FUNC(test_EigenArnoldi_7g_forward)          \
-        FUNC(test_EigenArnoldi_7g_adjoint)
+        FUNC(test_EigenGD_1g)                  \
+        FUNC(test_EigenGD_7g_forward)          \
+        FUNC(test_EigenGD_7g_adjoint)
 
 #include "TestDriver.hh"
 #include "solvers/EigenvalueManager.hh"
@@ -35,22 +35,28 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------------------------------------//
 
-int test_EigenArnoldi_1g(int argc, char *argv[])
+int test_EigenGD_1g(int argc, char *argv[])
 {
   EigenvalueData data = get_eigenvalue_data(1, 1);
-  data.input->put<std::string>("eigen_solver", "arnoldi");
+  data.input->put<std::string>("outer_solver", "GMRES");
+  data.input->put<int>("outer_krylov_group_cutoff", 0);
+  data.input->put<std::string>("eigen_solver", "GD");
   EigenvalueManager<_1D> manager(data.input, data.material, data.mesh);
   manager.solve();
+  cout << " # SWEEPS = " << manager.number_sweeps() << std::endl;
   TEST(soft_equiv(manager.state()->eigenvalue(), 1.0));
   return 0;
 }
 
-int test_EigenArnoldi_7g_forward(int argc, char *argv[])
+int test_EigenGD_7g_forward(int argc, char *argv[])
 {
   EigenvalueData data = get_eigenvalue_data(1, 7);
-  data.input->put<std::string>("eigen_solver", "arnoldi");
+  data.input->put<std::string>("outer_solver", "GMRES");
+  data.input->put<int>("outer_krylov_group_cutoff", 0);
+  data.input->put<std::string>("eigen_solver", "GD");
   EigenvalueManager<_1D> manager(data.input, data.material, data.mesh);
   manager.solve();
+  cout << " # SWEEPS = " << manager.number_sweeps() << std::endl;
   double ref[] =
   { 7.641447918995387e-02, 9.959998182719878e-01, 4.630704325129503e-02,
       9.200150683392864e-04, 2.626285787433469e-05, 3.927767793415337e-07,
@@ -67,10 +73,10 @@ int test_EigenArnoldi_7g_forward(int argc, char *argv[])
   return 0;
 }
 
-int test_EigenArnoldi_7g_adjoint(int argc, char *argv[])
+int test_EigenGD_7g_adjoint(int argc, char *argv[])
 {
   EigenvalueData data = get_eigenvalue_data(1, 7);
-  data.input->put<std::string>("eigen_solver", "arnoldi");
+  data.input->put<std::string>("eigen_solver", "GD");
   data.input->put<int>("adjoint", 1);
   EigenvalueManager<_1D> manager(data.input, data.material, data.mesh);
   manager.solve();
@@ -84,12 +90,12 @@ int test_EigenArnoldi_7g_adjoint(int argc, char *argv[])
   for (int g = 0; g < 7; ++g)
   {
     printf("%4i %20.12e  %20.12e \n", g, ref[g], phi[g]);
-    //TEST(soft_equiv(ref[g], phi[g]));
+    TEST(soft_equiv(ref[g], phi[g]));
   }
-  //TEST(soft_equiv(1.038797451683334, manager.state()->eigenvalue()));
+  TEST(soft_equiv(1.038797451683334, manager.state()->eigenvalue()));
   return 0;
 }
 
 //----------------------------------------------------------------------------//
-//              end of test_EigenArnoldi.cc
+//              end of test_EigenGD.cc
 //----------------------------------------------------------------------------//

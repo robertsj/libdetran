@@ -51,6 +51,21 @@ ADD_TEST(test_EigenPI_1g                  test_EigenPI 0)
 ADD_TEST(test_EigenPI_7g_forward          test_EigenPI 1)
 ADD_TEST(test_EigenPI_7g_adjoint          test_EigenPI 2)
 
+# Test of Callow standard eigenvalue solvers (slepc potential)
+ADD_EXECUTABLE(test_EigenArnoldi          test_EigenArnoldi.cc)
+TARGET_LINK_LIBRARIES(test_EigenArnoldi   solvers)
+ADD_TEST(test_EigenArnoldi_1g                  test_EigenArnoldi 0)
+ADD_TEST(test_EigenArnoldi_7g_forward          test_EigenArnoldi 1)
+ADD_TEST(test_EigenArnoldi_7g_adjoint          test_EigenArnoldi 2)
+
+# Test of Callow's GD eigenvalue solver 
+ADD_EXECUTABLE(test_EigenGD               test_EigenGD.cc)
+TARGET_LINK_LIBRARIES(test_EigenGD   		  solvers)
+ADD_TEST(test_EigenGD_1g                  test_EigenGD 0)
+ADD_TEST(test_EigenGD_7g_forward          test_EigenGD 1)
+ADD_TEST(test_EigenGD_7g_adjoint          test_EigenGD 2)
+
+
 # Test of coarse mesh preconditioner
 ADD_EXECUTABLE(test_MGCoarseMeshPreconditioner 
                test_MGCoarseMeshPreconditioner.cc)

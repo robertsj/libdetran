@@ -28,6 +28,14 @@ class MGScatterFissionOperator: public callow::MatrixShell
 
 public:
 
+  //--------------------------------------------------------------------------//
+  // ENUMERATIONS
+  //--------------------------------------------------------------------------//
+
+  enum SFOPTIONS
+  {
+    SCATTERONLY, SCATTERFISSION, FISSIONONLY, END_SFOPTIONS
+  };
 
   //--------------------------------------------------------------------------//
   // TYPEDEFS

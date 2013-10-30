@@ -11,6 +11,8 @@
 #define detran_ENERGYDEPENDENTEIGENLHS_HH_
 
 #include "solvers/FixedSourceManager.hh"
+#include "solvers/mg/MGScatterFissionOperator.hh"
+#include "solvers/mg/MGSweepOperator.hh"
 #include "callow/matrix/MatrixShell.hh"
 
 namespace detran
@@ -22,7 +24,7 @@ namespace detran
  *
  *  This operator represents the action of
  *  @f[
- *      \mathbf{TMS}\boldsymbol{\chi}\mathbf{F}^T \, .
+ *      \mathbf{TM}\boldsymbol{\chi}\mathbf{F}^T \, .
  *  @f]
  *
  *  The left hand operator is represented by MGTransportOperator.
@@ -38,14 +40,15 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef MatrixShell                                   Base;
-  typedef EnergyDependentEigenLHS<D>                    Operator_T;
-  typedef typename detran_utilities::SP<Operator_T>     SP_operator;
-  typedef FixedSourceManager<D>                         Fixed_T;
-  typedef typename Fixed_T::SP_manager                  SP_mg_solver;
-  typedef typename Fixed_T::SP_state                    SP_state;
-  typedef typename Fixed_T::SP_fissionsource            SP_fissionsource;
-  typedef callow::Vector                                Vector;
+  typedef MatrixShell                                     Base;
+  typedef EnergyDependentEigenLHS<D>                      Operator_T;
+  typedef typename detran_utilities::SP<Operator_T>       SP_operator;
+  typedef FixedSourceManager<D>                           Fixed_T;
+  typedef typename Fixed_T::SP_manager                    SP_mg_solver;
+  typedef typename Fixed_T::SP_state                      SP_state;
+  typedef callow::Vector                                  Vector;
+  typedef typename MGSweepOperator<D>::SP_operator        SP_sweep;
+  typedef typename MGScatterFissionOperator::SP_operator  SP_fission;
 
   //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -88,8 +91,12 @@ private:
 
   /// Multigroup solver
   SP_mg_solver d_mg_solver;
-  /// Fission source
-  SP_fissionsource d_fissionsource;
+  /// Fission operator
+  SP_fission d_fission;
+  /// Sweep operator
+  SP_sweep d_sweep;
+  /// Size of moments portion of unknowns
+  size_t d_moments_size;
 
 };
 

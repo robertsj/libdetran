@@ -17,11 +17,15 @@
 #include "solvers/eigen/EigenPI.hh"
 #include "solvers/eigen/EigenDiffusion.hh"
 #include "solvers/eigen/EigenArnoldi.hh"
+#include "solvers/eigen/EigenGD.hh"
 
 #include <string>
 
 namespace detran
 {
+
+using std::cout;
+using std::endl;
 
 //---------------------------------------------------------------------------//
 template <class D>
@@ -99,6 +103,17 @@ bool EigenvalueManager<D>::solve()
   else if (eigen_solver == "arnoldi")
   {
       d_solver = new EigenArnoldi<D>(d_mg_solver);
+  }
+  else if (eigen_solver == "GD")
+  {
+    if (d_discretization == Fixed_T::DIFF)
+    {
+      cout << "GD not applicable for diffusion.  Use the diffusion" << endl;
+      cout << "eigensolver and select gd from callow to use the " << endl;
+      cout << "built-in implementation or use the SLEPc version. " << endl;
+      return false;
+    }
+    d_solver = new EigenGD<D>(d_mg_solver);
   }
   else
   {

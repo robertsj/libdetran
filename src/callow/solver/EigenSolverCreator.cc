@@ -11,6 +11,7 @@
 // solvers
 #include "PowerIteration.hh"
 #include "SlepcSolver.hh"
+#include "Davidson.hh"
 #include "Eispack.hh"
 //
 #include <string>
@@ -59,6 +60,10 @@ EigenSolverCreator::Create(SP_db db)
 #else
     THROW("SLEPc solvers not available with this build");
 #endif
+  }
+  else if (solver_type == "gd")
+  {
+    solver = new Davidson(tol, maxit);
   }
   else if (solver_type == "eispack")
   {

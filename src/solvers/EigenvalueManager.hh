@@ -82,6 +82,7 @@ public:
   SP_boundary boundary() const {return d_mg_solver->boundary();}
   SP_quadrature quadrature() const {return d_mg_solver->quadrature();}
   SP_fissionsource fissionsource() const {return d_mg_solver->fissionsource();}
+  int number_sweeps() const { return d_mg_solver->number_sweeps(); }
 
 private:
 

@@ -11,6 +11,7 @@
 
 #include "Eigensolver.hh"
 #include "EnergyDependentEigenLHS.hh"
+#include "solvers/mg/MGTransportOperator.hh"
 #include "callow/solver/EigenSolver.hh"
 
 namespace detran
@@ -54,7 +55,6 @@ public:
   typedef callow::EigenSolver::SP_solver            SP_eigensolver;
   typedef MGTransportOperator<D>                    RHS_Operator_T;
   typedef EnergyDependentEigenLHS<D>                LHS_Operator_T;
-  typedef typename Operator_T::SP_operator          SP_operator;
   typedef callow::Vector::SP_vector                 SP_vector;
 
   //--------------------------------------------------------------------------//
@@ -94,11 +94,13 @@ protected:
   using Base::d_adjoint;
   using Base::d_mg_solver;
 
-  /// Main linear solver
+  /// Eigensolver here callow's GD
   SP_eigensolver d_eigensolver;
-  /// Operator "A" in "Fx = kAx"
+  /// Operators
+  //@{
   typename RHS_Operator_T::SP_operator d_A;
   typename LHS_Operator_T::SP_operator d_F;
+  //@}
   /// Solution vector
   SP_vector d_x;
   /// Initial guess
@@ -108,14 +110,8 @@ protected:
 
 } // namespace detran
 
-//----------------------------------------------------------------------------//
-// INLINE FUNCTIONS
-//----------------------------------------------------------------------------//
-
-#include "EigenArnoldi.i.hh"
-
-#endif /* detran_EIGENARNOLDI_HH_ */
+#endif /* detran_EIGENGD_HH_ */
 
 //----------------------------------------------------------------------------//
-//              end of EigenArnoldi.cc
+//              end of EigenGD.cc
 //----------------------------------------------------------------------------//
