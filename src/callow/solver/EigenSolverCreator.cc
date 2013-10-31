@@ -31,6 +31,7 @@ EigenSolverCreator::Create(SP_db db)
   int maxit = 100;
   int monitor_level = 0;
   int number_values = 1;
+  int subspace_size = 20;
 
   // Check database for parameters--easily add new ones here.
   if (db)
@@ -63,7 +64,9 @@ EigenSolverCreator::Create(SP_db db)
   }
   else if (solver_type == "gd")
   {
-    solver = new Davidson(tol, maxit);
+    if (db->check("eigen_solver_subspace_size"))
+      subspace_size = db->get<int>("eigen_solver_subspace_size");
+    solver = new Davidson(tol, maxit, subspace_size);
   }
   else if (solver_type == "eispack")
   {

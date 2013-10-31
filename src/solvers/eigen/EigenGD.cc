@@ -35,7 +35,7 @@ EigenGD<D>::EigenGD(SP_mg_solver mg_solver)
   d_x  = new callow::Vector(d_A->number_rows(), 1.0);
   d_x0 = new callow::Vector(d_A->number_rows(), 1.0);
 
-  // Get callow solver parameter database
+  // Get callow eigensolver parameter database
   SP_input db;
   if (d_input->check("eigen_solver_db"))
   {
@@ -49,11 +49,21 @@ EigenGD<D>::EigenGD(SP_mg_solver mg_solver)
   d_eigensolver = callow::EigenSolverCreator::Create(db);
   Assert(d_eigensolver);
 
-  // Set the transport operator.
-  d_eigensolver->set_operators(d_F, d_A);
 
-  d_F->compute_explicit("FF.out");
-  d_A->compute_explicit("AA.out");
+//  d_F->compute_explicit("FF.out");
+//  d_A->compute_explicit("AA.out");
+
+  // Get callow solver parameter database
+  if (d_input->check("eigen_solver_pc_db"))
+    db = d_input->template get<SP_input>("eigen_solver_pc_db");
+  else
+    db = NULL;
+  d_eigensolver->set_operators(d_F, d_A, db);
+
+  // Preconditioner
+
+
+
 }
 
 
