@@ -46,7 +46,7 @@ int test_ThreadedMatVec(int argc, char *argv[])
 {
   callow_initialize(argc, argv);
   {
-    int n = 2000;
+    int n = 200;
     Matrix::SP_matrix A = test_matrix_2(n);
     Vector x(A->number_columns(), 1.0);
     Vector y(A->number_columns(), 0.0);

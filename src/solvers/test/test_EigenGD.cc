@@ -53,7 +53,8 @@ int test_EigenGD_7g_forward(int argc, char *argv[])
   EigenvalueData data = get_eigenvalue_data(1, 7);
   data.input->put<std::string>("outer_solver", "GMRES");
   data.input->put<int>("outer_krylov_group_cutoff", 0);
-  data.input->put<std::string>("eigen_solver", "GD");
+  data.input->put<std::string>("eigen_solver", "PI");
+ // data.input->put<std::string>("eigen_solver_pc_type", "mgdsa");
   EigenvalueManager<_1D> manager(data.input, data.material, data.mesh);
   manager.solve();
   cout << " # SWEEPS = " << manager.number_sweeps() << std::endl;

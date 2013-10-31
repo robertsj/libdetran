@@ -8,8 +8,10 @@
 
 #include "EigenGD.hh"
 #include "solvers/mg/MGSolverGMRES.hh"
+#include "solvers/mg/MGDSA.hh"
+#include "solvers/mg/MGCMDSA.hh"
+#include "solvers/mg/MGTCDSA.hh"
 #include "callow/solver/EigenSolverCreator.hh"
-
 #include <iostream>
 
 namespace detran
@@ -46,12 +48,11 @@ EigenGD<D>::EigenGD(SP_mg_solver mg_solver)
     db = new detran_utilities::InputDB();
   }
   db->template put<std::string>("eigen_solver_type", "gd");
+  // By default, GD find largest; we want smallest, equal to
+  // 1/k for largest k
+  db->template put<int>("eigen_solver_which_value", 1);
   d_eigensolver = callow::EigenSolverCreator::Create(db);
   Assert(d_eigensolver);
-
-
-//  d_F->compute_explicit("FF.out");
-//  d_A->compute_explicit("AA.out");
 
   // Get callow solver parameter database
   if (d_input->check("eigen_solver_pc_db"))
@@ -60,9 +61,38 @@ EigenGD<D>::EigenGD(SP_mg_solver mg_solver)
     db = NULL;
   d_eigensolver->set_operators(d_F, d_A, db);
 
-  // Preconditioner
+  // Preconditioner -- diffusion pc's assume k = 1.0 for now so
+  // we need a nice way to update on the fly.  Moreover, the
+  // diffusion PC's are not set up for boundaries.  The quick
+  // fix is to allow the full vectors be passed to the
+  // operators but to insert them in a possibly smaller vector
+  // of correct size, thereby leaving the boundary terms unaccelerated
+  // until a better approach is implemented
+  typename MGSolverGMRES<D>::SP_pc pc;
+  std::string pc_type = "default";
+  if (d_input->check("eigen_solver_pc_type"))
+    pc_type = d_input->template get<std::string>("eigen_solver_pc_type");
+  MGTransportOperator<D> &TO = *mgs->get_operator();
+  if (pc_type == "mgdsa")
+  {
+    pc = new MGDSA(d_input, d_material, d_mesh,
+                   TO.sweepsource()->get_scatter_source(),
+                   d_fissionsource,
+                   0, true, d_adjoint);
+  }
+  else if (pc_type == "mgcmdsa")
+  {
+    pc = new MGCMDSA(d_input, d_material, d_mesh,
+                     TO.sweepsource()->get_scatter_source(),
+                     d_fissionsource,
+                     0, true, d_adjoint);
+  }
+  else
+  {
+    // use the default, which is a crude solve for (A-(1/k)F)v = r
+  }
 
-
+  if (pc) d_eigensolver->set_preconditioner(pc);
 
 }
 
@@ -83,8 +113,7 @@ void EigenGD<D>::solve()
       d_state->phi(g)[i] = (*d_x)[k];
     }
   }
-
-  // Fill the
+  d_state->set_eigenvalue(1.0 / d_eigensolver->eigenvalue());
 }
 
 //----------------------------------------------------------------------------//

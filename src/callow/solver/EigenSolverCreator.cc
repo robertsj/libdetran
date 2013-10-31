@@ -70,6 +70,8 @@ EigenSolverCreator::Create(SP_db db)
   }
   else if (solver_type == "eispack")
   {
+    if (db->check("eigen_solver_subspace_size"))
+      subspace_size = db->get<int>("eigen_solver_subspace_size");
     solver = new Eispack(tol, maxit);
   }
   else

@@ -34,7 +34,8 @@ public:
   //--------------------------------------------------------------------------//
 
   Eispack(const double tol   = 1e-6,
-          const int    maxit = 100);
+          const int    maxit = 100,
+          int          which = 1);
 
   virtual ~Eispack(){}
 

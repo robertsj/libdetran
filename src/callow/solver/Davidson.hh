@@ -18,43 +18,36 @@ namespace callow
 
 /**
  *  @class Davidson
- *  @brief Solves generalized eigenvalue problems via nonlinear Arnoldi method
+ *  @brief Solves generalized eigenproblems via generalized Davidson's method
  *
  *  Consider the generalized eigenvalue problem
  *  @f[
- *      Ax = \lambda Bx \, .
+ *       \mathbf{A}x = \lambda  \mathbf{B}x \, .
  *  @f]
- *  We can rewrite this as the nonlinear eigenvalue problem
- *  @f[
- *     T(\lambda)x = (A-\lambda B)x = 0\, ,
- *  @f]
- *  for which the nonlinear Arnoldi method is applicable.
- *
- *  The basic idea of the nonlinear Arnoldi method is
- *  that at each iteration, the nonlinear problem is projected into
+ *  The basic idea of the Davidson's method is
+ *  that at each iteration, the problem is projected into
  *  a subspace, and the resulting Ritz pair is used to estimate the
  *  eigenvalue and eigenvector of the original system.  A correction
  *  to the eigenvector is produced that is (approximately)
  *  orthogonal to the residual.  In other words, for the updated
  *  eigenvector @f$ u @f$ and eigenvalue @f$ \lambda @f$, we solve
  *  @f[
- *     \mathbf{T}(\lambda) v \approx r \, ,
+ *     (\mathbf{A} - \lambda \mathbf{B}) v = \mathbf{R} v \approx r \, ,
  *  @f]
  *  or alternatively,
  *  @f[
- *     \mathbf{P}(\lambda) v = r \, ,
+ *     \mathbf{P} v = r \, ,
  *  @f]
- *  where @f$P(\lambda) \approx T(\lambda) @f$ is called the
+ *  where @f$P \approx R @f$ is called the
  *  <em> preconditioner </em>.
  *  The result @f$ v @f$ is made orthogonal to the current subspace and
  *  is then used to extend subspace.  While not discussed in depth
  *  here, projection methods in general can be much more efficient
  *  if restarted.  We simply take the last resulting eigenpair.
  *
- *  It turns out the nonlinear Arnoldi method is equivalent to a generalized
- *  Davidson method.  SLEPc offers an implementation of G-D that may be more
- *  efficient.
- *
+ *  SLEPc also offers an implementation of generalized Davidson
+ *  that may be more efficient but cannot handle arbitrary user-defined
+ *  preconditioners in the way needed for Detran.
  */
 class Davidson: public EigenSolver
 {
@@ -98,8 +91,10 @@ public:
   /**
    *   @brief Sets the preconditioner for the problem
    *   @param P     preconditioner operator
+   *   @param size  preconditioner side (unused for Davidson)
    */
-  void set_preconditioner(SP_pc P);
+  void set_preconditioner(SP_pc     P,
+                          const int side = LinearSolver::LEFT);
 
 private:
 

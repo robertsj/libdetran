@@ -15,9 +15,10 @@ namespace callow
 
 //----------------------------------------------------------------------------//
 Eispack::Eispack(const double tol,
-                 const int    maxit)
+                 const int    maxit,
+                 int          which)
   : EigenSolver(tol, maxit, "eispack")
-  , d_which_value(0)
+  , d_which_value(which)
 {
   /* ... */
 }
@@ -98,25 +99,26 @@ void Eispack::solve_impl(Vector &x, Vector &x0)
     printf(" %4i  %12.4e %12.4e  \n ", i, E_R[i],  E_I[i]);
   }
 
-  // Extract the eigenvector corresponding to the maximum real value
-  double max_E = E_R[0];
-  int    max_i = 0;
+  // Extract the eigenvector corresponding to the max (or min) real value
+  double wanted_E = E_R[0];
+  int    wanted_i = 0;
   for (int i = 1; i < m; ++i)
   {
-    if (E_R[i] > max_E)
+    if ( (E_R[i] > wanted_E && d_which_value == 1) ||
+         (E_R[i] < wanted_E && d_which_value == 0) )
     {
-      max_E = E_R[i];
-      max_i = i;
+      wanted_E = E_R[i];
+      wanted_i = i;
     }
   }
   for (int i = 0; i < m; ++i)
   {
-    x[i] = V_R(i, max_i);
+    x[i] = V_R(i, wanted_i);
   }
   x.scale(1.0 / x.norm(L2));
 
   /// Store the eigenvalue
-  d_lambda = max_E;
+  d_lambda = wanted_E;
 }
 
 

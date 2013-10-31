@@ -19,6 +19,7 @@ Eigensolver<D>::Eigensolver(SP_mg_solver mg_solver)
   Require(mg_solver);
   d_input = d_mg_solver->input();
   d_state = d_mg_solver->state();
+  d_material = d_mg_solver->material();
   d_mesh  = d_mg_solver->mesh();
   d_fissionsource = d_mg_solver->fissionsource();
   Require(d_input);

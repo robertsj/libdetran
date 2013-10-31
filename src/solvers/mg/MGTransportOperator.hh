@@ -89,6 +89,7 @@ public:
   SP_sweeper sweeper() { return d_sweeper; }
   SP_sweepsource sweepsource() { return d_sweepsource; }
 
+
   //--------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL MATRICES MUST IMPLEMENT THESE
   //--------------------------------------------------------------------------//
