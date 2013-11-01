@@ -59,6 +59,7 @@ EigenGD<D>::EigenGD(SP_mg_solver mg_solver)
     db = d_input->template get<SP_input>("eigen_solver_pc_db");
   else
     db = NULL;
+  db->display();
   d_eigensolver->set_operators(d_F, d_A, db);
 
   // Preconditioner -- diffusion pc's assume k = 1.0 for now so
@@ -87,7 +88,31 @@ EigenGD<D>::EigenGD(SP_mg_solver mg_solver)
                      TO.sweepsource()->get_scatter_source(),
                      d_fissionsource,
                      0, true, d_adjoint);
-    pc->build(1.18549859);
+    pc->build(1.0);
+  }
+  else if (pc_type == "mgtcdsa")
+  {
+    typename MGSolverGMRES<D>::SP_pc
+      base_pc(new MGCMDSA(d_input,
+                          d_material,
+                          d_mesh,
+                          TO.sweepsource()->get_scatter_source(),
+                          d_fissionsource,
+                          0,
+                          true,
+                          d_adjoint));
+
+    pc = new MGTCDSA<D>(d_input,
+                        d_material,
+                        d_mesh,
+                        TO.sweepsource()->get_scatter_source(),
+                        d_fissionsource,
+                        base_pc,
+                        mgs->get_operator(),
+                        0,
+                        true,
+                        d_adjoint);
+    pc->build(1.0);
   }
   else
   {
