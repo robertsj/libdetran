@@ -79,6 +79,7 @@ EigenGD<D>::EigenGD(SP_mg_solver mg_solver)
                    TO.sweepsource()->get_scatter_source(),
                    d_fissionsource,
                    0, true, d_adjoint);
+
   }
   else if (pc_type == "mgcmdsa")
   {
@@ -86,6 +87,7 @@ EigenGD<D>::EigenGD(SP_mg_solver mg_solver)
                      TO.sweepsource()->get_scatter_source(),
                      d_fissionsource,
                      0, true, d_adjoint);
+    pc->build(1.18549859);
   }
   else
   {

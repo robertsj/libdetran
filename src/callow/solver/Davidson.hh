@@ -228,7 +228,7 @@ public:
 
 private:
 
-  /// Solver to invert B
+  /// Solver for approximating inv(A-e*B)
   EigenSolver::SP_linearsolver d_solver;
 
 };
