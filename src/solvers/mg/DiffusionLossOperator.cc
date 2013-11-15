@@ -228,11 +228,6 @@ void DiffusionLossOperator::build()
                    ( neig_hxyz[xyz_idx] * cell_dc +
                      cell_hxyz[xyz_idx] * neig_dc );
 
-          if (d_cmfd)
-          {
-            dhat = - (Jnet[xyz_idx] + dtilde*(phi[xyz_idx]);
-          }
-
           // Compute and set the off-diagonal matrix value.
           double val = - dtilde / cell_hxyz[xyz_idx];
           int neig_row = neig_cell + gg * d_group_size;

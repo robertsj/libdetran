@@ -14,6 +14,7 @@
 #include "utilities/InputDB.hh"
 #include "utilities/SP.hh"
 #include "callow/matrix/Matrix.hh"
+#include "transport/CurrentTally.hh"
 
 namespace detran
 {

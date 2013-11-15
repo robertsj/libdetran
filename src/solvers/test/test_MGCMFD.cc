@@ -52,7 +52,7 @@ int test_MGCMFD(int argc, char *argv[])
   callow_initialize(argc, argv);
   {
     int ng = 1;
-    FixedSourceData data = get_fixedsource_data(1, 7, 100);
+    FixedSourceData data = get_fixedsource_data(1, ng, 100);
     set_data(data.input);
     data.input->put<std::string>("bc_west", "vacuum");
     data.input->put<std::string>("bc_east", "vacuum");

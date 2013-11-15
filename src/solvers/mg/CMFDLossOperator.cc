@@ -121,8 +121,6 @@ void CMFDLossOperator<D>::build()
   // Get the material map.
   const vec_int &mat_map = d_mesh->mesh_map("MATERIAL");
 
-  bool db = false;
-
   for (groups_iter g_it = d_groups.begin(); g_it != d_groups.end(); ++g_it)
   {
     // actual group
@@ -133,12 +131,8 @@ void CMFDLossOperator<D>::build()
     // Loop over all cells.
     for (int cell = 0; cell < d_group_size; cell++)
     {
-      if (db) cout << "cell = " << cell << endl;
-
       // Compute row index.
       int row = cell + gg * d_group_size;
-
-      if (db) cout << "row = " << row << endl;
 
       // Define the data for this cell.
       size_t m = mat_map[cell];
@@ -251,8 +245,6 @@ void CMFDLossOperator<D>::build()
           double val = - dtilde / cell_hxyz[xyz_idx];
           int neig_row = neig_cell + gg * d_group_size;
 
-          if (db) cout << "      col = " << neig_row << " " << neig_cell << endl;
-
           flag = insert(row, neig_row, val, INSERT);
           Assert(flag);
         }
@@ -269,8 +261,6 @@ void CMFDLossOperator<D>::build()
 
      // Compute and set the diagonal matrix value.
      double val = jnet + cell_sr;
-
-     if (db) cout << "      col = " << row << " " << gg <<  endl;
 
      flag = insert(row, row, val, INSERT);
      Assert(flag);
@@ -293,7 +283,7 @@ void CMFDLossOperator<D>::build()
          // skip diagonal
          if (gp == g) continue;
          int col = cell + gpi * d_group_size;
-         if (db) cout << "  ds  col = " << col << endl;
+
          double val = d_adjoint ? -d_material->sigma_s(m, gp, g)
                                 : -d_material->sigma_s(m, g, gp);
          flag = insert(row, col, val, INSERT);
@@ -330,7 +320,7 @@ void CMFDLossOperator<D>::build()
           int gpi = d_adjoint ? gp : gp - d_group_cutoff;
           // Compute column index.
           int col = cell + gpi * d_group_size;
-          if (db) cout << "      col = " << col << endl;
+
           // Fold the fission density with the spectrum.  Note that
           // we scale by keff and take the negative, since it's on the
           // left hand side.
