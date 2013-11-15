@@ -1,12 +1,12 @@
 //----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file  DiffusionLossOperator.cc
- *  @brief DiffusionLossOperator
+ *  @file  CMFDLossOperator.cc
+ *  @brief CMFDLossOperator
  *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
 //----------------------------------------------------------------------------//
 
-#include "DiffusionLossOperator.hh"
+#include "CMFDLossOperator.hh"
 #include "utilities/MathUtilities.hh"
 #include <iostream>
 
@@ -16,22 +16,20 @@ namespace detran
 {
 
 //----------------------------------------------------------------------------//
-DiffusionLossOperator::DiffusionLossOperator(SP_input       input,
-                                             SP_material    material,
-                                             SP_mesh        mesh,
-                                             const bool     include_fission,
-                                             const size_t   cutoff,
-                                             const bool     adjoint,
-                                             const double   keff,
-                                             const size_t   sf_flag)
+template <class D>
+CMFDLossOperator<D>::CMFDLossOperator(SP_input      input,
+                                      SP_material   material,
+                                      SP_mesh       mesh,
+                                      SP_tally      tally,
+                                      const bool    include_fission,
+                                      const bool    adjoint,
+                                      const double  keff)
   : d_input(input)
   , d_material(material)
   , d_mesh(mesh)
-  , d_group_cutoff(cutoff)
   , d_include_fission(include_fission)
-  , d_keff(keff)
   , d_adjoint(adjoint)
-  , d_sf_flag(sf_flag)
+  , d_keff(keff)
 {
   Require(d_input);
   Require(d_material);
@@ -101,10 +99,10 @@ DiffusionLossOperator::DiffusionLossOperator(SP_input       input,
 }
 
 //----------------------------------------------------------------------------//
-void DiffusionLossOperator::construct(const double keff, const size_t flag)
+template <class D>
+void CMFDLossOperator<D>::construct(const double keff)
 {
   d_keff = keff;
-  d_sf_flag = flag;
   build();
 }
 
@@ -113,7 +111,8 @@ void DiffusionLossOperator::construct(const double keff, const size_t flag)
 //----------------------------------------------------------------------------//
 
 //----------------------------------------------------------------------------//
-void DiffusionLossOperator::build()
+template <class D>
+void CMFDLossOperator<D>::build()
 {
   using std::cout;
   using std::endl;
@@ -189,18 +188,34 @@ void DiffusionLossOperator::build()
         // Put i, j, k into an array.  The neighbor indices are
         // a perturbation of this.
         int neig_idx[3] = {i, j, k};
+        int &ii = neig_idx[0];
+        int &jj = neig_idx[1];
+        int &kk = neig_idx[2];
 
         // Determine whether the neighbor is positive (+1) or negative (-1)
         // relative to the surface under consideration, and then decrement
         // the appropriate x, y, or z index.
         int shift_idx   = -2 * ((leak + 1) % 2) + 1;
         neig_idx[xyz_idx] += shift_idx;
-
-        // \todo It might make sense to template the coupling coefficient
+        int neig = d_mesh->index(neig_idx[0], neig_idx[1], neig_idx[2]);
 
         // Compute coupling coefficient
         double dtilde = 0.0;
         double dhat = 0.0;
+
+        // net current
+        int surf_idx[] = {i, j, k};
+        surf_idx[xyz_idx] += leak % 2;
+        ii = surf_idx[0];
+        jj = surf_idx[1];
+        kk = surf_idx[2];
+        double J = d_tally->partial_current(ii, jj, kk, g, xyz_idx, true)
+                 - d_tally->partial_current(ii, jj, kk, g, xyz_idx, false);
+
+        // fluxes
+        double phi_cell = d_phi[g][cell];
+        double phi_neig = d_phi[g][neig];
+
         if (bound[leak] == nxyz[xyz_idx][dir_idx])
         {
           // on a boundary
@@ -208,6 +223,7 @@ void DiffusionLossOperator::build()
                    ( 4.0 * cell_dc * (1.0 + d_albedo[leak][g]) +
                     (1.0 - d_albedo[leak][g]) * cell_hxyz[xyz_idx]);
 
+          dhat = -(J + dtilde * phi_cell) / phi_cell;
         }
         else
         {
@@ -228,10 +244,8 @@ void DiffusionLossOperator::build()
                    ( neig_hxyz[xyz_idx] * cell_dc +
                      cell_hxyz[xyz_idx] * neig_dc );
 
-          if (d_cmfd)
-          {
-            dhat = - (Jnet[xyz_idx] + dtilde*(phi[xyz_idx]);
-          }
+          dhat = -(J + dtilde * (phi_neig - phi_cell)) /
+                  (phi_neig - phi_cell);
 
           // Compute and set the off-diagonal matrix value.
           double val = - dtilde / cell_hxyz[xyz_idx];
@@ -244,7 +258,7 @@ void DiffusionLossOperator::build()
         }
 
         // Compute leakage coefficient for this cell and surface.
-        jo[leak] = dtilde;
+        jo[leak] = dtilde + dhat * shift_idx;
 
       } // leak loop
 
@@ -344,7 +358,8 @@ void DiffusionLossOperator::build()
 }
 
 //----------------------------------------------------------------------------//
-double DiffusionLossOperator::albedo(const size_t side, const size_t g) const
+template <class D>
+double CMFDLossOperator<D>::albedo(const size_t side, const size_t g) const
 {
   Require(side < 6);
   Require(g < d_number_groups);
@@ -354,5 +369,5 @@ double DiffusionLossOperator::albedo(const size_t side, const size_t g) const
 } // end namespace detran
 
 //----------------------------------------------------------------------------//
-//              end of file DiffusionLossOperator.cc
+//              end of file CMFDLossOperator.cc
 //----------------------------------------------------------------------------//

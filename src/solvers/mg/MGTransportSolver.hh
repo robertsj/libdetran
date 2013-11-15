@@ -90,6 +90,9 @@ public:
   /// Return the sweep source
   SP_sweepsource sweepsource() {return d_wg_solver->get_sweepsource();}
 
+  /// Return the withingroup solver
+  SP_wg_solver wg_solver() {return d_wg_solver;}
+
 protected:
 
   //--------------------------------------------------------------------------//

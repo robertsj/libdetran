@@ -19,6 +19,7 @@ SET(MG_SRC
   ${SRC_DIR}/SpectrumGS.cc
   ${SRC_DIR}/SpectrumFS.cc
   ${SRC_DIR}/SpectrumPinCell.cc
+  ${SRC_DIR}/CMFDLossOperator.cc
   PARENT_SCOPE
 )
 

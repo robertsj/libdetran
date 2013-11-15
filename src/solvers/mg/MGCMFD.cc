@@ -1,12 +1,12 @@
 //----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file  DiffusionLossOperator.cc
- *  @brief DiffusionLossOperator
+ *  @file  MGCMFD.cc
+ *  @brief MGCMFD
  *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
 //----------------------------------------------------------------------------//
 
-#include "DiffusionLossOperator.hh"
+#include "MGCMFD.hh"
 #include "utilities/MathUtilities.hh"
 #include <iostream>
 
@@ -16,38 +16,36 @@ namespace detran
 {
 
 //----------------------------------------------------------------------------//
-DiffusionLossOperator::DiffusionLossOperator(SP_input       input,
-                                             SP_material    material,
-                                             SP_mesh        mesh,
-                                             const bool     include_fission,
-                                             const size_t   cutoff,
-                                             const bool     adjoint,
-                                             const double   keff,
-                                             const size_t   sf_flag)
-  : d_input(input)
+template <class D>
+MGCMFD<D>::MGCMFD(SP_state                   state,
+                  SP_material                material,
+                  SP_boundary                boundary,
+                  SP_sweeper                 sweeper,
+                  SP_sweepsource             sweepsource,
+                  bool                       multiply)
+  : d_state(state)
   , d_material(material)
-  , d_mesh(mesh)
-  , d_group_cutoff(cutoff)
-  , d_include_fission(include_fission)
-  , d_keff(keff)
-  , d_adjoint(adjoint)
-  , d_sf_flag(sf_flag)
+  , d_boundary(boundary)
+  , d_sweeper(sweeper)
+  , d_sweepsource(sweepsource)
+  , d_multiply(multiply)
 {
-  Require(d_input);
+  Require(d_state);
   Require(d_material);
   Require(d_mesh);
+
+  d_mesh = d_state->get_mesh();
+
+
 
   // Set the dimension and group count and indices
   d_dimension = d_mesh->dimension();
   d_number_groups = d_material->number_groups();
-  int upper = d_adjoint ? -1 : d_number_groups;
-  d_groups = detran_utilities::range<size_t>(d_group_cutoff, upper);
-  d_number_active_groups = d_groups.size();
   d_group_size = d_mesh->number_cells();
 
   // Set matrix dimensions
-  Base::set_size(d_number_active_groups*d_group_size,
-                 d_number_active_groups*d_group_size);
+  Base::set_size(d_number_groups*d_group_size,
+                 d_number_groups*d_group_size);
 
   // Default albedos to 1.0.  For dimensions in play, this will be
   // overwritten by the default boundary.
@@ -101,7 +99,7 @@ DiffusionLossOperator::DiffusionLossOperator(SP_input       input,
 }
 
 //----------------------------------------------------------------------------//
-void DiffusionLossOperator::construct(const double keff, const size_t flag)
+void MGCMFD::construct(const double keff, const size_t flag)
 {
   d_keff = keff;
   d_sf_flag = flag;
@@ -113,7 +111,7 @@ void DiffusionLossOperator::construct(const double keff, const size_t flag)
 //----------------------------------------------------------------------------//
 
 //----------------------------------------------------------------------------//
-void DiffusionLossOperator::build()
+void MGCMFD::build()
 {
   using std::cout;
   using std::endl;
@@ -200,7 +198,6 @@ void DiffusionLossOperator::build()
 
         // Compute coupling coefficient
         double dtilde = 0.0;
-        double dhat = 0.0;
         if (bound[leak] == nxyz[xyz_idx][dir_idx])
         {
           // on a boundary
@@ -227,11 +224,6 @@ void DiffusionLossOperator::build()
           dtilde = ( 2.0 * cell_dc * neig_dc ) /
                    ( neig_hxyz[xyz_idx] * cell_dc +
                      cell_hxyz[xyz_idx] * neig_dc );
-
-          if (d_cmfd)
-          {
-            dhat = - (Jnet[xyz_idx] + dtilde*(phi[xyz_idx]);
-          }
 
           // Compute and set the off-diagonal matrix value.
           double val = - dtilde / cell_hxyz[xyz_idx];
@@ -344,7 +336,7 @@ void DiffusionLossOperator::build()
 }
 
 //----------------------------------------------------------------------------//
-double DiffusionLossOperator::albedo(const size_t side, const size_t g) const
+double MGCMFD::albedo(const size_t side, const size_t g) const
 {
   Require(side < 6);
   Require(g < d_number_groups);
@@ -354,5 +346,5 @@ double DiffusionLossOperator::albedo(const size_t side, const size_t g) const
 } // end namespace detran
 
 //----------------------------------------------------------------------------//
-//              end of file DiffusionLossOperator.cc
+//              end of file MGCMFD.cc
 //----------------------------------------------------------------------------//

@@ -100,7 +100,7 @@ inline void Sweeper1D<EQ>::sweep(moments_type &phi)
 
         // Tally the outgoing cell flux
         if (d_tally)
-          d_tally->tally(i, 0, 0, d_g, o, a, Tally_T::X_DIRECTED, psi_out);
+          d_tally->tally(i, 0, 0, d_g, o, a, psi_out);
 
       } // end x loop
 

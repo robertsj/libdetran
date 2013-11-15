@@ -133,8 +133,9 @@ CurrentTally<D>::tally(const size_t i,
 
   // Make direction triplet
   const size_t dim[] = {i, j, k};
-  Require( (dim[d0] == 0) ||
-           (dim[d0] == d_coarsemesh->get_fine_mesh()->number_cells(d0) - 1) );
+  Requirev( (dim[d0] == 0) ||
+           (dim[d0] == d_coarsemesh->get_fine_mesh()->number_cells(d0) - 1),
+           "Value is " + AsString(dim[d0]));
 
   // Increment for incident direction
   int inc = 0;
