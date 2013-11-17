@@ -18,6 +18,7 @@
 namespace detran
 {
 
+//----------------------------------------------------------------------------//
 template <class D>
 void MGSolverGS<D>::solve(const double keff)
 {
@@ -50,6 +51,7 @@ void MGSolverGS<D>::solve(const double keff)
   {
     // Update group bounds for the possibly truncated iteration block.
     groups = range<size_t>(d_lower_upscatter, d_upper);
+
     for (iteration = 1; iteration <= d_maximum_iterations; ++iteration)
     {
       detran_utilities::vec_scale(nres, 0.0);
@@ -90,6 +92,19 @@ void MGSolverGS<D>::solve(const double keff)
            (int)iteration, nres_tot, number_sweeps());
   }
 
+}
+
+//----------------------------------------------------------------------------//
+template <class D>
+void MGSolverGS<D>::sweep()
+{
+  using detran_utilities::range;
+  vec_size_t groups = range<size_t>(d_lower, d_upper);
+  vec_size_t::iterator g_it = groups.begin();
+  for (; g_it != groups.end(); ++g_it)
+  {
+    d_wg_solver->solve(*g_it);
+  }
 }
 
 } // end namespace detran

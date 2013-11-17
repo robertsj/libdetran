@@ -5,6 +5,7 @@ SET(MG_SRC
   ${SRC_DIR}/MGTransportSolver.cc
   ${SRC_DIR}/MGSolverGS.cc
   ${SRC_DIR}/MGSolverGMRES.cc
+  ${SRC_DIR}/MGSolverCMFD.cc
   ${SRC_DIR}/MGDiffusionSolver.cc
   ${SRC_DIR}/MGTransportOperator.cc
   ${SRC_DIR}/DiffusionGainOperator.cc

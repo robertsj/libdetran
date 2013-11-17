@@ -102,6 +102,9 @@ Homogenize::homogenize(SP_mesh            mesh,
   SP_material cmat =
       detran_material::Material::Create(num_coarse_cells, num_coarse_groups);
 
+  // Size the averaged flux
+  d_coarse_mesh_flux.resize(num_coarse_groups, vec_dbl(num_coarse_cells, 0.0));
+
   // Loop over all coarse groups
   fg = 0;
   for (size_t cg = 0; cg < num_coarse_groups; ++cg)
@@ -116,6 +119,7 @@ Homogenize::homogenize(SP_mesh            mesh,
     vec_dbl  sigma_f(num_coarse_cells, 0.0);
     vec_dbl  nu(num_coarse_cells, 0.0);
     vec_dbl  chi(num_coarse_cells, 0.0);
+    vec_dbl  fd(num_coarse_cells, 0.0);
     vec2_dbl sigma_s(num_coarse_cells, vec_dbl(d_number_groups, 0.0));
     vec_dbl  diff_coef(num_coarse_cells, 0.0);
 
@@ -140,7 +144,12 @@ Homogenize::homogenize(SP_mesh            mesh,
         sigma_f[ci]    += pv * d_material->sigma_f(m, group);
         nu_sigma_f[ci] += pv * d_material->nu_sigma_f(m, group);
         // Volume weighting chi with subsequent normalization to unity
-        chi[ci]        += mesh->volume(fi) * d_material->chi(m, group);
+        //chi[ci]        += mesh->volume(fi) * d_material->chi(m, group);
+        double temp_fd = 0.0;
+        for (size_t gp = 0; gp < d_number_groups; ++gp)
+          temp_fd = spectrum(gp, fi) * d_material->nu_sigma_f(m, gp) * mesh->volume(fi);
+        if (gg==0) fd[ci] += temp_fd;
+        chi[ci] += temp_fd * d_material->chi(m, group);
         for (size_t gp = 0; gp < d_number_groups; ++gp)
           sigma_s[ci][fg_to_cg[gp]] += pv * d_material->sigma_s(m, gp, group);
         if (d_option_dc == PHI_D || d_option_dc == CURRENT_D)
@@ -161,8 +170,9 @@ Homogenize::homogenize(SP_mesh            mesh,
           cmat->set_sigma_f(ci, cg, sigma_f[ci]/phi_vol[ci]);
           cmat->set_nu_sigma_f(ci, cg, nu_sigma_f[ci]/phi_vol[ci]);
           cmat->set_nu(ci, cg, nu_sigma_f[ci]/sigma_f[ci]);
+          cmat->set_chi(ci, cg, chi[ci] / fd[ci]);
         }
-        cmat->set_chi(ci, cg, chi[ci]/vol[ci]);
+        //cmat->set_chi(ci, cg, chi[ci]/vol[ci]);
         for (size_t cgp = 0; cgp < num_coarse_groups; ++cgp)
           cmat->set_sigma_s(ci, cgp, cg, sigma_s[ci][cgp]/phi_vol[ci]);
         if (d_option_dc == PHI_D || d_option_dc == CURRENT_D)
@@ -170,20 +180,22 @@ Homogenize::homogenize(SP_mesh            mesh,
         else
           cmat->set_diff_coef(ci, cg, 1.0/(3.0*cmat->sigma_t(ci, cg)));
       }
+
+      d_coarse_mesh_flux[cg][ci] = phi_vol[ci] / vol[ci];
     }
 
   } // end coarse energy
 
   // normalize chi
-  for (size_t m = 0; m < num_coarse_cells; ++m)
-  {
-    double chi_sum = 0.0;
-    for (size_t g = 0; g < num_coarse_groups; ++g)
-      chi_sum += cmat->chi(m, g);
-    if (chi_sum > 0.0)
-      for (size_t g = 0; g < num_coarse_groups; ++g)
-        cmat->set_chi(m, g, cmat->chi(m, g)/chi_sum);
-  }
+//  for (size_t m = 0; m < num_coarse_cells; ++m)
+//  {
+//    double chi_sum = 0.0;
+//    for (size_t g = 0; g < num_coarse_groups; ++g)
+//      chi_sum += cmat->chi(m, g);
+//    if (chi_sum > 0.0)
+//      for (size_t g = 0; g < num_coarse_groups; ++g)
+//        cmat->set_chi(m, g, cmat->chi(m, g)/chi_sum);
+//  }
 
   cmat->finalize();
   return cmat;

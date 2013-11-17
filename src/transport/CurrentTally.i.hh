@@ -23,8 +23,7 @@ CurrentTally<D>::partial_current(const size_t i,
                                  const size_t axis,
                                  const size_t sense)
 {
-  // Precondition
-  Require(axis < D::dimension);
+  Requirev(axis < D::dimension, "Got axis = " + AsString(axis));
   Require(i <= d_coarsemesh->get_coarse_mesh()->number_cells_x());
   Require(j <= d_coarsemesh->get_coarse_mesh()->number_cells_y());
   Require(k <= d_coarsemesh->get_coarse_mesh()->number_cells_z());

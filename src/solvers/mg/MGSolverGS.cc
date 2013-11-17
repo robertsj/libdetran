@@ -25,7 +25,6 @@ MGSolverGS<D>::MGSolverGS(SP_state                  state,
   , d_lower(0)
   , d_lower_upscatter(d_material->upscatter_cutoff(d_adjoint))
   , d_upper(d_material->number_groups())
-  , d_increment(1)
   , d_iterate(false)
   , d_norm_type("Linf")
 {

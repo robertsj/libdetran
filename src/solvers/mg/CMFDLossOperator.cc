@@ -15,6 +15,10 @@
 namespace detran
 {
 
+using std::cout;
+using std::endl;
+using detran_utilities::range;
+
 //----------------------------------------------------------------------------//
 template <class D>
 CMFDLossOperator<D>::CMFDLossOperator(SP_input      input,
@@ -27,6 +31,7 @@ CMFDLossOperator<D>::CMFDLossOperator(SP_input      input,
   : d_input(input)
   , d_material(material)
   , d_mesh(mesh)
+  , d_tally(tally)
   , d_include_fission(include_fission)
   , d_adjoint(adjoint)
   , d_keff(keff)
@@ -34,18 +39,17 @@ CMFDLossOperator<D>::CMFDLossOperator(SP_input      input,
   Require(d_input);
   Require(d_material);
   Require(d_mesh);
+  Require(d_tally);
 
-  // Set the dimension and group count and indices
+  // Set the dimensions
   d_dimension = d_mesh->dimension();
   d_number_groups = d_material->number_groups();
   int upper = d_adjoint ? -1 : d_number_groups;
-  d_groups = detran_utilities::range<size_t>(d_group_cutoff, upper);
-  d_number_active_groups = d_groups.size();
+  int lower = d_adjoint ? d_number_groups - 1 : 0;
+  d_groups = detran_utilities::range<size_t>(lower, upper);
   d_group_size = d_mesh->number_cells();
-
-  // Set matrix dimensions
-  Base::set_size(d_number_active_groups*d_group_size,
-                 d_number_active_groups*d_group_size);
+  Base::set_size(d_number_groups * d_group_size,
+                 d_number_groups * d_group_size);
 
   // Default albedos to 1.0.  For dimensions in play, this will be
   // overwritten by the default boundary.
@@ -53,7 +57,7 @@ CMFDLossOperator<D>::CMFDLossOperator(SP_input      input,
 
   // Preallocate.  The number of nonzeros is
   //   diagonal + 2*dim neighbors + num_groups coupling from scatter/fission
-  vec_int nnz(d_m, 1 + 2 * d_dimension + d_number_active_groups);
+  vec_int nnz(d_m, 1 + 2 * d_dimension + d_number_groups);
   preallocate(&nnz[0]);
 
   // Set the albedo.  First, check if the input has an albedo
@@ -94,16 +98,18 @@ CMFDLossOperator<D>::CMFDLossOperator(SP_input      input,
       }
     }
   }
-  // Build the matrix with the initial keff guess.
-  build();
+  // note, needs to be constructed
 }
 
 //----------------------------------------------------------------------------//
 template <class D>
-void CMFDLossOperator<D>::construct(const double keff)
+void CMFDLossOperator<D>::construct(const vec2_dbl &phi, const double keff)
 {
+  Require(phi.size() == d_number_groups);
+  Require(phi[0].size() == d_group_size);
+
   d_keff = keff;
-  build();
+  build(phi);
 }
 
 //----------------------------------------------------------------------------//
@@ -112,36 +118,26 @@ void CMFDLossOperator<D>::construct(const double keff)
 
 //----------------------------------------------------------------------------//
 template <class D>
-void CMFDLossOperator<D>::build()
+void CMFDLossOperator<D>::build(const vec2_dbl &phi)
 {
-  using std::cout;
-  using std::endl;
-  using detran_utilities::range;
-
-  // Get the material map.
   const vec_int &mat_map = d_mesh->mesh_map("MATERIAL");
 
   for (groups_iter g_it = d_groups.begin(); g_it != d_groups.end(); ++g_it)
   {
-    // actual group
     int g = *g_it;
-    // index within active range
-    int gg = d_adjoint ? g : g - d_group_cutoff;
 
     // Loop over all cells.
     for (int cell = 0; cell < d_group_size; cell++)
     {
       // Compute row index.
-      int row = cell + gg * d_group_size;
+      int row = cell + g * d_group_size;
 
       // Define the data for this cell.
       size_t m = mat_map[cell];
-
       double cell_dc = d_material->diff_coef(m, g);
       Assert(cell_dc != 0.0);
-
       double cell_sr = d_material->sigma_t(m, g);
-      if (d_sf_flag == 0) cell_sr -= d_material->sigma_s(m, g, g);
+      cell_sr -= d_material->sigma_s(m, g, g);
 
       // Get the directional indices.
       size_t i = d_mesh->cell_to_i(cell);
@@ -171,7 +167,7 @@ void CMFDLossOperator<D>::build()
       // surface.
 
       // leak --> 0=-x, 1=+x, 2=-y, 3=+y, 4=-z, 5=+z
-      for (int leak = 0; leak < 6; leak++)
+      for (int leak = 0; leak < D::dimension*2; ++leak)
       {
         // Determine whether this is a W/E, S/N, or B/T face
         int xyz_idx = std::floor(leak / 2);
@@ -191,123 +187,110 @@ void CMFDLossOperator<D>::build()
         // the appropriate x, y, or z index.
         int shift_idx   = -2 * ((leak + 1) % 2) + 1;
         neig_idx[xyz_idx] += shift_idx;
-        int neig = d_mesh->index(neig_idx[0], neig_idx[1], neig_idx[2]);
 
         // Compute coupling coefficient
         double dtilde = 0.0;
         double dhat = 0.0;
 
-        // net current
+        // net current leaving this cell through the indexed surface
         int surf_idx[] = {i, j, k};
         surf_idx[xyz_idx] += leak % 2;
-        ii = surf_idx[0];
-        jj = surf_idx[1];
-        kk = surf_idx[2];
-        double J = d_tally->partial_current(ii, jj, kk, g, xyz_idx, true)
-                 - d_tally->partial_current(ii, jj, kk, g, xyz_idx, false);
+        int si = surf_idx[0];
+        int sj = surf_idx[1];
+        int sk = surf_idx[2];
+        double J = d_tally->partial_current(si, sj, sk, g, xyz_idx, true)
+                 - d_tally->partial_current(si, sj, sk, g, xyz_idx, false);
+        J *= (double)shift_idx;
 
-        // fluxes
-        double phi_cell = d_phi[g][cell];
-        double phi_neig = d_phi[g][neig];
+        // cell flux
+        double phi_cell = phi[g][cell];
 
         if (bound[leak] == nxyz[xyz_idx][dir_idx])
         {
-          // on a boundary
           dtilde = ( 2.0 * cell_dc * (1.0 - d_albedo[leak][g]) )  /
                    ( 4.0 * cell_dc * (1.0 + d_albedo[leak][g]) +
                     (1.0 - d_albedo[leak][g]) * cell_hxyz[xyz_idx]);
 
-          dhat = -(J + dtilde * phi_cell) / phi_cell;
+          dhat = (J - dtilde * phi_cell) / phi_cell;
         }
         else
         {
-          // not on a boundary
-
           // Get the neighbor data.
           size_t neig_cell = d_mesh->index(neig_idx[0], neig_idx[1], neig_idx[2]);
-          size_t ii = d_mesh->cell_to_i(neig_cell);
-          size_t jj = d_mesh->cell_to_j(neig_cell);
-          size_t kk = d_mesh->cell_to_k(neig_cell);
 
-          // Neighbor volume and diffusion coefficient.
+          // Neighbor volume, diffusion coefficient, and flux
           double neig_hxyz[3] = {d_mesh->dx(ii), d_mesh->dy(jj), d_mesh->dz(kk)};
           double neig_dc = d_material->diff_coef(mat_map[neig_cell], g);
+          double phi_neig = phi[g][neig_cell];
 
-          // Compute dtilde.
+          // Compute coupling coefficients
           dtilde = ( 2.0 * cell_dc * neig_dc ) /
                    ( neig_hxyz[xyz_idx] * cell_dc +
                      cell_hxyz[xyz_idx] * neig_dc );
-
-          dhat = -(J + dtilde * (phi_neig - phi_cell)) /
-                  (phi_neig - phi_cell);
+          dhat = (J - dtilde * (phi_cell - phi_neig)) / (phi_neig + phi_cell);
 
           // Compute and set the off-diagonal matrix value.
-          double val = - dtilde / cell_hxyz[xyz_idx];
-          int neig_row = neig_cell + gg * d_group_size;
-
+          double val = (dhat - dtilde) / cell_hxyz[xyz_idx];
+          int neig_row = neig_cell + g * d_group_size;
           flag = insert(row, neig_row, val, INSERT);
           Assert(flag);
         }
 
         // Compute leakage coefficient for this cell and surface.
-        jo[leak] = dtilde + dhat * shift_idx;
+        jo[leak] = dtilde + dhat;
+        //printf("Dhat(%2i) = %12.8f  Dtilde(%2i) = %12.8f \n", dhat, dtilde);
 
       } // leak loop
+
+
 
       // Net leakage coefficient.
       double jnet = (jo[1] + jo[0]) / d_mesh->dx(i) +
                     (jo[3] + jo[2]) / d_mesh->dy(j) +
                     (jo[5] + jo[4]) / d_mesh->dz(k);
 
-     // Compute and set the diagonal matrix value.
-     double val = jnet + cell_sr;
+      // Compute and set the diagonal matrix value.
+      double val = jnet + cell_sr;
 
-     flag = insert(row, row, val, INSERT);
-     Assert(flag);
+      flag = insert(row, row, val, INSERT);
+      Assert(flag);
 
-     // Add down/up scatter components
-     if (d_sf_flag == 0)
-     {
-       int lower = d_adjoint ?
-                   std::min(d_material->lower(g, d_adjoint), d_group_cutoff)
-                 : std::max(d_material->lower(g, d_adjoint), d_group_cutoff);
-       groups_t g_s =
-         range<size_t>(lower, d_material->upper(g, d_adjoint), true);
-       groups_iter g_s_it = g_s.begin();
-       for (; g_s_it != g_s.end(); ++g_s_it)
-       {
-         // actual group
-         int gp = *g_s_it;
-         // index within active range
-         int gpi = d_adjoint ? gp : gp - d_group_cutoff;
-         // skip diagonal
-         if (gp == g) continue;
-         int col = cell + gpi * d_group_size;
+      // Add down/up scatter components
+      {
+        groups_t g_s =
+          range<size_t>(d_material->lower(g, d_adjoint),
+                        d_material->upper(g, d_adjoint),
+                        true);
+        groups_iter g_s_it = g_s.begin();
+        for (; g_s_it != g_s.end(); ++g_s_it)
+        {
+          int gp = *g_s_it;
 
-         double val = d_adjoint ? -d_material->sigma_s(m, gp, g)
-                                : -d_material->sigma_s(m, g, gp);
-         flag = insert(row, col, val, INSERT);
-         Assert(flag);
-       }
-     }
+          // skip diagonal
+          if (gp == g) continue;
+          int col = cell + gp * d_group_size;
 
+          double val = d_adjoint ? -d_material->sigma_s(m, gp, g)
+                                 : -d_material->sigma_s(m, g, gp);
+          flag = insert(row, col, val, INSERT);
+          Assert(flag);
+        }
+      }
     } // row loop
   } // group loop
 
-  if (d_include_fission && d_sf_flag == 0)
+  if (d_include_fission)
   {
     // Loop over all groups
     for (groups_iter g_it = d_groups.begin(); g_it != d_groups.end(); ++g_it)
     {
-      // Actual group and index within the active group
       int g  = *g_it;
-      int gg = d_adjoint ? g : g - d_group_cutoff;
 
       // Loop over all cells.
       for (int cell = 0; cell < d_group_size; cell++)
       {
         // Compute row index.
-        int row = cell + gg * d_group_size;
+        int row = cell + g * d_group_size;
 
         // Define the data for this cell.
         int m = mat_map[cell];
@@ -317,9 +300,9 @@ void CMFDLossOperator<D>::build()
         for (d_groups.begin(); gp_it != d_groups.end(); ++gp_it)
         {
           int gp  = *gp_it;
-          int gpi = d_adjoint ? gp : gp - d_group_cutoff;
+
           // Compute column index.
-          int col = cell + gpi * d_group_size;
+          int col = cell + gp * d_group_size;
 
           // Fold the fission density with the spectrum.  Note that
           // we scale by keff and take the negative, since it's on the
@@ -344,7 +327,6 @@ void CMFDLossOperator<D>::build()
 
   // Assemble.
   assemble();
-
 }
 
 //----------------------------------------------------------------------------//
@@ -355,6 +337,14 @@ double CMFDLossOperator<D>::albedo(const size_t side, const size_t g) const
   Require(g < d_number_groups);
   return d_albedo[side][g];
 }
+
+//----------------------------------------------------------------------------//
+// EXPLICIT INSTANTIATIONS
+//----------------------------------------------------------------------------//
+
+template class CMFDLossOperator<_1D>;
+template class CMFDLossOperator<_2D>;
+template class CMFDLossOperator<_3D>;
 
 } // end namespace detran
 

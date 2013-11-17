@@ -45,7 +45,7 @@ public:
   typedef detran_utilities::vec2_dbl                    vec2_dbl;
   typedef detran_utilities::vec_size_t                  groups_t;
   typedef groups_t::iterator                            groups_iter;
-  typedef typename CurrentTally<D>::SP_tally            SP_tally;
+  typedef typename CurrentTally<D>::SP_currenttally     SP_tally;
 
   //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -83,7 +83,7 @@ public:
    *
    *  @param keff   Scaling parameter for fission source
    */
-  void construct(double keff = 1.0);
+  void construct(const vec2_dbl &phi, double keff = 1.0);
 
   double albedo(const size_t side, const size_t g) const;
 
@@ -105,15 +105,10 @@ private:
   size_t d_dimension;
   /// Energy-dependent albedos
   vec2_dbl d_albedo;
-  vec2_dbl d_phi;
   /// Energy groups
   size_t d_number_groups;
-  /// Cutoff
-  size_t d_group_cutoff;
   /// Group indices
   groups_t d_groups;
-  /// Active groups
-  size_t d_number_active_groups;
   /// One group spatial size
   size_t d_group_size;
   /// Including fission?
@@ -122,15 +117,16 @@ private:
   double d_keff;
   /// Adjoint flag
   bool d_adjoint;
-  /// Skip scatter and fission
-  size_t d_sf_flag;
 
   //--------------------------------------------------------------------------//
   // IMPLEMENTATION
   //--------------------------------------------------------------------------//
 
   // All matrix operators need this.  Here, we have the client call construct.
-  void build();
+  void build(const vec2_dbl &phi);
+
+  // Coupling coefficient
+  //double couple
 
 };
 

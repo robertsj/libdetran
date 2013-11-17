@@ -17,6 +17,7 @@
 #include "MGSolverGS.hh"
 #include "MGDiffusionSolver.hh"
 #include "MGSolverGMRES.hh"
+#include "MGSolverCMFD.hh"
 #include <string>
 
 
@@ -198,6 +199,11 @@ bool FixedSourceManager<D>::set_solver()
     {
       d_solver = new MGSolverGS<D>(d_state, d_material, d_boundary,
                                    d_sources, d_fissionsource, d_multiply);
+    }
+    else if (outer_solver == "CMFD")
+    {
+      d_solver = new MGSolverCMFD<D>(d_state, d_material, d_boundary,
+                                     d_sources, d_fissionsource, d_multiply);
     }
     else if (outer_solver == "GMRES")
     {

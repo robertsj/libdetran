@@ -61,8 +61,8 @@ int test_PPMOutput_geo(int argc, char *argv[])
 
   // complex pin cell
   {
-    //PPMOutput::SP_geometry geo = test_2D_pincell_via_factory(3, 3);
-    PPMOutput::SP_geometry geo = test_2D_assembly(8);
+    PPMOutput::SP_geometry geo = test_2D_pincell_via_factory(3, 3);
+    //PPMOutput::SP_geometry geo = test_2D_assembly(8);
     PPMOutput ppm("test_2D_pincell_via_factory");
     ppm.initialize(geo, 0.01);
     ppm.draw_geometry(geo, true, ColorMap::RANDOM);
