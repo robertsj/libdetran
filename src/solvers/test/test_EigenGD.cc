@@ -68,7 +68,7 @@ int test_EigenGD_7g_forward(int argc, char *argv[])
   for (int g = 0; g < 7; ++g)
   {
     printf("%4i %20.12e  %20.12e \n", g, ref[g], phi[g]);
-    TEST(soft_equiv(ref[g], phi[g]));
+    TEST(soft_equiv(ref[g], phi[g], 1e-8));
   }
   TEST(soft_equiv(1.038797451683334, manager.state()->eigenvalue()));
   return 0;
@@ -77,6 +77,7 @@ int test_EigenGD_7g_forward(int argc, char *argv[])
 int test_EigenGD_7g_adjoint(int argc, char *argv[])
 {
   EigenvalueData data = get_eigenvalue_data(1, 7);
+  data.input->put<std::string>("outer_solver", "GMRES");
   data.input->put<std::string>("eigen_solver", "GD");
   data.input->put<int>("adjoint", 1);
   EigenvalueManager<_1D> manager(data.input, data.material, data.mesh);

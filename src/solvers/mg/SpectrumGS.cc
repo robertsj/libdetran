@@ -71,8 +71,6 @@ SpectrumGS::vec2_dbl SpectrumGS::spectrum(double keff)
     {
       xi[g][m] = (*xi_v)[g];
     }
-    L.print_matlab("L.out");
-    U.print_matlab("U.out");
   }
 
   return xi;

@@ -106,6 +106,7 @@ bool EigenvalueManager<D>::solve()
   }
   else if (eigen_solver == "GD")
   {
+    std::cout << " GD-----> " << std::endl;
     if (d_discretization == Fixed_T::DIFF)
     {
       cout << "GD not applicable for diffusion.  Use the diffusion" << endl;

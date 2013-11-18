@@ -47,9 +47,9 @@ EigenvalueData get_eigenvalue_data(unsigned int dim, unsigned int ng)
   data.input->put<std::string>("bc_west",    "reflect");
   data.input->put<std::string>("bc_east",    "reflect");
   data.input->put<double>("inner_tolerance", 1e-18);
-  data.input->put<double>("outer_tolerance", 1e-14);
-  data.input->put<double>("eigen_tolerance", 1e-14);
-  data.input->put<int>("inner_max_iters",    1000000);
+  data.input->put<double>("outer_tolerance", 1e-16);
+  data.input->put<double>("eigen_tolerance", 1e-16);
+  data.input->put<int>("inner_max_iters",    1);
   data.input->put<int>("outer_max_iters",    1000000);
   data.input->put<int>("eigen_max_iters",    1000000);
 

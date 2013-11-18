@@ -55,12 +55,13 @@ EigenGD<D>::EigenGD(SP_mg_solver mg_solver)
   Assert(d_eigensolver);
 
   // Get callow solver parameter database
+  SP_input pcdb;
   if (d_input->check("eigen_solver_pc_db"))
-    db = d_input->template get<SP_input>("eigen_solver_pc_db");
+    pcdb = d_input->template get<SP_input>("eigen_solver_pc_db");
   else
-    db = NULL;
-  db->display();
-  d_eigensolver->set_operators(d_F, d_A, db);
+    pcdb = NULL;
+  //pcdb->display();
+  d_eigensolver->set_operators(d_F, d_A, pcdb);
 
   // Preconditioner -- diffusion pc's assume k = 1.0 for now so
   // we need a nice way to update on the fly.  Moreover, the
@@ -140,7 +141,7 @@ void EigenGD<D>::solve()
       d_state->phi(g)[i] = (*d_x)[k];
     }
   }
-  d_state->set_eigenvalue(1.0 / d_eigensolver->eigenvalue());
+  d_state->set_eigenvalue(d_eigensolver->eigenvalue());
 }
 
 //----------------------------------------------------------------------------//

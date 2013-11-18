@@ -132,7 +132,8 @@ template <class D>
 void MGSolverCMFD<D>::update(const double keff)
 {
   // Compute the current, if applicable.
-  compute_current();
+  if (d_diff_coef_weight == Homogenize::CURRENT_D)
+    compute_current();
 
   // Homogenize the material
   Homogenize H(d_material, d_diff_coef_weight);
@@ -154,7 +155,6 @@ void MGSolverCMFD<D>::update(const double keff)
   callow::Vector b(d_number_groups * d_coarse_mesh->number_cells(), 0.0);
   size_t k = 0;
   const vec_int &cmap = d_mesh->mesh_map("COARSEMESH");
-
   for (size_t g = 0; g < d_number_groups; ++g)
   {
     d_wg_solver->get_sweepsource()->reset();
