@@ -2,21 +2,6 @@
 # libdetran/src/solvers/test/CMakeLists.txt
 #------------------------------------------------------------------------------#
 
-#ADD_EXECUTABLE(test_FixedSourceManager          test_FixedSourceManager.cc)
-#TARGET_LINK_LIBRARIES(test_FixedSourceManager   solvers)
-#
-#ADD_EXECUTABLE(test_EigenvalueManager           test_EigenvalueManager.cc)
-#TARGET_LINK_LIBRARIES(test_EigenvalueManager    solvers)
-#
-#ADD_EXECUTABLE(test_TimeStepper           		test_TimeStepper.cc)
-#TARGET_LINK_LIBRARIES(test_TimeStepper    		solvers)
-#
-#ADD_EXECUTABLE(test_TWIGL                      	test_TWIGL.cc)
-#TARGET_LINK_LIBRARIES(test_TWIGL              	solvers)
-#
-#ADD_EXECUTABLE(test_LRA                      	test_LRA.cc)
-#TARGET_LINK_LIBRARIES(test_LRA              	solvers)
-
 # Test of Gauss-Seidel
 ADD_EXECUTABLE(test_MGSolverGS                  test_MGSolverGS.cc)
 TARGET_LINK_LIBRARIES(test_MGSolverGS           solvers)
@@ -65,7 +50,6 @@ ADD_TEST(test_EigenGD_1g                  test_EigenGD 0)
 ADD_TEST(test_EigenGD_7g_forward          test_EigenGD 1)
 ADD_TEST(test_EigenGD_7g_adjoint          test_EigenGD 2)
 
-
 # Test of coarse mesh preconditioner
 ADD_EXECUTABLE(test_MGCoarseMeshPreconditioner 
                test_MGCoarseMeshPreconditioner.cc)
@@ -76,7 +60,6 @@ ADD_TEST(test_MGCoarseMeshPreconditioner_space
          test_MGCoarseMeshPreconditioner 1)
 ADD_TEST(test_MGCoarseMeshPreconditioner_space_energy
          test_MGCoarseMeshPreconditioner 2)                  
-
 
 # Test of MGDSA
 ADD_EXECUTABLE(test_MGDSA test_MGDSA.cc)
@@ -93,9 +76,8 @@ TARGET_LINK_LIBRARIES(test_MGCMDSA solvers)
 ADD_TEST(test_MGCMDSA_1g                  test_MGCMDSA 0)
 ADD_TEST(test_MGCMDSA_7g_forward          test_MGCMDSA 1)
 ADD_TEST(test_MGCMDSA_7g_forward_multiply test_MGCMDSA 2)
-ADD_TEST(test_MCMGDSA_7g_adjoint          test_MGCMDSA 3)
+ADD_TEST(test_MGCMDSA_7g_adjoint          test_MGCMDSA 3)
 ADD_TEST(test_MGCMDSA_7g_adjoint_multiply test_MGCMDSA 4)    
-
 
 # Test of SpectrumGS
 ADD_EXECUTABLE(test_SpectrumGS test_SpectrumGS.cc)
@@ -106,10 +88,10 @@ ADD_EXECUTABLE(test_SpectrumPinCell test_SpectrumPinCell.cc)
 TARGET_LINK_LIBRARIES(test_SpectrumPinCell solvers)
 ADD_TEST(test_SpectrumPinCell             test_SpectrumPinCell 0)
 
+
 ADD_EXECUTABLE(test_MGSweepOperator          	test_MGSweepOperator.cc)
 TARGET_LINK_LIBRARIES(test_MGSweepOperator   	solvers)
 ADD_TEST(test_MGSweepOperator             		test_MGSweepOperator 0)
-
 
 ADD_EXECUTABLE(test_MGCMFD          	test_MGCMFD.cc)
 TARGET_LINK_LIBRARIES(test_MGCMFD   	solvers)

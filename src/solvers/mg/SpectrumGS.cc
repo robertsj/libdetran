@@ -42,10 +42,11 @@ SpectrumGS::vec2_dbl SpectrumGS::spectrum(double keff)
   Vector::SP_vector xi_v(new Vector(ng, 0.0));
   Vector::SP_vector xi_v_0(new Vector(ng, 0.0));
 
-  for (size_t m = 0; m < nm; ++m)
+  for (size_t m = 0; m < 1; ++m)
   {
     for (size_t g = 0; g < ng; ++g)
     {
+      // Upper diagonal scattering + fission
       for (size_t gp = g+1; gp < ng; ++gp)
       {
         U(g, gp) = d_material->sigma_s(m, g, gp);
@@ -54,16 +55,14 @@ SpectrumGS::vec2_dbl SpectrumGS::spectrum(double keff)
           U(g, gp) += d_material->chi(m, g) * d_material->sigma_f(m, gp);
         }
       }
+      // Lower + central diagonal with total - scatter - fission
+      L(g, g) = d_material->sigma_t(m, g);
       for (size_t gp = 0; gp <= g; ++gp)
       {
-        L(g, gp) = -d_material->sigma_s(m, g, gp);
+        L(g, gp) -= d_material->sigma_s(m, g, gp);
         if (d_include_fission)
         {
           L(g, gp) -= d_material->chi(m, g) * d_material->sigma_f(m, gp);
-        }
-        if (gp == g)
-        {
-          L(g, g)  += d_material->sigma_t(m, g);
         }
       }
     }
@@ -72,6 +71,8 @@ SpectrumGS::vec2_dbl SpectrumGS::spectrum(double keff)
     {
       xi[g][m] = (*xi_v)[g];
     }
+    L.print_matlab("L.out");
+    U.print_matlab("U.out");
   }
 
   return xi;

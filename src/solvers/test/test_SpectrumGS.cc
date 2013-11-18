@@ -40,10 +40,12 @@ int test_SpectrumGS(int argc, char *argv[])
     double ref[] = {7.58295118996886e-02, 9.95588875144603e-01,
         5.52315297625087e-02, 1.45402595100291e-03, 2.01204973835345e-04,
         1.60526070885210e-05, 9.26214237060863e-07};
+    data.input->put<int>("mgpc_spectrum_include_fission", 1);
     SpectrumGS S(data.input, data.material, data.mesh);
     SpectrumGS::vec2_dbl x = S.spectrum();
     for (int g = 0; g < 7; ++g)
     {
+      printf(" %20.16e  %20.16e \n", x[g][0], ref[g]);
       TEST(soft_equiv(x[g][0], ref[g], 1.0e-8));
     }
   }
@@ -56,6 +58,7 @@ int test_SpectrumGS(int argc, char *argv[])
     SpectrumGS::vec2_dbl x = S.spectrum();
     for (int g = 0; g < 7; ++g)
     {
+      printf(" %20.16e  %20.16e \n", x[g][0], ref[g]);
       TEST(soft_equiv(x[g][0], ref[g]));
     }
   }
