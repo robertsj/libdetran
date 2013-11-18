@@ -143,12 +143,17 @@ private:
   SP_input d_solver_db;
   /// CMFD operator
   SP_operator d_operator;
+  ///
+  size_t d_diff_coef_weight;
+  /// Relaxation factor
+  double d_omega;
 
   //--------------------------------------------------------------------------//
   // IMPLEMENTATION
   //--------------------------------------------------------------------------//
 
   void update(const double keff);
+  void compute_current();
 
 };
 

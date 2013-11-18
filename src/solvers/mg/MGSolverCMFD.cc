@@ -30,6 +30,8 @@ MGSolverCMFD<D>::MGSolverCMFD(SP_state                  state,
   : Base(state, material, boundary, q_e, q_f, multiply)
   , d_lower(d_adjoint ? d_number_groups - 1 : 0)
   , d_upper(d_adjoint ? -1 : d_material->number_groups())
+  , d_diff_coef_weight(Homogenize::PHI_D)
+  , d_omega(1.0)
 {
   // Force use of source iteration
   d_wg_solver = new WGSolverSI<D>(d_state, d_material, d_quadrature,
@@ -38,9 +40,9 @@ MGSolverCMFD<D>::MGSolverCMFD(SP_state                  state,
 
   // Create coarse mesh
   size_t level = 2;
-  if (d_input->check("cmfd_coarse_mesh_level"))
+  if (d_input->check("mgpc_coarse_mesh_level"))
   {
-    level = d_input->template get<int>("cmfd_coarse_mesh_level");
+    level = d_input->template get<int>("mgpc_coarse_mesh_level");
     Assert(level > 0);
   }
   d_coarsener = new CoarseMesh(d_mesh, level);
@@ -53,6 +55,14 @@ MGSolverCMFD<D>::MGSolverCMFD(SP_state                  state,
   // Check solver db
   if (d_input->check("outer_pc_db"))
     d_solver_db = d_input->template get<SP_input>("outer_pc_db");
+
+  if (d_input->check("cmfd_diff_coef_weight"))
+    d_diff_coef_weight = d_input->template get<int>("cmfd_diff_coef_weight");
+  Assert(d_diff_coef_weight < Homogenize::END_OPTIONS_DC);
+
+
+  if (d_input->check("cmfd_relaxation"))
+    d_omega = d_input->template get<double>("cmfd_relaxation");
 
   // Create the linear solver for this group.
   d_solver = callow::LinearSolverCreator::Create(d_solver_db);
@@ -121,8 +131,11 @@ void MGSolverCMFD<D>::solve(const double keff)
 template <class D>
 void MGSolverCMFD<D>::update(const double keff)
 {
+  // Compute the current, if applicable.
+  compute_current();
+
   // Homogenize the material
-  Homogenize H(d_material, Homogenize::PHI_D);
+  Homogenize H(d_material, d_diff_coef_weight);
   SP_material cmat = H.homogenize(d_state, d_mesh, "COARSEMESH");
   const vec2_dbl &phi = H.coarse_mesh_flux();
 
@@ -169,10 +182,36 @@ void MGSolverCMFD<D>::update(const double keff)
     for (size_t i = 0; i < d_mesh->number_cells(); ++i)
     {
       size_t ci = cmap[i] + g * d_coarse_mesh->number_cells();
-      d_state->phi(g)[i] *= x[ci] / x0[ci];
+      d_state->phi(g)[i] *= (d_omega * x[ci] / x0[ci] + (1-d_omega));
     }
   }
 
+}
+
+//----------------------------------------------------------------------------//
+template <class D>
+void MGSolverCMFD<D>::compute_current()
+{
+  for (size_t g = 0; g < d_number_groups; ++g)
+  {
+    for (size_t i = 0; i < d_mesh->number_cells(); ++i)
+    {
+      double J[3] = {0.0, 0.0, 0.0};
+      for (size_t o = 0; o < d_quadrature->number_octants(); ++o)
+      {
+        for (size_t a = 0; a < d_quadrature->number_angles_octant(); ++a)
+        {
+          double w = d_quadrature->weight(a);
+          double psi = d_state->psi(g, o, a)[i];
+          for (size_t d = 0; d < D::dimension; ++d)
+          {
+            J[d] += w * psi * d_quadrature->cosines(d)[a];
+          }
+        }
+      }
+      d_state->current(g)[i] = std::sqrt(J[0]*J[0] + J[1]*J[1] + J[2]*J[2]);
+    }
+  }
 }
 
 //----------------------------------------------------------------------------//

@@ -181,6 +181,7 @@ void CMFDLossOperator<D>::build(const vec2_dbl &phi)
         int &ii = neig_idx[0];
         int &jj = neig_idx[1];
         int &kk = neig_idx[2];
+        int ijk = neig_idx[xyz_idx];
 
         // Determine whether the neighbor is positive (+1) or negative (-1)
         // relative to the surface under consideration, and then decrement
@@ -200,17 +201,17 @@ void CMFDLossOperator<D>::build(const vec2_dbl &phi)
         int sk = surf_idx[2];
         double J = d_tally->partial_current(si, sj, sk, g, xyz_idx, true)
                  - d_tally->partial_current(si, sj, sk, g, xyz_idx, false);
-        J *= (double)shift_idx;
+        J *= (double)shift_idx * d_mesh->width(xyz_idx, ijk) / d_mesh->volume(cell);
 
         // cell flux
         double phi_cell = phi[g][cell];
 
         if (bound[leak] == nxyz[xyz_idx][dir_idx])
         {
+          // Compute coupling coefficients
           dtilde = ( 2.0 * cell_dc * (1.0 - d_albedo[leak][g]) )  /
                    ( 4.0 * cell_dc * (1.0 + d_albedo[leak][g]) +
                     (1.0 - d_albedo[leak][g]) * cell_hxyz[xyz_idx]);
-
           dhat = (J - dtilde * phi_cell) / phi_cell;
         }
         else

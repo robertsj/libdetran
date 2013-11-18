@@ -91,6 +91,33 @@ inline void Sweeper2D<EQ>::sweep(moments_type &phi)
       Equation<_2D>::face_flux_type psi_in  = {0.0, 0.0};
       Equation<_2D>::face_flux_type psi_out = {0.0, 0.0};
 
+      // Tally x-directed face
+      if (d_tally)
+      {
+        // Pick left or right side
+        size_t i = 0;
+        if (o == 1 || o == 2) i = d_mesh->number_cells_x() - 1;
+        // Loop over vertical
+        for (size_t jj = 0; jj < d_mesh->number_cells_y(); jj++)
+        {
+          size_t j = jj;
+          if (o > 1) j = d_mesh->number_cells_y() - j - 1;
+          d_tally->tally(i, j, 0,  d_g,  o, a,  Tally_T::X_DIRECTED, psi_v[j]);
+        }
+      }
+      // Tally y-directed face
+      if (d_tally)
+      {
+        size_t j = 0;
+        if (o > 1) j = d_mesh->number_cells_y() - 1;
+        for (size_t ii = 0; ii < d_mesh->number_cells_x(); ii++)
+        {
+          size_t i = ii;
+          if (o == 1 || o == 2) i = d_mesh->number_cells_x() - i - 1;
+          d_tally->tally(i, j, 0,  d_g,  o, a, Tally_T::Y_DIRECTED, psi_h[i]);
+        }
+      }
+
       // Sweep over all y.
       int j  = d_space_ranges[o][1][0]; // actual index
       int dj = d_space_ranges[o][1][1]; // decrement
@@ -115,7 +142,7 @@ inline void Sweeper2D<EQ>::sweep(moments_type &phi)
           // Save the horizontal flux.
           psi_h[i] = psi_out[Mesh::HORZ];
 
-          // INSERT ACCELERATION MESH STUFF HERE
+          if (d_tally) d_tally->tally(i, j, 0,  d_g,  o, a,  psi_out);
 
         } // end x loop
 
