@@ -18,6 +18,7 @@
 #include "solvers/eigen/EigenDiffusion.hh"
 #include "solvers/eigen/EigenArnoldi.hh"
 #include "solvers/eigen/EigenGD.hh"
+#include "solvers/eigen/EigenCMFD.hh"
 
 #include <string>
 
@@ -103,6 +104,10 @@ bool EigenvalueManager<D>::solve()
   else if (eigen_solver == "arnoldi")
   {
       d_solver = new EigenArnoldi<D>(d_mg_solver);
+  }
+  else if (eigen_solver == "cmfd")
+  {
+      d_solver = new EigenCMFD<D>(d_mg_solver);
   }
   else if (eigen_solver == "GD")
   {

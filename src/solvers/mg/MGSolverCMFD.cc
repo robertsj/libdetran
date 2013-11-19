@@ -19,6 +19,11 @@
 namespace detran
 {
 
+using detran_utilities::norm;
+using detran_utilities::norm_residual;
+using detran_utilities::range;
+using detran_utilities::vec_scale;
+
 //----------------------------------------------------------------------------//
 template <class D>
 MGSolverCMFD<D>::MGSolverCMFD(SP_state                  state,
@@ -73,11 +78,6 @@ MGSolverCMFD<D>::MGSolverCMFD(SP_state                  state,
 template <class D>
 void MGSolverCMFD<D>::solve(const double keff)
 {
-  using detran_utilities::norm;
-  using detran_utilities::norm_residual;
-  using detran_utilities::range;
-  using detran_utilities::vec_scale;
-
   // Save current group flux
   State::group_moments_type phi_old = d_state->all_phi();
 
@@ -99,11 +99,10 @@ void MGSolverCMFD<D>::solve(const double keff)
     State::group_moments_type phi_old = d_state->all_phi();
 
     // Loop over iteration block
+    energy_sweep();
     for (g_it = groups.begin(); g_it != groups.end(); ++g_it)
     {
-      size_t g = *g_it;
-      d_wg_solver->solve(g);
-      nres[g] = norm_residual(d_state->phi(g), phi_old[g], "Linf");
+      nres[*g_it] = norm_residual(d_state->phi(*g_it), phi_old[*g_it], "Linf");
     }
     nres_tot = norm(nres, "Linf");
 
@@ -125,6 +124,18 @@ void MGSolverCMFD<D>::solve(const double keff)
            (int)iteration, nres_tot, number_sweeps());
   }
 
+}
+
+//----------------------------------------------------------------------------//
+template <class D>
+void MGSolverCMFD<D>::energy_sweep()
+{
+  vec_size_t groups = range<size_t>(d_lower, d_upper);
+  vec_size_t::iterator g_it;
+  for (g_it = groups.begin(); g_it != groups.end(); ++g_it)
+  {
+    d_wg_solver->solve(*g_it);
+  }
 }
 
 //----------------------------------------------------------------------------//
@@ -153,7 +164,6 @@ void MGSolverCMFD<D>::update(const double keff)
   // Construct source
   callow::Vector x(d_number_groups * d_coarse_mesh->number_cells(), 0.0);
   callow::Vector b(d_number_groups * d_coarse_mesh->number_cells(), 0.0);
-  size_t k = 0;
   const vec_int &cmap = d_mesh->mesh_map("COARSEMESH");
   for (size_t g = 0; g < d_number_groups; ++g)
   {

@@ -6,6 +6,7 @@ SET(EIGEN_SRC
   ${SRC_DIR}/EigenPI.cc
   ${SRC_DIR}/EigenDiffusion.cc
   ${SRC_DIR}/EigenGD.cc
+  ${SRC_DIR}/EigenCMFD.cc
   ${SRC_DIR}/EnergyIndependentEigenOperator.cc
   ${SRC_DIR}/EnergyDependentEigenLHS.cc
   PARENT_SCOPE

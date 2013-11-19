@@ -77,11 +77,11 @@ public:
    *  @param multiply          Flag for a multiplying fixed source problem
    */
   MGSolverCMFD(SP_state                   state,
-         SP_material                material,
-         SP_boundary                boundary,
-         const vec_externalsource  &q_e,
-         SP_fissionsource           q_f,
-         bool                       multiply = false);
+               SP_material                material,
+               SP_boundary                boundary,
+               const vec_externalsource  &q_e,
+               SP_fissionsource           q_f,
+               bool                       multiply = false);
 
   //--------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL MULTIGROUP SOLVERS MUST IMPLEMENT
@@ -100,8 +100,14 @@ public:
     return d_wg_solver->get_sweeper()->number_sweeps();
   }
 
-  /// Perform one downscatter sweep
-  void sweep();
+  /// Perform one sweep through all energies
+  void energy_sweep();
+
+  /// Getters
+  SP_operator loss_operator() {return d_operator;}
+  SP_mesh coarse_mesh() {return d_coarse_mesh;}
+  SP_tally tally() {return d_tally;}
+  SP_material coarse_material() {return d_coarse_material;}
 
 private:
 
@@ -141,12 +147,15 @@ private:
   SP_linearsolver d_solver;
   /// Solver database
   SP_input d_solver_db;
-  /// CMFD operator
+  /// CMFD loss operator
   SP_operator d_operator;
-  ///
+  /// Diffusion coefficient homogenization option
   size_t d_diff_coef_weight;
   /// Relaxation factor
   double d_omega;
+  /// Coarse material
+  SP_material d_coarse_material;
+
 
   //--------------------------------------------------------------------------//
   // IMPLEMENTATION
