@@ -109,7 +109,7 @@ public:
    *   @param   g   Group of the source.
    *   @return      Source vector.
    */
-  const moments_type& source(const size_t g);
+  const moments_type& source(const size_t g) const;
 
   /**
    *   @brief Return the fission density.
@@ -120,7 +120,8 @@ public:
    *
    *   @return      Fission density vector.
    */
-  const moments_type& density();
+  const moments_type& density()const ;
+  moments_type& density();
 
   /**
    *   @brief Set the fission density.

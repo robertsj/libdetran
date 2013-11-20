@@ -230,6 +230,14 @@ void CMFDLossOperator<D>::build(const vec2_dbl &phi)
                      cell_hxyz[xyz_idx] * neig_dc );
           dhat = (J - dtilde * (phi_cell - phi_neig)) / (phi_neig + phi_cell);
 
+          // Ensure positive definiteness
+          if (dtilde + dhat <= 0.0)
+          {
+            THROW("LALALALA");
+            dtilde = 0.5 * J / phi_cell;
+            dhat   = dtilde;
+          }
+
           // Compute and set the off-diagonal matrix value.
           double val = (dhat - dtilde) / cell_hxyz[xyz_idx];
           int neig_row = neig_cell + g * d_group_size;
@@ -242,8 +250,6 @@ void CMFDLossOperator<D>::build(const vec2_dbl &phi)
         //printf("Dhat(%2i) = %12.8f  Dtilde(%2i) = %12.8f \n", dhat, dtilde);
 
       } // leak loop
-
-
 
       // Net leakage coefficient.
       double jnet = (jo[1] + jo[0]) / d_mesh->dx(i) +

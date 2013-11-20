@@ -32,8 +32,7 @@ EigenCMFD<D>::EigenCMFD(SP_mg_solver mg_solver)
   {
     d_eigen_db = d_input->template get<SP_input>("eigen_solver_db");
   }
-  d_eigensolver = callow::EigenSolverCreator::Create(d_eigen_db);
-  Assert(d_eigensolver);
+
 
 }
 
@@ -43,6 +42,7 @@ void EigenCMFD<D>::solve()
 {
   using detran_utilities::norm_residual;
   using detran_utilities::norm;
+  using detran_utilities::vec_scale;
 
   typedef MGSolverCMFD<D> Solver_T;
   Solver_T *solver = dynamic_cast<Solver_T*>(&(*d_mg_solver->solver()));
@@ -50,64 +50,51 @@ void EigenCMFD<D>::solve()
 
   std::cout << "Starting CMFD." << std::endl;
 
-  // New k-eigenvalue
-  double keff = 1.0, keff_1 = 1.0;
+  double keff = 1.0, keff_old;
 
-  // Assume flat flux everywhere
-  double val = 1.0 / d_mesh->number_cells();
-  for (size_t g = 0; g < d_number_groups; ++g)
-    for (size_t i = 0; i < d_mesh->number_cells(); ++i)
-      d_state->phi(g)[i] = val;
+  // Initialize density with normalize (L1) guess
+  d_fissionsource->initialize();
 
-  // Power iterations.
+  double error_k, error_fd;
   int iteration;
-  double error;
 
-  for (iteration = 1; iteration <= d_maximum_iterations; iteration++)
+  for (iteration = 1; iteration <= d_maximum_iterations; ++iteration)
   {
-    // Reset the error.
-    error = 0.0;
-
-    d_fissionsource->update();
-    d_fissionsource->setup_outer(1.0 / keff);
-    State::moments_type fd_old(d_fissionsource->density());
-
-    // Do one energy sweep
+    // Do one energy sweep.
+    d_fissionsource->setup_outer(1.0);
     solver->energy_sweep();
 
     // CMFD update
-    double keff_c = cmfd_update();
-    //keff = keff_c;
+    keff_old = keff;
+    keff = cmfd_update();
 
-    // Update fission source.
+    // Compute errors
+    State::moments_type fd_old(d_fissionsource->density());
     d_fissionsource->update();
-//    d_fissionsource->setup_outer(1.0 / keff);
-//    State::moments_type fd_old(d_fissionsource->density());
-//
-//    // Update density.
-//    d_fissionsource->update();
+    State::moments_type &fd = d_fissionsource->density();
+    vec_scale(fd, 1.0 / norm(fd, "L1"));
+    error_fd = norm_residual(fd, fd_old, "Linf");
+    error_k  = (keff - keff_old) / keff_old;
 
-    // Compute keff.
-    const State::moments_type &fd = d_fissionsource->density();
-    keff *= norm(fd, "L1") / norm(fd_old, "L1");
-
-    // Compute error in fission density.
-    error = norm_residual(fd, fd_old, "L1");
+    // Monitor
     if (d_print_level > 1 && iteration % d_print_interval == 0)
     {
-      printf("PI Iter: %3i  Error: %12.9f  keff: %12.9f  cmfd: %12.9f \n",
-             iteration, error, keff, keff_c);
+      printf("CMFD ITER:  %3i  keff: %12.9f  err_k: %12.5e  err_fd: %12.5e \n",
+             iteration, keff, error_k, error_fd);
     }
-    if (error < d_tolerance) break;
+    if (error_fd < d_tolerance) break;
 
   } // eigensolver loop
 
   if (d_print_level > 0)
   {
-    printf("*********************************************************************\n");
-    printf(" PI Final: Number Iters: %3i  Error: %12.9e keff: %12.9f \n",
-           iteration, error, keff);
-    printf("*********************************************************************\n");
+    std::string line = "";
+    for (int i = 0; i < 80; ++i) line += "*";
+    line += "\n";
+    printf(line.c_str());
+    printf("CMFD FINAL: %3i  keff: %12.9f  err_k: %12.5e  err_fd: %12.5e \n",
+           iteration, keff, error_k, error_fd);
+    printf(line.c_str());
   }
 
   d_state->set_eigenvalue(keff);
@@ -156,12 +143,15 @@ double EigenCMFD<D>::cmfd_update()
       x[ci] += d_state->phi(g)[i] * v_ratio;
     }
   }
-  x.scale(1.0/x.norm());
+  x.scale(1.0 / x.norm());
   callow::Vector x0(x);
+  callow::Vector xI(x); // callow/slepc overwrites initial guess
 
   // Solve the eigenvalue problem
+  d_eigensolver = callow::EigenSolverCreator::Create(d_eigen_db);
   d_eigensolver->set_operators(F, L, d_eigen_db);
-  d_eigensolver->solve(x, x0);
+  d_eigensolver->solve(x, xI);
+  x.scale(1.0 / x.norm());
 
   // Scale the fluxes
   for (size_t g = 0; g < d_number_groups; ++g)
@@ -169,7 +159,7 @@ double EigenCMFD<D>::cmfd_update()
     for (size_t i = 0; i < d_mesh->number_cells(); ++i)
     {
       size_t ci = cmap[i] + g * coarse_mesh->number_cells();
-      d_state->phi(g)[i] *= (d_omega * x[ci] / x0[ci] + (1-d_omega));
+      d_state->phi(g)[i] *= (d_omega * x[ci] / x0[ci] + (1.0-d_omega));
     }
   }
 
