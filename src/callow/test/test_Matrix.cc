@@ -205,6 +205,22 @@ int test_Matrix(int argc, char *argv[])
     A.display();
   }
 
+  // Clearing
+  {
+    Matrix A(3, 3, 2);
+    A.insert(0, 0, 1.0); A.insert(0, 1, 2.0);
+    A.insert(1, 1, 3.0); A.insert(1, 2, 4.0);
+    A.insert(2, 1, 5.0); A.insert(2, 2, 6.0);
+    A.assemble();
+    A.display();
+    A.clear();
+    A.insert(0, 1, 1.1); A.insert(0, 2, 2.1);
+    A.insert(1, 0, 3.1); A.insert(1, 2, 4.1);
+    A.insert(2, 0, 5.1); A.insert(2, 2, 6.1);
+    A.assemble();
+    A.display();
+  }
+
   callow_finalize();
   return 0;
 }

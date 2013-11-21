@@ -290,6 +290,33 @@ inline void Matrix::print_matlab(std::string filename) const
   fclose (f);
 }
 
+//----------------------------------------------------------------------------//
+void Matrix::clear()
+{
+  // save the memory used and reallocate
+
+  if (!d_allocated) return;
+  d_allocated = false;
+
+  std::vector<int> nnz(d_m, 0);
+  for (int i = 0; i < d_m; ++i)
+    nnz[i] =  d_rows[i + 1] - d_rows[i];
+  d_counter.clear();
+  preallocate(&nnz[0]);
+
+  if (!d_is_ready) return;
+
+#ifdef CALLOW_ENABLE_PETSC
+  MatDestroy(&d_petsc_matrix);
+#endif
+
+  delete [] d_values;
+  delete [] d_columns;
+  delete [] d_rows;
+  delete [] d_diagonals;
+  d_is_ready = false;
+}
+
 } // end namespace callow
 
 //----------------------------------------------------------------------------//

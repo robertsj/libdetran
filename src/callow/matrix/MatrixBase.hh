@@ -85,6 +85,8 @@ public:
   virtual void multiply_transpose(const Vector &x, Vector &y) = 0;
   // pretty print to screen
   virtual void display(bool forceprint = false) const = 0;
+  // clear the matrix contents
+  virtual void clear() {}
 
 protected:
 
