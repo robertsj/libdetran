@@ -35,6 +35,7 @@ CMFDLossOperator<D>::CMFDLossOperator(SP_input      input,
   , d_include_fission(include_fission)
   , d_adjoint(adjoint)
   , d_keff(keff)
+  , d_correct(true)
 {
   Require(d_input);
   Require(d_material);
@@ -99,6 +100,14 @@ CMFDLossOperator<D>::CMFDLossOperator(SP_input      input,
     }
   }
   // note, needs to be constructed
+
+  if (d_input->check("cmfd_correct_coupling"))
+    d_correct = 0 != d_input->get<int>("cmfd_correct_coupling");
+
+  // Coupling coefficient
+  d_d_hat.resize(d_number_groups,
+                 vec2_dbl(d_group_size,
+                          vec_dbl(d_dimension * 2, 0.0)));
 }
 
 //----------------------------------------------------------------------------//
@@ -122,6 +131,7 @@ void CMFDLossOperator<D>::build(const vec2_dbl &phi)
 {
   const vec_int &mat_map = d_mesh->mesh_map("MATERIAL");
 
+  bool corrected = false;
   for (groups_iter g_it = d_groups.begin(); g_it != d_groups.end(); ++g_it)
   {
     int g = *g_it;
@@ -231,9 +241,9 @@ void CMFDLossOperator<D>::build(const vec2_dbl &phi)
           dhat = (J - dtilde * (phi_cell - phi_neig)) / (phi_neig + phi_cell);
 
           // Ensure positive definiteness
-          if (dtilde + dhat <= 0.0)
+          if ((abs(dhat) > abs(dtilde)) && d_correct)
           {
-            THROW("LALALALA");
+            corrected = true;
             dtilde = 0.5 * J / phi_cell;
             dhat   = dtilde;
           }
@@ -285,7 +295,8 @@ void CMFDLossOperator<D>::build(const vec2_dbl &phi)
       }
     } // row loop
   } // group loop
-
+  if (corrected)
+    printf("corrected!!!!!!!!!!!!!!!!\n");
   if (d_include_fission)
   {
     // Loop over all groups

@@ -43,6 +43,7 @@ public:
   typedef detran_utilities::vec_int                     vec_int;
   typedef detran_utilities::vec_dbl                     vec_dbl;
   typedef detran_utilities::vec2_dbl                    vec2_dbl;
+  typedef detran_utilities::vec3_dbl                    vec3_dbl;
   typedef detran_utilities::vec_size_t                  groups_t;
   typedef groups_t::iterator                            groups_iter;
   typedef typename CurrentTally<D>::SP_currenttally     SP_tally;
@@ -117,6 +118,11 @@ private:
   double d_keff;
   /// Adjoint flag
   bool d_adjoint;
+  /// Correct coupling coefficient to keep positive definiteness
+  bool d_correct;
+  /// Coupling coefficients
+  vec3_dbl d_d_hat;
+
 
   //--------------------------------------------------------------------------//
   // IMPLEMENTATION

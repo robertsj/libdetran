@@ -111,7 +111,8 @@ double EigenCMFD<D>::cmfd_update()
   SP_mesh coarse_mesh = solver->coarse_mesh();
 
   // Homogenize the material
-  Homogenize H(d_material, Homogenize::PHI_D);
+  compute_current();
+  Homogenize H(d_material, Homogenize::CURRENT_D);
   SP_material cmat = H.homogenize(d_state, d_mesh, "COARSEMESH");
   const vec2_dbl &phi = H.coarse_mesh_flux();
 
@@ -152,6 +153,9 @@ double EigenCMFD<D>::cmfd_update()
   d_eigensolver->set_operators(F, L, d_eigen_db);
   d_eigensolver->solve(x, xI);
   x.scale(1.0 / x.norm());
+  static int count = 0;
+  x.print_matlab("X"+AsString(count)+".out");
+  ++count;
 
   // Scale the fluxes
   for (size_t g = 0; g < d_number_groups; ++g)
@@ -165,6 +169,34 @@ double EigenCMFD<D>::cmfd_update()
 
   return d_eigensolver->eigenvalue();
 }
+
+//----------------------------------------------------------------------------//
+template <class D>
+void EigenCMFD<D>::compute_current()
+{
+
+  for (size_t g = 0; g < d_number_groups; ++g)
+  {
+    for (size_t i = 0; i < d_mesh->number_cells(); ++i)
+    {
+      double J[3] = {0.0, 0.0, 0.0};
+      for (size_t o = 0; o < d_mg_solver->quadrature()->number_octants(); ++o)
+      {
+        for (size_t a = 0; a < d_mg_solver->quadrature()->number_angles_octant(); ++a)
+        {
+          double w = d_mg_solver->quadrature()->weight(a);
+          double psi = d_state->psi(g, o, a)[i];
+          for (size_t d = 0; d < D::dimension; ++d)
+          {
+            J[d] += w * psi * d_mg_solver->quadrature()->cosines(d)[a];
+          }
+        }
+      }
+      d_state->current(g)[i] = std::sqrt(J[0]*J[0] + J[1]*J[1] + J[2]*J[2]);
+    }
+  }
+}
+
 
 //----------------------------------------------------------------------------//
 // EXPLICIT INSTANTIATIONS
