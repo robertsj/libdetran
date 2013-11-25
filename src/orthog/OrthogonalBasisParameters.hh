@@ -11,7 +11,7 @@
 #define detran_orthog_ORTHOGONALBASISPARAMETERS_HH_
 
 #include "utilities/Definitions.hh"
-
+#include "utilities/InputDB.hh"
 #include <string>
 
 namespace detran_orthog
@@ -56,6 +56,8 @@ public:
   std::string transformed_key;
   /// Option for transformed basis
   size_t transformed_option;
+
+  detran_utilities::InputDB::SP_input db;
 };
 
 } // end namespace detran_orthog

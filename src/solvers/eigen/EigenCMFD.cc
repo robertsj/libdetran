@@ -24,6 +24,7 @@ EigenCMFD<D>::EigenCMFD(SP_mg_solver mg_solver)
   if (d_input->check("eigen_pi_omega"))
     d_omega = d_input->template get<double>("eigen_pi_omega");
 
+
   // Get callow solver parameter database
   if (d_input->check("eigen_solver_db"))
   {
@@ -78,6 +79,7 @@ void EigenCMFD<D>::solve()
       printf("CMFD ITER:  %3i  keff: %12.9f  err_k: %12.5e  err_fd: %12.5e \n",
              iteration, keff, error_k, error_fd);
     }
+
     if (error_fd < d_tolerance && error_k < d_tolerance) break;
 
   } // eigensolver loop
@@ -107,12 +109,15 @@ double EigenCMFD<D>::cmfd_update()
   SP_mesh coarse_mesh = solver->coarse_mesh();
 
   // Homogenize the material
+
   //compute_current();
   Homogenize H(d_material, Homogenize::PHI_D);
+
   SP_material cmat = H.homogenize(d_state, d_mesh, "COARSEMESH");
   const vec2_dbl &phi = H.coarse_mesh_flux();
 
   // Create loss matrix
+
   if (!d_loss)
   {
     d_loss = new CMFDLossOperator<D>(d_input,
@@ -164,6 +169,7 @@ double EigenCMFD<D>::cmfd_update()
   x.scale(1.0 / x.norm());
   static int count = 0;
   //x.print_matlab("X"+AsString(count)+".out");
+
   ++count;
 
   // Scale the fluxes

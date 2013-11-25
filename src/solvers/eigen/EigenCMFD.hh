@@ -52,7 +52,6 @@ public:
   typedef detran_utilities::vec_dbl                     vec_dbl;
   typedef detran_utilities::vec2_dbl                    vec2_dbl;
 
-
   //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
   //--------------------------------------------------------------------------//
@@ -100,6 +99,7 @@ protected:
   SP_gainoperator d_gain;
   /// Loss operator
   SP_lossoperator d_loss;
+
 
   //--------------------------------------------------------------------------//
   // IMPLEMENTATION
