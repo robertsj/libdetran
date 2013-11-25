@@ -157,7 +157,7 @@ bool PPMOutput::draw_geometry(SP_geometry geo, bool flag, const size_t cmap)
     if (flag)
       data[i] = (double) d_cells[i];
     else
-      data[i] = (double) geo->material_index(d_cells[i]);
+      data[i] = (double) geo->region(d_cells[i])->attribute("MATERIAL");//geo->material_index(d_cells[i]);
   }
   d_plotter->set_pixels<double>(data);
   return d_plotter->write();

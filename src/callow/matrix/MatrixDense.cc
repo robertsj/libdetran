@@ -61,11 +61,11 @@ MatrixDense::~MatrixDense()
 {
   if (d_is_ready)
   {
-#ifdef CALLOW_ENABLE_PETSC
-  PetscErrorCode ierr;
-  ierr = MatDestroy(&d_petsc_matrix);
-  Assert(!ierr);
-#endif
+//#ifdef CALLOW_ENABLE_PETSC
+//  PetscErrorCode ierr;
+//  ierr = MatDestroy(&d_petsc_matrix);
+//  Assert(!ierr);
+//#endif
     delete [] d_values;
   }
 }
