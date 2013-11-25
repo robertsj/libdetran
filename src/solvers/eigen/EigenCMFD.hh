@@ -10,6 +10,8 @@
 #define detran_EIGENCMFD_HH_
 
 #include "Eigensolver.hh"
+#include "solvers/mg/MGSolverCMFD.hh"
+#include "solvers/mg/DiffusionGainOperator.hh"
 #include "callow/solver/EigenSolver.hh"
 #include "callow/matrix/MatrixBase.hh"
 #include "utilities/Definitions.hh"
@@ -34,20 +36,22 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef Eigensolver<D>                            Base;
-  typedef typename Base::SP_solver                  SP_solver;
-  typedef typename Base::SP_mg_solver               SP_mg_solver;
-  typedef typename Base::SP_input                   SP_input;
-  typedef typename Base::SP_state                   SP_state;
-  typedef typename Base::SP_mesh                    SP_mesh;
-  typedef typename Base::SP_material                SP_material;
-  typedef typename Base::SP_boundary                SP_boundary;
-  typedef typename Base::SP_fissionsource           SP_fissionsource;
-  typedef callow::EigenSolver::SP_solver            SP_eigensolver;
-  typedef callow::MatrixBase::SP_matrix             SP_matrix;
-  typedef detran_utilities::vec_int                 vec_int;
-  typedef detran_utilities::vec_dbl                 vec_dbl;
-  typedef detran_utilities::vec2_dbl                vec2_dbl;
+  typedef Eigensolver<D>                                Base;
+  typedef typename Base::SP_solver                      SP_solver;
+  typedef typename Base::SP_mg_solver                   SP_mg_solver;
+  typedef typename Base::SP_input                       SP_input;
+  typedef typename Base::SP_state                       SP_state;
+  typedef typename Base::SP_mesh                        SP_mesh;
+  typedef typename Base::SP_material                    SP_material;
+  typedef typename Base::SP_boundary                    SP_boundary;
+  typedef typename Base::SP_fissionsource               SP_fissionsource;
+  typedef callow::EigenSolver::SP_solver                SP_eigensolver;
+  typedef DiffusionGainOperator::SP_gainoperator        SP_gainoperator;
+  typedef typename CMFDLossOperator<D>::SP_lossoperator SP_lossoperator;
+  typedef detran_utilities::vec_int                     vec_int;
+  typedef detran_utilities::vec_dbl                     vec_dbl;
+  typedef detran_utilities::vec2_dbl                    vec2_dbl;
+
 
   //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -92,7 +96,10 @@ protected:
   SP_input d_eigen_db;
   /// Over-relaxation parameter
   double d_omega;
-
+  /// Gain operator
+  SP_gainoperator d_gain;
+  /// Loss operator
+  SP_lossoperator d_loss;
 
   //--------------------------------------------------------------------------//
   // IMPLEMENTATION

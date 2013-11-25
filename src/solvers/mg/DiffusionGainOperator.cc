@@ -48,6 +48,16 @@ DiffusionGainOperator::DiffusionGainOperator(SP_input      input,
 }
 
 //---------------------------------------------------------------------------//
+void DiffusionGainOperator::construct(SP_material mat)
+{
+  Require(mat->number_groups() == d_material->number_groups());
+  Require(mat->number_materials() == d_material->number_materials());
+  d_material = mat;
+  clear();
+  build();
+}
+
+//---------------------------------------------------------------------------//
 // IMPLEMENTATION
 //---------------------------------------------------------------------------//
 

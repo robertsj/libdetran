@@ -295,7 +295,11 @@ void Matrix::clear()
 {
   // save the memory used and reallocate
 
-  if (!d_allocated) return;
+//  if (!d_allocated) return;
+//  d_allocated = false;
+
+  if (!d_is_ready) return;
+
   d_allocated = false;
 
   std::vector<int> nnz(d_m, 0);
@@ -307,7 +311,8 @@ void Matrix::clear()
   if (!d_is_ready) return;
 
 #ifdef CALLOW_ENABLE_PETSC
-  MatDestroy(&d_petsc_matrix);
+  int ierr = MatDestroy(&d_petsc_matrix);
+  Assert(ierr == 0);
 #endif
 
   delete [] d_values;

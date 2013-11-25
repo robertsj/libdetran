@@ -36,6 +36,7 @@ CMFDLossOperator<D>::CMFDLossOperator(SP_input      input,
   , d_adjoint(adjoint)
   , d_keff(keff)
   , d_correct(true)
+  , d_initial(true)
 {
   Require(d_input);
   Require(d_material);
@@ -104,20 +105,35 @@ CMFDLossOperator<D>::CMFDLossOperator(SP_input      input,
   if (d_input->check("cmfd_correct_coupling"))
     d_correct = 0 != d_input->get<int>("cmfd_correct_coupling");
 
+  if (d_input->check("cmfd_relaxation"))
+    d_alpha = d_input->get<double>("cmfd_relaxation");
+  Require(d_alpha > 0.0 && d_alpha <= 1.0);
+
   // Coupling coefficient
   d_d_hat.resize(d_number_groups,
                  vec2_dbl(d_group_size,
                           vec_dbl(d_dimension * 2, 0.0)));
+
 }
 
 //----------------------------------------------------------------------------//
 template <class D>
-void CMFDLossOperator<D>::construct(const vec2_dbl &phi, const double keff)
+void CMFDLossOperator<D>::construct(const vec2_dbl &phi,
+                                    const double    keff,
+                                    SP_material     mat,
+                                    bool            init)
 {
   Require(phi.size() == d_number_groups);
   Require(phi[0].size() == d_group_size);
-
+  clear();
   d_keff = keff;
+  if (mat)
+  {
+    Require(mat->number_groups() == d_material->number_groups());
+    Require(mat->number_materials() == d_material->number_materials());
+    d_material = mat;
+  }
+  d_initial = init;
   build(phi);
 }
 
@@ -130,6 +146,9 @@ template <class D>
 void CMFDLossOperator<D>::build(const vec2_dbl &phi)
 {
   const vec_int &mat_map = d_mesh->mesh_map("MATERIAL");
+
+  double alpha = d_alpha;
+  if (d_initial) alpha = 1.0;
 
   bool corrected = false;
   for (groups_iter g_it = d_groups.begin(); g_it != d_groups.end(); ++g_it)
@@ -223,6 +242,10 @@ void CMFDLossOperator<D>::build(const vec2_dbl &phi)
                    ( 4.0 * cell_dc * (1.0 + d_albedo[leak][g]) +
                     (1.0 - d_albedo[leak][g]) * cell_hxyz[xyz_idx]);
           dhat = (J - dtilde * phi_cell) / phi_cell;
+
+          // Relax
+          d_d_hat[g][cell][leak] = alpha * dhat
+                                 + (1.0 - alpha) * d_d_hat[g][cell][leak];
         }
         else
         {
@@ -248,15 +271,19 @@ void CMFDLossOperator<D>::build(const vec2_dbl &phi)
             dhat   = dtilde;
           }
 
+          // Relax
+          d_d_hat[g][cell][leak] = alpha * dhat
+                                 + (1.0 - alpha) * d_d_hat[g][cell][leak];
+
           // Compute and set the off-diagonal matrix value.
-          double val = (dhat - dtilde) / cell_hxyz[xyz_idx];
+          double val = (d_d_hat[g][cell][leak] - dtilde) / cell_hxyz[xyz_idx];
           int neig_row = neig_cell + g * d_group_size;
           flag = insert(row, neig_row, val, INSERT);
           Assert(flag);
         }
 
         // Compute leakage coefficient for this cell and surface.
-        jo[leak] = dtilde + dhat;
+        jo[leak] = dtilde + d_d_hat[g][cell][leak];
         //printf("Dhat(%2i) = %12.8f  Dtilde(%2i) = %12.8f \n", dhat, dtilde);
 
       } // leak loop

@@ -7,8 +7,6 @@
 //----------------------------------------------------------------------------//
 
 #include "solvers/eigen/EigenCMFD.hh"
-#include "solvers/mg/MGSolverCMFD.hh"
-#include "solvers/mg/DiffusionGainOperator.hh"
 #include "callow/solver/EigenSolverCreator.hh"
 
 #include <iostream>
@@ -23,16 +21,14 @@ EigenCMFD<D>::EigenCMFD(SP_mg_solver mg_solver)
   , d_omega(1.0)
 {
   // Assert I've gotten a CMFD fixed source solver
-
-  if (d_input->check("cmfd_relaxation"))
-    d_omega = d_input->template get<double>("cmfd_relaxation");
+  if (d_input->check("eigen_pi_omega"))
+    d_omega = d_input->template get<double>("eigen_pi_omega");
 
   // Get callow solver parameter database
   if (d_input->check("eigen_solver_db"))
   {
     d_eigen_db = d_input->template get<SP_input>("eigen_solver_db");
   }
-
 
 }
 
@@ -82,7 +78,7 @@ void EigenCMFD<D>::solve()
       printf("CMFD ITER:  %3i  keff: %12.9f  err_k: %12.5e  err_fd: %12.5e \n",
              iteration, keff, error_k, error_fd);
     }
-    if (error_fd < d_tolerance) break;
+    if (error_fd < d_tolerance && error_k < d_tolerance) break;
 
   } // eigensolver loop
 
@@ -111,28 +107,41 @@ double EigenCMFD<D>::cmfd_update()
   SP_mesh coarse_mesh = solver->coarse_mesh();
 
   // Homogenize the material
-  compute_current();
-  Homogenize H(d_material, Homogenize::CURRENT_D);
+  //compute_current();
+  Homogenize H(d_material, Homogenize::PHI_D);
   SP_material cmat = H.homogenize(d_state, d_mesh, "COARSEMESH");
   const vec2_dbl &phi = H.coarse_mesh_flux();
 
   // Create loss matrix
-  typedef typename CMFDLossOperator<D>::SP_lossoperator SP_L;
-  SP_L L(new CMFDLossOperator<D>(d_input,
-                                 cmat,
-                                 solver->coarse_mesh(),
-                                 solver->tally(),
-                                 false, // not multiplying
-                                 d_adjoint));
-  L->construct(phi);
+  if (!d_loss)
+  {
+    d_loss = new CMFDLossOperator<D>(d_input,
+                                     cmat,
+                                     solver->coarse_mesh(),
+                                     solver->tally(),
+                                     false, // not multiplying
+                                     d_adjoint);
+    d_loss->construct(phi, 1.0, cmat, true);
+  }
+  else
+  {
+    d_loss->construct(phi, 1.0, cmat, false);
+  }
 
   // Create gain matrix
-  SP_matrix F(new DiffusionGainOperator(d_input,
-                                        cmat,
-                                        coarse_mesh,
-                                        d_adjoint));
+  if (!d_gain)
+  {
+    d_gain = new DiffusionGainOperator(d_input,
+                                       cmat,
+                                       coarse_mesh,
+                                       d_adjoint);
+  }
+  else
+  {
+    d_gain->construct(cmat);
+  }
 
-  // Construct source
+  // Construct coarse mesh fluxes
   callow::Vector x(d_number_groups * coarse_mesh->number_cells(), 0.0);
   const vec_int &cmap = d_mesh->mesh_map("COARSEMESH");
   for (size_t g = 0; g < d_number_groups; ++g)
@@ -150,11 +159,11 @@ double EigenCMFD<D>::cmfd_update()
 
   // Solve the eigenvalue problem
   d_eigensolver = callow::EigenSolverCreator::Create(d_eigen_db);
-  d_eigensolver->set_operators(F, L, d_eigen_db);
+  d_eigensolver->set_operators(d_gain, d_loss, d_eigen_db);
   d_eigensolver->solve(x, xI);
   x.scale(1.0 / x.norm());
   static int count = 0;
-  x.print_matlab("X"+AsString(count)+".out");
+  //x.print_matlab("X"+AsString(count)+".out");
   ++count;
 
   // Scale the fluxes

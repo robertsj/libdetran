@@ -84,7 +84,10 @@ public:
    *
    *  @param keff   Scaling parameter for fission source
    */
-  void construct(const vec2_dbl &phi, double keff = 1.0);
+  void construct(const vec2_dbl &phi,
+                 double          keff = 1.0,
+                 SP_material     mat  = SP_material(0),
+                 bool            init = true);
 
   double albedo(const size_t side, const size_t g) const;
 
@@ -122,7 +125,8 @@ private:
   bool d_correct;
   /// Coupling coefficients
   vec3_dbl d_d_hat;
-
+  double d_alpha;
+  bool d_initial;
 
   //--------------------------------------------------------------------------//
   // IMPLEMENTATION
