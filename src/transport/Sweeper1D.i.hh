@@ -42,6 +42,9 @@ inline void Sweeper1D<EQ>::sweep(moments_type &phi)
   // Reset the flux moments
   phi_local.resize(d_mesh->number_cells(), 0.0);
 
+  // Reset the boundary flux tally
+  if (d_tally) d_tally->reset(d_g);
+
   // Initialize discrete sweep source vector.
   SweepSource<_1D>::sweep_source_type source(d_mesh->number_cells(), 0.0);
 
@@ -100,7 +103,7 @@ inline void Sweeper1D<EQ>::sweep(moments_type &phi)
 
         // Tally the outgoing cell flux
         if (d_tally)
-          d_tally->tally(i, 0, 0, d_g, o, a, Tally_T::X_DIRECTED, psi_out);
+          d_tally->tally(i, 0, 0, d_g, o, a, psi_out);
 
       } // end x loop
 

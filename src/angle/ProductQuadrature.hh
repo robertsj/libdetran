@@ -66,6 +66,18 @@ public:
 
   typedef detran_utilities::SP<ProductQuadrature>   SP_quadrature;
 
+  struct index_t
+  {
+    size_t octant;
+    size_t angle;
+    size_t io_octant;
+  };
+
+  typedef std::vector<index_t>          vec1_index_t;
+  typedef std::vector<vec1_index_t>     vec2_index_t;
+  typedef std::vector<vec2_index_t>     vec3_index_t;
+  typedef detran_utilities::vec_size_t  vec_size_t;
+
   //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
   //--------------------------------------------------------------------------//
@@ -110,6 +122,10 @@ public:
   size_t number_azimuths_octant() const {return d_number_azimuth_octant;}
   /// Number of polar angles per octant
   size_t number_polar_octant() const {return d_number_polar_octant;}
+  /// Number of incident or outgoing azimuths along a side
+  size_t number_azimuths(const size_t s) const;
+  /// Number of incident or outgoing polar angles along a side
+  size_t number_polar(const size_t s) const;
 
   /// Cardinal angle within octant given azimuth and polar.
   size_t angle(const size_t a, const size_t p) const;
@@ -117,6 +133,19 @@ public:
   size_t azimuth(const size_t angle) const;
   /// Polar index from cardinal within octant
   size_t polar(const size_t angle) const;
+
+  // Prepend class on the following because onld SWIG fails on this
+  // particular nested type.
+
+  /// Incident octant/angle given cardinal azimuth and polar index on a side
+  ProductQuadrature::index_t
+  incident_index(const size_t s, const size_t a, const size_t p) const;
+  /// Outgoing octant/angle given cardinal azimuth and polar index on a side
+  ProductQuadrature::index_t
+  outgoing_index(const size_t s, const size_t a, const size_t p) const;
+
+
+  void display_indices();
 
 protected:
 
@@ -142,6 +171,13 @@ protected:
   vec_dbl d_sin_theta;
   /// Polar weights
   vec_dbl d_polar_weight;
+  ///
+  vec_size_t d_number_polar;
+  vec_size_t d_number_azimuths;
+  /// Angle indices for each side [side][azimuth][polar]
+  vec3_index_t d_incident_indices;
+  vec3_index_t d_outgoing_indices;
+
 
   //--------------------------------------------------------------------------//
   // IMPLEMENTATION

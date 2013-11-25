@@ -22,7 +22,7 @@ inline int EigenSolver::solve(Vector &x, Vector &x0)
     Require(x0.size() == d_A->number_rows());
   d_status = MAXIT;
   solve_impl(x, x0);
-  if (d_status ==  MAXIT)
+  if (d_status ==  MAXIT && d_monitor_level > 0)
   {
     printf("*** %s did not converge within the maximum number of iterations\n",
            d_name.c_str());

@@ -23,8 +23,8 @@ namespace callow
  *  @brief CRS matrix
  *
  *  This is the base matrix class used within callow.  It implements a
- *  compressed row storage (CRS) matrix.  An example of what this means is as
- *  follows.
+ *  compressed row storage (CRS) matrix.  An example of what this means
+ *  is as follows.
  *
  *  Example:
  *
@@ -102,8 +102,8 @@ public:
   Matrix(Matrix &A);
   // destructor
   virtual ~Matrix();
-  //@{
   /// sp constructor
+  //@{
   static SP_matrix Create(const int m, const int n);
   static SP_matrix Create(const int m, const int n, const int nnz);
   //@}
@@ -126,7 +126,6 @@ public:
   /// add n triplets  (return false if can't add)
   bool insert(int *i, int *j, double *v, int n, const int type = INSERT);
 
-
   /// starting index for a row
   int start(const int i) const;
   /// diagonal index for a row
@@ -141,11 +140,13 @@ public:
   /// value at ij and returns 0 if not present
   double operator()(const int i, const int j) const;
 
-  // get underlying storage and indexing. careful!
-  double* values() {return d_values;}
-  int* columns()   {return d_columns;}
-  int* rows()      {return d_rows;}
-  int* diagonals() {return d_diagonals;}
+  /// get underlying storage and indexing. careful!
+  //@{
+  double* values()    {return d_values;}
+  int*    columns()   {return d_columns;}
+  int*    rows()      {return d_rows;}
+  int*    diagonals() {return d_diagonals;}
+  //@}
 
   /// number of nonzeros
   int number_nonzeros() const { return d_nnz; }
@@ -166,6 +167,8 @@ public:
   void multiply_transpose(const Vector &x, Vector &y);
   // pretty print to screen
   void display(bool forceprint = false) const;
+  // clear contents, but leave allocation
+  void clear();
 
 protected:
 
@@ -173,15 +176,6 @@ protected:
   // DATA
   //--------------------------------------------------------------------------//
 
-  /// expose base members
-  using MatrixBase::d_m;
-  using MatrixBase::d_n;
-  using MatrixBase::d_sizes_set;
-  using MatrixBase::d_is_ready;
-
-#ifdef CALLOW_ENABLE_PETSC
-  using MatrixBase::d_petsc_matrix;
-#endif
   /// matrix elements
   double* d_values;
   /// column indices

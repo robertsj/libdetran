@@ -45,6 +45,7 @@ void IO_HDF5::open(const int flag)
     d_file_id = H5Fopen(fname, H5F_ACC_RDONLY, H5P_DEFAULT);
   else if (flag == HDF5_OVERWRITE)
     d_file_id = H5Fcreate(fname, H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
+  Insist(d_file_id > 0, "Error opening HDF5 file " + d_filename);
   d_open = true;
 }
 

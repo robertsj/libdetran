@@ -133,7 +133,9 @@ private:
   double d_keff;
   /// Adjoint flag
   bool d_adjoint;
+  /// Skip scatter and fission
   size_t d_sf_flag;
+
   //--------------------------------------------------------------------------//
   // IMPLEMENTATION
   //--------------------------------------------------------------------------//

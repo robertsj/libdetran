@@ -24,7 +24,7 @@ namespace detran_utilities
 {
 
 /// Norm of a vector
-inline double norm(vec_dbl &x, std::string flag = "L2")
+inline double norm(const vec_dbl &x, std::string flag = "L2")
 {
   double v = 0.0;
   if (flag == "L2")
@@ -65,9 +65,10 @@ inline void vec_set(vec_dbl &x, double value)
     x[i] = value;
 }
 
-
 /// Norm of the residual of two double vectors.
-inline double norm_residual(vec_dbl &x, vec_dbl &y, std::string flag = "L2")
+inline double norm_residual(const vec_dbl &x,
+                            const vec_dbl &y,
+                            std::string    flag = "L2")
 {
   Require(x.size() == y.size());
   double v = 0.0;
@@ -99,7 +100,9 @@ inline double norm_residual(vec_dbl &x, vec_dbl &y, std::string flag = "L2")
 }
 
 /// Norm of the relative residual.
-inline double norm_relative_residual(vec_dbl &x, vec_dbl &y, std::string flag = "L2")
+inline double norm_relative_residual(const vec_dbl &x,
+                                     const vec_dbl &y,
+                                     std::string    flag = "L2")
 {
   Require(x.size() == y.size());
   double v = 0.0;

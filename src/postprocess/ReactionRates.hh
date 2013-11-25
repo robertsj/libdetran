@@ -91,7 +91,7 @@ public:
    *  as used in \ref Mesh.
    *
    *  @param key    String identifier for the edit region
-   *  @param scale  Total power used for normalization
+   *  @param scale  Total power for normalization.  Negative for no scaling.
    */
   vec_dbl region_power(std::string key, double scale = 1.0);
 

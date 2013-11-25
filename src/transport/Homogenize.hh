@@ -126,6 +126,9 @@ public:
   /// Reset the weighting method for diffusion coefficient generation
   void set_option_dc(const size_t option_dc);
 
+  /// Get the coarse mesh flux
+  const vec2_dbl& coarse_mesh_flux(){return d_coarse_mesh_flux;}
+
 private:
 
   //--------------------------------------------------------------------------//
@@ -146,7 +149,8 @@ private:
   vec2_dbl d_spectrum;
   /// Fine mesh spectrum map
   vec_int d_spectrum_map;
-
+  /// Coarse mesh flux
+  vec2_dbl d_coarse_mesh_flux;
 
   //--------------------------------------------------------------------------//
   // IMPLEMENTATION

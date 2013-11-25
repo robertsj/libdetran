@@ -16,6 +16,7 @@
 #include "angle/BaseUniform.hh"
 #include "angle/TabuchiYamamoto.hh"
 #include "angle/AbuShumaysDoubleRange.hh"
+#include "angle/TriGauss.hh"
 
 namespace detran_angle
 {
@@ -71,6 +72,7 @@ typedef PolarQuadrature<BaseUniformCosine>      PolarUC;
 typedef PolarQuadrature<BaseSimpson>            PolarS;
 typedef PolarQuadrature<TabuchiYamamoto>        PolarTY;
 typedef PolarQuadrature<AbuShumaysDoubleRange>  PolarASDR;
+typedef PolarQuadrature<TriGauss>               PolarTG;
 
 } // end namespace detran_angle
 

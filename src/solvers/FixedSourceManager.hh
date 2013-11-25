@@ -181,7 +181,6 @@ public:
   /// Update operators, etc.
   void update()
   {
-    // Preconditions
     Require(d_solver);
 
     // Refresh the solver
@@ -200,6 +199,7 @@ public:
   int discretization() const { return d_discretization; }
   SP_solver solver() const { return d_solver; }
   int number_sweeps() const { return d_solver->number_sweeps(); }
+  bool adjoint() const {return d_adjoint;}
   /// @}
 
 private:

@@ -107,6 +107,7 @@ bool LinearSolver::monitor(int it, double r)
   if (d_monitor_level > 1)
     printf("iteration: %5i    residual: %12.8e \n", it, r);
  // Assert(it > 0);
+  bool value = false;
   if (r < std::max(d_relative_tolerance * d_residual[0],
                    d_absolute_tolerance))
   {
@@ -116,15 +117,25 @@ bool LinearSolver::monitor(int it, double r)
              d_name.c_str(), it, r );
     }
     d_status = SUCCESS;
-    return true;
+    value = true;
   }
   else if (d_monitor_diverge && it >  1 && r - d_residual[it - 1] > 0.0)
   {
     if (d_monitor_level) printf("*** %s diverged \n", d_name.c_str());
     d_status = DIVERGE;
-    return true;
+    value = true;
   }
-  return false;
+  else if (it == d_maximum_iterations - 1)
+  {
+    if (d_monitor_level) printf("*** max it\n");
+    d_status = MAXIT;
+    value = true;
+  }
+  else
+  {
+    d_status = RUNNING;
+  }
+  return value;
 }
 
 

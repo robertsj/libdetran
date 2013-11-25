@@ -9,6 +9,7 @@
 %module(directors="1", allprotected="1", package="detran") orthog
 %{
 #include <stddef.h>
+#include "orthog/OrthogonalBasisParameters.hh"
 #include "orthog/OrthogonalBasis.hh"
 %}
 
@@ -24,8 +25,10 @@
 %import "callow/detran_callow.i"
 
 // Base angle classes and utilities
-%include "OrthogonalBasis.hh"
+%include "OrthogonalBasisParameters.hh"
+%template(OrthogonalBasisParamsSP) detran_utilities::SP<detran_orthog::OrthogonalBasisParameters>;
 
+%include "OrthogonalBasis.hh"
 %template(OrthogonalBasisSP) detran_utilities::SP<detran_orthog::OrthogonalBasis>;
 
 //---------------------------------------------------------------------------//

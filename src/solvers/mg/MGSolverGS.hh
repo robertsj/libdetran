@@ -87,6 +87,9 @@ public:
   /// Return number of sweeps
   int number_sweeps() const;
 
+  /// Perform one downscatter sweep
+  void sweep();
+
 private:
 
   //--------------------------------------------------------------------------//
@@ -118,8 +121,6 @@ private:
   int d_lower_upscatter;
   /// Upper bound of energy loop
   int d_upper;
-  /// Decrement (1 for foward, -1 for adjoint)
-  int d_increment;
   /// Flag to indicate upscatter iteration is required.
   bool d_iterate;
   /// Determines which norm to use (default is Linf)

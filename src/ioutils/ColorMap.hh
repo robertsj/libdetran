@@ -48,8 +48,11 @@ public:
 
   typedef detran_utilities::size_t          size_t;
   typedef detran_utilities::vec_dbl         vec_dbl;
-  typedef struct {unsigned char r, g, b;}   rgb_t;
-  typedef std::vector<rgb_t>                vec_rgb;
+  struct rgb_t
+  {
+    unsigned char r, g, b;
+  };
+  typedef std::vector<ColorMap::rgb_t>      vec_rgb;
   typedef detran_geometry::Point            Point;
 
   //--------------------------------------------------------------------------//
@@ -63,7 +66,7 @@ public:
    */
   static vec_rgb color(const size_t map, const vec_dbl &values);
 
-  static rgb_t hex_to_rgb(const int hex);
+  static ColorMap::rgb_t hex_to_rgb(const int hex);
 
 private:
 

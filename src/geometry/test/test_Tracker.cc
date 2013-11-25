@@ -21,6 +21,7 @@
 #include "csg_fixture.hh"
 #include "angle/QuadratureFactory.hh"
 #include "ioutils/PSPlotter.hh"
+#include "callow/utils/Initialization.hh"
 #include <cmath>
 
 using namespace detran_geometry;
@@ -32,7 +33,9 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
+  callow_initialize(argc, argv);
   RUN(argc, argv);
+  callow_finalize();
 }
 
 //----------------------------------------------------------------------------//

@@ -16,6 +16,7 @@
 #include "orthog/DLP.hh"
 #include "orthog/Jacobi01.hh"
 #include "orthog/TransformedBasis.hh"
+#include "orthog/UserBasis.hh"
 //
 #include <cmath>
 
@@ -32,6 +33,7 @@ void InitFactory()
   REGISTER_CLASS(OrthogonalBasis, DLP,              "dlp")
   REGISTER_CLASS(OrthogonalBasis, Jacobi01,         "jacobi")
   REGISTER_CLASS(OrthogonalBasis, TransformedBasis, "trans")
+  REGISTER_CLASS(OrthogonalBasis, UserBasis,        "UserBasis")
 }
 
 //----------------------------------------------------------------------------//

@@ -7,8 +7,9 @@
 //----------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
-#define TEST_LIST                   \
-        FUNC(test_Davidson)
+#define TEST_LIST                    \
+        FUNC(test_Davidson_standard) \
+        FUNC(test_Davidson_general)
 
 #include "utilities/TestDriver.hh"
 #include "callow/utils/Initialization.hh"
@@ -60,7 +61,7 @@ private:
  *  Solves Ax = e*B*x where A is the standard 2nd difference
  *  operator and B is diagonal matrix of 1 through n.
  */
-int test_Davidson(int argc, char *argv[])
+int test_Davidson_standard(int argc, char *argv[])
 {
   Matrix::SP_matrix M = test_matrix_2(10);
   Matrix::SP_matrix F = test_matrix_3(10);
@@ -89,6 +90,17 @@ int test_Davidson(int argc, char *argv[])
       TEST(soft_equiv(X[i], ref_V[i], 1.0e-8));
     }
   }
+
+  return 0;
+}
+
+int test_Davidson_general(int argc, char *argv[])
+{
+  Matrix::SP_matrix M = test_matrix_2(10);
+  Matrix::SP_matrix F = test_matrix_3(10);
+  int n = M->number_columns();
+  Vector X (n, 1.0);
+  Vector X0(n, 1.0);
 
   // Test on Ax=LBx
   {

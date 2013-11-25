@@ -11,6 +11,7 @@
 // solvers
 #include "PowerIteration.hh"
 #include "SlepcSolver.hh"
+#include "Davidson.hh"
 #include "Eispack.hh"
 //
 #include <string>
@@ -30,6 +31,7 @@ EigenSolverCreator::Create(SP_db db)
   int maxit = 100;
   int monitor_level = 0;
   int number_values = 1;
+  int subspace_size = 20;
 
   // Check database for parameters--easily add new ones here.
   if (db)
@@ -60,8 +62,16 @@ EigenSolverCreator::Create(SP_db db)
     THROW("SLEPc solvers not available with this build");
 #endif
   }
+  else if (solver_type == "gd")
+  {
+    if (db->check("eigen_solver_subspace_size"))
+      subspace_size = db->get<int>("eigen_solver_subspace_size");
+    solver = new Davidson(tol, maxit, subspace_size);
+  }
   else if (solver_type == "eispack")
   {
+    if (db->check("eigen_solver_subspace_size"))
+      subspace_size = db->get<int>("eigen_solver_subspace_size");
     solver = new Eispack(tol, maxit);
   }
   else

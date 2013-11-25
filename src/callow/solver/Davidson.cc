@@ -68,7 +68,7 @@ void Davidson::set_operators(SP_matrix A,
 }
 
 //----------------------------------------------------------------------------//
-void Davidson::set_preconditioner(SP_pc P)
+void Davidson::set_preconditioner(SP_pc P, const int side)
 {
   Require(P);
   d_P = P;

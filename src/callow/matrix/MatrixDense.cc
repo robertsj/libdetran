@@ -107,7 +107,7 @@ void MatrixDense::display(bool forceprint) const
 }
 
 //----------------------------------------------------------------------------//
-inline void MatrixDense::print_matlab(std::string filename) const
+void MatrixDense::print_matlab(std::string filename) const
 {
   Require(d_is_ready);
   FILE * f;
@@ -122,6 +122,18 @@ inline void MatrixDense::print_matlab(std::string filename) const
   }
   fprintf(f, "\n");
   fclose (f);
+}
+
+//----------------------------------------------------------------------------//
+void MatrixDense::clear()
+{
+  for (int i = 0; i < d_m; ++i)
+  {
+    for (int j = 0; j < d_n; ++j)
+    {
+      d_values[MDIDX(i, j)] = 0.0;
+    }
+  }
 }
 
 

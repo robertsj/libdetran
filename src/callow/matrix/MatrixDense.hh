@@ -97,6 +97,8 @@ public:
   void multiply_transpose(const Vector &x, Vector &y);
   // pretty print to screen
   void display(bool forceprint = false) const;
+  // clear the matrix contents
+  void clear();
 
 protected:
 

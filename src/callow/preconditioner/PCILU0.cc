@@ -1,27 +1,27 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   PCILU0.cc
- *  @brief  PCILU0 member definitions
- *  @author Jeremy Roberts
- *  @date   Sep 18, 2012
+ *  @file  PCILU0.cc
+ *  @brief PCILU0 member definitions
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #include "PCILU0.hh"
 
 namespace callow
 {
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 PCILU0::PCILU0(SP_matrix A)
   : Base("PCILU0")
 {
-  // preconditions
   Require(A);
   Require(A->number_rows() == A->number_columns());
   Insist(dynamic_cast<Matrix*>(A.bp()),
     "Need an explicit matrix for use with PCILU0");
   SP_matrixfull B(A);
+
+  d_size = A->number_columns();
 
   // copy A
   d_P = new Matrix(*B);
@@ -93,7 +93,7 @@ PCILU0::PCILU0(SP_matrix A)
 
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 PCILU0::SP_preconditioner PCILU0::Create(SP_matrix A)
 {
   SP_preconditioner p(new PCILU0(A));
@@ -102,6 +102,6 @@ PCILU0::SP_preconditioner PCILU0::Create(SP_matrix A)
 
 } // end namespace callow
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file PCILU0.cc
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

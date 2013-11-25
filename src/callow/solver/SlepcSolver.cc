@@ -23,15 +23,12 @@ SlepcSolver::SlepcSolver(const std::string &eps_type,
   , d_eps_type(eps_type)
 {
   PetscErrorCode ierr;
-  std::cout << " start slepcsolver... " << std::endl;
 
   // Create the context.
   ierr = EPSCreate(PETSC_COMM_SELF, &d_slepc_solver);
   Insist(!ierr, "Error creating EPS context.");
 
   // Set the solver type and get just the largest eigenvalue.
-//  ierr = EPSSetType(d_slepc_solver, EPSGD);//epstype.c_str());
-//  Insist(!ierr, "Error creating EPS of type " + epstype);
   ierr = EPSSetWhichEigenpairs(d_slepc_solver, EPS_LARGEST_MAGNITUDE);
   Insist(!ierr, "Error selecting EPS eigenpairs.");
 
@@ -64,8 +61,6 @@ void SlepcSolver::solve_impl(Vector &x, Vector &x0)
   ierr = EPSGetEigenpair(d_slepc_solver, 0, &lambda, &lambda_imag,
                          x.petsc_vector(), x0.petsc_vector());
   Insist(!ierr, "Error getting eigenpair.");
-
-  std::cout << " LAMBDA = " << lambda << std::endl;
 
   // Scale the result by its sum.  This points it in the positive
   // direction and gives the L1 normalization we're using in PI.

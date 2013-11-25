@@ -123,7 +123,7 @@ public:
   typedef MGTransportOperator<D>                    Operator_T;
   typedef typename Operator_T::SP_operator          SP_operator;
   typedef callow::Vector::SP_vector                 SP_vector;
-  typedef MGPreconditioner::SP_preconditioner       SP_preconditioner;
+  typedef MGPreconditioner::SP_preconditioner       SP_pc;
   typedef detran_utilities::vec_dbl                 vec_dbl;
   typedef detran_utilities::size_t                  size_t;
   typedef detran_utilities::vec_size_t              groups_t;
@@ -163,6 +163,9 @@ public:
   /// Return number of sweeps
   int number_sweeps() const;
 
+  /// Return the transport operator
+  SP_operator get_operator();
+
 private:
 
   //-------------------------------------------------------------------------//
@@ -191,7 +194,7 @@ private:
   /// Main linear solver
   SP_linearsolver d_solver;
   /// Preconditioner
-  SP_preconditioner d_pc;
+  SP_pc d_pc;
   /// Operator "A" in "Ax = b"
   SP_operator d_operator;
   /// Solution vector

@@ -140,7 +140,7 @@ test_2D_pincell_via_factory(const size_t div, const size_t nrad)
 }
 
 /// A 2-D pincell assembly
-static Geometry::SP_geometry test_2D_assembly()
+static Geometry::SP_geometry test_2D_assembly(int n = 3)
 {
   typedef RegionFactory RF;
 
@@ -163,25 +163,31 @@ static Geometry::SP_geometry test_2D_assembly()
   F_I  = PinCell::Create(P, mat_I, radii, PinCell::DIVISION_HV_DIAG);
   F_II = PinCell::Create(P, mat_I, radii, PinCell::DIVISION_HV_DIAG);
 
-  int n = 3;
   Assembly::SP_assembly a = Assembly::Create(n, n);
-//  int pin_map_a[] =
-//  {
-//      2, 1, 1, 1, 1, 1, 1, 2,
-//      1, 0, 1, 1, 1, 1, 0, 1,
-//      1, 1, 1, 1, 1, 1, 1, 1,
-//      1, 1, 1, 2, 2, 1, 1, 1,
-//      1, 1, 1, 2, 2, 1, 1, 1,
-//      1, 1, 1, 1, 1, 1, 1, 1,
-//      1, 0, 1, 1, 1, 1, 0, 1,
-//      2, 1, 1, 1, 1, 1, 1, 2
-//  };
-  int pin_map_a[] =
+  int* pin_map_a;
+  int pin_map_a_8[] =
+  {
+      2, 1, 1, 1, 1, 1, 1, 2,
+      1, 0, 1, 1, 1, 1, 0, 1,
+      1, 1, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 2, 2, 1, 1, 1,
+      1, 1, 1, 2, 2, 1, 1, 1,
+      1, 1, 1, 1, 1, 1, 1, 1,
+      1, 0, 1, 1, 1, 1, 0, 1,
+      2, 1, 1, 1, 1, 1, 1, 2
+  };
+
+  int pin_map_a_3[] =
   {
       1, 1, 1,
       1, 1, 1,
       1, 1, 1
   };
+  if (n == 3)
+    pin_map_a = pin_map_a_3;
+  else
+    pin_map_a = pin_map_a_8;
+
   Assembly::vec_int pin_map(n * n);
   for (int i = 0; i < pin_map.size(); ++i)
   {

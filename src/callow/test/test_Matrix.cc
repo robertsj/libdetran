@@ -25,9 +25,7 @@ using std::endl;
 
 int main(int argc, char *argv[])
 {
-  callow_initialize(argc, argv);
   RUN(argc, argv);
-  callow_finalize();
 }
 
 //----------------------------------------------------------------------------//
@@ -37,14 +35,13 @@ int main(int argc, char *argv[])
 // Test of basic public interface
 int test_Matrix(int argc, char *argv[])
 {
-  typedef Matrix Mat;
-  typedef Vector Vec;
+  callow_initialize(argc, argv);
 
   // n * n
   {
     // Create test matrix
     int n = 5;
-    Mat A(n, n);
+    Matrix A(n, n);
     TEST(A.number_rows()    == n);
     TEST(A.number_columns() == n);
     A.preallocate(3);
@@ -136,7 +133,7 @@ int test_Matrix(int argc, char *argv[])
     int n = 2;
 
     // Create test matrix
-    Mat A(m, n);
+    Matrix A(m, n);
     TEST(A.number_rows()    == m);
     TEST(A.number_columns() == n);
     A.preallocate(2);
@@ -208,6 +205,23 @@ int test_Matrix(int argc, char *argv[])
     A.display();
   }
 
+  // Clearing
+  {
+    Matrix A(3, 3, 2);
+    A.insert(0, 0, 1.0); A.insert(0, 1, 2.0);
+    A.insert(1, 1, 3.0); A.insert(1, 2, 4.0);
+    A.insert(2, 1, 5.0); A.insert(2, 2, 6.0);
+    A.assemble();
+    A.display();
+    A.clear();
+    A.insert(0, 1, 1.1); A.insert(0, 2, 2.1);
+    A.insert(1, 0, 3.1); A.insert(1, 2, 4.1);
+    A.insert(2, 0, 5.1); A.insert(2, 2, 6.1);
+    A.assemble();
+    A.display();
+  }
+
+  callow_finalize();
   return 0;
 }
 

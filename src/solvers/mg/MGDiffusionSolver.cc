@@ -104,7 +104,11 @@ void MGDiffusionSolver<D>::solve(const double keff)
   build_boundary_source();
 
   // Solve the problem
+//  d_M->print_matlab("tran_diff.out");
+//  d_M->compute_explicit("tran_exp.out");
   d_solver->solve(*d_Q, *d_phi);
+//  d_Q->print_matlab("Q.out");
+//  d_phi->print_matlab("phi.out");
 //
 //  d_Q->print_matlab("Q.out");
 //  d_phi->print_matlab("phi.out");

@@ -22,15 +22,29 @@ namespace detran
 template <class D>
 inline void MGSolverGMRES<D>::solve(const double keff)
 {
-  using std::cout;
-  using std::endl;
   using detran_utilities::range;
 
   double norm_resid = 0.0;
   int iteration = 0;
 
   // Set the scaling factor for multiplying problems
-  if (d_multiply) d_fissionsource->setup_outer(1.0 / keff);
+  if (d_multiply) d_fissionsource->set_scale(1.0 / keff);
+
+  // Build the preconditioner
+  if (d_pc) d_pc->build(keff, d_state);
+
+  // Debug printing of operators
+  bool flag = false;
+  if (d_input->check("print_transport_operator"))
+  {
+    flag = d_input->template get<int>("print_transport_operator") != 0;
+    if (flag != 0) d_operator->compute_explicit("tran.out");
+  }
+  if (d_input->check("print_preconditioner_operator"))
+  {
+    flag = d_input->template get<int>("print_preconditioner_operator") != 0;
+    if (flag && d_pc) d_pc->display("pc.out");
+  }
 
   //--------------------------------------------------------------------------//
   // GAUSS-SEIDEL BLOCK

@@ -25,8 +25,10 @@ MGDSA::MGDSA(SP_input         input,
   : Base(input, material, mesh, ssource, fsource, cutoff,
          include_fission, adjoint, "MG-DSA")
 {
-  if (d_input->check("mgdsa_disable_fission") and d_include_fission)
+  if (d_input->check("mgdsa_disable_fission") && d_include_fission)
+  {
     d_include_fission = (0 == d_input->get<int>("mgdsa_disable_fission"));
+  }
 
   // Compute the diffusion coefficients.
   d_material->compute_diff_coef();
@@ -45,28 +47,20 @@ MGDSA::MGDSA(SP_input         input,
                               d_adjoint, // adjoint
                               1.0);      // keff
 
-
   // Create the linear solver for this group.
   d_solver = callow::LinearSolverCreator::Create(db);
 
   // Set the operators for this group.  The database is used
   // to set the preconditioner parameters for the diffusion solves.
   d_solver->set_operators(d_operator, db);
+
+  // Set the size of the operator
+  d_size = d_operator->number_columns();
 }
 
 //----------------------------------------------------------------------------//
 void MGDSA::apply(Vector &V, Vector &V_out)
 {
-  //V_out.copy(V);
-
-//  Operator_T::SP_matrix C(new Operator_T(d_input, d_material, d_mesh,
-//                          d_include_fission,d_group_cutoff, d_adjoint,1.0, 1));
-//  Vector tmp(V);
-//  C->multiply(V, tmp);
-//  d_solver->solve(tmp, V_out);
-//
-//  return;
-
   // Currently, DSA is only used on the flux moments, not on the boundaries.
   size_t size_moments = d_mesh->number_cells();
   V_out.set(0.0);
@@ -108,8 +102,16 @@ void MGDSA::apply(Vector &V, Vector &V_out)
 
   for (int i = 0; i < size_moments * d_number_active_groups; ++i)
     V_out[i] = V[i] + invC_S_V[i];
+}
 
-
+//----------------------------------------------------------------------------//
+void MGDSA::build(const double keff, SP_state state)
+{
+  // Print the operator for debugging
+  if (d_input->check("mgpc_print_operators"))
+  {
+    d_operator->print_matlab("diffusion.out");
+  }
 }
 
 } // end namespace detran

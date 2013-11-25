@@ -15,6 +15,10 @@ target_link_libraries(test_StupidParser
                       geometry
                       utilities
                       ioutils)    
+install(FILES       ${CMAKE_CURRENT_SOURCE_DIR}/test.h5
+        DESTINATION ${CMAKE_BINARY_DIR}/drivers/test)
+install(FILES       ${CMAKE_CURRENT_SOURCE_DIR}/test.inp
+        DESTINATION ${CMAKE_BINARY_DIR}/drivers/test)    
 #INSTALL(FILES       ${CMAKE_SOURCE_DIR}/drivers/test/test.inp
 #        DESTINATION ${CMAKE_BINARY_DIR}/drivers/test/)
         

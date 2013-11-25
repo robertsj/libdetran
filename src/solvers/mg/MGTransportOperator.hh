@@ -58,6 +58,7 @@ public:
   /**
    *  @brief Constructor
    *  @param state      state vector
+   *  @param boundary   boundary container
    *  @param sweeper    transport sweeper
    *  @param source     sweep source
    *  @param cutoff     lowest group included in operator
@@ -82,6 +83,12 @@ public:
 
   size_t moments_size() const { return d_moments_size; }
   size_t boundary_size() const { return d_boundary_size; }
+
+  SP_state state() { return d_state; }
+  SP_boundary boundary() { return d_boundary; }
+  SP_sweeper sweeper() { return d_sweeper; }
+  SP_sweepsource sweepsource() { return d_sweepsource; }
+
 
   //--------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL MATRICES MUST IMPLEMENT THESE

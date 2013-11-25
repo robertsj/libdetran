@@ -15,7 +15,6 @@ namespace callow
 PCJacobi::PCJacobi(SP_matrix A)
   : Base("PCJacobi")
 {
-  // preconditions
   Require(A);
   Require(A->number_rows() == A->number_columns());
   Insist(dynamic_cast<Matrix*>(A.bp()),
@@ -36,6 +35,8 @@ PCJacobi::PCJacobi(SP_matrix A)
     else
       (*d_P)[i] = 1.0 / aii;  // / aii;
   }
+
+  d_size = n;
 }
 
 //----------------------------------------------------------------------------//

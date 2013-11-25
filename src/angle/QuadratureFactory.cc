@@ -77,8 +77,10 @@ build(SP_input input, const int dimension)
       q = new PolarUC(np);
     else if (quad_type == "ty")
       q = new PolarTY(np);
-    else if (quad_type == "ASDR")
+    else if (quad_type == "asdr")
       q = new PolarASDR(np);
+    else if (quad_type == "tg")
+      q = new PolarTG(np);
   }
   else
   {
@@ -94,6 +96,7 @@ build(SP_input input, const int dimension)
       q = new Product_GL_U(dimension, na, np);
     else if (quad_type == "gl-ty")
       q = new Product_GL_TY(dimension, na, np);
+    //
     else if (quad_type == "dgl-gl")
       q = new Product_DGL_GL(dimension, na, np);
     else if (quad_type == "dgl-dgl")
@@ -102,14 +105,24 @@ build(SP_input input, const int dimension)
       q = new Product_DGL_U(dimension, na, np);
     else if (quad_type == "dgl-ty")
       q = new Product_DGL_TY(dimension, na, np);
+    //
     else if (quad_type == "u-gl")
       q = new Product_U_GL(dimension, na, np);
     else if (quad_type == "u-dgl")
       q = new Product_U_DGL(dimension, na, np);
+    else if (quad_type == "u-gc")
+      q = new Product_U_GC(dimension, na, np);
+    else if (quad_type == "u-dgc")
+      q = new Product_U_DGC(dimension, na, np);
     else if (quad_type == "u-u")
       q = new Product_U_U(dimension, na, np);
     else if (quad_type == "u-ty")
       q = new Product_U_TY(dimension, na, np);
+    else if (quad_type == "u-asdr")
+      q = new Product_U_ASDR(dimension, na, np);
+    else if (quad_type == "u-tg")
+      q = new Product_U_TG(dimension, na, np);
+    //
     else if (quad_type == "s-gl")
       q = new Product_S_GL(dimension, na, np);
     else if (quad_type == "s-dgl")
@@ -118,8 +131,19 @@ build(SP_input input, const int dimension)
       q = new Product_S_U(dimension, na, np);
     else if (quad_type == "s-ty")
       q = new Product_S_TY(dimension, na, np);
+    //
     else if (quad_type == "asqr-asdr")
       q = new Product_ASQR_ASDR(dimension, na, np);
+    else if (quad_type == "asqr-gl")
+      q = new Product_ASQR_GL(dimension, na, np);
+    else if (quad_type == "asqr-dgl")
+      q = new Product_ASQR_DGL(dimension, na, np);
+    else if (quad_type == "asqr-gc")
+      q = new Product_ASQR_GC(dimension, na, np);
+    else if (quad_type == "asqr-dgc")
+      q = new Product_ASQR_DGC(dimension, na, np);
+    else if (quad_type == "asqr-tg")
+      q = new Product_ASQR_TG(dimension, na, np);
 
     //------------------------------------------------------------------------//
     // OTHER QUADRATURES

@@ -41,8 +41,10 @@ inline PetscErrorCode shell_multiply_wrapper(Mat A, Vec x, Vec y)
 }
 #endif
 
-
 } // end namespace callow
 
-
 #endif /* callow_MATRIXSHELL_I_HH_ */
+
+//----------------------------------------------------------------------------//
+//              end of MatrixShell.i.hh
+//----------------------------------------------------------------------------//

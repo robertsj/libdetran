@@ -156,7 +156,7 @@ Vector::~Vector()
 {
   if (!d_size) return;
 #ifdef CALLOW_ENABLE_PETSC
-    // If it was a temporary wrap around an extend Vec, do nothing.
+    // If it was a temporary wrap around an extent Vec, do nothing.
     // Otherwise, we have to kill it.
     if (d_temporary_petsc)
       return;

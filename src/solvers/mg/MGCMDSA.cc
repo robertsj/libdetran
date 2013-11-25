@@ -8,7 +8,13 @@
 
 #include "MGCMDSA.hh"
 #include "callow/solver/LinearSolverCreator.hh"
+#include "callow/solver/GaussSeidel.hh"
+#include "callow/solver/Richardson.hh"
+#include "callow/solver/Jacobi.hh"
+
 #include "utilities/MathUtilities.hh"
+
+#define COUT(c) std::cout << c << std::endl;
 
 namespace detran
 {
@@ -22,12 +28,52 @@ MGCMDSA::MGCMDSA(SP_input         input,
                  size_t           cutoff,
                  bool             include_fission,
                  bool             adjoint)
-  : Base(input, material, mesh, ssource, fsource, cutoff, adjoint, "MG-CMDSA")
-  , d_include_fission(include_fission)
+  : Base(input, material, mesh, ssource, fsource,
+         cutoff, include_fission, adjoint, "MG-CMDSA")
 {
-  if (d_input->check("mgdsa_disable_fission") and d_include_fission)
-    d_include_fission = (0 == d_input->get<int>("mgdsa_disable_fission"));
+  if (d_input->check("mgpc_disable_fission") and d_include_fission)
+    d_include_fission = (0 == d_input->get<int>("mgpc_disable_fission"));
 
+
+  d_SF = new MGScatterFissionOperator(d_input,
+                                      d_material,
+                                      d_mesh,
+                                      d_scattersource,
+                                      d_fissionsource,
+                                      d_group_cutoff,
+                                      d_include_fission,
+                                      d_adjoint);
+
+  bool use_smoother = false;
+  if (d_input->check("mgpc_cmdsa_use_smoothing"))
+    use_smoother = (0 != d_input->get<int>("mgpc_cmdsa_use_smoothing"));
+
+  if (use_smoother)
+  {
+    int n = 2;
+    if (d_input->check("mgpc_cmdsa_smoothing_iters"))
+      n = d_input->get<int>("mgpc_cmdsa_smoothing_iters");
+
+    double w = 1.0;
+    if (d_input->check("mgpc_cmdsa_smoothing_relax"))
+      w = d_input->get<double>("mgpc_cmdsa_smoothing_relax");
+
+    // A full diffusion operator for use in a weighted Richardson
+    d_smoothing_operator = new Operator(d_input,
+                                        d_material,
+                                        d_mesh,
+                                        d_include_fission,
+                                        d_group_cutoff,
+                                        d_adjoint,
+                                        1.0);
+
+    // Gauss-Seidel for the smoother
+    //d_smoothing_solver = new callow::GaussSeidel(0.0, 0.0, n, w);
+    //d_smoothing_solver = new callow::Richardson(0.0, 0.0, n, w);
+    d_smoothing_solver = new callow::Jacobi(0.0, 0.0, n, w);
+    d_smoothing_solver->set_operators(d_smoothing_operator);
+    d_smoothing_solver->set_monitor_level(0);
+  }
 }
 
 //----------------------------------------------------------------------------//
@@ -56,12 +102,18 @@ void MGCMDSA::build(const double keff, SP_state state)
   // Set the operators for this group.  The database is used
   // to set the preconditioner parameters for the diffusion solves.
   d_solver->set_operators(d_operator, db);
+
+  // Print the operator for debugging
+  if (d_input->check("mgpc_print_operators"))
+  {
+    d_operator->print_matlab("diffusion_cm.out");
+    d_SF->compute_explicit("SF.out");
+  }
 }
 
 //----------------------------------------------------------------------------//
 void MGCMDSA::apply(Vector &V_h, Vector &V_h_out)
 {
-  std::cout << " hello" << std::endl;
   /*
    *  fine mesh dsa:    (I-inv(C)*S)*phi
    *  coarse mesh dsa:  (I-P*inv(C)*R*S)*phi
@@ -70,12 +122,6 @@ void MGCMDSA::apply(Vector &V_h, Vector &V_h_out)
   // Currently, DSA is only used on the flux moments, not on the boundaries.
   size_t size_moments = d_mesh->number_cells();
   V_h_out.set(0.0);
-  // Copy input vector to a multigroup flux; only the Krylov block is used.
-  State::vec_moments_type
-    phi(d_number_groups, State::moments_type(size_moments, 0.0));
-  for (int g = d_group_cutoff; g < d_number_groups; ++g)
-    for (int i = 0; i < size_moments; ++i)
-      phi[g][i] = V_h[(g - d_group_cutoff) * size_moments + i];
 
   //--------------------------------------------------------------------------//
   // Construct scatter source: SV_h <-- S * V_h
@@ -83,13 +129,7 @@ void MGCMDSA::apply(Vector &V_h, Vector &V_h_out)
 
   // Create the total group source on the fine mesh
   Vector SV_h(size_moments * d_number_active_groups, 0.0);
-  for (int g = d_group_cutoff; g < d_number_groups; g++)
-  {
-    State::moments_type source(size_moments, 0.0);
-    d_scattersource->build_total_group_source(g, d_group_cutoff, phi, source);
-    for (int i = 0; i < size_moments; i++)
-      SV_h[(g - d_group_cutoff) * size_moments + i] = source[i];
-  }
+  d_SF->multiply(V_h, SV_h);
 
   //--------------------------------------------------------------------------//
   // Restrict scatter source: SV_H <-- R * SV_h
@@ -98,20 +138,28 @@ void MGCMDSA::apply(Vector &V_h, Vector &V_h_out)
   Vector SV_H(d_size_coarse, 0.0);
   d_restrict->multiply(SV_h, SV_H);
 
-
   //--------------------------------------------------------------------------//
   // Solve coarse mesh diffusion equation: invC_SV_H <-- inv(C_H) * R * SV_h
   //--------------------------------------------------------------------------//
 
-  Vector invC_SV_H(size_moments * d_number_active_groups, 0.0);
+  Vector invC_SV_H(d_size_coarse, 0.0);
   d_solver->solve(SV_H, invC_SV_H);
 
   //--------------------------------------------------------------------------//
-  // Project the result: invC_SV_h <-- P * inv(C_H) * R * SV_h
+  // Prolong the result: invC_SV_h <-- P * inv(C_H) * R * SV_h
   //--------------------------------------------------------------------------//
 
   Vector invC_SV_h(d_size_fine, 0.0);
-  d_restrict->multiply(invC_SV_H, invC_SV_h);
+  d_prolong->multiply(invC_SV_H, invC_SV_h);
+
+  //--------------------------------------------------------------------------//
+  // Smooth
+  //--------------------------------------------------------------------------//
+
+  if (d_smoothing_solver)
+  {
+    d_smoothing_solver->solve(SV_h, invC_SV_h);
+  }
 
   //--------------------------------------------------------------------------//
   // Add result to output: V_h_out <--- V_h + P * inv(C_H) * R * SV_h

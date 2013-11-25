@@ -14,6 +14,7 @@
 #include "geometry/Region.hh"
 #include "geometry/CSG.hh"
 #include "geometry/QuadraticSurfaceFactory.hh"
+#include "callow/utils/Initialization.hh"
 #include <cmath>
 
 using namespace detran_geometry;
@@ -24,7 +25,9 @@ using std::endl;
 
 int main(int argc, char *argv[])
 {
+  callow_initialize(argc, argv);
   RUN(argc, argv);
+  callow_finalize();
 }
 
 //----------------------------------------------------------------------------//

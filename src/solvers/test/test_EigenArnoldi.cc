@@ -1,6 +1,6 @@
 //----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file  test_EigenPI.cc
+ *  @file  test_EigenArnoldi.cc
  *  @brief Test of EigenPI
  *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
@@ -8,9 +8,9 @@
 
 // LIST OF TEST FUNCTIONS
 #define TEST_LIST                              \
-        FUNC(test_EigenPI_1g)                  \
-        FUNC(test_EigenPI_7g_forward)          \
-        FUNC(test_EigenPI_7g_adjoint)
+        FUNC(test_EigenArnoldi_1g)                  \
+        FUNC(test_EigenArnoldi_7g_forward)          \
+        FUNC(test_EigenArnoldi_7g_adjoint)
 
 #include "TestDriver.hh"
 #include "solvers/EigenvalueManager.hh"
@@ -35,20 +35,20 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------------------------------------//
 
-int test_EigenPI_1g(int argc, char *argv[])
+int test_EigenArnoldi_1g(int argc, char *argv[])
 {
   EigenvalueData data = get_eigenvalue_data(1, 1);
-  data.input->put<std::string>("eigen_solver", "PI");
+  data.input->put<std::string>("eigen_solver", "arnoldi");
   EigenvalueManager<_1D> manager(data.input, data.material, data.mesh);
   manager.solve();
   TEST(soft_equiv(manager.state()->eigenvalue(), 1.0));
   return 0;
 }
 
-int test_EigenPI_7g_forward(int argc, char *argv[])
+int test_EigenArnoldi_7g_forward(int argc, char *argv[])
 {
   EigenvalueData data = get_eigenvalue_data(1, 7);
-  data.input->put<std::string>("eigen_solver", "PI");
+  data.input->put<std::string>("eigen_solver", "arnoldi");
   EigenvalueManager<_1D> manager(data.input, data.material, data.mesh);
   manager.solve();
   double ref[] =
@@ -67,10 +67,10 @@ int test_EigenPI_7g_forward(int argc, char *argv[])
   return 0;
 }
 
-int test_EigenPI_7g_adjoint(int argc, char *argv[])
+int test_EigenArnoldi_7g_adjoint(int argc, char *argv[])
 {
   EigenvalueData data = get_eigenvalue_data(1, 7);
-  data.input->put<std::string>("eigen_solver", "PI");
+  data.input->put<std::string>("eigen_solver", "arnoldi");
   data.input->put<int>("adjoint", 1);
   EigenvalueManager<_1D> manager(data.input, data.material, data.mesh);
   manager.solve();
@@ -91,5 +91,5 @@ int test_EigenPI_7g_adjoint(int argc, char *argv[])
 }
 
 //----------------------------------------------------------------------------//
-//              end of test_EigenPI.cc
+//              end of test_EigenArnoldi.cc
 //----------------------------------------------------------------------------//

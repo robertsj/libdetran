@@ -11,6 +11,7 @@
 
 #include "MGCoarseMeshPreconditioner.hh"
 #include "DiffusionLossOperator.hh"
+#include "MGScatterFissionOperator.hh"
 
 namespace detran
 {
@@ -42,10 +43,11 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef MGCoarseMeshPreconditioner        Base;
-  typedef DiffusionLossOperator             Operator;
-  typedef callow::Matrix                    Matrix;
-  typedef Matrix::SP_matrix                 SP_matrix;
+  typedef MGCoarseMeshPreconditioner              Base;
+  typedef DiffusionLossOperator                   Operator;
+  typedef callow::Matrix                          Matrix;
+  typedef Matrix::SP_matrix                       SP_matrix;
+  typedef MGScatterFissionOperator::SP_operator   SP_SF;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -90,16 +92,12 @@ private:
   // DATA
   //-------------------------------------------------------------------------//
 
-  /// Coarse mesh
-  SP_coarsemesh d_coarsemesher;
-  /// Scatter source
-  SP_scattersource d_scattersource;
-  /// Restriction operator
-  SP_matrix d_restrict;
-  /// Projection operator
-  SP_matrix d_project;
-  /// Flag to include fission
-  bool d_include_fission;
+  /// Scatter+Fission operator
+  SP_SF d_SF;
+  /// Smoothing operator
+  SP_matrix d_smoothing_operator;
+  /// Smoothing solver
+  SP_solver d_smoothing_solver;
 
 };
 

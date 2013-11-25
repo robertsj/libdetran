@@ -45,17 +45,24 @@ inline void FissionSource::update()
 }
 
 //----------------------------------------------------------------------------//
-inline const State::moments_type& FissionSource::source(const size_t g)
+inline const State::moments_type& FissionSource::source(const size_t g) const
 {
   Require(g < d_number_groups);
   return d_source[g];
 }
 
 //----------------------------------------------------------------------------//
-inline const State::moments_type& FissionSource::density()
+inline const State::moments_type& FissionSource::density() const
 {
   return d_density;
 }
+
+//----------------------------------------------------------------------------//
+inline State::moments_type& FissionSource::density()
+{
+  return d_density;
+}
+
 
 //----------------------------------------------------------------------------//
 // INTERFACE MIMICING SCATTER SOURCE

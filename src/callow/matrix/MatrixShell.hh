@@ -1,10 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
  *  @file  MatrixShell.hh
  *  @brief MatrixShell class definition
  *  @note  Copyright (C) 2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef callow_MATRIXSHELL_HH_
 #define callow_MATRIXSHELL_HH_
@@ -33,15 +33,15 @@ class CALLOW_EXPORT MatrixShell: public MatrixBase
 
 public:
 
-  //---------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // TYPEDEFS
-  //---------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   typedef detran_utilities::SP<MatrixShell>    SP_matrix;
 
-  //---------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
-  //---------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /// the context is the "this" of the caller
   MatrixShell(void* context);
@@ -49,65 +49,31 @@ public:
   MatrixShell(void* context, const int m, const int n);
   virtual ~MatrixShell();
 
-  void set_size(const int m, const int n = 0)
-  {
-    Require(m > 0);
-    d_m = m;
-    d_n = n;
-    if (!d_n) d_n = d_m;
-    d_sizes_set = true;
-#ifdef DETRAN_ENABLE_PETSC
-    PetscErrorCode ierr;
-    ierr = MatCreate(PETSC_COMM_SELF, &d_petsc_matrix);
-    ierr = MatSetSizes(d_petsc_matrix, d_m, d_n, PETSC_DETERMINE, PETSC_DETERMINE);
-    ierr = MatSetType(d_petsc_matrix, MATSHELL);
-    ierr = MatShellSetContext(d_petsc_matrix, d_context);
-    ierr = MatSetUp(d_petsc_matrix);
-    Ensure(!ierr);
-#endif
-    set_operation();
-    d_is_ready = true;
-  }
+  //--------------------------------------------------------------------------//
+  // PUBLIC FUNCTIONS
+  //--------------------------------------------------------------------------//
 
-  //---------------------------------------------------------------------------//
+  /// overloaded size setter so that the appropriate PETSc Mat is made
+  void set_size(const int m, const int n = 0);
+
+  //--------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL MATRICES MUST IMPLEMENT
-  //---------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   // default shell assemble does nothing
-  virtual void assemble()
-  {
-    /* ... */
-  }
+  void assemble(){}
   // default shell display gives just the sizes
-  virtual void display(bool forceprint = false) const
-  {
-    std::cout << "MatrixShell:" << std::endl
-              << "  # rows = " << d_m << std::endl
-              << "  # cols = " << d_n << std::endl
-              << std::endl;
-  }
+  void display(bool forceprint = false) const;
   // the client must implement the action y <-- A * x
-  virtual void multiply(const Vector &x,  Vector &y) = 0;
+  void multiply(const Vector &x,  Vector &y) = 0;
   // the client must implement the action y <-- A' * x
-  virtual void multiply_transpose(const Vector &x, Vector &y) = 0;
+  void multiply_transpose(const Vector &x, Vector &y) = 0;
 
 protected:
 
-  //---------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // DATA
-  //---------------------------------------------------------------------------//
-
-  /// expose base members
-  using MatrixBase::d_m;
-  using MatrixBase::d_n;
-  using MatrixBase::d_sizes_set;
-  using MatrixBase::d_is_ready;
-
-#ifdef DETRAN_ENABLE_PETSC
-  using MatrixBase::d_petsc_matrix;
-#endif
-
-protected:
+  //--------------------------------------------------------------------------//
 
   /// context of my caller
   void* d_context;
@@ -129,3 +95,7 @@ CALLOW_TEMPLATE_EXPORT(detran_utilities::SP<MatrixShell>)
 #include "MatrixShell.i.hh"
 
 #endif /* callow_MATRIXSHELL_HH_ */
+
+//----------------------------------------------------------------------------//
+//              end of MatrixShell.hh
+//----------------------------------------------------------------------------//
