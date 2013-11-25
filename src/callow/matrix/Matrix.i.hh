@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   Matrix.i.hh
- *  @author robertsj
- *  @date   Sep 13, 2012
- *  @brief  Matrix.i class definition.
+ *  @file  Matrix.i.hh
+ *  @brief Matrix inline member definitions
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef callow_MATRIX_I_HH_
 #define callow_MATRIX_I_HH_
@@ -22,13 +21,12 @@
 namespace callow
 {
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 // PREALLOCATION
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 inline void Matrix::preallocate(const int nnzrow)
 {
-  // preconditions
   Require(d_sizes_set);
   Require(!d_allocated);
   Require(nnzrow > 0);
@@ -41,7 +39,6 @@ inline void Matrix::preallocate(const int nnzrow)
 
 inline void Matrix::preallocate(int* nnzrows)
 {
-  // preconditions
   Require(d_sizes_set);
   Require(!d_allocated);
   // set number of nonzeros, preallocate triplets, and initialize counter
@@ -55,9 +52,9 @@ inline void Matrix::preallocate(int* nnzrows)
   d_allocated = true;
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 // ASSEMBLING
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 /*
  *  We construct in COO format, ie with (i,j,v) triplets.  This makes
@@ -70,7 +67,6 @@ inline void Matrix::preallocate(int* nnzrows)
 
 inline void Matrix::assemble()
 {
-  // Preconditions
   Insist(!d_is_ready, "This matrix must not have been assembled already.");
   Insist(d_allocated, "This matrix must be allocated before assembling.");
 
@@ -99,13 +95,28 @@ inline void Matrix::assemble()
 //      std::cout << d_aij[i][j] << std::endl;
 
     // find and/or insert the diagonal
-    int j = 0;
-    for (size_t k = 0; k < d_aij[i].size(); ++k)
-      if (d_aij[i][k].j <= d_aij[i][k].i) ++j;
-    if (j) --j;
-    if (d_aij[i][j].i != d_aij[i][j].j && i < d_n)
-      d_aij[i].insert(d_aij[i].begin()+j, triplet_T(i, i, 0.0));
-
+    Assert(d_aij[i].size());
+    if (i < d_n)
+    {
+      int d = 0;
+      while(d < d_aij[i].size())
+      {
+        if (d_aij[i][d].j == d_aij[i][d].i)
+        {
+          d = 0;
+          break;
+        }
+        else if (d_aij[i][d].j > d_aij[i][d].i)
+        {
+          d = d + 1;
+          break;
+        }
+        ++d;
+      }
+      --d;
+      if (d >= 0 && i < d_n)
+        d_aij[i].insert(d_aij[i].begin()+d, triplet_T(i, i, 0.0));
+    }
 
 //    std::cout << " after diag" << std::endl;
 //    for (int j = 0; j < d_aij[i].size(); ++j)
@@ -153,10 +164,9 @@ inline void Matrix::assemble()
   d_is_ready = true;
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 // INDEXING
-//---------------------------------------------------------------------------//
-
+//----------------------------------------------------------------------------//
 
 inline int Matrix::start(const int i) const
 {
@@ -196,10 +206,9 @@ inline double Matrix::operator[](const int p) const
   return d_values[p];
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 // ACCESS
-//---------------------------------------------------------------------------//
-
+//----------------------------------------------------------------------------//
 
 inline double Matrix::operator()(const int i, const int j) const
 {
@@ -223,10 +232,9 @@ inline double Matrix::operator()(const int i, const int j) const
   return 0.0;
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 // MULTIPLY
-//---------------------------------------------------------------------------//
-
+//----------------------------------------------------------------------------//
 
 inline void Matrix::multiply(const Vector &x, Vector &y)
 {
@@ -283,9 +291,9 @@ inline void Matrix::multiply_transpose(const Vector &x, Vector &y)
 #endif
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 // INSERTING VALUES
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 
 inline bool Matrix::insert(int i, int j, double v, const int type)
@@ -409,57 +417,10 @@ inline bool Matrix::insert(int *i, int *j, double *v, int n, const int type)
   return true;
 }
 
-//---------------------------------------------------------------------------//
-// IO
-//---------------------------------------------------------------------------//
-
-
-inline void Matrix::display() const
-{
-  Require(d_is_ready);
-  printf(" CSR matrix \n");
-  printf(" ---------------------------\n");
-  printf("      number rows = %5i \n",   d_m);
-  printf("   number columns = %5i \n",   d_n);
-  printf("      stored size = %5i \n\n", d_nnz);
-  printf("\n");
-  if (d_m > 20 || d_n > 20)
-  {
-    printf("  *** matrix not printed for m or n > 20 *** \n");
-    return;
-  }
-  for (int i = 0; i < d_m; i++)
-  {
-    printf(" row  %3i | ", i);
-    for (int p = d_rows[i]; p < d_rows[i + 1]; p++)
-    {
-      int j = d_columns[p];
-      double v = d_values[p];
-      printf(" %3i (%13.6e)", j, v);
-    }
-    printf("\n");
-  }
-  printf("\n");
-}
-
-inline void Matrix::print_matlab(std::string filename) const
-{
-  Require(d_is_ready);
-  FILE * f;
-  f = fopen (filename.c_str(), "w");
-  for (int i = 0; i < d_m; i++)
-  {
-    for (int p = d_rows[i]; p < d_rows[i + 1]; p++)
-    {
-      int j = d_columns[p];
-      double v = d_values[p];
-      fprintf(f, "%8i   %8i    %23.16e \n", i+1, j+1, v);
-    }
-  }
-  fprintf(f, "\n");
-  fclose (f);
-}
-
 } // end namespace callow
 
 #endif /* callow_MATRIX_I_HH_ */
+
+//----------------------------------------------------------------------------//
+//              end of Matrix.i.hh
+//----------------------------------------------------------------------------//

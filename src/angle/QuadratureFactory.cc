@@ -1,68 +1,46 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   QuadratureFactory.cc
- *  @author robertsj
- *  @date   Apr 11, 2012
- *  @brief  QuadratureFactory member definitions.
+ *  @file  QuadratureFactory.cc
+ *  @brief QuadratureFactory member definitions
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
-// Detran
 #include "QuadratureFactory.hh"
+// Base
+#include "BaseGL.hh"
+#include "BaseGC.hh"
+#include "BaseUniform.hh"
+#include "TabuchiYamamoto.hh"
 // 1D
-#include "GaussLegendre.hh"
-#include "GaussChebyshev.hh"
-#include "DPN.hh"
-#include "DTN.hh"
+#include "PolarQuadrature.hh"
 // 2D/3D
+#include "ProductQuadratureAP.hh"
 #include "LevelSymmetric.hh"
-#include "QuadrupleRange.hh"
 #include "UniformEqual.hh"
-// Product
-#include "ChebyshevLegendre.hh"
-#include "ChebyshevDPN.hh"
-#include "LegendreDTN.hh"
-// MOC
-#include "Collocated.hh"
-#include "Uniform.hh"
 
 namespace detran_angle
 {
 
-// Build a quadrature
+//----------------------------------------------------------------------------//
 QuadratureFactory::SP_quadrature QuadratureFactory::
 build(SP_input input, const int dimension)
-{
-  SP_quadrature q;
-  build(q, input, dimension);
-  return q;
-}
-// Build a quadrature
-void QuadratureFactory::
-build(SP_quadrature &q, SP_input input, const int dimension)
 {
   using std::string;
 
   // Set the quadrature type.
-  string quad_type = "notset";
+  string quad_type;
   if (!input->check("quad_type"))
   {
-    quad_type = "chebyshevdpn";
-    if (dimension == 1) quad_type = "gausslegendre";
+    quad_type = "u-dgl";
+    if (dimension == 1) quad_type = "gl";
   }
   else
   {
     quad_type = input->get<string>("quad_type");
   }
 
-  // Set default values.
-  bool moc = false;
-  int azimuths_octant = 2;
-  int polar_octant = 1;
-  string polar_type = "TY";
-
-  // All quadratures are parameterized by number of polar and/or
-  // number of azimuths
+  // All quadratures are parameterized by number of polar and/or azimuth angles
   int np = 1;
   int na = 1;
 
@@ -72,140 +50,125 @@ build(SP_quadrature &q, SP_input input, const int dimension)
   if (input->check("quad_chebyshev_normalize"))
     cheb_norm = (0 != input->get<int>("quad_chebyshev_normalize"));
 
-  // First, check whether this is an MOC quadrature or not.  If it
-  // is, we need different parameters.
-  if (quad_type == "uniform" || quad_type == "collocated")
+  // Get the number of polar and/or azimuths
+  if (input->check("quad_number_polar_octant"))
+    np = input->get<int>("quad_number_polar_octant");
+  if (input->check("quad_number_azimuth_octant"))
+    na = input->get<int>("quad_number_azimuth_octant");
+
+  SP_quadrature q;
+  if (dimension == 1)
   {
+    //------------------------------------------------------------------------//
+    // POLAR QUADRATURES
+    //------------------------------------------------------------------------//
 
-    // We're using an MOC quadrature (but that doesn't mean this
-    // is an MOC problem.
-    moc = true;
-
-    // Set the number of azimuths per octant
-    if (input->check("quad_azimuths_octant"))
-      azimuths_octant = input->get<int>("quad_azimuths_octant");
-
-    // Set the number of polar angles per octant
-    if (input->check("quad_polar_octant"))
-      polar_octant = input->get<int>("quad_polar_octant");
-
-    // Set the polar type
-    if (input->check("polar_type"))
-      polar_type = input->get<string>("quad_polar_type");
-
+    if      (quad_type == "gl")
+      q = new PolarGL(np);
+    else if (quad_type == "dgl")
+      q = new PolarDGL(np);
+    else if (quad_type == "gc")
+      q = new PolarGC(np, cheb_norm);
+    else if (quad_type == "dgc")
+      q = new PolarDGC(np, cheb_norm);
+    else if (quad_type == "uniform")
+      q = new PolarU(np);
+    else if (quad_type == "uniformcosine")
+      q = new PolarUC(np);
+    else if (quad_type == "ty")
+      q = new PolarTY(np);
+    else if (quad_type == "ASDR")
+      q = new PolarASDR(np);
   }
   else
   {
-    // Get the number of polar and/or azimuths
-    if (input->check("quad_number_polar_octant"))
-      np = input->get<int>("quad_number_polar_octant");
-    if (input->check("quad_number_azimuth_octant"))
-      na = input->get<int>("quad_number_azimuth_octant");
+    //------------------------------------------------------------------------//
+    // PRODUCT QUADRATURES
+    //------------------------------------------------------------------------//
+
+    if      (quad_type == "gl-gl")
+      q = new Product_GL_GL(dimension, na, np);
+    else if (quad_type == "gl-dgl")
+      q = new Product_GL_DGL(dimension, na, np);
+    else if (quad_type == "gl-u")
+      q = new Product_GL_U(dimension, na, np);
+    else if (quad_type == "gl-ty")
+      q = new Product_GL_TY(dimension, na, np);
+    else if (quad_type == "dgl-gl")
+      q = new Product_DGL_GL(dimension, na, np);
+    else if (quad_type == "dgl-dgl")
+      q = new Product_DGL_DGL(dimension, na, np);
+    else if (quad_type == "dgl-u")
+      q = new Product_DGL_U(dimension, na, np);
+    else if (quad_type == "dgl-ty")
+      q = new Product_DGL_TY(dimension, na, np);
+    else if (quad_type == "u-gl")
+      q = new Product_U_GL(dimension, na, np);
+    else if (quad_type == "u-dgl")
+      q = new Product_U_DGL(dimension, na, np);
+    else if (quad_type == "u-u")
+      q = new Product_U_U(dimension, na, np);
+    else if (quad_type == "u-ty")
+      q = new Product_U_TY(dimension, na, np);
+    else if (quad_type == "s-gl")
+      q = new Product_S_GL(dimension, na, np);
+    else if (quad_type == "s-dgl")
+      q = new Product_S_DGL(dimension, na, np);
+    else if (quad_type == "s-u")
+      q = new Product_S_U(dimension, na, np);
+    else if (quad_type == "s-ty")
+      q = new Product_S_TY(dimension, na, np);
+    else if (quad_type == "asqr-asdr")
+      q = new Product_ASQR_ASDR(dimension, na, np);
+
+    //------------------------------------------------------------------------//
+    // OTHER QUADRATURES
+    //------------------------------------------------------------------------//
+
+    if      (quad_type == "levelsymmetric")
+      q = new LevelSymmetric(np, dimension);
+    else if (quad_type == "uniformequal")
+      q = new UniformEqual(np, dimension);
+
   }
 
-  //-------------------------------------------------------------------------//
-  // 1D QUADRATURES
-  //-------------------------------------------------------------------------//
-
-  if (quad_type == "gausslegendre")
-  {
-    Insist(dimension == 1, "GaussLegendre only for 1D.");
-    q = new GaussLegendre(np);
-  }
-  else if (quad_type == "gausschebyshev")
-  {
-    Insist(dimension == 1, "GaussLegendre only for 1D.");
-    q = new GaussChebyshev(np, cheb_norm);
-  }
-  else if (quad_type == "dpn")
-  {
-    Insist(dimension == 1, "DPN only for 1D.");
-    q = new DPN(np);
-  }
-  else if (quad_type == "dtn")
-  {
-    Insist(dimension == 1, "DTN only for 1D.");
-    q = new DTN(np, cheb_norm);
-  }
-
-  //-------------------------------------------------------------------------//
-  // 2D/3D QUADRATURES
-  //-------------------------------------------------------------------------//
-
-  else if (quad_type == "levelsymmetric")
-  {
-    Insist(dimension > 1, "LevelSymmetric only for 2D or 3D.");
-    q = new LevelSymmetric(np, dimension);
-  }
-  else if (quad_type == "uniformequal")
-  {
-    Insist(dimension > 1, "UniformEqual only for 2D or 3D.");
-    q = new UniformEqual(np, dimension);
-  }
-
-  else if (quad_type == "chebyshevlegendre")
-  {
-    Insist(dimension > 1, "ChebyshevLegendre only for 2D or 3D.");
-    q = new ChebyshevLegendre(dimension, na, np);
-  }
-  else if (quad_type == "chebyshevdpn")
-  {
-    Insist(dimension > 1, "ChebyshevDPN only for 2D or 3D.");
-    q = new ChebyshevDPN(dimension, na, np);
-  }
-  else if (quad_type == "legendredtn")
-  {
-    Insist(dimension > 1, "LegendreDTN only for 2D or 3D.");
-    q = new LegendreDTN(dimension, na, np);
-  }
-  else if (quad_type == "quadruplerange")
-  {
-    Insist(dimension > 1, "QuadrupleRange only for 2D or 3D.");
-    q = new QuadrupleRange(dimension, na, np);
-  }
-
-  //-------------------------------------------------------------------------//
-  // MOC QUADRATURES
-  //-------------------------------------------------------------------------//
-
-  else if (quad_type == "collocated")
-  {
-    Insist(dimension > 1, "Collocated only for 2D or 3D.");
-    q = new Collocated(dimension, azimuths_octant, 1, polar_octant, polar_type);
-  }
-  else if (quad_type == "uniform")
-  {
-    Insist(dimension > 1, "Uniform only for 2D or 3D.");
-    int num_space = 10;
-    if (input->check("quad_uniform_number_space"))
-      num_space = input->get<int>("quad_uniform_number_space");
-    q = new Uniform(dimension, azimuths_octant, num_space, polar_octant, polar_type);
-  }
-  else
-  {
-    THROW("Unsupported quadrature selected: " + quad_type);
-  }
-
+  Insist(q, "Unsupported quadrature type: " + quad_type);
+  return q;
 }
 
-void QuadratureFactory::help() const
+//----------------------------------------------------------------------------//
+QuadratureFactory::SP_basequadrature
+QuadratureFactory::build_base(const std::string &type,
+                              const size_t       n,
+                              const double       a,
+                              const double       b)
 {
-
-  std::cout << "Available quadratures are: " << std::endl;
-  std::cout << "  gausslegendre (1D)" << std::endl;
-  std::cout << "  gausschebyshev (1D)" << std::endl;
-  std::cout << "  dpn (1D)" << std::endl;
-  std::cout << "  dtn (1D)" << std::endl;
-  std::cout << "  levelsymmetric" << std::endl;
-  std::cout << "  quadruplerange" << std::endl;
-  std::cout << "  uniformequal" << std::endl;
-  std::cout << "  chebyshevlegendre" << std::endl;
-  std::cout << "  chebyshevdpn" << std::endl;
-
+  Require(n > 0);
+  SP_basequadrature q;
+  if (type == "gl")
+    q = new BaseGL();
+  else if (type == "dgl")
+    q = new BaseDGL();
+  else if (type == "gc")
+    q = new BaseGC();
+  else if (type == "dgc")
+    q = new BaseDGC();
+  else if (type == "uniform")
+    q = new BaseUniform();
+  else if (type == "uniformcosine")
+    q = new BaseUniformCosine();
+  else if (type == "simpson")
+    q = new BaseSimpson();
+  else if (type == "ty")
+    q = new TabuchiYamamoto();
+  else
+    THROW("Unsupported base quadrature type: " + type);
+  q->build(a, b, n);
+  return q;
 }
 
 } // end namespace detran_angle
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of QuadratureFactory.cc
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

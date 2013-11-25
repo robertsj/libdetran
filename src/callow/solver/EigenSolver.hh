@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   EigenSolver.hh
- *  @brief  EigenSolver
- *  @author Jeremy Roberts
- *  @date   Sep 24, 2012
+ *  @file  EigenSolver.hh
+ *  @brief EigenSolver class definition
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef callow_EIGENSOLVER_HH_
 #define callow_EIGENSOLVER_HH_
@@ -52,9 +51,8 @@ namespace callow
  *  a different norm is warranted, perhaps based on
  *  physics.  This can be implemented by derived classes.
  *
- *  Currently, we implement only the power method, inverse
- *  iteration, and Rayleigh quotient.  However, other solvers
- *  are available if SLEPc is enabled.  Additionally, our
+ *  Currently, we implement only the power method and
+ *  nonlinear Arnoldi method.  Additionally, our
  *  structure is really intended for the dominant mode.
  *  Other modes will require different handling.
  */
@@ -63,30 +61,38 @@ class CALLOW_EXPORT EigenSolver
 
 public:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // TYPEDEFS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   typedef detran_utilities::SP<EigenSolver>       SP_solver;
   typedef MatrixBase::SP_matrix                   SP_matrix;
   typedef LinearSolver::SP_solver                 SP_linearsolver;
+  typedef Preconditioner::SP_preconditioner       SP_preconditioner;
   typedef Vector::SP_vector                       SP_vector;
   typedef detran_utilities::InputDB::SP_input     SP_db;
+  typedef detran_utilities::size_t                size_t;
 
-
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
-  EigenSolver(const double    tol = 1e-6,
+  /**
+   *   @brief Constructor
+   *   @param     tol     tolerance
+   *   @param     maxit   maximum number of iterations
+   *   @param     name    solver name
+   */
+  EigenSolver(const double    tol   = 1e-6,
               const int       maxit = 100,
-              std::string     name = "solver");
+              std::string     name  = "solver");
 
+  /// Destructor
   virtual ~EigenSolver(){}
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /**
    *  @brief Sets the operators for the problem.
@@ -96,10 +102,18 @@ public:
    *  @param B      optional right side operator (to be inverted)
    *  @param db     optional database for solver and preconditioner options
    */
-  virtual void set_operators(SP_matrix A,
-                             SP_matrix B = SP_matrix(0),
-                             SP_db db = SP_db(0));
+  virtual void set_operators(SP_matrix  A,
+                             SP_matrix  B  = SP_matrix(0),
+                             SP_db      db = SP_db(0));
 
+
+  /// Set the preconditioner for a generalized eigenvalue problem
+  virtual void set_preconditioner(SP_preconditioner P,
+                                  const int         side = LinearSolver::LEFT);
+
+  /// Set the preconditioner matrix for a generalized eigenvalue problem
+  virtual void set_preconditioner_matrix(SP_matrix P,
+                                         const int side = LinearSolver::LEFT);
 
   /**
    *  @brief Set the convergence criteria
@@ -178,9 +192,9 @@ public:
 
 protected:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // DATA
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /// convergence tolerance
   double d_tolerance;
@@ -205,9 +219,9 @@ protected:
   /// solver status
   int d_status;
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // IMPLEMENTATION
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /**
    *  @brief Print out iteration and residual
@@ -221,9 +235,9 @@ protected:
    */
   virtual bool monitor(int it, double l, double r);
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL EIGENSOLVERS MUST IMPLEMENT THIS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   virtual void solve_impl(Vector &x, Vector &x0) = 0;
 
@@ -237,6 +251,6 @@ CALLOW_TEMPLATE_EXPORT(detran_utilities::SP<EigenSolver>)
 
 #endif // callow_EIGENSOLVER_HH_
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file Eigensolver.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

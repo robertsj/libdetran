@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   MatrixShell.hh
- *  @author robertsj
- *  @date   Sep 18, 2012
- *  @brief  MatrixShell class definition.
+ *  @file  MatrixShell.hh
+ *  @brief MatrixShell class definition
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 
@@ -80,7 +79,7 @@ public:
     /* ... */
   }
   // default shell display gives just the sizes
-  virtual void display() const
+  virtual void display(bool forceprint = false) const
   {
     std::cout << "MatrixShell:" << std::endl
               << "  # rows = " << d_m << std::endl
@@ -108,7 +107,7 @@ protected:
   using MatrixBase::d_petsc_matrix;
 #endif
 
-private:
+protected:
 
   /// context of my caller
   void* d_context;

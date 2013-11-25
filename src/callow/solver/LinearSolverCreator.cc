@@ -29,7 +29,7 @@ LinearSolverCreator::Create(SP_db db)
   double atol = 1e-8;
   double rtol = 1e-8;
   int maxit   = 100;
-  int monitor_level = 2;
+  int monitor_level = 0;
   bool monitor_diverge = false;
   double omega = 1.0;
   int restart = 30;

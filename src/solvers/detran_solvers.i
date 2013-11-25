@@ -19,6 +19,8 @@
 #include "kinetics/LinearMaterial.hh"
 %}
 
+%feature("autodoc", "3");
+
 // Hide templates from SWIG
 %inline
 {

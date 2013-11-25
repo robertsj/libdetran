@@ -15,7 +15,8 @@
         FUNC(test_norm_residual_L2) \
         FUNC(test_norm_residual_L1) \
         FUNC(test_norm_residual_Linf) \
-        FUNC(test_linspace)
+        FUNC(test_linspace) \
+        FUNC(test_range)
 
 
 // Detran headers
@@ -93,12 +94,18 @@ int test_norm_residual_Linf(int argc, char *argv[])
 }
 int test_linspace(int argc, char *argv[])
 {
+  //
   vec_dbl v = linspace(0, 4, 5);
   for (unsigned int i = 0; i < v.size(); ++i)
   {
     std::cout << v[i] << " " << i << std::endl;
     TEST(soft_equiv(v[i], double(i)));
   }
+  //
+  v = linspace(-2, 2, 5);
+  TEST(soft_equiv(v[0], -2.0));
+  TEST(soft_equiv(v[1], -1.0));
+  //
   double ref[] = {0.4, 1.2, 2.0, 2.8, 3.6};
   v = linspace_center(0, 4, 5);
   for (unsigned int i = 0; i < v.size(); ++i)
@@ -106,11 +113,46 @@ int test_linspace(int argc, char *argv[])
     std::cout << v[i] << " " << ref[i] << std::endl;
     TEST(soft_equiv(v[i], ref[i]));
   }
+  //
+  v = linspace_center(-2, 2, 4); // -1.5 -0.5 0.5 1.5
+  TEST(soft_equiv(v[0], -1.5));
+  TEST(soft_equiv(v[1], -0.5));
   return 0;
 }
 
+int test_range(int argc, char *argv[])
+{
+  vec_int v = range<int>(0, 4);
+  TEST(v.size() == 4);
+  TEST(v[0] == 0);
+  TEST(v[1] == 1);
+  TEST(v[2] == 2);
+  TEST(v[3] == 3);
+
+  v = range<int>(4, 0);
+  TEST(v.size() == 4);
+  TEST(v[0] == 4);
+  TEST(v[1] == 3);
+  TEST(v[2] == 2);
+  TEST(v[3] == 1);
+
+  v = range<int>(0, 4, true);
+  TEST(v.size() == 5);
+  TEST(v[0] == 0);
+  TEST(v[1] == 1);
+  TEST(v[2] == 2);
+  TEST(v[3] == 3);
+  TEST(v[4] == 4);
+
+  v = range<int>(0, 0);
+  TEST(v.size() == 0);
+
+  return 0;
+}
+
+
 //---------------------------------------------------------------------------//
-//              end of testMathUtilities.cc
+//              end of test_MathUtilities.cc
 //---------------------------------------------------------------------------//
 
 

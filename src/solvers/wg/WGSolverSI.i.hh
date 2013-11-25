@@ -1,16 +1,14 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   WGSolverSI.i.hh
- *  @author robertsj
- *  @date   Apr 4, 2012
- *  @brief  WGSolverSI inline member definitions.
+ *  @file  WGSolverSI.i.hh
+ *  @brief WGSolverSI inline member definitions
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_WGSOLVERSI_I_HH
 #define detran_WGSOLVERSI_I_HH
 
-// System
 #include <algorithm>
 #include <cstdio>
 #include <iostream>
@@ -18,6 +16,7 @@
 namespace detran
 {
 
+//----------------------------------------------------------------------------//
 template <class D>
 void WGSolverSI<D>::solve(const size_t g)
 {
@@ -26,7 +25,7 @@ void WGSolverSI<D>::solve(const size_t g)
   using detran_utilities::norm_residual;
 
   if (d_print_level > 0) cout << "    Starting SI." << endl;
-  if (d_print_level > 0) cout << "      group " << g << endl;
+  if (d_print_level > 0) cout << "      group " << (int)g << endl;
 
   // Setup boundary conditions.  This sets any conditions fixed for the solve.
   d_boundary->set(g);
@@ -65,6 +64,9 @@ void WGSolverSI<D>::solve(const size_t g)
     }
     if (error < d_tolerance) break;
 
+    // INSERT ACCELERATION HERE
+    // d_accelerate->update(g, phi)
+
     // Construct within group
     d_sweepsource->build_within_group_scatter(g, phi);
 
@@ -91,6 +93,6 @@ void WGSolverSI<D>::solve(const size_t g)
 
 #endif /* detran_WGSOLVERSI_I_HH */
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of WGSolverSI.i.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

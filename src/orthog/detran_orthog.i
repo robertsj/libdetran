@@ -10,11 +10,6 @@
 %{
 #include <stddef.h>
 #include "orthog/OrthogonalBasis.hh"
-#include "orthog/ContinuousOrthogonalBasis.hh"
-#include "orthog/CLP.hh"
-#include "orthog/DLP.hh"
-#include "orthog/DCP.hh"
-#include "orthog/DCT.hh"
 %}
 
 // Hide templates from SWIG
@@ -30,11 +25,6 @@
 
 // Base angle classes and utilities
 %include "OrthogonalBasis.hh"
-%include "ContinuousOrthogonalBasis.hh"
-%include "CLP.hh"
-%include "DLP.hh"
-%include "DCP.hh"
-%include "DCT.hh"
 
 %template(OrthogonalBasisSP) detran_utilities::SP<detran_orthog::OrthogonalBasis>;
 

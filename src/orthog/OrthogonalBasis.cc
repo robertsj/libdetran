@@ -1,36 +1,65 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   OrthogonalBasis.cc
- *  @brief  OrthogonalBasis member definitions
- *  @author Jeremy Roberts
- *  @date   Jan 8, 2013
+ *  @file  OrthogonalBasis.cc
+ *  @brief OrthogonalBasis member definitions
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #include "orthog/OrthogonalBasis.hh"
+// derived classes --- ugh!! autoregistration would be sooo nice
+#include "orthog/ChebyshevU.hh"
+#include "orthog/CLP.hh"
+#include "orthog/DCP.hh"
+#include "orthog/DCT.hh"
+#include "orthog/DDF.hh"
+#include "orthog/DLP.hh"
+#include "orthog/Jacobi01.hh"
+#include "orthog/TransformedBasis.hh"
+//
 #include <cmath>
 
 namespace detran_orthog
 {
 
-//---------------------------------------------------------------------------//
-OrthogonalBasis::OrthogonalBasis(const size_t order,
-                                 const size_t size,
-                                 const bool   orthonormal)
-  : d_order(order)
-  , d_size(size)
-  , d_orthonormal(orthonormal)
+void InitFactory()
 {
-  Require(d_order < d_size);
+  REGISTER_CLASS(OrthogonalBasis, ChebyshevU,       "cheby")
+  REGISTER_CLASS(OrthogonalBasis, CLP,              "clp")
+  REGISTER_CLASS(OrthogonalBasis, DCP,              "dcp")
+  REGISTER_CLASS(OrthogonalBasis, DCT,              "dct")
+  REGISTER_CLASS(OrthogonalBasis, DDF,              "ddf")
+  REGISTER_CLASS(OrthogonalBasis, DLP,              "dlp")
+  REGISTER_CLASS(OrthogonalBasis, Jacobi01,         "jacobi")
+  REGISTER_CLASS(OrthogonalBasis, TransformedBasis, "trans")
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
+OrthogonalBasis::OrthogonalBasis(const Parameters &p)
+  : d_order(p.order)
+  , d_size(p.size)
+  , d_orthonormal(p.orthonormal)
+  , d_even_only(p.even_only)
+{
+  Requirev(d_order < d_size, AsString(d_order)+" < "+AsString(d_size));
+}
+
+//----------------------------------------------------------------------------//
 OrthogonalBasis::~OrthogonalBasis()
 {
   /* ... */
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
+OrthogonalBasis::SP_basis
+OrthogonalBasis::Create(const std::string &key,
+                        const Parameters  &p)
+{
+  InitFactory();
+  return (Factory_T::Instance().GetCreateFunction(key))(p);
+}
+
+//----------------------------------------------------------------------------//
 void OrthogonalBasis::compute_a()
 {
   Require(d_basis);
@@ -41,20 +70,22 @@ void OrthogonalBasis::compute_a()
   // If we're orthonormal, then we pre-normalize the basis.
   for (size_t i = 0; i <= d_order; ++i)
   {
-    Vector row(d_size, &(*d_basis)(i, 0));
-    Vector tmp(row);
+    Vector column(d_size, &(*d_basis)(0, i));
+    Vector tmp(column);
     if (d_w)
     {
       tmp.multiply(d_w);
     }
-    double val = 1.0 / std::sqrt(tmp.dot(row));
+    double val = 1.0 / tmp.dot(column);
 
     if (d_orthonormal)
     {
-      row.scale(val);
+      // Then scale V so that V'V = 1
+      column.scale(std::sqrt(val));
     }
     else
     {
+      // Scale so that value * V'V = 1
       (*d_a)[i] = val;
     }
   }
@@ -63,6 +94,6 @@ void OrthogonalBasis::compute_a()
 
 } // end namespace detran_orthog
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file OrthogonalBasis.cc
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

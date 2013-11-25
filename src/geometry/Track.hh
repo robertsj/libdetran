@@ -1,17 +1,18 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
  *  @file  Track.hh
- *  @brief Track class definition.
- *  @note  Copyright (C) 2013 Jeremy Roberts
+ *  @brief Track class definition
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_geometry_TRACK_HH_
 #define detran_geometry_TRACK_HH_
 
-#include "utilities/Point.hh"
-#include "Segment.hh"
+#include "geometry/Point.hh"
+#include "geometry/Segment.hh"
 #include "utilities/DBC.hh"
+#include "utilities/Iterators.hh"
 #include "utilities/SP.hh"
 #include <iomanip>
 #include <ostream>
@@ -24,153 +25,111 @@ namespace detran_geometry
  *  @class Track
  *  @brief Represents a track across a domain, consisting of several segments
  */
+/**
+ *  @example geometry/test/test_Track.cc
+ *
+ *  Test of Track class
+ */
+
 class GEOMETRY_EXPORT Track
 {
 
 public:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // TYPEDEFS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<Track>         SP_track;
-  typedef Segment::SP_segment                 SP_segment;
-  typedef detran_utilities::Point             Point;
-  typedef std::vector<Segment>                vec_segment;
-  typedef vec_segment::const_iterator         iterator;
-  typedef vec_segment::const_reverse_iterator riterator;
-  typedef detran_utilities::size_t            size_t;
+  typedef detran_utilities::SP<Track>                 SP_track;
+  typedef std::vector<Segment>                        vec_segment;
+  typedef detran_utilities::Reversible<vec_segment>   iterator;
+  typedef detran_utilities::size_t                    size_t;
 
-  //-------------------------------------------------------------------------//
-  // PUBLIC INTERFACE
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
+  // CONSTRUCTOR & DESTRUCTOR
+  //--------------------------------------------------------------------------//
 
   /**
    *  @brief Constructor
-   *  @param r0   Entrance point
-   *  @param r1   Exit point
+   *  @param r0   entrance point
+   *  @param r1   exit point
+   *  @param w    track width (or, in 3-d, its area)
    */
-  Track(Point r0, Point r1)
-    : d_enter(r0)
-    , d_exit(r1)
-  {
-    double d = distance(r0, r1);
-    Point p = r1 - r0;
-    d_cos_phi = p.x() / d;
-    d_sin_phi = p.y() / d;
-  }
+  Track(const Point  &r0,
+        const Point  &r1,
+        const double  w);
 
   /// SP_constructor
-  static SP_track Create(Point r0, Point r1)
-  {
-    SP_track p(new Track(r0, r1));
-    return p;
-  }
+  static SP_track Create(const Point  &r0,
+                         const Point  &r1,
+                         const double  w);
 
-  /// Return my entrance point
-  Point enter() const
-  {
-    return d_enter;
-  }
+  //--------------------------------------------------------------------------//
+  // PUBLIC FUNCTIONS
+  //--------------------------------------------------------------------------//
 
-  /// Return my exit point
-  Point exit() const
-  {
-    return d_exit;
-  }
-
-  int number_segments() const
-  {
-    return d_segments.size();
-  }
-
-  void add_segment(Segment s)
-  {
-    d_segments.push_back(s);
-  }
-
+  /// Add a segment
+  void add_segment(const Segment &s);
   /// Mutable reference to segment
-  Segment& segment(size_t i)
-  {
-    Require(i < d_segments.size());
-    return d_segments[i];
-  }
-
+  Segment& segment(const size_t i);
   /// Const reference to segment
-  const Segment& segment(size_t i) const
-  {
-    Require(i < d_segments.size());
-    return d_segments[i];
-  }
-
+  const Segment& segment(const size_t i) const;
+  /// Return my entrance point
+  Point enter() const;
+  /// Return my exit point
+  Point exit() const;
   /// Iterator to the beginning of the track
-  iterator begin()
-  {
-    return d_segments.begin();
-  }
-
+  iterator begin(bool forward = true);
   /// Iterator to the end of the track
-  riterator rbegin()
-  {
-    return d_segments.rbegin();
-  }
-
-  /// Return the track cosine (with respect to x)
-  double cos_phi() const
-  {
-    return d_cos_phi;
-  }
-
-  /// Return the track sine (with respect to x)
-  double sin_phi() const
-  {
-    return d_sin_phi;
-  }
+  iterator end(bool forward = true);
+  /// Return the track cosine
+  double mu() const;
+  /// Return the track sine
+  double eta() const;
+  /// Return the track polar cosine
+  double xi() const;
+  /// Number of segments along this track
+  size_t number_segments() const;
+  /// Return the track width
+  double width() const;
+  /// Indentifier
+  size_t identifier() const;
 
 private:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // DATA
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /// Track segments
   vec_segment d_segments;
-
   /// Track entrance point
   Point d_enter;
-
   /// Track exit point
   Point d_exit;
+  /// Cosine with respect to x
+  double d_mu;
+  /// Cosine with respect to y
+  double d_eta;
+  /// Cosine with respect to z
+  double d_xi;
+  /// Track width
+  double d_width;
+  /// Unique identifier
+  size_t d_identifier;
+  /// Counts every track added
+  static size_t d_number_tracks;
 
-  /// Cosine of the track angle with respect to x
-  double d_cos_phi;
-
-  /// Sine of the track angle with respect to y
-  double d_sin_phi;
-
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // IMPLEMENTATION
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   friend std::ostream& operator<< (std::ostream &out, Track &t);
 
 };
 
 /// Output stream for a Track
-inline std::ostream& operator<< (std::ostream &out, Track &t)
-{
-  std::ios::fmtflags f(out.flags());
-  out.setf(std::ios::fixed, std::ios::floatfield);
-  out.setf(std::ios::showpoint);
-  out << " enter = " << t.enter()
-      << " exit = "  << t.exit() << std::endl;
-  for (int s = 0; s < t.number_segments(); s++)
-  {
-    out << "          segment = " << s << " " << t.segment(s) << std::endl;
-  }
-  out.flags(f);
-  return out;
-}
+std::ostream& operator<< (std::ostream &out, Track &t);
 
 GEOMETRY_TEMPLATE_EXPORT(detran_utilities::SP<Track>)
 GEOMETRY_TEMPLATE_EXPORT(std::vector<detran_utilities::SP<Track> >)
@@ -178,8 +137,14 @@ GEOMETRY_TEMPLATE_EXPORT(std::vector<std::vector<detran_utilities::SP<Track> > >
 
 } // end namespace detran_geometry
 
+//----------------------------------------------------------------------------//
+// INLINE FUNCTIONS
+//----------------------------------------------------------------------------//
+
+#include "Track.i.hh"
+
 #endif /* detran_geometry_TRACK_HH_ */
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file Track.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

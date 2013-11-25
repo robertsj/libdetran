@@ -84,6 +84,7 @@ StupidParser::SP_mesh StupidParser::parse_mesh()
 detran_geometry::Mesh::SP_mesh StupidParser::parse_mesh_text()
 {
   Insist(d_input, "Input must be parsed before mesh!");
+  using namespace detran_geometry;
 
   bool coarse = false;
   Insist(d_input->check("dimension"), "The dimension must be specified!");
@@ -118,16 +119,20 @@ detran_geometry::Mesh::SP_mesh StupidParser::parse_mesh_text()
   {
     if (coarse)
     {
-      Insist(d_input->check("mesh_ycme"), "mesh_xcme given, but not ycme for a 2D problem!");
+      Insist(d_input->check("mesh_ycme"),
+             "mesh_xcme given, but not ycme for a 2D problem!");
       yme = d_input->get<vec_dbl>("mesh_ycme");
-      Insist(d_input->check("mesh_yfm"), "mesh_ycme given, but not yfm!");
+      Insist(d_input->check("mesh_yfm"),
+             "mesh_ycme given, but not yfm!");
       yfm = d_input->get<vec_int>("mesh_yfm");
-      Insist(xme.size() == yfm.size() + 1, "size(ycme) must be size(yfm)+1");
+      Insist(xme.size() == yfm.size() + 1,
+             "size(ycme) must be size(yfm)+1");
       mesh_map_size *= yfm.size();
     }
     else
     {
-      Insist(d_input->check("mesh_xfme"), "mesh_xfme given, but not yfme for a 2D problem!");
+      Insist(d_input->check("mesh_xfme"),
+             "mesh_xfme given, but not yfme for a 2D problem!");
       yme = d_input->get<vec_dbl>("mesh_yfme");
       mesh_map_size *= (yme.size()-1);
     }
@@ -136,16 +141,20 @@ detran_geometry::Mesh::SP_mesh StupidParser::parse_mesh_text()
   {
     if (coarse)
     {
-      Insist(d_input->check("mesh_zcme"), "mesh_xcme given, but not zcme for a 3D problem!");
+      Insist(d_input->check("mesh_zcme"),
+             "mesh_xcme given, but not zcme for a 3D problem!");
       zme = d_input->get<vec_dbl>("mesh_zcme");
-      Insist(d_input->check("mesh_zfm"), "mesh_zcme given, but not zfm!");
+      Insist(d_input->check("mesh_zfm"),
+             "mesh_zcme given, but not zfm!");
       zfm = d_input->get<vec_int>("mesh_zfm");
-      Insist(zme.size() == zfm.size() + 1, "size(zcme) must be size(zfm)+1");
+      Insist(zme.size() == zfm.size() + 1,
+             "size(zcme) must be size(zfm)+1");
       mesh_map_size *= zfm.size();
     }
     else
     {
-      Insist(d_input->check("mesh_zfme"), "mesh_xfme given, but not zfme for a 3D problem!");
+      Insist(d_input->check("mesh_zfme"),
+             "mesh_xfme given, but not zfme for a 3D problem!");
       zme = d_input->get<vec_dbl>("mesh_zfme");
       mesh_map_size *= (zme.size()-1);
     }
@@ -156,18 +165,18 @@ detran_geometry::Mesh::SP_mesh StupidParser::parse_mesh_text()
 
   if (dimension == 1)
   {
-    if (coarse)  d_mesh = new detran_geometry::Mesh1D(xfm, xme, mesh_map);
-    if (!coarse) d_mesh = new detran_geometry::Mesh1D(xme, mesh_map);
+    if (coarse)  d_mesh = new Mesh1D(xfm, xme, mesh_map);
+    if (!coarse) d_mesh = new Mesh1D(xme, mesh_map);
   }
   else if (dimension == 2 && coarse)
   {
-    if (coarse)  d_mesh = new detran_geometry::Mesh2D(xfm, yfm, xme, yme, mesh_map);
-    if (!coarse) d_mesh = new detran_geometry::Mesh2D(xme, yme, mesh_map);
+    if (coarse)  d_mesh = new Mesh2D(xfm, yfm, xme, yme, mesh_map);
+    if (!coarse) d_mesh = new Mesh2D(xme, yme, mesh_map);
   }
   else if (dimension == 3 && coarse)
   {
-    if (coarse)  d_mesh = new detran_geometry::Mesh3D(yfm, zfm, zfm, xme, yme, zme, mesh_map);
-    if (!coarse) d_mesh = new detran_geometry::Mesh3D(xme, yme, zme, mesh_map);
+    if (coarse)  d_mesh = new Mesh3D(yfm, zfm, zfm, xme, yme, zme, mesh_map);
+    if (!coarse) d_mesh = new Mesh3D(xme, yme, zme, mesh_map);
   }
   else
   {

@@ -1,47 +1,43 @@
-//----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   TrackDB.hh
- * \brief  TrackDB 
- * \author Jeremy Roberts
- * \date   Jun 22, 2012
+//----------------------------------*-C++-*-----------------------------------//
+/**
+ *  @file  TrackDB.hh
+ *  @brief TrackDB class definition
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
-#ifndef TRACKDB_HH_
-#define TRACKDB_HH_
+#ifndef detran_geometry_TRACKDB_HH_
+#define detran_geometry_TRACKDB_HH_
 
 #include "geometry/geometry_export.hh"
-#include "Track.hh"
-#include "angle/QuadratureMOC.hh"
+#include "geometry/Track.hh"
+#include "angle/ProductQuadrature.hh"
 #include "utilities/DBC.hh"
 #include "utilities/Definitions.hh"
+#include "utilities/Iterators.hh"
 #include "utilities/SP.hh"
 #include <vector>
 
 namespace detran_geometry
 {
 
-/*!
- *  \class TrackDB
- *  \brief Database of tracks.
+/**
+ *  @class TrackDB
+ *  @brief Database of tracks.
  *
- *  The track database contains all the information needed
- *  to represent the MOC problem with respect to space
- *  and angle.
+ *  The track database contains all the information needed to represent the
+ *  MOC problem with respect to space and angle.  In 2-D, tracks are
+ *  stored only for the first two quadrants, phi = [0, pi].  In 3-D, tracks are
+ *  similarly stored only for the first four octants, phi = [0, 2*pi] and
+ *  theta = [0, pi/2].
  *
- *  Currently, this is limited to 2-D tracking.  Tracks
- *  are only assigned for azimuths over [0, pi], using
- *  symmetry for [pi, 2*pi].
- *
- *  Tracks are stored in order in order of decreasing
- *  y and increasing x for 0, pi/2 and decreasing
- *  x for pi/2, pi.  This is how tracks are indexed.
- *  The track index in the other two octancts keeps
- *  the index of their reflection.
+ *  Tracks are not guaranteed to be stored in any particular order within
+ *  an angle.  The client needs to post process to obtain proper indexing,
+ *  e.g. for boundary conditions.
  *
  */
-/*!
- *  \example geometry/test/test_TrackDB.cc
+/**
+ *  @example geometry/test/test_TrackDB.cc
  *
  *  Test of TrackDB class
  */
@@ -50,112 +46,120 @@ class GEOMETRY_EXPORT TrackDB
 
 public:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
+  // ENUMERATIONS
+  //--------------------------------------------------------------------------//
+
+  enum DIRECTIONS
+  {
+    BACKWARD, FORWARD, END_DIRECTIONS
+  };
+
+  //--------------------------------------------------------------------------//
   // TYPEDEFS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<TrackDB>               SP_trackdb;
-  typedef detran_angle::QuadratureMOC::SP_quadrature  SP_quadrature;
-  typedef Track::SP_track                             SP_track;
-  typedef std::vector<SP_track>                       vec_track;
-  typedef std::vector<vec_track>                      vec2_track;
-  typedef detran_utilities::size_t                    size_t;
-  typedef detran_utilities::vec_int                   vec_int;
-  typedef detran_utilities::vec_dbl                   vec_dbl;
+  typedef detran_utilities::SP<TrackDB>                       SP_trackdb;
+  typedef detran_angle::ProductQuadrature::SP_quadrature      SP_quadrature;
+  typedef Track::SP_track                                     SP_track;
+  typedef std::vector<SP_track>                               vec_track;
+  typedef std::vector<vec_track>                              vec2_track;
+  typedef std::vector<vec2_track>                             vec3_track;
+  typedef detran_utilities::size_t                            size_t;
+  typedef const size_t                                        c_size_t;
+  typedef detran_utilities::vec_int                           vec_int;
+  typedef detran_utilities::vec_dbl                           vec_dbl;
 
-  //-------------------------------------------------------------------------//
+  typedef vec_track::iterator                                 iterator_angle;
+  //typedef detran_utilities::Reversible<vec_track>         iterator;
+
+
+  //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /**
    *  @brief Constructor
-   *  @param num_azimuths   Number of azimuths in first two octants
+   *  @param    q   product quadrature
    */
-  TrackDB(int num_azimuths, int num_regions, SP_quadrature quad)
-    : d_quadrature(quad)
-    , d_number_azimuths(num_azimuths)
-    , d_number_regions(num_regions)
-    , d_tracks(num_azimuths)
-    , d_cos_phi(num_azimuths, 0.0)
-    , d_sin_phi(num_azimuths, 0.0)
-    , d_spacing(num_azimuths, 0.0)
-  {
-    Require(d_number_azimuths > 0);
-    Require(d_number_regions > 0);
-  }
+  TrackDB(SP_quadrature q);
 
-  ~TrackDB(){}
-
-    
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
-  SP_track track(size_t a, size_t t)
+  /**
+   *  @brief Get a track
+   *  @param    a       azimuth index
+   *  @param    p       polar index
+   *  @param    t       track index within [a, p]
+   */
+  SP_track track(c_size_t a, c_size_t p, c_size_t t);
+
+  struct iterator_anglea
   {
-    Require(a < d_tracks.size());
-    Require(t < d_tracks[a].size());
-    return d_tracks[a][t];
-  }
 
-  int number_tracks_angle(size_t a) const
-  {
-    Require(a < d_tracks.size());
-    return d_tracks[a].size();
-  }
+  };
 
-  int number_angles() const
-  {
-    return d_tracks.size();
-  }
 
-  double spacing(size_t a) const
-  {
-    Require(a < d_spacing.size());
-    return d_spacing[a];
-  }
+  //@{
+  /// Iterators to all tracks
+//  iterator begin(bool forward = true);
+//  iterator end(bool forward = true);
+  /// Iterators to tracks for a given angle
+  iterator_angle begin(c_size_t a, c_size_t p);
+  iterator_angle end(c_size_t a, c_size_t p);
+  //@}
 
-  void add_track(size_t a, SP_track t)
-  {
-    Require(a < d_tracks.size());
-    d_tracks[a].push_back(t);
-  }
+  /**
+   *  @brief Number of tracks in a given angle
+   *  @param    a       azimuth index
+   *  @param    p       polar index
+   */
+  size_t number_tracks(c_size_t a, c_size_t p = 0) const;
 
-  void setup_angle(size_t a, double c_phi, double s_phi, double space)
-  {
-    Require(a < d_tracks.size());
-    Require(space > 0.0);
-    d_cos_phi[a] = c_phi;
-    d_sin_phi[a] = s_phi;
-    d_spacing[a] = space;
-  }
+  /**
+   *  @brief Add a track
+   *  @param    a       azimuth index
+   *  @param    p       polar index
+   *  @param    t       track index within azimuths
+   */
+  void add_track(c_size_t a, c_size_t p, SP_track t);
 
-  /// Normalize the tracks given a vector of true volumes.
-  void normalize(vec_dbl &volume);
+  /// Normalize the tracks given a vector of true region volumes.
+  void normalize(const vec_dbl &volume);
+
+  /// Get the number of azimuths stored
+  size_t number_azimuths() const;
+
+  /// Get the number of polar angles stored
+  size_t number_polar() const;
+
+  /// Return the dimension
+  size_t dimension() const;
+
+  /// Sort the tracks from left-to-right, bottom-to-top on an incident side
+  void sort();
 
   /// Pretty display of all track
   void display() const;
 
 private:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // DATA
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /// Quadrature
   SP_quadrature d_quadrature;
-  /// Number of azimuths in first two octants
-  int d_number_azimuths;
-  /// Number of flat source regions
-  int d_number_regions;
-  /// Tracks by [azimuth][space]
-  vec2_track d_tracks;
-  /// Azimuthal cosines.
-  vec_dbl d_cos_phi;
-  /// Azimuthal sines.
-  vec_dbl d_sin_phi;
-  /// Constant track spacing for each angle.
-  vec_dbl d_spacing;
+  /// Dimension
+  size_t d_dimension;
+  /// Number of azimuths stored
+  size_t d_number_azimuths;
+  /// Number of polar angles stored
+  size_t d_number_polar;
+  /// Tracks by [azimuth][polar][space]
+  vec3_track d_tracks;
 
 };
 
@@ -163,8 +167,8 @@ GEOMETRY_TEMPLATE_EXPORT(detran_utilities::SP<TrackDB>)
 
 } // end namespace detran_geometry
 
-#endif // TRACKDB_HH_ 
+#endif // detran_geometry_TRACKDB_HH_
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file TrackDB.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   test_DiffusionEigensolver.cc
- * \author Jeremy Roberts
- * \date   Apr 1, 2012
- * \brief  Test of DiffusionEigensolver class.
+/**
+ *  @file  test_DiffusionEigensolver.cc
+ *  @brief Test of DiffusionEigensolver class
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 

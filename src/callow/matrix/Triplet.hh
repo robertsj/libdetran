@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   Triplet.hh
- *  @brief  Triplet class definition
- *  @author Jeremy Roberts
- *  @date   Sep 26, 2012
+ *  @file  Triplet.hh
+ *  @brief Triplet struct definition and supporting methods
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef callow_TRIPLET_HH_
 #define callow_TRIPLET_HH_
@@ -15,6 +14,7 @@
 namespace callow
 {
 
+//----------------------------------------------------------------------------//
 /// Structure for storing COO matrix
 struct triplet
 {
@@ -27,6 +27,7 @@ struct triplet
   {}
 };
 
+//----------------------------------------------------------------------------//
 inline bool compare_triplet(const triplet &x, const triplet &y)
 {
   // leave -1's on the right
@@ -36,6 +37,7 @@ inline bool compare_triplet(const triplet &x, const triplet &y)
   return x.j < y.j;
 }
 
+//----------------------------------------------------------------------------//
 inline std::ostream& operator<< (std::ostream &out, triplet s)
 {
   out << "(i = " << s.i << ", j = " << s.j << ", v = " << s.v << ")";
@@ -48,6 +50,6 @@ CALLOW_TEMPLATE_EXPORT(std::vector<std::vector<triplet> >)
 
 #endif // callow_TRIPLET_HH_
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file Triplet.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

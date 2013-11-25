@@ -1,19 +1,19 @@
-//----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   PowerIteration.cc
- * \brief  PowerIteration 
- * \author Jeremy Roberts
- * \date   Sep 24, 2012
+//----------------------------------*-C++-*-----------------------------------//
+/**
+ *  @file  PowerIteration.cc
+ *  @brief PowerIteration member definitions
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #include "PowerIteration.hh"
 
 namespace callow
 {
 
-PowerIteration::PowerIteration(const double    tol,
-                                  const int       maxit)
+//----------------------------------------------------------------------------//
+PowerIteration::PowerIteration(const double tol,
+                               const int    maxit)
   : Base(tol, maxit, "power")
 {
   /* ... */
@@ -21,6 +21,6 @@ PowerIteration::PowerIteration(const double    tol,
 
 } // end namespace callow
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file PowerIteration.cc
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

@@ -24,7 +24,6 @@ SiloOutput::SiloOutput(SP_mesh mesh)
   : d_mesh(mesh)
   , d_initialized(false)
 {
-  // Preconditions
   Require(d_mesh);
 }
 
@@ -42,7 +41,7 @@ bool SiloOutput::initialize(std::string filename)
 
   // Create the file
   d_silofile = DBCreate((char *)filename.c_str(), DB_CLOBBER,
-                         DB_LOCAL, NULL, DB_PDB );
+                         DB_LOCAL, NULL, DB_PDB);
   Insist(d_silofile, "Error creating Silo file.");
   d_initialized = true;
 
@@ -85,15 +84,15 @@ bool SiloOutput::initialize(std::string filename)
   coords[2] = &z[0];
 
   // Add the mesh
-  DBPutQuadmesh(d_silofile, "mesh", NULL, coords, d_dims,
-                d_dimension, DB_DOUBLE, DB_COLLINEAR, NULL);
+  int ierr = DBPutQuadmesh(d_silofile, "mesh", NULL, coords, d_dims,
+                           d_dimension, DB_DOUBLE, DB_COLLINEAR, NULL);
 
   // Decrement the dimensions for zonal quantities.
   d_dims[0]--;
   d_dims[1]--;
   d_dims[2]--;
 
-  return true;
+  return ierr == 0;
 }
 
 //---------------------------------------------------------------------------//
@@ -127,17 +126,16 @@ bool SiloOutput::write_mesh_map(const std::string &key)
   detran_utilities::vec_int map = d_mesh->mesh_map(key);
 
   // Write to silo
-  DBPutQuadvar1(d_silofile, key.c_str(), "mesh", &map[0],
-                d_dims, d_dimension, NULL, 0, DB_INT,
-                DB_ZONECENT, NULL);
+  int ierr = DBPutQuadvar1(d_silofile, key.c_str(), "mesh", &map[0],
+                           d_dims, d_dimension, NULL, 0, DB_INT,
+                           DB_ZONECENT, NULL);
 
-  return true;
+  return ierr == 0;
 }
 
 //---------------------------------------------------------------------------//
 bool SiloOutput::write_scalar_flux(SP_state state)
 {
-  // Preconditions
   Require(state);
 
   if (!d_initialized)
@@ -168,7 +166,6 @@ bool SiloOutput::write_scalar_flux(SP_state state)
 //---------------------------------------------------------------------------//
 bool SiloOutput::write_angular_flux(SP_state state, SP_quadrature quad)
 {
-  // Preconditions
   Require(state);
   Require(quad);
 
@@ -179,7 +176,8 @@ bool SiloOutput::write_angular_flux(SP_state state, SP_quadrature quad)
   }
   if (!state->store_angular_flux())
   {
-    std::cout << "Angular fluxes not stored; not writing angular fluxes" << std::endl;
+    std::cout << "Angular fluxes not stored; not writing angular fluxes"
+              << std::endl;
     return false;
   }
 
@@ -212,7 +210,6 @@ bool SiloOutput::write_time_flux(const int step,
                                  SP_state  state,
                                  bool      do_psi)
 {
-  // Preconditions
   Require(state);
   SP_quadrature q;
   if (do_psi)
@@ -238,6 +235,70 @@ bool SiloOutput::write_time_flux(const int step,
   finalize();
 
   return flag;
+}
+
+//---------------------------------------------------------------------------//
+bool SiloOutput::write_scalar_field(const std::string &key,
+                                    const vec_dbl     &data)
+{
+  if (!d_initialized)
+  {
+    std::cout << "Silo not initialized; not writing field" << std::endl;
+    return false;
+  }
+
+  // Get a pointer to the group flux
+  double *d = const_cast<double*> (&data[0]);
+
+  // Write to silo
+  DBPutQuadvar1(d_silofile, key.c_str(), "mesh", d,
+                d_dims, d_dimension, NULL, 0, DB_DOUBLE, DB_ZONECENT, NULL);
+
+  return true;
+}
+
+//---------------------------------------------------------------------------//
+bool SiloOutput::write_vector_field(const std::string &key,
+                                    const vec_dbl     &data_i,
+                                    const vec_dbl     &data_j,
+                                    const vec_dbl     &data_k)
+{
+  if (!d_initialized)
+  {
+    std::cout << "Silo not initialized; not writing field" << std::endl;
+    return false;
+  }
+
+  double *comp[d_dimension];
+  comp[0] = const_cast<double*> (&data_i[0]);
+  if (d_dimension > 1) comp[1] = const_cast<double*> (&data_j[0]);
+  if (d_dimension > 2) comp[2] = const_cast<double*> (&data_k[0]);
+
+  std::string i_comp = key+"_i";
+  std::string j_comp = key+"_j";
+  std::string k_comp = key+"_k";
+  char* varnames[] = {const_cast<char*>(i_comp.c_str()),
+                      const_cast<char*>(j_comp.c_str()),
+                      const_cast<char*>(k_comp.c_str())};
+
+  DBPutQuadvar(d_silofile, key.c_str(), "mesh", d_dimension, varnames, comp,
+               d_dims, d_dimension, NULL, 0, DB_DOUBLE, DB_ZONECENT, NULL);
+
+  return true;
+}
+
+//---------------------------------------------------------------------------//
+bool SiloOutput::make_directory(const std::string &dir)
+{
+  int ierr = DBMkDir(d_silofile, dir.c_str());
+  return ierr == 0;
+}
+
+//---------------------------------------------------------------------------//
+bool SiloOutput::set_directory(const std::string &dir)
+{
+  int ierr = DBSetDir(d_silofile, dir.c_str());
+  return ierr == 0;
 }
 
 #else

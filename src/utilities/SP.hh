@@ -188,14 +188,14 @@ public:
   /// Access operator.
   T* operator->() const
   {
-    Require_msg(p, std::string(typeid(T).name()));
+    Requirev(p, std::string(typeid(T).name()));
     return p;
   }
 
   /// Dereference operator.
   T& operator*() const
   {
-    Require_msg(p, std::string(typeid(T).name()));
+    Requirev(p, std::string(typeid(T).name()));
     return *p;
   }
 

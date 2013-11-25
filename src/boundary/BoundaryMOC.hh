@@ -12,8 +12,8 @@
 
 #include "boundary/BoundaryBase.hh"
 #include "boundary/BoundaryConditionMOC.hh"
-#include "geometry/MeshMOC.hh"
-#include "angle/QuadratureMOC.hh"
+#include "geometry/Mesh.hh"
+#include "angle/ProductQuadrature.hh"
 
 namespace detran
 {
@@ -43,9 +43,8 @@ public:
   typedef detran_utilities::SP<BoundaryMOC<D> > SP_boundary;
   typedef typename Base::SP_input               SP_input;
   typedef detran_geometry::Mesh                 Mesh;
-  typedef detran_geometry::MeshMOC              MeshMOC;
-  typedef detran_utilities::SP<MeshMOC>         SP_mesh;
-  typedef detran_angle::QuadratureMOC           QuadratureMOC;
+  typedef Mesh::SP_mesh                         SP_mesh;
+  typedef detran_angle::ProductQuadrature       QuadratureMOC;
   typedef detran_utilities::SP<QuadratureMOC>   SP_quadrature;
   typedef BoundaryConditionMOC<D>               BC_T;
   typedef typename BC_T::SP_bc                  SP_bc;

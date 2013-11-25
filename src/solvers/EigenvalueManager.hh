@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   EigenvalueManager.hh
- *  @author robertsj
- *  @date   Oct 24, 2012
- *  @brief  EigenvalueManager class definition.
+ *  @file  EigenvalueManager.hh
+ *  @brief EigenvalueManager class definition
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_EIGENVALUEMANAGER_HH_
 #define detran_EIGENVALUEMANAGER_HH_
@@ -26,9 +25,9 @@ class EigenvalueManager: public TransportManager
 
 public:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // TYPEDEFS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   typedef typename Eigensolver<D>::Fixed_T              Fixed_T;
   typedef typename Eigensolver<D>::SP_solver            SP_solver;
@@ -68,29 +67,27 @@ public:
   /// Virtual destructor
   virtual ~EigenvalueManager(){}
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /// Solve the system
   bool solve();
 
-  /// @name Getters
-  /// @{
-  SP_input input() const { return d_mg_solver->input(); }
-  SP_material material() const { return d_mg_solver->material(); }
-  SP_mesh mesh() const { return d_mg_solver->mesh(); }
-  SP_state state() const { return d_mg_solver->state(); }
-  SP_boundary boundary() const { return d_mg_solver->boundary(); }
-  SP_quadrature quadrature() const { return d_mg_solver->quadrature(); }
-  SP_fissionsource fissionsource() const { return d_mg_solver->fissionsource(); }
-  /// @}
+  /// Getters
+  SP_input input() const {return d_mg_solver->input();}
+  SP_material material() const {return d_mg_solver->material();}
+  SP_mesh mesh() const {return d_mg_solver->mesh();}
+  SP_state state() const {return d_mg_solver->state();}
+  SP_boundary boundary() const {return d_mg_solver->boundary();}
+  SP_quadrature quadrature() const {return d_mg_solver->quadrature();}
+  SP_fissionsource fissionsource() const {return d_mg_solver->fissionsource();}
 
 private:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // DATA
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /// Eigensolver
   SP_solver d_solver;
@@ -107,5 +104,8 @@ private:
 
 } // end namespace detran
 
-
 #endif /* detran_EIGENVALUEMANAGER_HH_ */
+
+//----------------------------------------------------------------------------//
+//              end of EigenvalueManager.hh
+//----------------------------------------------------------------------------//

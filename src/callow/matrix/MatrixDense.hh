@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   MatrixDense.hh
- *  @brief  MatrixDense
- *  @author Jeremy Roberts
- *  @date   Jan 7, 2013
+ *  @file  MatrixDense.hh
+ *  @brief MatrixDense class definition
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef callow_MATRIXDENSE_HH_
 #define callow_MATRIXDENSE_HH_
@@ -18,17 +17,14 @@
 namespace callow
 {
 
+#define MATRIXDENSE_COLMAJ
 
 /**
  *  @class MatrixDense
  *  @brief Dense matrix
  *
- *  This is a simple matrix stored in row-major format.  It should
- *  be easy enough to use BLAS routines.
- *
- *  Note, PETSc is accessible, but note that PETSc uses a column-major
- *  order (like Fortran).  Hence, we switch the sizes and use transpose
- *  by default.
+ *  This class uses a column-major storage format lie Fortran.  This makes
+ *  it easier to couple with PETSc, BLAS, etc.
  */
 
 class CALLOW_EXPORT MatrixDense: public MatrixBase
@@ -36,24 +32,24 @@ class CALLOW_EXPORT MatrixDense: public MatrixBase
 
 public:
 
-  //---------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // ENUMERATIONS
-  //---------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   enum insert_type
   {
     INSERT, ADD, END_INSERT_TYPE
   };
 
-  //---------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // TYPEDEFS
-  //---------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   typedef detran_utilities::SP<MatrixDense>  SP_matrix;
 
-  //---------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
-  //---------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   // construction with sizing but deferred allocation
   MatrixDense(const int m, const int n, const double v = 0.0);
@@ -64,9 +60,9 @@ public:
   // sp constructor
   static SP_matrix Create(const int m, const int n, const double v = 0.0);
 
-  //---------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
-  //---------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /// add one value (return false if can't add)
   bool insert(int  i, int  j, double  v, const int type = INSERT);
@@ -89,9 +85,9 @@ public:
   /// print (i, j, v) to ascii file with 1-based indexing for matlab
   void print_matlab(std::string filename = "matrix.out") const;
 
-  //---------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL MATRICES MUST IMPLEMENT
-  //---------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   // doesn't do anything for dense matrix
   void assemble(){ /* ... */ }
@@ -100,13 +96,13 @@ public:
   // action y <-- A' * x
   void multiply_transpose(const Vector &x, Vector &y);
   // pretty print to screen
-  void display() const;
+  void display(bool forceprint = false) const;
 
 protected:
 
-  //---------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // DATA
-  //---------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /// expose base members
   using MatrixBase::d_m;
@@ -120,6 +116,8 @@ protected:
   /// matrix elements
   double* d_values;
 
+private:
+
 };
 
 CALLOW_TEMPLATE_EXPORT(detran_utilities::SP<MatrixDense>)
@@ -131,6 +129,6 @@ CALLOW_TEMPLATE_EXPORT(detran_utilities::SP<MatrixDense>)
 
 #endif // callow_MATRIXDENSE_HH_
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file MatrixDense.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

@@ -1,9 +1,11 @@
-/*
- * ExternalSource.cc
- *
- *  Created on: Apr 24, 2013
- *      Author: robertsj
+//----------------------------------*-C++-*-----------------------------------//
+/**
+ *  @file  ExternalSource.hh
+ *  @brief ExternalSource member definitions
+ *  @note  Copyright (C) Jeremy Roberts 2012-2013
  */
+//----------------------------------------------------------------------------//
+
 
 #include "ExternalSource.hh"
 
@@ -21,7 +23,6 @@ ExternalSource::ExternalSource(size_t        number_groups,
   , d_number_angles(-1)
   , d_discrete(discrete)
 {
-  // Preconditions
   Require(number_groups > 0);
   Require(mesh);
 
@@ -31,3 +32,7 @@ ExternalSource::ExternalSource(size_t        number_groups,
 }
 
 } // end namespace detran_external_source
+
+//----------------------------------------------------------------------------//
+//              end of ExternalSource.hh
+//----------------------------------------------------------------------------//

@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   MatrixShell.i.hh
- * \author robertsj
- * \date   Sep 20, 2012
- * \brief  MatrixShell.i class definition.
+/**
+ *  @file  MatrixShell.i.hh
+ *  @brief MatrixShell inline member definitions
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 

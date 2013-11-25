@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   test_LinearSolver.cc
- *  @author Jeremy Roberts
- *  @date   Aug 19, 2012
- *  @brief  Test of LinearSolver class and its subclasses
+ *  @file  test_LinearSolver.cc
+ *  @brief Test of LinearSolver class and its subclasses
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
 #define TEST_LIST              \
@@ -94,7 +93,7 @@ int test_Richardson(int argc, char *argv[])
   //Preconditioner::SP_preconditioner pcilu0(new PCILU0(test_matrix_1(n)));
   //solver->set_preconditioner(pcilu0, LinearSolver::LEFT);
   int status = solver->solve(B, X);
-  TEST(status == 0);
+  TEST(status == SUCCESS);
   for (int i = 0; i < 20; ++i)
   {
     TEST(soft_equiv(X[i],  X_ref[i], 1e-9));
@@ -111,7 +110,7 @@ int test_Jacobi(int argc, char *argv[])
   solver = LinearSolverCreator::Create(db);
   solver->set_operators(test_matrix_1(n));
   int status = solver->solve(B, X);
-  TEST(status == 0);
+  TEST(status == SUCCESS);
   for (int i = 0; i < 20; ++i)
   {
     TEST(soft_equiv(X[i],  X_ref[i], 1e-9));
@@ -128,7 +127,7 @@ int test_GaussSeidel(int argc, char *argv[])
   solver = LinearSolverCreator::Create(db);
   solver->set_operators(test_matrix_1(n));
   int status = solver->solve(B, X);
-  TEST(status == 0);
+  TEST(status == SUCCESS);
   for (int i = 0; i < 20; ++i)
   {
     TEST(soft_equiv(X[i],  X_ref[i], 1e-9));
@@ -146,7 +145,7 @@ int test_SOR(int argc, char *argv[])
   solver = LinearSolverCreator::Create(db);
   solver->set_operators(test_matrix_1(n));
   int status = solver->solve(B, X);
-  TEST(status == 0);
+  TEST(status == SUCCESS);
   for (int i = 0; i < 20; ++i)
   {
     TEST(soft_equiv(X[i],  X_ref[i], 1e-9));
@@ -170,7 +169,7 @@ int test_GMRES(int argc, char *argv[])
   solver = LinearSolverCreator::Create(db);
   solver->set_operators(test_matrix_1(n));
   int status = solver->solve(B, X);
-  TEST(status == 0);
+  TEST(status == SUCCESS);
   for (int i = 0; i < 20; ++i)
   {
     TEST(soft_equiv(X[i],  X_ref[i], 1e-9));
@@ -186,7 +185,7 @@ int test_GMRES(int argc, char *argv[])
   X.set(0.0);
   solver->set_preconditioner(pcilu0, GMRES::LEFT);
   status = solver->solve(B, X);
-  TEST(status == 0);
+  TEST(status == SUCCESS);
   for (int i = 0; i < 20; ++i)
   {
     TEST(soft_equiv(X[i],  X_ref[i], 1e-9));
@@ -197,7 +196,7 @@ int test_GMRES(int argc, char *argv[])
   X.set(0.0);
   solver->set_preconditioner(pcilu0, GMRES::RIGHT);
   status = solver->solve(B, X);
-  TEST(status == 0);
+  TEST(status == SUCCESS);
   for (int i = 0; i < 20; ++i)
   {
     TEST(soft_equiv(X[i],  X_ref[i], 1e-9));
@@ -208,7 +207,7 @@ int test_GMRES(int argc, char *argv[])
   X.set(0.0);
   solver->set_preconditioner(pcjacobi, GMRES::LEFT);
   status = solver->solve(B, X);
-  TEST(status == 0);
+  TEST(status == SUCCESS);
   for (int i = 0; i < 20; ++i)
   {
     TEST(soft_equiv(X[i],  X_ref[i], 1e-9));
@@ -219,7 +218,7 @@ int test_GMRES(int argc, char *argv[])
   X.set(0.0);
   solver->set_preconditioner(pcjacobi, GMRES::RIGHT);
   status = solver->solve(B, X);
-  TEST(status == 0);
+  TEST(status == SUCCESS);
   for (int i = 0; i < 20; ++i)
   {
     TEST(soft_equiv(X[i],  X_ref[i], 1e-9));
@@ -241,7 +240,7 @@ int test_PetscSolver(int argc, char *argv[])
   solver = LinearSolverCreator::Create(db);
   solver->set_operators(test_matrix_1(n), db);
   int status = solver->solve(B, X);
-  TEST(status == 0);
+  TEST(status == SUCCESS);
   for (int i = 0; i < 20; ++i)
   {
     TEST(soft_equiv(X[i],  X_ref[i], 1e-9));

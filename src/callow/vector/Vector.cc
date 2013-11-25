@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   Vector.cc
- *  @author robertsj
- *  @date   Sep 13, 2012
- *  @brief  Vector member definitions
+ *  @file  Vector.cc
+ *  @brief Vector member definitions
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 
@@ -199,9 +198,9 @@ void Vector::resize(const int n, const double v)
 // IO
 //---------------------------------------------------------------------------//
 
-void Vector::display() const
+void Vector::display(const std::string &name) const
 {
-  printf(" Vector \n");
+  printf(" Vector: %s \n", name.c_str());
   printf(" ---------------------------\n");
   printf("      number rows = %5i \n\n", d_size);
   if (d_size > 100)

@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   DiffusionLossOperator.hh
- *  @brief  DiffusionLossOperator
- *  @author Jeremy Roberts
- *  @date   Sep 10, 2012
+ *  @file  DiffusionLossOperator.hh
+ *  @brief DiffusionLossOperator
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_DIFFUSIONLOSSOPERATOR_HH_
 #define detran_DIFFUSIONLOSSOPERATOR_HH_
@@ -43,9 +42,9 @@ class DiffusionLossOperator: public callow::Matrix
 
 public:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // TYPEDEFS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   typedef callow::Matrix                                Base;
   typedef callow::MatrixBase::SP_matrix                 SP_matrix;
@@ -57,10 +56,12 @@ public:
   typedef detran_utilities::vec_int                     vec_int;
   typedef detran_utilities::vec_dbl                     vec_dbl;
   typedef detran_utilities::vec2_dbl                    vec2_dbl;
+  typedef detran_utilities::vec_size_t                  groups_t;
+  typedef groups_t::iterator                            groups_iter;
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /**
    *  @brief Constructor
@@ -78,11 +79,12 @@ public:
                         const bool    include_fission,
                         const size_t  cutoff = 0,
                         const bool    adjoint = false,
-                        const double  keff = 1.0);
+                        const double  keff = 1.0,
+                        const size_t  sf_flag = 0);
 
-  //---------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
-  //---------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /**
    *  @brief Rebuild the matrix for a new fission scaling constant
@@ -93,16 +95,17 @@ public:
    *  the pseudo-coefficients changes with time.
    *
    *  @param keff   Scaling parameter for fission source
+   *  @param flag   Optionally omit any scatter and fission terms
    */
-  void construct(double keff = 1.0);
+  void construct(double keff = 1.0, const size_t flag = 0);
 
   double albedo(const size_t side, const size_t g) const;
 
 private:
 
-  //---------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // DATA
-  //---------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /// Input
   SP_input d_input;
@@ -118,6 +121,8 @@ private:
   size_t d_number_groups;
   /// Cutoff
   size_t d_group_cutoff;
+  /// Group indices
+  groups_t d_groups;
   /// Active groups
   size_t d_number_active_groups;
   /// One group spatial size
@@ -128,10 +133,10 @@ private:
   double d_keff;
   /// Adjoint flag
   bool d_adjoint;
-
-  //---------------------------------------------------------------------------//
+  size_t d_sf_flag;
+  //--------------------------------------------------------------------------//
   // IMPLEMENTATION
-  //---------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   // All matrix operators need this.  Here, we have the client call construct.
   void build();
@@ -142,6 +147,6 @@ private:
 
 #endif // detran_DIFFUSIONLOSSOPERATOR_HH_
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file DiffusionLossOperator.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

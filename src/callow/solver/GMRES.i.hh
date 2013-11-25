@@ -193,7 +193,6 @@ inline void GMRES::solve_impl(const Vector &b, Vector &x0)
       double g_1 = d_s[k]*g[k] + d_c[k]*g[k+1];
       g[k  ] = g_0;
       g[k+1] = g_1;
-      if (happy) cout << " g_0 = " << g_0 << " g_1 = " << g_1 << endl;
 
       //---------------------------------------------------------------------//
       // monitor the residual and break if done

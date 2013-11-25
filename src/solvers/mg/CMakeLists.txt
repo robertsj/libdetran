@@ -10,8 +10,9 @@ SET(MG_SRC
   ${SRC_DIR}/DiffusionGainOperator.cc
   ${SRC_DIR}/DiffusionLossOperator.cc
   ${SRC_DIR}/MGPreconditioner.cc
+  ${SRC_DIR}/MGCoarseMeshPreconditioner.cc
   ${SRC_DIR}/MGDSA.cc
-  ${SRC_DIR}/CMMGDSA.cc
+  ${SRC_DIR}/MGCMDSA.cc
   PARENT_SCOPE
 )
 

@@ -1,10 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
  *  @file   Core.hh
  *  @brief  Core class definition
  *  @note   Copyright (C) 2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_geometry_CORE_HH_
 #define detran_geometry_CORE_HH_
@@ -24,9 +24,9 @@ class GEOMETRY_EXPORT Core
 
 public:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // TYPEDEFS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   typedef detran_utilities::SP<Core>    SP_core;
   typedef Mesh::SP_mesh                 SP_mesh;
@@ -35,9 +35,9 @@ public:
   typedef Mesh::vec_int                 vec_int;
   typedef Mesh::vec_dbl                 vec_dbl;
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // PUBLIC INTERFACE
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /**
    *  @brief Constructor.
@@ -73,31 +73,42 @@ public:
   /// Add an assembly.
   void add_assembly(SP_assembly assembly);
 
+  vec_assembly assemblies() const
+  {
+    return d_assemblies;
+  }
+
+  /// Get dimension
+  int dimension(const size_t dim = 0) const
+  {
+    if (dim == 0) return d_number_x;
+    return d_number_y;
+  }
+
   /// Mesh the assembly.
   void finalize(vec_int assembly_map);
 
   /// Pincell index.
   int pincell_index(int i, int j)
   {
-    return i + j * d_number_pincells_dim;
+    return i + j * d_number_x;
   }
 
 private:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // DATA
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /// Meshed object
   Mesh2D::SP_mesh d_mesh;
   /// Dimension, e.g. 17 in 17x17. Number assemblies along one dimension.
-  int d_dimension;
+  int d_number_x;
+  int d_number_y;
   /// Vector of SP pointers to pin cells in the assembly
   vec_assembly d_assemblies;
   /// Logically 2-D map of pin cell locations
   vec_int d_assembly_map;
-  /// Number of pins along one dimension of core
-  int d_number_pincells_dim;
   /// Number of assemblies in the core
   int d_number_assemblies;
   /// Number of pincells in the core

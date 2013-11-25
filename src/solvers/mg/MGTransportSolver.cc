@@ -1,9 +1,8 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   MGTransportSolver.cc
- *  @author robertsj
- *  @date   Oct 24, 2012
- *  @brief  MGTransportSolver class definition.
+ *  @file  MGTransportSolver.cc
+ *  @brief MGTransportSolver member definitions
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 

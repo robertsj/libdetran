@@ -1,27 +1,23 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   test_Sweeper2D.cc
- *  @author Jeremy Roberts
- *  @date   Apr 1, 2012
- *  @brief  Test of test_Sweeper2D
+ *  @file  test_Sweeper2D.cc
+ *  @brief test_Sweeper2D
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
 #define TEST_LIST                     \
         FUNC(test_Sweeper2D_basic)
 
-// Detran headers
 #include "utilities/TestDriver.hh"
 #include "Sweeper2D.hh"
 #include "Equation_DD_2D.hh"
 #include "Equation_SD_2D.hh"
 #include "Equation_SC_2D.hh"
-
-// Setup
 #include "geometry/test/mesh_fixture.hh"
 #include "material/test/material_fixture.hh"
-#include "angle/test/quadrature_fixture.hh"
+#include "angle/QuadratureFactory.hh"
 
 using namespace detran;
 using namespace detran_angle;
@@ -34,9 +30,9 @@ int main(int argc, char *argv[])
   RUN(argc, argv);
 }
 
-//----------------------------------------------//
+//----------------------------------------------------------------------------//
 // TEST DEFINITIONS
-//----------------------------------------------//
+//----------------------------------------------------------------------------//
 
 int test_Sweeper2D_basic(int argc, char *argv[])
 {
@@ -45,13 +41,14 @@ int test_Sweeper2D_basic(int argc, char *argv[])
   // Test fixtures
   SP_mesh mesh          = mesh_2d_fixture();
   SP_material mat       = material_fixture_1g();
-  SP_quadrature quad    = quadruplerange_fixture();
 
   // Input
   Sweeper_T::SP_input input;
   input = new InputDB();
   input->put<std::string>("equation", "dd");
   input->put<int>("number_groups", 2);
+
+  QuadratureFactory::SP_quadrature quad = QuadratureFactory::build(input, 2);
 
   // State
   Sweeper_T::SP_state state;
@@ -78,3 +75,7 @@ int test_Sweeper2D_basic(int argc, char *argv[])
 
   return 0;
 }
+
+//----------------------------------------------------------------------------//
+//              end of test_Sweeper2D.cc
+//----------------------------------------------------------------------------//

@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   ContinuousOrthogonalBasis.hh
- *  @brief  ContinuousOrthogonalBasis
- *  @author Jeremy Roberts
- *  @date   Jan 8, 2013
+ *  @file  ContinuousOrthogonalBasis.hh
+ *  @brief ContinuousOrthogonalBasis class definition
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_orthog_CONTINUOUSORTHOGONALBASIS_HH_
 #define detran_orthog_CONTINUOUSORTHOGONALBASIS_HH_
@@ -19,7 +18,8 @@ namespace detran_orthog
  *  @class ContinuousOrthogonalBasis
  *  @brief Represents a continuous basis on an arbitrary domain.
  *
- *  (See OrthogonalBasis for some additional background)
+ *  See @ref OrthogonalBasis for some additional background.
+ *
  *  For continuous functions defined on @f$ x \in [a, b] @f$,
  *  an expansion in an orthogonal basis defined on the same
  *  domain is defined
@@ -46,42 +46,36 @@ namespace detran_orthog
  *        \sum_{i=0}^{N} P_l(x_i) w_l(x_i) f(x_i) \Delta_i \, .
  *  @f]
  *  In general, any quadrature may be used.
- *
- *
  */
 class ORTHOG_EXPORT ContinuousOrthogonalBasis: public OrthogonalBasis
 {
 
 public:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
-  /**
-   *   @brief Constructor.
-   *   @param   order     Order of the basis
-   *   @param   x         Grid on which basis is defined
-   *   @param   qw        Quadrature weights
-   *   @param   size
-   */
-  ContinuousOrthogonalBasis(const size_t order,
-                            const vec_dbl &x,
-                            const vec_dbl &qw);
+  /// @brief Constructor
+  ContinuousOrthogonalBasis(const Parameters &p);
 
   /// Pure virtual destructor
   virtual ~ContinuousOrthogonalBasis() = 0;
 
 protected:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // DATA
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /// Grid on which basis is defined
   vec_dbl d_x;
   /// Quadrature weights
   vec_dbl d_qw;
+  /// Lower bound
+  double d_lower_bound;
+  /// Upper bound
+  double d_upper_bound;
 
 };
 
@@ -89,6 +83,6 @@ protected:
 
 #endif // detran_orthog_CONTINUOUSORTHOGONALBASIS_HH_
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file ContinuousOrthogonalBasis.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

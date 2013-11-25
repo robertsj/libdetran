@@ -24,6 +24,9 @@ TARGET_LINK_LIBRARIES(test_Jacobi01    orthog)
 ADD_EXECUTABLE(test_ChebyshevU          test_ChebyshevU.cc)
 TARGET_LINK_LIBRARIES(test_ChebyshevU   orthog)
 
+ADD_EXECUTABLE(test_TransformedBasis           test_TransformedBasis.cc)
+TARGET_LINK_LIBRARIES(test_TransformedBasis    orthog)
+
 ADD_EXECUTABLE(test_BasisComparison           test_BasisComparison.cc)
 TARGET_LINK_LIBRARIES(test_BasisComparison    orthog)
 

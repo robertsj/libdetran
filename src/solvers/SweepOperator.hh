@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   SweepOperator.hh
- *  @brief  SweepOperator
- *  @author Jeremy Roberts
- *  @date   Nov 1, 2012
+ *  @file  SweepOperator.hh
+ *  @brief SweepOperator
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 

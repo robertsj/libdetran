@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   PC_DSA.i.hh
- *  @brief  PC_DSA inline member definitions
- *  @author Jeremy Roberts
- *  @date   Aug 5, 2012
+ *  @file  PC_DSA.i.hh
+ *  @brief PC_DSA inline member definitions
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 

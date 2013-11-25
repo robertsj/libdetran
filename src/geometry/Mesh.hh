@@ -1,18 +1,19 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
  *  @file  Mesh.hh
  *  @brief Mesh class definition.
- *  @note  Copyright (C) 2013 Jeremy Roberts
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_geometry_MESH_HH_
 #define detran_geometry_MESH_HH_
 
 #include "geometry/geometry_export.hh"
+#include "geometry/TrackDB.hh"
+#include "geometry/Point.hh"
 #include "utilities/Definitions.hh"
 #include "utilities/DBC.hh"
-#include "utilities/Point.hh"
 #include "utilities/SP.hh"
 #include "utilities/Warning.hh"
 #include <cmath>
@@ -51,13 +52,7 @@ public:
 
   enum SIDES
   {
-    WEST,
-    EAST,
-    SOUTH,
-    NORTH,
-    BOTTOM,
-    TOP,
-    END_SIDES
+    WEST, EAST, SOUTH, NORTH, BOTTOM, TOP, END_SIDES
   };
 
   enum FACE2D
@@ -79,6 +74,7 @@ public:
   typedef detran_utilities::vec_dbl         vec_dbl;
   typedef std::map<std::string, vec_int>    mesh_map_type;
   typedef detran_utilities::size_t          size_t;
+  typedef TrackDB::SP_trackdb               SP_trackdb;
 
   // Note, these constructors are protected to hide them from the
   // user.  These are to be called by inherited classes.  I keep
@@ -129,7 +125,8 @@ public:
    * @brief  Add map of coarse mesh integer properties.
    *
    * This is an easy way to set mesh properties for meshes based on
-   * simple coarse mesh regions.
+   * the coarse mesh regions used to create the mesh.  If the key exists,
+   * this function overwrites the map.
    *
    * @param  map_key   String description of map.
    * @param  mesh_map  Logically multi-dimensional map as 1-d vector.
@@ -139,11 +136,7 @@ public:
   /**
    * @brief  Add map of fine mesh integer properties.
    *
-   * This adds properties for fine meshes directly, and so is meanty for
-   * use with higher level mesh construction, e.g. pin cells, where
-   * assignment is not possible by simple coarse mesh bounds.
-   *
-   * @note If the key exists, this function overwrites the map.
+   * If the key exists, this function overwrites the map.
    *
    * @param  map_key   String description of map.
    * @param  mesh_map  Logically multi-dimensional map as 1-d vector.
@@ -156,7 +149,6 @@ public:
 
   /// Return total number of cells.
   size_t number_cells() const;
-
   /// Return number of cells in specified dimension.
   size_t number_cells(size_t dim) const;
   /// Return number of cells along x axis
@@ -226,7 +218,7 @@ public:
   size_t cell_to_k(size_t cell) const;
 
   /// Find the cell containing a point
-  int find_cell(detran_utilities::Point p);
+  int find_cell(Point p);
 
   /// Check if fine mesh map exists.
   bool mesh_map_exists(std::string map_key);
@@ -247,6 +239,12 @@ public:
 
   /// Display some key features
   void display() const;
+
+  void set_tracks(SP_trackdb tracks)
+  {
+    Require(tracks);
+    d_tracks = tracks;
+  }
 
 protected:
 
@@ -284,6 +282,8 @@ protected:
   size_t d_number_cells_y;
   /// Number of cells in y direction
   size_t d_number_cells_z;
+  /// Track database
+  SP_trackdb d_tracks;
 
   /**
    *  Map container containing a key describing a mesh property and a fine

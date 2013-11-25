@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   Manager.hh
- *  @brief  Manager for external libraries.
- *  @author Jeremy Roberts
- *  @date   Jul 26, 2012
+ *  @file  Manager.hh
+ *  @brief Manager for external libraries.
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 
@@ -13,6 +12,7 @@
 #include "detran_config.hh"
 #include "utilities/Profiler.hh"
 #include "callow/utils/Initialization.hh"
+#include <iostream>
 
 namespace detran
 {

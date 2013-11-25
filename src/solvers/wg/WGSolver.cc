@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   WGSolver.cc
- *  @author robertsj
- *  @date   Apr 4, 2012
- *  @brief  WGSolver class member definitions
+ *  @file  WGSolver.cc
+ *  @brief WGSolver member definitions
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 

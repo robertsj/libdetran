@@ -1,18 +1,15 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   test_ProductQuadratures.cc
- *  @author Jeremy Roberts
- *  @date   Apr 1, 2012
- *  @brief  Test of GaussLegendre class
- *  @note   Copyright (C) 2012 Jeremy Roberts.
+ *  @file  test_ProductQuadratures.cc
+ *  @brief Test of GaussLegendre class
+ *  @note  Copyright (C) Jeremy Roberts 2012-2013
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
 #define TEST_LIST                    \
         FUNC(test_ProductQuadratures)
 
-// Detran headers
 #include "TestDriver.hh"
 #include "QuadratureFactory.hh"
 #include "ProductQuadrature.hh"
@@ -27,32 +24,38 @@ int main(int argc, char *argv[])
   RUN(argc, argv);
 }
 
-//----------------------------------------------//
+//----------------------------------------------------------------------------//
 // TEST DEFINITIONS
-//----------------------------------------------//
+//----------------------------------------------------------------------------//
 
+// Make sure the a few quadratures give expected numbers
 int test_ProductQuadratures(int argc, char *argv[])
 {
-  typedef SP<ProductQuadrature> SP_pq;
+  int N = 3;
+  const char* types[] = {"u-gl", "u-dgl", "asqr-asdr"};
+  double mu[3][12] = {{0.952453550758000, 0.735786494829000, 0.354307382859200,
+                       0.807451131668000, 0.623769670912500, 0.300367295623300,
+                       0.539521597344300, 0.416789569085700, 0.200699010465100,
+                       0.189454790600400, 0.146357033572400, 0.070476120304600},
+                      {0.974536571519800, 0.849384968487000, 0.452334157760700,
+                       0.826172212702000, 0.720073806728800, 0.383470382661000,
+                       0.552030623770000, 0.481137935381400, 0.256226717968800,
+                       0.193847376539100, 0.168953174898500, 0.089974858166900},
+                      {0.948499936863400, 0.635950440054300, 0.229700032293800,
+                       0.827163947957100, 0.554597060322400, 0.200315865266500,
+                       0.476302301137400, 0.319351268497600, 0.115347033458600,
+                       0.106826722495100, 0.071625203692600, 0.025870430406300}};
 
-  SP_pq q;
-
-  QuadratureFactory qf;
   InputDB::SP_input db = InputDB::Create();
-  db->put<int>("quad_number_polar_octant", 3);
   db->put<int>("quad_number_azimuth_octant", 4);
-
-  // LegendreDTN
+  db->put<int>("quad_number_polar_octant",   3);
+  for (int i = 0; i < N; ++i)
   {
-    db->put<string>("quad_type", "chebyshevlegendre");
-    q = qf.build(db, 2);
-    TEST(q);
-    q->display();
-    for (int a = 0; a < 3; ++a)
+    db->put<std::string>("quad_type", types[i]);
+    QuadratureFactory::SP_quadrature q = QuadratureFactory::build(db, 3);
+    for (int j = 0; j < q->number_angles_octant(); ++j)
     {
-      cout << " a=" << a << " phi=" << q->phi(a) << "  "
-                         << "cphi=" << q->cos_phi(a)  << "  "
-                         << "sphi=" << q->sin_phi(a) << endl;
+      TEST(soft_equiv(mu[i][j], q->mu(0, j), 1e-11));
     }
   }
 

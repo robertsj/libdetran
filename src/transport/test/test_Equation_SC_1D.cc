@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   test_Equation_SC_1D.cc
- *  @author Jeremy Roberts
- *  @date   Apr 1, 2012
- *  @brief  Test of Equation_SC_1D
+ *  @file  test_Equation_SC_1D.cc
+ *  @brief Test of Equation_SC_1D
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
 #define TEST_LIST                     \
@@ -14,13 +13,11 @@
 #include "TestDriver.hh"
 #include "Equation_SC_1D.hh"
 #include "utilities/Definitions.hh"
-
-// Setup
 #include "geometry/test/mesh_fixture.hh"
 #include "material/test/material_fixture.hh"
-#include "angle/test/quadrature_fixture.hh"
-#include "angle/GaussLegendre.hh"
+#include "angle/PolarQuadrature.hh"
 #include <cstdio>
+
 using namespace detran;
 using namespace detran_utilities;
 using namespace detran_material;
@@ -50,15 +47,15 @@ int test_Equation_SC_1D(int argc, char *argv[])
   vec_int mt(1, 0);
   SP_mesh mesh(new Mesh1D(fm, cm, mt));
   // Quad
-  SP_quadrature q(new GaussLegendre(2));
+  PolarGL::SP_quadrature q(new PolarGL(2));
   q->display();
   // Create
   Equation_SC_1D eq(mesh, mat, q, true);
 
   // Setup group, octant, and angle.
   eq.setup_group(0);
-  eq.setup_octant(1);
-  eq.setup_angle(0);
+  eq.setup_octant(0);
+  eq.setup_angle(1);
 
   // Create a phi and psi vector
   Equation_SC_1D::moments_type      phi(mesh->number_cells(), 0.0);

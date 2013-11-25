@@ -1,27 +1,27 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   CoarseMesh.cc
- *  @brief  CoarseMesh
- *  @author Jeremy Roberts
- *  @date   Aug 8, 2012
+ *  @file  CoarseMesh.cc
+ *  @brief CoarseMesh member definitions
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #include "transport/CoarseMesh.hh"
 #include "geometry/Mesh1D.hh"
 #include "geometry/Mesh2D.hh"
 #include "geometry/Mesh3D.hh"
+#include "utilities/SoftEquivalence.hh"
 
 namespace detran
 {
 
+//----------------------------------------------------------------------------//
 CoarseMesh::CoarseMesh(SP_mesh fine_mesh, const size_t level)
   : d_fine_mesh(fine_mesh)
   , d_level(level)
   , d_fine_to_coarse(3)
   , d_coarse_edge_flag(3)
 {
-  // Preconditions
   Require(d_fine_mesh);
 
   using std::cout;
@@ -49,16 +49,25 @@ CoarseMesh::CoarseMesh(SP_mesh fine_mesh, const size_t level)
   {
 
     // Try dividing the mesh by the level, recording any remainder.
-    number_fine[d]   = d_fine_mesh->number_cells(d);
-    remainder[d]     = number_fine[d] % d_level;
+    number_fine[d]   = d_fine_mesh->number_cells(d); // 5, level=3
+    remainder[d]     = number_fine[d] % d_level;     // 5 % 3 = 2
     number_coarse[d] = (number_fine[d] - remainder[d]) / d_level;
 
-    // Set fine meshes per coarse to be level.
+    // Set fine meshes per coarse to be level.  If the meshing yields a single
+    // coarse mesh, then the remainder is added to that.
     number_fine_coarse[d].resize(number_coarse[d], d_level);
-
-    // Distribute any remaining fine meshes.
-    for (int i = 0; i < remainder[d]; i++)
-      number_fine_coarse[d][i] += 1;
+    if (number_coarse[d] == 1)
+    {
+      number_fine_coarse[d][0] += remainder[d];
+    }
+    else
+    {
+      // Distribute any remaining fine meshes.
+      for (int i = 0; i < remainder[d]; i++)
+      {
+        number_fine_coarse[d][i] += 1;
+      }
+    }
 
     // Resize the edge and fine to coarse vectors.
     coarse_edges[d].resize(number_coarse[d] + 1, 0.0);
@@ -138,12 +147,20 @@ CoarseMesh::CoarseMesh(SP_mesh fine_mesh, const size_t level)
   // \todo it might be good to check if the key is there and
   // use a numbered version
   d_fine_mesh->add_mesh_map("COARSEMESH", f2c_mesh_map);
+
+  using detran_utilities::soft_equiv;
+  Ensure(soft_equiv(d_fine_mesh->total_width_x(),
+                    d_coarse_mesh->total_width_x()));
+  Ensure(soft_equiv(d_fine_mesh->total_width_y(),
+                    d_coarse_mesh->total_width_y()));
+  Ensure(soft_equiv(d_fine_mesh->total_width_z(),
+                    d_coarse_mesh->total_width_z()));
 }
 
 TRANSPORT_TEMPLATE_EXPORT(detran_utilities::SP<CoarseMesh>)
 
 } // end namespace detran
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file CoarseMesh.cc
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

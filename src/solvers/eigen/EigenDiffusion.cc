@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   EigenDiffusion.cc
- *  @brief  EigenDiffusion
- *  @author Jeremy Roberts
- *  @date   Oct 26, 2012
+ *  @file  EigenDiffusion.cc
+ *  @brief EigenDiffusion member definitions
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #include "EigenDiffusion.hh"
 #include "MGDiffusionSolver.hh"
@@ -13,7 +12,7 @@
 namespace detran
 {
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 template <class D>
 EigenDiffusion<D>::EigenDiffusion(SP_mg_solver mg_solver)
   : Base(mg_solver)
@@ -37,9 +36,8 @@ EigenDiffusion<D>::EigenDiffusion(SP_mg_solver mg_solver)
   d_M = mg_diff->lossoperator();
   d_F = new DiffusionGainOperator(d_input, d_material, d_mesh, d_adjoint);
 
-  d_F->print_matlab("eigF.out");
-  d_M->print_matlab("eigM.out");
-
+  d_M->print_matlab("L.out");
+  d_F->print_matlab("F.out");
 
   // Create callow eigensolver and set operators
   SP_input db;
@@ -49,11 +47,10 @@ EigenDiffusion<D>::EigenDiffusion(SP_mg_solver mg_solver)
   d_eigensolver->set_operators(d_F, d_M, db);
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 template <class D>
 void EigenDiffusion<D>::solve()
 {
-
   // solve the system
   d_eigensolver->solve(d_phi, d_work);
 
@@ -61,19 +58,18 @@ void EigenDiffusion<D>::solve()
   d_state->set_eigenvalue(d_eigensolver->eigenvalue());
 
   // fill the state flux vector
-  int k = 0;
-  for (int g = 0; g < d_material->number_groups(); g++)
-    for (int i = 0; i < d_mesh->number_cells(); i++, k++)
+  size_t k = 0;
+  for (size_t g = 0; g < d_material->number_groups(); ++g)
+    for (size_t i = 0; i < d_mesh->number_cells(); ++i, ++k)
       d_state->phi(g)[i] = (*d_phi)[k];
 
   // update the fission source (for use in rates, etc.)
   d_fissionsource->update();
-
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 // EXPLICIT INSTANTIATIONS
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 template class EigenDiffusion<_1D>;
 template class EigenDiffusion<_2D>;
@@ -81,6 +77,6 @@ template class EigenDiffusion<_3D>;
 
 } // end namespace detran
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file EigenDiffusion.cc
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

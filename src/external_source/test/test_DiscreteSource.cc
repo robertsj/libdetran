@@ -1,24 +1,19 @@
-//----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   test_DiscreteSource.cc
- * \author Jeremy Roberts
- * \date   Jun 22, 2012
- * \brief  Test of DiscreteSource
+//----------------------------------*-C++-*-----------------------------------//
+/**
+ *  @file  test_DiscreteSource.cc
+ *  @brief Test of DiscreteSource
+ *  @note  Copyright (C) Jeremy Roberts 2012-2013
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
-#define TEST_LIST                     \
+#define TEST_LIST                  \
         FUNC(test_DiscreteSource)
 
-// Detran headers
 #include "TestDriver.hh"
 #include "DiscreteSource.hh"
 #include "Mesh2D.hh"
 #include "QuadratureFactory.hh"
-
-// Setup
-/* ... */
 
 using namespace detran_external_source;
 using namespace detran_geometry;
@@ -32,9 +27,9 @@ int main(int argc, char *argv[])
   RUN(argc, argv);
 }
 
-//----------------------------------------------//
+//----------------------------------------------------------------------------//
 // TEST DEFINITIONS
-//----------------------------------------------//
+//----------------------------------------------------------------------------//
 
 int test_DiscreteSource(int argc, char *argv[])
 {
@@ -81,6 +76,6 @@ int test_DiscreteSource(int argc, char *argv[])
   return 0;
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of test_DiscreteSource.cc
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

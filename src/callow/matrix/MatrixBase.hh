@@ -119,7 +119,7 @@ public:
   virtual void multiply_transpose(const Vector &x, Vector &y) = 0;
 
   // pretty print to screen
-  virtual void display() const = 0;
+  virtual void display(bool forceprint = false) const = 0;
   // print output for reading into matlab
   virtual void print_matlab(std::string filename = "matrix.out") const
   {
