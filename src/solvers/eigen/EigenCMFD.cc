@@ -8,7 +8,6 @@
 
 #include "solvers/eigen/EigenCMFD.hh"
 #include "callow/solver/EigenSolverCreator.hh"
-
 #include <iostream>
 
 namespace detran
@@ -21,16 +20,14 @@ EigenCMFD<D>::EigenCMFD(SP_mg_solver mg_solver)
   , d_omega(1.0)
 {
   // Assert I've gotten a CMFD fixed source solver
-  if (d_input->check("eigen_pi_omega"))
-    d_omega = d_input->template get<double>("eigen_pi_omega");
-
+  if (d_input->check("cmfd_relaxation"))
+    d_omega = d_input->template get<double>("cmfd_relaxation");
 
   // Get callow solver parameter database
   if (d_input->check("eigen_solver_db"))
   {
     d_eigen_db = d_input->template get<SP_input>("eigen_solver_db");
   }
-
 }
 
 //----------------------------------------------------------------------------//
@@ -80,7 +77,7 @@ void EigenCMFD<D>::solve()
              iteration, keff, error_k, error_fd);
     }
 
-    if (error_fd < d_tolerance && error_k < d_tolerance) break;
+    if (error_fd < d_tolerance) break;
 
   } // eigensolver loop
 
@@ -113,11 +110,11 @@ double EigenCMFD<D>::cmfd_update()
   //compute_current();
   Homogenize H(d_material, Homogenize::PHI_D);
 
+
   SP_material cmat = H.homogenize(d_state, d_mesh, "COARSEMESH");
   const vec2_dbl &phi = H.coarse_mesh_flux();
 
   // Create loss matrix
-
   if (!d_loss)
   {
     d_loss = new CMFDLossOperator<D>(d_input,
