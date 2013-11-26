@@ -19,6 +19,7 @@ set(SRC
   ChebyshevU.cc
   DDF.cc
   TransformedBasis.cc
+  UserBasis.cc
 )
 
 #-----------------------------------------------------------------------------#

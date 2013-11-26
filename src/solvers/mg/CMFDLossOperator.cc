@@ -113,11 +113,11 @@ CMFDLossOperator<D>::CMFDLossOperator(SP_input      input,
   d_d_hat.resize(d_number_groups,
                  vec2_dbl(d_group_size,
                           vec_dbl(d_dimension * 2, 0.0)));
-
 }
 
 //----------------------------------------------------------------------------//
 template <class D>
+<<<<<<< HEAD
 void CMFDLossOperator<D>::construct(const vec2_dbl &phi,
                                     const double    keff,
                                     SP_material     mat,
@@ -246,6 +246,7 @@ void CMFDLossOperator<D>::build(const vec2_dbl &phi)
           // Relax
           d_d_hat[g][cell][leak] = alpha * dhat
                                  + (1.0 - alpha) * d_d_hat[g][cell][leak];
+
         }
         else
         {
@@ -277,6 +278,7 @@ void CMFDLossOperator<D>::build(const vec2_dbl &phi)
 
           // Compute and set the off-diagonal matrix value.
           double val = (d_d_hat[g][cell][leak] - dtilde) / cell_hxyz[xyz_idx];
+
           int neig_row = neig_cell + g * d_group_size;
           flag = insert(row, neig_row, val, INSERT);
           Assert(flag);
@@ -284,6 +286,7 @@ void CMFDLossOperator<D>::build(const vec2_dbl &phi)
 
         // Compute leakage coefficient for this cell and surface.
         jo[leak] = dtilde + d_d_hat[g][cell][leak];
+
         //printf("Dhat(%2i) = %12.8f  Dtilde(%2i) = %12.8f \n", dhat, dtilde);
 
       } // leak loop
