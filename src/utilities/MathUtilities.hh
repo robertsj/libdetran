@@ -239,32 +239,6 @@ inline std::vector<T> range(const int a, const int b, bool inclusive = false)
   return v;
 }
 
-/**
- *  @brief Create a range vector
- *
- *  Example: range(0, 4)       = {0, 1, 2, 3}
- *           range(4, 0)       = {4, 3, 2, 1}
- *           range(0, 4, true) = {0, 1, 2, 3, 4}
- *
- *  @param  a    start of range
- *  @param  b    end of range
- */
-template <class T>
-inline std::vector<T> range(const int a, const int b, bool inclusive = false)
-{
-  int size = std::abs(a-b);
-  if (inclusive) ++size;
-  std::vector<T> v(size, 0);
-  typename std::vector<T>::iterator it = v.begin();
-  int del = a < b ? 1 : -1;
-  int i = a;
-  for (; it != v.end(); ++it, i += del)
-  {
-    *it = i;
-  }
-  return v;
-}
-
 } // namespace detran_utilities
 
 #endif /* detran_utilities_MATHUTILITIES_HH_ */

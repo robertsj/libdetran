@@ -33,6 +33,7 @@ public:
     , upper_bound(1)
     , transformed_key("dct")
     , transformed_option(0)
+    , db(new detran_utilities::InputDB())
   {}
   /// Order of basis
   size_t order;

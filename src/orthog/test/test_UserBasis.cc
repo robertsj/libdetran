@@ -55,7 +55,8 @@ int test_UserBasis(int argc, char *argv[])
   		 {0.0170697, -.1194880, 0.3584641, -.5974401, 0.5974401, -.3584641, 0.1194880, -.0170697},
    };
   for (int i = 0; i < 8; ++i)
-  { vec_dbl temp_vec(8, 0.0);
+  {
+    vec_dbl temp_vec(8, 0.0);
 	for (int j = 0; j < 8; ++j)
 	{
 	  temp_vec[j] = data[i][j];
