@@ -117,6 +117,7 @@ CMFDLossOperator<D>::CMFDLossOperator(SP_input      input,
 
 //----------------------------------------------------------------------------//
 template <class D>
+
 void CMFDLossOperator<D>::construct(const vec2_dbl &phi,
                                     const double    keff,
                                     SP_material     mat,
