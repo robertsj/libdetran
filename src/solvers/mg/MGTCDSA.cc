@@ -98,10 +98,10 @@ void MGTCDSA<D>::apply(Vector &b, Vector &x)
     ++d_A_count;
   }
 
-  COUT(" A count  = "  << d_A_count)
-  COUT(" At count = "  << d_A_tilde_count)
-  COUT(" P count  = "  << d_P_count)
-  COUT(" At sweeps = " << d_A_tilde->sweeper()->number_sweeps())
+//  COUT(" A count  = "  << d_A_count)
+//  COUT(" At count = "  << d_A_tilde_count)
+//  COUT(" P count  = "  << d_P_count)
+//  COUT(" At sweeps = " << d_A_tilde->sweeper()->number_sweeps())
 }
 
 //----------------------------------------------------------------------------//
@@ -109,6 +109,9 @@ template <class D>
 void MGTCDSA<D>::build(const double k, SP_state state)
 {
   d_P->build(k, state);
+  // update the fission source's eigenvalue if present
+  if (d_A_tilde->sweepsource()->get_fission_source())
+    d_A_tilde->sweepsource()->get_fission_source()->set_scale(1.0 / k);
 }
 
 //----------------------------------------------------------------------------//
