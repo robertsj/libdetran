@@ -63,7 +63,7 @@ void PetscSolver::set_operators(SP_matrix A, SP_db db)
   // Default PC settings.
   std::string pc_type = "";
   std::string petsc_pc_type = "ilu";
-  int pc_side = LEFT;
+  int pc_side = RIGHT;
 
   // Extract the PETSc preconditioner.
   PC pc;
@@ -144,7 +144,7 @@ void PetscSolver::set_operators(SP_matrix A, SP_db db)
                          d_A->petsc_matrix(),
                          SAME_NONZERO_PATTERN);
 
-  KSPGMRESSetRestart(d_petsc_solver, 20);
+  KSPGMRESSetRestart(d_petsc_solver, 30);
   // Set the preconditioner side.
   if (pc_side == Base::LEFT) ierr = KSPSetPCSide(d_petsc_solver, PC_LEFT);
   else
