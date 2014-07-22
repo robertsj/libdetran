@@ -18,6 +18,8 @@
 #include "ProductQuadratureAP.hh"
 #include "LevelSymmetric.hh"
 #include "UniformEqual.hh"
+//
+#include "UserQuadrature.hh"
 
 namespace detran_angle
 {
@@ -154,6 +156,18 @@ build(SP_input input, const int dimension)
     else if (quad_type == "uniformequal")
       q = new UniformEqual(np, dimension);
 
+  }
+
+  if (quad_type == "user")
+  {
+    Quadrature::vec_dbl mu_v, eta_v, wt_v;
+    Insist(input->check("quad_mu"), "quad_mu required for user quadrature");
+    Insist(input->check("quad_wt"), "quad_wt required for user quadrature");
+    mu_v = input->get<Quadrature::vec_dbl>("quad_mu");
+    if (input->check("quad_eta"))
+      eta_v = input->get<Quadrature::vec_dbl>("quad_eta");
+    wt_v = input->get<Quadrature::vec_dbl>("quad_wt");
+    q = new UserQuadrature(dimension, mu_v, eta_v, wt_v);
   }
 
   Insist(q, "Unsupported quadrature type: " + quad_type);
