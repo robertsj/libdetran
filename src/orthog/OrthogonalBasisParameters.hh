@@ -48,6 +48,10 @@ public:
   detran_utilities::vec_dbl x;
   detran_utilities::vec_dbl qw;
   //@}
+  /// Weights for discrete basis
+  //@{
+  detran_utilities::vec_dbl w;
+  //@}
   /// Lower and upper bounds for continuous bases
   //@{
   double lower_bound;
