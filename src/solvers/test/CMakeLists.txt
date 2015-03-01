@@ -96,3 +96,10 @@ ADD_TEST(test_MGSweepOperator             		test_MGSweepOperator 0)
 ADD_EXECUTABLE(test_MGCMFD          	test_MGCMFD.cc)
 TARGET_LINK_LIBRARIES(test_MGCMFD   	solvers)
 ADD_TEST(test_MGCMFD             		test_MGCMFD 0)
+
+
+ADD_EXECUTABLE(test_TimeStepper          	test_TimeStepper.cc)
+TARGET_LINK_LIBRARIES(test_TimeStepper   	solvers)
+ADD_EXECUTABLE(test_TWIGL                   test_TWIGL.cc)
+TARGET_LINK_LIBRARIES(test_TWIGL            solvers)
+#ADD_TEST(test_MGCMFD             		test_MGCMFD 0)

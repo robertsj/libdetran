@@ -22,11 +22,7 @@
 #include "kinetics/LinearExternalSource.hh"
 #include "kinetics/LinearMaterial.hh"
 #include "solvers/EigenvalueManager.hh"
-//
-#include "angle/test/quadrature_fixture.hh"
-#include "geometry/test/mesh_fixture.hh"
-#include "material/test/material_fixture.hh"
-#include "external_source/test/external_source_fixture.hh"
+
 
 using namespace detran_test;
 using namespace detran;
