@@ -122,6 +122,7 @@ public:
     ,  d_scatter_group_source(mesh->number_cells(), 0.0)
     ,  d_implicit_fission(implicit_fission)
     ,  d_scattersource(new ScatterSource(mesh, material, state))
+    ,  d_discrete_external_source_flag(true)
   {
     Require(d_state);
     Require(d_mesh);
@@ -272,6 +273,11 @@ public:
     return d_scatter_group_source;
   }
 
+  void set_discrete_external_source_flag(bool flag)
+  {
+    d_discrete_external_source_flag = flag;
+  }
+
 private:
 
   //--------------------------------------------------------------------------//
@@ -302,6 +308,8 @@ private:
   bool d_implicit_fission;
   /// Scattering source
   SP_scattersource d_scattersource;
+  /// Discrete external source flag.  Default true.
+  bool d_discrete_external_source_flag;
 
 };
 

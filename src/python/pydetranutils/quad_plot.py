@@ -8,16 +8,16 @@ import matplotlib.pyplot as plt
 # LaTeX labels are nicer
 global __detranuselatex__ 
 __detranuselatex__ = False
-try :
-  import os
-  print "Checking for LaTeX for nicer plotting labels..."
-  if (os.system("which latex > NULL")==0) :
-    from matplotlib import rc
-    rc('text', usetex=True)
-    rc('font', family='serif')
-    __detranuselatex__ = True
-except ImportError :
-  pass
+#try :
+#  import os
+#  print "Checking for LaTeX for nicer plotting labels..."
+#  if (os.system("which latex > NULL")==0) :
+#    from matplotlib import rc
+#    rc('text', usetex=True)
+#    rc('font', family='serif')
+#    __detranuselatex__ = True
+#except ImportError :
+#  pass
 
 def plot_quadrature(quad) :
     """ Plots a quadrature.

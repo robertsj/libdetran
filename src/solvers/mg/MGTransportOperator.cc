@@ -140,8 +140,10 @@ void MGTransportOperator<D>::multiply(const Vector &x,  Vector &y)
     typename State::moments_type phi_g(phi[*g]);
 
     // set the sweeper and sweep.
+    d_sweepsource->set_discrete_external_source_flag(false);
     d_sweeper->setup_group(*g);
     d_sweeper->sweep(phi_g);
+    d_sweepsource->set_discrete_external_source_flag(true);
 
     // assign the moment values.
     for (int i = 0; i < d_moments_size; i++)

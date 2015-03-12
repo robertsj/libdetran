@@ -148,10 +148,13 @@ source(const size_t g, const size_t o, const size_t a, sweep_source_type &s)
 //  }
 
   // Add discrete contributions if present.
-  size_t angle = d_quadrature->index(o, a);
-  for (size_t i = 0; i < d_discrete_external_sources.size(); ++i)
-    for (size_t cell = 0; cell < d_mesh->number_cells(); ++cell)
-      s[cell] += d_discrete_external_sources[i]->source(cell, g, angle);
+  if (d_discrete_external_source_flag)
+  {
+    size_t angle = d_quadrature->index(o, a);
+    for (size_t i = 0; i < d_discrete_external_sources.size(); ++i)
+      for (size_t cell = 0; cell < d_mesh->number_cells(); ++cell)
+        s[cell] += d_discrete_external_sources[i]->source(cell, g, angle);
+  }
 
 }
 
