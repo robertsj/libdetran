@@ -50,6 +50,8 @@ endif()
 if(DETRAN_ENABLE_PYTHON)
   # SWIG setup
   set_source_files_properties(detran_${LIB_NAME}.i PROPERTIES CPLUSPLUS ON)
+  #set_property(SOURCE detran_${LIB_NAME}.i PROPERTY SWIG_FLAGS "-py3")
+
   swig_add_module(${LIB_NAME} python detran_${LIB_NAME}.i)
   swig_link_libraries(${LIB_NAME} ${PYTHON_LIBRARIES} ${LIB_NAME})
   # Install the module and library

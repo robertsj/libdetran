@@ -6,7 +6,7 @@ global __detranuselatex__
 __detranuselatex__ = False
 
 try :
-  import mpl_toolkits.mplot3d.axes3d as p3
+ # import mpl_toolkits.mplot3d.axes3d as p3
   import matplotlib.pyplot as plt
 except ImportError :
   print "Warning: Could not import matplotlib."

@@ -21,14 +21,14 @@ try :
   import numpy as np
   has_numpy = True
 except ImportError :
-  print "Warning: Could not import Numpy.  Numpy is highly recommended."
-  print "         Detran utilities are unavailable without Numpy."
+  print("Warning: Could not import Numpy.  Numpy is highly recommended.")
+  print("         Detran utilities are unavailable without Numpy.")
   
 if has_numpy :
   try :
     from pydetranutils import *
   except ImportError :
-    print "Warning: Could not import Detran utilities."
+    print("Warning: Could not import Detran utilities.")
 
 import sys
 
