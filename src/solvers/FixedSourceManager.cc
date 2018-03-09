@@ -217,7 +217,10 @@ bool FixedSourceManager<D>::set_solver()
       return false;
     }
     d_is_ready = true;
+    std::cout << "Using " << outer_solver << " for the multigroup solution." 
+              << std::endl;
   }
+
   return d_is_ready;
 }
 
@@ -225,7 +228,7 @@ bool FixedSourceManager<D>::set_solver()
 template <class D>
 bool FixedSourceManager<D>::solve(const double keff)
 {
-
+  
   if (!d_is_ready)
   {
     std::cout << "You must set the solver before solving.  Skipping solve."

@@ -9,7 +9,7 @@
 #include "Matrix.hh"
 #include "utils/Typedefs.hh"
 #include <iostream>
-
+#include <cstring>
 namespace callow
 {
 

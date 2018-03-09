@@ -166,6 +166,9 @@ public:
   /// Return the transport operator
   SP_operator get_operator();
 
+  /// Return residual norms from base solver
+  vec_dbl residual_norms() const {return d_solver->residual_norms();}
+
 private:
 
   //-------------------------------------------------------------------------//

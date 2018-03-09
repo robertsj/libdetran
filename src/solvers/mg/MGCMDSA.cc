@@ -106,8 +106,10 @@ void MGCMDSA::build(const double keff, SP_state state)
   // Print the operator for debugging
   if (d_input->check("mgpc_print_operators"))
   {
-    d_operator->print_matlab("diffusion_cm.out");
-    d_SF->compute_explicit("SF.out");
+    d_operator->print_matlab("mg_cmdsa_diffop.out");
+    //d_SF->compute_explicit("mg_cmdsa_SF.out");
+    this->display("mg_cmdsa.out");
+
   }
 }
 

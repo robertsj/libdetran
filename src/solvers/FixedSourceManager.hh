@@ -70,6 +70,7 @@ public:
   typedef FissionSource::SP_fissionsource               SP_fissionsource;
   typedef State::moments_type                           moments_type;
   typedef typename MGSolver<D>::SP_solver               SP_solver;
+  typedef detran_utilities::vec_dbl                     vec_dbl;
 
   //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -199,6 +200,7 @@ public:
   int discretization() const { return d_discretization; }
   SP_solver solver() const { return d_solver; }
   int number_sweeps() const { return d_solver->number_sweeps(); }
+  vec_dbl residual_norms() const { return d_solver->residual_norms(); }
   bool adjoint() const {return d_adjoint;}
   /// @}
 

@@ -15,6 +15,9 @@
 #include "geometry/Mesh.hh"
 #include "TimeStepper.hh"
 
+
+
+
 namespace detran_user
 {
 
@@ -46,6 +49,7 @@ const double VELOCITY0 = 3.0e7;
 const double VELOCITY1 = 3.0e5;
 const int ROD = 5;
 const int REFLECTOR = 4;
+
 
 class SOLVERS_EXPORT LRA: public detran::TimeDependentMaterial
 {
@@ -79,12 +83,14 @@ public:
 
   void set_state(SP_state);
   void initialize_materials();
+  void perturb(double T0, double SigA20, double alpha, double gamma);
   void update_P_and_T(double t, double dt);
-  vec_dbl T() {return d_T;}
+  //vec_dbl T() {return d_T;}
   vec_dbl P() {return d_P;}
   SP_multiphysics physics() {return d_physics;}
   double area() {return d_A;}
   void set_area(double a) {d_A = a;}
+
 
   //-------------------------------------------------------------------------//
   // DATA
@@ -103,15 +109,32 @@ public:
   /// Multiphysics (just T)
   SP_multiphysics d_physics;
   /// Fine mesh temperature
-  vec_dbl d_T;
+  //vec_dbl d_T;
   /// Old fine mesh temperature
-  vec_dbl d_T_old;
+  //vec_dbl d_T_old;
   /// Fine mesh power density
   vec_dbl d_P;
   /// Core area
   double d_A;
   /// Store the current time for iteration purposes
   double d_current_time;
+
+
+  /// Store the base data, possibly modified by sampling.
+  double d_T1[6], d_T2[6],
+		 d_A1[6], d_A2[6],
+		 d_F1[6], d_F2[6],
+         d_S11[6], d_S21[6], d_S22[6],
+         d_D1[6], d_D2[6],
+         d_mu0[6], d_mu1[6],
+         d_NU, d_B, d_ALPHA, d_GAMMA, d_KAPPA,
+         d_LAMBDA0, d_LAMBDA1, d_BETA0, d_BETA1,
+         d_VELOCITY0, d_VELOCITY1,
+		 d_temp_0;
+
+
+
+
 
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL TIME DEPENDENT MATERIALS MUST IMPLEMENT THESE
@@ -142,8 +165,8 @@ void update_T_rhs(void* data,
   // cast data as LRA
   LRA* mat = (LRA*) data;
 
-  std::cout << mat->physics()->variable(0)[0] << " "
-            << step->multiphysics()->variable(0)[0] << std::endl;
+  //std::cout << mat->physics()->variable(0)[0] << " "
+  //          << step->multiphysics()->variable(0)[0] << std::endl;
   // update
   mat->update_P_and_T(t, dt);
 }

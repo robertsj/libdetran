@@ -405,9 +405,9 @@ void TimeStepper<D>::update_multiphysics(const double t,
 {
   // Update the right hand side.  The result is placed into
   // the working vector d_multiphysics
-  std::cout << " P before = " << d_multiphysics->variable(0)[0] - 300.0 << std::endl;
+  //std::cout << " P before = " << d_multiphysics->variable(0)[0] - 300.0 << std::endl;
   d_update_multiphysics_rhs(d_multiphysics_data, this, t, dt);
-  std::cout << " P after = " << d_multiphysics->variable(0)[0] << std::endl;
+  //std::cout << " P after = " << d_multiphysics->variable(0)[0] << std::endl;
 
   // Loop through and compute
   //  y(n+1) = (1/a0) * ( dt*rhs + sum of bdf terms )
@@ -418,8 +418,8 @@ void TimeStepper<D>::update_multiphysics(const double t,
     MultiPhysics::vec_dbl &P   = d_multiphysics->variable(i);
 
     //std::cout << " Pold[0]=" << P[0] << std::endl;
-    printf("delP = %18.12e \n", P[0]);
-    printf("Pold[0] = %18.12e \n", d_vec_multiphysics[0]->variable(0)[0]);
+    //printf("delP = %18.12e \n", P[0]);
+   // printf("Pold[0] = %18.12e \n", d_vec_multiphysics[0]->variable(0)[0]);
 
     // Loop over all elements (usually spatial)
     for (int j = 0; j < P.size(); ++j)
@@ -430,7 +430,7 @@ void TimeStepper<D>::update_multiphysics(const double t,
         v += bdf_coefs[order-1][k] * d_vec_multiphysics[k-1]->variable(i)[j];
       P[j] = v / bdf_coefs[order-1][0];
     } // end element loop
-    std::cout << " Pnew[0]=" << P[0] - 300.0 << std::endl;
+    //std::cout << " Pnew[0]=" << P[0] - 300.0 << std::endl;
   } // end variable loop
 }
 

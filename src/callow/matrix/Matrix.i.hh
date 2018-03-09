@@ -11,7 +11,7 @@
 
 #include "utilities/DBC.hh"
 #include <algorithm>
-#include <cstring>
+//#include <cstring>
 #include <vector>
 #include <iostream>
 #include <string>

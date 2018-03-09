@@ -78,7 +78,10 @@ int test_MatrixShell(int argc, char *argv[])
       TEST(soft_equiv(X[i], ref2[i]));
     }
 
+    A.compute_explicit("test_shell_explicit.out");
+
   } // end n * n
+
 
   return 0;
 }

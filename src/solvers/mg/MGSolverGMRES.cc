@@ -125,6 +125,12 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
     // explicitly below.
     d_solver->set_operators(d_operator);
 
+
+    if (d_input->check("mg_print_operators"))
+    {
+    	d_operator->compute_explicit("mg_tran_op.out");
+    }
+
     d_moments_size_group  = d_operator->moments_size();
     d_moments_size        = d_moments_size_group * d_number_groups;
     d_boundary_size_group = d_operator->boundary_size();

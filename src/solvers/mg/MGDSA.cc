@@ -56,6 +56,7 @@ MGDSA::MGDSA(SP_input         input,
 
   // Set the size of the operator
   d_size = d_operator->number_columns();
+
 }
 
 //----------------------------------------------------------------------------//
@@ -110,8 +111,10 @@ void MGDSA::build(const double keff, SP_state state)
   // Print the operator for debugging
   if (d_input->check("mgpc_print_operators"))
   {
-    d_operator->print_matlab("diffusion.out");
+    d_operator->print_matlab("mg_dsa_diffop.out");
+    this->display("mg_dsa.out");
   }
+
 }
 
 } // end namespace detran

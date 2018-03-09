@@ -63,6 +63,12 @@ MGCoarseMeshPreconditioner(SP_input         input,
   CoarseMesh C(d_mesh, level);
   d_coarsemesh = C.get_coarse_mesh();
 
+
+  if (d_input->check("mgpc_print_mesh"))
+  {
+	  d_coarsemesh->display();
+  }
+
   // Define fine to coarse map
   if (d_input->check("mgpc_fine_per_coarse_group"))
   {
@@ -219,6 +225,10 @@ void MGCoarseMeshPreconditioner::build(const double keff, SP_state state)
 //    std::cout << std::endl;
 //
 //    d_c_material->display();
+  }
+  if (d_input->check("mgpc_print_material"))
+  {
+	  d_c_material->display();
   }
 
   // Prolongation

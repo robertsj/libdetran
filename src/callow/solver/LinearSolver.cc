@@ -47,7 +47,7 @@ void LinearSolver::set_operators(SP_matrix A, SP_db db)
   // lets us set new operators but maintain old parameters.
   if (db) d_db = db;
 
-  std::string pc_type = "";
+  std::string pc_type = "none!";
   int pc_side = LEFT;
 
   if (d_db)
@@ -64,7 +64,16 @@ void LinearSolver::set_operators(SP_matrix A, SP_db db)
     }
     if(d_db->check("pc_side"))
       pc_side = d_db->get<int>("pc_side");
+    //if (d_P)
+    //{
+    //	d_A->compute_explicit("A");
+    //	d_P->display(pc_type);
+    //}
+
   }
+
+  printf("callow solver = %s, callow preconditioner used is %s \n",
+		  d_name.c_str(), pc_type.c_str());
 
 }
 

@@ -7,6 +7,8 @@
 //----------------------------------------------------------------------------//
 
 #include "MatrixBase.hh"
+#include "MatrixDense.hh"
+#include "Vector.hh"
 #include "utils/Typedefs.hh"
 #include <iostream>
 
@@ -66,6 +68,31 @@ PetscViewerBinaryOpen(PETSC_COMM_SELF, filename.c_str(), FILE_MODE_WRITE,
 MatView(A, viewer);
 PetscViewerDestroy(&viewer);
 #endif
+  if (true)
+  {
+	// Allocate dense matrix for explicit construction
+	MatrixDense A(d_m, d_n, 0.0);
+    for (int j = 0; j < d_n; ++j)
+    {
+    	// Define e_i w
+    	Vector e(d_n, 0.0);
+    	e[j] = 1.0;
+
+    	// Define output
+    	Vector a_j(d_m, 0.0);
+
+    	// a = A*e
+        this->multiply(e, a_j);
+
+        // Set the column
+        for (int i = 0; i < d_m; ++i)
+        {
+          A(i, j) = a_j[i];
+        }
+    }
+    // Output the dense matrix
+    A.print_matlab(filename);
+  }
 }
 
 //----------------------------------------------------------------------------//

@@ -47,6 +47,7 @@ public:
           ExternalSource::vec_externalsource          vec_externalsource;
   typedef FissionSource::SP_fissionsource             SP_fissionsource;
   typedef detran_utilities::size_t                    size_t;
+  typedef detran_utilities::vec_dbl                   vec_dbl;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -110,6 +111,11 @@ public:
   SP_material material() {return d_material;}
   SP_boundary boundary() {return d_boundary;}
   bool adjoint() {return d_adjoint;}
+  virtual vec_dbl residual_norms() const 
+  {
+
+      return d_residual_norms;
+  }
   //@}
 
 protected:
@@ -144,6 +150,8 @@ protected:
   int d_print_interval;
   /// Adjoint flag
   bool d_adjoint;
+  /// Residual norms
+  vec_dbl d_residual_norms;
 
   //-------------------------------------------------------------------------//
   // IMPLEMENTATION
