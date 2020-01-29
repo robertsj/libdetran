@@ -1,11 +1,13 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   MathUtilities.hh
- *  @author robertsj
- *  @date   Apr 4, 2012
- *  @brief  Provides several useful math functions
+ *  @file  MathUtilities.hh
+ *  @brief Provides several useful math functions
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
+ *
+ *  @todo There is some overlap with callow vector methods.  It might be
+ *        a good idea to move all math extras to callow
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_utilities_MATHUTILITIES_HH_
 #define detran_utilities_MATHUTILITIES_HH_
@@ -22,7 +24,7 @@ namespace detran_utilities
 {
 
 /// Norm of a vector
-inline double norm(vec_dbl &x, std::string flag = "L2")
+inline double norm(const vec_dbl &x, std::string flag = "L2")
 {
   double v = 0.0;
   if (flag == "L2")
@@ -56,9 +58,17 @@ inline void vec_scale(vec_dbl &x, double scale)
     x[i] = x[i] * scale;
 }
 
+/// Set a double vector.
+inline void vec_set(vec_dbl &x, double value)
+{
+  for (size_t i = 0; i < x.size(); ++i)
+    x[i] = value;
+}
 
 /// Norm of the residual of two double vectors.
-inline double norm_residual(vec_dbl &x, vec_dbl &y, std::string flag = "L2")
+inline double norm_residual(const vec_dbl &x,
+                            const vec_dbl &y,
+                            std::string    flag = "L2")
 {
   Require(x.size() == y.size());
   double v = 0.0;
@@ -90,7 +100,9 @@ inline double norm_residual(vec_dbl &x, vec_dbl &y, std::string flag = "L2")
 }
 
 /// Norm of the relative residual.
-inline double norm_relative_residual(vec_dbl &x, vec_dbl &y, std::string flag = "L2")
+inline double norm_relative_residual(const vec_dbl &x,
+                                     const vec_dbl &y,
+                                     std::string    flag = "L2")
 {
   Require(x.size() == y.size());
   double v = 0.0;
@@ -151,6 +163,14 @@ inline T vec_sum(const std::vector<T> &v)
   return s;
 }
 
+/// Add a constant to a vector
+template <class T>
+inline void vec_plus_a(std::vector<T> &v, const T a)
+{
+  for (size_t i = 0; i < v.size(); ++i)
+    v[i] += a;
+}
+
 /// Return the unique elements of a vector
 template <class T>
 inline std::vector<T> vec_unique(const std::vector<T> &v)
@@ -187,7 +207,7 @@ inline std::vector<double> linspace_center(double a, double b, int n = 10)
     dx = b-a;
   else
     dx = (b-a)/double(n);
-  std::vector<double> v(n, 0.5*dx);
+  std::vector<double> v(n, a + 0.5*dx);
   for (int i = 1; i < n; ++i)
     v[i] = v[i-1] + dx;
   return v;
@@ -223,6 +243,6 @@ inline std::vector<T> range(const int a, const int b, bool inclusive = false)
 
 #endif /* detran_utilities_MATHUTILITIES_HH_ */
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of MathUtilities.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

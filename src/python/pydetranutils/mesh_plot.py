@@ -1,15 +1,9 @@
 # This provides utilities for plotting things on a 
 # 1D or 2D mesh or a slice of a 3D mesh.
 
-try :
-  import numpy as np
-except ImportError :
-  print "Error importing Numpy."
-try :
-  import matplotlib.pyplot as plt
-  import matplotlib
-except ImportError :
-  print "Error importing matplotlib"      
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib    
 
 def plot_mesh_function(mesh, f, title="", colormap = "hot", edges = False, mybounds = [], myticks = []) :
     """ Plot a mesh function.

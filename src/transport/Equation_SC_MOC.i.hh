@@ -16,12 +16,13 @@ namespace detran
 {
 
 //---------------------------------------------------------------------------//
-inline void Equation_SC_MOC::solve(const size_t region,
-                                   const double length,
-                                   moments_type &source,
-                                   double &psi_in,
-                                   double &psi_out,
-                                   moments_type &phi,
+inline void Equation_SC_MOC::solve(const size_t       region,
+                                   const double       length,
+                                   const double       width,
+                                   moments_type      &source,
+                                   double            &psi_in,
+                                   double            &psi_out,
+                                   moments_type      &phi,
                                    angular_flux_type &psi)
 {
   using std::cout;
@@ -72,7 +73,7 @@ inline void Equation_SC_MOC::solve(const size_t region,
 //  cout << "    space = " << d_spacing << endl;
 
   // Contribution to region average angular flux.
-  psi_average *= d_spacing * length * inv_volume;
+  psi_average *= width * length * inv_volume;
 
   // Contribution to region average scalar flux.
   phi[region] += d_quadrature->weight(d_angle) * psi_average;

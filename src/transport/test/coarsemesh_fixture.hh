@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   coarsemesh_fixture.hh
- * \brief  coarsemesh_fixture 
- * \author Jeremy Roberts
- * @date   Aug 9, 2012
+/**
+ *  @file  coarsemesh_fixture.hh
+ *  @brief coarsemesh_fixture
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 

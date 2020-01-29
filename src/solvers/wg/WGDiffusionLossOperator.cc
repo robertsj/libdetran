@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   WGDiffusionLossOperator.cc
- *  @brief  WGDiffusionLossOperator
- *  @author Jeremy Roberts
- *  @date   Jul 25, 2012
+ *  @file  WGDiffusionLossOperator.cc
+ *  @brief WGDiffusionLossOperator member definitions
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 

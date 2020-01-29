@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   MatrixBase.hh
- *  @author robertsj
- *  @date   Sep 13, 2012
- *  @brief  MatrixBase class definition.
+ *  @file  MatrixBase.hh
+ *  @brief MatrixBase class definition
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef callow_MATRIXBASE_HH_
 #define callow_MATRIXBASE_HH_
@@ -23,64 +22,40 @@ class CALLOW_EXPORT MatrixBase
 
 public:
 
-  //---------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // TYPEDEFS
-  //---------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   typedef detran_utilities::SP<MatrixBase >     SP_matrix;
   typedef Vector::SP_vector                     SP_vector;
   typedef detran_utilities::size_t              size_t;
 
-  //---------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
-  //---------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
-  MatrixBase()
-    : d_m(0)
-    , d_n(0)
-    , d_sizes_set(false)
-    , d_is_ready(false)
-  {
-    /* ... */
-  }
+  /// default constructor
+  MatrixBase();
+  /// constructor with explicit sizing
+  MatrixBase(const int m, const int n);
+  /// virtual destructor
+  virtual ~MatrixBase();
 
-  MatrixBase(const int m, const int n)
-    : d_m(m)
-    , d_n(n)
-    , d_is_ready(false)
-  {
-    Require(m > 0 && n > 0);
-    d_sizes_set = true;
-  }
-
-  virtual ~MatrixBase()
-  {
-#ifdef CALLOW_ENABLE_PETSC
-    // destroy the petsc matrix.  note, since we constructed it
-    // using our own arrays, those still need to be deleted.
-    MatDestroy(&d_petsc_matrix);
-#endif
-  }
-
-  //---------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
-  //---------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
-  virtual void set_size(const int m, const int n)
-  {
-    Require(m > 0 && n > 0);
-    d_m = m;
-    d_n = n;
-    d_sizes_set = true;
-  }
-
+  /// set the matrix sizes
+  virtual void set_size(const int m, const int n);
+  /// get matrix sizes
+  //@{
   int number_rows() const { return d_m; }
   int number_columns() const { return d_n; }
+  //@}
+  /// is the matrix ready to use?
   bool is_ready() const { return d_is_ready; }
-
-#ifdef CALLOW_ENABLE_PETSC
+  /// return a PETSc matrix
   Mat petsc_matrix() {return d_petsc_matrix;}
-#endif
 
   // multiply with SP vectors
   void multiply(SP_vector x,  SP_vector y)
@@ -94,17 +69,9 @@ public:
   }
 
   // compute and print the explicit operator (even if shell)
-  virtual void compute_explicit(std::string filename = "matrix.out")
-  {
-#ifdef CALLOW_ENABLE_PETSC
-  Mat A;
-  MatComputeExplicitOperator(d_petsc_matrix, &A);
-  PetscViewer viewer;
-  PetscViewerBinaryOpen(PETSC_COMM_SELF, filename.c_str(), FILE_MODE_WRITE, &viewer);
-  MatView(A, viewer);
-  PetscViewerDestroy(&viewer);
-#endif
-  }
+  virtual void compute_explicit(std::string filename = "matrix.out");
+  // print output for reading into matlab
+  virtual void print_matlab(std::string filename = "matrix.out") const;
 
   //---------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL MATRICES MUST IMPLEMENT
@@ -112,25 +79,20 @@ public:
 
   // postprocess storage
   virtual void assemble() = 0;
-
   // action y <-- A * x
   virtual void multiply(const Vector &x,  Vector &y) = 0;
   // action y <-- A' * x
   virtual void multiply_transpose(const Vector &x, Vector &y) = 0;
-
   // pretty print to screen
-  virtual void display() const = 0;
-  // print output for reading into matlab
-  virtual void print_matlab(std::string filename = "matrix.out") const
-  {
-    /* ... */
-  }
+  virtual void display(bool forceprint = false) const = 0;
+  // clear the matrix contents
+  virtual void clear() {}
 
 protected:
 
-  //---------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // DATA
-  //---------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /// number of rows
   int d_m;
@@ -140,10 +102,8 @@ protected:
   bool d_sizes_set;
   /// am i good to go?
   bool d_is_ready;
-
-#ifdef CALLOW_ENABLE_PETSC
+  /// PETSc matrix
   Mat d_petsc_matrix;
-#endif
 
 };
 
@@ -152,3 +112,7 @@ CALLOW_TEMPLATE_EXPORT(detran_utilities::SP<MatrixBase>)
 } // end namespace callow
 
 #endif /* callow_MATRIXBASE_HH_ */
+
+//----------------------------------------------------------------------------//
+//              end of MatrixBase.hh
+//----------------------------------------------------------------------------//

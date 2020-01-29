@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   EigenSolver.i.hh
- *  @author robertsj
- *  @date   Sep 25, 2012
- *  @brief  EigenSolver.i class definition.
+ *  @file  EigenSolver.i.hh
+ *  @brief EigenSolver inline member definitions
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef callow_EIGENSOLVER_I_HH_
 #define callow_EIGENSOLVER_I_HH_
@@ -15,32 +14,7 @@
 namespace callow
 {
 
-//---------------------------------------------------------------------------//
-inline void EigenSolver::set_operators(SP_matrix    A,
-                                       SP_matrix    B,
-                                       SP_db        db)
-{
-  // Preconditions
-  Insist(A, "The operator A cannot be null");
-  d_A = A;
-  Ensure(d_A->number_rows() == d_A->number_columns());
-
-  // Setup linear system if this is a generalized eigenproblem
-  if (B)
-  {
-    d_B = B;
-    Ensure(d_B->number_rows() == d_B->number_columns());
-    Ensure(d_B->number_rows() == d_A->number_columns());
-    // Create linear solver.  Defaults can be changed by
-    // extracting the solver and resetting.  The same goes
-    // for the preconditioner, which is null by default.
-
-    d_solver = LinearSolverCreator::Create(db);
-    d_solver->set_operators(d_B, db);
-  }
-}
-
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 inline int EigenSolver::solve(Vector &x, Vector &x0)
 {
   Require(x.size() == d_A->number_rows());
@@ -48,7 +22,7 @@ inline int EigenSolver::solve(Vector &x, Vector &x0)
     Require(x0.size() == d_A->number_rows());
   d_status = MAXIT;
   solve_impl(x, x0);
-  if (d_status ==  MAXIT)
+  if (d_status ==  MAXIT && d_monitor_level > 0)
   {
     printf("*** %s did not converge within the maximum number of iterations\n",
            d_name.c_str());
@@ -56,7 +30,7 @@ inline int EigenSolver::solve(Vector &x, Vector &x0)
   return d_status;
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 inline bool EigenSolver::monitor(int it, double l, double r)
 {
   // record the iteration and residual norm
@@ -64,8 +38,16 @@ inline bool EigenSolver::monitor(int it, double l, double r)
   d_residual_norm[it] = r;
   // echo the residual
   if (d_monitor_level > 1)
-    printf("iteration: %5i  eigenvalue: %12.8e    residual: %12.8e \n", it, l, r);
+  {
+    printf("iteration: %5i  eigenvalue: %12.8e    residual: %12.8e \n",
+           it, l, r);
+  }
   // send a signal
+  if (it == d_maximum_iterations)
+  {
+    d_status = MAXIT;
+    return true;
+  }
   if (r < d_tolerance)
   {
     if (d_monitor_level > 0)
@@ -82,3 +64,8 @@ inline bool EigenSolver::monitor(int it, double l, double r)
 } // end namespace callow
 
 #endif /* callow_EIGENSOLVER_I_HH_ */
+
+
+//----------------------------------------------------------------------------//
+//              end of file EigenSolver.i.hh
+//----------------------------------------------------------------------------//

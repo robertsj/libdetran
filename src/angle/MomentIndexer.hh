@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   MomentIndexer.hh
- *  @author robertsj
- *  @date   Dec 13, 2012
- *  @brief  MomentIndexer class definition.
+ *  @file  MomentIndexer.hh
+ *  @brief MomentIndexer class definition
+ *  @note  Copyright (C) Jeremy Roberts 2012-2013
  */
 //---------------------------------------------------------------------------//
 

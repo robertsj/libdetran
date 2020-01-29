@@ -11,7 +11,6 @@ set(LIB_NAME "utilities")
 set(SRC
     InputDB.cc
     GenException.cc
-	Point.cc
 )
 
 #-----------------------------------------------------------------------------#

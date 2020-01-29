@@ -46,7 +46,6 @@ void Equation_SC_MOC::setup_azimuth(const size_t a)
 {
   Require(a < d_quadrature->number_azimuths_octant());
   d_azimuth = a;
-  d_spacing = d_tracks->spacing(d_azimuth);
   for (size_t p = 0; p < d_quadrature->number_polar_octant(); ++p)
   {
     size_t angle = d_quadrature->angle(a, p);

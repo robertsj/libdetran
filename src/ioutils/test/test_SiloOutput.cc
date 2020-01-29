@@ -1,16 +1,15 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   test_SiloOutput.cc
- * \author Jeremy Roberts
- * \date   Apr 1, 2012
- * \brief  Test of Material class.
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+/**
+ *  @file  test_SiloOutput.cc
+ *  @brief Test of SiloOutput
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts.
  */
 //---------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
-#define TEST_LIST                  \
-        FUNC(test_SiloOutput)
+#define TEST_LIST                       \
+        FUNC(test_SiloOutput)           \
+        FUNC(test_SiloOutput_directory)
 
 // Detran headers
 #include "utilities/TestDriver.hh"
@@ -94,7 +93,40 @@ int test_SiloOutput(int argc, char *argv[])
   return 0;
 }
 
+// Test writing material into different directories
+int test_SiloOutput_directory(int argc, char *argv[])
+{
+  // Create mesh
+  vec_int fm(1, 10);
+  vec_dbl cm(2, 0.0);
+  cm[1] = 10;
+  vec_int mt(1, 0);
+  Mesh2D::SP_mesh mesh(new Mesh2D(fm, fm, cm, cm, mt));
 
+  // Create field of fata
+  vec_dbl data(mesh->number_cells(), 1.234);
+
+  // Create the SiloOutput.
+  SiloOutput out(mesh);
+
+  // Open the file, and write the mesh.
+  TEST(out.initialize("test_dir.silo"));
+
+  // Write out data
+  TEST(out.write_scalar_field("SCALARFIELD", data));
+
+  // Create a new directory and go to it
+  TEST(out.make_directory("subdirectory"));
+  TEST(out.set_directory("subdirectory"));
+
+  // Write out the data again
+  vec_dbl data2(data);
+  TEST(out.write_scalar_field("SUBDIRFIELD2", data2))
+
+  out.finalize();
+
+  return 0;
+}
 //---------------------------------------------------------------------------//
 //              end of test_SiloOutput.cc
 //---------------------------------------------------------------------------//

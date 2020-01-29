@@ -14,7 +14,6 @@
 #include "utilities/DBC.hh"
 #include "utilities/InputDB.hh"
 #include "utilities/MathUtilities.hh"
-#include "utilities/Point.hh"
 #include "utilities/SP.hh"
 %}
 
@@ -23,6 +22,8 @@
 %include std_map.i
 %include std_string.i
 %include std_vector.i
+
+%feature("autodoc", "3");
 
 // Hide templates from SWIG
 %inline
@@ -91,7 +92,6 @@ namespace std
 %template(put_spdb)     detran_utilities::InputDB::put<detran_utilities::InputDB::SP_input>;
 
 %include "MathUtilities.hh"
-%include "Point.hh"
 
 // Anyhere in C/C++ that we need (argc, argv)
 %typemap(in) (int argc, char *argv[]) 
@@ -125,6 +125,8 @@ namespace std
 %typemap(freearg) (int argc, char *argv[]) {
   free((char *) $2);
 }
+
+// see http://embedded.eecs.berkeley.edu/Alumni/pinhong/scriptEDA/pyTypemapFAQ.html#32
 
 //---------------------------------------------------------------------------//
 //              end of detran_utilities.i

@@ -1,26 +1,21 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   test_BoundarySN.cc
- *  @author Jeremy Roberts
- *  @date   Apr 1, 2012
- *  @brief  Test of BoundarySN class
+ *  @file  test_BoundarySN.cc
+ *  @brief Test of BoundarySN class
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
 #define TEST_LIST                    \
         FUNC(test_BoundarySN)
 
-// Detran headers
 #include "TestDriver.hh"
 #include "boundary/BoundarySN.hh"
 #include "angle/QuadratureFactory.hh"
 #include "geometry/Mesh1D.hh"
 #include "geometry/Mesh2D.hh"
 #include "geometry/Mesh3D.hh"
-
-// Setup
-/* ... */
 
 using namespace detran;
 using namespace detran_geometry;
@@ -36,9 +31,9 @@ int main(int argc, char *argv[])
   RUN(argc, argv);
 }
 
-//----------------------------------------------//
+//----------------------------------------------------------------------------//
 // TEST DEFINITIONS
-//----------------------------------------------//
+//----------------------------------------------------------------------------//
 
 int test_BoundarySN(int argc, char *argv[])
 {
@@ -53,9 +48,7 @@ int test_BoundarySN(int argc, char *argv[])
     inp->put<string>("bc_left",  "vacuum");
     // Quadrature
     inp->put<int>("quad_number_polar_octant", 2);
-    Boundary_T::SP_quadrature q;
-    detran_angle::QuadratureFactory qf;
-    qf.build(q, inp, 1);
+    Boundary_T::SP_quadrature q = QuadratureFactory::build(inp, 1);
     // Mesh
     vec_dbl cm(2, 0.0); cm[1] = 1.0;
     vec_int fm(1, 10);
@@ -69,7 +62,6 @@ int test_BoundarySN(int argc, char *argv[])
     TEST(b->has_reflective());
     TEST(b->boundary_flux_size(0) == 4);
     TEST(b->boundary_flux_size(1) == 4);
-
   }
 
   // 2-D test
@@ -85,9 +77,7 @@ int test_BoundarySN(int argc, char *argv[])
     // Quadrature
     inp->put<int>("quad_number_polar_octant", 2);
     inp->put<int>("quad_number_azimuth_octant", 2);
-    Boundary_T::SP_quadrature q;
-    detran_angle::QuadratureFactory qf;
-    qf.build(q, inp, 2);
+    Boundary_T::SP_quadrature q = QuadratureFactory::build(inp, 2);
     // Mesh
     vec_dbl cm(2, 0.0); cm[1] = 1.0;
     vec_int fm(1, 10);
@@ -122,9 +112,7 @@ int test_BoundarySN(int argc, char *argv[])
     // Quadrature
     inp->put<int>("quad_number_polar_octant",   2);
     inp->put<int>("quad_number_azimuth_octant", 2);
-    Boundary_T::SP_quadrature q;
-    detran_angle::QuadratureFactory qf;
-    qf.build(q, inp, 3);
+    Boundary_T::SP_quadrature q = QuadratureFactory::build(inp, 3);
     // Mesh
     vec_dbl cm(2, 0.0); cm[1] = 1.0;
     vec_int fm(1, 10);
@@ -147,7 +135,6 @@ int test_BoundarySN(int argc, char *argv[])
     TEST(b->boundary_flux_size(4) == 8*2*2*10*10);
     TEST(b->boundary_flux_size(5) == 8*2*2*10*10);
   }
-
 
   return 0;
 }

@@ -30,7 +30,7 @@
  */
 
 /// Initialize external packages, if enabled
-inline void callow_initialize(int argc, char** argv)
+inline void callow_initialize(int argc, char *argv[])
 {
 #ifdef CALLOW_ENABLE_PETSC
   PetscInitialize(&argc, &argv, PETSC_NULL, PETSC_NULL);

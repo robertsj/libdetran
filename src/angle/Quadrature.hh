@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   Quadrature.hh
- *  @brief  Quadrature class definition.
- *  @author Jeremy Roberts
- *  @date   Mar 23, 2012
+ *  @file  Quadrature.hh
+ *  @brief Quadrature class definition
+ *  @note  Copyright (C) Jeremy Roberts 2012-2013
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_angle_QUADRATURE_HH_
 #define detran_angle_QUADRATURE_HH_
@@ -30,8 +29,7 @@ namespace detran_angle
  *  @brief Base quadrature class for transport calculations
  *
  *  For all Detran quadratures, octant symmetry is assumed.  As a result,
- *  only the first octant abscissa and weights are stored.  This applies
- *  to specializations for product and MOC-specific quadratures.
+ *  only the first octant abscissa and weights are stored.
  *
  *  The octants are ordered as follows, with
  *
@@ -59,8 +57,8 @@ namespace detran_angle
  *  helpful for streamlining quadrature sums over all angles.
  *
  *  Because of this ordering, *only the first octant values are stored*.  All
- *  other values are found by multiply by the appropriate octant-dependent
- *  sign.  This assumes, of course, symmetric quadratures.
+ *  other values are found by multiplying by the appropriate octant-dependent
+ *  sign.
  *
  */
 
@@ -69,21 +67,18 @@ class ANGLE_EXPORT Quadrature
 
 public:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // ENUMERATIONS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   enum directions
   {
-    MU,
-    ETA,
-    XI,
-    END_COSINES
+    MU, ETA, XI, END_COSINES
   };
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // TYPEDEFS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   typedef detran_utilities::SP<Quadrature>      SP_quadrature;
   typedef detran_utilities::vec_dbl             vec_dbl;
@@ -92,9 +87,9 @@ public:
   typedef detran_utilities::vec2_int            vec2_int;
   typedef detran_utilities::size_t              size_t;
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /**
    *   @brief Constructor.
@@ -102,16 +97,16 @@ public:
    *   @param    number_angles   Total number of angles
    *   @param    name            Descriptive name
    */
-  Quadrature(const size_t dim,
-             const size_t number_angles,
+  Quadrature(const size_t      dim,
+             const size_t      number_angles,
              const std::string name);
 
   /// Pure virtual destructor
   virtual ~Quadrature() = 0;
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /// Return total number of angles.
   size_t number_angles() const;
@@ -196,9 +191,6 @@ public:
     return d_adjoint;
   }
 
-  // Return my name
-  std::string name() const;
-
   /// Pretty print of the first octant parameters.
   virtual void display() const;
 
@@ -213,7 +205,7 @@ protected:
   size_t d_number_octants;
   /// number of angle per octant
   size_t d_number_angles_octant;
-  /// Quadrature weight
+  /// quadrature weight
   vec_dbl d_weight;
   /// x-axis cosines
   vec_dbl d_mu;
@@ -238,14 +230,14 @@ ANGLE_TEMPLATE_EXPORT(detran_utilities::SP<Quadrature>)
 
 } // end namespace detran_angle
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 // INLINE MEMBER DEFINITIONS
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #include "Quadrature.i.hh"
 
 #endif /* detran_angle_QUADRATURE_HH_ */
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of Quadrature.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

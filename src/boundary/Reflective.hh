@@ -75,7 +75,7 @@ public:
   /// Update a boundary for a given angle following a sweep.
   void update(const size_t g, const size_t o, const size_t a);
 
-private:
+protected:
 
   //-------------------------------------------------------------------------//
   // DATA

@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   DLP.hh
- *  @brief  DLP
- *  @author Jeremy Roberts
- *  @date   Jan 8, 2013
+ *  @file  DLP.hh
+ *  @brief DLP class definition
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_orthog_DLP_HH_
 #define detran_orthog_DLP_HH_
@@ -24,19 +23,12 @@ class ORTHOG_EXPORT DLP: public OrthogonalBasis
 
 public:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
-  /**
-   *   @brief Constructor.
-   *   @param   order       Order of the basis
-   *   @param   size        Size of the basis vectors
-   *   @param   orthonormal Flag to indicate the basis should be orthonormal
-   */
-  DLP(const size_t order,
-      const size_t size,
-      const bool orthonormal = false);
+  /// Constructor
+  DLP(const Parameters &p);
 
   /// Virtual destructor
   virtual ~DLP(){}
@@ -47,6 +39,6 @@ public:
 
 #endif // detran_orthog_DLP_HH_
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file DLP.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

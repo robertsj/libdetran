@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   EigenArnoldi.i.hh
- *  @author robertsj
- *  @date   Apr 10, 2012
- *  @brief  EigenArnoldi inline member definitions.
+ *  @file  EigenArnoldi.i.hh
+ *  @brief EigenArnoldi inline member definitions.
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_EIGENARNOLDI_I_HH_
 #define detran_EIGENARNOLDI_I_HH_
@@ -20,7 +19,7 @@
 namespace detran
 {
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 template <class D>
 void EigenArnoldi<D>::solve()
 {
@@ -57,3 +56,8 @@ void EigenArnoldi<D>::solve()
 } // end namespace detran
 
 #endif /* detran_EIGENARNOLDI_I_HH_ */
+
+//----------------------------------------------------------------------------//
+//              end of EigenArnoldi.i.hh
+//----------------------------------------------------------------------------//
+

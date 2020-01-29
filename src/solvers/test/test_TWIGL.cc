@@ -22,11 +22,7 @@
 #include "kinetics/LinearExternalSource.hh"
 #include "kinetics/LinearMaterial.hh"
 #include "solvers/EigenvalueManager.hh"
-//
-#include "angle/test/quadrature_fixture.hh"
-#include "geometry/test/mesh_fixture.hh"
-#include "material/test/material_fixture.hh"
-#include "external_source/test/external_source_fixture.hh"
+
 
 using namespace detran_test;
 using namespace detran;
@@ -80,97 +76,152 @@ public:
   void update_impl()
   {
     double t = time();
-    //t -= 0.000005;
-    //
-    int m = 0;
-    set_diff_coef(m, 0,  1.400);
-    set_diff_coef(m, 1,  0.400);
-    double sa = 0.150;
-    if (d_perturbation == 1) // RAMP
-    {
-      if (t >= 0.1 && t < 0.3)
-        sa = 0.150 * (1.0 - 0.11667 * (t - 0.1));
-      else if (t >= 0.3)
-        sa = 0.150 * 0.97666;
-    }
-    else if (d_perturbation == 2) // STEP
-    {
-      if (t >= 0.1)
-        sa = 0.150 - 0.0035;
-    }
+
     if (d_transport)
     {
-      set_sigma_t(m, 0,    1/(3*1.4));
-      set_sigma_t(m, 1,    1/(3*0.4));
-      set_sigma_s(m, 0, 0, 1/(3*1.4) - 0.01 - 0.01);
-      set_sigma_s(m, 1, 1, 1/(3*0.4) - sa);
+      double s_a[3][2] = {{0.01, 0.15}, {0.01, 0.15}, {0.008, 0.05}};
+      double s_t[3][2] = {{0.2481, 0.9833}, {0.2481, 0.9833}, {0.2644, 0.7167}};
+      double s_f[3][2] = {{0.007, 0.2}, {0.007, 0.2}, {0.003, 0.06}};
+      double s_s[3][2][2] =  {  {{0.2281, 0.0000},
+    	    	                 {0.0100, 0.8333}},
+    			        {{0.2281, 0.0000},
+    				 {0.0100, 0.8333}},
+    				{{0.2464, 0.0000},
+    				 {0.0100, 0.6667}} };
+      for (int m = 0; m < 3; ++m)
+      {
+    	set_chi(m, 0, 1.0);
+    	set_chi(m, 1, 0.0);
+    	set_chi_d(m, 0, 0, 1.0);
+    	set_chi_d(m, 0, 1, 0.0);
+    	for (int g = 0; g < 2; ++g)
+    	{
+    	  set_sigma_t(m, g, s_t[m][g]);
+    	  set_sigma_f(m, g, s_f[m][g]);
+    	  set_nu(m, g, 1.0);
+    	  for (int gp = 0; gp < 2; ++gp)
+    	  {
+    	    set_sigma_s(m, g, gp, s_s[m][g][gp]);
+    	  }
+    	}
+      }
+      set_lambda(0,        0.08);
+      set_beta(0,          0.0075);
+      set_velocity(0,      1.0e7);
+      set_velocity(1,      2.0e5);
+      if (d_perturbation == 1)
+      {
+        double st;
+        if (t < 0.1)
+          st = s_t[0][1];
+        else if (t >= 0.1 && t < 0.3)
+          st = s_t[0][1]*(0.3-t)/0.2 + (s_t[0][1]-0.0035)*(t-0.1)/0.2;
+        else
+          st = s_t[0][1]-0.0035;
+        set_sigma_t(0, 1, st);
+      }
+      else
+      {
+        if (t >= 0.1)
+          set_sigma_t(0, 1, s_t[0][1]-0.0035);
+      }
+      compute_sigma_a();
+      compute_diff_coef();
+      finalize();
     }
     else
     {
-      set_sigma_t(m, 0,    0.010 + 0.010);
-      set_sigma_t(m, 1,    sa);
+        int m = 0;
+        set_diff_coef(m, 0,  1.400);
+        set_diff_coef(m, 1,  0.400);
+        double sa = 0.150;
+        if (d_perturbation == 1) // RAMP
+        {
+          if (t >= 0.1 && t < 0.3)
+            sa = 0.150 * (1.0 - 0.11667 * (t - 0.1));
+          else if (t >= 0.3)
+            sa = 0.150 * 0.97666;
+        }
+        else if (d_perturbation == 2) // STEP
+        {
+          if (t >= 0.1)
+            sa = 0.150 - 0.0035;
+        }
+        if (d_transport)
+        {
+          set_sigma_t(m, 0,    1/(3*1.4));
+          set_sigma_t(m, 1,    1/(3*0.4));
+          set_sigma_s(m, 0, 0, 1/(3*1.4) - 0.01 - 0.01);
+          set_sigma_s(m, 1, 1, 1/(3*0.4) - sa);
+        }
+        else
+        {
+          set_sigma_t(m, 0,    0.010 + 0.010);
+          set_sigma_t(m, 1,    sa);
+        }
+        set_sigma_s(m, 1, 0, 0.010);
+        set_sigma_f(m, 0,    0.007);
+        set_sigma_f(m, 1,    0.200);
+        set_nu(m, 0,         1.0);
+        set_nu(m, 1,         1.0);
+        set_chi(m, 0,        1.000);
+        //
+        m = 1;
+        set_diff_coef(m, 0,  1.400);
+        set_diff_coef(m, 1,  0.400);
+        if (d_transport)
+        {
+          set_sigma_t(m, 0,    1/(3*1.4));
+          set_sigma_t(m, 1,    1/(3*0.4));
+          set_sigma_s(m, 0, 0, 1/(3*1.4) - 0.01 - 0.01);
+          set_sigma_s(m, 1, 1, 1/(3*0.4) - 0.150);
+        }
+        else
+        {
+          set_sigma_t(m, 0,    0.010 + 0.010);
+          set_sigma_t(m, 1,    0.150);
+        }
+        set_sigma_s(m, 1, 0, 0.010);
+        set_sigma_f(m, 0,    0.007);
+        set_sigma_f(m, 1,    0.200);
+        set_nu(m, 0,         1.0);
+        set_nu(m, 1,         1.0);
+        set_chi(m, 0,        1.000);
+        //
+        m = 2;
+        set_diff_coef(m, 0,  1.300);
+        set_diff_coef(m, 1,  0.500);
+        if (d_transport)
+        {
+          set_sigma_t(m, 0,    1/(3*1.3));
+          set_sigma_t(m, 1,    1/(3*0.5));
+          set_sigma_s(m, 0, 0, 1/(3*1.3) - 0.008 - 0.01);
+          set_sigma_s(m, 1, 1, 1/(3*0.5) - 0.050);
+        }
+        else
+        {
+          set_sigma_t(m, 0,    0.008 + 0.01);
+          set_sigma_t(m, 1,    0.050);
+        }
+        set_sigma_s(m, 1, 0, 0.010);
+        set_sigma_f(m, 0,    0.003);
+        set_sigma_f(m, 1,    0.060);
+        set_nu(m, 0,         1.0);
+        set_nu(m, 1,         1.0);
+        set_chi(m, 0,        1.000);
+        // kinetics
+        set_lambda(0,        0.08);
+        set_beta(0,          0.0075);
+        set_velocity(0,      1.0e7);
+        set_velocity(1,      2.0e5);
+        // delayed chi(m, i, g, v)
+        set_chi_d(0, 0, 0,    1.00000);
+        set_chi_d(1, 0, 0,    1.00000);
+        set_chi_d(2, 0, 0,    1.00000);
+        //
+        finalize();
     }
-    set_sigma_s(m, 1, 0, 0.010);
-    set_sigma_f(m, 0,    0.007);
-    set_sigma_f(m, 1,    0.200);
-    set_nu(m, 0,         1.0);
-    set_nu(m, 1,         1.0);
-    set_chi(m, 0,        1.000);
-    //
-    m = 1;
-    set_diff_coef(m, 0,  1.400);
-    set_diff_coef(m, 1,  0.400);
-    if (d_transport)
-    {
-      set_sigma_t(m, 0,    1/(3*1.4));
-      set_sigma_t(m, 1,    1/(3*0.4));
-      set_sigma_s(m, 0, 0, 1/(3*1.4) - 0.01 - 0.01);
-      set_sigma_s(m, 1, 1, 1/(3*0.4) - 0.150);
-    }
-    else
-    {
-      set_sigma_t(m, 0,    0.010 + 0.010);
-      set_sigma_t(m, 1,    0.150);
-    }
-    set_sigma_s(m, 1, 0, 0.010);
-    set_sigma_f(m, 0,    0.007);
-    set_sigma_f(m, 1,    0.200);
-    set_nu(m, 0,         1.0);
-    set_nu(m, 1,         1.0);
-    set_chi(m, 0,        1.000);
-    //
-    m = 2;
-    set_diff_coef(m, 0,  1.300);
-    set_diff_coef(m, 1,  0.500);
-    if (d_transport)
-    {
-      set_sigma_t(m, 0,    1/(3*1.3));
-      set_sigma_t(m, 1,    1/(3*0.5));
-      set_sigma_s(m, 0, 0, 1/(3*1.3) - 0.008 - 0.01);
-      set_sigma_s(m, 1, 1, 1/(3*0.5) - 0.050);
-    }
-    else
-    {
-      set_sigma_t(m, 0,    0.008 + 0.01);
-      set_sigma_t(m, 1,    0.050);
-    }
-    set_sigma_s(m, 1, 0, 0.010);
-    set_sigma_f(m, 0,    0.003);
-    set_sigma_f(m, 1,    0.060);
-    set_nu(m, 0,         1.0);
-    set_nu(m, 1,         1.0);
-    set_chi(m, 0,        1.000);
-    // kinetics
-    set_lambda(0,        0.08);
-    set_beta(0,          0.0075);
-    set_velocity(0,      1.0e7);
-    set_velocity(1,      2.0e5);
-    // delayed chi(m, i, g, v)
-    set_chi_d(0, 0, 0,    1.00000);
-    set_chi_d(1, 0, 0,    1.00000);
-    set_chi_d(2, 0, 0,    1.00000);
-    //
-    finalize();
+
   }
 
 private:
@@ -227,25 +278,25 @@ int test_TWIGL(int argc, char *argv[])
   InputDB::SP_input inp(new InputDB("TWIGL benchmark"));
   inp->put<int>("dimension",                      2);
   inp->put<int>("number_groups",                  2);
-  inp->put<std::string>("equation",               "diffusion");
+  inp->put<std::string>("equation",               "dd");
   inp->put<std::string>("bc_west",                "reflect");
   inp->put<std::string>("bc_east",                "vacuum");
   inp->put<std::string>("bc_south",               "reflect");
   inp->put<std::string>("bc_north",               "vacuum");
   inp->put<int>("bc_zero_flux",                   0);
   inp->put<double>("ts_final_time",               0.6);
-  inp->put<double>("ts_step_size",                0.01);
+  inp->put<double>("ts_step_size",                0.001);
   inp->put<int>("ts_max_steps",                   1000);
-  inp->put<int>("ts_scheme",                      TS_2D::BDF2);
+  inp->put<int>("ts_scheme",                      TS_2D::IMP);
   inp->put<int>("ts_output",                      0);
   inp->put<int>("ts_monitor_level",               1);
   inp->put<int>("ts_no_extrapolation",            0);
   inp->put<string>("eigen_solver",                "arnoldi");
-  inp->put<int>("quad_number_polar_octant",       3);
-  inp->put<int>("quad_number_azimuth_octant",     3);
+  inp->put<int>("quad_number_polar_octant",       8);
+  inp->put<int>("quad_number_azimuth_octant",     8);
 
-//  inp->put<string>("outer_solver",          "GMRES");
-//  inp->put<int>("outer_krylov_group_cutoff",      1);
+  inp->put<string>("outer_solver",          "GMRES");
+  inp->put<int>("outer_krylov_group_cutoff",      0);
   //inp->put<int>("compute_boundary_flux",          1);
 
   inp->put<string>("inner_solver",          "SI");
@@ -254,9 +305,10 @@ int test_TWIGL(int argc, char *argv[])
   inp->put<int>("inner_max_iters",          1e5);
 
   inp->put<int>("inner_print_level",        0);
-  inp->put<int>("outer_print_level",        0);
+  inp->put<int>("outer_print_level",        1);
   inp->put<int>("quad_number_azimuth_octant",   1);
   inp->put<int>("quad_number_polar_octant",     1);
+
   // inner gmres parameters
   InputDB::SP_input db(new InputDB("inner_solver_db"));
   db->put<double>("linear_solver_atol",                 1e-12);
@@ -286,7 +338,7 @@ int test_TWIGL(int argc, char *argv[])
   // Create a TWIGL material with ramp reactivity
   bool transport = false;
   if (inp->get<std::string>("equation") != "diffusion") transport = true;
-  TS_2D::SP_material mat(new TWIGLMaterial(1, transport));
+  TS_2D::SP_material mat(new TWIGLMaterial(2, transport));
 
   //-------------------------------------------------------------------------//
   // MESH
@@ -326,9 +378,7 @@ int test_TWIGL(int argc, char *argv[])
 
   TS_2D stepper(inp, mat, mesh, true);
   stepper.set_monitor(test_monitor);
-
   stepper.solve(ic);
-  //stepper.state()->display();
 
 
   printf(" %20.16f %20.16f ", ic->phi(0)[0], ic->phi(0)[1]);

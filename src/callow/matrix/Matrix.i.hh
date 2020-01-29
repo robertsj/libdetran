@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   Matrix.i.hh
- *  @author robertsj
- *  @date   Sep 13, 2012
- *  @brief  Matrix.i class definition.
+ *  @file  Matrix.i.hh
+ *  @brief Matrix inline member definitions
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef callow_MATRIX_I_HH_
 #define callow_MATRIX_I_HH_
@@ -22,142 +21,11 @@
 namespace callow
 {
 
-//---------------------------------------------------------------------------//
-// PREALLOCATION
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
+// ACCESS
+//----------------------------------------------------------------------------//
 
-inline void Matrix::preallocate(const int nnzrow)
-{
-  // preconditions
-  Require(d_sizes_set);
-  Require(!d_allocated);
-  Require(nnzrow > 0);
-  // set number of nonzeros, preallocate triplets, and initialize counter
-  d_aij.resize(d_m, std::vector<triplet_T>(nnzrow));
-  d_counter.resize(d_m, 0);
-  d_allocated = true;
-}
-
-
-inline void Matrix::preallocate(int* nnzrows)
-{
-  // preconditions
-  Require(d_sizes_set);
-  Require(!d_allocated);
-  // set number of nonzeros, preallocate triplets, and initialize counter
-  d_aij.resize(d_m);
-  for (int i = 0; i < d_m; i++)
-  {
-    Require(nnzrows[i] >= 0);
-    d_aij[i].resize(nnzrows[i]);
-  }
-  d_counter.resize(d_m, 0);
-  d_allocated = true;
-}
-
-//---------------------------------------------------------------------------//
-// ASSEMBLING
-//---------------------------------------------------------------------------//
-
-/*
- *  We construct in COO format, ie with (i,j,v) triplets.  This makes
- *  adding entries much easier.  Now, we need to order everything
- *  so that the resulting CSR storage has for all i-->j, with j in
- *  order.  The diagonal pointer is also set.  If (i,i,v) doesn't exist,
- *  we insert it, since that's needed for Gauss-Seidel, preconditioning,
- *  and other things.
- */
-
-inline void Matrix::assemble()
-{
-  // Preconditions
-  Insist(!d_is_ready, "This matrix must not have been assembled already.");
-  Insist(d_allocated, "This matrix must be allocated before assembling.");
-
-  typedef std::vector<triplet_T>::iterator it_T;
-
-  // sort the coo structure
-  d_nnz = 0;
-  for (int i = 0; i < d_m; i++)
-  {
-//    std::cout << " before sort" << std::endl;
-//    for (int j = 0; j < d_aij[i].size(); ++j)
-//      std::cout << d_aij[i][j] << std::endl;
-
-    // do the sort
-    std::sort(d_aij[i].begin(), d_aij[i].end(), compare_triplet);
-
-//    std::cout << " after sort" << std::endl;
-//    for (int j = 0; j < d_aij[i].size(); ++j)
-//      std::cout << d_aij[i][j] << std::endl;
-
-    // remove empty entries (if not entered, i,j==-1)
-    while ( (d_aij[i].end()-1)->j == -1 ) d_aij[i].pop_back();
-
-//    std::cout << " after pop" << std::endl;
-//    for (int j = 0; j < d_aij[i].size(); ++j)
-//      std::cout << d_aij[i][j] << std::endl;
-
-    // find and/or insert the diagonal
-    int j = 0;
-    for (size_t k = 0; k < d_aij[i].size(); ++k)
-      if (d_aij[i][k].j <= d_aij[i][k].i) ++j;
-    if (j) --j;
-    if (d_aij[i][j].i != d_aij[i][j].j && i < d_n)
-      d_aij[i].insert(d_aij[i].begin()+j, triplet_T(i, i, 0.0));
-
-
-//    std::cout << " after diag" << std::endl;
-//    for (int j = 0; j < d_aij[i].size(); ++j)
-//      std::cout << d_aij[i][j] << std::endl;
-
-    // update the total nonzero count
-    d_nnz += d_aij[i].size();
-  }
-
-  // allocate
-  d_rows = new int[d_m + 1];
-  d_columns = new int[d_nnz];
-  d_values = new double[d_nnz];
-  d_diagonals = new int[d_m];
-
-  // fill the csr storage
-  d_rows[0] = 0;
-  // pointer to value index
-  int p = 0;
-  // for all rows
-  for (int i = 0; i < d_m; i++)
-  {
-    // for all columns in the row
-    for (size_t j = 0; j < d_aij[i].size(); ++j, ++p)
-    {
-      d_columns[p] = d_aij[i][j].j;
-      d_values[p] = d_aij[i][j].v;
-      // store diagonal index
-      if (d_columns[p] == i) d_diagonals[i] = p;
-    }
-    d_rows[i + 1] = p;
-    // delete this row of coo storage
-    d_aij[i].clear();
-  }
-  // delete the coo storage and specify the matrix is set to use
-  d_aij.clear();
-
-#ifdef CALLOW_ENABLE_PETSC
-  PetscErrorCode ierr;
-  ierr = MatCreateSeqAIJWithArrays(PETSC_COMM_SELF, d_m, d_n,
-                                   d_rows, d_columns,
-                                   d_values, &d_petsc_matrix);
-  Assert(!ierr);
-#endif
-  d_is_ready = true;
-}
-
-//---------------------------------------------------------------------------//
-// INDEXING
-//---------------------------------------------------------------------------//
-
-
+//----------------------------------------------------------------------------//
 inline int Matrix::start(const int i) const
 {
   Require(d_is_ready);
@@ -165,6 +33,7 @@ inline int Matrix::start(const int i) const
   return d_rows[i];
 }
 
+//----------------------------------------------------------------------------//
 inline int Matrix::diagonal(const int i) const
 {
   Require(d_is_ready);
@@ -172,7 +41,7 @@ inline int Matrix::diagonal(const int i) const
   return d_diagonals[i];
 }
 
-
+//----------------------------------------------------------------------------//
 inline int Matrix::end(const int i) const
 {
   Require(d_is_ready);
@@ -180,7 +49,7 @@ inline int Matrix::end(const int i) const
   return d_rows[i + 1];
 }
 
-
+//----------------------------------------------------------------------------//
 inline int Matrix::column(const int p) const
 {
   Require(d_is_ready);
@@ -188,7 +57,7 @@ inline int Matrix::column(const int p) const
   return d_columns[p];
 }
 
-
+//----------------------------------------------------------------------------//
 inline double Matrix::operator[](const int p) const
 {
   Require(d_is_ready);
@@ -196,11 +65,7 @@ inline double Matrix::operator[](const int p) const
   return d_values[p];
 }
 
-//---------------------------------------------------------------------------//
-// ACCESS
-//---------------------------------------------------------------------------//
-
-
+//----------------------------------------------------------------------------//
 inline double Matrix::operator()(const int i, const int j) const
 {
   Require(d_is_ready);
@@ -223,30 +88,31 @@ inline double Matrix::operator()(const int i, const int j) const
   return 0.0;
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 // MULTIPLY
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
-
+//----------------------------------------------------------------------------//
 inline void Matrix::multiply(const Vector &x, Vector &y)
 {
   Require(d_is_ready);
   Require(x.size() == d_n);
   Require(y.size() == d_m);
 #ifdef CALLOW_ENABLE_PETSC_OPS
-  MatMult(d_petsc_matrix, const_cast<Vector* >(&x)->petsc_vector(), y.petsc_vector());
+  MatMult(d_petsc_matrix,
+          const_cast<Vector* >(&x)->petsc_vector(), y.petsc_vector());
 #else
   // clear the output vector
   y.scale(0);
   // row pointer
   int p = 0;
   // for all rows
-  #pragma omp for private(p)
-  for (int i = 0; i < d_m; i++)
+  #pragma omp for schedule(static) private(p)
+  for (int i = 0; i < d_m; ++i)
   {
     double temp = y[i];
     // for all columns
-    for (p = d_rows[i]; p < d_rows[i + 1]; p++)
+    for (p = d_rows[i]; p < d_rows[i + 1]; ++p)
     {
       int j = d_columns[p];
       temp += x[j] * d_values[p];
@@ -256,8 +122,7 @@ inline void Matrix::multiply(const Vector &x, Vector &y)
 #endif
 }
 
-// \todo good threading option needed
-
+//----------------------------------------------------------------------------//
 inline void Matrix::multiply_transpose(const Vector &x, Vector &y)
 {
   Require(d_is_ready);
@@ -283,11 +148,11 @@ inline void Matrix::multiply_transpose(const Vector &x, Vector &y)
 #endif
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 // INSERTING VALUES
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
-
+//----------------------------------------------------------------------------//
 inline bool Matrix::insert(int i, int j, double v, const int type)
 {
   Require(!d_is_ready);
@@ -316,7 +181,7 @@ inline bool Matrix::insert(int i, int j, double v, const int type)
   return true;
 }
 
-
+//----------------------------------------------------------------------------//
 inline bool Matrix::insert(int i, int *j, double *v, int n, const int type)
 {
   Require(!d_is_ready);
@@ -358,7 +223,7 @@ inline bool Matrix::insert(int i, int *j, double *v, int n, const int type)
   return true;
 }
 
-
+//----------------------------------------------------------------------------//
 inline bool Matrix::insert(int *i, int j, double *v, int n, const int type)
 {
   Require(!d_is_ready);
@@ -383,7 +248,7 @@ inline bool Matrix::insert(int *i, int j, double *v, int n, const int type)
   return true;
 }
 
-
+//----------------------------------------------------------------------------//
 inline bool Matrix::insert(int *i, int *j, double *v, int n, const int type)
 {
   Require(!d_is_ready);
@@ -409,57 +274,10 @@ inline bool Matrix::insert(int *i, int *j, double *v, int n, const int type)
   return true;
 }
 
-//---------------------------------------------------------------------------//
-// IO
-//---------------------------------------------------------------------------//
-
-
-inline void Matrix::display() const
-{
-  Require(d_is_ready);
-  printf(" CSR matrix \n");
-  printf(" ---------------------------\n");
-  printf("      number rows = %5i \n",   d_m);
-  printf("   number columns = %5i \n",   d_n);
-  printf("      stored size = %5i \n\n", d_nnz);
-  printf("\n");
-  if (d_m > 20 || d_n > 20)
-  {
-    printf("  *** matrix not printed for m or n > 20 *** \n");
-    return;
-  }
-  for (int i = 0; i < d_m; i++)
-  {
-    printf(" row  %3i | ", i);
-    for (int p = d_rows[i]; p < d_rows[i + 1]; p++)
-    {
-      int j = d_columns[p];
-      double v = d_values[p];
-      printf(" %3i (%13.6e)", j, v);
-    }
-    printf("\n");
-  }
-  printf("\n");
-}
-
-inline void Matrix::print_matlab(std::string filename) const
-{
-  Require(d_is_ready);
-  FILE * f;
-  f = fopen (filename.c_str(), "w");
-  for (int i = 0; i < d_m; i++)
-  {
-    for (int p = d_rows[i]; p < d_rows[i + 1]; p++)
-    {
-      int j = d_columns[p];
-      double v = d_values[p];
-      fprintf(f, "%8i   %8i    %23.16e \n", i+1, j+1, v);
-    }
-  }
-  fprintf(f, "\n");
-  fclose (f);
-}
-
 } // end namespace callow
 
 #endif /* callow_MATRIX_I_HH_ */
+
+//----------------------------------------------------------------------------//
+//              end of Matrix.i.hh
+//----------------------------------------------------------------------------//

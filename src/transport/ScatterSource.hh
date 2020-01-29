@@ -1,11 +1,10 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   ScatterSource.hh
- *  @author robertsj
- *  @date   Apr 4, 2012
- *  @brief  ScatterSource class definition.
+ *  @file  ScatterSource.hh
+ *  @brief ScatterSource class definition
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_SCATTERSOURCE_HH_
 #define detran_SCATTERSOURCE_HH_
@@ -15,28 +14,30 @@
 #include "material/Material.hh"
 #include "geometry/Mesh.hh"
 #include "utilities/DBC.hh"
+#include "utilities/MathUtilities.hh"
 #include "utilities/SP.hh"
 #include <iostream>
 
 namespace detran
 {
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 /**
  *  @class ScatterSource
  *  @brief Methods for constructing various scattering sources.
- *  @todo  Implement something in group bounds for adjoint
+ *
+ *  See the individual methods for detailed information.
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 class TRANSPORT_EXPORT ScatterSource
 {
 
 public:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // TYPEDEFS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   typedef detran_utilities::SP<ScatterSource>       SP_scattersource;
   typedef detran_geometry::Mesh::SP_mesh            SP_mesh;
@@ -44,11 +45,14 @@ public:
   typedef State::SP_state                           SP_state;
   typedef State::moments_type                       moments_type;
   typedef detran_utilities::vec_int                 vec_int;
+  typedef detran_utilities::vec_size_t              vec_size_t;
   typedef detran_utilities::size_t                  size_t;
+  typedef vec_size_t                                groups_t;
+  typedef groups_t::iterator                        groups_iter;
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /**
    *  @brief Constructor
@@ -58,9 +62,9 @@ public:
    */
   ScatterSource(SP_mesh mesh, SP_material material, SP_state state);
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // PUBLIC INTERFACE
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /**
    *  @brief Build the within group scattering source.
@@ -75,28 +79,30 @@ public:
    *  @param   source   Mutable reference to moments source.
    *
    */
-  void build_within_group_source(const size_t g,
+  void build_within_group_source(const size_t        g,
                                  const moments_type &phi,
-                                 moments_type &source);
+                                 moments_type       &source);
 
   /**
    *  @brief Build the in-scatter source.
    *
    *  This constructs
    *  @f[
-   *      q_g = \sum^G_{g',g\ne g'} \mathbf{S}_{gg'}\phi_{g'} \, .
+   *      q_g = \sum^G_{g',g\ne g'} \mathbf{S}_{gg'}\phi_{g'}
+   *  @f]
+   *  or for adjoint problems
+   *  @f[
+   *      q_g = \sum^G_{g',g\ne g'} \mathbf{S}_{g'g}\phi_{g'} \, .
    *  @f]
    *
-   *  This *assumes* the state is up-to-date.
+   *  This \e assumes the state is up-to-date.
    *
-   *  @param   g        Group for this problem
-   *  @param   source   Mutable reference to moments source.
-   *  @param   g_down   Highest group to contribute to downscatter
-   *  @param   g_up     Lowest group to contribute to upscatter
+   *  @param   g    Group for this problem
+   *  @param   s    Mutable reference to moments source.
    *
    */
-  void build_in_scatter_source(const size_t g,
-                               moments_type &source);
+  void build_in_scatter_source(const size_t  g,
+                               moments_type &s);
   /**
    *  @brief Build the downscatter source.
    *
@@ -112,12 +118,12 @@ public:
    *  downscatter block.
    *
    *  @param   g        Group for this problem
-   *  @param   g_down   Highest group to contribute to downscatter
-   *  @param   source   Mutable reference to moments source.
+   *  @param   g_cutoff Highest group to contribute to downscatter
+   *  @param   s        Mutable reference to moments source.
    */
-  void build_downscatter_source(const size_t g,
-                                const size_t g_cutoff,
-                                moments_type &source);
+  void build_downscatter_source(const size_t  g,
+                                const size_t  g_cutoff,
+                                moments_type &s);
 
   /**
    *  @brief Build the total scatter source.
@@ -129,26 +135,26 @@ public:
    *      q_g = \sum^G_{g'} \mathbf{S}_{gg'}\phi_{g'} \, .
    *  @f]
    *
-   *  Because Gauss-Seidell can be used to solve downscatter blocks,
+   *  Because Gauss-Seidel can be used to solve downscatter blocks,
    *  a cutoff group is passed to exclude the solved portion of
    *  the problem.
    *
    *  @param   g        Group for this problem.
    *  @param   g_cutoff Highest group to contribute to downscatter.
    *  @param   phi      Const reference to multigroup flux moments.
-   *  @param   source   Mutable reference to moments source.
+   *  @param   s        Mutable reference to moments source.
    *
    */
-  void build_total_group_source(const size_t g,
-                                const size_t g_cutoff,
+  void build_total_group_source(const size_t                   g,
+                                const size_t                   g_cutoff,
                                 const State::vec_moments_type &phi,
-                                moments_type &source);
+                                moments_type                  &s);
 
 protected:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // DATA
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /// Mesh
   SP_mesh d_mesh;
@@ -158,6 +164,25 @@ protected:
   SP_state d_state;
   /// Material map
   vec_int d_mat_map;
+  /// Adjoint
+  bool d_adjoint;
+  /// Vector of group indices for in-scatter, down-scatter, and total-scatter
+  groups_t d_groups;
+
+  //--------------------------------------------------------------------------//
+  // IMPLEMENTATION
+  //--------------------------------------------------------------------------//
+
+  /// Lower bound for a group loop
+  size_t lower(const size_t g) const;
+  /// Upper bound for a group loop
+  size_t upper(const size_t g) const;
+  /// The "from" group
+  size_t g_from(const size_t g, const size_t gp) const;
+  /// the "to" group
+  size_t g_to(const size_t g, const size_t gp) const;
+  /// Set group index vector
+  groups_iter groups(const size_t g_start, const size_t g_finish, bool inc);
 
 };
 
@@ -165,14 +190,14 @@ TRANSPORT_TEMPLATE_EXPORT(detran_utilities::SP<ScatterSource>)
 
 } // end namespace detran
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 // INLINE MEMBER DEFINITIONS
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #include "ScatterSource.i.hh"
 
 #endif /* detran_SCATTERSOURCE_HH_ */
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of ScatterSource.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

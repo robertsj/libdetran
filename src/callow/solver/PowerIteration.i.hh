@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   PowerIteration.i.hh
- *  @brief  PowerIteration inline member definitions
- *  @author Jeremy Roberts
- *  @date   Sep 24, 2012
+ *  @file  PowerIteration.i.hh
+ *  @brief PowerIteration inline member definitions
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 

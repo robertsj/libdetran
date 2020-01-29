@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   WGSolverGMRES.i.hh
- *  @author robertsj
- *  @date   Apr 4, 2012
- *  @brief  WGSolverGMRES inline member definitions.
+ *  @file  WGSolverGMRES.i.hh
+ *  @brief WGSolverGMRES inline member definitions.
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 
@@ -26,7 +25,7 @@ inline void WGSolverGMRES<D>::solve(const size_t g)
   using std::endl;
 
   if (d_print_level > 0) std::cout << "    Starting GMRES." << std::endl;
-  if (d_print_level > 0) std::cout << "      group " << g << std::endl;
+  if (d_print_level > 0) std::cout << "      group " << (int)g << std::endl;
 
   // Set the group for this solve.
   d_g = g;
@@ -67,8 +66,8 @@ inline void WGSolverGMRES<D>::solve(const size_t g)
                     BoundaryBase<D>::IN, BoundaryBase<D>::SET, true);
   }
 
-  // Iterate to pick up outgoing boundary fluxes if requested.
-  if (d_update_boundary_flux)
+  // Iterate to pick up angular fluxes fluxes if requested.
+  if (d_update_angular_flux)
   {
     // Any fixed condition must be set again.
     d_boundary->set(d_g);
@@ -91,7 +90,6 @@ inline void WGSolverGMRES<D>::solve(const size_t g)
     d_reflective_solve_iterations = iteration;
     d_sweeper->set_update_boundary(false);
   }
-  //d_state->display();
 
   if (d_print_level > 0)
   {

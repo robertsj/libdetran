@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   Vector.cc
- *  @author robertsj
- *  @date   Sep 13, 2012
- *  @brief  Vector member definitions
+ *  @file  Vector.cc
+ *  @brief Vector member definitions
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 
@@ -157,7 +156,7 @@ Vector::~Vector()
 {
   if (!d_size) return;
 #ifdef CALLOW_ENABLE_PETSC
-    // If it was a temporary wrap around an extend Vec, do nothing.
+    // If it was a temporary wrap around an extent Vec, do nothing.
     // Otherwise, we have to kill it.
     if (d_temporary_petsc)
       return;
@@ -199,9 +198,9 @@ void Vector::resize(const int n, const double v)
 // IO
 //---------------------------------------------------------------------------//
 
-void Vector::display() const
+void Vector::display(const std::string &name) const
 {
-  printf(" Vector \n");
+  printf(" Vector: %s \n", name.c_str());
   printf(" ---------------------------\n");
   printf("      number rows = %5i \n\n", d_size);
   if (d_size > 100)

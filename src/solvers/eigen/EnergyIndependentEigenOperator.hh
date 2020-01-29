@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   EnergyIndependentEigenOperator.hh
- *  @author robertsj
- *  @date   Nov 9, 2012
- *  @brief  EnergyIndependentEigenOperator class definition.
+ *  @file  EnergyIndependentEigenOperator.hh
+ *  @brief EnergyIndependentEigenOperator class definition
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_ENERGYINDEPENDENTEIGENOPERATOR_HH_
 #define detran_ENERGYINDEPENDENTEIGENOPERATOR_HH_
@@ -22,7 +21,7 @@ namespace detran
  *
  *  This operator represents the action of
  *  @f[
- *      \mathbf{f}^T (\mathbf{I} - \mathbf{TMS})^{-1}
+ *      \mathbf{F}^T (\mathbf{I} - \mathbf{TMS})^{-1}
  *      \mathbf{TM} \boldsymbol{\chi} \, .
  *  @f]
  *
@@ -36,9 +35,9 @@ class EnergyIndependentEigenOperator: public callow::MatrixShell
 
 public:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // TYPEDEFS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   typedef MatrixShell                                   Base;
   typedef EnergyIndependentEigenOperator<D>             Operator_T;
@@ -49,9 +48,9 @@ public:
   typedef typename Fixed_T::SP_fissionsource            SP_fissionsource;
   typedef callow::Vector                                Vector;
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /**
    *  @brief Constructor
@@ -62,16 +61,16 @@ public:
   // Destructor
   virtual ~EnergyIndependentEigenOperator(){}
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   // Default shell display gives just the sizes
   virtual void display() const;
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL MATRICES MUST IMPLEMENT THESE
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   // the client must implement the action y <-- A * x
   virtual void multiply(const Vector &x,  Vector &y);
@@ -84,9 +83,9 @@ public:
 
 private:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // DATA
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /// Multigroup solver
   SP_mg_solver d_mg_solver;
@@ -98,3 +97,7 @@ private:
 } // end namespace detran
 
 #endif /* detran_ENERGYINDEPENDENTEIGENOPERATOR_HH_ */
+
+//----------------------------------------------------------------------------//
+//              end of file EnergyIndependentEigenOperator.hh
+//----------------------------------------------------------------------------//

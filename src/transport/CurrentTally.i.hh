@@ -1,10 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
  *  @file  CurrentTally.i.hh
  *  @brief CurrentTally inline member definitions
  *  @note  Copyright (C) Jeremy Roberts 2013
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_CURRENTTALLY_I_HH_
 #define detran_CURRENTTALLY_I_HH_
@@ -12,7 +12,7 @@
 namespace detran
 {
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 // Get the partial current on a coarse mesh edge.
 template <class D>
 inline double
@@ -23,8 +23,7 @@ CurrentTally<D>::partial_current(const size_t i,
                                  const size_t axis,
                                  const size_t sense)
 {
-  // Precondition
-  Require(axis < D::dimension);
+  Requirev(axis < D::dimension, "Got axis = " + AsString(axis));
   Require(i <= d_coarsemesh->get_coarse_mesh()->number_cells_x());
   Require(j <= d_coarsemesh->get_coarse_mesh()->number_cells_y());
   Require(k <= d_coarsemesh->get_coarse_mesh()->number_cells_z());
@@ -36,7 +35,7 @@ CurrentTally<D>::partial_current(const size_t i,
   return d_partial_current[axis][g][sense][index(i, j, k, axis)];
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 // Tallying for main body
 template <class D>
 inline void
@@ -88,7 +87,7 @@ CurrentTally<D>::tally(const size_t i,
   }
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 // Tallying for main body, 1D specialization. Things simplify a lot,
 // e.g. the current has no area.
 template <>
@@ -117,7 +116,7 @@ CurrentTally<_1D>::tally(const size_t i,
   }
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 // Tallying for incident boundary.
 template <class D>
 inline void
@@ -133,8 +132,9 @@ CurrentTally<D>::tally(const size_t i,
 
   // Make direction triplet
   const size_t dim[] = {i, j, k};
-  Require( (dim[d0] == 0) ||
-           (dim[d0] == d_coarsemesh->get_fine_mesh()->number_cells(d0) - 1) );
+  Requirev( (dim[d0] == 0) ||
+           (dim[d0] == d_coarsemesh->get_fine_mesh()->number_cells(d0) - 1),
+           "Value is " + AsString(dim[d0]));
 
   // Increment for incident direction
   int inc = 0;
@@ -171,6 +171,6 @@ CurrentTally<D>::tally(const size_t i,
 
 #endif // detran_CURRENTTALLY_I_HH_ 
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file CurrentTally.i.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

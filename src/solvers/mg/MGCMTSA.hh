@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   MGCMTSA.hh
- *  @author robertsj
- *  @date   Dec 6, 2012
- *  @brief  MGCMTSA class definition.
+ *  @file  MGCMTSA.hh
+ *  @brief MGCMTSA class definition.
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 
@@ -23,6 +22,44 @@ namespace detran
 /**
  *  @class MGCMTSA.hh
  *  @brief Multigroup coarse mesh transport synthetic acceleration
+ *
+ *  Recall the multigroup transport equation can be written generically as
+ *  @f[
+ *     \mathbf{A} \phi
+ *       = (\mathbf{I}-\mathbf{T}_h \mathbf{M}_h \mathbf{S}_h})\phi_h
+ *       = \mathbf{T}_hq_h \, ,
+ *  @f]
+ *  where \f$ h \f$ denotes a fine mesh quantity in space, angle, and energy.
+ *  The multigroup TSA preconditioning process \$ \mathbf{\tilde{A}}^{-1} \$
+ *  represents an approximation to \f$ \mathbf{A}^{-1} \f$.  Here,
+ *  we represent that via the process
+ *  @f[
+ *   \mathbf{\tilde{A}} =
+ *     \mathbf{P}
+ *       (\mathbf{I} - \mathbf{T}_H \mathbf{M}_H \mathbf{S}_H)
+ *     \mathbf{R} \, ,
+ *  @f]
+ *  where \f$ H \f$ represents the equivalent operator on a coarse
+ *  mesh,
+ *  \f$ \mathbf{R} \f$ is the restriction operator, and
+ *  \f$ \mathbf{P} \f$ is the prolongation operator.
+ *
+ *  The restriction space is based on a user-specific level defining the
+ *  number of fine cells per coarse cell and/or the number of fine groups
+ *  per coarse group.  A coarser angular mesh is created simply by using
+ *  a smaller quadrature set.  If only a new angle mesh is desired,
+ *  similar to the original TSA methods, the original mesh and materials
+ *  are used.
+ *
+ *  \todo The following should be common functions
+ *
+ *  The restriction in space is based either on a user-defined state vector,
+ *  possibly from an initial guess, partial solution, or other approximation,
+ *  or uniform volume weighting.
+ *
+ *  The restriction in energy is based either on the same user defined state
+ *  vector or a set of material-dependent spectra based on infinite medium
+ *  calculations for each material.
  */
 
 class MGCMTSA: public MGPreconditioner

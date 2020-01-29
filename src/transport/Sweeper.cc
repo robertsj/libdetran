@@ -33,7 +33,6 @@ Sweeper<D>::Sweeper(SP_input input,
   , d_update_boundary(false)
   , d_ordered_octants(std::pow((float)2, (int)D::dimension), 0)
 {
-  // Preconditions
   Require(d_input);
   Require(d_mesh);
   Require(d_material);
@@ -45,6 +44,10 @@ Sweeper<D>::Sweeper(SP_input input,
   // Check whether we keep psi.
   if (d_input->check("store_angular_flux"))
     d_update_psi = (0 != d_input->get<int>("store_angular_flux"));
+
+  // Check for the adjoint mode.
+  if (d_input->check("adjoint"))
+    d_adjoint = 0 != d_input->get<int>("adjoint");
 
   // Perform templated setup tasks.
   setup();
@@ -135,7 +138,7 @@ void Sweeper<D>::setup_spatial_indices()
     for (size_t dim = 0; dim < D::dimension; ++dim)
     {
       if ((o == oct[dim][0] || o == oct[dim][1]  ||
-           o == oct[dim][2] || o == oct[dim][3]   ) && !d_adjoint)
+           o == oct[dim][2] || o == oct[dim][3]   ))// && !d_adjoint)
       {
         d_space_ranges[o][dim][0] = 0;
         d_space_ranges[o][dim][1] = 1;

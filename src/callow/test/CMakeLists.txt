@@ -34,4 +34,24 @@ ADD_EXECUTABLE(test_EigenSolver         test_EigenSolver.cc)
 TARGET_LINK_LIBRARIES(test_EigenSolver  callow )
 ADD_TEST(test_PowerIteration            test_EigenSolver 0)
 
+ADD_EXECUTABLE(test_Davidson            test_Davidson.cc)
+TARGET_LINK_LIBRARIES(test_Davidson     callow )
+ADD_TEST(test_Davidson_standard         test_Davidson   0)
+ADD_TEST(test_Davidson_general          test_Davidson   0)
+
+ADD_EXECUTABLE(test_Eispack             test_Eispack.cc)
+TARGET_LINK_LIBRARIES(test_Eispack      callow )
+ADD_TEST(test_Eispack                   test_Eispack 0)
+
+# Preconditioners
+ADD_EXECUTABLE(test_Preconditioners         test_Preconditioners.cc)
+TARGET_LINK_LIBRARIES(test_Preconditioners  callow )
+ADD_TEST(test_PCJacobi                      test_Preconditioners  0)
+ADD_TEST(test_PCILU0                        test_Preconditioners  1)
+
+# Performance, etc.
+#ADD_EXECUTABLE(test_Threading               test_Threading.cc)
+#TARGET_LINK_LIBRARIES(test_Threading        callow )
+#ADD_TEST(test_ThreadedMatVec                test_Threading  0)
+#ADD_TEST(test_ThreadedJacobi                test_Threading  1)
 

@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   Preconditioner.hh
- *  @brief  Preconditioner
- *  @author Jeremy Roberts
- *  @date   Sep 18, 2012
+ *  @file  Preconditioner.hh
+ *  @brief Preconditioner class definition
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef callow_PRECONDITIONER_HH_
 #define callow_PRECONDITIONER_HH_
@@ -13,6 +12,7 @@
 #include "callow/callow_export.hh"
 #include "callow/callow_config.hh"
 #include "callow/vector/Vector.hh"
+#include "callow/matrix/MatrixShell.hh"
 #include <string>
 
 namespace callow
@@ -52,7 +52,8 @@ namespace callow
  *  available along with user-defined shell preconditioners.
  *  If built with PETSc, all preconditioners are available (to PETSc)
  *  as shells.  Otherwise, the user can set PETSc preconditioners
- *  with PetscSolver parameters.
+ *  with PetscSolver parameters.  If built with SLEPc, preconditioners
+ *  are available for spectral transformations.
  */
 
 class CALLOW_EXPORT Preconditioner
@@ -60,41 +61,44 @@ class CALLOW_EXPORT Preconditioner
 
 public:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // TYPEDEFS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   typedef detran_utilities::SP<Preconditioner>  SP_preconditioner;
+  typedef detran_utilities::size_t              size_t;
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
-  Preconditioner(std::string name)
-    : d_name(name)
-  {
-    /* ... */
-  };
-
+  /// Constructor
+  Preconditioner(const std::string &name);
+  /// Virtual destructor
   virtual ~Preconditioner(){};
 
-#ifdef DETRAN_ENABLE_PETSC
-  /**
-   *  set the PETSc preconditioner and do other setup
-   *
-   *  this should only be called by PetscSolver
-   */
+  //--------------------------------------------------------------------------//
+  // PUBLIC FUNCTIONS
+  //--------------------------------------------------------------------------//
+
+  /// set PETSc preconditioner and other setup (called by PetscSolver)
   void set_petsc_pc(PC pc);
-  /// return petsc preconditioner
+  /// set SLEPc spectral transformer and other setup (called by SlepcSolver)
+  void set_slepc_st(ST st);
+  /// return PETSc preconditioner
   PC petsc_pc() {return d_petsc_pc;}
-#endif
-
-  /// Return the PC name
+  /// return SLEPc spectral transformer
+  ST slepc_st() {return d_slepc_st;}
+  /// return the preconditioner name
   std::string name() const {return d_name;}
+  /// display the preconditioner operator
+  virtual void display(const std::string &name);
+  /// size of the operator
+  size_t size() const {return d_size;}
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL PRECONDITIONERS MUST IMPLEMENT THIS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /// solve Px = b
   virtual void apply(Vector &b, Vector &x) = 0;
@@ -103,20 +107,42 @@ protected:
 
   /// pc name
   std::string d_name;
-
-#ifdef DETRAN_ENABLE_PETSC
   /// PETSc preconditioner
   PC d_petsc_pc;
-#endif
+  /// SLEPc spectral transformation
+  ST d_slepc_st;
+  /// System size
+  size_t d_size;
+
+private:
+
+  /// Shell matrix that allows us to write out the preconditioner
+  class MatrixShellPC: public MatrixShell
+  {
+  public:
+    MatrixShellPC(Preconditioner* p, const size_t m)
+      : MatrixShell(this, m, m)
+      , d_pc(p) {}
+    void multiply(const Vector &x,  Vector &y)
+    {
+      d_pc->apply(*(const_cast<Vector*>(&x)), y);
+    }
+    void multiply_transpose(const Vector &x, Vector &y)
+    {
+      THROW("not implemented");
+    }
+  private:
+    Preconditioner* d_pc;
+  };
 
 };
 
-#ifdef DETRAN_ENABLE_PETSC
-// this is the function petsc actual calls; internally, it redirects
-// to our own operation.  all callow preconditioners are viewed by
-// petsc as shells.
+//@{
+/// These are the methods actually called by PETSc or SLEPc.  The callow
+/// preconditioners are viewed as shells.
 PetscErrorCode pc_apply_wrapper(PC pc, Vec b, Vec x);
-#endif
+PetscErrorCode st_apply_wrapper(ST st, Vec b, Vec x);
+//@}
 
 CALLOW_TEMPLATE_EXPORT(detran_utilities::SP<Preconditioner>)
 
@@ -126,6 +152,6 @@ CALLOW_TEMPLATE_EXPORT(detran_utilities::SP<Preconditioner>)
 
 #endif // callow_PRECONDITIONER_HH_
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file Preconditioner.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   EigenvalueManager.cc
- *  @author robertsj
- *  @date   Oct 24, 2012
- *  @brief  EigenvalueManager class definition.
+ *  @file  EigenvalueManager.cc
+ *  @brief EigenvalueManager class definition
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 
@@ -18,23 +17,29 @@
 #include "solvers/eigen/EigenPI.hh"
 #include "solvers/eigen/EigenDiffusion.hh"
 #include "solvers/eigen/EigenArnoldi.hh"
+#include "solvers/eigen/EigenGD.hh"
+#include "solvers/eigen/EigenCMFD.hh"
 
 #include <string>
 
 namespace detran
 {
 
+using std::cout;
+using std::endl;
+
 //---------------------------------------------------------------------------//
 template <class D>
-EigenvalueManager<D>::EigenvalueManager(int argc,
-                                        char *argv[],
-                                        SP_input    input,
-                                        SP_material material,
-                                        SP_mesh     mesh)
+EigenvalueManager<D>::EigenvalueManager(int          argc,
+                                        char        *argv[],
+                                        SP_input     input,
+                                        SP_material  material,
+                                        SP_mesh      mesh)
   : TransportManager(argc, argv)
+  , d_adjoint(false)
   , d_discretization(0)
+  , d_is_setup(false)
 {
-  // Preconditions
   Require(input);
   Require(material);
   Require(mesh);
@@ -45,7 +50,6 @@ EigenvalueManager<D>::EigenvalueManager(int argc,
   d_mg_solver->set_solver();
   d_discretization = d_mg_solver->discretization();
 
-  // Postconditions
   Ensure(d_mg_solver);
 }
 
@@ -54,9 +58,10 @@ template <class D>
 EigenvalueManager<D>::EigenvalueManager(SP_input    input,
                                         SP_material material,
                                         SP_mesh     mesh)
-  : d_discretization(0)
+  : d_adjoint(false)
+  , d_discretization(0)
+  , d_is_setup(false)
 {
-  // Preconditions
   Require(input);
   Require(material);
   Require(mesh);
@@ -67,7 +72,6 @@ EigenvalueManager<D>::EigenvalueManager(SP_input    input,
   d_mg_solver->set_solver();
   d_discretization = d_mg_solver->discretization();
 
-  // Postconditions
   Ensure(d_mg_solver);
 }
 
@@ -100,6 +104,22 @@ bool EigenvalueManager<D>::solve()
   else if (eigen_solver == "arnoldi")
   {
       d_solver = new EigenArnoldi<D>(d_mg_solver);
+  }
+  else if (eigen_solver == "cmfd")
+  {
+      d_solver = new EigenCMFD<D>(d_mg_solver);
+  }
+  else if (eigen_solver == "GD")
+  {
+    std::cout << " GD-----> " << std::endl;
+    if (d_discretization == Fixed_T::DIFF)
+    {
+      cout << "GD not applicable for diffusion.  Use the diffusion" << endl;
+      cout << "eigensolver and select gd from callow to use the " << endl;
+      cout << "built-in implementation or use the SLEPc version. " << endl;
+      return false;
+    }
+    d_solver = new EigenGD<D>(d_mg_solver);
   }
   else
   {

@@ -9,12 +9,8 @@
 %module(directors="1", allprotected="1", package="detran") orthog
 %{
 #include <stddef.h>
+#include "orthog/OrthogonalBasisParameters.hh"
 #include "orthog/OrthogonalBasis.hh"
-#include "orthog/ContinuousOrthogonalBasis.hh"
-#include "orthog/CLP.hh"
-#include "orthog/DLP.hh"
-#include "orthog/DCP.hh"
-#include "orthog/DCT.hh"
 %}
 
 // Hide templates from SWIG
@@ -29,13 +25,10 @@
 %import "callow/detran_callow.i"
 
 // Base angle classes and utilities
-%include "OrthogonalBasis.hh"
-%include "ContinuousOrthogonalBasis.hh"
-%include "CLP.hh"
-%include "DLP.hh"
-%include "DCP.hh"
-%include "DCT.hh"
+%include "OrthogonalBasisParameters.hh"
+%template(OrthogonalBasisParamsSP) detran_utilities::SP<detran_orthog::OrthogonalBasisParameters>;
 
+%include "OrthogonalBasis.hh"
 %template(OrthogonalBasisSP) detran_utilities::SP<detran_orthog::OrthogonalBasis>;
 
 //---------------------------------------------------------------------------//

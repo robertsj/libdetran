@@ -10,15 +10,13 @@
 #ifndef MESH_FIXTURE_HH_
 #define MESH_FIXTURE_HH_
 
-// Detran includes
 #include "Mesh1D.hh"
 #include "Mesh2D.hh"
 #include "Mesh3D.hh"
 #include "PinCell.hh"
 #include "Assembly.hh"
 #include "Core.hh"
-
-// Detran utilities
+#include "Point.hh"
 #include "DBC.hh"
 #include "Definitions.hh"
 
@@ -26,7 +24,7 @@
 
 namespace detran_test
 {
-
+using namespace detran_geometry;
 typedef detran_geometry::Mesh::SP_mesh SP_mesh;
 typedef detran_geometry::PinCell::SP_pincell SP_pincell;
 typedef detran_geometry::Assembly::SP_assembly SP_assembly;
@@ -137,13 +135,18 @@ static SP_pincell pincell_fixture()
 {
   // PinCell(double pitch, vec_dbl radii,
   //         vec_int mat_map, bool fuel_flag = true);
-  double pitch = 1.26;
+  Point pitch(1.26, 1.26);
   detran_geometry::PinCell::vec_dbl radii(1, 0.54);
   detran_geometry::PinCell::vec_int mat_map(2, 0);
   mat_map[0] = 1; // pin (fuel I)
   mat_map[1] = 0; // mod
   bool fuel_flag = true; // this is a fuel pin (i.e. not a moderator box)
-  SP_pincell pin(new detran_geometry::PinCell(pitch, radii, mat_map, fuel_flag));
+//  PinCell(const Point      &pitch,
+//          const vec_int    &mat_map,
+//          const vec_dbl    &radii = vec_dbl(0),
+//          const size_t      division = DIVISION_NONE,
+//          const Point      &pincenter = Point(0));
+  SP_pincell pin(new detran_geometry::PinCell(pitch, mat_map, radii));
   pin->meshify(7, true);
   return pin;
 }

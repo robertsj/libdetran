@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   WGTransportOperator.cc
- *  @brief  WGTransportOperator
- *  @author Jeremy Roberts
- *  @date   Oct 30, 2012
+ *  @file  WGTransportOperator.cc
+ *  @brief WGTransportOperator member definitions
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 
@@ -25,6 +24,7 @@ WGTransportOperator<D>::WGTransportOperator(SP_state        state,
   , d_sweepsource(source)
   , d_moments_size(0)
   , d_boundary_size(0)
+  , d_g(0)
 {
   // Preconditions
   Require(d_state);

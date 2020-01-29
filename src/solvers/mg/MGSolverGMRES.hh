@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   MGSolverGMRES.hh
- *  @author robertsj
- *  @date   Apr 9, 2012
- *  @brief  MGSolverGMRES class definition.
+ *  @file  MGSolverGMRES.hh
+ *  @brief MGSolverGMRES class definition
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_MGSOLVERGMRES_HH_
 #define detran_MGSOLVERGMRES_HH_
@@ -19,21 +18,21 @@
 namespace detran
 {
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 /**
  *  @class MGSolverGMRES
  *  @brief Solves the multigroup transport equation via GMRES.
  *
- * Traditionally, the Gauss-Seidel method has been used for multigroup
- * problems. For each group, the within-group equation is solved, and
- * the the fluxes are updated for use in the next group.  However, for
- * problems with significant upscatter, Gauss-Seidel can be quite
- * expensive, even when GMRES (or some better-than-source-iteration
- * scheme) is used for the within group solve.  As an
- * alternative, we can apply GMRES (or other Krylov solvers) to
- * the multigroup
- * problem directly.  The linear system is then
- * \f[
+ *  Traditionally, the Gauss-Seidel method has been used for multigroup
+ *  problems. For each group, the within-group equation is solved, and
+ *  the the fluxes are updated for use in the next group.  However, for
+ *  problems with significant upscatter, Gauss-Seidel can be quite
+ *  expensive, even when GMRES (or some better-than-source-iteration
+ *  scheme) is used for the within group solve.  As an
+ *  alternative, we can apply GMRES (or other Krylov solvers) to
+ *  the multigroup
+ *  problem directly.  The linear system is then
+ *  \f[
  *     \left( ( \mathbf{I} -
  *         \left(\begin{array}{ccc}
  *             T_1  & \cdots & 0     \\
@@ -61,32 +60,41 @@ namespace detran
  *          \vdots \\
  *          \mathbf{T}_G q_G
  *     \end{array} \right] \, .
- * \f]
- * Of course, this can be written succinctly in the same way as the within-
- * group equation:
- * \f[
+ *  \f]
+ *  Of course, this can be written succinctly in the same way as the within-
+ *  group equation:
+ *  \f[
  *     (\mathbf{I}-\mathbf{TMS})\phi = \mathbf{T}q \, ,
- * \f]
- * where \f$ \mathbf{T} = D\mathbf{L}^{-1} \f$ is the sweeping operator with
- * moment contributions added implicitly, and where the Krylov vectors are
- * energy-dependent.
+ *  \f]
+ *  where \f$ \mathbf{T} = D\mathbf{L}^{-1} \f$ is the sweeping operator with
+ *  moment contributions added implicitly, and where the Krylov vectors are
+ *  energy-dependent.
  *
- * By default, only the energy block in which upscatter occurs is
- * solved via Krylov methods.  Because Gauss-Seidel is exact for
- * downscatter, it is used for the downscatter-only block.  The user can
- * switch this using "outer_upscatter_cutoff".
+ *  By default, only the energy block in which upscatter occurs is
+ *  solved via Krylov methods.  Because Gauss-Seidel is exact for
+ *  downscatter, it is used for the downscatter-only block.  The user can
+ *  switch this using "outer_upscatter_cutoff".
  *
- * Reference:
- *   Evans, T., Davidson, G. and Mosher, S. "Parallel Algorithms for
- *   Fixed-Source and Eigenvalue Problems", NSTD Seminar (ORNL), May 27, 2010.
+ *  Reference:
+ *    Evans, T., Davidson, G. and Mosher, S. "Parallel Algorithms for
+ *    Fixed-Source and Eigenvalue Problems", NSTD Seminar (ORNL), May 27, 2010.
  *
- * \todo Consider better ways to handle memory between Vec and vector.  May
- *       want to devise a moment container based on pointer that allows
- *       one to swap memory temporarily (as done with Vec)
+ *  @note While the intent of this class is to provide GMRES as a multigroup
+ *        solver, it makes available any of the applicable \ref callow
+ *        solvers, included PETSc solvers when enabled.  The default solver
+ *        is the built-in GMRES, which is not a highly-tuned implementation!
+ *
+ *  \todo Consider better ways to handle memory between Vec and vector.  May
+ *        want to devise a moment container based on pointer that allows
+ *        one to swap memory temporarily (as done with Vec)
  *
  */
-//---------------------------------------------------------------------------//
-
+//----------------------------------------------------------------------------//
+/**
+ *  @example solvers/test/test_MGSolverGMRES.cc
+ *
+ *  Test of MGSolverGMRES class.
+ */
 template <class D>
 class MGSolverGMRES: public MGTransportSolver<D>
 {
@@ -115,8 +123,11 @@ public:
   typedef MGTransportOperator<D>                    Operator_T;
   typedef typename Operator_T::SP_operator          SP_operator;
   typedef callow::Vector::SP_vector                 SP_vector;
-  typedef MGPreconditioner::SP_preconditioner       SP_preconditioner;
+  typedef MGPreconditioner::SP_preconditioner       SP_pc;
   typedef detran_utilities::vec_dbl                 vec_dbl;
+  typedef detran_utilities::size_t                  size_t;
+  typedef detran_utilities::vec_size_t              groups_t;
+  typedef groups_t::iterator                        groups_iter;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -152,6 +163,9 @@ public:
   /// Return number of sweeps
   int number_sweeps() const;
 
+  /// Return the transport operator
+  SP_operator get_operator();
+
 private:
 
   //-------------------------------------------------------------------------//
@@ -180,7 +194,7 @@ private:
   /// Main linear solver
   SP_linearsolver d_solver;
   /// Preconditioner
-  SP_preconditioner d_pc;
+  SP_pc d_pc;
   /// Operator "A" in "Ax = b"
   SP_operator d_operator;
   /// Solution vector
@@ -214,6 +228,8 @@ private:
    *
    */
   int d_krylov_group_cutoff;
+  int d_lower;
+  int d_upper;
   /// Krylov block size (number of groups in Krylov portion of solve)
   int d_number_active_groups;
   /// Count of reflective solve iterations
@@ -222,8 +238,8 @@ private:
   SP_sweeper d_sweeper;
   /// Sweep source
   SP_sweepsource d_sweepsource;
-  /// Flag to update the outgoing fluxes (default: false)
-  bool d_update_boundary_flux;
+  /// Flag to update the angular flux, including boundary and cell values
+  bool d_update_angular_flux;
 
   //-------------------------------------------------------------------------//
   // IMPLEMENTATION
@@ -251,14 +267,14 @@ private:
 
 } // namespace detran
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 // INLINE FUNCTIONS
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #include "MGSolverGMRES.i.hh"
 
 #endif /* detran_MGSOLVERGMRES_HH_ */
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of MGSolverGMRES.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
