@@ -17,7 +17,7 @@
 namespace detran
 {
 
-//---------------------------------------------------------------------------/
+//---------------------------------------------------------------------------//
 template<class D>
 BoundarySN<D>::BoundarySN(SP_input        input,
                           SP_mesh         mesh,
@@ -99,14 +99,22 @@ void BoundarySN<D>::display(bool inout) const
             std::cout << "       ANGLE = " << a << std::endl;
             for (ijk[dim1] = 0; ijk[dim1] < d_mesh->number_cells(dim1); ++ijk[dim1])
             {
-              for (ijk[dim2] = 0; ijk[dim2] < d_mesh->number_cells(dim2); ++ijk[dim2])
+              //std::cout << "dim1=" << dim1 << " val=" << ijk[dim1] << std::endl;
+              if (d_mesh->dimension() == 3)
               {
-
-                std::cout << BV_T::value((*this)(surface, o, a, g), ijk[dim1], ijk[dim2])
-                          << " " << std::endl;
+                for (ijk[dim2] = 0; ijk[dim2] < d_mesh->number_cells(dim2); ++ijk[dim2])
+                {
+                  std::cout << " dim2="<< dim2 << " val=" << ijk[dim2] << std::endl;
+                  std::cout << BV_T::value((*this)(surface, o, a, g), ijk[dim1], ijk[dim2]) << " " << std::endl;
+                }
+                std::cout << std::endl;
               }
-              std::cout << std::endl;
+              else
+              {
+                std::cout << BV_T::value((*this)(surface, o, a, g), ijk[dim1], 0) << " ";
+              }
             }
+            std::cout << std::endl;
           }
         }
       }

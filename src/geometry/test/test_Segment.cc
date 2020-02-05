@@ -1,37 +1,30 @@
-//----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   test_Segment.cc
- * \author Jeremy Roberts
- * \date   Jun 22, 2012
- * \brief  Test of Segment class
- * \note   Copyright (C) 2012 Jeremy Roberts. 
+//----------------------------------*-C++-*-----------------------------------//
+/**
+ *  @file  test_Segment.cc
+ *  @brief Test of Segment class
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
-#define TEST_LIST                     \
+#define TEST_LIST          \
         FUNC(test_Segment)
 
-// Detran headers
 #include "TestDriver.hh"
-#include "Segment.hh"
-
-// Setup
-/* ... */
+#include "geometry/Segment.hh"
 
 using namespace detran_geometry;
 using namespace detran_utilities;
 using namespace detran_test;
-using namespace std;
 
 int main(int argc, char *argv[])
 {
   RUN(argc, argv);
 }
 
-//----------------------------------------------//
+//----------------------------------------------------------------------------//
 // TEST DEFINITIONS
-//----------------------------------------------//
+//----------------------------------------------------------------------------//
 
 int test_Segment(int argc, char *argv[])
 {
@@ -41,6 +34,6 @@ int test_Segment(int argc, char *argv[])
   return 0;
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of test_Segment.cc
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

@@ -1,17 +1,17 @@
-//----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   DiffusionGainOperator.cc
- * \brief  DiffusionGainOperator 
- * \author Jeremy Roberts
- * \date   Sep 10, 2012
+//----------------------------------*-C++-*-----------------------------------//
+/**
+ *  @file  DiffusionGainOperator.cc
+ *  @brief DiffusionGainOperator
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #include "DiffusionGainOperator.hh"
 
 namespace detran
 {
 
+//----------------------------------------------------------------------------//
 DiffusionGainOperator::DiffusionGainOperator(SP_input      input,
                                              SP_material   material,
                                              SP_mesh       mesh,
@@ -21,7 +21,6 @@ DiffusionGainOperator::DiffusionGainOperator(SP_input      input,
   , d_mesh(mesh)
   , d_adjoint(adjoint)
 {
-  // Preconditions
   Require(d_input);
   Require(d_material);
   Require(d_mesh);
@@ -29,7 +28,7 @@ DiffusionGainOperator::DiffusionGainOperator(SP_input      input,
   // Set the dimension and group count
   d_dimension = d_mesh->dimension();
   d_number_groups = d_material->number_groups();
-  d_group_size    = d_mesh->number_cells();
+  d_group_size = d_mesh->number_cells();
 
   // Set matrix dimensions
   Base::set_size(d_number_groups*d_group_size,
@@ -46,28 +45,36 @@ DiffusionGainOperator::DiffusionGainOperator(SP_input      input,
 
   // Build the matrix with the initial keff guess.
   build();
+}
 
+//---------------------------------------------------------------------------//
+void DiffusionGainOperator::construct(SP_material mat)
+{
+  Require(mat->number_groups() == d_material->number_groups());
+  Require(mat->number_materials() == d_material->number_materials());
+  d_material = mat;
+  clear();
+  build();
 }
 
 //---------------------------------------------------------------------------//
 // IMPLEMENTATION
 //---------------------------------------------------------------------------//
 
+//----------------------------------------------------------------------------//
 void DiffusionGainOperator::build()
 {
   using std::cout;
   using std::endl;
 
   // Get the material map.
-  vec_int mat_map = d_mesh->mesh_map("MATERIAL");
+  const vec_int &mat_map = d_mesh->mesh_map("MATERIAL");
 
   for (int g = 0; g < d_number_groups; g++)
   {
-
     // Loop over all cells.
     for (int cell = 0; cell < d_group_size; cell++)
     {
-
       // Compute row index.
       int row = cell + g * d_group_size;
 
@@ -81,28 +88,24 @@ void DiffusionGainOperator::build()
         int col = cell + gp * d_group_size;
 
         // Fold the fission density with the spectrum.
-        double val = d_material->nu_sigma_f(m, gp) *
-                     d_material->chi(m, g);
+        double val = 0;
+        if (d_adjoint)
+          val = d_material->nu_sigma_f(m, g) * d_material->chi(m, gp);
+        else
+          val = d_material->nu_sigma_f(m, gp) * d_material->chi(m, g);
 
         // Set the value.
-        bool flag;
-        if (!d_adjoint)
-          flag = insert(row, col, val, INSERT);
-        else
-          flag = insert(col, row, val, INSERT);
+        bool flag = insert(row, col, val, INSERT);
         Assert(flag);
       }
-
     } // row loop
-
   } // group loop
 
   assemble();
-
 }
 
 } // end namespace detran
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file DiffusionGainOperator.cc
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   SweepSource.i.hh
- *  @author robertsj
- *  @date   Apr 4, 2012
- *  @brief  SweepSource inline member definitions.
+ *  @file  SweepSource.i.hh
+ *  @brief SweepSource inline member definitions
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_SWEEPSOURCE_I_HH_
 #define detran_SWEEPSOURCE_I_HH_
@@ -19,7 +18,7 @@
 namespace detran
 {
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 template <class D>
 inline void SweepSource<D>::build_fixed(const size_t g)
 {
@@ -48,7 +47,7 @@ inline void SweepSource<D>::build_fixed(const size_t g)
   }
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 template <class D>
 inline void SweepSource<D>::
 build_fixed_with_scatter(const size_t g)
@@ -62,7 +61,7 @@ build_fixed_with_scatter(const size_t g)
     d_fissionsource->build_in_fission_source(g, d_fixed_group_source);
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 template <class D>
 inline void SweepSource<D>::
 build_fixed_with_downscatter(const size_t g, const size_t g_cutoff)
@@ -75,7 +74,7 @@ build_fixed_with_downscatter(const size_t g, const size_t g_cutoff)
   // should never be solved in downscatter mode
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 template <class D>
 inline void SweepSource<D>::
 build_within_group_scatter(const size_t g, const moments_type &phi)
@@ -89,7 +88,7 @@ build_within_group_scatter(const size_t g, const moments_type &phi)
     d_fissionsource->build_within_group_source(g, phi, d_scatter_group_source);
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 template <class D>
 inline void SweepSource<D>::
 build_total_scatter(const size_t g, const size_t g_cutoff,
@@ -103,17 +102,19 @@ build_total_scatter(const size_t g, const size_t g_cutoff,
   if (d_implicit_fission)
   {
     // For multiplying problems, there should be no downscatter block.
-    Assert(g_cutoff == 0);
+    Assert(g_cutoff == 0 || g_cutoff == d_state->number_groups() - 1);
     d_fissionsource->build_total_group_source(g, phi,
                                               d_scatter_group_source);
   }
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 template <class D>
 inline void SweepSource<D>::
 source(const size_t g, const size_t o, const size_t a, sweep_source_type &s)
 {
+  // \todo A study on the optimal implementation is warranted.  This
+  //       will certainly be group/quad dependent.
 
   double *s_a = &s[0];
   double *fixed_a = &d_fixed_group_source[0];
@@ -147,14 +148,17 @@ source(const size_t g, const size_t o, const size_t a, sweep_source_type &s)
 //  }
 
   // Add discrete contributions if present.
-  size_t angle = d_quadrature->index(o, a);
-  for (size_t i = 0; i < d_discrete_external_sources.size(); ++i)
-    for (size_t cell = 0; cell < d_mesh->number_cells(); ++cell)
-      s[cell] += d_discrete_external_sources[i]->source(cell, g, angle);
+  if (d_discrete_external_source_flag)
+  {
+    size_t angle = d_quadrature->index(o, a);
+    for (size_t i = 0; i < d_discrete_external_sources.size(); ++i)
+      for (size_t cell = 0; cell < d_mesh->number_cells(); ++cell)
+        s[cell] += d_discrete_external_sources[i]->source(cell, g, angle);
+  }
 
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 template <class D>
 void SweepSource<D>::reset()
 {
@@ -165,9 +169,9 @@ void SweepSource<D>::reset()
   }
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 // EXPLICIT INSTANTIATIONS
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 TRANSPORT_INSTANTIATE_EXPORT(SweepSource<_1D>)
 TRANSPORT_INSTANTIATE_EXPORT(SweepSource<_2D>)
@@ -180,6 +184,6 @@ TRANSPORT_TEMPLATE_EXPORT(detran_utilities::SP<SweepSource<_3D> >)
 
 #endif /* detran_SWEEPSOURCE_I_HH_ */
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of SweepSource.i.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

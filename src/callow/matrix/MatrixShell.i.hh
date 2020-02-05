@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   MatrixShell.i.hh
- * \author robertsj
- * \date   Sep 20, 2012
- * \brief  MatrixShell.i class definition.
+/**
+ *  @file  MatrixShell.i.hh
+ *  @brief MatrixShell inline member definitions
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 
@@ -42,8 +41,10 @@ inline PetscErrorCode shell_multiply_wrapper(Mat A, Vec x, Vec y)
 }
 #endif
 
-
 } // end namespace callow
 
-
 #endif /* callow_MATRIXSHELL_I_HH_ */
+
+//----------------------------------------------------------------------------//
+//              end of MatrixShell.i.hh
+//----------------------------------------------------------------------------//

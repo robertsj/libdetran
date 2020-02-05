@@ -1,18 +1,17 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   MGSolver.cc
- *  @author robertsj
- *  @date   Oct 24, 2012
- *  @brief  MGSolver class definition.
+ *  @file  MGSolver.cc
+ *  @brief MGSolver member definitions
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #include "MGSolver.hh"
 
 namespace detran
 {
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 template <class D>
 MGSolver<D>::MGSolver(SP_state                  state,
                       SP_material               material,
@@ -35,7 +34,7 @@ MGSolver<D>::MGSolver(SP_state                  state,
   if (d_input->check("outer_print_interval"))
     d_print_interval = d_input->template get<int>("outer_print_interval");
   if (d_input->check("adjoint"))
-    d_adjoint = d_input->template get<int>("adjoint");
+    d_adjoint = 0 != d_input->template get<int>("adjoint");
 
   // We can turn off downscatter even if the material has
   // it and is set to use it.  This might be desirable when
@@ -49,9 +48,9 @@ MGSolver<D>::MGSolver(SP_state                  state,
 
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 // EXPLICIT INSTANTIATIONS
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 template class MGSolver<_1D>;
 template class MGSolver<_2D>;

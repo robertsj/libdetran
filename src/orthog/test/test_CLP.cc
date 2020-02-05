@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   test_CLP.cc
- *  @author Jeremy Roberts
- *  @date   Apr 1, 2012
- *  @brief  Test of CLP class
+ *  @file  test_CLP.cc
+ *  @brief Test of CLP class
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
 #define TEST_LIST                   \
@@ -13,6 +12,7 @@
 
 #include "utilities/TestDriver.hh"
 #include "utilities/Definitions.hh"
+#include "utilities/MathUtilities.hh"
 #include "orthog/CLP.hh"
 #include "callow/utils/Initialization.hh"
 #include <cmath>
@@ -29,42 +29,63 @@ int main(int argc, char *argv[])
   callow_finalize();
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 // TEST DEFINITIONS
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 int test_CLP(int argc, char *argv[])
 {
+  CLP::Parameters p;
+  p.size = 10;
+  p.order = 3;
+  p.orthonormal = false;
+  p.x = linspace_center(-1.0, 1.0, p.size);
+  p.qw = vec_dbl(p.size, p.x[1]-p.x[0]);
 
-  int N = 20;
-  int M = 4;
-  double width = 2.0 / N;
+  callow::Vector X(p.x);
+  X.display("X");
 
-  vec_dbl x(N, 0);
-  x[0] = -1.0 + width / 2.0;
-  for (int i = 1; i < N; ++i) x[i] = x[i-1] + width;
+  OrthogonalBasis::Factory_T::ShowRegistered();
+  OrthogonalBasis::SP_basis P = OrthogonalBasis::Create("clp", p);
+  P->basis()->display();
 
-  vec_dbl dx(N, width);
+  callow::Vector f(p.size, 0.0);
+  for (int i = 0; i < p.size; ++i)
+    f[i] = p.x[i]*p.x[i];
 
-  CLP P(M, x, dx);
+  callow::Vector ft(p.order+ 1, 0.0);
+  callow::Vector fa(p.size,     0.0);
 
-  callow::Vector f(N, 0.0);
-  for (int i = 0; i < N; ++i) f[i] = std::cos(x[i]);
+  double ref_coef[] = { 6.6e-01, 0.0, 2.5014e-01, 0.0};
 
-  callow::Vector ft(M + 1, 0.0);
-  callow::Vector f2(N, 0.0);
+  P->transform(f, ft);
 
-  P.transform(f, ft);
-  P.inverse(ft, f2);
+  f.display("F");
+  ft.display("FT");
 
-  f.display();
-  ft.display();
-  f2.display();
+  for (int i = 0; i <= p.order; ++i)
+  {
+    TEST(soft_equiv(ft[i], ref_coef[i]));
+  }
+
+  double ref_appx[] = {7.771252499999999e-01, 4.769572499999999e-01,
+      2.518312500000000e-01, 1.017472500000000e-01, 2.670525000000006e-02,
+      2.670525000000008e-02, 1.017472500000000e-01, 2.518312500000002e-01,
+      4.769572500000001e-01, 7.771252500000000e-01};
+
+  P->inverse(ft, fa);
+
+  fa.display("FA");
+
+  for (int i = 0; i < p.size; ++i)
+  {
+    TEST(soft_equiv(fa[i], ref_appx[i]));
+  }
 
   return 0;
 }
 
 
-//---------------------------------------------------------------------------//
-//              end of test_MomentIndexer.cc
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
+//              end of test_CLP.cc
+//----------------------------------------------------------------------------//

@@ -1,18 +1,15 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   SlepcSolver.hh
- *  @author robertsj
- *  @date   Sep 25, 2012
- *  @brief  SlepcSolver class definition.
+ *  @file  SlepcSolver.hh
+ *  @brief SlepcSolver class definition
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef callow_SLEPCSOLVER_HH_
 #define callow_SLEPCSOLVER_HH_
 
 #include "EigenSolver.hh"
-
-#ifdef CALLOW_ENABLE_SLEPC
 
 namespace callow
 {
@@ -26,27 +23,29 @@ class SlepcSolver: public EigenSolver
 
 public:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // TYPEDEFS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
-  typedef EigenSolver               Base;
-  typedef Base::SP_matrix           SP_matrix;
-  typedef Base::SP_solver           SP_solver;
-  typedef Base::SP_vector           SP_vector;
+  typedef EigenSolver                       Base;
+  typedef Base::SP_matrix                   SP_matrix;
+  typedef Base::SP_solver                   SP_solver;
+  typedef Base::SP_vector                   SP_vector;
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
-  SlepcSolver(const double tol,
-              const int    maxit);
+  SlepcSolver(const std::string &epstype,
+              const double       tol,
+              const int          maxit,
+              const int          number_values);
 
   virtual ~SlepcSolver();
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /**
    *  @brief Sets the operators for the problem.
@@ -56,16 +55,27 @@ public:
    *  @param B      optional right side operator (to be inverted)
    *  @param db     optional database for solver and preconditioner options
    */
-  virtual void set_operators(SP_matrix A,
-                             SP_matrix B = SP_matrix(0),
-                             SP_db db = SP_db(0));
+  void set_operators(SP_matrix A,
+                     SP_matrix B  = SP_matrix(0),
+                     SP_db     db = SP_db(0));
 
+
+  /// Set the preconditioner for a generalized eigenvalue problem
+  void set_preconditioner(SP_preconditioner pc,
+                          const int         side = LinearSolver::LEFT);
+
+  /// Set the preconditioner matrix for a generalized eigenvalue problem
+  void set_preconditioner_matrix(SP_matrix P,
+                                 const int side = LinearSolver::LEFT);
+
+  /// Set the EPS type
+  void set_eps_type(const std::string &eps_type);
 
 private:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // DATA
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   // expose base members
   using Base::d_tolerance;
@@ -79,22 +89,25 @@ private:
   using Base::d_monitor_level;
   using Base::d_lambda;
 
+  /// SLEPc solver type
+  std::string d_eps_type;
   /// SLEPc solver object
   EPS d_slepc_solver;
+  /// Optional preconditioner
+  SP_preconditioner d_P;
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL EIGENSOLVERS MUST IMPLEMENT THIS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   virtual void solve_impl(Vector &x, Vector &x0);
-
 
 };
 
 } // end namespace callow
 
-#include "SlepcSolver.i.hh"
-
-#endif // CALLOW_ENABLE_SLEPC
-
 #endif /* callow_SLEPCSOLVER_HH_ */
+
+//----------------------------------------------------------------------------//
+//              end of file SlepcSolver.hh
+//----------------------------------------------------------------------------//

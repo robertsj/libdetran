@@ -20,7 +20,6 @@
 #include "SP.hh"
 #include "Timer.hh"
 #include "Warning.hh"
-#include "Point.hh"
 
 #endif // DETRAN_UTILITIES_HH_ 
 

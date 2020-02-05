@@ -102,6 +102,16 @@ public:
     /* ... */
   }
 
+  /// Getters
+  //@}
+  SP_input input() {return d_input;}
+  SP_state state() {return d_state;}
+  SP_mesh mesh() {return d_mesh;}
+  SP_material material() {return d_material;}
+  SP_boundary boundary() {return d_boundary;}
+  bool adjoint() {return d_adjoint;}
+  //@}
+
 protected:
 
   //-------------------------------------------------------------------------//

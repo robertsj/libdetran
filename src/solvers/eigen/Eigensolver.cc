@@ -1,26 +1,25 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   Eigensolver.cc
- *  @author robertsj
- *  @date   Jun 18, 2012
- *  @brief  Eigensolver class definition.
+ *  @file  Eigensolver.cc
+ *  @brief Eigensolver member definitions
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #include "Eigensolver.hh"
 
 namespace detran
 {
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 template <class D>
 Eigensolver<D>::Eigensolver(SP_mg_solver mg_solver)
   : d_mg_solver(mg_solver)
 {
-  // Preconditions
   Require(mg_solver);
   d_input = d_mg_solver->input();
   d_state = d_mg_solver->state();
+  d_material = d_mg_solver->material();
   d_mesh  = d_mg_solver->mesh();
   d_fissionsource = d_mg_solver->fissionsource();
   Require(d_input);
@@ -38,19 +37,18 @@ Eigensolver<D>::Eigensolver(SP_mg_solver mg_solver)
     d_print_level = d_input->template get<int>("eigen_print_level");
   if (d_input->check("eigen_print_interval"))
     d_print_interval = d_input->template get<int>("eigen_print_interval");
-
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 template <class D>
 Eigensolver<D>::~Eigensolver()
 {
   /* ... */
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 // EXPLICIT INSTANTIATION
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 template class Eigensolver<_1D>;
 template class Eigensolver<_2D>;
@@ -58,9 +56,6 @@ template class Eigensolver<_3D>;
 
 } // end namespace detran
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of Eigensolver.cc
-//---------------------------------------------------------------------------//
-
-
-
+//----------------------------------------------------------------------------//

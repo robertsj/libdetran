@@ -1,9 +1,8 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   WGPreconditioner.hh
- *  @brief  WGPreconditioner
- *  @author Jeremy Roberts
- *  @date   Nov 11, 2012
+ *  @file  WGPreconditioner.hh
+ *  @brief WGPreconditioner class definition
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
 //---------------------------------------------------------------------------//
 

@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   test_BoundaryDiffusion.cc
- * \author Jeremy Roberts
- * \date   Apr 1, 2012
- * \brief  Test of BoundarySN class
+//----------------------------------*-C++-*-----------------------------------//
+/**
+ *  @file  test_BoundaryDiffusion.cc
+ *  @brief Test of BoundaryDiffusion class
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
 #define TEST_LIST                       \
@@ -13,15 +12,11 @@
         FUNC(test_BoundaryDiffusion_2D) \
         FUNC(test_BoundaryDiffusion_3D)
 
-// Detran headers
 #include "utilities/TestDriver.hh"
 #include "boundary/BoundaryDiffusion.hh"
 #include "geometry/Mesh1D.hh"
 #include "geometry/Mesh2D.hh"
 #include "geometry/Mesh3D.hh"
-
-// Setup
-/* ... */
 
 using namespace detran;
 using namespace detran_geometry;
@@ -36,9 +31,9 @@ int main(int argc, char *argv[])
   RUN(argc, argv);
 }
 
-//----------------------------------------------//
+//----------------------------------------------------------------------------//
 // TEST DEFINITIONS
-//----------------------------------------------//
+//----------------------------------------------------------------------------//
 
 int test_BoundaryDiffusion_1D(int argc, char *argv[])
 {
@@ -159,7 +154,6 @@ int test_BoundaryDiffusion_3D(int argc, char *argv[])
   return 0;
 }
 
-
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of test_BoundaryDiffusion.cc
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

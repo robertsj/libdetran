@@ -1,18 +1,17 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   DiscreteSource.cc
- *  @brief  DiscreteSource member definitions
- *  @author Jeremy Roberts
- *  @date   Sep 6, 2012
+ *  @file  DiscreteSource.cc
+ *  @brief DiscreteSource member definitions
+ *  @note  Copyright (C) Jeremy Roberts 2012-2013
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #include "DiscreteSource.hh"
 
 namespace detran_external_source
 {
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 DiscreteSource::DiscreteSource(size_t         number_groups,
                                SP_mesh        mesh,
                                vec3_dbl       spectra,
@@ -22,7 +21,6 @@ DiscreteSource::DiscreteSource(size_t         number_groups,
   , d_source_spectra(spectra)
   , d_source_map(map)
 {
-  // Preconditions
   Require(d_source_spectra.size()       > 0);
   Require(d_source_spectra[0].size()    == d_number_groups);
   Require(d_source_spectra[0][0].size() == d_number_angles);
@@ -33,6 +31,6 @@ DiscreteSource::DiscreteSource(size_t         number_groups,
 
 } // end namespace detran_external_source
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file DiscreteSource.cc
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   EnergyIndependentEigenOperator.cc
- *  @author robertsj
- *  @date   Nov 9, 2012
- *  @brief  EnergyIndependentEigenOperator class definition.
+ *  @file  EnergyIndependentEigenOperator.cc
+ *  @brief EnergyIndependentEigenOperator class definition
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #include "EnergyIndependentEigenOperator.hh"
 #include <cstring>
@@ -13,14 +12,13 @@
 namespace detran
 {
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 template <class D>
 EnergyIndependentEigenOperator<D>::
 EnergyIndependentEigenOperator(SP_mg_solver mg_solver)
   : Base(this)
   , d_mg_solver(mg_solver)
 {
-  // Preconditions
   Require(d_mg_solver);
 
   // Set the fission source
@@ -30,11 +28,10 @@ EnergyIndependentEigenOperator(SP_mg_solver mg_solver)
   Assert(d_mg_solver->state());
   set_size(d_mg_solver->state()->moments_size());
 
-  // Postconditions
   Ensure(d_fissionsource);
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 template <class D>
 void EnergyIndependentEigenOperator<D>::display() const
 {
@@ -42,7 +39,7 @@ void EnergyIndependentEigenOperator<D>::display() const
   std::cout << "              total size: " << d_m << std::endl;
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 template <class D>
 void EnergyIndependentEigenOperator<D>::multiply(const Vector &x,  Vector &y)
 {
@@ -63,9 +60,9 @@ void EnergyIndependentEigenOperator<D>::multiply(const Vector &x,  Vector &y)
   memcpy(&y[0], &d_fissionsource->density()[0], d_m*sizeof(double));
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 // EXPLICIT INSTANTIATIONS
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 template class EnergyIndependentEigenOperator<_1D>;
 template class EnergyIndependentEigenOperator<_2D>;
@@ -73,8 +70,6 @@ template class EnergyIndependentEigenOperator<_3D>;
 
 } // end namespace detran
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file EnergyIndependentEigenOperator.cc
-//---------------------------------------------------------------------------//
-
-
+//----------------------------------------------------------------------------//

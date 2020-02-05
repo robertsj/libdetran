@@ -1,114 +1,83 @@
-//----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   PolarQuadrature.hh
- * \brief  PolarQuadrature class definition.
- * \author Jeremy Roberts
- * \date   Jun 22, 2012
+//----------------------------------*-C++-*-----------------------------------//
+/**
+ *  @file  PolarQuadrature.hh
+ *  @brief PolarQuadrature class definition
+ *  @note  Copyright (C) Jeremy Roberts 2012-2013
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
-#ifndef POLARQUADRATURE_HH_
-#define POLARQUADRATURE_HH_
+#ifndef detran_angle_POLARQUADRATURE_HH_
+#define detran_angle_POLARQUADRATURE_HH_
 
-#include "angle/angle_export.hh"
-#include "utilities/DBC.hh"
-#include "utilities/Definitions.hh"
-#include "utilities/SP.hh"
-#include <vector>
+#include "angle/Quadrature.hh"
+// Various base quadratures
+#include "angle/BaseGL.hh"
+#include "angle/BaseGC.hh"
+#include "angle/BaseUniform.hh"
+#include "angle/TabuchiYamamoto.hh"
+#include "angle/AbuShumaysDoubleRange.hh"
+#include "angle/TriGauss.hh"
 
 namespace detran_angle
 {
 
-/*!
- *  \class PolarQuadrature
- *  \brief Polar quadrature definition, nominally for MOC
+/**
+ *  @class PolarQuadrature
+ *  @brief Defines a quadrature over [-1, 1]
+ *
+ *  Using any 1-D quadrature implementing @ref BaseQuadrature, this class
+ *  yields a complete angular quadrature for slab geometry or for use in
+ *  defining a @ref ProductQuadrature.
+ *
+ *  @tparam B   Base quadrature class
  */
-class ANGLE_EXPORT PolarQuadrature
+template <class B>
+class ANGLE_EXPORT PolarQuadrature: public Quadrature
 {
 
 public:
 
-  //-------------------------------------------------------------------------//
-  // TYPEDEFS
-  //-------------------------------------------------------------------------//
+  /// Constructor, with optional normalization of weights to unity
+  PolarQuadrature(const size_t number_polar, bool normalize = false);
+  /// Number of polar angles per half space
+  size_t number_polar() const;
+  /// Get polar sines
+  const vec_dbl& sin_theta() const;
+  /// Get polar cosines
+  const vec_dbl& cos_theta() const;
+  /// Return base name
+  static std::string name() {return B::name();}
 
-  typedef detran_utilities::SP<PolarQuadrature>       SP_polar;
-  typedef detran_utilities::size_t                    size_t;
-
-  //-------------------------------------------------------------------------//
-  // PUBLIC INTERFACE
-  //-------------------------------------------------------------------------//
-
-  /*!
-   *  \brief Constructor
-   *  \param number_polar   Number of angles in positive half space
-   */
-  PolarQuadrature(size_t number_polar)
-    : d_number_polar(number_polar)
-    , d_sin(number_polar, 0.0)
-    , d_cos(number_polar, 0.0)
-    , d_weight(number_polar, 0.0)
-  {
-    Require(number_polar > 0);
-  }
-
-  /// Virtual destructor.
-  virtual ~PolarQuadrature(){};
-
-  size_t number_polar() const
-  {
-    return d_number_polar;
-  }
-
-  /*!
-   *  \brief Return a polar sine
-   *  \param p  Polar index in octant
-   */
-  double sin_theta(size_t p) const
-  {
-    Require(p < d_number_polar);
-    return d_sin[p];
-  }
-
-  /*!
-   *  \brief Return a polar cosine
-   *  \param p  Polar index in octant
-   */
-  double cos_theta(size_t p) const
-  {
-    Require(p < d_number_polar);
-    return d_cos[p];
-  }
-
-  /*!
-   *  \brief Return a polar weight
-   *  \param p  Polar index in octant
-   */
-  double weight(size_t p) const
-  {
-    Require(p < d_number_polar);
-    return d_weight[p];
-  }
-
-protected:
-
-  //-------------------------------------------------------------------------//
-  // DATA
-  //-------------------------------------------------------------------------//
+private:
 
   /// Number of polar angles for a single half space.
   size_t d_number_polar;
-  /// Vector of sines
-  std::vector<double> d_sin;
-  /// Vector of cosines
-  std::vector<double> d_cos;
-  /// Vector of weights (sums to 1).
-  std::vector<double> d_weight;
+  /// Vector of polar cosines
+  vec_dbl d_cos_theta;
+  /// Vector of polar sines
+  vec_dbl d_sin_theta;
 
 };
 
-ANGLE_TEMPLATE_EXPORT(detran_utilities::SP<PolarQuadrature>)
+//----------------------------------------------------------------------------//
+// CONVENIENCE TYPEDEFS
+//----------------------------------------------------------------------------//
+
+typedef PolarQuadrature<BaseGL>                 PolarGL;
+typedef PolarQuadrature<BaseDGL>                PolarDGL;
+typedef PolarQuadrature<BaseGC>                 PolarGC;
+typedef PolarQuadrature<BaseDGC>                PolarDGC;
+typedef PolarQuadrature<BaseUniform>            PolarU;
+typedef PolarQuadrature<BaseUniformCosine>      PolarUC;
+typedef PolarQuadrature<BaseSimpson>            PolarS;
+typedef PolarQuadrature<TabuchiYamamoto>        PolarTY;
+typedef PolarQuadrature<AbuShumaysDoubleRange>  PolarASDR;
+typedef PolarQuadrature<TriGauss>               PolarTG;
 
 } // end namespace detran_angle
 
-#endif /* POLARQUADRATURE_HH_ */
+#endif /* detran_angle_POLARQUADRATURE_HH_ */
+
+//----------------------------------------------------------------------------//
+//              end of PolarQuadrature.hh
+//----------------------------------------------------------------------------//

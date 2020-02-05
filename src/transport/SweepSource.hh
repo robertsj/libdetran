@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   SweepSource.hh
- *  @author robertsj
- *  @date   Apr 4, 2012
- *  @brief  SweepSource class definition.
+ *  @file  SweepSource.hh
+ *  @brief SweepSource class definition
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_SWEEPSOURCE_HH_
 #define detran_SWEEPSOURCE_HH_
@@ -27,7 +26,7 @@
 namespace detran
 {
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 /**
  *  @class SweepSource
  *  @brief Construct the source for sweeping
@@ -42,10 +41,9 @@ namespace detran
  *    - in-scattering source (from both up- and down-scattering)
  *    - fission source
  *    - external source
- *  Algorithmically, the fission source behaves as an external source within
- *  an inner iteration.  Moreover, and of importance for response function
- *  generation, there \em can be a fission source (i.e. multiplication)
- *  together with an fixed source.
+ *  Algorithmically, the fission source behaves just like scattering for
+ *  fixed source problems unless explicitly treated as an external source.  For
+ *  eigenvalue problems, it is always treated as an external source.
  *
  *  Recall that a within group equation is represented as
  *  @f[
@@ -53,7 +51,8 @@ namespace detran
  *          [\mathbf{M}][\mathbf{S}]_{gg}[\phi]_g + \bar{Q}_g \, ,
  *  @f]
  *  where \f$ \bar{Q}_g \f$ represents everything \em but the within-group
- *  scattering.  The right hand side is the sweep source (but \em not the
+ *  scattering (and fission, if applicable).
+ *  The right hand side is the sweep source (but \em not the
  *  right hand side for the linear system of interest, which casts the
  *  problem in terms of flux moments!).
  *
@@ -66,18 +65,9 @@ namespace detran
  *  which indicates that application of \f$ \mathbf{M} \f$ implies
  *  a normalization.
  *
- *  For each inner iteration, the scattering components are stored in
- *  moments form.  The M operator is then applied using one row at a
- *  time for the associated angle being swept.
- *
- *  @note Keep in mind where we're headed: solving the linear system
- *        \f$ (\mathbf{I}-\mathbf{D}\mathbf{T}^{-1}\mathbf{M}\mathbf{S})\phi
- *        = \mathbf{D}\mathbf{T}^{-1}q \f$. Hence, the sweep source is q,
- *        and we'll invert the transport operator \em T via sweeps.
- *
  *  @sa ScatterSource, FissionSource, ExternalSource
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 template<class D>
 class SweepSource
@@ -85,9 +75,9 @@ class SweepSource
 
 public:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // TYPEDEFS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   typedef detran_utilities::SP<SweepSource>         SP_sweepsource;
   typedef State::SP_state                           SP_state;
@@ -104,19 +94,18 @@ public:
   typedef detran_utilities::size_t                  size_t;
   typedef State::moments_type                       moments_type;
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /**
    *  @brief Constructor
-   *  @param state           The state.
-   *  @param mesh            The mesh.
-   *  @param angularmesh     The angular mesh.
-   *  @param materials       The material library.
-   *  @param momentsindex    The moments index.
-   *  @param m_operator      The moments to discrete operator.
-   *
+   *  @param state              State vector
+   *  @param mesh               Problem geometry
+   *  @param quadrature         Angular mesh
+   *  @param material           Cross section definitions
+   *  @param MtoD               Moment-to-discrete operator
+   *  @param implicit_fission   True if fission treated like scattering
    */
   SweepSource(SP_state      state,
               SP_mesh       mesh,
@@ -133,6 +122,7 @@ public:
     ,  d_scatter_group_source(mesh->number_cells(), 0.0)
     ,  d_implicit_fission(implicit_fission)
     ,  d_scattersource(new ScatterSource(mesh, material, state))
+    ,  d_discrete_external_source_flag(true)
   {
     Require(d_state);
     Require(d_mesh);
@@ -153,9 +143,9 @@ public:
     return p;
   }
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // PUBLIC INTERFACE
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /**
    *  @brief Set an external moment source.
@@ -199,6 +189,12 @@ public:
   {
     return d_scattersource;
   }
+
+  SP_fissionsource get_fission_source()
+  {
+    return d_fissionsource;
+  }
+
 
   // The following source construction routines aim to
   // satisfy the needs of all solvers.
@@ -248,7 +244,9 @@ public:
    *  given multigroup flux vector.  This routine would find
    *  use in a multigroup Krylov solver.
    */
-  void build_total_scatter(const size_t g, const size_t g_cutoff, const State::vec_moments_type &phi);
+  void build_total_scatter(const size_t g,
+                           const size_t g_cutoff,
+                           const State::vec_moments_type &phi);
 
   /// Reset all the internal source vectors to zero.
   void reset();
@@ -264,6 +262,10 @@ public:
   {
     return d_fixed_group_source;
   }
+  moments_type& fixed_group_source()
+  {
+    return d_fixed_group_source;
+  }
 
   /// Return the scatter source for the current group
   const moments_type& scatter_group_source() const
@@ -271,7 +273,16 @@ public:
     return d_scatter_group_source;
   }
 
+  void set_discrete_external_source_flag(bool flag)
+  {
+    d_discrete_external_source_flag = flag;
+  }
+
 private:
+
+  //--------------------------------------------------------------------------//
+  // DATA
+  //--------------------------------------------------------------------------//
 
   /// Problem state vector
   SP_state d_state;
@@ -297,19 +308,21 @@ private:
   bool d_implicit_fission;
   /// Scattering source
   SP_scattersource d_scattersource;
+  /// Discrete external source flag.  Default true.
+  bool d_discrete_external_source_flag;
 
 };
 
 } // end namespace detran
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 // INLINE FUNCTIONS
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #include "SweepSource.i.hh"
 
 #endif /* detran_SWEEPSOURCE_HH_ */
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of SweepSource.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

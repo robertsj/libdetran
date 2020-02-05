@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   Eigensolver.hh
- *  @author robertsj
- *  @date   Jun 18, 2012
- *  @brief  Eigensolver class definition.
+ *  @file  Eigensolver.hh
+ *  @brief Eigensolver class definition
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_EIGENSOLVER_HH_
 #define detran_EIGENSOLVER_HH_
@@ -15,7 +14,7 @@
 namespace detran
 {
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 /**
  *  @class Eigensolver
  *  @brief Base class for solving the eigenvalue problem
@@ -26,13 +25,13 @@ namespace detran
  *  characterized by the multigroup eigenvalue problem
  *
  *  @f[
- *      @hat{\Omega} \cdot \nabla  @psi +
- *        @Sigma_t(\vec{r},E_g) \psi(\vec{r},\hat{\Omega},E_g) =
- *      @frac{1}{4\pi} \sum^G_{g'} \int_{4\pi} d\Omega'
- *        @Sigma_S(\vec{r},\hat{\Omega}'\cdot \hat{\Omega}, E_g'\to E_g)
- *          @psi(\vec{r},\hat{\Omega}',E_{g'}) +
- *      @frac{\chi_g}{4\pi k} \sum^G_{g'} \int_{4\pi} d\Omega'
- *        @nu \Sigma_f(\vec{r}, E_{g'}) \psi(\vec{r}, \hat{\Omega}', E_{g'})
+ *      \hat{\Omega} \cdot \nabla  \psi +
+ *        \Sigma_t(\vec{r},E_g) \psi(\vec{r},\hat{\Omega},E_g) =
+ *      \frac{1}{4\pi} \sum^G_{g'} \int_{4\pi} d\Omega'
+ *        \Sigma_S(\vec{r},\hat{\Omega}'\cdot \hat{\Omega}, E_g'\to E_g)
+ *          \psi(\vec{r},\hat{\Omega}',E_{g'}) +
+ *      \frac{\chi_g}{4\pi k} \sum^G_{g'} \int_{4\pi} d\Omega'
+ *        \nu \Sigma_f(\vec{r}, E_{g'}) \psi(\vec{r}, \hat{\Omega}', E_{g'})
  *  @f]
  *
  *  where \f$ k \f$ is the eigenvalue, which physically represents the
@@ -44,7 +43,7 @@ namespace detran
  *
  *  @f[
  *      (\mathbf{I} - \mathbf{DL}^{-1}\mathbf{MS})\phi =
- *        @frac{1}{k} \mathbf{DL}^{-1}\mathbf{M}\chi \mathbf{F}^T \phi \, .
+ *        \frac{1}{k} \mathbf{DL}^{-1}\mathbf{M}\chi \mathbf{F}^T \phi \, .
  *  @f]
  *
  *  where the eigenvector consists of the angular flux moments.  In the more
@@ -52,9 +51,9 @@ namespace detran
  *  can keep the problem in terms of the multigroup fluxes so that
  *
  *  @f[
- *      @overbrace{(\mathbf{I} - \mathbf{DL}^{-1}\mathbf{MS})^{-1}
- *        @mathbf{DL}^{-1}\mathbf{M}\chi \mathbf{F}^T}^{\mathbf{A}} \phi =
- *        k \phi \, .
+ *      \overbrace{(\mathbf{I} - \mathbf{DL}^{-1}\mathbf{MS})^{-1}
+ *        \mathbf{DL}^{-1}\mathbf{M}\chi \mathbf{F}^T}^{\mathbf{A}} \phi
+ *       = k \phi \, .
  *  @f]
  *
  *  Alternatively, we can solve in terms of the fission density,
@@ -63,24 +62,25 @@ namespace detran
  *  @f]
  *  so that
  *  @f[
- *      @overbrace{(\mathbf{I} - \mathbf{DL}^{-1}\mathbf{MS})^{-1}
- *        @mathbf{DL}^{-1}\mathbf{M}\chi }^{\mathbf{A}} d =
- *        k d \, .
+ *      \overbrace{\mathbf{F}^T (\mathbf{I} - \mathbf{DL}^{-1}\mathbf{MS})^{-1}
+ *        \mathbf{DL}^{-1}\mathbf{M}\chi }^{\mathbf{A}_{\text{ei}}} d =
+ *        k d \, ,
  *  @f]
+ *  where @f$ \mathbf{A}_{\text{ei}} @f$ is the
+ *  @ref EnergyIndependentEigenOperator.
  *
- *  We choose the second approach, since it represents a smaller
+ *  We only implement the second approach, since it represents a smaller
  *  system independent of energy and represents the more canonical
  *  formulation of the problem.  The former approach would be
- *  of value when parallelizing over energy, as in Denovo, but
- *  that is not our focus here.
+ *  of value when parallelizing over energy, which is not our focus here.
  *
  *  @section anoteaboutthemultigroupsolve A Note About the Multigroup Solve
  *
  *  Note that in both cases, we require the action
- *  @f$ (\mathbf{I} - \mathbf{DL}^{-1} )\f$.  This is equivalent
+ *  @f$ (\mathbf{I} - \mathbf{DL}^{-1}\mathbf{MS})\f$.  This is equivalent
  *  to an \e exact multigroup solve.
  *
- *  For the power method (see \ref PowerIteration), an
+ *  For the power method (see \ref EigenPI), an
  *  exact inversion is not really necessary, since the iteration
  *  will eventually converge (though in many more power iterations
  *  than if an exact multigroup solve were used).  In many
@@ -109,22 +109,21 @@ namespace detran
  *  problem represents an entirely different operator \f$ \mathbf{A} \f$,
  *  and hence will yield an entirely different spectrum.
  *
- *  @section eigensolverinput Eigensolver Input Entries
- *
+ *  @section eigensolverinput Eigensolver Parameters
  *
  *  @f[
-    @begin{tabular}{llll}
+    \begin{tabular}{llll}
       Key                     & Type  & Description                         & Default \\
-    @hline
-      eigen\_max\_iters       & int   & Maximum iterations allowed          & 100     @\
-      eigen\_tolerance        & dbl   & Tolerance on residual               & 1e-5    @\
-      eigen\_print\_out       & int   & Diagnostic print level              & 0       @\
-      eigen\_print\_interval  & int   & Iteration interval for diagonostics & 10      @\
-    @end{tabular}
+    \hline
+      eigen\_max\_iters       & int   & Maximum iterations allowed          & 100     \\
+      eigen\_tolerance        & dbl   & Tolerance on residual               & 1e-5    \\
+      eigen\_print\_out       & int   & Diagnostic print level              & 0       \\
+      eigen\_print\_interval  & int   & Iteration interval for diagonostics & 10      \\
+    \end{tabular}
     @f]
  *
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 template <class D>
 class Eigensolver: public Solver<D>
@@ -132,9 +131,9 @@ class Eigensolver: public Solver<D>
 
 public:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // TYPEDEFS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   typedef FixedSourceManager<D>                     Fixed_T;
   typedef typename Fixed_T::SP_manager              SP_mg_solver;
@@ -148,9 +147,9 @@ public:
   typedef typename Base::SP_fissionsource           SP_fissionsource;
 
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /**
    *  @brief Constructor
@@ -161,18 +160,18 @@ public:
   /// Virtual destructor
   virtual ~Eigensolver() = 0;
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL EIGENSOLVERS MUST IMPLEMENT
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /// Solve the eigenvalue problem.
   virtual void solve() = 0;
 
 protected:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // DATA
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /// Expose base members
   using Base::d_input;
@@ -195,3 +194,7 @@ protected:
 } // namespace detran
 
 #endif /* detran_EIGENSOLVER_HH_ */
+
+//----------------------------------------------------------------------------//
+//              end of Eigensolver.hh
+//----------------------------------------------------------------------------//

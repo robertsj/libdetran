@@ -16,8 +16,16 @@ SET(SRC
     PinCell.cc
     Assembly.cc
     Core.cc
+    Segment.cc
+    Track.cc
     TrackDB.cc
     Tracker.cc
+    QuadraticSurface.cc
+    Point.cc
+    CSG.cc
+    Region.cc
+    RegionFactory.cc
+    Geometry.cc
 )
 
 #-----------------------------------------------------------------------------#
@@ -26,6 +34,7 @@ SET(SRC
 
 set(LINKED_LIBS
     angle
+    callow
     utilities
 )
 

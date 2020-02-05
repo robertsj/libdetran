@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   test_State.cc
- * \author Jeremy Roberts
- * @date   Mar 25, 2012
- * \brief  Test of State.
+//----------------------------------*-C++-*-----------------------------------//
+/**
+ *  @file  test_State.cc
+ *  @brief Test of State.
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
 #define TEST_LIST                     \
@@ -14,11 +13,11 @@
 #include "utilities/TestDriver.hh"
 #include "State.hh"
 
-// Setup
 #include "geometry/test/mesh_fixture.hh"
-#include "angle/test/quadrature_fixture.hh"
+#include "angle/QuadratureFactory.hh"
 
 using namespace detran;
+using namespace detran_angle;
 using namespace detran_utilities;
 using namespace detran_test;
 
@@ -27,22 +26,22 @@ int main(int argc, char *argv[])
   RUN(argc, argv);
 }
 
-//----------------------------------------------//
+//----------------------------------------------------------------------------//
 // TEST DEFINITIONS
-//----------------------------------------------//
+//----------------------------------------------------------------------------//
 
 int test_State_basic(int argc, char *argv[])
 {
 
-  // Test fixtures
   SP_mesh mesh          = mesh_2d_fixture();
-  SP_quadrature quad    = quadruplerange_fixture();
 
   // Input
   State::SP_input input;
   input = new InputDB();
   input->put<std::string>("equation", "dd");
   input->put<int>("number_groups", 2);
+
+  QuadratureFactory::SP_quadrature quad = QuadratureFactory::build(input, 2);
 
   // State
   State::SP_state state;
@@ -72,6 +71,6 @@ int test_State_basic(int argc, char *argv[])
   return 0;
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of test_State.cc
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

@@ -47,11 +47,26 @@
 #ifdef DETRAN_ENABLE_PETSC
 #define CALLOW_ENABLE_PETSC
 #include "petsc.h"
+#else
+namespace callow
+{
+typedef int* KSP;
+typedef int* PC;
+typedef int* Mat;
+typedef int* Vec;
+typedef int PetscErrorCode;
+}
 #endif
 
 #ifdef DETRAN_ENABLE_SLEPC
 #define CALLOW_ENABLE_SLEPC
 #include "slepc.h"
+#else
+namespace callow
+{
+typedef int* EPS;
+typedef int* ST;
+}
 #endif
 
 //#define CALLOW_ENABLE_PETSC_OPS

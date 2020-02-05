@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   test_Material.cc
- *  @author Jeremy Roberts
- *  @date   Apr 1, 2012
- *  @brief  Test of Material class.
+ *  @file  test_Material.cc
+ *  @brief Test of Material class.
+ *  @note  Copyright (C) Jeremy Roberts 2012-2013
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
 #define TEST_LIST                     \
@@ -35,9 +34,9 @@ int main(int argc, char *argv[])
   RUN(argc, argv);
 }
 
-//----------------------------------------------//
+//----------------------------------------------------------------------------//
 // TEST DEFINITIONS
-//----------------------------------------------//
+//----------------------------------------------------------------------------//
 
 // Test of basic public interface
 int test_Material_basic(int argc, char *argv[])
@@ -91,29 +90,44 @@ int test_Material_bounds(int argc, char *argv[])
   SP_material mat = material_fixture_7g();
 
   // Test scattering bounds
-  TEST(mat->lower(0) == 0);
-  TEST(mat->upper(0) == 0);
+  TEST(mat->lower(0)       == 0);
+  TEST(mat->upper(0)       == 0);
+  TEST(mat->lower(0, true) == 4);
+  TEST(mat->upper(0, true) == 0);
 
   TEST(mat->lower(1) == 0);
   TEST(mat->upper(1) == 1);
+  TEST(mat->lower(1, true) == 6);
+  TEST(mat->upper(1, true) == 1);
 
   TEST(mat->lower(2) == 0);
   TEST(mat->upper(2) == 2);
+  TEST(mat->lower(2, true) == 6);
+  TEST(mat->upper(2, true) == 2);
 
   TEST(mat->lower(3) == 0);
   TEST(mat->upper(3) == 4);
+  TEST(mat->lower(3, true) == 6);
+  TEST(mat->upper(3, true) == 3);
 
   TEST(mat->lower(4) == 0);
   TEST(mat->upper(4) == 5);
+  TEST(mat->lower(4, true) == 6);
+  TEST(mat->upper(4, true) == 3);
 
   TEST(mat->lower(5) == 1);
   TEST(mat->upper(5) == 6);
+  TEST(mat->lower(5, true) == 6);
+  TEST(mat->upper(5, true) == 4);
 
   TEST(mat->lower(6) == 1);
   TEST(mat->upper(6) == 6);
+  TEST(mat->lower(6, true) == 6);
+  TEST(mat->upper(6, true) == 5);
 
-  // Test cutoff
-  TEST(mat->upscatter_cutoff() == 3);
+  // Test cutoff;
+  TEST(mat->upscatter_cutoff(false) == 3);
+  TEST(mat->upscatter_cutoff(true)  == 6);
 
   return 0;
 }

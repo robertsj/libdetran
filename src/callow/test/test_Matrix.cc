@@ -1,17 +1,18 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   test_Matrix.cc
- *  @author Jeremy Roberts
- *  @date   Aug 19, 2012
- *  @brief  Test of Matrix class.
+ *  @file  test_Matrix.cc
+ *  @brief Test of Matrix class
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
-#define TEST_LIST         \
-        FUNC(test_Matrix)
+#define TEST_LIST             \
+        FUNC(test_Matrix)     \
+        FUNC(test_MatrixDiff) \
 
 #include "TestDriver.hh"
+#include "matrix_fixture.hh"
 #include "matrix/Matrix.hh"
 #include "utils/Initialization.hh"
 #include <iostream>
@@ -24,26 +25,23 @@ using std::endl;
 
 int main(int argc, char *argv[])
 {
-  callow_initialize(argc, argv);
   RUN(argc, argv);
-  callow_finalize();
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 // TEST DEFINITIONS
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 // Test of basic public interface
 int test_Matrix(int argc, char *argv[])
 {
-  typedef Matrix Mat;
-  typedef Vector Vec;
+  callow_initialize(argc, argv);
 
   // n * n
   {
     // Create test matrix
     int n = 5;
-    Mat A(n, n);
+    Matrix A(n, n);
     TEST(A.number_rows()    == n);
     TEST(A.number_columns() == n);
     A.preallocate(3);
@@ -70,6 +68,19 @@ int test_Matrix(int argc, char *argv[])
       }
     }
     A.assemble();
+    A.display();
+    // Ensure no repeated columns
+    for (int i = 0; i < A.number_rows(); ++i)
+    {
+      int c0 = -1, c1 = 0;
+      for (int p = A.start(i); p < A.end(i); ++p)
+      {
+        c1 = A.column(p);
+        TEST(c1 > c0);
+        c0 = c1;
+      }
+    }
+
 
     // Create two vectors
     Vector X(n, 0.0);
@@ -122,7 +133,7 @@ int test_Matrix(int argc, char *argv[])
     int n = 2;
 
     // Create test matrix
-    Mat A(m, n);
+    Matrix A(m, n);
     TEST(A.number_rows()    == m);
     TEST(A.number_columns() == n);
     A.preallocate(2);
@@ -154,7 +165,6 @@ int test_Matrix(int argc, char *argv[])
 
     // Transpose
     A.multiply_transpose(Y, X);
-    return 0;
     double ref2[] =
     { 79.0, 100.0 };
     for (int i = 0; i < X.size(); i++)
@@ -169,9 +179,61 @@ int test_Matrix(int argc, char *argv[])
 
   } // end m * n
 
+  // Pathologic case?
+  {
+    std::cout << " patho case 1" << std::endl;
+    // | 1  0 |
+    // | 1  0 |
+    // | 0  1 |
+    // | 0  1 |
+    Matrix A(4, 2, 1);
+    A.insert(0, 0, 1.0); A.insert(1, 0, 1.0);
+    A.insert(2, 1, 1.0); A.insert(3, 1, 1.0);
+    A.assemble();
+    A.display();
+  }
+
+  // Pathologic case?
+  {
+    std::cout << " patho case 2" << std::endl;
+    // | 1  1  0  1 |
+    // | 0  0  1  1 |
+    Matrix A(2, 4, 2);
+    A.insert(0, 0, 1.0); A.insert(0, 1, 1.0);
+    A.insert(1, 2, 1.0); A.insert(1, 3, 1.0);
+    A.assemble();
+    A.display();
+  }
+
+  // Clearing
+  {
+    Matrix A(3, 3, 2);
+    A.insert(0, 0, 1.0); A.insert(0, 1, 2.0);
+    A.insert(1, 1, 3.0); A.insert(1, 2, 4.0);
+    A.insert(2, 1, 5.0); A.insert(2, 2, 6.0);
+    A.assemble();
+    A.display();
+    A.clear();
+    A.insert(0, 1, 1.1); A.insert(0, 2, 2.1);
+    A.insert(1, 0, 3.1); A.insert(1, 2, 4.1);
+    A.insert(2, 0, 5.1); A.insert(2, 2, 6.1);
+    A.assemble();
+    A.display();
+  }
+
+  callow_finalize();
   return 0;
 }
 
-//---------------------------------------------------------------------------//
+int test_MatrixDiff(int argc, char *argv[])
+{
+  Matrix::SP_matrix L = test_matrix_2(10);
+  Matrix::SP_matrix F = test_matrix_3(10);
+  L->print_matlab("L.out");
+  F->print_matlab("F.out");
+  return 0;
+}
+
+//----------------------------------------------------------------------------//
 //              end of test_Matrix.cc
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

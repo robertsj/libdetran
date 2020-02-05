@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   SolverDefinitions.hh
- *  @brief  SolverDefinitions
- *  @author Jeremy Roberts
- *  @date   Sep 24, 2012
+ *  @file  CallowDefinitions.hh
+ *  @brief Various definitions to support callow solvers
+ *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef callow_CALLOWDEFINITIONS_HH_
 #define callow_CALLOWDEFINITIONS_HH_
@@ -13,14 +12,14 @@
 namespace callow
 {
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 // ENUMERATIONS
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 /// return codes for solvers
 enum solver_status
 {
-  SUCCESS, MAXIT, DIVERGE, END_SOLVER_STATUS
+  RUNNING, SUCCESS, MAXIT, DIVERGE, END_SOLVER_STATUS
 };
 
 /**
@@ -48,6 +47,6 @@ enum vector_norm_types
 
 #endif // callow_CALLOWDEFINITIONS_HH_
 
-//---------------------------------------------------------------------------//
-//              end of file SolverDefinitions.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
+//              end of file CallowDefinitions.hh
+//----------------------------------------------------------------------------//

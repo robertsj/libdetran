@@ -1,18 +1,17 @@
-//----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   test_MatrixShell.cc
- * \author Jeremy Roberts
- * \date   Aug 19, 2012
- * \brief  Test of Matrix class.
+//----------------------------------*-C++-*-----------------------------------//
+/**
+ *  @file  test_MatrixShell.cc
+ *  @brief Test of MatrixShell class
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
-#define TEST_LIST         \
+#define TEST_LIST              \
         FUNC(test_MatrixShell)
 
 #include "TestDriver.hh"
-#include "matrix/Matrix.hh"
+#include "matrix/MatrixShell.hh"
 #include "utils/Initialization.hh"
 #include "test/matrixshell_fixture.hh"
 #include <iostream>
@@ -30,9 +29,9 @@ int main(int argc, char *argv[])
   callow_finalize();
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 // TEST DEFINITIONS
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 // Test of basic public interface
 int test_MatrixShell(int argc, char *argv[])
@@ -48,8 +47,6 @@ int test_MatrixShell(int argc, char *argv[])
     A.display();
     TEST(A.number_rows()    == n);
     TEST(A.number_columns() == n);
-
-
 
     // Create two vectors
     Vec_T X(n, 0.0);
@@ -86,6 +83,6 @@ int test_MatrixShell(int argc, char *argv[])
   return 0;
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of test_MatrixShell.cc
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

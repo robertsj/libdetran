@@ -22,11 +22,7 @@
 #include "boundary/BoundarySN.hh"
 #include "kinetics/LinearExternalSource.hh"
 #include "kinetics/LinearMaterial.hh"
-//
-#include "angle/test/quadrature_fixture.hh"
-#include "geometry/test/mesh_fixture.hh"
-#include "material/test/material_fixture.hh"
-#include "external_source/test/external_source_fixture.hh"
+#include "external_source/IsotropicSource.hh"
 
 using namespace detran_test;
 using namespace detran;
@@ -185,25 +181,13 @@ int test_TimeStepper(int argc, char *argv[])
   TS_1D stepper(inp, linmat, mesh, true);
   stepper.set_monitor(test_monitor);
 
-//  // Initial condition (constant psi = 1/2)
-//  for (int o = 0; o < stepper.quadrature()->number_octants(); ++o)
-//  {
-//    for (int a = 0; a < stepper.quadrature()->number_angles_octant(); ++a)
-//    {
-//      for (int i = 0; i < mesh->number_cells(); ++i)
-//      {
-//        ic->phi(0)[i] = 1.0;
-//        ic->psi(0, o, a)[i] = 0.5;
-//      }
-//    }
-//  }
   // Initial condition (constant psi = 1/2)
   for (int i = 0; i < mesh->number_cells(); ++i)
   {
     ic->phi(0)[i] = 1.0;
   }
 
-  //stepper.add_source(q_td);
+  stepper.add_source(q_td);
 
   stepper.solve(ic);
 
@@ -238,7 +222,7 @@ int test_BDF_Steps(int argc, char *argv[])
   inp->put<double>("ts_final_time",         1.0);
   inp->put<double>("ts_step_size",          0.1);
   inp->put<int>("ts_discrete",              1);
-  inp->put<int>("ts_output",                1);
+  inp->put<int>("ts_output",                0);
   inp->put<int>("ts_monitor_level",         0);
   inp->put<int>("store_angular_flux",       1);
   inp->put<int>("inner_print_level",        0);

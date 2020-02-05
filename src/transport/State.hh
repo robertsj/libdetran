@@ -190,6 +190,11 @@ public:
     return d_store_current;
   }
 
+  bool adjoint() const
+  {
+    return d_adjoint;
+  }
+
   /// Zero out the state
   void clear();
 
@@ -229,6 +234,8 @@ private:
   bool d_store_angular_flux;
   /// Store the current?
   bool d_store_current;
+  /// Adjoint
+  bool d_adjoint;
 
 };
 

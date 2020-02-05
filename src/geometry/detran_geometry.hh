@@ -1,9 +1,9 @@
 //----------------------------------*-C++-*----------------------------------//
-/*!
- * \file   detran_geometry.hh
- * \brief  Convenience header for using Detran geometry
- * \author Jeremy Roberts
- * \date   Aug 22, 2012
+/**
+ *   @file   detran_geometry.hh
+ *   @brief  Convenience header for using Detran geometry
+ *   @author Jeremy Roberts
+ *   @date   Aug 22, 2012
  */
 //---------------------------------------------------------------------------//
 
@@ -20,7 +20,7 @@
 #include "Track.hh"
 #include "TrackDB.hh"
 #include "Tracker.hh"
-#include "MeshMOC.hh"
+#include "Point.hh"
 
 #endif // DETRAN_GEOMETRY_HH_ 
 

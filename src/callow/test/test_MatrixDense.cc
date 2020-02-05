@@ -59,7 +59,7 @@ int test_MatrixDense(int argc, char *argv[])
     TEST(A.insert_row(3, row3, A.INSERT));
     TEST(A.insert_row(4, row4, A.INSERT));
     A.assemble();
-    A.display();
+    A.print_matlab("A.out");
 
     // Create two vectors
     Vector X(n, 0.0);
@@ -78,6 +78,7 @@ int test_MatrixDense(int argc, char *argv[])
     { 1.1, 2.4, 2.9, 3.6, -23.0 };
     for (int i = 0; i < Y.size(); i++)
     {
+      Y.display();
       TEST(soft_equiv(Y[i], ref[i]));
     }
 

@@ -28,14 +28,12 @@ inline void GaussSeidel::solve_impl(const Vector &b, Vector &x)
     "Need an explicit matrix for use with GaussSeidel iteration");
   Matrix::SP_matrix A = d_A;
 
-  typedef Vector Vec;
-
   // temporary storage and pointers for swapping
-  Vec temp(x.size(), 0.0);
-  Vec temp2(x.size(), 0.0);
-  Vec* x0 = &x;
-  Vec* x1 = &temp;
-  Vec* swap;
+  Vector temp(x.size(), 0.0);
+  Vector temp2(x.size(), 0.0);
+  Vector* x0 = &x;
+  Vector* x1 = &temp;
+  Vector* swap;
 
   // compute initial residual Ax - b and its norm
   A->multiply((*x0), (*x1));

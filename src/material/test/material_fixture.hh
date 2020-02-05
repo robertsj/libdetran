@@ -1,30 +1,24 @@
 //----------------------------------*-C++-*----------------------------------//
 /**
- *  @file   material_fixture.hh
- *  @author Jeremy Roberts
- *  @date   Apr 1, 2012
- *  @brief  Materials for testing.
+ *  @file  material_fixture.hh
+ *  @brief Materials for testing
+ *  @note
  */
 //---------------------------------------------------------------------------//
 
 #ifndef MATERIAL_FIXTURE_HH_
 #define MATERIAL_FIXTURE_HH_
 
-// Detran
 #include "Material.hh"
-
-// Detran utilities
 #include "DBC.hh"
-
-// System includes
 
 namespace detran_test
 {
 
 typedef detran_material::Material::SP_material SP_material;
 
-/*!
- *  \brief Two group material database for transport tests.
+/**
+ *  @brief Two group material database for transport tests.
  *
  *  Reference: Mosher's PhD thesis.
  */
@@ -33,7 +27,7 @@ static SP_material material_fixture_1g()
   // Create the new database.
   SP_material mat;
   // 1 group, 3 materials.
-  mat = new detran_material::Material(3, 1, "fixtured_1g");
+  mat = new detran_material::Material(3, 1, "fixture_1g");
 
   // ---------------------------
   // Material 0: strong scatter
@@ -75,8 +69,8 @@ static SP_material material_fixture_1g()
 }  // material_fixture_1g
 
 
-/*!
- *  \brief Two group material database for transport tests.
+/**
+ *  @brief Two group material database for transport tests.
  *
  *  Reference: Mosher's PhD thesis.
  */
@@ -86,7 +80,7 @@ static SP_material material_fixture_2g()
   SP_material mat;
   // 2 groups, 4 materials, and we don't turn off upscatter explicitly
   // (though there happens to be no upscatter in this data)
-  mat = new detran_material::Material(4, 2, "fixtured_2g");
+  mat = new detran_material::Material(4, 2, "fixture_2g");
 
   // ---------------------------
   // Material 0: Water
@@ -185,8 +179,8 @@ static SP_material material_fixture_2g()
 
 }  // material_fixture_2g
 
-/*!
- *  \brief Seven group material database for transport tests.
+/**
+ *  @brief Seven group material database for transport tests.
  *
  *  Reference: C5G7
  */
@@ -194,8 +188,8 @@ static SP_material material_fixture_7g()
 {
   // Create the new database.
   SP_material mat;
-  // 7 groups, 4 materials, and we don't turn off upscatter.
-  mat = new detran_material::Material(7, 7, "fixtured_7g");
+  // 7 groups, 7 materials
+  mat = new detran_material::Material(7, 7, "fixture_7g");
 
   // --------------------------------------------
   // Material 0: UO2 fuel-clad
@@ -388,9 +382,9 @@ static SP_material material_fixture_7g()
   mat->set_sigma_s(m, 5, 5, 2.49751E-01);
   mat->set_sigma_s(m, 5, 6, 8.86450E-03);
   //   7 <- g'
-  mat->set_sigma_s(3, 6, 4, 9.00160E-09);
-  mat->set_sigma_s(3, 6, 5, 1.31140E-02);
-  mat->set_sigma_s(3, 6, 6, 2.59529E-01);
+  mat->set_sigma_s(m, 6, 4, 9.00160E-09);
+  mat->set_sigma_s(m, 6, 5, 1.31140E-02);
+  mat->set_sigma_s(m, 6, 6, 2.59529E-01);
 
   // --------------------------------------------
   // Material 3: 8.7 w/o MOX fuel-clad
@@ -648,6 +642,7 @@ static SP_material material_fixture_7g()
   mat->set_sigma_s(m, 6, 6, 2.48070E+00);
 
   // Finalize
+  mat->compute_diff_coef();
   mat->finalize();
 
   return mat;

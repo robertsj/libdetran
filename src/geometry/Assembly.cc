@@ -1,10 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
  *  @file  Assembly.cc
  *  @brief Assembly class member definitions
  *  @note  Copyright (C) 2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #include "Assembly.hh"
 #include <cmath>
@@ -13,28 +13,53 @@
 namespace detran_geometry
 {
 
-Assembly::Assembly(int dimension, vec_pincell pincells, vec_int pincell_map)
-  : d_dimension(dimension)
-  , d_pincells(pincells)
-  , d_pincell_map(pincell_map)
+//----------------------------------------------------------------------------//
+Assembly::Assembly(const size_t nx, const size_t ny)
+  : d_number_x(nx)
+  , d_number_y(ny)
 {
-  Require(d_dimension > 0);
-  Require(d_pincells.size() > 0);
-  finalize(d_pincell_map);
+  Require(d_number_x > 0);
+  if (d_number_y == 0) d_number_y = d_number_x;
 }
 
-Assembly::Assembly(int dimension)
- : d_dimension(dimension)
+//----------------------------------------------------------------------------//
+Assembly::SP_assembly Assembly::Create(const size_t nx, const size_t ny)
 {
-  Require(d_dimension > 0);
+  SP_assembly p(new Assembly(nx, ny));
+  return p;
 }
 
+//----------------------------------------------------------------------------//
+Assembly::SP_mesh Assembly::mesh()
+{
+  return d_mesh;
+}
+
+//----------------------------------------------------------------------------//
 void Assembly::add_pincell(SP_pincell pin)
 {
   Require(pin);
   d_pincells.push_back(pin);
 }
 
+//----------------------------------------------------------------------------//
+void Assembly::set_pincell_map(const vec_int &pincell_map)
+{
+  // Verify the pin cell map is correct size.  This does not check to see
+  // if pins match up.
+  Insist(pincell_map.size() == d_number_x * d_number_y,
+         "Pincell map is the wrong size.");
+  d_pincell_map = pincell_map;
+
+
+}
+
+Assembly::vec_int Assembly::pincell_map() const
+{
+  return d_pincell_map;
+}
+
+//----------------------------------------------------------------------------//
 void Assembly::finalize(vec_int pincell_map)
 {
   using std::cout;
@@ -53,11 +78,11 @@ void Assembly::finalize(vec_int pincell_map)
   }
 
   // Verify the pin cell map is correct.
-  Insist(pincell_map.size() == d_dimension*d_dimension,
+  Insist(pincell_map.size() == d_number_x*d_number_y,
          "Pincell map is the wrong size.");
   d_pincell_map = pincell_map;
 
-  d_number_pincells = d_dimension*d_dimension;
+  size_t number_pincells = d_number_x * d_number_y;
 
   // Set number of cells.  This *assumes* all pins have the same meshing,
   // which was already checked above.
@@ -106,8 +131,10 @@ void Assembly::finalize(vec_int pincell_map)
       int i2 = i_save + d_pincells[0]->mesh()->number_cells_x();
 
       // Get the material and region maps for this pin.
-      vec_int pin_mat_map = d_pincells[pincell_map[pin]]->mesh()->mesh_map("MATERIAL");
-      vec_int pin_reg_map = d_pincells[pincell_map[pin]]->mesh()->mesh_map("REGION");
+      vec_int pin_mat_map =
+        d_pincells[pincell_map[pin]]->mesh()->mesh_map("MATERIAL");
+      vec_int pin_reg_map =
+        d_pincells[pincell_map[pin]]->mesh()->mesh_map("REGION");
 
       // Is this a fuel pin?  If not, assign -1 to the pin map.  Then, 0..N are
       // the actual fuel pins.
@@ -150,5 +177,6 @@ void Assembly::finalize(vec_int pincell_map)
 
 } // end namespace detran_geometry
 
-
-
+//----------------------------------------------------------------------------//
+//              end of Assembly.hh
+//----------------------------------------------------------------------------//

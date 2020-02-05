@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
  *  @file   WGSolverSI.hh
- *  @author robertsj
- *  @date   Apr 4, 2012
  *  @brief  WGSolverSI class definition.
+ *  @note   Copyright(C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_WGSOLVERSI_HH_
 #define detran_WGSOLVERSI_HH_
@@ -22,9 +21,27 @@ namespace detran
  *  @class WGSolverSI
  *  @brief Solve the within-group transport equation via source iteration.
  *
+ *  Source iteration (or Richardson iteration) solves the transport
+ *  equation (see \ref WGSolver)
+ *
+ *  \f[
+ *      (\mathbf{I} - \mathbf{D}\mathbf{L}^{-1}\mathbf{MS})\phi
+ *        = \mathbf{D} \mathbf{L}^{-1} Q \, .
+ *  \f]
+ *
+ *  via the process
+ *
+ *  \f[
+ *      \phi^{(n+1)} = \mathbf{D}\mathbf{L}^{-1}\mathbf{MS})\phi^{(n)}
+ *        + \mathbf{D} \mathbf{L}^{-1} Q \, .
+ *  \f]
+ *
  *  This is a "hand-coded" implementation.  Essentially the same solver
  *  can be had via callow's Richardson iteration (and via callow's
  *  interface to PETSc's Richardson).
+ *
+ *  This implementation is useful because it provides access to various
+ *  nonlinear acceleration schemes not applicable to nonstationary solvers.
  */
 
 template <class D>
@@ -33,9 +50,9 @@ class WGSolverSI: public WGSolver<D>
 
 public:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // TYPEDEFS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   typedef WGSolver<D>                           Base;
   typedef typename Base::SP_solver              SP_solver;
@@ -54,9 +71,9 @@ public:
   typedef typename Base::moments_type           moments_type;
   typedef typename Base::size_t                 size_t;
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /**
    *  @brief Constructor
@@ -76,18 +93,18 @@ public:
              SP_fissionsource           q_f,
              bool                       multiply);
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL WITHIN-GROUP SOLVERS MUST IMPLEMENT
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /// Solve the within group equation.
   void solve(const size_t g);
 
 private:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // DATA
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   // Make inherited data visible
   using Base::d_input;
@@ -109,14 +126,14 @@ private:
 
 } // namespace detran
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 // INLINE FUNCTIONS
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #include "WGSolverSI.i.hh"
 
 #endif /* detran_WGSOLVERSI_HH_ */
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of WGSolverSI.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

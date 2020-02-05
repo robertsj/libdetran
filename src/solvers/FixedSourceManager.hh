@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   FixedSourceManager.hh
- *  @author robertsj
- *  @date   Sep 25, 2012
- *  @brief  FixedSourceManager class definition.
+ *  @file  FixedSourceManager.hh
+ *  @brief FixedSourceManager class definition
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_FIXEDSOURCEMANAGER_HH_
 #define detran_FIXEDSOURCEMANAGER_HH_
@@ -36,9 +35,9 @@ class FixedSourceManager: TransportManager
 
 public:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // ENUMERATION
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   // basic spatial discretization categories
   enum EQTYPES
@@ -52,9 +51,9 @@ public:
     FIXED, MULTIPLY, END_FIXEDTYPE
   };
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // TYPEDEFS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   typedef detran_utilities::SP<FixedSourceManager<D> >  SP_manager;
   typedef detran_utilities::InputDB::SP_input           SP_input;
@@ -72,9 +71,9 @@ public:
   typedef State::moments_type                           moments_type;
   typedef typename MGSolver<D>::SP_solver               SP_solver;
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /**
    *  @brief Constructor
@@ -86,8 +85,8 @@ public:
    *  @param multiply   flag for multiplying fixed source problem
    *  @param fission    ensure a fission source is built (e.g. for eigen)
    */
-  FixedSourceManager(int argc,
-                     char *argv[],
+  FixedSourceManager(int         argc,
+                     char       *argv[],
                      SP_input    input,
                      SP_material material,
                      SP_mesh     mesh,
@@ -104,9 +103,9 @@ public:
   /// Virtual destructor
   virtual ~FixedSourceManager(){}
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /**
    *  @brief Sets up a problem to be solved
@@ -182,7 +181,6 @@ public:
   /// Update operators, etc.
   void update()
   {
-    // Preconditions
     Require(d_solver);
 
     // Refresh the solver
@@ -201,13 +199,14 @@ public:
   int discretization() const { return d_discretization; }
   SP_solver solver() const { return d_solver; }
   int number_sweeps() const { return d_solver->number_sweeps(); }
+  bool adjoint() const {return d_adjoint;}
   /// @}
 
 private:
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
   // DATA
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   /// User input
   SP_input d_input;
@@ -242,13 +241,12 @@ private:
   /// Iteration generation
   int d_generation;
 
-  //-------------------------------------------------------------------------//
-  // IMPLEMENTATION
-  //-------------------------------------------------------------------------//
-
-
 };
 
 } // end namespace detran
 
 #endif /* detran_FIXEDSOURCEMANAGER_HH_ */
+
+//----------------------------------------------------------------------------//
+//              end of FixedSourceManager.hh
+//----------------------------------------------------------------------------//

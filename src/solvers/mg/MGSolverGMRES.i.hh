@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   MGSolverGMRES.i.hh
- *  @author robertsj
- *  @date   Jun 19, 2012
- *  @brief  MGSolverGMRES inline member definitions.
+ *  @file  MGSolverGMRES.i.hh
+ *  @brief MGSolverGMRES inline member definitions
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #ifndef detran_MGSOLVERGMRES_I_HH_
 #define detran_MGSOLVERGMRES_I_HH_
@@ -19,60 +18,80 @@
 namespace detran
 {
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 template <class D>
 inline void MGSolverGMRES<D>::solve(const double keff)
 {
-  using std::cout;
-  using std::endl;
-
+  using detran_utilities::range;
 
   double norm_resid = 0.0;
   int iteration = 0;
 
   // Set the scaling factor for multiplying problems
-  if (d_multiply) d_fissionsource->setup_outer(1.0/keff);
+  if (d_multiply) d_fissionsource->set_scale(1.0 / keff);
 
-  //-------------------------------------------------------------------------//
-  // GAUSS-SEIDEL BLOCK
-  //-------------------------------------------------------------------------//
+  // Build the preconditioner
+  if (d_pc) d_pc->build(keff, d_state);
 
-  for (int g = 0; g < d_krylov_group_cutoff; g++)
+  // Debug printing of operators
+  bool flag = false;
+  if (d_input->check("print_transport_operator"))
   {
-    d_wg_solver->solve(g);
+    flag = d_input->template get<int>("print_transport_operator") != 0;
+    if (flag != 0) d_operator->compute_explicit("tran.out");
+  }
+  if (d_input->check("print_preconditioner_operator"))
+  {
+    flag = d_input->template get<int>("print_preconditioner_operator") != 0;
+    if (flag && d_pc) d_pc->display("pc.out");
   }
 
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
+  // GAUSS-SEIDEL BLOCK
+  //--------------------------------------------------------------------------//
+
+  groups_t groups  = range<size_t>(d_lower, d_krylov_group_cutoff);
+  groups_iter g_it = groups.begin();
+  for (; g_it != groups.end(); ++g_it)
+  {
+    d_wg_solver->solve(*g_it);
+  }
+
+  //--------------------------------------------------------------------------//
   // KRYLOV BLOCK
-  //-------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
 
   if (d_number_active_groups)
   {
+    groups = range<size_t>(d_krylov_group_cutoff, d_upper);
 
-    //-----------------------------------------------------------------------//
+    //------------------------------------------------------------------------//
     // BUILD RIGHT HAND SIDE
-    //-----------------------------------------------------------------------//
+    //------------------------------------------------------------------------//
 
     State::vec_moments_type B(d_number_active_groups,
                               State::moments_type(d_moments_size_group, 0.0));
     build_rhs(B);
 
-    //-----------------------------------------------------------------------//
+    //------------------------------------------------------------------------//
     // SOLVE MULTIGROUP TRANSPORT EQUATION
-    //-----------------------------------------------------------------------//
+    //------------------------------------------------------------------------//
 
+    // Set the uncollided flux as the initial guess.  It may be of value to
+    // have an optional initial guess based on the current flux.
     d_x->copy(d_b);
     d_solver->solve(*d_b, *d_x);
 
-    //-----------------------------------------------------------------------//
+    //------------------------------------------------------------------------//
     // POST-PROCESS
-    //-----------------------------------------------------------------------//
+    //------------------------------------------------------------------------//
 
     // Copy the flux solution into state.
-    for (int g = d_krylov_group_cutoff; g < d_number_groups; g++)
+    for (g_it = groups.begin(); g_it != groups.end(); ++g_it)
     {
-      int offset = (g - d_krylov_group_cutoff) * d_moments_size_group;
-      memcpy(&d_state->phi(g)[0],
+      int g_index = d_adjoint ? *g_it : *g_it - d_krylov_group_cutoff;
+      int offset  = g_index * d_moments_size_group;
+      memcpy(&d_state->phi(*g_it)[0],
              &((*d_x)[offset]),
              d_moments_size_group*sizeof(double));
     }
@@ -80,23 +99,24 @@ inline void MGSolverGMRES<D>::solve(const double keff)
     // Set the incident boundary flux if applicable
     if (d_boundary->has_reflective())
     {
-      for (int g = d_krylov_group_cutoff; g < d_number_groups; g++)
+      for (g_it = groups.begin(); g_it != groups.end(); ++g_it)
       {
-        int offset = (g - d_krylov_group_cutoff) * d_boundary_size_group +
-                     d_moments_size_group * d_number_active_groups;
-        d_boundary->psi(g, &(*d_x)[offset],
+        int g_index = d_adjoint ? *g_it : *g_it - d_krylov_group_cutoff;
+        int offset  = g_index * d_boundary_size_group +
+                      d_moments_size_group * d_number_active_groups;
+        d_boundary->psi(*g_it, &(*d_x)[offset],
                         BoundaryBase<D>::IN, BoundaryBase<D>::SET, true);
       }
     }
 
-    // Iterate to pick up outgoing boundary fluxes.  Only do this if
-    // there is at least one vacuum boundary.  Otherwise, the
-    // boundary fluxes are never going to be needed.
-    if (d_update_boundary_flux)
+    // Iterate to update the angular fluxes.  This includes cell and
+    // boundary fluxes.  Remember, the angular fluxes are only a secondary
+    // output of the solvers and are not part of the Krylov solution vector.
+    if (d_update_angular_flux)
     {
-      //d_boundary->clear_bc();
-      for (int g = d_krylov_group_cutoff; g < d_number_groups; g++)
+      for (g_it = groups.begin(); g_it != groups.end(); ++g_it)
       {
+        unsigned int g = *g_it;
         d_boundary->set(g);
         State::moments_type phi_g = d_state->phi(g);
         d_sweeper->setup_group(g);
@@ -124,7 +144,7 @@ inline void MGSolverGMRES<D>::solve(const double keff)
 
 } // end solve
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 template <class D>
 inline void MGSolverGMRES<D>::build_rhs(State::vec_moments_type &B)
 {
@@ -140,14 +160,18 @@ inline void MGSolverGMRES<D>::build_rhs(State::vec_moments_type &B)
   }
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 template <class D>
 inline void MGSolverGMRES<D>::
 group_sweep(State::vec_moments_type &phi)
 {
-  for (int g = d_krylov_group_cutoff; g < d_number_groups; g++)
+  using detran_utilities::range;
+  groups_t groups  = range<size_t>(d_krylov_group_cutoff, d_upper);
+  groups_iter g_it = groups.begin();
+  for (; g_it != groups.end(); ++g_it)
   {
-    int g_index = g - d_krylov_group_cutoff;
+    int g = *g_it;
+    int g_index = d_adjoint ? g : g - d_krylov_group_cutoff;
 
     // Setup the sweeper.
     d_sweeper->setup_group(g);
@@ -168,11 +192,10 @@ group_sweep(State::vec_moments_type &phi)
       d_sweeper->sweep(phi[g_index]);
     else
       solve_wg_reflection(g, phi[g_index]);
-
   }
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 template <class D>
 inline void MGSolverGMRES<D>::
 solve_wg_reflection(size_t g, State::moments_type &phi_g)
@@ -212,6 +235,6 @@ solve_wg_reflection(size_t g, State::moments_type &phi_g)
 
 #endif /* detran_MGSOLVERGMRES_I_HH_ */
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of MGSolverGMRES.i.hh
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   PetscSolver.cc
- *  @brief  PetscSolver
- *  @author Jeremy Roberts
- *  @date   Sep 20, 2012
+ *  @file  PetscSolver.cc
+ *  @brief PetscSolver member definitions
+ *  @note  Copyright (C) 2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #include "callow_config.hh"
 
@@ -16,7 +15,7 @@
 namespace callow
 {
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 PetscSolver::PetscSolver(const double  atol,
                          const double  rtol,
                          const int     maxit)
@@ -43,13 +42,13 @@ PetscSolver::PetscSolver(const double  atol,
   Insist(!ierr, "Error setting KSP nonzeros initial guess.");
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 PetscSolver::~PetscSolver()
 {
   KSPDestroy(&d_petsc_solver);
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 void PetscSolver::set_operators(SP_matrix A, SP_db db)
 {
   // Preconditions
@@ -64,7 +63,7 @@ void PetscSolver::set_operators(SP_matrix A, SP_db db)
   // Default PC settings.
   std::string pc_type = "";
   std::string petsc_pc_type = "ilu";
-  int pc_side = LEFT;
+  int pc_side = RIGHT;
 
   // Extract the PETSc preconditioner.
   PC pc;
@@ -121,7 +120,9 @@ void PetscSolver::set_operators(SP_matrix A, SP_db db)
       // Add more options, like hypre etc.
       else
       {
-        THROW("Unsupported PETSc preconditioner: " + petsc_pc_type);
+        //PCSetType(pc, petsc_pc_type.c_str());
+        PCSetFromOptions(pc);
+        //THROW("Unsupported PETSc preconditioner: " + petsc_pc_type);
       }
     }
     if (d_db->check("pc_side")) pc_side = d_db->get<int>("pc_side");
@@ -143,7 +144,7 @@ void PetscSolver::set_operators(SP_matrix A, SP_db db)
                          d_A->petsc_matrix(),
                          SAME_NONZERO_PATTERN);
 
-  KSPGMRESSetRestart(d_petsc_solver, 20);
+  KSPGMRESSetRestart(d_petsc_solver, 30);
   // Set the preconditioner side.
   if (pc_side == Base::LEFT) ierr = KSPSetPCSide(d_petsc_solver, PC_LEFT);
   else
@@ -153,13 +154,12 @@ void PetscSolver::set_operators(SP_matrix A, SP_db db)
   Ensure(!ierr);
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 void PetscSolver::set_preconditioner(SP_preconditioner P,
-                                     const int side)
+                                     const int         side)
 {
-  // Preconditions
   Require(P);
-  Require(side == LEFT or side == RIGHT);
+  Require(side == LEFT || side == RIGHT);
 
   // Keep the pc and its side
   d_P = P;
@@ -173,11 +173,11 @@ void PetscSolver::set_preconditioner(SP_preconditioner P,
   d_P->set_petsc_pc(pc);
 
   // Set the preconditioner side.
-  if (side == Base::LEFT) ierr = KSPSetPCSide(d_petsc_solver, PC_LEFT);
+  if (side == Base::LEFT)
+    ierr = KSPSetPCSide(d_petsc_solver, PC_LEFT);
   else
     ierr = KSPSetPCSide(d_petsc_solver, PC_RIGHT);
 
-  // Postconditions
   Ensure(!ierr);
 }
 
@@ -185,6 +185,6 @@ void PetscSolver::set_preconditioner(SP_preconditioner P,
 
 #endif
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of file PetscSolver.cc
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//

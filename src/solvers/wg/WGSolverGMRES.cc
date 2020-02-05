@@ -1,11 +1,10 @@
-//----------------------------------*-C++-*----------------------------------//
+//----------------------------------*-C++-*-----------------------------------//
 /**
- *  @file   WGSolverGMRES.cc
- *  @author robertsj
- *  @date   Apr 4, 2012
- *  @brief  WGSolverGMRES class definition.
+ *  @file  WGSolverGMRES.cc
+ *  @brief WGSolverGMRES class definition.
+ *  @note  Copyright(C) 2012-2013 Jeremy Roberts
  */
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 #include "WGSolverGMRES.hh"
 #include "PC_DSA.hh"
@@ -14,7 +13,7 @@
 namespace detran
 {
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 template <class D>
 WGSolverGMRES<D>::WGSolverGMRES(SP_state                  state,
                                 SP_material               material,
@@ -24,7 +23,8 @@ WGSolverGMRES<D>::WGSolverGMRES(SP_state                  state,
                                 SP_fissionsource          q_f,
                                 bool                      multiply)
  : Base(state, material, quadrature, boundary, q_e, q_f, multiply)
- , d_update_boundary_flux(false)
+ , d_reflective_solve_iterations(0)
+ , d_update_angular_flux(false)
 {
   Require(d_input);
 
@@ -44,7 +44,15 @@ WGSolverGMRES<D>::WGSolverGMRES(SP_state                  state,
   {
     db = d_input->template get<SP_input>("inner_solver_db");
   }
-
+  else
+  {
+    db = new detran_utilities::InputDB("solvergmres_db");
+    db->template put<double>("linear_solver_rtol", d_tolerance);
+    db->template put<double>("linear_solver_atol", d_tolerance);
+    db->template put<int>("linear_solver_maxit", d_maximum_iterations);
+    db->template put<int>("linear_solver_monitor_level", d_print_level);
+    d_input->template put<SP_input>("inner_solver_db", db);
+  }
   d_solver = callow::LinearSolverCreator::Create(db);
   Assert(d_solver);
 
@@ -59,11 +67,14 @@ WGSolverGMRES<D>::WGSolverGMRES(SP_state                  state,
   {
     if (d_input->template get<int>("compute_boundary_flux"))
     {
-      d_update_boundary_flux =
-        d_input->template get<int>("compute_boundary_flux");
+      d_update_angular_flux =
+        0 != d_input->template get<int>("compute_boundary_flux");
     }
   }
- // d_operator->compute_explicit("WGTO.out");
+  // Also, if we need the angular flux updated, we need to sweep.
+  if (d_state->store_angular_flux())
+    d_update_angular_flux = true;
+
   //--------------------------------------------------------------------------//
   // PRECONDITIONER
   //--------------------------------------------------------------------------//
@@ -81,9 +92,8 @@ WGSolverGMRES<D>::WGSolverGMRES(SP_state                  state,
   {
     pc_type = d_input->template get<std::string>("inner_pc_type");
   }
-  //std::cout << "Using WG-GMRES with PC-" << pc_type;
 
-  size_t pc_side = callow::LinearSolver::LEFT;
+  size_t pc_side = callow::LinearSolver::RIGHT;
   if (d_input->check("inner_pc_side"))
   {
     pc_side = d_input->template get<int>("inner_pc_side");
@@ -104,9 +114,9 @@ WGSolverGMRES<D>::WGSolverGMRES(SP_state                  state,
 
 }
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 // EXPLICIT INSTANTIATIONS
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 
 template class WGSolverGMRES<_1D>;
 template class WGSolverGMRES<_2D>;
@@ -114,6 +124,6 @@ template class WGSolverGMRES<_3D>;
 
 } // end namespace detran
 
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
 //              end of WGSolverGMRES.cc
-//---------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
