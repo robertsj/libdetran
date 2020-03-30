@@ -38,7 +38,9 @@ void TimeDependentMaterial::update(const double t,
   d_dt    = dt;
   d_order = order;
 
+
   // Update the base materials.
+
   update_impl();
 
   // BDF coefficient
@@ -77,6 +79,7 @@ void TimeDependentMaterial::update(const double t,
     {
       for (size_t g = 0; g < number_groups(); ++g)
       {
+	    //std::cout <<  d_sigma_f[g][m]<< "\n";
         d_sigma_f[g][m] /= d_kcrit;
         //d_chi[g][m] *= (1.0 - beta_total(m));
       }
