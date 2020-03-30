@@ -8,6 +8,7 @@
 
 ADD_EXECUTABLE(test_KineticsMaterial            test_KineticsMaterial.cc)
 TARGET_LINK_LIBRARIES(test_KineticsMaterial     kinetics)
+
 ADD_EXECUTABLE(test_LinearMaterial              test_LinearMaterial.cc)
 TARGET_LINK_LIBRARIES(test_LinearMaterial       kinetics)
 
@@ -18,6 +19,9 @@ TARGET_LINK_LIBRARIES(test_PulsedExternalSource      kinetics)
 
 ADD_EXECUTABLE(test_MultiPhysics             		test_MultiPhysics.cc)
 TARGET_LINK_LIBRARIES(test_MultiPhysics             kinetics)
+
+ADD_EXECUTABLE(test_TimeIndependentMaterial           test_TimeIndependentMaterial.cc)
+TARGET_LINK_LIBRARIES(test_TimeIndependentMaterial     kinetics)
 
 
 #------------------------------------------------------------------------------#
@@ -31,4 +35,6 @@ ADD_TEST(test_LinearExternalSource   test_LinearExternalSource 0)
 ADD_TEST(test_PulsedExternalSource   test_PulsedExternalSource 0)
 
 ADD_TEST(test_MultiPhysics           test_MultiPhysics 0)
+ADD_TEST(test_TimeIndependentMaterial   test_TimeIndependentMaterial 0)
+
 
