@@ -51,12 +51,13 @@ int test_TimeIndependentMaterial(int argc, char *argv[])
 
   for (int i = 0; i < 8; ++i)
   {
-     k_mat->set_lambda(i, lambda[i]);
+    k_mat->set_lambda(i, lambda[i]);
     for (int m = 0; m < 2; ++m)
     {
       k_mat->set_beta(m, i, beta[i]);
-      k_mat->set_sigma_t(m,0, 1);
-      k_mat->set_sigma_s(m, 0, 0,  0.5);
+      k_mat->set_sigma_t(m, 0, 1);
+      k_mat->set_sigma_s(m, 0, 0, 0.5);
+      k_mat->set_chi_d(m, i, 0, 1 );
     }
   }
 
@@ -77,8 +78,8 @@ int test_TimeIndependentMaterial(int argc, char *argv[])
       TEST(soft_equiv(t_mat->beta_total(m), beta_total));
     }
   }
-
       TEST(soft_equiv(t_mat->velocity(0), 2200.0));
+      TEST(soft_equiv(t_mat->chi_d(0, 0, 0), 1.0));
   return 0;
 }
 
