@@ -109,14 +109,7 @@ ADD_EXECUTABLE(test_Ruby            test_Ruby.cc)
 TARGET_LINK_LIBRARIES(test_Ruby   	solvers)
 ADD_TEST(test_Ruby             		test_Ruby 0)
 
-
-ADD_EXECUTABLE(test_1D_transient            test_1D_transient.cc)
-TARGET_LINK_LIBRARIES(test_1D_transient   	solvers)
-ADD_TEST(test_1D_transient            		test_1D_transient 0)
-
 ADD_EXECUTABLE(test_1D_transient_diffusion_matrix   test_1D_transient_diffusion_matrix.cc)
 TARGET_LINK_LIBRARIES(test_1D_transient_diffusion_matrix   	 solvers)
 ADD_TEST(test_1D_transient_diffusion_matrix          test_1D_transient_diffusion_matrix 0)
-
-
 
