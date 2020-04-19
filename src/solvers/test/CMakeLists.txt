@@ -113,3 +113,6 @@ ADD_EXECUTABLE(test_1D_transient_diffusion_matrix   test_1D_transient_diffusion_
 TARGET_LINK_LIBRARIES(test_1D_transient_diffusion_matrix   	 solvers)
 ADD_TEST(test_1D_transient_diffusion_matrix          test_1D_transient_diffusion_matrix 0)
 
+ADD_EXECUTABLE(test_1D_transient_diffusion_matrix_shell   test_1D_transient_diffusion_matrix_shell.cc)
+TARGET_LINK_LIBRARIES(test_1D_transient_diffusion_matrix_shell  	 solvers)
+ADD_TEST(test_1D_transient_diffusion_matrix_shell         test_1D_transient_diffusion_matrix_shell 0)
