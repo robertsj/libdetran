@@ -52,19 +52,23 @@ class Test_Transient_Matrix_shell:public MatrixShell
 
    SP_gainoperator d_G (new DiffusionGainOperator(d_input, d_mat, d_mesh, false));
 
-   int* rows_L = d_D->rows();
-   int* cols_L = d_D->columns();
-   double* v_L = d_D->values();
-
-   int* rows_F = d_G->rows();
-   int* cols_F = d_G->columns();
-   double* v_F = d_G->values();
-
    const vec_int &mat_map = d_mesh->mesh_map("MATERIAL");
 
    int r, c;
 
    int num_cells = d_mesh->number_cells();
+
+   callow::Vector phi(2*num_cells , 0.0);
+   for (int i; i < 2*num_cells; i++)
+   {
+       phi[i] =  x[i];
+   }
+
+   callow::Vector Y1(2*num_cells, 0.0);
+   callow::Vector Y2(2*num_cells, 0.0);
+
+   d_D->multiply(phi, Y1);
+   d_G->multiply(phi, Y2);
 
    for (int g=0; g < 2; g++)
    {
@@ -72,15 +76,9 @@ class Test_Transient_Matrix_shell:public MatrixShell
      {
        int m = mat_map[cell];
        r = num_cells*g + cell; //row
-       for (int p = rows_L[r]; p < rows_L[r + 1]; p++)
+       if (r < num_cells*2)
        {
-         c = cols_L[p];
-         y[r] += -v_L[p]*d_mat->velocity(g)*x[c];
-       }
-       for (int p = rows_F[r]; p < rows_F[r + 1]; p++)
-       {
-         c = cols_F[p];
-         y[r] += v_F[p]*(1 - d_mat->beta_total(m))*d_mat->velocity(g)/d_keff*x[c];
+       y[r] += (-Y1[r] + Y2[r]*(1 - d_mat->beta_total(m))/d_keff)*d_mat->velocity(g);
        }
        for (int p=0 ; p < 8; p++)
        {
