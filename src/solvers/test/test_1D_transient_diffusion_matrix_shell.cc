@@ -104,7 +104,7 @@ class Test_Transient_Matrix_shell:public MatrixShell
 
   void multiply_transpose(const Vector &x,  Vector &y)
   {
-
+    THROW("matrix transpose operator not implemented");
   }
 
   private:
