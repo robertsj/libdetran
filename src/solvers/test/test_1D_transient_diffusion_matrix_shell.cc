@@ -34,6 +34,8 @@ int main(int argc, char *argv[])
 class Test_Transient_Matrix_shell:public MatrixShell
 {
   public:
+  typedef DiffusionGainOperator::SP_gainoperator    SP_gainoperator;
+  typedef DiffusionLossOperator::SP_lossoperator    SP_lossoperator;
   Test_Transient_Matrix_shell(int fmm)
   :MatrixShell(this),
   d_mat(get_mat()),
@@ -46,9 +48,9 @@ class Test_Transient_Matrix_shell:public MatrixShell
   void multiply(const Vector &x,  Vector &y)
   {
 
-   DiffusionLossOperator* d_D = new DiffusionLossOperator(d_input, d_mat, d_mesh,
- 							 false, 0.0, false, 1.0);
-   DiffusionGainOperator* d_G = new DiffusionGainOperator(d_input, d_mat, d_mesh, false);
+   SP_lossoperator d_D (new DiffusionLossOperator(d_input, d_mat, d_mesh, false, 0.0, false, 1.0));
+
+   SP_gainoperator d_G (new DiffusionGainOperator(d_input, d_mat, d_mesh, false));
 
    int* rows_L = d_D->rows();
    int* cols_L = d_D->columns();
