@@ -132,7 +132,13 @@ Mesh1D::SP_mesh get_mesh(Mesh1D::size_t fmm = 2)
   }
 
   Mesh1D::vec_int mt(7);
-  mt = {0, 1, 2, 1, 3, 1, 0};
+  mt[0] = 0;
+  mt[1] = 1;
+  mt[2] = 2;
+  mt[3] = 1;
+  mt[4] = 3;
+  mt[5] = 1;
+  mt[6] = 0;
 
   Mesh1D::SP_mesh mesh = Mesh1D::Create(fm, cm, mt);
 
@@ -274,5 +280,4 @@ int test_1D_transient_diffusion_matrix(int argc, char *argv[])
   return 0;
 
  }
-
 
