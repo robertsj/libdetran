@@ -12,6 +12,7 @@ set(SRC
     KineticsMaterial.cc
     LinearMaterial.cc
     TimeDependentMaterial.cc
+    TimeIndependentMaterial.cc
     PyTimeDependentMaterial.cc
     Precursors.cc
     SyntheticSource.cc

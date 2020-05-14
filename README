@@ -1,10 +1,11 @@
 README - libdetran
 ------------------
 
-Detran is a set of simple utilities for deterministic transport, mostly
-with a focus on easy algorithm development for reactor physics.  Several
-aspects of the design are directly inspired by ORNL code Denovo, especially
-with respect to object orientation.  
+Detran is a set of simple utilities for deterministic neutral particle 
+transport, mostly with a focus on easy algorithm development for reactor 
+physics and other transport applications.  Several aspects of the design 
+are directly inspired by ORNL code Denovo, especially with respect to 
+object-orientation.  
 
 Current features:
   - Multigroup diffusion, discrete ordinates, and method of 
