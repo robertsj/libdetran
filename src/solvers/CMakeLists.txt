@@ -17,6 +17,8 @@ add_subdirectory(wg)
 add_subdirectory(mg)
 add_subdirectory(eigen)
 add_subdirectory(time)
+add_subdirectory(ROM)
+
 set(SRC
     FixedSourceManager.cc
     EigenvalueManager.cc
