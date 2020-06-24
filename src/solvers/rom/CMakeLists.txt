@@ -1,6 +1,6 @@
 # Set source
 SET(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 SET(ROM_SRC
-  ${SRC_DIR}/Basis.cc
+  ${SRC_DIR}/ROMBasis.cc
   PARENT_SCOPE
 )
