@@ -5,35 +5,42 @@
  *      Author: rabab
  */
 
+
 #ifndef SOLVERS_ROM_PROJECTEDOPERATOR_HH_
 #define SOLVERS_ROM_PROJECTEDOPERATOR_HH_
+
+#include "solvers/solvers_export.hh"
 #include "callow/matrix/MatrixBase.hh"
 #include "callow/matrix/MatrixDense.hh"
 #include "callow/matrix/MatrixShell.hh"
 #include "callow/matrix/Matrix.hh"
+#include "callow/vector/Vector.hh"
 
-class ProjectedOPerator
+namespace detran
+{
+template <class T>
+class ProjectedOperator
 {
 
   public:
-	ProjectedOPerator(callow::Matrix A, callow::MatrixDense U);
-	//ProjectedOPerator(callow::MatrixShell A, ROMBasis U);
-	//ProjectedOPerator(matrixshell A, ROMBasis U);
+	typedef detran_utilities::SP<T>  SP_matrix;
 
-	callow::MatrixDense ComputeAU();
+	// constructor
+	ProjectedOperator(int a);
 
-	callow::MatrixDense ComputeUTAU();
+	void SetOperators(SP_matrix A, SP_matrix U);
+
+	void Project(SP_matrix Ar);
 
 
   private:
-	callow::MatrixDense d_U;
-	callow::Matrix d_A;
 	int d_r;
 	int d_n;
-
+	SP_matrix d_A;
+	SP_matrix d_U;
+	callow::MatrixDense ComputeAU();
 
 };
-
-
+}
 
 #endif /* SOLVERS_ROM_PROJECTEDOPERATOR_HH_ */
