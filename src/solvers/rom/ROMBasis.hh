@@ -5,12 +5,17 @@
  *      Author: rabab
  */
 
+#ifndef detran_rombasis_HH_
+#define detran_rombasis_HH_
+
+
 #include "callow/matrix/MatrixBase.hh"
 #include "callow/matrix/MatrixDense.hh"
 #include "utilities/Definitions.hh"
 #include "utilities/DBC.hh"
 #include "utilities/SP.hh"
 #include <iostream>
+#include <string>
 #include <vector>
 
 
@@ -37,7 +42,7 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //--------------------------------------------------------------------------//
 
-   ROMBasis(const int n, const int r, std::string fname);
+   ROMBasis(const int n, const int r, int fname);
 
   /// virtual destructor
   virtual ~ROMBasis() {};
@@ -66,7 +71,9 @@ public:
 private:
   const int d_r;
   const int d_n;
-  std::string d_fname;
+  int d_fname;
 
 };
 }
+
+#endif //  detran_rombasis_HH_

@@ -110,7 +110,7 @@ TARGET_LINK_LIBRARIES(test_Basis  	solvers)
 ADD_TEST(test_Basis             		test_Basis 0)
 
 ADD_EXECUTABLE(test_ProjectedOperator          	 test_ProjectedOperator.cc)
-TARGET_LINK_LIBRARIES( test_ProjectedOperator   	solvers)
+TARGET_LINK_LIBRARIES(test_ProjectedOperator   	solvers)
 ADD_TEST(test_ProjectedOperator                  test_ProjectedOperator  0)
 
 

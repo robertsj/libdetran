@@ -34,7 +34,8 @@ int main(int argc, char *argv[])
 
 int test_Basis(int argc, char *argv[])
 {
-//Basis U(20, 4, "n");
+	std::string a = "n";
+  ROMBasis U(20, 4, 99);
 
 return 0;
 }

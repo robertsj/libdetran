@@ -14,7 +14,9 @@ using namespace std;
 
 namespace detran
 {
-ROMBasis::ROMBasis(const int n, const int r, string fname)
+
+
+ROMBasis::ROMBasis(const int n, const int r, int fname)
 :d_n(n),
  d_r(r),
  d_fname(fname)
@@ -25,6 +27,9 @@ ROMBasis::ROMBasis(const int n, const int r, string fname)
 
 detran_utilities::vec2_dbl ROMBasis::GetBasis()
 {
+	detran_utilities::vec2_dbl a;
+	/*
+
   ifstream infile;
   infile.open(d_fname, ios::binary | ios::in);
 
@@ -44,8 +49,9 @@ detran_utilities::vec2_dbl ROMBasis::GetBasis()
     }
 	 basis_vecs.push_back(v);
   }
+*/
+  return a;
 
-  return  basis_vecs;
 }
 
 }
