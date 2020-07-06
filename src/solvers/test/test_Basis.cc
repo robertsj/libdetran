@@ -13,7 +13,7 @@
 
 
 #include "TestDriver.hh"
-#include "solvers/ROM/Basis.hh"
+#include "solvers/rom/ROMBasis.hh"
 #include "utilities/MathUtilities.hh"
 #include "solvers/EigenvalueManager.hh"
 
@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 
 int test_Basis(int argc, char *argv[])
 {
-Basis U(20, 4, "n");
+//Basis U(20, 4, "n");
 
 return 0;
 }
