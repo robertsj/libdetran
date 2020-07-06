@@ -12,7 +12,7 @@ namespace detran
 {
 
 template <class T>
-ProjectedOperator<T>::ProjectedOperator(int a)
+ProjectedOperator<T>::ProjectedOperator()
 :d_r(0)
 ,d_n(0)
 {
