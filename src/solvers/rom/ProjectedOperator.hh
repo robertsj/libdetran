@@ -26,7 +26,7 @@ class ProjectedOperator
 	typedef detran_utilities::SP<T>  SP_matrix;
 
 	// constructor
-	ProjectedOperator();
+	ProjectedOperator(int a);
 
 	void SetOperators(SP_matrix A, SP_matrix U);
 
