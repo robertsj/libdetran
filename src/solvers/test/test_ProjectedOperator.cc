@@ -57,21 +57,13 @@ int test_ProjectedOperator(int argc, char *argv[])
  U->insert_col(0, col0, U->INSERT);
  U->insert_col(1, col1, U->INSERT);
 
-
-
- std::cout << "**********1 ***********" << "\n";
- detran::ProjectedOperator<callow::MatrixDense> projector(1);
- std::cout << "**********2***********" << "\n";
-
+ detran::ProjectedOperator projector(1);
 
  projector.SetOperators(A, U);
- std::cout << "**********3***********" << "\n";
 
  SP_matrix Ar;
  Ar = new callow::MatrixDense(2, 2);
  projector.Project(Ar);
- std::cout << "********** done ***********" << "\n";
-
 
  TEST(soft_equiv((*Ar)(0, 0), -1.6 ));
  TEST(soft_equiv((*Ar)(1, 0), -3.2 ));

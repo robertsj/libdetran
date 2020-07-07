@@ -18,26 +18,26 @@
 
 namespace detran
 {
-template <class T>
 class ProjectedOperator
 {
 
   public:
-	typedef detran_utilities::SP<T>  SP_matrix;
+	 typedef callow::MatrixBase::SP_matrix  SP_matrix;
+	 typedef callow::MatrixDense::SP_matrix  SP_matrixDense;
 
 	// constructor
 	ProjectedOperator(int a);
 
 	void SetOperators(SP_matrix A, SP_matrix U);
 
-	void Project(SP_matrix Ar);
+	void Project(SP_matrixDense Ar);
 
 
   private:
 	int d_r;
 	int d_n;
 	SP_matrix d_A;
-	SP_matrix d_U;
+	SP_matrixDense d_U;
 	callow::MatrixDense ComputeAU();
 
 };
