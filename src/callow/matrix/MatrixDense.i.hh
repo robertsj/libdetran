@@ -150,7 +150,7 @@ inline bool MatrixDense::insert_col(int j, double *v, const int type)
   Require(d_is_ready);
   Require(j >= 0 && j < d_n);
 
-  for (int i = 0; i < d_n; ++i)
+  for (int i = 0; i < d_m; ++i)
     insert(i, j, v[i], type);
 
   return true;
