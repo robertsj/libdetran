@@ -113,4 +113,11 @@ ADD_EXECUTABLE(test_ProjectedOperator          	 test_ProjectedOperator.cc)
 TARGET_LINK_LIBRARIES(test_ProjectedOperator   	solvers)
 ADD_TEST(test_ProjectedOperator                  test_ProjectedOperator  0)
 
+ADD_EXECUTABLE(test_ROM_Manager        	 test_ROM_Manager.cc)
+TARGET_LINK_LIBRARIES( test_ROM_Manager     	solvers)
+ADD_TEST(test_ROM_Manager                  test_ROM_Manager 0)
+
+
+
+
 
