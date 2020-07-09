@@ -8,15 +8,25 @@
 
 
 #define TEST_LIST                      \
-        FUNC(test_ProjectedOperator)
+        FUNC(test_ProjectedOperator_general)
 
-#include "ProjectedOperator.hh"
 #include "TestDriver.hh"
 #include "callow/utils/Initialization.hh"
 #include "utilities/MathUtilities.hh"
+#include "callow/solver/EigenSolverCreator.hh"
+#include "solvers/EigenvalueManager.hh"
+#include "FixedSourceManager.hh"
+#include "projection_fixture.hh"
+#include "ProjectedOperator.hh"
+#include "solvers/eigen/EnergyDependentEigenLHS.hh"
+#include "solvers/eigen/EnergyIndependentEigenOperator.hh"
+
+
 using namespace detran_test;
 using namespace detran;
 using namespace detran_utilities;
+#include <iostream>
+#include <fstream>
 using namespace std;
 
 
@@ -28,7 +38,7 @@ int main(int argc, char *argv[])
 }
 
 
-int test_ProjectedOperator(int argc, char *argv[])
+int test_ProjectedOperator_general(int argc, char *argv[])
 {
  typedef detran_utilities::SP<callow::MatrixDense>  SP_matrix;
 
@@ -72,7 +82,9 @@ int test_ProjectedOperator(int argc, char *argv[])
 
  Ar->print_matlab("Ar.txt");
 
+
  //ProjectedOperator<callow::MatrixDense> Ar(A, U);
 
 return 0;
 }
+
