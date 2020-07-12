@@ -26,16 +26,18 @@ void ProjectedOperator::SetOperators(SP_matrix A, SP_matrix U)
     d_A = A;
     d_U = U;
 
-    Ensure(d_A->number_rows() == d_A->number_columns());
-    Ensure(d_A->number_rows() == d_U->number_rows());
     d_n = d_U->number_rows();
     d_r = d_U->number_columns();
 
+    Ensure(d_A->number_rows() == d_A->number_columns());
+    Ensure(d_A->number_rows() == d_U->number_rows());
+    // maybe need to make sure that the rank is less than problem size.
+    Ensure(d_n > d_r);
 }
 
 void ProjectedOperator::Project(SP_matrixDense Ar)
 {
-	callow::MatrixDense A_ = ProjectedOperator::ComputeAU();
+	callow::MatrixDense AU = ProjectedOperator::ComputeAU();
 	// compute UTAU
 	for (int i=0; i<d_r; i++)
 	 {
@@ -43,19 +45,18 @@ void ProjectedOperator::Project(SP_matrixDense Ar)
 	  {
 	    for (int j=0; j<d_n; j++)
 		{
-		 double v = (*d_U)(j, i)*A_(j, k);
+		 double v = (*d_U)(j, i)*AU(j, k);
 		 Ar->insert(i, k, v, 1);
 		}
 	  }
-
-	 }
+   }
 }
 
 
 callow::MatrixDense ProjectedOperator::ComputeAU()
 {
   callow::Vector y(d_n, 0.0);
-  callow::MatrixDense A_(d_n, d_r);
+  callow::MatrixDense AU(d_n, d_r);
 
   for (int i=0; i<d_r; i++)
   {
@@ -67,16 +68,14 @@ callow::MatrixDense ProjectedOperator::ComputeAU()
 
     d_A->multiply(v, y);
 
-    // need to cast from callow vector to double
-    double *a = &y[0];
-    A_.insert_col(i, a, 0);
+    double *y_ = &y[0];
+
+    AU.insert_col(i, y_, 0);
   }
-  A_.print_matlab("A_.txt");
+  //AU.print_matlab("AU.txt");
 
-  return A_;
+  return AU;
 }
 }
-
-
 
 

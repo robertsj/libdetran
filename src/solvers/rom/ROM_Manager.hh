@@ -10,27 +10,25 @@
 
 
 #include "callow/vector/Vector.hh"
-#include "callow/solver/EigenSolverCreator.hh"
 #include "callow/matrix/MatrixBase.hh"
 #include "utilities/InputDB.hh"
 #include "material/Material.hh"
 #include "geometry/Mesh.hh"
 #include "solvers/mg/DiffusionLossOperator.hh"
 #include "solvers/mg/DiffusionGainOperator.hh"
+#include "callow/solver/EigenSolverCreator.hh"
 #include "FixedSourceManager.hh"
-#include "Eigensolver.hh"
 #include "solvers/EigenvalueManager.hh"
 #include "solvers/EigenvalueManager.hh"
 #include "solvers/eigen/EnergyDependentEigenLHS.hh"
 #include "solvers/eigen/EnergyIndependentEigenOperator.hh"
 #include "ProjectedOperator.hh"
 
-
-
 #include <string>
 
 using namespace detran;
 
+template <class D>
 class ROM_Manager
 {
 public:
@@ -43,11 +41,11 @@ public:
    typedef detran_material::Material::SP_material        SP_material;
    typedef detran::DiffusionLossOperator::SP_lossoperator    SP_lossoperator;
    typedef detran::DiffusionGainOperator::SP_gainoperator    SP_gainoperator;
-   typedef typename Eigensolver<_1D>::Fixed_T              Fixed_T;
-   typedef typename Eigensolver<_1D>::SP_solver            SP_solver;
+   typedef typename Eigensolver<D>::Fixed_T              Fixed_T;
+   typedef typename Eigensolver<D>::SP_solver            SP_solver;
    typedef typename Fixed_T::SP_manager                  SP_mg_solver;
-   typedef EnergyDependentEigenLHS<_1D>                LHS_Operator_T;
-   typedef EnergyIndependentEigenOperator<_1D>             Operator_T;
+   typedef EnergyDependentEigenLHS<D>                LHS_Operator_T;
+   typedef EnergyIndependentEigenOperator<D>             Operator_T;
 
 
 
@@ -55,12 +53,29 @@ public:
    ROM_Manager(SP_input inp, SP_mesh Mesh, SP_material mat, std::string operator_type);
 
    void SetBasis();
+
    void Set_FullOperators();
 
    void SetOperators(SP_matrix A, SP_matrix B);
 
    void Solve(SP_matrix d_U);
 
+   void ComputeROM_Error(std::string type);
+
+   double keff()
+   {
+     return d_keff;
+   }
+
+  callow::Vector fom_state()
+  {
+	return x_fom;
+  }
+
+  callow::Vector rom_state()
+  {
+    return x_rom;
+  }
 
 private:
 	SP_input d_input ;
@@ -70,10 +85,9 @@ private:
 	SP_matrix d_B;
 
 	std::string d_operator_type;
-	double keff;
+	double d_keff;
 	callow::Vector x_rom;
 	callow::Vector x_fom;
-
 };
 
 #endif /* SOLVERS_ROM_ROM_MANAGER_HH_ */

@@ -5,37 +5,34 @@
  *      Author: rabab
  */
 
-
-
-#include <ROMBasis.hh>
+#include "ROMBasis.hh"
 #include <fstream>
-
 using namespace std;
 
 namespace detran
 {
-
-
-ROMBasis::ROMBasis(const int n, const int r, int fname)
-:d_n(n),
- d_r(r),
- d_fname(fname)
+ROMBasis::ROMBasis(int a)
 {
-  std::cout << "******** please work ********" << "\n";
+
 }
 
-
-detran_utilities::vec2_dbl ROMBasis::GetBasis()
+void ROMBasis::GetBasis(std::string fname, SP_matrix U)
 {
-	detran_utilities::vec2_dbl a;
-	/*
+  int d_r = U->number_columns();
+  int d_n = U->number_rows();
 
   ifstream infile;
-  infile.open(d_fname, ios::binary | ios::in);
+  infile.open(fname, ios::binary | ios::in);
 
-  double U[d_n][d_r];
+  if(!infile)
+    {
+     cout << "Cannot open file!" << endl;
+    }
+
+
+  double B[d_n][d_r];
   infile.seekg(0);
-  infile.read((char *) &U, sizeof(U)); // read the number of element
+  infile.read((char *) &B, sizeof(B)); // read the number of element
 
   vector<vector<double>> basis_vecs;
 
@@ -44,16 +41,9 @@ detran_utilities::vec2_dbl ROMBasis::GetBasis()
     vector<double> v;
     for (int j=0; j< d_n; j++)
 	{
-	 //std::cout << U[j][i] << "\n";
-	 v.push_back(U[j][i]);
+     U->insert(j, i, B[j][i]);
     }
-	 basis_vecs.push_back(v);
   }
-*/
-  return a;
-
 }
-
 }
-
 

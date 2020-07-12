@@ -9,10 +9,8 @@
 #define detran_rombasis_HH_
 
 
-#include "callow/matrix/MatrixBase.hh"
 #include "callow/matrix/MatrixDense.hh"
 #include "utilities/Definitions.hh"
-#include "utilities/DBC.hh"
 #include "utilities/SP.hh"
 #include <iostream>
 #include <string>
@@ -35,14 +33,12 @@ public:
   //--------------------------------------------------------------------------//
   // TYPEDEFS
   //--------------------------------------------------------------------------//
-
- // typedef detran_utilities::vec2_dbl     vec2_dbl;
-
+ typedef callow::MatrixDense::SP_matrix             SP_matrix;
   //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
   //--------------------------------------------------------------------------//
 
-   ROMBasis(const int n, const int r, int fname);
+  ROMBasis(int a);
 
   /// virtual destructor
   virtual ~ROMBasis() {};
@@ -51,8 +47,9 @@ public:
   // PUBLIC FUNCTIONS
   //--------------------------------------------------------------------------//
 
-  detran_utilities::vec2_dbl GetBasis();
+  void GetBasis(std::string fname, SP_matrix U);
 
+  /*
   int rank()
   {
    return d_r;
@@ -71,7 +68,8 @@ public:
 private:
   const int d_r;
   const int d_n;
-  int d_fname;
+  std::string d_fname;
+  */
 
 };
 }
