@@ -33,43 +33,21 @@ public:
   //--------------------------------------------------------------------------//
   // TYPEDEFS
   //--------------------------------------------------------------------------//
- typedef callow::MatrixDense::SP_matrix             SP_matrix;
+  typedef callow::MatrixDense::SP_matrix             SP_matrix;
   //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
   //--------------------------------------------------------------------------//
 
   ROMBasis(int a);
 
-  /// virtual destructor
+  // virtual destructor
   virtual ~ROMBasis() {};
 
   //--------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
   //--------------------------------------------------------------------------//
 
-  void GetBasis(std::string fname, SP_matrix U);
-
-  /*
-  int rank()
-  {
-   return d_r;
-  }
-
-  int problem_size()
-  {
-   return d_n;
-  }
-
-  //--------------------------------------------------------------------------//
-  // PRIVATE MEMBERS
-  //--------------------------------------------------------------------------//
-
-//--------------------------------------------------------------------------//
-private:
-  const int d_r;
-  const int d_n;
-  std::string d_fname;
-  */
+  static void GetBasis(std::string fname, SP_matrix U);
 
 };
 }

@@ -7,6 +7,7 @@
 
 #include "ROMBasis.hh"
 #include <fstream>
+
 using namespace std;
 
 namespace detran
@@ -29,19 +30,21 @@ void ROMBasis::GetBasis(std::string fname, SP_matrix U)
      cout << "Cannot open file!" << endl;
     }
 
-
-  double B[d_n][d_r];
-  infile.seekg(0);
-  infile.read((char *) &B, sizeof(B)); // read the number of element
-
-  vector<vector<double>> basis_vecs;
-
-  for (int i=0; i<d_r; i++)
+  else
   {
-    vector<double> v;
-    for (int j=0; j< d_n; j++)
-	{
-     U->insert(j, i, B[j][i]);
+    double B[d_n][d_r];
+    infile.seekg(0);
+    infile.read((char *) &B, sizeof(B)); // read the number of element
+
+    vector<vector<double>> basis_vecs;
+
+    for (int i=0; i<d_r; i++)
+    {
+      vector<double> v;
+      for (int j=0; j< d_n; j++)
+	   {
+         U->insert(j, i, B[j][i]);
+       }
     }
   }
 }
