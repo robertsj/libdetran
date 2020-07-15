@@ -8,16 +8,27 @@
 #include "ROMSolver.hh"
 
 template <class D>
-ROMSolver<D>::ROMSolver(SP_input inp, SP_mesh mesh, SP_material mat, std::string operator_type)
+ROMSolver<D>::ROMSolver(SP_input inp, SP_mesh mesh, SP_material mat)
 :d_input(inp),
  d_mesh(mesh),
- d_mat(mat),
- d_operator_type(operator_type)
-
+ d_mat(mat)
 {
  Require(inp);
  Require(mat);
  Require(mesh);
+
+ // not sure what input can tell that we want energyindependent operator,
+ // so will let it the default until Roberts give his opinion
+ d_operator = "EnergyIndependent";
+
+ if (d_input->check("equation"))
+ {
+    if (d_input->get<std::string>("equation") == "diffusion")
+    	d_operator = "diffusion";
+
+    else if (d_input->get<std::string>("equation") == "dd")
+		d_operator = "EnergyDependent";
+ }
 
  ROMSolver::Set_FullOperators();
 }
@@ -25,8 +36,7 @@ ROMSolver<D>::ROMSolver(SP_input inp, SP_mesh mesh, SP_material mat, std::string
 template <class D>
 void ROMSolver<D>::Set_FullOperators()
 {
-	if (d_operator_type == "diffusion")
-
+	if (d_operator == "diffusion")
 	{
 	  SP_lossoperator A (new DiffusionLossOperator(d_input, d_mat, d_mesh, false, 0.0, false, 1.0));
 	  SP_gainoperator B (new DiffusionGainOperator(d_input, d_mat, d_mesh, false));
@@ -35,7 +45,7 @@ void ROMSolver<D>::Set_FullOperators()
 	  d_B = B;
 	}
 
-	else if (d_operator_type == "EnergyDependent")
+	else if (d_operator == "EnergyDependent")
 	{
 	  d_input->put<std::string>("outer_solver", "GMRES");
 	  d_input->put<int>("outer_krylov_group_cutoff", 0);
@@ -48,7 +58,7 @@ void ROMSolver<D>::Set_FullOperators()
 	  //d_A->compute_explicit("EnergyDependent");
 	}
 
-	else if (d_operator_type == "EnergyIndependent")
+	else if (d_operator == "EnergyIndependent")
 	{
 	 SP_mg_solver mg_solver;
 	 mg_solver = new FixedSourceManager<_1D>(d_input, d_mat, d_mesh, false, true);
@@ -77,7 +87,7 @@ void ROMSolver<D>::Solve(SP_matrix d_U, SP_vector sol)
 	SP_eigensolver eigensolver;
 	eigensolver = Creator_T::Create(d_input);
 
-	if (d_operator_type == "diffusion")
+	if (d_operator == "diffusion")
 	{
 	  P.SetOperators(d_B, d_U);
       SP_matrix Br;

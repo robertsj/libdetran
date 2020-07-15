@@ -47,8 +47,10 @@ int test_ROM_diffusion(int argc, char *argv[])
  InputDB::SP_input input = get_input();
  input->put<std::string>("bc_west",                    "reflect");
  input->put<std::string>("bc_east",                    "reflect");
+ input->put<std::string>("equation", "diffusion");
 
- ROMSolver<_1D> ROM(input, mesh, mat, "diffusion");
+
+ ROMSolver<_1D> ROM(input, mesh, mat);
 
  SP_matrix U;
  U = new callow::MatrixDense(40, 10);
@@ -58,8 +60,6 @@ int test_ROM_diffusion(int argc, char *argv[])
  ROM.Solve(U, ROM_flux);
 
  // FOM solution
- input->put<std::string>("equation",  "diffusion");
-
  EigenvalueManager<_1D> manager(input, mat, mesh);
  manager.solve();
  int n = 20;
@@ -95,12 +95,12 @@ int test_ROM_EnergyIndependent(int argc, char *argv[])
   Material::SP_material mat = get_mat();
   InputDB::SP_input input = get_input();
 
-  ROMSolver<_1D> ROM(input, mesh, mat, "EnergyIndependent");
+  ROMSolver<_1D> ROM(input, mesh, mat);
   SP_matrix U;
   U = new callow::MatrixDense(20, 5);
   ROMBasis::GetBasis("/home/rabab/opt/detran/source/src/solvers/test/fission_density_basis_assem0", U);
   SP_vector  ROM_flux;
-  int n=20;
+  int n = 20;
   ROM_flux = new callow::Vector(n, 0.0);
   ROM.Solve(U, ROM_flux);
 
@@ -117,22 +117,25 @@ int test_ROM_EnergyDependent(int argc, char *argv[])
  Mesh1D::SP_mesh mesh = get_mesh();
  Material::SP_material mat = get_mat();
  InputDB::SP_input input = get_input();
+ input->put<std::string>("equation", "dd");
 
- //input->put<std::string>("bc_west",                    "reflect");
- //input->put<std::string>("bc_east",                    "reflect");
-
- ROMSolver<_1D> ROM(input, mesh, mat, "EnergyDependent");
+ ROMSolver<_1D> ROM(input, mesh, mat);
 
  SP_matrix U;
 
- int n=40;
- int r=10;
+ int n = 40;
+ int r = 10;
+
  U = new callow::MatrixDense(n, r);
  ROMBasis::GetBasis("/home/rabab/opt/detran/source/src/solvers/test/flux_basis_assem0_diff", U);
  SP_vector  ROM_flux;
  ROM_flux = new callow::Vector(n, 0.0);
-
  ROM.Solve(U, ROM_flux);
+
+ EigenvalueManager<_1D> manager(input, mat, mesh);
+ manager.solve();
+
+ TEST(soft_equiv(manager.state()->eigenvalue(), ROM.keff(), 1E-4))
 
  return 0;
 }

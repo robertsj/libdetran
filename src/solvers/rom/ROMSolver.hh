@@ -49,7 +49,7 @@ public:
    typedef EnergyIndependentEigenOperator<D>             Operator_T;
 
 
-   ROMSolver(SP_input inp, SP_mesh Mesh, SP_material mat, std::string operator_type);
+   ROMSolver(SP_input inp, SP_mesh Mesh, SP_material mat);
 
    void SetBasis();
 
@@ -76,7 +76,7 @@ private:
   int d_r;
   int d_n;
 
-  std::string d_operator_type;
+  std::string d_operator;
   double d_keff;
   SP_vector x_rom;
   SP_vector x_fom;
