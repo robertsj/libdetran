@@ -107,17 +107,14 @@ TARGET_LINK_LIBRARIES(test_TWIGL            solvers)
 
 ADD_EXECUTABLE(test_Basis          	test_Basis.cc)
 TARGET_LINK_LIBRARIES(test_Basis  	solvers)
-ADD_TEST(test_Basis             		test_Basis 0)
+ADD_TEST(test_Basis             	test_Basis 0)
 
 ADD_EXECUTABLE(test_ProjectedOperator          	 test_ProjectedOperator.cc)
 TARGET_LINK_LIBRARIES(test_ProjectedOperator   	solvers)
 ADD_TEST(test_ProjectedOperator                  test_ProjectedOperator  0)
 
-ADD_EXECUTABLE(test_ROM_Manager        	 test_ROM_Manager.cc)
-TARGET_LINK_LIBRARIES( test_ROM_Manager     	solvers)
-ADD_TEST(test_ROM_Manager                  test_ROM_Manager 0)
-
-
-
-
-
+ADD_EXECUTABLE(test_ROMSolver        	 test_ROMSolver.cc)
+TARGET_LINK_LIBRARIES(test_ROMSolver     solvers)
+ADD_TEST(test_ROM_diffusion               test_ROMSolver 0)
+ADD_TEST(test_ROM_EnergyIndependent       test_ROMSolver 1)
+ADD_TEST(test_ROM_EnergyDependent         test_ROMSolver 2)
