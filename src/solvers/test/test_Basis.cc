@@ -8,7 +8,7 @@
 
 
 // LIST OF TEST FUNCTIONS
-#define TEST_LIS \
+#define TEST_LIST\
         FUNC(test_Basis)\
 
 
@@ -24,7 +24,7 @@ using namespace std;
 using std::cout;
 using std::endl;
 
-typedef callow::MatrixDense::SP_matrix             SP_matrix;
+typedef callow::MatrixDense::SP_matrix        SP_matrix;
 
 int main(int argc, char *argv[])
 {
@@ -40,11 +40,12 @@ int test_Basis(int argc, char *argv[])
 SP_matrix U;
 U = new callow::MatrixDense(20, 5);
 
-ROMBasis::GetBasis("/home/rabab/opt/detran/source/src/solvers/test/flux_basis_assem0_diff", U);
+ROMBasis::GetBasis("/home/rabab/opt/detran/source/src/solvers/test/random_basis", U);
 
-std::cout << (*U)(1, 1) << "\n";
-
-std::cout << (*U)(2, 2) << "\n";
+TEST(soft_equiv((*U)(1, 1),  0.4772053248001433));
+TEST(soft_equiv((*U)(2, 2),  0.733400048402773));
+TEST(soft_equiv((*U)(10, 0), 0.4521219173889569));
+TEST(soft_equiv((*U)(17, 3), 0.16543906668292263));
 
 return 0;
 }
