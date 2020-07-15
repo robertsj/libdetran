@@ -28,10 +28,11 @@ void ROMSolver<D>::Set_FullOperators()
 	if (d_operator_type == "diffusion")
 
 	{
-	  d_A = new DiffusionLossOperator(d_input, d_mat, d_mesh, false, 0.0, false, 1.0);
-	 // d_A->print_matlab("A.txt");
-	  d_B = new DiffusionGainOperator(d_input, d_mat, d_mesh, false);
-	  //d_B->print_matlab("B.txt");
+	  SP_lossoperator A (new DiffusionLossOperator(d_input, d_mat, d_mesh, false, 0.0, false, 1.0));
+	  SP_gainoperator B (new DiffusionGainOperator(d_input, d_mat, d_mesh, false));
+
+	  d_A = A;
+	  d_B = B;
 	}
 
 	else if (d_operator_type == "EnergyDependent")
@@ -39,7 +40,7 @@ void ROMSolver<D>::Set_FullOperators()
 	  d_input->put<std::string>("outer_solver", "GMRES");
 	  d_input->put<std::string>("eigen_solver", "GD");
 	  SP_mg_solver mg_solver_ED;
-	  mg_solver_ED = new FixedSourceManager<_1D>(d_input, d_mat, d_mesh, true, true);
+	  mg_solver_ED = new FixedSourceManager<_1D>(d_input, d_mat, d_mesh, false, true);
 	  mg_solver_ED->setup();
 	  mg_solver_ED->set_solver();
 	  d_A = new LHS_Operator_T(mg_solver_ED);
@@ -82,7 +83,7 @@ void ROMSolver<D>::Solve(SP_matrix d_U, SP_vector sol)
 	  Br = new callow::MatrixDense(d_r, d_r);
 	  P.Project(Br);
 	  //Br->print_matlab("Br.txt");
-	eigensolver->set_operators(Br, Ar);
+	  eigensolver->set_operators(Br, Ar);
 	}
 
 	else eigensolver->set_operators(Ar);
