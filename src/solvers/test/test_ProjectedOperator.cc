@@ -17,10 +17,7 @@
 #include "solvers/EigenvalueManager.hh"
 #include "FixedSourceManager.hh"
 #include "projection_fixture.hh"
-#include "ProjectedOperator.hh"
-#include "solvers/eigen/EnergyDependentEigenLHS.hh"
-#include "solvers/eigen/EnergyIndependentEigenOperator.hh"
-
+#include "OperatorProjection.hh"
 
 using namespace detran_test;
 using namespace detran;
@@ -67,7 +64,7 @@ int test_ProjectedOperator_general(int argc, char *argv[])
  U->insert_col(0, col0, U->INSERT);
  U->insert_col(1, col1, U->INSERT);
 
- detran::ProjectedOperator projector(1);
+ detran::OperatorProjection projector(1);
 
  projector.SetOperators(A, U);
 
@@ -80,11 +77,7 @@ int test_ProjectedOperator_general(int argc, char *argv[])
  TEST(soft_equiv((*Ar)(0, 1), -3.2));
  TEST(soft_equiv((*Ar)(1, 1), -6.4));
 
- Ar->print_matlab("Ar.txt");
-
-
- //ProjectedOperator<callow::MatrixDense> Ar(A, U);
-
+ //Ar->print_matlab("Ar.txt");
 return 0;
 }
 

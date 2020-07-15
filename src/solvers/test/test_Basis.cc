@@ -8,8 +8,8 @@
 
 
 // LIST OF TEST FUNCTIONS
-#define TEST_LIST                              \
-        FUNC(test_Basis)                  \
+#define TEST_LIS \
+        FUNC(test_Basis)\
 
 
 #include "TestDriver.hh"
@@ -40,10 +40,7 @@ int test_Basis(int argc, char *argv[])
 SP_matrix U;
 U = new callow::MatrixDense(20, 5);
 
-ROMBasis Basis(1);
-
-Basis.GetBasis("/home/rabab/Desktop/test_basis", U);
-//std::cout << Basis.rank();
+ROMBasis::GetBasis("/home/rabab/opt/detran/source/src/solvers/test/flux_basis_assem0_diff", U);
 
 std::cout << (*U)(1, 1) << "\n";
 
