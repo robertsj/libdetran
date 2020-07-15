@@ -38,6 +38,7 @@ void ROMSolver<D>::Set_FullOperators()
 	else if (d_operator_type == "EnergyDependent")
 	{
 	  d_input->put<std::string>("outer_solver", "GMRES");
+	  d_input->put<int>("outer_krylov_group_cutoff", 0);
 	  d_input->put<std::string>("eigen_solver", "GD");
 	  SP_mg_solver mg_solver_ED;
 	  mg_solver_ED = new FixedSourceManager<_1D>(d_input, d_mat, d_mesh, false, true);
