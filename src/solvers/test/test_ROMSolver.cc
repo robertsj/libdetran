@@ -45,8 +45,6 @@ int test_ROM_diffusion(int argc, char *argv[])
  Mesh1D::SP_mesh mesh = get_mesh();
  Material::SP_material mat = get_mat();
  InputDB::SP_input input = get_input();
- input->put<std::string>("bc_west",                    "reflect");
- input->put<std::string>("bc_east",                    "reflect");
  input->put<std::string>("equation", "diffusion");
 
 
@@ -85,6 +83,14 @@ int test_ROM_diffusion(int argc, char *argv[])
 
    error2[i] = phi1_fom[i]/phi1_fom.norm() - phi1_rom[i]/phi1_rom.norm();
  }
+
+ TEST(soft_equiv(manager.state()->eigenvalue(), ROM.keff(), 1E-6));
+
+ std::cout << "The error in group 1 is " << detran_utilities::norm(error1, "L2") << "\n";
+ std::cout << "The error in group 1 is " << detran_utilities::norm(error2, "L2") << "\n";
+
+
+
  return 0;
 }
 
@@ -94,20 +100,34 @@ int test_ROM_EnergyIndependent(int argc, char *argv[])
   Mesh1D::SP_mesh mesh = get_mesh();
   Material::SP_material mat = get_mat();
   InputDB::SP_input input = get_input();
-
   ROMSolver<_1D> ROM(input, mesh, mat);
   SP_matrix U;
   U = new callow::MatrixDense(20, 5);
   ROMBasis::GetBasis("/home/rabab/opt/detran/source/src/solvers/test/fission_density_basis_assem0", U);
-  SP_vector  ROM_flux;
-  int n = 20;
-  ROM_flux = new callow::Vector(n, 0.0);
-  ROM.Solve(U, ROM_flux);
+  SP_vector  fd_rom;
+  int n =20;
+  fd_rom = new callow::Vector(n, 0.0);
+  ROM.Solve(U, fd_rom);
 
   EigenvalueManager<_1D> manager(input, mat, mesh);
   manager.solve();
 
-  TEST(soft_equiv(manager.state()->eigenvalue(), ROM.keff(), 1E-4));
+  callow::Vector fd_fom(n, 0.0);
+  for (int i = 0; i < n; ++i)
+  {
+	fd_fom[i] = manager.fissionsource()->density()[i];
+  }
+
+  callow::Vector error(n, 0.0);
+
+  for (int i = 0; i < n; ++i)
+  {
+    error[i] = fd_fom[i]/fd_fom.norm() - (*fd_rom)[i]/fd_rom->norm();
+  }
+
+  std::cout << "the error norm  is   "<< error.norm()<<  "\n";
+
+  TEST(soft_equiv(manager.state()->eigenvalue(), ROM.keff(), 1E-6));
 
  return 0;
 }
@@ -118,7 +138,8 @@ int test_ROM_EnergyDependent(int argc, char *argv[])
  Material::SP_material mat = get_mat();
  InputDB::SP_input input = get_input();
  input->put<std::string>("equation", "dd");
-
+ input->put<std::string>("bc_west",                    "vacuum");
+ input->put<std::string>("bc_east",                    "vacuum");
  ROMSolver<_1D> ROM(input, mesh, mat);
 
  SP_matrix U;
@@ -135,7 +156,7 @@ int test_ROM_EnergyDependent(int argc, char *argv[])
  EigenvalueManager<_1D> manager(input, mat, mesh);
  manager.solve();
 
- TEST(soft_equiv(manager.state()->eigenvalue(), ROM.keff(), 1E-4))
+ TEST(soft_equiv(manager.state()->eigenvalue(), ROM.keff(), 1E-6))
 
  return 0;
 }
