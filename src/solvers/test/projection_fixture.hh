@@ -172,7 +172,6 @@ InputDB::SP_input get_input()
   InputDB::SP_input inp(new InputDB("Slab Reactor"));
   inp->put<std::string>("problem_type", "eigenvalue");
   inp->put<int>("number_groups",                  2);
-  inp->put<std::string>("equation",               "dd");
   inp->put<std::string>("inner_solver",           "SI");
   inp->put<int>("inner_max_iters",            1000);
   inp->put<int>("inner_max_iters",            1000);
@@ -185,8 +184,8 @@ InputDB::SP_input get_input()
   inp->put<std::string>("eigen_solver",       "arnoldi");
   inp->put<int>("eigen_max_iters",            200);
   inp->put<double>("eigen_tolerance",            1e-7);
-  inp->put<std::string>("bc_west",                    "vacuum");
-  inp->put<std::string>("bc_east",                    "vacuum");
+  inp->put<std::string>("bc_west",                    "reflect");
+  inp->put<std::string>("bc_east",                    "reflect");
   inp->put<int>("quad_number_polar_octant",   16);
 
   return inp;
