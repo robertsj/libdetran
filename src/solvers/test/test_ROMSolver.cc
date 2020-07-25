@@ -42,25 +42,34 @@ int main(int argc, char *argv[])
 
 int test_ROM_diffusion(int argc, char *argv[])
 {
- Mesh1D::SP_mesh mesh = get_mesh();
+ Mesh1D::SP_mesh mesh = get_mesh(1, "core");
  Material::SP_material mat = get_mat();
  InputDB::SP_input input = get_input();
  input->put<std::string>("equation", "diffusion");
 
+ int n = mesh->number_cells();
+ int r = 5;
 
- ROMSolver<_1D> ROM(input, mesh, mat);
-
+// get the basis
  SP_matrix U;
- U = new callow::MatrixDense(40, 10);
- ROMBasis::GetBasis("/home/rabab/opt/detran/source/src/solvers/test/flux_basis_assem0_diff", U);
- SP_vector  ROM_flux;
- ROM_flux = new callow::Vector(40, 0.0);
- ROM.Solve(U, ROM_flux);
+ U = new callow::MatrixDense(2*n, 2*r);
+ std::cout << n << "\n";
+ ROMBasis::GetBasis("/home/rabab/opt/detran/source/src/solvers/test/flux_basis_core0_diff", U);
 
- // FOM solution
+ // ROM
+ ROMSolver<_1D> ROM(input, mesh, mat);
+ SP_vector  ROM_flux;
+ ROM_flux = new callow::Vector(2*n, 0.0);
+ ROM.Solve(U, ROM_flux);
+ double keff_rom = ROM.keff();
+
+ std::cout << keff_rom << "$$$$$$$$$$" << "\n";
+ // FOM
  EigenvalueManager<_1D> manager(input, mat, mesh);
  manager.solve();
- int n = 20;
+ double keff_fom = manager.state()->eigenvalue();
+
+// error and testing
  callow::Vector phi0_fom(n, 0.0);
  callow::Vector phi1_fom(n, 0.0);
 
@@ -69,27 +78,26 @@ int test_ROM_diffusion(int argc, char *argv[])
 
  for (int i = 0; i < n; ++i)
 {
-  phi0_fom[i] = manager.state()->phi(0)[i]/ detran_utilities::norm(manager.state()->phi(0), "L2");
-  phi1_fom[i] = manager.state()->phi(1)[i]/detran_utilities::norm(manager.state()->phi(1), "L2");
+  phi0_fom[i] = manager.state()->phi(0)[i];
+  phi1_fom[i] = manager.state()->phi(1)[i];
   phi0_rom[i] = (*ROM_flux)[i];
-  phi1_rom[i] = (*ROM_flux)[i + 20];
+  phi1_rom[i] = (*ROM_flux)[i + n];
 }
  vec_dbl error1 (n, 0);
  vec_dbl error2 (n, 0);
 
- for (int i = 0; i < 20; ++i)
+ for (int i = 0; i < n; ++i)
  {
    error1[i] = phi0_fom[i]/phi0_fom.norm() - phi0_rom[i]/phi0_rom.norm();
 
    error2[i] = phi1_fom[i]/phi1_fom.norm() - phi1_rom[i]/phi1_rom.norm();
  }
 
- TEST(soft_equiv(manager.state()->eigenvalue(), ROM.keff(), 1E-6));
-
  std::cout << "The error in group 1 is " << detran_utilities::norm(error1, "L2") << "\n";
- std::cout << "The error in group 1 is " << detran_utilities::norm(error2, "L2") << "\n";
+ std::cout << "The error in group 2 is " << detran_utilities::norm(error2, "L2") << "\n";
+ std::cout << "The absolute error in the eigenvalue  " << abs(keff_rom - keff_fom) << "\n";
 
-
+ TEST(soft_equiv(manager.state()->eigenvalue(), ROM.keff(), 1E-6));
 
  return 0;
 }
@@ -97,21 +105,32 @@ int test_ROM_diffusion(int argc, char *argv[])
 
 int test_ROM_EnergyIndependent(int argc, char *argv[])
 {
-  Mesh1D::SP_mesh mesh = get_mesh();
+  Mesh1D::SP_mesh mesh = get_mesh(1, "core");
   Material::SP_material mat = get_mat();
   InputDB::SP_input input = get_input();
+  input->put<std::string>("equation", "dd");
+
   ROMSolver<_1D> ROM(input, mesh, mat);
+  int n = mesh->number_cells();
+  int r = 7;
+
+  // get the basis
   SP_matrix U;
-  U = new callow::MatrixDense(20, 5);
-  ROMBasis::GetBasis("/home/rabab/opt/detran/source/src/solvers/test/fission_density_basis_assem0", U);
+  U = new callow::MatrixDense(n, r);
+  ROMBasis::GetBasis("/home/rabab/opt/detran/source/src/solvers/test/fission_density_core0_transport_r=7", U);
   SP_vector  fd_rom;
-  int n =20;
+
+  // ROM
   fd_rom = new callow::Vector(n, 0.0);
   ROM.Solve(U, fd_rom);
+  double keff_rom = ROM.keff();
 
+ //FOM
   EigenvalueManager<_1D> manager(input, mat, mesh);
   manager.solve();
+  double keff_fom = manager.state()->eigenvalue();
 
+  // error and testing
   callow::Vector fd_fom(n, 0.0);
   for (int i = 0; i < n; ++i)
   {
@@ -125,7 +144,8 @@ int test_ROM_EnergyIndependent(int argc, char *argv[])
     error[i] = fd_fom[i]/fd_fom.norm() - (*fd_rom)[i]/fd_rom->norm();
   }
 
-  std::cout << "the error norm  is   "<< error.norm()<<  "\n";
+  std::cout << "the error norm in the fission density =   " << error.norm()<<  "\n";
+  std::cout << "The absolute error in the eigenvalue = " << abs(keff_rom - keff_fom) << "\n";
 
   TEST(soft_equiv(manager.state()->eigenvalue(), ROM.keff(), 1E-6));
 
@@ -134,27 +154,58 @@ int test_ROM_EnergyIndependent(int argc, char *argv[])
 
 int test_ROM_EnergyDependent(int argc, char *argv[])
 {
- Mesh1D::SP_mesh mesh = get_mesh();
- Material::SP_material mat = get_mat();
- InputDB::SP_input input = get_input();
- input->put<std::string>("equation", "dd");
- input->put<std::string>("bc_west",                    "vacuum");
- input->put<std::string>("bc_east",                    "vacuum");
- ROMSolver<_1D> ROM(input, mesh, mat);
+  Mesh1D::SP_mesh mesh = get_mesh(1, "core");
+  Material::SP_material mat = get_mat();
+  InputDB::SP_input input = get_input();
 
- SP_matrix U;
+  int n = mesh->number_cells();
+  int r = 7;
 
- int n = 40;
- int r = 10;
+  // get the basis
+  SP_matrix U;
+  U = new callow::MatrixDense(2*n, 2*r);
+  ROMBasis::GetBasis("/home/rabab/opt/detran/source/src/solvers/test/flux_basis_core0_transport_r=7", U);
 
- U = new callow::MatrixDense(n, r);
- ROMBasis::GetBasis("/home/rabab/opt/detran/source/src/solvers/test/flux_basis_assem0_diff", U);
- SP_vector  ROM_flux;
- ROM_flux = new callow::Vector(n, 0.0);
- ROM.Solve(U, ROM_flux);
+  // ROM
+  ROMSolver<_1D> ROM(input, mesh, mat);
+  SP_vector  ROM_flux;
+  ROM_flux = new callow::Vector(2*n, 0.0);
+  ROM.Solve(U, ROM_flux);
+  double keff_rom = ROM.keff();
 
- EigenvalueManager<_1D> manager(input, mat, mesh);
- manager.solve();
+  // FOM
+  EigenvalueManager<_1D> manager(input, mat, mesh);
+  manager.solve();
+  double keff_fom = manager.state()->eigenvalue();
+
+  // error and testing
+  callow::Vector phi0_fom(n, 0.0);
+  callow::Vector phi1_fom(n, 0.0);
+
+  callow::Vector phi0_rom(n, 0.0);
+  callow::Vector phi1_rom(n, 0.0);
+
+  for (int i = 0; i < n; ++i)
+  {
+   phi0_fom[i] = manager.state()->phi(0)[i];
+   phi1_fom[i] = manager.state()->phi(1)[i];
+   phi0_rom[i] = (*ROM_flux)[i];
+   phi1_rom[i] = (*ROM_flux)[i + n];
+  }
+  vec_dbl error1 (n, 0);
+  vec_dbl error2 (n, 0);
+
+  for (int i = 0; i < n; ++i)
+  {
+    error1[i] = phi0_fom[i]/phi0_fom.norm() - phi0_rom[i]/phi0_rom.norm();
+
+    error2[i] = phi1_fom[i]/phi1_fom.norm() - phi1_rom[i]/phi1_rom.norm();
+  }
+
+  std::cout << "The error in group 1 is " << detran_utilities::norm(error1, "L2") << "\n";
+  std::cout << "The error in group 2 is " << detran_utilities::norm(error2, "L2") << "\n";
+  std::cout << "The absolute error in the eigenvalue  " << abs(keff_rom - keff_fom) << "\n";
+
 
  TEST(soft_equiv(manager.state()->eigenvalue(), ROM.keff(), 1E-6))
 
