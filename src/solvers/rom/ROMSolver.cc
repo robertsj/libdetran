@@ -19,15 +19,15 @@ ROMSolver<D>::ROMSolver(SP_input inp, SP_mesh mesh, SP_material mat)
 
  // not sure what input can tell that we want energyindependent operator,
  // so will let it the default until Roberts give his opinion
- d_operator = "EnergyIndependent";
+ d_operator = "EnergyDependent";
 
  if (d_input->check("equation"))
- {
+ {  std::cout << "check equation " << "\n";
     if (d_input->get<std::string>("equation") == "diffusion")
     	d_operator = "diffusion";
 
     else if (d_input->get<std::string>("equation") == "dd")
-		d_operator = "EnergyDependent";
+		d_operator = "EnergyIndependent";
  }
 
  ROMSolver::Set_FullOperators();
@@ -54,8 +54,17 @@ void ROMSolver<D>::Set_FullOperators()
 	  mg_solver_ED = new FixedSourceManager<_1D>(d_input, d_mat, d_mesh, false, true);
 	  mg_solver_ED->setup();
 	  mg_solver_ED->set_solver();
-	  d_A = new LHS_Operator_T(mg_solver_ED);
-	  //d_A->compute_explicit("EnergyDependent");
+	  d_B = new LHS_Operator_T(mg_solver_ED);
+
+	  typename RHS_Operator_T::SP_operator A;
+	  MGSolverGMRES<D>* mgs =
+	  dynamic_cast<MGSolverGMRES<D>*>(&(*mg_solver_ED->solver()));
+	  Insist(mgs, "EigenGD requires GMRES for the MG problem to get the operator.");
+
+	  // Transport operator
+	  A = mgs->get_operator();
+	  A->sweeper()->set_update_boundary(false);
+	  d_A = A;
 	}
 
 	else if (d_operator == "EnergyIndependent")
@@ -65,9 +74,7 @@ void ROMSolver<D>::Set_FullOperators()
 	 mg_solver->setup();
 	 mg_solver->set_solver();
 	 d_A = new Operator_T(mg_solver);
-	 //d_A->compute_explicit("/home/rabab/Desktop/EnergyIndependent");
 	}
-
 }
 
 template <class D>
@@ -87,9 +94,10 @@ void ROMSolver<D>::Solve(SP_matrix d_U, SP_vector sol)
 	SP_eigensolver eigensolver;
 	eigensolver = Creator_T::Create(d_input);
 
-	if (d_operator == "diffusion")
+	if (d_operator == "diffusion" || d_operator == "EnergyDependent")
 	{
 	  P.SetOperators(d_B, d_U);
+
       SP_matrix Br;
 	  Br = new callow::MatrixDense(d_r, d_r);
 	  P.Project(Br);
@@ -112,6 +120,16 @@ void ROMSolver<D>::Solve(SP_matrix d_U, SP_vector sol)
 
     x_fom = new callow::Vector(d_n, 0.0);
     d_U->multiply(x_rom, sol);
+
+    // correct the direction of the vector if negative
+    for (int i=0; i<d_n; i++)
+    {
+      if (signbit((*sol)[i]))
+	  {
+    	(*sol)[i] *= -1;
+	  }
+    }
+
     }
 
 

@@ -22,9 +22,17 @@
 #include "callow/solver/EigenSolverCreator.hh"
 #include "solvers/eigen/EnergyDependentEigenLHS.hh"
 #include "solvers/eigen/EnergyIndependentEigenOperator.hh"
+#include "solvers/mg/MGTransportOperator.hh"
+#include "solvers/mg/MGSolverGMRES.hh"
+#include "EigenGD.hh"
+#include "solvers/mg/MGSolverGMRES.hh"
+#include "solvers/mg/MGDSA.hh"
+#include "solvers/mg/MGCMDSA.hh"
+#include "solvers/mg/MGTCDSA.hh"
+#include "callow/solver/EigenSolverCreator.hh"
 #include "OperatorProjection.hh"
-
 #include <string>
+#include <math.h>
 
 using namespace detran;
 
@@ -46,6 +54,7 @@ public:
    typedef typename Eigensolver<D>::SP_solver            SP_solver;
    typedef typename Fixed_T::SP_manager                  SP_mg_solver;
    typedef EnergyDependentEigenLHS<D>                LHS_Operator_T;
+   typedef MGTransportOperator<D>                    RHS_Operator_T;
    typedef EnergyIndependentEigenOperator<D>             Operator_T;
 
 
