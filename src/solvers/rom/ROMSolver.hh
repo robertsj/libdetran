@@ -26,10 +26,6 @@
 #include "solvers/mg/MGSolverGMRES.hh"
 #include "EigenGD.hh"
 #include "solvers/mg/MGSolverGMRES.hh"
-#include "solvers/mg/MGDSA.hh"
-#include "solvers/mg/MGCMDSA.hh"
-#include "solvers/mg/MGTCDSA.hh"
-#include "callow/solver/EigenSolverCreator.hh"
 #include "OperatorProjection.hh"
 #include <string>
 #include <math.h>
@@ -64,8 +60,6 @@ public:
 
    void Set_FullOperators();
 
-   void SetOperators(SP_matrix A, SP_matrix B);
-
    void Solve(SP_matrix d_U, SP_vector sol);
 
    void ComputeROM_Error(std::string type);
@@ -84,7 +78,6 @@ private:
   SP_matrix d_B;
   int d_r;
   int d_n;
-
   std::string d_operator;
   double d_keff;
   SP_vector x_rom;
