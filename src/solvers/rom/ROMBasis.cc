@@ -33,16 +33,14 @@ void ROMBasis::GetBasis(std::string fname, SP_matrix U)
  {
   double * B = new double[d_r*d_n];
   infile.seekg(0);
-  infile.read((char *) B, sizeof(B)); // read the number of element
+  infile.read((char *) B, (d_n*d_r)*sizeof(double)); // read the number of element
   int i;
   int j;
   for (int c=0; c<d_r*d_n; c++)
   {
-   vector<double> v;
    i = c/d_r;
    j = c%d_r;
    U->insert(i, j, B[c]);
-   std::cout << B[c] << "\n";
    }
  }
 }
