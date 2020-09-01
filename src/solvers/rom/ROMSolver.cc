@@ -51,7 +51,7 @@ void ROMSolver<D>::Set_FullOperators()
 	d_input->put<int>("outer_krylov_group_cutoff", 0);
 	d_input->put<std::string>("eigen_solver", "GD");
 	SP_mg_solver mg_solver;
-	mg_solver = new FixedSourceManager<_1D>(d_input, d_mat, d_mesh, false, true);
+	mg_solver = new FixedSourceManager<D>(d_input, d_mat, d_mesh, false, true);
 	mg_solver->setup();
 	mg_solver->set_solver();
 	d_B = new LHS_Operator_T(mg_solver);
@@ -70,7 +70,7 @@ void ROMSolver<D>::Set_FullOperators()
   else if (d_operator == "EnergyIndependent")
   {
    SP_mg_solver mg_solver;
-   mg_solver = new FixedSourceManager<_1D>(d_input, d_mat, d_mesh, false, true);
+   mg_solver = new FixedSourceManager<D>(d_input, d_mat, d_mesh, false, true);
    mg_solver->setup();
    mg_solver->set_solver();
    d_A = new Operator_T(mg_solver);
