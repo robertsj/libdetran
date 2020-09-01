@@ -63,7 +63,6 @@ int test_ROM_diffusion(int argc, char *argv[])
  ROM.Solve(U, ROM_flux);
  double keff_rom = ROM.keff();
 
- std::cout << keff_rom << "$$$$$$$$$$" << "\n";
  // FOM
  EigenvalueManager<_1D> manager(input, mat, mesh);
  manager.solve();
