@@ -120,7 +120,7 @@ void ROMSolver<D>::Solve(SP_matrix d_U, SP_vector sol)
   // correct the direction of the vector if negative
   for (int i=0; i<d_n; i++)
   {
-    if (signbit((*sol)[i]))
+    if (((*sol)[i]) < 0)
 	{
       (*sol)[i] *= -1;
 	}
