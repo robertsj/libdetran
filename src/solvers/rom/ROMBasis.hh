@@ -38,7 +38,7 @@ public:
   // CONSTRUCTOR & DESTRUCTOR
   //--------------------------------------------------------------------------//
 
-  ROMBasis(int a);
+  ROMBasis();
 
   // virtual destructor
   virtual ~ROMBasis() {};
@@ -47,7 +47,7 @@ public:
   // PUBLIC FUNCTIONS
   //--------------------------------------------------------------------------//
 
-  static void GetBasis(std::string fname, SP_matrix U);
+  static void GetBasis(const char* fname, SP_matrix U);
 
 };
 }

@@ -12,12 +12,12 @@ using namespace std;
 
 namespace detran
 {
-ROMBasis::ROMBasis(int a)
+ROMBasis::ROMBasis()
 {
 
 }
 
-void ROMBasis::GetBasis(std::string fname, SP_matrix U)
+void ROMBasis::GetBasis(const char* fname, SP_matrix U)
 {
  int d_r = U->number_columns();
  int d_n = U->number_rows();
