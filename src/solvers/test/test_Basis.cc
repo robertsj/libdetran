@@ -39,8 +39,8 @@ int test_Basis(int argc, char *argv[])
 
 SP_matrix U;
 U = new callow::MatrixDense(20, 5);
-
-ROMBasis::GetBasis("/home/rabab/opt/detran/source/src/solvers/test/random_basis", U);
+const char* fname= "/home/rabab/opt/detran/source/src/solvers/test/random_basis";
+ROMBasis::GetBasis(fname, U);
 
 TEST(soft_equiv((*U)(1, 1),  0.4772053248001433));
 TEST(soft_equiv((*U)(2, 2),  0.733400048402773));
