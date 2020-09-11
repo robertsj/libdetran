@@ -4,5 +4,7 @@ SET(ROM_SRC
   ${SRC_DIR}/ROMBasis.cc
   ${SRC_DIR}/OperatorProjection.cc
   ${SRC_DIR}/ROMSolver.cc
+  ${SRC_DIR}/Kinetic_Mat.cc
+  ${SRC_DIR}/TransientSolver.cc
   PARENT_SCOPE
 )
