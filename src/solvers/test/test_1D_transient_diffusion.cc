@@ -14,6 +14,7 @@
 #include "kinetics/KineticsMaterial.hh"
 #include "Kinetic_Mat.hh"
 #include "ROMBasis.hh"
+#include "1D_transient_fixture.hh"
 
 typedef callow::MatrixDense::SP_matrix SP_matrix;
 using namespace detran_test;
@@ -36,7 +37,7 @@ int main(int argc, char *argv[])
 
 KineticsMaterial::SP_material get_mat(){
 
-	TimeDependentMaterial::SP_material mat = TimeDependentMaterial::Create(4, 2, 8);
+	KineticsMaterial::SP_material mat = KineticsMaterial::Create(4, 2, 8);
 		// materials are reflector, fuel, control-1, control-2
 		double xs_t[4][2] = {{0.222222,  0.666667}, {0.25641,  0.66667}, {0.25641,  0.1515 }, {0.25641,  0.1515}};
 		// double xs_a[4][2] = {{0.0002, 0.01}, {0.0105, 0.1140}, {0.0105, 0.1640}, {0.0105, 0.1640}};

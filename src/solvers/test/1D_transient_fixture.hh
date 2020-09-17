@@ -10,7 +10,6 @@
         FUNC(test_1D_transient)
 
 #include "TestDriver.hh"
-#include "TimeStepper.hh"
 #include "Mesh1D.hh"
 #include "external_source/ConstantSource.hh"
 #include "callow/utils/Initialization.hh"
@@ -20,6 +19,8 @@
 #include "kinetics/LinearExternalSource.hh"
 #include "kinetics/LinearMaterial.hh"
 #include "solvers/EigenvalueManager.hh"
+#include "kinetics/TimeDependentMaterial.hh"
+#include "TimeStepper.hh"
 
 
 using namespace detran_test;
@@ -32,49 +33,7 @@ using namespace std;
 using std::cout;
 using std::endl;
 
-float compute_xs_t(float pos)
-{
-  float pos1 = 0.0;  // rod all in
-  float pos2 = 1.0;  // rod all out
-  float xs1 = 0.164; // absorption if all in
-  float xs2 = 0.114; // absorption if all out
 
-  // linear interpolation
-  float xs_a = -(pos1 - pos)*(xs1 - xs2)/(pos1 - pos2) + xs1;
-  // add scattering cross section to compute total
-  return xs_a + 0.55267;
-}
-
-double xa_perturbed(double time)
-{
-  float xs_a;
-  float initial_pos = 0.25;
-  float initial_xa = compute_xs_t(initial_pos);
-  double pos; //control position
-  float c = 0.05/2; // withdrawal/insertion  rate
-
-  if (2.0 <= time && time < 4.0)
-  {
-   pos = initial_pos + c*(time - 2);
-   xs_a = compute_xs_t(pos);
-  }
-  else if (4 <= time  && time < 10)
-  {
-    pos = initial_pos + 0.05;
-    xs_a = compute_xs_t(pos);
-  }
-
- else if ( 10 <= time && time <= 12)
- {
-  pos = initial_pos + 0.05 - c*(time - 10);
-  xs_a = compute_xs_t(pos);
- }
- else
- {
-   xs_a = initial_xa;
- }
- return xs_a;
-}
 
 class SlabMaterial: public TimeDependentMaterial
 {
@@ -84,11 +43,16 @@ public:
     : Base(4, 2, 8, "SlabMaterial")
     , d_transport(transport)
   {
+   std::cout << "SlabMaterial **********" << "\n";
+
     update_impl();
   }
   // Update the materials.
+
   void update_impl()
   {
+  std::cout << "update_impl ********" << "\n";
+
    double t = time();
    // materials are reflector, fuel, control-1, control-2
    double xs_t[2][2] = {{0.222222,  0.666667}, {0.25641,  0.66667}};
@@ -149,7 +113,6 @@ public:
 	  {
 	   set_chi_d(m, i, 0, 1);
 	  }
-
 	}
 
 	compute_sigma_a();
@@ -157,6 +120,51 @@ public:
 	finalize();
     }
 
+  float compute_xs_t(float pos)
+  {
+    float pos1 = 0.0;  // rod all in
+    float pos2 = 1.0;  // rod all out
+    float xs1 = 0.164; // absorption if all in
+    float xs2 = 0.114; // absorption if all out
+
+    // linear interpolation
+    float xs_a = -(pos1 - pos)*(xs1 - xs2)/(pos1 - pos2) + xs1;
+    // add scattering cross section to compute total
+    return xs_a + 0.55267;
+  }
+
+  double xa_perturbed(double time)
+  {
+    float xs_a;
+    float initial_pos = 0.25;
+    float initial_xa = compute_xs_t(initial_pos);
+    double pos; //control position
+    float c = 0.05/2; // withdrawal/insertion  rate
+
+
+    if (2.0 <= time && time < 4.0)
+    {
+     pos = initial_pos + c*(time - 2);
+     xs_a = compute_xs_t(pos);
+    }
+    else if (4 <= time  && time < 10)
+    {
+      pos = initial_pos + 0.05;
+      xs_a = compute_xs_t(pos);
+    }
+
+   else if ( 10 <= time && time <= 12)
+   {
+    pos = initial_pos + 0.05 - c*(time - 10);
+    xs_a = compute_xs_t(pos);
+   }
+   else
+   {
+     xs_a = initial_xa;
+   }
+
+      return xs_a;
+  }
 
 private:
   /// Flag for transport
@@ -164,7 +172,7 @@ private:
 };
 
 // -------------------------------------------------
-Mesh1D::SP_mesh get_mesh(Mesh1D::size_t fmm = 10)
+Mesh1D::SP_mesh get_mesh(Mesh1D::size_t fmm = 50)
 {
     Mesh1D::vec_dbl cm(8);
     cm[0] =  0.0;
@@ -183,9 +191,11 @@ Mesh1D::SP_mesh get_mesh(Mesh1D::size_t fmm = 10)
     fm[4] = fmm;
     fm[5] = fmm;
     fm[6] = fmm;
+
     Mesh1D::vec_int mt(7);
     mt[0] = 0; mt[1] = 1; mt[2] = 2;
-    mt[3] = 1; mt[4] = 3; mt[6] = 0;
+    mt[3] = 1; mt[4] = 3; mt[5] = 1;
+    mt[6] = 0;
     Mesh1D::SP_mesh mesh = Mesh1D::Create(fm, cm, mt);
 
     return mesh;
@@ -209,6 +219,10 @@ InputDB::SP_input get_input()
   inp->put<string>("eigen_solver",                "arnoldi");
   inp->put<string>("outer_solver",          "GMRES");
   inp->put<int>("outer_krylov_group_cutoff",      0);
+  inp->put<double>("eigen_solver_tol", 1e-16);
+  inp->put<int>("eigen_solver_maxit",  1000);
+
+
   //inp->put<int>("compute_boundary_flux",          1);
 
   inp->put<string>("inner_solver",          "SI");
@@ -220,9 +234,9 @@ InputDB::SP_input get_input()
   inp->put<int>("outer_print_level",        1);
   // inner gmres parameters
   InputDB::SP_input db(new InputDB("inner_solver_db"));
-  db->put<double>("linear_solver_atol",                 1e-12);
+  db->put<double>("linear_solver_atol",                 1e-16);
   db->put<double>("linear_solver_rtol",                 1e-15);
-  db->put<string>("linear_solver_type",                 "petsc");
+  db->put<string>("linear_solver_type",                 "jacobi");
   db->put<string>("pc_type",                            "petsc_pc");
   db->put<string>("petsc_pc_type",                      "lu");
   db->put<int>("linear_solver_maxit",                   2000);
@@ -234,6 +248,11 @@ InputDB::SP_input get_input()
   inp->put<InputDB::SP_input>("outer_solver_db",        db);
   inp->put<InputDB::SP_input>("eigen_solver_db",        db);
   inp->put<int>("compute_boundary_flux",                1);
+  inp->put<double>("ts_final_time",               60);
+  inp->put<double>("ts_step_size",                0.1);
+  inp->put<int>("linear_solver_maxit",   1000);
+  inp->put<int>("linear_solver_monitor_level", 0);
+  inp->put<int>("linear_solver_monitor_diverge", 0);
   if (inp->get<std::string>("equation") != "diffusion")
   {
 	inp->put<int>("ts_discrete",              1);
