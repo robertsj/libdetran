@@ -114,13 +114,12 @@ SP_matrix Kinetic_Mat::Mat3()
        m = mat_map[n];
        value = (*d_basis_p)(p*num_cells + n, r)*d_mat->beta(m, p)*d_mat->nu_sigma_f(m, g)*(*d_basis_f)((n + g*num_cells), c);
        F->insert(r, c, value, 1);
-       std::cout << value << "  " << d_mat->nu_sigma_f(m, g) << "  " << m << "  " <<n <<"  " << d_mat->beta(m, p) << "  " << (*d_basis_f)(n + g*num_cells, c) << "  "<< (*d_basis_p)(p*num_cells + n, r)<<"\n";
      }
     }
    }
-
   }
  }
+ F->print_matlab("mat3.txt");
  return F;
 }
 

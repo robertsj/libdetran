@@ -26,8 +26,6 @@
 #include "kinetics/SyntheticSource.hh"
 #include "utilities/Definitions.hh"
 #include "kinetics/TimeDependentMaterial.hh"
-#include "solvers/mg/DiffusionLossOperator.hh"
-#include "solvers/mg/DiffusionGainOperator.hh"
 #include "OperatorProjection.hh"
 
 
@@ -58,18 +56,14 @@ public:
 
 	TransientSolver(SP_input inp, SP_mesh mesh, SP_material material, SP_matrix flux_basis, SP_matrix precursors_basis);
 	void initialize_precursors();
-	void ProjectInitial(SP_state initial_state);
+	void ProjectInitial();
 	void Solve(SP_state initial_state);
-	void step(double t, double dt);
+	void step(double t, double dt,int time_idx, bool rom_flag);
 	void UpdatePrecursors(double dt);
 	void UpdateOperator(double dt);
-	void compute_b();
+	void compute_b(double dt);
 
 private:
-  /// Vector of previous states
-  vec_states d_states;
-  vec_precursors d_precursors;
-
   /// Working precursor vector.
   SP_state d_state;
   SP_precursors d_precursor;
@@ -85,8 +79,14 @@ private:
   SP_matrix s_A;
   SP_matrix d_B;
 
+  SP_matrix d_fluxes;
+  SP_matrix d_precursors;
+
   /// Time step size
   double d_dt;
+  double  d_final_time;
+  double d_number_steps;
+
 
   // user settings
   SP_mesh d_mesh;
