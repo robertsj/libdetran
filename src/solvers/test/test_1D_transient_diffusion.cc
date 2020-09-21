@@ -71,8 +71,8 @@ KineticsMaterial::SP_material get_mat(){
 				};
 
 		// kinetics
-		mat->set_velocity(0,      1.0e7);
-		mat->set_velocity(1,      2.0e5);
+		mat->set_velocity(0,      2.0e7);
+		mat->set_velocity(1,      220000);
 		double beta[8] = {2.18e-4, 1.02e-03, 6.05e-4, 1.31e-03, 2.20e-03, 6.00e-4, 5.40e-04, 1.52e-04};
 		double lambda[8] = {1.246700e-02, 2.829299e-02, 4.2524000e-02, 1.330420e-01, 2.924670e-01, 6.664888e-01, 1.634781e+00, 3.554601e+00};
 
