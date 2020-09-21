@@ -49,8 +49,8 @@ int test_TransientSolver(int argc, char *argv[])
 
  // mat->display();
 
-  std::string flux_basis = "/home/rabab/opt/detran/source/src/solvers/test/1D_slab_transient_flux_basis_fm=3";
-  std::string precursors_basis = "/home/rabab/opt/detran/source/src/solvers/test/1D_slab_transient_precurses_basis_fm=3";
+  const char* flux_basis = "/home/rabab/opt/detran/source/src/solvers/test/1D_slab_transient_flux_basis_fm=3";
+  const char* precursors_basis = "/home/rabab/opt/detran/source/src/solvers/test/1D_slab_transient_precurses_basis_fm=3";
 
   SP_matrix basis_f;
   basis_f = new callow::MatrixDense(42, 20);
@@ -71,7 +71,7 @@ int test_TransientSolver(int argc, char *argv[])
   State::SP_state ic = manager.state();
   mat->set_eigenvalue(ic->eigenvalue());
   std::cout << " *** updating materials after SS solve ******" << "\n";
-  mat->update(0, 0, 1, false);
+  mat->update(0, 0, 1, false, false);
 
   // solve
   std::cout << " *** Normalize state ******" << "\n";
