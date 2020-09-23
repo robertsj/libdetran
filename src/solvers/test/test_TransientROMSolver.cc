@@ -47,7 +47,7 @@ int test_TransientSolver(int argc, char *argv[])
 
   TimeDependentMaterial::SP_material mat(new SlabMaterial('transport'));
 
- // mat->display();
+  //mat->display();
 
   const char* flux_basis = "/home/rabab/opt/detran/source/src/solvers/test/1D_slab_transient_flux_basis_fm=3";
   const char* precursors_basis = "/home/rabab/opt/detran/source/src/solvers/test/1D_slab_transient_precurses_basis_fm=3";
@@ -71,7 +71,7 @@ int test_TransientSolver(int argc, char *argv[])
   State::SP_state ic = manager.state();
   mat->set_eigenvalue(ic->eigenvalue());
   std::cout << " *** updating materials after SS solve ******" << "\n";
-  mat->update(0, 0, 1, false, false);
+  mat->update(0, 0, 1, false);
 
   // solve
   std::cout << " *** Normalize state ******" << "\n";
@@ -125,11 +125,15 @@ int test_TransientSolver(int argc, char *argv[])
   ic->scale(1.0/F);
   std::cout << ic->eigenvalue() << "\n";
   printf("eigen value %1.16f " ,ic->eigenvalue()) ;
-  printf("eigen value %1.16f " ,ic->phi(0)[0]) ;
 
   std::cout << " ***SOLVE ROM ******" << "\n";
 
   R.Solve(ic);
+
+  std::cout << " ***reconstruct ******" << "\n";
+  std::cout <<  "  ************* END TEST **************************" << "\n";
+
+  R.reconstruct();
 
   std::cout <<  "  ************* END TEST **************************" << "\n";
 

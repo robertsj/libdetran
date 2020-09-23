@@ -43,16 +43,12 @@ public:
     : Base(4, 2, 8, "SlabMaterial")
     , d_transport(transport)
   {
-   std::cout << "SlabMaterial **********" << "\n";
-
     update_impl();
   }
   // Update the materials.
 
   void update_impl()
   {
-  std::cout << "update_impl ********" << "\n";
-
    double t = time();
    // materials are reflector, fuel, control-1, control-2
    double xs_t[2][2] = {{0.222222,  0.666667}, {0.25641,  0.66667}};
