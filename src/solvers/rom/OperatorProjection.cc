@@ -37,45 +37,25 @@ void OperatorProjection::SetOperators(SP_matrix A, SP_matrix U)
 
 void OperatorProjection::Project(SP_matrixDense Ar)
 {
-	callow::MatrixDense AU = OperatorProjection::ComputeAU();
-	// compute UTAU
-	for (int i=0; i<d_r; i++)
-	 {
-	  for (int k=0; k<d_r ; k++)
-	  {
-	    for (int j=0; j<d_n; j++)
-		{
-		 double v = (*d_U)(j, i)*AU(j, k);
-		 Ar->insert(i, k, v, 1);
-		}
-	  }
-   }
-}
-
-
-callow::MatrixDense OperatorProjection::ComputeAU()
-{
+  // compute AU
   callow::Vector y(d_n, 0.0);
+  callow::Vector y2(d_r, 0.0);
   callow::MatrixDense AU(d_n, d_r);
 
+  callow::Vector v(d_n);
   for (int i=0; i<d_r; i++)
   {
-	callow::Vector v(d_n);
-	for (int j=0; j<d_n; j++)
-	{
-	  v[j] = (*d_U)(j, i);
-	}
+   for (int j=0; j<d_n; j++)
+   {
+    v[j] = (*d_U)(j, i);
+   }
 
-    d_A->multiply(v, y);
-
-    double *y_ = &y[0];
-
-    AU.insert_col(i, y_, 0);
-  }
-  //AU.print_matlab("AU.txt");
-
-  return AU;
-}
+  d_A->multiply(v, y);
+  d_U->multiply_transpose(y, y2);
+  double *y_ = &y2[0];
+  Ar->insert_col(i, y_, 0);
+ }
 }
 
+}
 

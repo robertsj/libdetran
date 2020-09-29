@@ -38,7 +38,6 @@ class OperatorProjection
 	int d_n;
 	SP_matrix d_A;
 	SP_matrixDense d_U;
-	callow::MatrixDense ComputeAU();
 
 };
 }
