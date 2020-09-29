@@ -55,10 +55,6 @@ public:
 
    ROMSolver(SP_input inp, SP_mesh Mesh, SP_material mat);
 
-   void SetBasis();
-
-   void Set_FullOperators();
-
    void Solve(SP_matrix d_U, SP_vector sol);
 
    void ComputeROM_Error(std::string type);
@@ -81,6 +77,9 @@ private:
   double d_keff;
   SP_vector x_rom;
   SP_vector x_fom;
+
+  void SetBasis();
+  void Set_FullOperators();
 };
 
 #endif /* SOLVERS_ROM_ROMSOLVER_HH_ */
