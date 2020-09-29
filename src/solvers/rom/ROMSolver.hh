@@ -16,7 +16,6 @@
 #include "geometry/Mesh.hh"
 #include "FixedSourceManager.hh"
 #include "solvers/EigenvalueManager.hh"
-#include "solvers/EigenvalueManager.hh"
 #include "solvers/mg/DiffusionLossOperator.hh"
 #include "solvers/mg/DiffusionGainOperator.hh"
 #include "callow/solver/EigenSolverCreator.hh"
