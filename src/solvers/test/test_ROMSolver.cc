@@ -53,7 +53,7 @@ int test_ROM_diffusion(int argc, char *argv[])
 // get the basis
  SP_matrix U;
  U = new callow::MatrixDense(2*n, 2*r);
- ROMBasis::GetBasis("/home/rabab/opt/detran/source/src/solvers/test/flux_basis_core0_diff", U);
+ ROMBasis::GetBasis("../../../source/src/solvers/test/flux_basis_core0_diff", U);
 
  // ROM
  ROMSolver<_1D> ROM(input, mesh, mat);
@@ -115,7 +115,7 @@ int test_ROM_EnergyIndependent(int argc, char *argv[])
   // get the basis
   SP_matrix U;
   U = new callow::MatrixDense(n, r);
-  ROMBasis::GetBasis("/home/rabab/opt/detran/source/src/solvers/test/fission_density_core0_transport_r=7", U);
+  ROMBasis::GetBasis("../../../source/src/solvers/test/fission_density_core0_transport_r=7", U);
   SP_vector  fd_rom;
 
   // ROM
@@ -162,7 +162,7 @@ int test_ROM_EnergyDependent(int argc, char *argv[])
   // get the basis
   SP_matrix U;
   U = new callow::MatrixDense(2*n, 2*r);
-  ROMBasis::GetBasis("/home/rabab/opt/detran/source/src/solvers/test/flux_basis_core0_transport_r=7", U);
+  ROMBasis::GetBasis("../../../source/src/solvers/test/flux_basis_core0_transport_r=7", U);
 
   // ROM
   ROMSolver<_1D> ROM(input, mesh, mat);
