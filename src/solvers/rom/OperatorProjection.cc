@@ -42,7 +42,7 @@ void OperatorProjection::Project(SP_matrixDense Ar)
   // compute AU
   callow::Vector y(d_n, 0.0);
   callow::Vector y2(d_r, 0.0);
-  callow::MatrixDense AU(d_n, d_r);
+  callow::MatrixDense AU(d_n, d_r, 0.0);
 
   callow::Vector v(d_n);
   for (int i=0; i<d_r; i++)
@@ -60,5 +60,5 @@ void OperatorProjection::Project(SP_matrixDense Ar)
  }
 }
 
-} // end namespace detra
+} // end namespace detran
 

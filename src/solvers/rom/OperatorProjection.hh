@@ -49,6 +49,7 @@ class OperatorProjection
 	SP_matrixDense d_U;
 
 };
-}
+
+} // end namespace detran
 
 #endif /* SOLVERS_ROM_OPERATORPROJECTION_HH_ */
