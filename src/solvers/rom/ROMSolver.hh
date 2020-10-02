@@ -1,9 +1,10 @@
-/*
- * ROM_Solver.hh
- *
- *  Created on: Jul 8, 2020
- *      Author: rabab
+//----------------------------------*-C++-*-----------------------------------//
+/**
+ *  @file  ROMSolver.hh
+ *  @brief RoMSolver class definition.
+ *  @note  Copyright(C) 2020 Jeremy Roberts
  */
+//----------------------------------------------------------------------------//
 
 #ifndef SOLVERS_ROM_ROMSOLVER_HH_
 #define SOLVERS_ROM_ROMSOLVER_HH_
@@ -32,6 +33,14 @@
 using namespace detran;
 
 
+//----------------------------------------------------------------------------//
+/**
+ *  @class ROMSolver
+ *  @brief Solves the reduced eigenvalue problem
+ */
+//----------------------------------------------------------------------------//
+
+
 template <class D>
 class ROMSolver
 {
@@ -52,13 +61,13 @@ public:
    typedef MGTransportOperator<D>                    RHS_Operator_T;
    typedef EnergyIndependentEigenOperator<D>             Operator_T;
 
-
+   /// Constructor
    ROMSolver(SP_input inp, SP_mesh Mesh, SP_material mat);
 
+   /// Solve the eigenvalue problem
    void Solve(SP_matrix d_U, SP_vector sol);
 
-   void ComputeROM_Error(std::string type);
-
+   /// Give the fundamental eigenvalue
    double keff()
    {
      return d_keff;
@@ -66,19 +75,40 @@ public:
 
 
 private:
-  SP_input d_input ;
-  SP_mesh d_mesh;
-  SP_material d_mat;
-  SP_matrix  d_A ;
-  SP_matrix d_B;
-  int d_r;
-  int d_n;
-  std::string d_operator;
-  double d_keff;
-  SP_vector x_rom;
-  SP_vector x_fom;
+  //--------------------------------------------------------------------------//
+  // DATA
+  //--------------------------------------------------------------------------//
 
+  /// Input
+  SP_input d_input;
+  /// Mesh
+  SP_mesh d_mesh;
+  /// Material
+  SP_material d_mat;
+  /// Operator "A" in "Ax = \lambda B"
+  SP_matrix  d_A;
+  /// Operator "B" in "Ax = \lambda B"
+  SP_matrix d_B;
+  /// Basis rank
+  int d_r;
+  /// Operator size
+  int d_n;
+  /// Eigenvalue
+  double d_keff;
+  /// Eigen-vector of the reduced eigenvalue problem
+  SP_vector x_rom;
+  /// Reconstructed eigen-vector
+  SP_vector x_fom;
+  /// name of the problem operator
+  std::string d_operator;
+
+  //--------------------------------------------------------------------------//
+  // IMPLEMENTATION
+  //--------------------------------------------------------------------------//
+
+  /// Sets the basis
   void SetBasis();
+  /// Sets the operators of the problem
   void Set_FullOperators();
 };
 

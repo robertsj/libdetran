@@ -1,11 +1,14 @@
-/*
- * ROM_Manager.cc
- *
- *  Created on: Jul 8, 2020
- *      Author: rabab
+//----------------------------------*-C++-*-----------------------------------//
+/**
+ *  @file  ROMSolver.cc
+ *  @brief RoMSolver class definition.
+ *  @note  Copyright(C) 2020 Jeremy Roberts
  */
+//----------------------------------------------------------------------------//
+
 
 #include "ROMSolver.hh"
+
 
 template <class D>
 ROMSolver<D>::ROMSolver(SP_input inp, SP_mesh mesh, SP_material mat)
@@ -17,8 +20,6 @@ ROMSolver<D>::ROMSolver(SP_input inp, SP_mesh mesh, SP_material mat)
  Require(mat);
  Require(mesh);
 
- // not sure what input can tell that we want energyindependent operator,
- // so will let it the default until Roberts give his opinion
  d_operator = "EnergyDependent";
 
  if (d_input->check("equation"))
@@ -39,41 +40,41 @@ void ROMSolver<D>::Set_FullOperators()
   if (d_operator == "diffusion")
   {
     SP_lossoperator A (new DiffusionLossOperator(d_input, d_mat, d_mesh, false, 0.0, false, 1.0));
-	SP_gainoperator B (new DiffusionGainOperator(d_input, d_mat, d_mesh, false));
+    SP_gainoperator B (new DiffusionGainOperator(d_input, d_mat, d_mesh, false));
 
-	d_A = A;
-	d_B = B;
+    d_A = A;
+    d_B = B;
   }
 
   else if (d_operator == "EnergyDependent")
   {
     d_input->put<std::string>("outer_solver", "GMRES");
-	d_input->put<int>("outer_krylov_group_cutoff", 0);
-	d_input->put<std::string>("eigen_solver", "GD");
-	SP_mg_solver mg_solver;
-	mg_solver = new FixedSourceManager<D>(d_input, d_mat, d_mesh, false, true);
-	mg_solver->setup();
-	mg_solver->set_solver();
-	d_B = new LHS_Operator_T(mg_solver);
+    d_input->put<int>("outer_krylov_group_cutoff", 0);
+    d_input->put<std::string>("eigen_solver", "GD");
+    SP_mg_solver mg_solver;
+    mg_solver = new FixedSourceManager<D>(d_input, d_mat, d_mesh, false, true);
+    mg_solver->setup();
+    mg_solver->set_solver();
+    d_B = new LHS_Operator_T(mg_solver);
 
-	typename RHS_Operator_T::SP_operator A;
-	MGSolverGMRES<D>* mgs =
-	dynamic_cast<MGSolverGMRES<D>*>(&(*mg_solver->solver()));
-	Insist(mgs, "EigenGD requires GMRES for the MG problem to get the operator.");
+    typename RHS_Operator_T::SP_operator A;
+    MGSolverGMRES<D>* mgs =
+    dynamic_cast<MGSolverGMRES<D>*>(&(*mg_solver->solver()));
+    Insist(mgs, "EigenGD requires GMRES for the MG problem to get the operator.");
 
-	// Transport operator
-	A = mgs->get_operator();
-	A->sweeper()->set_update_boundary(false);
-	d_A = A;
+    // Transport operator
+    A = mgs->get_operator();
+    A->sweeper()->set_update_boundary(false);
+    d_A = A;
   }
 
   else if (d_operator == "EnergyIndependent")
   {
-   SP_mg_solver mg_solver;
-   mg_solver = new FixedSourceManager<D>(d_input, d_mat, d_mesh, false, true);
-   mg_solver->setup();
-   mg_solver->set_solver();
-   d_A = new Operator_T(mg_solver);
+    SP_mg_solver mg_solver;
+    mg_solver = new FixedSourceManager<D>(d_input, d_mat, d_mesh, false, true);
+    mg_solver->setup();
+    mg_solver->set_solver();
+    d_A = new Operator_T(mg_solver);
   }
 }
 
@@ -121,12 +122,12 @@ void ROMSolver<D>::Solve(SP_matrix d_U, SP_vector sol)
   for (int i=0; i<d_n; i++)
   {
     if (((*sol)[i]) < 0)
-	{
-      (*sol)[i] *= -1;
-	}
+    {
+     (*sol)[i] *= -1;
+    }
   }
 
-  }
+}
 
 
 //----------------------------------------------------------------------------//
