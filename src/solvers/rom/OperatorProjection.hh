@@ -1,9 +1,10 @@
-/*
- * ProjectedOperator.hh
- *
- *  Created on: Jun 24, 2020
- *      Author: rabab
+//----------------------------------*-C++-*-----------------------------------//
+/**
+ *  @file  OperatorProjection.hh
+ *  @brief OperatorProjection class definition
+ *  @note  Copyright(C) 2020 Jeremy Roberts
  */
+//----------------------------------------------------------------------------//
 
 
 #ifndef SOLVERS_ROM_OPERATORPROJECTION_HH_
@@ -25,18 +26,22 @@ class OperatorProjection
 	typedef callow::MatrixBase::SP_matrix  SP_matrix;
 	typedef callow::MatrixDense::SP_matrix  SP_matrixDense;
 
-	// constructor
+	/// constructor
 	OperatorProjection(int a);
-
+    /// set the operator pointer and the basis
 	void SetOperators(SP_matrix A, SP_matrix U);
-
+    /// generate the reduced matrix UTAU
 	void Project(SP_matrixDense Ar);
 
 
   private:
+	/// basis rank
 	int d_r;
+	/// operator size
 	int d_n;
+	/// operator to be projected
 	SP_matrix d_A;
+	/// basis onto which the operator is projected
 	SP_matrixDense d_U;
 
 };

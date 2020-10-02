@@ -1,9 +1,11 @@
-/*
- * ProjectedOperator.cc
- *
- *  Created on: Jun 24, 2020
- *      Author: rabab
+//----------------------------------*-C++-*-----------------------------------//
+/**
+ *  @file  OperatorProjection.cc
+ *  @brief OperatorProjection class definition
+ *  @note  Copyright(C) 2020 Jeremy Roberts
  */
+//----------------------------------------------------------------------------//
+
 
 
 #include "OperatorProjection.hh"
@@ -20,19 +22,19 @@ OperatorProjection::OperatorProjection(int a)
 
 void OperatorProjection::SetOperators(SP_matrix A, SP_matrix U)
 {
-	Require(A);
-	Require(U);
+  Require(A);
+  Require(U);
 
-    d_A = A;
-    d_U = U;
+  d_A = A;
+  d_U = U;
 
-    d_n = d_U->number_rows();
-    d_r = d_U->number_columns();
+  d_n = d_U->number_rows();
+  d_r = d_U->number_columns();
 
-    Ensure(d_A->number_rows() == d_A->number_columns());
-    Ensure(d_A->number_rows() == d_U->number_rows());
-    // maybe need to make sure that the rank is less than problem size.
-    Ensure(d_n > d_r);
+  Ensure(d_A->number_rows() == d_A->number_columns());
+  Ensure(d_A->number_rows() == d_U->number_rows());
+  // make sure that the rank is less than problem size.
+  Ensure(d_n > d_r);
 }
 
 void OperatorProjection::Project(SP_matrixDense Ar)
@@ -49,13 +51,14 @@ void OperatorProjection::Project(SP_matrixDense Ar)
    {
     v[j] = (*d_U)(j, i);
    }
-
+   // compute AU
   d_A->multiply(v, y);
+  // compute UTAU
   d_U->multiply_transpose(y, y2);
   double *y_ = &y2[0];
   Ar->insert_col(i, y_, 0);
  }
 }
 
-}
+} // end namespace detra
 
