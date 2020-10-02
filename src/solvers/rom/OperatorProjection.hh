@@ -19,6 +19,10 @@
 
 namespace detran
 {
+ /**
+ *  @class OperatorProjection
+ *  @brief project matrix onto the space of a given basis
+ */
 class OperatorProjection
 {
 
