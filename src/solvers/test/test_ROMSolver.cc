@@ -45,7 +45,7 @@ int test_ROM_diffusion(int argc, char *argv[])
  Mesh1D::SP_mesh mesh = get_mesh(1, "core");
  Material::SP_material mat = get_mat();
  InputDB::SP_input input = get_input();
- input->put<std::string>("equation", "diffusion");
+ input->put<std::string>("operator", "diffusion");
 
  int n = mesh->number_cells();
  int r = 5;
@@ -53,7 +53,6 @@ int test_ROM_diffusion(int argc, char *argv[])
 // get the basis
  SP_matrix U;
  U = new callow::MatrixDense(2*n, 2*r);
- std::cout << n << "\n";
  ROMBasis::GetBasis("/home/rabab/opt/detran/source/src/solvers/test/flux_basis_core0_diff", U);
 
  // ROM
@@ -107,7 +106,7 @@ int test_ROM_EnergyIndependent(int argc, char *argv[])
   Mesh1D::SP_mesh mesh = get_mesh(1, "core");
   Material::SP_material mat = get_mat();
   InputDB::SP_input input = get_input();
-  input->put<std::string>("equation", "dd");
+  input->put<std::string>("operator", "energy-independent");
 
   ROMSolver<_1D> ROM(input, mesh, mat);
   int n = mesh->number_cells();

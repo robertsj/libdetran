@@ -20,16 +20,17 @@ ROMSolver<D>::ROMSolver(SP_input inp, SP_mesh mesh, SP_material mat)
  Require(mat);
  Require(mesh);
 
+ // set the operator type
  d_operator = "EnergyDependent";
 
- if (d_input->check("equation"))
+ if (d_input->check("operator"))
  {
-   if (d_input->get<std::string>("equation") == "diffusion")
-    d_operator = "diffusion";
+   if (d_input->get<std::string>("operator") == "diffusion")
+   d_operator = "diffusion";
 
-    else if (d_input->get<std::string>("equation") == "dd")
-	  d_operator = "EnergyIndependent";
- }
+   else if (d_input->get<std::string>("operator") == "energy-independent")
+   d_operator = "EnergyIndependent";
+  }
 
  ROMSolver::Set_FullOperators();
 }
