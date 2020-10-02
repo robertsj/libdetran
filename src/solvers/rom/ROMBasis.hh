@@ -1,9 +1,10 @@
-/*
- * basis.hh
- *
- *  Created on: Jun 15, 2020
- *      Author: rabab
+//----------------------------------*-C++-*-----------------------------------//
+/**
+ *  @file  ROMBasis.hh
+ *  @brief RoMBasis class definition.
+ *  @note  Copyright(C) 2020 Jeremy Roberts
  */
+//----------------------------------------------------------------------------//
 
 #ifndef detran_rombasis_HH_
 #define detran_rombasis_HH_
@@ -47,6 +48,7 @@ public:
   // PUBLIC FUNCTIONS
   //--------------------------------------------------------------------------//
 
+  /// Read the basis from file and store it in a dense matrix
   static void GetBasis(const char* fname, SP_matrix U);
 
 };
