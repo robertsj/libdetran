@@ -17,6 +17,8 @@
 #include "callow/matrix/Matrix.hh"
 #include "callow/vector/Vector.hh"
 
+using namespace callow;
+
 namespace detran
 {
  /**
@@ -27,8 +29,8 @@ class OperatorProjection
 {
 
   public:
-	typedef callow::MatrixBase::SP_matrix  SP_matrix;
-	typedef callow::MatrixDense::SP_matrix  SP_matrixDense;
+	typedef MatrixBase::SP_matrix  SP_matrix;
+	typedef MatrixDense::SP_matrix  SP_matrixDense;
 
 	/// constructor
 	OperatorProjection(int a);

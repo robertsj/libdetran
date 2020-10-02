@@ -40,11 +40,11 @@ void OperatorProjection::SetOperators(SP_matrix A, SP_matrix U)
 void OperatorProjection::Project(SP_matrixDense Ar)
 {
   // compute AU
-  callow::Vector y(d_n, 0.0);
-  callow::Vector y2(d_r, 0.0);
-  callow::MatrixDense AU(d_n, d_r, 0.0);
+  Vector y(d_n, 0.0);
+  Vector y2(d_r, 0.0);
+  MatrixDense AU(d_n, d_r, 0.0);
 
-  callow::Vector v(d_n);
+  Vector v(d_n);
   for (int i=0; i<d_r; i++)
   {
    for (int j=0; j<d_n; j++)
