@@ -1,9 +1,11 @@
-/*
- * kinetic_mats.hh
- *
- *  Created on: Sep 1, 2020
- *      Author: rabab
+//----------------------------------*-C++-*-----------------------------------//
+/**
+ *  @file  Kinetic_Mat.hh
+ *  @brief Kinetic_Mat class definition.
+ *  @note  Copyright(C) 2020 Jeremy Roberts
  */
+//----------------------------------------------------------------------------//
+
 #include "kinetics/TimeDependentMaterial.hh"
 #include "utilities/InputDB.hh"
 #include "callow/matrix/MatrixBase.hh"
@@ -13,33 +15,40 @@
 
 using namespace detran;
 
+
 class Kinetic_Mat
 {
   public:
-	typedef callow::MatrixDense::SP_matrix                 SP_matrix;
+	typedef callow::MatrixDense::SP_matrix		           SP_matrix;
 	typedef callow::Vector::SP_vector                      SP_vector;
 	typedef detran_utilities::InputDB::SP_input            SP_input;
 	typedef detran_geometry::Mesh::SP_mesh                 SP_mesh;
 	typedef TimeDependentMaterial::SP_material             SP_material;
 
 	Kinetic_Mat(SP_input inp, SP_mesh mesh, SP_material mat, SP_matrix basis_f, SP_matrix basis_p);
-	SP_matrix Mat1();
-	SP_matrix Mat2();
-	SP_matrix Mat3();
+	SP_matrix precursors_decay();
+	SP_matrix delayed_production();
+	SP_matrix precursors_production();
 
   private:
-	 size_t d_number_precursor_groups;
-	 int num_cells;
-	 int num_groups;
-	 int d_rp;
-	 int d_rf;
+	 /// Input
 	 SP_input d_input;
+	 /// Mesh
 	 SP_mesh d_mesh;
+	 /// Material
 	 SP_material d_mat;
+	 /// Flux basis
 	 SP_matrix d_basis_f;
+	 /// Precursors basis
 	 SP_matrix d_basis_p;
-
+	 /// Number of precursors group
+	 int d_number_precursor_groups;
+	 /// Number of cells
+	 int num_cells;
+	 /// Number of energy groups
+	 int num_groups;
+	 /// Precursors rank
+	 int d_rp;
+	 /// Flux rank
+	 int d_rf;
 };
-
-
-
