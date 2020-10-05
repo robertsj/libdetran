@@ -64,15 +64,18 @@ private:
   /// Fission source
   SP_fissionsource d_fissionsource;
   ///
-  SP_matrix d_F;
-  SP_matrix d_P;
-  SP_matrix d_D;
+  SP_matrix d_precursors_production;
+  SP_matrix d_precursors_decay;
+  SP_matrix d_delayed_production;
   SP_matrix_Base d_G;
   SP_matrix_Base d_L;
   /// operator
   SP_matrix d_A;
   SP_matrix d_A_;
   SP_matrix d_LF;
+  SP_matrix d_Lr;
+  SP_matrix d_Gr;
+
 
   SP_matrix d_sols;
   /// flux solution matrix at all time steps
@@ -140,9 +143,10 @@ private:
   void ProjectInitial();
  /// COnstruct matrix
   void Construct_Operator(double t, double dt);
+
+  void Refersh_Operator();
  /// Reconstruct the full order solution
   void reconstruct();
-
 };
 
 #endif /* SOLVERS_ROM_TRANSIENTSOLVER_HH_ */
