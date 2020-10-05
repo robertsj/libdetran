@@ -48,6 +48,8 @@ TransientSolver::TransientSolver(SP_input inp, SP_mesh mesh, SP_material materia
 
   // need to put if condition
   d_A = new callow::MatrixDense(d_rf + d_rc, d_rf+d_rc);
+  d_A_ = new callow::MatrixDense(d_rf + d_rc, d_rf+d_rc);
+
 
   // long vector of flux and precursors
   d_sols = new callow::MatrixDense(d_rf + d_rc, d_number_steps);
@@ -119,13 +121,13 @@ void TransientSolver::Construct_Operator(double t, double dt)
   Kinetic_Mat K(d_inp, d_mesh, d_material, d_flux_basis, d_precursors_basis);
 
   d_precursors_decay = new callow::MatrixDense(d_rc, d_rc);
-  d_precursors_decay = K.Mat1();
+  d_precursors_decay = K.precursors_decay();
 
   d_delayed_production = new callow::MatrixDense(d_rf, d_rc);
-  d_delayed_production = K.Mat2();
+  d_delayed_production = K.delayed_production();
 
   d_precursors_production = new callow::MatrixDense(d_rc, d_rf);
-  d_precursors_production = K.Mat3();
+  d_precursors_production = K.precursors_production();
 
   // if diffusion
   SP_lossoperator L(new DiffusionLossOperator(d_inp, d_material, d_mesh, false, 0.0, false, 1.0));
@@ -150,8 +152,6 @@ void TransientSolver::Construct_Operator(double t, double dt)
   double* v_G = d_G->values();
 
   OperatorProjection Projector(1);
-
-  SP_matrix d_Gr;
   d_Gr = new callow::MatrixDense(d_rf, d_rf);
   d_Lr = new callow::MatrixDense(d_rf, d_rf);
 
@@ -239,7 +239,7 @@ void TransientSolver::Refersh_Operator()
   OperatorProjection Projector(1);
   Projector.SetOperators(d_L, d_flux_basis);
   Projector.Project(d_Lr);
-
+  std::cout << "%%%%%%%%%%%%%%%\n";
   const vec_int &mat_map = d_mesh->mesh_map("MATERIAL");
 
   // this assumes that a basis set is generated for each flux group, so the velocity
@@ -249,13 +249,13 @@ void TransientSolver::Refersh_Operator()
   for (int g=0; g<d_number_groups; g++)
   {
     for (int i=0; i<r; i++)
-     {
-       for (int j=0; j<d_rf; j++)
-       {
-	     (*d_A)(i + g*r, j) = (-(*d_Lr)(i + g*r, j)*d_material->velocity(g) + (*d_Gr)(i + g*r, j));
-       }
-     }
-   }
+    {
+      for (int j=0; j<d_rf; j++)
+      {
+	    (*d_A)(i + g*r, j) = (-(*d_Lr)(i + g*r, j)*d_material->velocity(g) + (*d_Gr)(i + g*r, j));
+      }
+    }
+  }
 }
 //------------------------------------------------------------------------------------//
 
@@ -263,11 +263,17 @@ void TransientSolver::Solve(SP_state initial_state)
 {
   d_material->update(0.0, 0, 1, false);
 
+  std::cout << "******* 1 ****\n";
   d_state = initial_state;
+  std::cout << "******* 2 ****\n";
 
   initialize_precursors();
+  std::cout << "******* 3 ****\n";
+
 
   ProjectInitial();
+
+  std::cout << "******* 4 ****\n";
 
   double t = 0.0;
   int n = d_rf + d_rc;
@@ -279,18 +285,20 @@ void TransientSolver::Solve(SP_state initial_state)
   {
     t += d_dt;
     d_material->update(t, d_dt, 1, false);
+    std::cout << "******* 4 ****\n";
 
-    Construct_Operator(t, d_dt);
+    Refersh_Operator();
 
     for (int i=0; i<n; i++)
     {
       for (int j=0; j<n; j++)
       {
+    	std::cout << "******* 5 ****\n";
         (*d_A_)(i, j) = -(*d_A)(i, j)*d_dt;
         if (i == j) (*d_A_)(i, j) += 1;
       }
     }
-
+    std::cout << "******* 6 ****\n";
     d_solver->set_operators(d_A_);
     d_solver->solve(*d_sol0_r, *d_sol_r);
 
@@ -300,7 +308,6 @@ void TransientSolver::Solve(SP_state initial_state)
       (*d_sols)(i, step+1) = (*d_sol_r)[i];
     }
 
-    ///
     *d_sol0_r = *d_sol_r;
    }
 
@@ -319,7 +326,6 @@ void TransientSolver::reconstruct()
 
   for (int i=1; i<d_number_steps; i++)
   {
-
     for (int f=0; f< d_rf; f++)
     {
       (*d_flux_r)(f, i) = (*d_sols)(f, i);
@@ -336,31 +342,28 @@ void TransientSolver::reconstruct()
   callow::Vector phi(d_number_groups*d_num_cells, 0.0);
   callow::Vector C(d_precursors_group*d_num_cells, 0.0);
 
-  // callow::MatrixDense AU(d_n, d_r);
-
+  callow::Vector v1(d_rf, 0.0);
+  callow::Vector v2(d_rc, 0.0);
   for (int i=1; i<d_number_steps; i++)
   {
-    callow::Vector v1(d_rf, 0.0);
-    callow::Vector v2(d_rc, 0.0);
+    for (int j=0; j<d_rf; j++)
+    {
+      v1[j] = (*d_flux_r)(j, i);
+    }
+    d_flux_basis->multiply(v1, phi);
 
-  for (int j=0; j<d_rf; j++)
-  {
-    v1[j] = (*d_flux_r)(j, i);
-  }
-  d_flux_basis->multiply(v1, phi);
+    for (int j=0; j<d_rc; j++)
+    {
+      v2[j] = (*d_precursors_r)(j, i);
+    }
+    d_precursors_basis->multiply(v2, C);
 
-  for (int j=0; j<d_rc; j++)
-  {
-    v2[j] = (*d_precursors_r)(j, i);
-  }
-  d_precursors_basis->multiply(v2, C);
+    double *phi_ = &phi[0];
+    double *C_ = &C[0];
 
-  double *phi_ = &phi[0];
-  double *C_ = &C[0];
-
-  d_flux->insert_col(i, phi_, 0);
-  d_precursors->insert_col(i, C_, 0);
-  }
+    d_flux->insert_col(i, phi_, 0);
+    d_precursors->insert_col(i, C_, 0);
+ }
 
   d_flux->print_matlab("flux.txt");
 }
