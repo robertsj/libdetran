@@ -43,8 +43,8 @@ TransientSolver::TransientSolver(SP_input inp, SP_mesh mesh, SP_material materia
   d_P0_r = new callow::Vector (d_rc, 0.0);
 
   // matrix of the flux and precursors at all time steps
-  d_precursors = new callow::MatrixDense(d_num_cells*d_precursors_group, d_number_steps);
-  d_flux = new callow::MatrixDense(d_number_groups*d_num_cells, d_number_steps);
+  d_precursors = new callow::MatrixDense(d_num_cells*d_precursors_group, d_number_steps+1);
+  d_flux = new callow::MatrixDense(d_number_groups*d_num_cells, d_number_steps+1);
 
   // need to put if condition
   d_A = new callow::MatrixDense(d_rf + d_rc, d_rf+d_rc);
@@ -52,12 +52,12 @@ TransientSolver::TransientSolver(SP_input inp, SP_mesh mesh, SP_material materia
 
 
   // long vector of flux and precursors
-  d_sols = new callow::MatrixDense(d_rf + d_rc, d_number_steps);
+  d_sols = new callow::MatrixDense(d_rf + d_rc, d_number_steps+1);
 
   // long vector of reduced flux and precursors
   d_sol_r = new callow::Vector(d_rf+d_rc, 0.0);
 
-  d_sol0_r = new callow::Vector(d_rf + d_rc);
+  d_sol0_r = new callow::Vector(d_rf + d_rc, 0.0);
 
   d_solver = LinearSolverCreator::Create(d_inp);
 }
@@ -239,7 +239,6 @@ void TransientSolver::Refersh_Operator()
   OperatorProjection Projector(1);
   Projector.SetOperators(d_L, d_flux_basis);
   Projector.Project(d_Lr);
-  std::cout << "%%%%%%%%%%%%%%%\n";
   const vec_int &mat_map = d_mesh->mesh_map("MATERIAL");
 
   // this assumes that a basis set is generated for each flux group, so the velocity
@@ -252,7 +251,7 @@ void TransientSolver::Refersh_Operator()
     {
       for (int j=0; j<d_rf; j++)
       {
-	    (*d_A)(i + g*r, j) = (-(*d_Lr)(i + g*r, j)*d_material->velocity(g) + (*d_Gr)(i + g*r, j));
+        (*d_A)(i + g*r, j) = (-(*d_Lr)(i + g*r, j)*d_material->velocity(g) + (*d_Gr)(i + g*r, j));
       }
     }
   }
@@ -263,29 +262,26 @@ void TransientSolver::Solve(SP_state initial_state)
 {
   d_material->update(0.0, 0, 1, false);
 
-  std::cout << "******* 1 ****\n";
+  Construct_Operator(0, d_dt);
+
   d_state = initial_state;
-  std::cout << "******* 2 ****\n";
 
   initialize_precursors();
-  std::cout << "******* 3 ****\n";
 
 
   ProjectInitial();
 
-  std::cout << "******* 4 ****\n";
-
   double t = 0.0;
   int n = d_rf + d_rc;
+
 
   SP_matrix d_A_;
   d_A_ = new callow::MatrixDense(n, n);
 
-  for (int step=0 ; step< d_number_steps-1; step++)
+  for (int step=0 ; step< d_number_steps; step++)
   {
     t += d_dt;
     d_material->update(t, d_dt, 1, false);
-    std::cout << "******* 4 ****\n";
 
     Refersh_Operator();
 
@@ -293,26 +289,28 @@ void TransientSolver::Solve(SP_state initial_state)
     {
       for (int j=0; j<n; j++)
       {
-    	std::cout << "******* 5 ****\n";
         (*d_A_)(i, j) = -(*d_A)(i, j)*d_dt;
         if (i == j) (*d_A_)(i, j) += 1;
       }
     }
-    std::cout << "******* 6 ****\n";
     d_solver->set_operators(d_A_);
     d_solver->solve(*d_sol0_r, *d_sol_r);
 
     // store this state in the solution matrix
     for (int i=0; i < n ; i++)
     {
-      (*d_sols)(i, step+1) = (*d_sol_r)[i];
+      (*d_sols)(i, step) = (*d_sol_r)[i];
     }
 
-    *d_sol0_r = *d_sol_r;
+    for (int i=0; i<n; i++)
+    {
+      (*d_sols)(i, step) = (*d_sol_r)[i];
+      (*d_sol0_r)[i] = (*d_sol_r)[i];
+    }
    }
 
   // reconstruct the full solution
-  reconstruct();
+   reconstruct();
 }
 
 //------------------------------------------------------------------------------------//
@@ -324,7 +322,7 @@ void TransientSolver::reconstruct()
 
   d_precursors_r = new callow::MatrixDense(d_rc, d_number_steps);
 
-  for (int i=1; i<d_number_steps; i++)
+  for (int i=0; i<d_number_steps; i++)
   {
     for (int f=0; f< d_rf; f++)
     {
@@ -344,7 +342,7 @@ void TransientSolver::reconstruct()
 
   callow::Vector v1(d_rf, 0.0);
   callow::Vector v2(d_rc, 0.0);
-  for (int i=1; i<d_number_steps; i++)
+  for (int i=0; i<d_number_steps; i++)
   {
     for (int j=0; j<d_rf; j++)
     {
