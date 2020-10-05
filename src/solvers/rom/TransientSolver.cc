@@ -297,11 +297,6 @@ void TransientSolver::Solve(SP_state initial_state)
     d_solver->solve(*d_sol0_r, *d_sol_r);
 
     // store this state in the solution matrix
-    for (int i=0; i < n ; i++)
-    {
-      (*d_sols)(i, step) = (*d_sol_r)[i];
-    }
-
     for (int i=0; i<n; i++)
     {
       (*d_sols)(i, step) = (*d_sol_r)[i];
@@ -359,8 +354,8 @@ void TransientSolver::reconstruct()
     double *phi_ = &phi[0];
     double *C_ = &C[0];
 
-    d_flux->insert_col(i, phi_, 0);
-    d_precursors->insert_col(i, C_, 0);
+    d_flux->insert_col(i+1, phi_, 0);
+    d_precursors->insert_col(i+1, C_, 0);
  }
 
   d_flux->print_matlab("flux.txt");
