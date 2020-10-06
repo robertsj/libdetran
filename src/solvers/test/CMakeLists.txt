@@ -121,4 +121,5 @@ ADD_TEST(test_ROM_EnergyDependent         test_ROMSolver 2)
 
 ADD_EXECUTABLE(test_TransientROMSolver         	 test_TransientROMSolver.cc)
 TARGET_LINK_LIBRARIES(test_TransientROMSolver    	solvers)
-ADD_TEST(test_TransientROMSolver                  test_TransientROMSolver   0)
+ADD_TEST(test_TransientROMSolver                  test_TransientROMSolver_rom   0)
+ADD_TEST(test_TransientROMSolver                  test_TransientROMSolver_fom   1)
