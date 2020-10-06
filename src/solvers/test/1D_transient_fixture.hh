@@ -34,7 +34,6 @@ using std::cout;
 using std::endl;
 
 
-
 class SlabMaterial: public TimeDependentMaterial
 {
 public:
@@ -49,72 +48,69 @@ public:
 
   void update_impl()
   {
-   double t = time();
-   // materials are reflector, fuel, control-1, control-2
-   double xs_t[2][2] = {{0.222222,  0.666667}, {0.25641,  0.66667}};
-   // double xs_a[4][2] = {{0.0002, 0.01}, {0.0105, 0.1140}, {0.0105, 0.1640}, {0.0105, 0.1640}};
-   double xs_f[4][2] = {{0.0, 0.0}, {0.0012, 0.076}, {0.0012, 0.076}, {0.0012, 0.076}};
-   double xs_s[4][2][2] = {{{0.190022, 0.0},
-	  	      	    	   {0.032, 0.6566667}},
-	  	      			   {{0.223910, 0.0},
-	  	      			   {0.022, 0.55267}},
-	  	      			   {{0.223910, 0.0},
-	  	      				{0.022, 0.55267}},
-	  						{{0.223910, 0.0},
-	  						{0.022, 0.55267}}};
+    double t = time();
+    // materials are reflector, fuel, control-1, control-2
+    double xs_t[2][2] = {{0.222222,  0.666667}, {0.25641,  0.66667}};
+    // double xs_a[4][2] = {{0.0002, 0.01}, {0.0105, 0.1140}, {0.0105, 0.1640}, {0.0105, 0.1640}};
+    double xs_f[4][2] = {{0.0, 0.0}, {0.0012, 0.076}, {0.0012, 0.076}, {0.0012, 0.076}};
+    double xs_s[4][2][2] = {{{0.190022, 0.0},
+	  	      	   {0.032, 0.6566667}},
+	  	      	   {{0.223910, 0.0},
+	  	      	   {0.022, 0.55267}},
+	  	      	   {{0.223910, 0.0},
+	  	      	   {0.022, 0.55267}},
+	  		   {{0.223910, 0.0},
+	  		   {0.022, 0.55267}}};
 
+    double diff_coeff[4][2] = {{1.5, 0.5}, {1.3, 0.5}, {1.3, 0.5}, {1.3, 0.5}};
 
-   double diff_coeff[4][2] = {{1.5, 0.5}, {1.3, 0.5}, {1.3, 0.5}, {1.3, 0.5}};
-
-   for (int m = 0; m < 4; ++m)
-   {
-     for (int g = 0; g < 2; ++g)
-     {
-	  if (g == 0 & m > 0) set_chi(m, g, 1.0);
-	  if (m == 0 || m ==1 )
-	  {
-	   set_sigma_t(m, g, xs_t[m][g]);
-	  }
-	  set_nu(m, g, 2.5);
-	  set_sigma_f(m, g, xs_f[m][g]);
-	  set_diff_coef(m, g, diff_coeff[m][g]);
-
-	  for (int gp = 0; gp < 2; ++gp)
-	  {
-	   set_sigma_s(m, gp, g, xs_s[m][gp][g]);
-   	  }
-     }
-	};
-
-	// set absorption cross section in control rod cells
-	// this is the one that moves
-	set_sigma_t(2, 0, 0.256410);
-	set_sigma_t(2, 1,  xa_perturbed(t));
-
-	// this one stays in this position
-	set_sigma_t(3, 0, 0.256410);
-	set_sigma_t(3, 1, compute_xs_t(0.25));
-
-	// kinetics
-	set_velocity(0,      2.0e7);
-	set_velocity(1,      220000);
-	double beta[8] = {2.18e-4, 1.02e-03, 6.05e-4, 1.31e-03, 2.20e-03, 6.00e-4, 5.40e-04, 1.52e-04};
-	double lambda[8] = {1.246700e-02, 2.829299e-02, 4.2524000e-02, 1.330420e-01, 2.924670e-01, 6.664888e-01, 1.634781e+00, 3.554601e+00};
-
-	for (int i=0; i < 8; i++)
-	{ set_lambda(i, lambda[i]);
-	  set_beta(i, beta[i]);
-
-	  for (int m = 1; m < 4; m++)
-	  {
-	   set_chi_d(m, i, 0, 1);
-	  }
+    for (int m = 0; m < 4; ++m)
+    {
+      for (int g = 0; g < 2; ++g)
+      {
+        if (g == 0 & m > 0) set_chi(m, g, 1.0);
+	if (m == 0 || m ==1 )
+	{
+	  set_sigma_t(m, g, xs_t[m][g]);
 	}
+	set_nu(m, g, 2.5);
+	set_sigma_f(m, g, xs_f[m][g]);
+	set_diff_coef(m, g, diff_coeff[m][g]);
+	for (int gp = 0; gp < 2; ++gp)
+	{
+	  set_sigma_s(m, gp, g, xs_s[m][gp][g]);
+   	}
+       }
+      };
 
-	compute_sigma_a();
+      // set absorption cross section in control rod cells
+      // this is the one that moves
+      set_sigma_t(2, 0, 0.256410);
+      set_sigma_t(2, 1,  xa_perturbed(t));
+      // this one stays in this position
+      set_sigma_t(3, 0, 0.256410);
+      set_sigma_t(3, 1, compute_xs_t(0.25));
+      // kinetics
+      set_velocity(0,      2.0e7);
+      set_velocity(1,      220000);
+      double beta[8] = {2.18e-4, 1.02e-03, 6.05e-4, 1.31e-03, 2.20e-03, 6.00e-4, 5.40e-04, 1.52e-04};
+      double lambda[8] = {1.246700e-02, 2.829299e-02, 4.2524000e-02, 1.330420e-01, 2.924670e-01, 6.664888e-01, 1.634781e+00, 3.554601e+00};
 
-	finalize();
-    }
+      for (int i=0; i < 8; i++)
+      {
+        set_lambda(i, lambda[i]);
+	set_beta(i, beta[i]);
+
+	for (int m = 1; m < 4; m++)
+	{
+	  set_chi_d(m, i, 0, 1);
+	}
+      }
+
+      compute_sigma_a();
+
+      finalize();
+   }
 
   float compute_xs_t(float pos)
   {
@@ -170,31 +166,29 @@ private:
 // -------------------------------------------------
 Mesh1D::SP_mesh get_mesh(Mesh1D::size_t fmm = 50)
 {
-    Mesh1D::vec_dbl cm(8);
-    cm[0] =  0.0;
-    cm[1] = 10.0;
-    cm[2] = 20.0;
-    cm[3] = 30.0;
-    cm[4] = 40.0;
-    cm[5] = 50.0;
-    cm[6] = 60.0;
-    cm[7] = 70.0;
-    Mesh1D::vec_int fm(7);
-    fm[0] = fmm;
-    fm[1] = fmm;
-    fm[2] = fmm;
-    fm[3] = fmm;
-    fm[4] = fmm;
-    fm[5] = fmm;
-    fm[6] = fmm;
-
-    Mesh1D::vec_int mt(7);
-    mt[0] = 0; mt[1] = 1; mt[2] = 2;
-    mt[3] = 1; mt[4] = 3; mt[5] = 1;
-    mt[6] = 0;
-    Mesh1D::SP_mesh mesh = Mesh1D::Create(fm, cm, mt);
-
-    return mesh;
+  Mesh1D::vec_dbl cm(8);
+  cm[0] =  0.0;
+  cm[1] = 10.0;
+  cm[2] = 20.0;
+  cm[3] = 30.0;
+  cm[4] = 40.0;
+  cm[5] = 50.0;
+  cm[6] = 60.0;
+  cm[7] = 70.0;
+  Mesh1D::vec_int fm(7);
+  fm[0] = fmm;
+  fm[1] = fmm;
+  fm[2] = fmm;
+  fm[3] = fmm;
+  fm[4] = fmm;
+  fm[5] = fmm;
+  fm[6] = fmm;
+  Mesh1D::vec_int mt(7);
+  mt[0] = 0; mt[1] = 1; mt[2] = 2;
+  mt[3] = 1; mt[4] = 3; mt[5] = 1;
+  mt[6] = 0;
+  Mesh1D::SP_mesh mesh = Mesh1D::Create(fm, cm, mt);
+  return mesh;
 }
 
 InputDB::SP_input get_input()
@@ -213,14 +207,10 @@ InputDB::SP_input get_input()
   inp->put<int>("ts_monitor_level",               1);
   inp->put<int>("ts_no_extrapolation",            0);
   inp->put<string>("eigen_solver",                "arnoldi");
-  inp->put<string>("outer_solver",          "GMRES");
+  inp->put<string>("outer_solver",                 "GMRES");
   inp->put<int>("outer_krylov_group_cutoff",      0);
   inp->put<double>("eigen_solver_tol", 1e-16);
   inp->put<int>("eigen_solver_maxit",  1000);
-
-
-  //inp->put<int>("compute_boundary_flux",          1);
-
   inp->put<string>("inner_solver",          "SI");
   inp->put<double>("outer_tolerance",       1e-14);
   inp->put<double>("inner_tolerance",       1e-14);
@@ -232,7 +222,7 @@ InputDB::SP_input get_input()
   InputDB::SP_input db(new InputDB("inner_solver_db"));
   db->put<double>("linear_solver_atol",                 1e-16);
   db->put<double>("linear_solver_rtol",                 1e-15);
-  db->put<string>("linear_solver_type",                 "jacobi");
+  db->put<string>("linear_solver_type",                 "petsc");
   db->put<string>("pc_type",                            "petsc_pc");
   db->put<string>("petsc_pc_type",                      "lu");
   db->put<int>("linear_solver_maxit",                   2000);
@@ -244,15 +234,13 @@ InputDB::SP_input get_input()
   inp->put<InputDB::SP_input>("outer_solver_db",        db);
   inp->put<InputDB::SP_input>("eigen_solver_db",        db);
   inp->put<int>("compute_boundary_flux",                1);
-  inp->put<double>("ts_final_time",               60);
-  inp->put<double>("ts_step_size",                0.1);
   inp->put<int>("linear_solver_maxit",   1000);
   inp->put<int>("linear_solver_monitor_level", 0);
   inp->put<int>("linear_solver_monitor_diverge", 0);
   if (inp->get<std::string>("equation") != "diffusion")
   {
-	inp->put<int>("ts_discrete",              1);
-	inp->put<int>("store_angular_flux",       1);
+    inp->put<int>("ts_discrete",              1);
+    inp->put<int>("store_angular_flux",       1);
   }
 
 return inp;
