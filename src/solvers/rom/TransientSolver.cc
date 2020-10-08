@@ -9,9 +9,8 @@
 
 #include "TransientSolver.hh"
 
-
 TransientSolver::TransientSolver(SP_input inp, SP_mesh mesh, SP_material material,
-		                         SP_matrix flux_basis, SP_matrix precursors_basis)
+		                 SP_matrix flux_basis, SP_matrix precursors_basis)
 :d_mesh(mesh),
  d_material(material),
  d_inp(inp),
@@ -42,14 +41,13 @@ TransientSolver::TransientSolver(SP_input inp, SP_mesh mesh, SP_material materia
   d_phi0_r = new callow::Vector(d_rf, 0.0);
   d_P0_r = new callow::Vector (d_rc, 0.0);
 
-  // matrix of the flux and precursors at all time steps
+  // matrix of precursors concentraion at all time steps
   d_precursors = new callow::MatrixDense(d_num_cells*d_precursors_group, d_number_steps+1);
+  // matrix of the flux at all time steps
   d_flux = new callow::MatrixDense(d_number_groups*d_num_cells, d_number_steps+1);
 
-  // need to put if condition
   d_A = new callow::MatrixDense(d_rf + d_rc, d_rf+d_rc);
   d_A_ = new callow::MatrixDense(d_rf + d_rc, d_rf+d_rc);
-
 
   // long vector of flux and precursors
   d_sols = new callow::MatrixDense(d_rf + d_rc, d_number_steps+1);
@@ -65,17 +63,17 @@ TransientSolver::TransientSolver(SP_input inp, SP_mesh mesh, SP_material materia
 //------------------------------------------------------------------------------------//
 void TransientSolver::initialize_precursors()
 {
- d_fissionsource = new FissionSource(d_state, d_mesh, d_material);
- d_fissionsource->update();
+  d_fissionsource = new FissionSource(d_state, d_mesh, d_material);
+  d_fissionsource->update();
 
- const State::moments_type &fd = d_fissionsource->density();
+  const State::moments_type &fd = d_fissionsource->density();
 
- const vec_int &mt = d_mesh->mesh_map("MATERIAL");
+  const vec_int &mt = d_mesh->mesh_map("MATERIAL");
 
- for (int i = 0; i < d_precursors_group; ++i)
- {
-   double inv_lambda = 1.0 / d_material->lambda(i);
-   for (int cell = 0; cell < d_num_cells; ++cell)
+  for (int i = 0; i < d_precursors_group; ++i)
+  {
+    double inv_lambda = 1.0 / d_material->lambda(i);
+    for (int cell = 0; cell < d_num_cells; ++cell)
    {
      (*d_P0)[cell + i*d_num_cells] = inv_lambda * d_material->beta(mt[cell], i) * fd[cell];
      // store the initial concentration in the solution matrix
@@ -85,6 +83,8 @@ void TransientSolver::initialize_precursors()
 }
 
 //------------------------------------------------------------------------------------//
+
+/// Project the initial flux and precursors concentraion onto their basis to get
 void TransientSolver::ProjectInitial()
 {
   for (int g=0; g<d_number_groups; g++)
@@ -99,7 +99,7 @@ void TransientSolver::ProjectInitial()
 
   d_flux_basis->multiply_transpose(*d_phi0, *d_phi0_r);
 
-  //project initial precursors
+  // project initial precursors
   d_precursors_basis->multiply_transpose(*d_P0, *d_P0_r);
 
   // stack the flux and precursors in one vector
@@ -115,6 +115,7 @@ void TransientSolver::ProjectInitial()
 }
 
 //------------------------------------------------------------------------------------//
+
 void TransientSolver::Construct_Operator(double t, double dt)
 {
   // get the matrices
@@ -140,8 +141,8 @@ void TransientSolver::Construct_Operator(double t, double dt)
   SP_matrix d_L_prime;
   SP_matrix d_G_prime;
 
-  d_L_prime =  new callow::MatrixDense(d_number_groups*d_num_cells, d_number_groups*d_num_cells);
-  d_G_prime =  new callow::MatrixDense(d_number_groups*d_num_cells, d_number_groups*d_num_cells);
+  d_L_prime = new callow::MatrixDense(d_number_groups*d_num_cells, d_number_groups*d_num_cells);
+  d_G_prime = new callow::MatrixDense(d_number_groups*d_num_cells, d_number_groups*d_num_cells);
 
   int * rows_L = d_L->rows();
   int* cols_L = d_L->columns();
@@ -155,7 +156,6 @@ void TransientSolver::Construct_Operator(double t, double dt)
   d_Gr = new callow::MatrixDense(d_rf, d_rf);
   d_Lr = new callow::MatrixDense(d_rf, d_rf);
 
-  int r = d_rf/d_number_groups;
 
   const vec_int &mat_map = d_mesh->mesh_map("MATERIAL");
 
@@ -166,10 +166,9 @@ void TransientSolver::Construct_Operator(double t, double dt)
     {
       int m = mat_map[cell];
       int r = d_num_cells*g + cell; //row number
-      // fill upper left: L - (1-beta)/k *F
       for (int p = rows_L[r]; p < rows_L[r + 1]; p++)
       {
-	    int c = cols_L[p];
+	int c = cols_L[p];
         double value = -v_L[p]*d_material->velocity(g);
         //d_L->insert(r, c, value, 0);
         d_L_prime->insert(r, c, value);
@@ -179,7 +178,6 @@ void TransientSolver::Construct_Operator(double t, double dt)
       {
         int c = cols_G[p];
         double value = v_G[p]*(1 - d_material->beta_total(m))*d_material->velocity(g);
-        // add the value
         //d_G->insert(r, c, value, 0);
         d_G_prime->insert(r, c, value);
       }
@@ -194,14 +192,16 @@ void TransientSolver::Construct_Operator(double t, double dt)
 
   // this assumes that a basis set is generated for each flux group, so the velocity
   // is not collapsed.
+  int r = d_rf/d_number_groups;
   for (int g=0; g<d_number_groups; g++)
   {
     for (int i=0; i<r; i++)
-    {
+    { // fill the upper left of A
       for (int j=0; j<d_rf; j++)
       {
         (*d_A)(i + g*r, j) = ((*d_Lr)(i + g*r, j) + (*d_Gr)(i + g*r, j));
       }
+      // fill the upper right
       for (int k =0; k<d_rc; k++)
       {
         (*d_A)(i + g*r, k+d_rf) = (*d_delayed_production)(i+g*r, k)*d_material->velocity(g);
@@ -210,15 +210,16 @@ void TransientSolver::Construct_Operator(double t, double dt)
   }
    // fill the lower half
   for (int i=0; i<d_rc ; i++)
-  {
-    for (int j=0; j<d_rf; j++)
+  {  // lower left
+     for (int j=0; j<d_rf; j++)
+     {
+        (*d_A)(d_rf+i, j) = (*d_precursors_production)(i, j);
+     }
+    // lower right
+    for (int k=0; k<d_rc; k++)
     {
-      (*d_A)(d_rf+i, j) = (*d_precursors_production)(i, j);
+      (*d_A)(d_rf+i, k+d_rf) = (*d_precursors_decay)(i, k);
     }
-   for (int k=0; k<d_rc; k++)
-   {
-     (*d_A)(d_rf+i, k+d_rf) = (*d_precursors_decay)(i, k);
-   }
   }
  }
 
@@ -268,12 +269,10 @@ void TransientSolver::Solve(SP_state initial_state)
 
   initialize_precursors();
 
-
   ProjectInitial();
 
   double t = 0.0;
   int n = d_rf + d_rc;
-
 
   SP_matrix d_A_;
   d_A_ = new callow::MatrixDense(n, n);
@@ -292,20 +291,20 @@ void TransientSolver::Solve(SP_state initial_state)
         (*d_A_)(i, j) = -(*d_A)(i, j)*d_dt;
         if (i == j) (*d_A_)(i, j) += 1;
       }
-    }
-    d_solver->set_operators(d_A_);
-    d_solver->solve(*d_sol0_r, *d_sol_r);
-
-    // store this state in the solution matrix
-    for (int i=0; i<n; i++)
-    {
-      (*d_sols)(i, step) = (*d_sol_r)[i];
-      (*d_sol0_r)[i] = (*d_sol_r)[i];
-    }
    }
+   d_solver->set_operators(d_A_);
+   d_solver->solve(*d_sol0_r, *d_sol_r);
 
-  // reconstruct the full solution
-   reconstruct();
+   // store this state in the solution matrix
+   for (int i=0; i<n; i++)
+   {
+     (*d_sols)(i, step) = (*d_sol_r)[i];
+     (*d_sol0_r)[i] = (*d_sol_r)[i];
+   }
+ }
+
+ // reconstruct the full solution
+  reconstruct();
 }
 
 //------------------------------------------------------------------------------------//
@@ -329,7 +328,6 @@ void TransientSolver::reconstruct()
      (*d_precursors_r)(p, i) = (*d_sols)(p + d_rf, i);
    }
   }
-
 
   // reconstruct flux
   callow::Vector phi(d_number_groups*d_num_cells, 0.0);
