@@ -1,4 +1,3 @@
-
 #define TEST_LIST  \
     FUNC(test_TransientSolver_fom)\
     FUNC(test_TransientSolver_rom)\
@@ -69,12 +68,6 @@ int test_TransientSolver_fom(int argc, char *argv[])
   time(&end);
   time_t elapsed = end - begin;
   printf("time elapsed %1.6f", elapsed);
-  //SP_matrix phi_mat;
-  //SP_matrix precursors_mat;
-  //phi_mat = stepper.flux_mat;
-  //precursors_mat = stepper.precursors_mat;
-  //phi_mat->print_matlab("1d_flux.txt");
-  //precursors_mat->print_matlab("1d_precursors.txt");
 
 return 0;
 }
@@ -109,10 +102,10 @@ int test_TransientSolver_rom(int argc, char *argv[])
   time_t begin, end;
   time(&begin);
 
-  const char* flux_basis = "/home/rabab/Desktop/1d_transient_flux_basis_r=15";
-  const char* precursors_basis = "/home/rabab/Desktop/1d_transient_precursors_basis_r=15";
+  const char* flux_basis = "/home/rabab/opt/detran/source/src/solvers/test/rom_basis/1d_transient_flux_basis_r=20";
+  const char* precursors_basis = "/home/rabab/opt/detran/source/src/solvers/test/rom_basis/1d_transient_precursors_basis_r=20";
 
-  int r = 15;
+  int r = 20;
   SP_matrix basis_f;
   basis_f = new callow::MatrixDense(42, 2*r);
   ROMBasis::GetBasis(flux_basis, basis_f);
@@ -121,7 +114,6 @@ int test_TransientSolver_rom(int argc, char *argv[])
   basis_p = new callow::MatrixDense(168, r);
   ROMBasis::GetBasis(precursors_basis, basis_p);
 
-  //
   TransientSolver R(inp, mesh, mat, basis_f, basis_p);
 
   R.Solve(ic);
