@@ -36,63 +36,63 @@ class TransientSolver
 {
 
 public:
-	typedef callow::MatrixDense::SP_matrix            SP_matrix;
-	typedef callow::Vector::SP_vector                 SP_vector;
-	typedef detran_utilities::InputDB::SP_input       SP_input;
-	typedef detran_utilities::vec_int                 vec_int;
-	typedef detran_geometry::Mesh::SP_mesh            SP_mesh;
-    typedef TimeDependentMaterial::SP_material        SP_material;
-	typedef Precursors::SP_precursors                 SP_precursors;
-	typedef FissionSource::SP_fissionsource           SP_fissionsource;
-	typedef State::SP_state                           SP_state;
-    typedef SyntheticSource::vec_states               vec_states;
-    typedef DiffusionGainOperator::SP_gainoperator    SP_gainoperator;
-    typedef DiffusionLossOperator::SP_lossoperator    SP_lossoperator;
-    typedef LinearSolverCreator::SP_solver            SP_solver;
-    typedef callow::Matrix::SP_matrix             SP_matrix_Base;
+  typedef callow::MatrixDense::SP_matrix            SP_matrix;
+  typedef callow::Vector::SP_vector                 SP_vector;
+  typedef detran_utilities::InputDB::SP_input       SP_input;
+  typedef detran_utilities::vec_int                 vec_int;
+  typedef detran_geometry::Mesh::SP_mesh            SP_mesh;
+  typedef TimeDependentMaterial::SP_material        SP_material;
+  typedef Precursors::SP_precursors                 SP_precursors;
+  typedef FissionSource::SP_fissionsource           SP_fissionsource;
+  typedef State::SP_state                           SP_state;
+  typedef DiffusionGainOperator::SP_gainoperator    SP_gainoperator;
+  typedef DiffusionLossOperator::SP_lossoperator    SP_lossoperator;
+  typedef LinearSolverCreator::SP_solver            SP_solver;
+  typedef callow::Matrix::SP_matrix                 SP_matrix_Base;
 
 
-	TransientSolver(SP_input inp, SP_mesh mesh, SP_material material, SP_matrix flux_basis, SP_matrix precursors_basis);
+  TransientSolver(SP_input inp, SP_mesh mesh, SP_material material, SP_matrix flux_basis, SP_matrix precursors_basis);
 
-
-	void Solve(SP_state initial_state);
-
-
+  void Solve(SP_state initial_state);
 
 private:
   /// State vector
   SP_state d_state;
   /// Fission source
   SP_fissionsource d_fissionsource;
-  ///
+  /// Precursors production matrix
   SP_matrix d_precursors_production;
+  /// Precursors decsy matrix
   SP_matrix d_precursors_decay;
+  /// Delayed neutron production
   SP_matrix d_delayed_production;
+  /// Gain matrix
   SP_matrix_Base d_G;
+  /// Loss matrix
   SP_matrix_Base d_L;
   /// operator
   SP_matrix d_A;
+  ///
   SP_matrix d_A_;
   SP_matrix d_LF;
   SP_matrix d_Lr;
   SP_matrix d_Gr;
-
-
+  /// Reduced solution
   SP_matrix d_sols;
-  /// flux solution matrix at all time steps
+  /// Flux solution matrix at all time steps
   SP_matrix d_flux;
-  /// precursors solution matrix at all time steps
+  /// Precursors solution matrix at all time steps
   SP_matrix d_precursors;
-  /// reduced flux vector
+  /// Reduced flux vector
   SP_matrix d_flux_r;
-  /// reduced precursors vector
+  /// Reduced precursors vector
   SP_matrix d_precursors_r;
 
   /// Time step size
   double d_dt;
-  /// final time
+  /// Final time
   double  d_final_time;
-  /// number of time steps
+  /// Number of time steps
   double d_number_steps;
 
   /// Mesh
@@ -105,23 +105,23 @@ private:
   SP_matrix d_flux_basis;
   /// Precursors basis
   SP_matrix d_precursors_basis;
- /// precursor vector in previous time step
+  /// Precursor vector in previous time step
   SP_vector d_P0;
-  /// flux vector in previous time step
+  /// Flux vector in previous time step
   SP_vector d_phi0;
-  /// precursor vector in current time step
+  /// Precursor vector in current time step
   SP_vector d_phi;
-  /// current vector of the reduced flux and precursors
+  /// Current vector of the reduced flux and precursors
   SP_vector d_sol_r;
-  /// vector of the reduced flux and precursors at the previous time step
+  /// Vector of the reduced flux and precursors at the previous time step
   SP_vector d_sol0_r;
-  /// the projected vector of the precursors
+  /// The projected vector of the precursors
   SP_vector d_P_r;
-  ///the projected vector of the initial precursors
+  /// The projected vector of the initial precursors
   SP_vector d_P0_r;
-  ///the projected vector of the initial flux
+  /// The projected vector of the initial flux
   SP_vector d_phi0_r;
-  ///the projected vector of the flux
+  /// The projected vector of the flux
   SP_vector d_phi_r;
   ///
   SP_vector d_b;
@@ -140,13 +140,13 @@ private:
   SP_solver d_solver;
   /// Compute the initial precursors concentration
   void initialize_precursors();
- /// Project the initial flux and precursors on space of the reduced basis
+  /// Project the initial flux and precursors on space of the reduced basis
   void ProjectInitial();
- /// COnstruct matrix
+  /// Construct matrix
   void Construct_Operator(double t, double dt);
-
+  /// Update the operator 
   void Refersh_Operator();
- /// Reconstruct the full order solution
+  /// Reconstruct the full order solution
   void reconstruct();
 };
 

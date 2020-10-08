@@ -15,16 +15,14 @@
 #include "callow/matrix/MatrixShell.hh"
 #include "callow/vector/Vector.hh"
 #include "callow/matrix/Matrix.hh"
-
 #include "Kinetic_Mat.hh"
+
 using namespace detran;
 using namespace detran_material;
 using namespace detran_geometry;
 using namespace detran_utilities;
-typedef callow::MatrixDense::SP_matrix             SP_matrix;
 
-
-typedef callow::MatrixDense::SP_matrix		           SP_matrix;
+typedef callow::MatrixDense::SP_matrix       SP_matrix;
 
 
 Kinetic_Mat::Kinetic_Mat(SP_input inp, SP_mesh mesh, SP_material mat, SP_matrix basis_f, SP_matrix basis_p)
@@ -37,41 +35,40 @@ Kinetic_Mat::Kinetic_Mat(SP_input inp, SP_mesh mesh, SP_material mat, SP_matrix 
  d_basis_f(basis_f),
  d_basis_p(basis_p)
 {
- num_cells = mesh->number_cells();
- num_groups = mat->number_groups();
- // need to assert the number of rows in the basis is related to the number of cells
+  num_cells = mesh->number_cells();
+  num_groups = mat->number_groups();
+  // need to assert the number of rows in the basis is related to the number of cells
 }
 
 //----------------------------------------------------------------------------//
 
 SP_matrix Kinetic_Mat::precursors_decay()
 {
-// precursors decay
- SP_matrix P;
+  // precursors decay
+  SP_matrix P;
 
- P = new callow::MatrixDense(d_rp, d_rp);
- double PP[d_rp][d_rp];
- // loop over rows
- for (int r=0; r< d_rp; r++)
- {
-  // loop over columns
-  for (int c=0; c<d_rp; c++)
+  P = new callow::MatrixDense(d_rp, d_rp);
+  double PP[d_rp][d_rp];
+  // loop over rows
+  for (int r=0; r< d_rp; r++)
   {
-   double value = 0.0;
-   for (int i=0; i < d_number_precursor_groups; i++)
-   {
-     double l =  d_mat->lambda(i);
-     for (int j=0; j< num_cells ; j++)
-     {
-      value += -l*(*d_basis_p)((i*num_cells)+j, r)*(*d_basis_p)((i*num_cells+j), c);
-      //PP[r][c] +=  -l*(*d_basis_p)(i*num_cells+j, r)*(*d_basis_p)(i*num_cells+j, c);
-      // std::cout << (*d_basis_p)[r, i*num_cells+j] << "  " << value << "\n";
-     }
-     P->insert(r, c, value);
-   }
-   }
- }
-return P;
+    // loop over columns
+    for (int c=0; c<d_rp; c++)
+    {
+      double value = 0.0;
+      for (int i=0; i < d_number_precursor_groups; i++)
+      {
+         double l =  d_mat->lambda(i);
+         for (int j=0; j< num_cells ; j++)
+         {
+           value += -l*(*d_basis_p)((i*num_cells)+j, r)*(*d_basis_p)((i*num_cells+j), c);
+         }
+
+         P->insert(r, c, value);
+      }
+    }
+  }
+ return P;
 }
 
 //----------------------------------------------------------------------------//
@@ -84,7 +81,7 @@ SP_matrix Kinetic_Mat::delayed_production()
   {
     for (int c=0; c<d_rp; c++)
     {
-	  double value = 0;
+      double value = 0;
       for (int n=0; n<num_cells; n++)
       {
         for (int i=0; i<d_number_precursor_groups; i++)
@@ -92,9 +89,9 @@ SP_matrix Kinetic_Mat::delayed_production()
           value += (*d_basis_f)(n, r)*d_mat->lambda(i)*(*d_basis_p)((i*num_cells+n), c);
           D->insert(r, c, value);
        }
-      }
-    }
-  }
+     }
+   }
+ }
  return D;
 }
 
@@ -125,6 +122,5 @@ SP_matrix Kinetic_Mat::precursors_production()
       }
     }
   }
-  F->print_matlab("mat3.txt");
   return F;
 }
