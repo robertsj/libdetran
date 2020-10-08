@@ -57,7 +57,12 @@ TransientSolver::TransientSolver(SP_input inp, SP_mesh mesh, SP_material materia
 
   d_sol0_r = new callow::Vector(d_rf + d_rc, 0.0);
 
-  d_solver = LinearSolverCreator::Create(d_inp);
+  if (d_inp->check("rom_solver_db"))
+  {
+    db = d_inp->template get<SP_input>("rom_solver_db");
+  }
+
+  d_solver = LinearSolverCreator::Create(db);
 }
 
 //------------------------------------------------------------------------------------//
@@ -292,7 +297,8 @@ void TransientSolver::Solve(SP_state initial_state)
         if (i == j) (*d_A_)(i, j) += 1;
       }
    }
-   d_solver->set_operators(d_A_);
+
+   d_solver->set_operators(d_A_, db);
    d_solver->solve(*d_sol0_r, *d_sol_r);
 
    // store this state in the solution matrix
