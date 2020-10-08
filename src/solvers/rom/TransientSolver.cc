@@ -317,51 +317,33 @@ void TransientSolver::Solve(SP_state initial_state)
 
 void TransientSolver::reconstruct()
 {
-  // unpack the flux and the precursors
-  d_flux_r = new callow::MatrixDense(d_rf, d_number_steps);
-
-  d_precursors_r = new callow::MatrixDense(d_rc, d_number_steps);
-
-  for (int i=0; i<d_number_steps; i++)
-  {
-    for (int f=0; f< d_rf; f++)
-    {
-      (*d_flux_r)(f, i) = (*d_sols)(f, i);
-    }
-
-   for (int p=0; p<d_rc; p++)
-   {
-     (*d_precursors_r)(p, i) = (*d_sols)(p + d_rf, i);
-   }
-  }
-
-  // reconstruct flux
   callow::Vector phi(d_number_groups*d_num_cells, 0.0);
   callow::Vector C(d_precursors_group*d_num_cells, 0.0);
 
   callow::Vector v1(d_rf, 0.0);
   callow::Vector v2(d_rc, 0.0);
+
   for (int i=0; i<d_number_steps; i++)
   {
-    for (int j=0; j<d_rf; j++)
+    for (int f=0; f< d_rf; f++)
     {
-      v1[j] = (*d_flux_r)(j, i);
+      v1[f] = (*d_sols)(f, i);
     }
     d_flux_basis->multiply(v1, phi);
 
-    for (int j=0; j<d_rc; j++)
+    for (int p=0; p<d_rc; p++)
     {
-      v2[j] = (*d_precursors_r)(j, i);
+      v2[p] = (*d_sols)(p + d_rf, i);
     }
-    d_precursors_basis->multiply(v2, C);
 
+    d_precursors_basis->multiply(v2, C);
     double *phi_ = &phi[0];
     double *C_ = &C[0];
 
     d_flux->insert_col(i+1, phi_, 0);
     d_precursors->insert_col(i+1, C_, 0);
- }
-
+  }
+  // temporary ... need to have getter for flux, etc
   d_flux->print_matlab("flux.txt");
 }
 
