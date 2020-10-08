@@ -99,6 +99,8 @@ private:
   SP_mesh d_mesh;
   /// Input
   SP_input d_inp;
+  /// Solver setting
+  SP_input db;
   /// Material
   SP_material d_material;
   /// Flux basis

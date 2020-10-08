@@ -233,6 +233,7 @@ InputDB::SP_input get_input()
   inp->put<InputDB::SP_input>("inner_solver_db",        db);
   inp->put<InputDB::SP_input>("outer_solver_db",        db);
   inp->put<InputDB::SP_input>("eigen_solver_db",        db);
+  inp->put<InputDB::SP_input>("rom_solver_db",          db);
   inp->put<int>("compute_boundary_flux",                1);
   inp->put<int>("linear_solver_maxit",   1000);
   inp->put<int>("linear_solver_monitor_level", 0);
