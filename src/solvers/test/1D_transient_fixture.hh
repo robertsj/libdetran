@@ -1,6 +1,6 @@
 /**
  *  @file   test_1D_transient.cc
- *  @author Ruby
+ *  @author Rabab Elzohery
  *  @date   March 16, 2020
  *  @brief  1D slab transient
  */
