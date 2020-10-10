@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
  *     exp(x^2)*sin(x)  ( 0, 1)    0.77874516052672400466
  */
 int number_tests = 4;
-double ref[]   = {1.0, 1.0, 0.25, 0.77874516052672400466};
+double ref_val[]   = {1.0, 1.0, 0.25, 0.77874516052672400466};
 double lower[] = {-1.0,-1.0, 0.0, 0.0};
 double upper[] = { 1.0, 1.0, 1.0, 1.0};
 double integrand(const double x, const int id)
@@ -78,12 +78,12 @@ int test_BaseQuadrature_regression(int argc, char *argv[])
       Q = QuadratureFactory::build_base(types[i], 8, lower[j], upper[j]);
       for (int k = 0; k < Q->size(); ++k)
         val[i][j] += Q->get_w()[k] * integrand(Q->get_x()[k], j);
-      err[i][j] = val[i][j] - ref[j];
+      err[i][j] = val[i][j] - ref_val[j];
 //      std::cout << "  value = " << val[i][j]
 //                << "  error = " << err[i][j]
 //                << "  sum w = " << vec_sum(Q->get_w()) << std::endl;
       std::printf(" %4i %16.13f  %16.13f  %16.13f  %16.13f \n",
-                   j, ref[j], val[i][j], err[i][j], vec_sum(Q->get_w()));
+                   j, ref_val[j], val[i][j], err[i][j], vec_sum(Q->get_w()));
     }
   }
 
@@ -129,8 +129,3 @@ int test_BaseQuadrature_Uniform(int argc, char *argv[])
   Q->display();
   return 0;
 }
-
-
-//----------------------------------------------------------------------------//
-//              end of test_GaussLegendre.cc
-//----------------------------------------------------------------------------//
