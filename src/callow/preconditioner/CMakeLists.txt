@@ -10,5 +10,3 @@ SET(PRECONDITIONER_SRC
 
 # Install
 INSTALL_FILES(/include/callow/preconditioner .hh)
-
-
