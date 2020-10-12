@@ -91,12 +91,12 @@ public:
   /// Solve Px = b
   void apply(Vector &b, Vector &x);
 
-protected:
+private:
 
   /// Number of levels on either side of diagonal
-  const size_t d_p;
+  size_t d_p;
   /// Threshold for keeping an element of ILU
-  const double d_t;
+  double d_t;
   /// ILU decomposition of A
   SP_matrixfull d_P;
   /// Working vector

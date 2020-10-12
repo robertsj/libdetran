@@ -15,6 +15,42 @@
 namespace callow
 {
 
+  bool drop_t(SparseRow  &r, int idx, double t)
+  {
+    if (std::abs(r[idx]) < 0)
+    {
+      r.delete_value(idx);
+      return false;
+    }
+    return true;
+  }
+
+  bool drop_p(SparseRow  &r, int d, int p, double t)
+  {
+    // first drop small values
+    for (int idx = 0; idx < r.number_nonzeros(); ++idx)
+    {
+      drop_t(r, idx, t);
+    }
+    // then keep the p largest on either side of d
+    int cL = 0;
+    int idx_d = 0;
+    for (int idx = 0; idx < r.number_nonzeros(); ++idx)
+    {
+      int j = r.elements()[idx].first;
+      if (j == d)
+        idx_d = idx;
+      else if (j < d)
+        cL++;
+    }
+    int cU = r.number_nonzeros() - 1 - cL;
+    Ensure(cU >= 0);
+    // Now need to find p largest among cU and p largest among
+    auto q = r;
+    std::sort(q.range(0, d).first, q.range(0, d).second, SparseRow::compare);
+
+    return true;
+  }
 
 //----------------------------------------------------------------------------//
 PCILUT::PCILUT(SP_matrix A, const size_t p, const double t)
@@ -26,6 +62,9 @@ PCILUT::PCILUT(SP_matrix A, const size_t p, const double t)
   Require(A->number_rows() == A->number_columns());
   Insist(dynamic_cast<Matrix*>(A.bp()),
     "Need an explicit matrix for use with PCILUT");
+  if (d_p == 0)
+    d_p = A->number_rows();
+
   SP_matrixfull B(A);
 
   d_size = A->number_columns();
@@ -59,43 +98,6 @@ PCILUT::PCILUT(SP_matrix A, const size_t p, const double t)
     *    end i
     */
 
-  bool drop_t(SparseRow  &r, int idx, double t)
-  {
-    if (std::abs(r[idx]) < 0)
-    {
-      r.delete(idx);
-      return false;
-    }
-    return true;
-  }
-
-  bool drop_p(SparseRow  &r, int d, int p, double t)
-  {
-    // first drop small values
-    for (int idx = 0; idx < r.number_nonzeros(); ++idx)
-    {
-      drop_t(r, idx, t);
-    }
-    // then keep the p largest on either side of d
-    int cL = 0;
-    int idx_d = 0;
-    for (int idx = 0; idx < r.number_nonzeros(); ++idx)
-    {
-      int j = r.indices()[idx];
-      if (j == d)
-        idx_d = idx;
-      else if (j < d)
-        cL++;
-    }
-    int cU = r.number_nonzeros() - 1 - cL;
-    Ensure(cU >= 0);
-    // Now need to find p largest among cU and p largest among
-    auto indices = r.indices();
-    std::sort(indices.begin())
-
-    return true;
-  }
-
   // P = L + U
   bool keep;
   for (int i = 0; i < n; ++i)
@@ -106,13 +108,12 @@ PCILUT::PCILUT(SP_matrix A, const size_t p, const double t)
       int p = row.find(k);
       if (p < 0)
         continue;
-
-      double dv = ((*d_P)[d_P->diagonal(i)]);
-      if (dv == 0)
+      double diag_val = ((*d_P)[d_P->diagonal(i)]);
+      if (diag_val == 0)
       {
         THROW("ZERO PIVOT IN ILUT");
       }
-      row[p] /= dv;
+      row[p] /= diag_val;
       keep = drop_t(row, p, d_t);
       if (!keep)
         continue;
@@ -123,11 +124,6 @@ PCILUT::PCILUT(SP_matrix A, const size_t p, const double t)
 
   }
 
-  delete [] iw;
-
-  // size the working vector
-  d_y.resize(d_P->number_rows(), 0.0);
-
 }
 
 //----------------------------------------------------------------------------//
@@ -137,6 +133,13 @@ PCILUT::Create(SP_matrix A, const size_t p, const double t)
   SP_preconditioner pc(new PCILUT(A, p, t));
   return pc;
 }
+
+//----------------------------------------------------------------------------//
+void PCILUT::apply(Vector &b, Vector &x)
+{
+  //
+}
+
 
 } // end namespace callow
 

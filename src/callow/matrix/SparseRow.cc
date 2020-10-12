@@ -26,7 +26,6 @@ SparseRow::SparseRow(const int n)
 SparseRow::SparseRow(const SparseRow& row)
   : d_n(row.size())
   , d_elements(row.elements())
-  , d_ready(true)
 {
   /* ... */
 }
@@ -35,7 +34,6 @@ SparseRow::SparseRow(const SparseRow& row)
 SparseRow::SparseRow(const Matrix &A, const int i)
   : d_n(A.number_rows())
   , d_elements(A.end(i)-A.start(i))
-  , d_ready(true)
 {
   Require(i >= 0);
   Require(i < A.number_rows());
@@ -52,7 +50,6 @@ SparseRow::SparseRow(const Matrix &A, const int i)
 //----------------------------------------------------------------------------//
 SparseRow::SparseRow(const double *a, const int n)
   : d_n(n)
-  , d_ready(true)
 {
   Require(d_n >= 0);
 
@@ -135,7 +132,6 @@ bool SparseRow::insert(int a, int b, const SparseRow &r, double v, const int t)
 //----------------------------------------------------------------------------//
 bool SparseRow::update(const double threshold)
 {
-  d_ready = true;
   return true;
 }
 
@@ -202,6 +198,26 @@ double& SparseRow::operator[](const int i)
 {
   return const_cast<double&>((*this)[i]);
 }
+
+/**
+//----------------------------------------------------------------------------//
+SparseRow SparseRow::operator()(const int low, const int high)
+{
+  auto _begin = begin();
+  for (; _begin < end(); ++_begin)
+  {
+    if (_begin->first >= low)  // insertions are before, so we want next one
+      break;
+  }
+  auto _end = _begin+1;
+  for (; _end < end(); ++_end)
+  {
+    if (_end->first >= high) // next one or end
+      break;
+  }
+  return range_t(_begin, _end);
+}
+*/
 
 //----------------------------------------------------------------------------//
 int SparseRow::find(const int i) const

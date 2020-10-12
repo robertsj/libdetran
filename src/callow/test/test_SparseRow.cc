@@ -44,6 +44,16 @@ int test_SparseRow(int argc, char *argv[])
   double d =  0.50;
   double u = -0.21;
 
+  /**
+  {
+    // can we make a new vector from an iterator of another by reference?
+    std::vector<int> v(5);
+    for (int i = 0; i < 5; ++i)
+      v[i] = i+1;
+    auto it = v.begin()+2;
+    std::vector<int> &y = *it;
+  }
+  */
 
   {
     SparseRow::element_t element(1, 2.0);

@@ -13,7 +13,6 @@
 #include <vector>
 #include <string>
 #include <utility>
-
 #include "Matrix.hh"
 
 namespace callow
@@ -21,9 +20,10 @@ namespace callow
 
 /**
  *  @class SparseRow
- *  @brief Single, sparse vector
+ *  @brief Single, sparse row vector.
  *
- *  This is a helper class for ILUT.
+ *  This is a helper class for ILUT, but it's becoming a tutorial
+ *  for some C++ 11+ features.
  */
 class CALLOW_EXPORT SparseRow
 {
@@ -36,8 +36,9 @@ public:
   };
 
   typedef std::pair<int, double> element_t;
-  typedef std::vector<element_t>::iterator iterator;
-  typedef std::vector<element_t>::const_iterator citerator;
+  typedef std::vector<element_t> vec_element_t;
+  typedef vec_element_t::iterator iterator;
+  typedef vec_element_t::const_iterator citerator;
   typedef std::pair<iterator, iterator> range_t;
   typedef std::pair<citerator, citerator> crange_t;
 
@@ -97,11 +98,14 @@ public:
 
   bool verify();
 
-  bool operator()(int i, int j)
-  {
-    return (d_elements[i].second < d_elements[j].second);
-  }
+  // Return a view with column values that are in [low, high]
+ // SparseRow operator()(const int low, const int high);
 
+
+  static bool compare(const element_t& e0, const element_t& e1)
+  {
+    return e0.second < e1.second;
+  }
 
   iterator begin() { return d_elements.begin(); }
   citerator cbegin() const { return d_elements.cbegin(); }
@@ -112,6 +116,9 @@ public:
   range_t range(const int a, const int b);
   crange_t range(const int a, const int b) const;
 
+
+  /// Delete elements
+
 private:
 
   //--------------------------------------------------------------------------//
@@ -121,11 +128,7 @@ private:
   /// Logical size
   int d_n;
   /// Non zero locations
-  std::vector<element_t> d_elements;
-  /// Have I been updated since my last insertion?
-  bool d_ready;
-
-
+  vec_element_t d_elements;
 
 };
 
