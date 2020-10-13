@@ -46,6 +46,8 @@ int test_ROM_diffusion(int argc, char *argv[])
  Material::SP_material mat = get_mat();
  InputDB::SP_input input = get_input();
  input->put<std::string>("operator", "diffusion");
+ input->put<std::string>("equation", "diffusion");
+ input->display();
 
  int n = mesh->number_cells();
  int r = 5;
@@ -91,6 +93,7 @@ int test_ROM_diffusion(int argc, char *argv[])
    error2[i] = phi1_fom[i]/phi1_fom.norm() - phi1_rom[i]/phi1_rom.norm();
  }
 
+ printf(" keff_ref %10.5e  rom %10.5e\n", keff_fom, keff_rom);
  std::cout << "The error in group 1 is " << detran_utilities::norm(error1, "L2") << "\n";
  std::cout << "The error in group 2 is " << detran_utilities::norm(error2, "L2") << "\n";
  std::cout << "The absolute error in the eigenvalue  " << abs(keff_rom - keff_fom) << "\n";
@@ -106,6 +109,7 @@ int test_ROM_EnergyIndependent(int argc, char *argv[])
   Mesh1D::SP_mesh mesh = get_mesh(1, "core");
   Material::SP_material mat = get_mat();
   InputDB::SP_input input = get_input();
+  input->put<std::string>("equation", "dd");
   input->put<std::string>("operator", "energy-independent");
 
   ROMSolver<_1D> ROM(input, mesh, mat);
@@ -142,6 +146,9 @@ int test_ROM_EnergyIndependent(int argc, char *argv[])
     error[i] = fd_fom[i]/fd_fom.norm() - (*fd_rom)[i]/fd_rom->norm();
   }
 
+  printf(" keff_ref %10.5e  rom %10.5e\n", keff_fom, keff_rom);
+
+
   std::cout << "the error norm in the fission density =   " << error.norm()<<  "\n";
   std::cout << "The absolute error in the eigenvalue = " << abs(keff_rom - keff_fom) << "\n";
 
@@ -155,6 +162,10 @@ int test_ROM_EnergyDependent(int argc, char *argv[])
   Mesh1D::SP_mesh mesh = get_mesh(1, "core");
   Material::SP_material mat = get_mat();
   InputDB::SP_input input = get_input();
+
+
+  input->put<std::string>("equation", "dd");
+  input->put<std::string>("operator", "energy-dependent");
 
   int n = mesh->number_cells();
   int r = 7;
@@ -199,6 +210,9 @@ int test_ROM_EnergyDependent(int argc, char *argv[])
 
     error2[i] = phi1_fom[i]/phi1_fom.norm() - phi1_rom[i]/phi1_rom.norm();
   }
+
+  printf(" keff_ref %10.5e  rom %10.5e\n", keff_fom, keff_rom);
+
 
   std::cout << "The error in group 1 is " << detran_utilities::norm(error1, "L2") << "\n";
   std::cout << "The error in group 2 is " << detran_utilities::norm(error2, "L2") << "\n";

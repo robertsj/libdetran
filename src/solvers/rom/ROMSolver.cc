@@ -22,15 +22,19 @@ ROMSolver<D>::ROMSolver(SP_input inp, SP_mesh mesh, SP_material mat)
 
  // set the operator type
  d_operator = "EnergyDependent";
-
  if (d_input->check("operator"))
  {
    if (d_input->get<std::string>("operator") == "diffusion")
-   d_operator = "diffusion";
-
+      d_operator = "diffusion";
    else if (d_input->get<std::string>("operator") == "energy-independent")
-   d_operator = "EnergyIndependent";
+      d_operator = "EnergyIndependent";
+   else if (d_input->get<std::string>("operator") == "energy-dependent")
+      d_operator = "EnergyDependent";
+   else
+	  std::cout << "Bad choice.  Using default." << std::endl;
   }
+
+ std::cout << " operator is " << d_operator << std::endl;
 
  ROMSolver::Set_FullOperators();
 }
