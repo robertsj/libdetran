@@ -64,7 +64,7 @@ SparseRow::SparseRow(const double *a, const int n)
 }
 
 //----------------------------------------------------------------------------//
-bool SparseRow::verify()
+bool SparseRow::verify() const
 {
   for (int i = 1; i < d_elements.size(); ++i)
   {
@@ -73,7 +73,6 @@ bool SparseRow::verify()
   }
   return true;
 }
-
 
 //----------------------------------------------------------------------------//
 bool SparseRow::insert(int i, double v, const int type)
@@ -136,32 +135,9 @@ bool SparseRow::update(const double threshold)
 }
 
 //----------------------------------------------------------------------------//
-bool SparseRow::is_non_zero(int i) const
+void SparseRow::display(const std::string s) const
 {
-  Require(d_ready);
-  // for now, linear search
-
-}
-
-/*
-//----------------------------------------------------------------------------//
-const double& SparseRow::operator[](const int i) const
-{
-
-}
-
-//----------------------------------------------------------------------------//
-double& SparseRow::operator[](const int i)
-{
-
-}
-*/
-
-//----------------------------------------------------------------------------//
-void SparseRow::display() const
-{
-  Require(d_is_ready);
-  printf(" Sparse Row \n");
+  printf(" Sparse Row %s \n", s.c_str());
   printf(" ---------------------------\n");
   printf("             size = %5i \n",   d_n);
   printf("  number nonzeros = %5i \n",   number_nonzeros());
@@ -175,8 +151,6 @@ void SparseRow::display() const
   printf("\n");
 }
 
-
-
 //----------------------------------------------------------------------------//
 void SparseRow::clear()
 {
@@ -186,7 +160,7 @@ void SparseRow::clear()
 //----------------------------------------------------------------------------//
 const double& SparseRow::operator[](const int i) const
 {
-  Require(i > 0);
+  Require(i >= 0);
   Require(i < d_n);
   int p = find(i);
   Require(i >= 0);
@@ -196,7 +170,11 @@ const double& SparseRow::operator[](const int i) const
 //----------------------------------------------------------------------------//
 double& SparseRow::operator[](const int i)
 {
-  return const_cast<double&>((*this)[i]);
+  Require(i >= 0);
+  Require(i < d_n);
+  int p = find(i);
+  Require(i >= 0);
+  return d_elements[p].second;
 }
 
 /**
@@ -222,7 +200,7 @@ SparseRow SparseRow::operator()(const int low, const int high)
 //----------------------------------------------------------------------------//
 int SparseRow::find(const int i) const
 {
-  Require(i > 0);
+  Require(i >= 0);
   Require(i < d_n);
   for (int p = 0; p < number_nonzeros(); ++p)
   {

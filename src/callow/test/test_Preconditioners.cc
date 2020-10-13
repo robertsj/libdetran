@@ -65,10 +65,10 @@ int test_PCILU0(int argc, char *argv[])
 //----------------------------------------------------------------------------//
 int test_PCILUT(int argc, char *argv[])
 {
-  Matrix::SP_matrix A = test_matrix_1(5);
+  Matrix::SP_matrix A = test_matrix_2(5);
 
   PCILUT P(A);
-  //P.display("pc_ilu0.out");
+  P.display("pc_ilut.out");
 
   return 0;
 }

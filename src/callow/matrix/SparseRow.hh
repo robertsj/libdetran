@@ -14,6 +14,7 @@
 #include <string>
 #include <utility>
 #include "Matrix.hh"
+#include <iostream>
 
 namespace callow
 {
@@ -74,9 +75,6 @@ public:
   /// get logical size
   int size() const {return d_n;}
 
-  /// Check using binary search whether i is there.  Must keep it sorted.
-  bool is_non_zero(int i) const;
-
   /// Get location of index
   int find(const int i) const;
 
@@ -86,25 +84,32 @@ public:
 
   /// get all elements
   const std::vector<element_t>& elements() const {return d_elements;}
+  std::vector<element_t>& elements() {return d_elements;}
 
   /// number of nonzeros
   int number_nonzeros() const { return d_elements.size(); }
 
   /// pretty print
-  void display() const;
+  void display(const std::string s = "") const;
 
   // sparse set to zero
   void clear();
 
-  bool verify();
+  // Checks validity of row order
+  bool verify() const;
 
   // Return a view with column values that are in [low, high]
  // SparseRow operator()(const int low, const int high);
 
 
-  static bool compare(const element_t& e0, const element_t& e1)
+  static bool compare_v(const element_t& e0, const element_t& e1)
   {
-    return e0.second < e1.second;
+    return std::abs(e0.second) > std::abs(e1.second);
+  }
+
+  static bool compare_c(const element_t& e0, const element_t& e1)
+  {
+    return   e0.first < e1.first;
   }
 
   iterator begin() { return d_elements.begin(); }

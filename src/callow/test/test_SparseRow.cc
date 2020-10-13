@@ -16,12 +16,14 @@
 #include "matrix/SparseRow.hh"
 #include "utils/Initialization.hh"
 #include <iostream>
+#include <algorithm>
 
 using namespace callow;
 using namespace detran_test;
 using detran_utilities::soft_equiv;
 using std::cout;
 using std::endl;
+
 
 int main(int argc, char *argv[])
 {
@@ -60,6 +62,24 @@ int test_SparseRow(int argc, char *argv[])
     TEST(element.first == 1);
     TEST(element.second == 2.0);
   }
+
+  {
+	//              0  1  2  3  4  5  6  7  8
+    double a[10] = {1, 0, 3, 0, 2, 0, 6, 4, 5, };
+    SparseRow row(a, 10);
+    SparseRow row2 = row;
+    row.display("before");
+    std::sort(row.begin(), row.end(), SparseRow::compare);
+    row.display("after");
+
+    row2.display("before 2");
+    std::sort(row2.range(0, 5).first, row2.range(0, 5).second, SparseRow::compare);
+    row2.display("after 2");
+
+  }
+
+  callow_finalize();
+  return 0;
 
   {
     // test row from sparse matrix and copy
