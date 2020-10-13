@@ -58,7 +58,6 @@ void OperatorProjection::Project(SP_matrixDense Ar)
   double *y_ = &y2[0];
   Ar->insert_col(i, y_, 0);
  }
-}
-
 } // end namespace detran
 
+} // end namespace detran
