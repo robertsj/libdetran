@@ -46,17 +46,6 @@ int test_SparseRow(int argc, char *argv[])
   double d =  0.50;
   double u = -0.21;
 
-  /**
-  {
-    // can we make a new vector from an iterator of another by reference?
-    std::vector<int> v(5);
-    for (int i = 0; i < 5; ++i)
-      v[i] = i+1;
-    auto it = v.begin()+2;
-    std::vector<int> &y = *it;
-  }
-  */
-
   {
     SparseRow::element_t element(1, 2.0);
     TEST(element.first == 1);
@@ -68,18 +57,16 @@ int test_SparseRow(int argc, char *argv[])
     double a[10] = {1, 0, 3, 0, 2, 0, 6, 4, 5, };
     SparseRow row(a, 10);
     SparseRow row2 = row;
-    row.display("before");
-    std::sort(row.begin(), row.end(), SparseRow::compare);
-    row.display("after");
-
-    row2.display("before 2");
-    std::sort(row2.range(0, 5).first, row2.range(0, 5).second, SparseRow::compare);
-    row2.display("after 2");
-
+    std::sort(row.begin(), row.end(), SparseRow::compare_v);
+    TEST(row.begin()->first == 6);
+    TEST((row.begin()+5)->first == 0);
+    TEST((row.begin()+5)->second == 1);
+    std::sort(row2.range(0, 5).first, row2.range(0, 5).second, SparseRow::compare_v);
+    TEST(row2.begin()->first == 2);
+    TEST((row2.begin()+5)->first == 8);
+    TEST((row2.begin()+5)->second == 5);
   }
 
-  callow_finalize();
-  return 0;
 
   {
     // test row from sparse matrix and copy
@@ -119,8 +106,8 @@ int test_SparseRow(int argc, char *argv[])
     wow.insert(3, 1.0, SparseRow::INSERT);
   }
 
-  // test row from array
   {
+	// test row from array
     double arr0[n] = {1, 0, 2, 0, 0};
     double arr1[n] = {0, 3, 4, 0, 5};
     SparseRow row0(arr0, n);
