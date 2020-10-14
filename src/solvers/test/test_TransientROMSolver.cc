@@ -106,6 +106,7 @@ int test_TransientSolver_rom(int argc, char *argv[])
   const char* precursors_basis = "./../../../source/src/solvers/test/rom_basis/1d_transient_precursors_basis_r=5";
 
   int r = 6;
+
   SP_matrix basis_f;
   basis_f = new callow::MatrixDense(42, 2*r);
   ROMBasis::GetBasis(flux_basis, basis_f);
