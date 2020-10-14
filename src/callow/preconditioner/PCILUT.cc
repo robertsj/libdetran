@@ -89,8 +89,6 @@ PCILUT::PCILUT(SP_matrix A, const size_t p, const double t)
   Require(A->number_rows() == A->number_columns());
   Insist(dynamic_cast<Matrix*>(A.bp()),
     "Need an explicit matrix for use with PCILUT");
-  if (d_p == 0)
-    d_p = A->number_rows();
 
   SP_matrixfull B(A);
 

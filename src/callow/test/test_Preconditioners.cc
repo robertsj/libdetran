@@ -7,10 +7,12 @@
 //----------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
-#define TEST_LIST            \
-        FUNC(test_PCJacobi)  \
-        FUNC(test_PCILU0)    \
-        FUNC(test_PCILUT)
+#define TEST_LIST              \
+        FUNC(test_PCJacobi)    \
+        FUNC(test_PCILU0)      \
+        FUNC(test_PCILUT_full) \
+        FUNC(test_PCILUT_P0)   \
+
 
 #include "TestDriver.hh"
 #include "preconditioner/PCJacobi.hh"
@@ -63,9 +65,8 @@ int test_PCILU0(int argc, char *argv[])
 
 
 //----------------------------------------------------------------------------//
-int test_PCILUT(int argc, char *argv[])
+int test_PCILUT_full(int argc, char *argv[])
 {
-
 
   {
 	// small 2-d diffusion matrix.  By default, ILUT should
@@ -113,6 +114,38 @@ int test_PCILUT(int argc, char *argv[])
     	TEST(soft_equiv(got[i], expect[i]));
     }
 
+  }
+
+  return 0;
+}
+
+//----------------------------------------------------------------------------//
+int test_PCILUT_P0(int argc, char *argv[])
+{
+
+  {
+	// small 2-d diffusion matrix.
+    Matrix::SP_matrix A = test_matrix_2(2);
+
+    // reference
+    const int expect_n = 8;
+    const double expect_v[expect_n] = {2.687837678598e-02,	2.793253411896e-02,
+			2.793253411896e-02, 2.898669145194e-02,
+			7.666353065191e-02, 7.692029478196e-02,
+			7.692029478196e-02, 7.717705891201e-02};
+
+    // ILUT(0, 0.0) should yield the diagonal matrix.
+    PCILUT P(A, 0, 0.0);
+    Matrix::SP_matrix M = P.matrix();
+    M->display();
+    int got_n = M->number_nonzeros();
+    double *got_v = M->values();
+
+    TEST(got_n == expect_n);
+    for (int i = 0; i < got_n; ++i)
+    {
+    	TEST(soft_equiv(got_v[i], expect_v[i]));
+    }
   }
 
   return 0;
