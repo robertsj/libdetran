@@ -121,10 +121,13 @@ bool SparseRow::insert(int a, int b, const SparseRow &r, double v, const int t)
   Require(r.verify());
   crange_t r_range = r.range(a, b);
   bool rval = true;
+  //printf("\n %i %i ", a, b);
   for (auto element = r_range.first; element < r_range.second; ++element)
   {
+	//printf(" (%4i, %9.3e)", element->first, element->second);
     rval = insert(element->first, element->second*v, t) || rval;
   }
+  //printf("\n");
   return true;
 }
 
@@ -137,6 +140,8 @@ bool SparseRow::update(const double threshold)
 //----------------------------------------------------------------------------//
 void SparseRow::display(const std::string s) const
 {
+
+/*
   printf(" Sparse Row %s \n", s.c_str());
   printf(" ---------------------------\n");
   printf("             size = %5i \n",   d_n);
@@ -148,7 +153,17 @@ void SparseRow::display(const std::string s) const
       double v = d_elements[p].second;
       printf(" %3i (%13.6e)\n", j, v);
   }
-  printf("\n");
+*/
+  printf("[");
+  for (int i = 0; i < d_n; ++i)
+  {
+	double v = 0.0;
+	int p = find(i);
+    if (p >= 0)
+      v = d_elements[p].second;
+	printf("%9.2e ", v);
+  }
+  printf("]\n");
 }
 
 //----------------------------------------------------------------------------//
@@ -221,12 +236,17 @@ void SparseRow::delete_value(const int p)
 //----------------------------------------------------------------------------//
 SparseRow::crange_t SparseRow::range(const int a, const int b) const
 {
+  Require(b >= a);
   auto _begin = cbegin();
   for (; _begin < cend(); ++_begin)
   {
+	if (_begin->first > b)
+	  return crange_t(cend(), cend());
     if (_begin->first >= a)  // insertions are before, so we want next one
       break;
   }
+  if (_begin == cend())
+    return crange_t(cend(), cend());
   auto _end = _begin+1;
   for (; _end < cend(); ++_end)
   {
@@ -239,17 +259,22 @@ SparseRow::crange_t SparseRow::range(const int a, const int b) const
 //----------------------------------------------------------------------------//
 SparseRow::range_t SparseRow::range(const int a, const int b)
 {
+  Require(b >= a);
   auto _begin = begin();
-  for (; _begin < cend(); ++_begin)
+  for (; _begin < end(); ++_begin)
   {
-    if (_begin->first >= a)  // insertions are before, so we want next one
-      break;
+	if (_begin->first > b)
+	  return range_t(end(), end());
+	if (_begin->first >= a)  // insertions are before, so we want next one
+	  break;
   }
+  if (_begin == cend())
+	return range_t(end(), end());
   auto _end = _begin+1;
-  for (; _end < cend(); ++_end)
+  for (; _end < end(); ++_end)
   {
-    if (_end->first > b) // next one or end
-      break;
+	if (_end->first >= b) // next one or end
+	  break;
   }
   return range_t(_begin, _end);
 }

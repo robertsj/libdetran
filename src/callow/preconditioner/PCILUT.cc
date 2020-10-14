@@ -15,6 +15,8 @@
 using std::cout;
 using std::endl;
 
+#define dbprint(s, i, k, row) printf("%s %i %i ",s, i, k); row.display("");
+
 namespace callow
 {
 
@@ -73,7 +75,6 @@ namespace callow
     }
     // sort q by column and copy to r
     std::sort(q.begin(), q.end(), SparseRow::compare_c);
-    //q.display("q");
     r = q;
     return true;
   }
@@ -99,8 +100,6 @@ PCILUT::PCILUT(SP_matrix A, const size_t p, const double t)
   int n = B->number_rows();
 
   std::vector<SparseRow> rows;
-  // P = L + U
-
   bool keep = false;
   for (int i = 0; i < n; ++i)
   {
@@ -109,26 +108,22 @@ PCILUT::PCILUT(SP_matrix A, const size_t p, const double t)
     {
       int p = row.find(k);
       if (p < 0)
+      {
         continue;
+      }
       SparseRow &row_U = rows[k];
       double diag_val = row_U.elements()[row_U.find(k)].second;
       Ensure(diag_val != 0);
-      row.display("row befor scale");
       row.elements()[p].second /= diag_val;
-      //keep = drop_t(row, p, d_t);
-      //if (!keep)
-      //  continue;
-      //
-      cout << "*************************************" << endl;
-      row.display("row");
-      row_U.display("P[k, :]");
-      row.insert(k+1, n, row_U, -row[k], SparseRow::ADD);
-      row.display("row");
-      cout << " i = " << i << "  k = " << k  << " diag = " << diag_val << endl;
-      cout << "*************************************" << endl;
+      keep = drop_t(row, p, d_t);
+      if (!keep)
+        continue;
+      dbprint("-->", i, k, row);
+      row.insert(k+1, n, row_U, -row.elements()[p].second, SparseRow::ADD);
+      dbprint("<--", i, k, row);
 
     } // end k
-    //keep = drop_p(row, i, d_p, d_t);
+    keep = drop_p(row, i, d_p, d_t);
     //row.display("final");
     rows.push_back(row);
   }
@@ -143,9 +138,6 @@ PCILUT::PCILUT(SP_matrix A, const size_t p, const double t)
 	}
   }
   d_P->assemble();
-
-
-  cout << "...FINISHED..." << endl;
 }
 
 //----------------------------------------------------------------------------//

@@ -84,7 +84,11 @@ public:
   /// Virtual destructor
   virtual ~PCILUT(){};
 
+  /// Print my matrix.
   virtual void display(const std::string &name);
+
+  /// Get my matrix.
+  SP_matrixfull matrix() {return d_P;}
 
   //--------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL PRECONDITIONERS MUST IMPLEMENT THIS
