@@ -102,10 +102,10 @@ int test_TransientSolver_rom(int argc, char *argv[])
   time_t begin, end;
   time(&begin);
 
-  const char* flux_basis = "/home/rabab/opt/detran/source/src/solvers/test/rom_basis/1d_transient_flux_basis_r=20";
-  const char* precursors_basis = "/home/rabab/opt/detran/source/src/solvers/test/rom_basis/1d_transient_precursors_basis_r=20";
+  const char* flux_basis = "./../../../source/src/solvers/test/rom_basis/1d_transient_flux_basis_r=5";
+  const char* precursors_basis = "./../../../source/src/solvers/test/rom_basis/1d_transient_precursors_basis_r=5";
 
-  int r = 20;
+  int r = 6;
   SP_matrix basis_f;
   basis_f = new callow::MatrixDense(42, 2*r);
   ROMBasis::GetBasis(flux_basis, basis_f);
