@@ -91,6 +91,7 @@ int test_PCILUT(int argc, char *argv[])
 
     PCILUT P(A);
     Matrix::SP_matrix M = P.matrix();
+
     int got_n = M->number_nonzeros();
     double *got_v = M->values();
 
@@ -100,6 +101,17 @@ int test_PCILUT(int argc, char *argv[])
     	TEST(soft_equiv(got_v[i], expect_v[i]));
     }
 
+    Vector given(M->number_columns(), 1.0);
+    Vector got(M->number_columns(), 0.0);
+    P.apply(given, got);
+    double expect[8] = {3.884339023513e+01, 3.737962161918e+01,
+    		            3.737962161918e+01, 3.601815957905e+01,
+    		            2.127328717126e+01, 2.089593865027e+01,
+						2.089593865027e+01, 2.054236209448e+01};
+    for (int i = 0; i < 8; ++i)
+    {
+    	TEST(soft_equiv(got[i], expect[i]));
+    }
 
   }
 

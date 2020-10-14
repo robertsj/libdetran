@@ -15,7 +15,7 @@
 using std::cout;
 using std::endl;
 
-#define dbprint(s, i, k, row) printf("%s %i %i ",s, i, k); row.display("");
+#define dbprint(s, i, k, row) void(0);//printf("%s %i %i ",s, i, k); row.display("");
 
 namespace callow
 {
@@ -158,7 +158,50 @@ void PCILUT::display(const std::string &name)
 //----------------------------------------------------------------------------//
 void PCILUT::apply(Vector &b, Vector &x)
 {
-  //
+	// solve LUx = x --> x = inv(U)*inv(L)*x
+
+	// forward substitution
+	//   for i = 0:m-1
+	//     x[i] = 1/L[i,i] * ( b[i] - sum(k=0:i-1, L[i,k]*y[k]) )
+	// but note that in our ILU(0) scheme, L is *unit* lower triangle,
+	// meaning L has ones on the diagonal (whereas U does not)
+	Vector y(b.size(), 0.0);
+
+	for (int i = 0; i < d_P->number_rows(); ++i)
+	{
+		// start index
+		int s = d_P->start(i);
+		// diagonal index
+		int d = d_P->diagonal(i);
+		// invert row
+		y[i] = b[i];
+		for (int p = s; p < d; ++p)
+		{
+			// column index
+			int c = d_P->column(p);
+			y[i] -= d_P->values()[p] * y[c];
+		}
+	}
+
+	// backward substitution
+	//   for i = m-1:0
+	//     y[i] = 1/U[i,i] * ( b[i] - sum(k=i+1:m-1, U[i,k]*y[k]) )
+	for (int i = d_P->number_rows() - 1; i >= 0; --i)
+	{
+		// diagonal index
+		int d = d_P->diagonal(i);
+		// end index
+		int e = d_P->end(i);
+		// invert row
+		x[i] = y[i];
+		for (int p = d+1; p < e; ++p)
+		{
+			// column index
+			int c = d_P->column(p);
+			x[i] -= d_P->values()[p] * x[c];
+		}
+		x[i] /= d_P->values()[d];
+	}
 }
 
 
