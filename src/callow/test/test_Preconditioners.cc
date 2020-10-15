@@ -12,6 +12,7 @@
         FUNC(test_PCILU0)      \
         FUNC(test_PCILUT_full) \
         FUNC(test_PCILUT_P0)   \
+		FUNC(test_performance)
 
 
 #include "TestDriver.hh"
@@ -21,6 +22,7 @@
 
 #include "matrix_fixture.hh"
 #include "matrix/Matrix.hh"
+#include "solver/GMRES.hh"
 #include "utils/Initialization.hh"
 #include <iostream>
 
@@ -149,6 +151,59 @@ int test_PCILUT_P0(int argc, char *argv[])
   }
 
   return 0;
+}
+
+//----------------------------------------------------------------------------//
+int test_performance(int argc, char *argv[])
+{
+	/*
+	 *  Test the performance of the difference built-in PC's with
+	 *  GMRES to ensure things "seem" right.
+	 */
+
+
+	Matrix::SP_matrix A = test_matrix_2(20);
+	Vector b(A->number_rows(), 1.0);
+	Vector x(A->number_rows(), 0.0);
+	GMRES solver(1e-12, 1e-12, 1000, 20);
+
+
+	solver.set_operators(A);
+
+	// No PC
+	solver.solve(b, x);
+
+	// PC ILUT(oo, 0)
+	{
+	x.set(0.0);
+	typedef detran_utilities::SP<PCILUT> SP_pc;
+	SP_pc P(new PCILUT(A, 10000, 0.0));
+	P->matrix()->print_matlab("ilutoo.out");
+	solver.set_preconditioner(P, 1);
+	solver.solve(b, x);
+	}
+
+	// PC ILUT(0, 0)
+	{
+	x.set(0.0);
+	typedef detran_utilities::SP<PCILUT> SP_pc;
+	SP_pc P(new PCILUT(A, 0, 0));
+	P->matrix()->print_matlab("ilut0.out");
+	solver.set_preconditioner(P, 1);
+	solver.solve(b, x);
+	}
+
+	// PC ILUT(10, 1e-3)
+	{
+	x.set(0.0);
+	typedef detran_utilities::SP<PCILUT> SP_pc;
+	SP_pc P(new PCILUT(A, 10, 1e-3));
+	P->matrix()->print_matlab("ilut2.out");
+	solver.set_preconditioner(P, 1);
+	solver.solve(b, x);
+	}
+
+	return 0;
 }
 
 //----------------------------------------------------------------------------//
