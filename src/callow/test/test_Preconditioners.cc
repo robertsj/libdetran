@@ -173,6 +173,15 @@ int test_performance(int argc, char *argv[])
 	// No PC
 	solver.solve(b, x);
 
+	// PC ILU0
+	{
+	x.set(0.0);
+	typedef detran_utilities::SP<PCILU0> SP_pc;
+	SP_pc P(new PCILU0(A));
+	solver.set_preconditioner(P, 1);
+	solver.solve(b, x);
+	}
+
 	// PC ILUT(oo, 0)
 	{
 	x.set(0.0);
