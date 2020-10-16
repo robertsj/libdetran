@@ -239,6 +239,7 @@ inline std::vector<T> range(const int a, const int b, bool inclusive = false)
   return v;
 }
 
+
 } // namespace detran_utilities
 
 #endif /* detran_utilities_MATHUTILITIES_HH_ */
