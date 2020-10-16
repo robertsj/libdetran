@@ -103,3 +103,18 @@ TARGET_LINK_LIBRARIES(test_TimeStepper   	solvers)
 ADD_EXECUTABLE(test_TWIGL                   test_TWIGL.cc)
 TARGET_LINK_LIBRARIES(test_TWIGL            solvers)
 #ADD_TEST(test_MGCMFD             		test_MGCMFD 0)
+
+
+ADD_EXECUTABLE(test_Basis          	test_Basis.cc)
+TARGET_LINK_LIBRARIES(test_Basis  	solvers)
+ADD_TEST(test_Basis             	test_Basis 0)
+
+ADD_EXECUTABLE(test_ProjectedOperator          	 test_ProjectedOperator.cc)
+TARGET_LINK_LIBRARIES(test_ProjectedOperator   	solvers)
+ADD_TEST(test_ProjectedOperator                  test_ProjectedOperator  0)
+
+ADD_EXECUTABLE(test_ROMSolver        	 test_ROMSolver.cc)
+TARGET_LINK_LIBRARIES(test_ROMSolver     solvers)
+ADD_TEST(test_ROM_diffusion               test_ROMSolver 0)
+ADD_TEST(test_ROM_EnergyIndependent       test_ROMSolver 1)
+ADD_TEST(test_ROM_EnergyDependent         test_ROMSolver 2)
