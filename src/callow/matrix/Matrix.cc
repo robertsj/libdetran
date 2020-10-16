@@ -9,6 +9,7 @@
 #include "Matrix.hh"
 #include "utils/Typedefs.hh"
 #include <iostream>
+#include <cstdio>
 
 namespace callow
 {
@@ -276,7 +277,7 @@ void Matrix::print_matlab(std::string filename) const
 {
   Require(d_is_ready);
   FILE * f;
-  f = fopen (filename.c_str(), "w");
+  f = fopen(filename.c_str(), "w");
   for (int i = 0; i < d_m; i++)
   {
     for (int p = d_rows[i]; p < d_rows[i + 1]; p++)

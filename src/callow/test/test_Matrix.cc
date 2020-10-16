@@ -9,7 +9,7 @@
 // LIST OF TEST FUNCTIONS
 #define TEST_LIST             \
         FUNC(test_Matrix)     \
-        FUNC(test_MatrixDiff) \
+        FUNC(test_MatrixDiff) 
 
 #include "TestDriver.hh"
 #include "matrix_fixture.hh"

@@ -134,6 +134,8 @@ public:
   int end(const int i) const ;
   /// column index from cardinal index
   int column(const int p) const;
+  /// value from cardinal
+  double value(const int p) const {return (*this)[p];}
 
   /// value at a cardinal index
   double operator[](const int p) const;
