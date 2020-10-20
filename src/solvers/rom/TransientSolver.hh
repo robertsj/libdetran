@@ -25,7 +25,7 @@
 #include "kinetics/SyntheticSource.hh"
 #include "utilities/Definitions.hh"
 #include "OperatorProjection.hh"
-#include "Kinetic_Mat.hh"
+#include "KineticMatrices.hh"
 
 
 using namespace detran;
