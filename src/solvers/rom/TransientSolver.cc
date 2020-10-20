@@ -124,7 +124,7 @@ void TransientSolver::ProjectInitial()
 void TransientSolver::Construct_Operator(double t, double dt)
 {
   // get the matrices
-  Kinetic_Mat K(d_inp, d_mesh, d_material, d_flux_basis, d_precursors_basis);
+  KineticMatrices K(d_inp, d_mesh, d_material, d_flux_basis, d_precursors_basis);
 
   d_precursors_decay = new callow::MatrixDense(d_rc, d_rc);
   d_precursors_decay = K.precursors_decay();
@@ -346,7 +346,3 @@ void TransientSolver::reconstruct()
   // temporary ... need to have getter for flux, etc
   d_flux->print_matlab("flux.txt");
 }
-
-
-
-
