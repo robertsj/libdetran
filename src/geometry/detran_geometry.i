@@ -88,6 +88,7 @@
 %template(AssemblySP) detran_utilities::SP<detran_geometry::Assembly>;
 %template(CoreSP)     detran_utilities::SP<detran_geometry::Core>;
 
+%template(PointSP)  detran_utilities::SP<detran_geometry::Point>;
 %template(SurfaceSP)  detran_utilities::SP<detran_geometry::Surface>;
 %template(RegionSP)   detran_utilities::SP<detran_geometry::Region>;
 %template(vec_region) std::vector<detran_utilities::SP<detran_geometry::Region> >;
