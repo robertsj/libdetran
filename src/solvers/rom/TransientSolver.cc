@@ -143,11 +143,16 @@ void TransientSolver::Construct_Operator(double t, double dt)
   d_G = G;
   //d_G = new DiffusionGainOperator(d_inp, d_material, d_mesh, false);
 
-  SP_matrix d_L_prime;
-  SP_matrix d_G_prime;
+ callow::Matrix::SP_matrix d_L_prime;
+ callow::Matrix::SP_matrix d_G_prime;
 
-  d_L_prime = new callow::MatrixDense(d_number_groups*d_num_cells, d_number_groups*d_num_cells);
-  d_G_prime = new callow::MatrixDense(d_number_groups*d_num_cells, d_number_groups*d_num_cells);
+  int m =d_number_groups*d_num_cells;
+
+  vec_int nnz_L(m, 1 + 2 * d_mesh->dimension() + d_number_groups);
+  d_L_prime = new callow::Matrix(d_number_groups*d_num_cells, d_number_groups*d_num_cells, nnz_L[0]);
+
+  vec_int nnz_G(m, d_number_groups);
+  d_G_prime = new callow::Matrix(d_number_groups*d_num_cells, d_number_groups*d_num_cells, nnz_G[0]);
 
   int * rows_L = d_L->rows();
   int* cols_L = d_L->columns();
@@ -189,11 +194,18 @@ void TransientSolver::Construct_Operator(double t, double dt)
     }
  }
 
+ d_L_prime->assemble();
+ d_G_prime->assemble();
+
   Projector.SetOperators(d_G_prime, d_flux_basis);
+
   Projector.Project(d_Gr);
+
 
   Projector.SetOperators(d_L_prime, d_flux_basis);
   Projector.Project(d_Lr);
+
+
 
   // this assumes that a basis set is generated for each flux group, so the velocity
   // is not collapsed.
