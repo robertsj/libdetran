@@ -299,7 +299,10 @@ void TransientSolver::Solve(SP_state initial_state)
     t += d_dt;
     d_material->update(t, d_dt, 1, false);
 
-    Refersh_Operator();
+    if (d_material->update_material)
+    {
+     Refersh_Operator();
+    }
 
     for (int i=0; i<n; i++)
     {

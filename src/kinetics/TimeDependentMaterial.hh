@@ -117,6 +117,9 @@ public:
               const size_t order,
               const bool flag = true);
 
+  /// flag to update materials, used by the ROM
+  bool update_material = true;
+
 protected:
 
   //-------------------------------------------------------------------------//
@@ -133,6 +136,7 @@ protected:
   size_t d_order;
   /// Eigenvalue (for scaling fission)
   double d_kcrit;
+
 
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL TIME DEPENDENT MATERIALS MUST IMPLEMENT THESE
