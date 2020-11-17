@@ -42,15 +42,11 @@ void OperatorProjection::Project(SP_matrixDense Ar)
   // compute AU
   Vector y(d_n, 0.0);
   Vector y2(d_r, 0.0);
-  MatrixDense AU(d_n, d_r, 0.0);
 
   Vector v(d_n);
   for (int i=0; i<d_r; i++)
   {
-   for (int j=0; j<d_n; j++)
-   {
-    v[j] = (*d_U)(j, i);
-   }
+   Vector v(d_n, &(*d_U)(0, i));
    // compute AU
   d_A->multiply(v, y);
   // compute UTAU
