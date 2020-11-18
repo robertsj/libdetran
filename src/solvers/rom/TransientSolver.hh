@@ -72,28 +72,18 @@ private:
   SP_matrix_Base d_L;
   /// operator
   SP_matrix d_A;
-
-  SP_matrix d_LF;
   SP_matrix d_Lr;
   SP_matrix d_Gr;
-  /// Reduced solution
-  SP_matrix d_sols;
   /// Flux solution matrix at all time steps
   SP_matrix d_flux;
   /// Precursors solution matrix at all time steps
   SP_matrix d_precursors;
-  /// Reduced flux vector
-  SP_matrix d_flux_r;
-  /// Reduced precursors vector
-  SP_matrix d_precursors_r;
-
   /// Time step size
   double d_dt;
   /// Final time
   double  d_final_time;
   /// Number of time steps
   double d_number_steps;
-
   /// Mesh
   SP_mesh d_mesh;
   /// Input
@@ -106,27 +96,20 @@ private:
   SP_matrix d_flux_basis;
   /// Precursors basis
   SP_matrix d_precursors_basis;
-  /// Precursor vector in previous time step
-  SP_vector d_P0;
-  /// Flux vector in previous time step
-  SP_vector d_phi0;
-  /// Precursor vector in current time step
+  /// working vector of the full-order Precursors concentration
+  SP_vector d_P;
+  /// working vector of the full-order flux
   SP_vector d_phi;
   /// Current vector of the reduced flux and precursors
   SP_vector d_sol_r;
   /// Vector of the reduced flux and precursors at the previous time step
   SP_vector d_sol0_r;
-  /// The projected vector of the precursors
+  /// working vector of the reduced Precursors concentration
   SP_vector d_P_r;
-  /// The projected vector of the initial precursors
-  SP_vector d_P0_r;
-  /// The projected vector of the initial flux
-  SP_vector d_phi0_r;
-  /// The projected vector of the flux
+  /// working vector of the reduced flux
   SP_vector d_phi_r;
   ///
   SP_vector d_b;
-
   /// Number of cells
   int d_num_cells;
   /// number of energy groups
@@ -147,8 +130,6 @@ private:
   void Construct_Operator(double t, double dt);
   /// Update the operator 
   void Refersh_Operator();
-  /// Reconstruct the full order solution
-  void reconstruct();
 };
 
 #endif /* SOLVERS_ROM_TRANSIENTSOLVER_HH_ */
