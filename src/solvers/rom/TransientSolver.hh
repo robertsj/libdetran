@@ -56,10 +56,30 @@ public:
   void Solve(SP_state initial_state);
 
 private:
+  /// Mesh
+  SP_mesh d_mesh;
+  /// Input
+  SP_input d_inp;
+  /// Solver setting
+  SP_input db;
+  /// Material
+  SP_material d_material;
+  /// Number of cells
+  int d_num_cells;
+  /// number of energy groups
+  int d_number_groups;
+  /// Number of precursors group
+  int d_precursors_group ;
   /// State vector
   SP_state d_state;
   /// Fission source
   SP_fissionsource d_fissionsource;
+  /// Time step size
+  double d_dt;
+  /// Final time
+  double  d_final_time;
+  /// Number of time steps
+  double d_number_steps;
   /// Precursors production matrix
   SP_matrix d_precursors_production;
   /// Precursors decsy matrix
@@ -70,28 +90,16 @@ private:
   SP_matrix_Base d_G;
   /// Loss matrix
   SP_matrix_Base d_L;
-  /// operator
+  /// backward euler operator
   SP_matrix d_A;
+  /// projected loss matrix
   SP_matrix d_Lr;
+  /// projected gain matrix
   SP_matrix d_Gr;
   /// Flux solution matrix at all time steps
   SP_matrix d_flux;
   /// Precursors solution matrix at all time steps
   SP_matrix d_precursors;
-  /// Time step size
-  double d_dt;
-  /// Final time
-  double  d_final_time;
-  /// Number of time steps
-  double d_number_steps;
-  /// Mesh
-  SP_mesh d_mesh;
-  /// Input
-  SP_input d_inp;
-  /// Solver setting
-  SP_input db;
-  /// Material
-  SP_material d_material;
   /// Flux basis
   SP_matrix d_flux_basis;
   /// Precursors basis
@@ -100,22 +108,16 @@ private:
   SP_vector d_P;
   /// working vector of the full-order flux
   SP_vector d_phi;
-  /// Current vector of the reduced flux and precursors
-  SP_vector d_sol_r;
-  /// Vector of the reduced flux and precursors at the previous time step
-  SP_vector d_sol0_r;
   /// working vector of the reduced Precursors concentration
   SP_vector d_P_r;
   /// working vector of the reduced flux
   SP_vector d_phi_r;
-  ///
+  /// Current vector of the reduced flux and precursors
+  SP_vector d_sol_r;
+  /// Vector of the reduced flux and precursors at the previous time step
+  SP_vector d_sol0_r;
+  /// RHS of the linear solver
   SP_vector d_b;
-  /// Number of cells
-  int d_num_cells;
-  /// number of energy groups
-  int d_number_groups;
-  /// Number of precursors group
-  int d_precursors_group ;
   /// Flux rank
   int d_rf;
   /// Precursors rank
