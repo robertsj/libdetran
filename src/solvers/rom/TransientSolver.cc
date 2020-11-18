@@ -236,7 +236,7 @@ void TransientSolver::Construct_Operator(double t, double dt)
 
 //---------------------------------------------------------------------//
 
-void TransientSolver::Refersh_Operator()
+void TransientSolver::Refresh_Operator()
 {
   // if diffusion
   SP_lossoperator L(new DiffusionLossOperator(d_inp, d_material, d_mesh, false, 0.0, false, 1.0));

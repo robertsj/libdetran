@@ -131,7 +131,7 @@ private:
   /// Construct matrix
   void Construct_Operator(double t, double dt);
   /// Update the operator 
-  void Refersh_Operator();
+  void Refresh_Operator();
 };
 
 #endif /* SOLVERS_ROM_TRANSIENTSOLVER_HH_ */
