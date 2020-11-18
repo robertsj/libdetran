@@ -72,8 +72,7 @@ private:
   SP_matrix_Base d_L;
   /// operator
   SP_matrix d_A;
-  ///
-  SP_matrix d_A_;
+
   SP_matrix d_LF;
   SP_matrix d_Lr;
   SP_matrix d_Gr;

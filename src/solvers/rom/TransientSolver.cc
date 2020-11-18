@@ -47,7 +47,6 @@ TransientSolver::TransientSolver(SP_input inp, SP_mesh mesh, SP_material materia
   d_flux = new callow::MatrixDense(d_number_groups*d_num_cells, d_number_steps+1);
 
   d_A = new callow::MatrixDense(d_rf + d_rc, d_rf+d_rc);
-  d_A_ = new callow::MatrixDense(d_rf + d_rc, d_rf+d_rc);
 
   // long vector of flux and precursors
   d_sols = new callow::MatrixDense(d_rf + d_rc, d_number_steps+1);
@@ -216,12 +215,14 @@ void TransientSolver::Construct_Operator(double t, double dt)
     { // fill the upper left of A
       for (int j=0; j<d_rf; j++)
       {
-        (*d_A)(i + g*r, j) = ((*d_Lr)(i + g*r, j) + (*d_Gr)(i + g*r, j));
+        (*d_A)(i + g*r, j) = ((*d_Lr)(i + g*r, j) + (*d_Gr)(i + g*r, j))*-d_dt;
+         if (i + g*r == j) (*d_A)(i + g*r, j) += 1;
       }
       // fill the upper right
       for (int k =0; k<d_rc; k++)
       {
-        (*d_A)(i + g*r, k+d_rf) = (*d_delayed_production)(i+g*r, k)*d_material->velocity(g);
+        (*d_A)(i + g*r, k+d_rf) = (*d_delayed_production)(i+g*r, k)*d_material->velocity(g)*-d_dt;
+        if (i + g*r == k+d_rf) (*d_A)(i + g*r, k+d_rf) += 1;
       }
     }
   }
@@ -230,12 +231,14 @@ void TransientSolver::Construct_Operator(double t, double dt)
   {  // lower left
      for (int j=0; j<d_rf; j++)
      {
-        (*d_A)(d_rf+i, j) = (*d_precursors_production)(i, j);
+        (*d_A)(d_rf+i, j) = (*d_precursors_production)(i, j)*-d_dt;
+        if (d_rf+i == j) (*d_A)(d_rf+i, j) += 1;
      }
     // lower right
     for (int k=0; k<d_rc; k++)
     {
-      (*d_A)(d_rf+i, k+d_rf) = (*d_precursors_decay)(i, k);
+      (*d_A)(d_rf+i, k+d_rf) = (*d_precursors_decay)(i, k)*-d_dt;
+      if (d_rf+i == k+d_rf) (*d_A)(d_rf+i, k+d_rf) += 1;
     }
   }
  }
@@ -269,7 +272,8 @@ void TransientSolver::Refersh_Operator()
     {
       for (int j=0; j<d_rf; j++)
       {
-        (*d_A)(i + g*r, j) = (-(*d_Lr)(i + g*r, j)*d_material->velocity(g) + (*d_Gr)(i + g*r, j));
+        (*d_A)(i + g*r, j) = (-(*d_Lr)(i + g*r, j)*d_material->velocity(g) + (*d_Gr)(i + g*r, j))*-d_dt;
+        if (i + g*r == j) (*d_A)(i + g*r, j) += 1;
       }
     }
   }
@@ -304,16 +308,7 @@ void TransientSolver::Solve(SP_state initial_state)
      Refersh_Operator();
     }
 
-    for (int i=0; i<n; i++)
-    {
-      for (int j=0; j<n; j++)
-      {
-        (*d_A_)(i, j) = -(*d_A)(i, j)*d_dt;
-        if (i == j) (*d_A_)(i, j) += 1;
-      }
-   }
-
-   d_solver->set_operators(d_A_, db);
+   d_solver->set_operators(d_A, db);
    d_solver->solve(*d_sol0_r, *d_sol_r);
 
    // store this state in the solution matrix
