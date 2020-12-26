@@ -38,8 +38,8 @@ void TimeDependentMaterial::update(const double t,
   d_dt    = dt;
   d_order = order;
 
-  // Update the base materials.
-  update_impl();
+ // Update the base materials.
+ update_impl();
 
   // BDF coefficient
   Assert(order >= 1 && order <= 6);

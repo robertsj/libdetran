@@ -13,10 +13,13 @@ include_directories(wg)
 include_directories(mg)
 include_directories(eigen)
 include_directories(time)
+include_directories(rom)
 add_subdirectory(wg)
 add_subdirectory(mg)
 add_subdirectory(eigen)
 add_subdirectory(time)
+add_subdirectory(rom)
+
 set(SRC
     FixedSourceManager.cc
     EigenvalueManager.cc
@@ -26,6 +29,7 @@ set(SRC
     ${MG_SRC}
     ${WG_SRC}
     ${TIME_SRC}
+    ${ROM_SRC}
 )
 
 #-----------------------------------------------------------------------------#
