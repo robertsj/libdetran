@@ -118,3 +118,10 @@ TARGET_LINK_LIBRARIES(test_ROMSolver     solvers)
 ADD_TEST(test_ROM_diffusion               test_ROMSolver 0)
 ADD_TEST(test_ROM_EnergyIndependent       test_ROMSolver 1)
 ADD_TEST(test_ROM_EnergyDependent         test_ROMSolver 2)
+
+ADD_EXECUTABLE(test_SlabReactor       	 test_SlabReactorTransient.cc)
+TARGET_LINK_LIBRARIES(test_SlabReactor   solvers)
+ADD_TEST(test_SlabReactor                test_SlabReactor 0)
+
+
+
