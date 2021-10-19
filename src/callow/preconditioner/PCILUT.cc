@@ -2,7 +2,6 @@
 /**
  *  @file  PCILUT.cc
  *  @brief PCILUT member definitions
- *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
 //----------------------------------------------------------------------------//
 

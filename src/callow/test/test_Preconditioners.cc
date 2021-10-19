@@ -167,6 +167,7 @@ int test_performance(int argc, char *argv[])
 	Vector x(A->number_rows(), 0.0);
 	GMRES solver(1e-12, 1e-12, 1000, 20);
 
+	A->print_matlab("A_pc.out");
 
 	solver.set_operators(A);
 
@@ -178,6 +179,7 @@ int test_performance(int argc, char *argv[])
 	x.set(0.0);
 	typedef detran_utilities::SP<PCILU0> SP_pc;
 	SP_pc P(new PCILU0(A));
+	P->matrix()->print_matlab("ilu0.out");
 	solver.set_preconditioner(P, 1);
 	solver.solve(b, x);
 	}

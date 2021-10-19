@@ -64,6 +64,9 @@ public:
   /// Virtual destructor
   virtual ~PCILU0(){};
 
+  /// Get my matrix.
+  SP_matrixfull matrix() {return d_P;}
+
   //--------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL PRECONDITIONERS MUST IMPLEMENT THIS
   //--------------------------------------------------------------------------//
