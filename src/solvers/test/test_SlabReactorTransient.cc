@@ -9,7 +9,6 @@
     FUNC(test_SlabReactor)\
 
 #include "TestDriver.hh"
-#include "Mesh1D.hh"
 #include "callow/utils/Initialization.hh"
 #include "callow/vector/Vector.hh"
 #include "solvers/EigenvalueManager.hh"
@@ -43,7 +42,9 @@ int test_SlabReactor(int argc, char *argv[])
   InputDB::SP_input inp = get_input();
   Mesh1D::SP_mesh mesh = get_mesh(3);
 
-  TimeDependentMaterial::SP_material mat(new SlabMaterial('transport'));
+  bool transport = true;
+  TS_1D::SP_material mat(new SlabMaterial(mesh, transport, 1));
+
   // steady state
   EigenvalueManager<_1D> manager(inp, mat, mesh);
   manager.solve();
@@ -68,6 +69,13 @@ int test_SlabReactor(int argc, char *argv[])
 
   // transient
   TS_1D stepper(inp, mat, mesh, true);
+  detran_utilities::SP<SlabMaterial> mat_slab;
+  mat_slab = mat;
+
+  stepper.set_multiphysics(mat_slab->physics(),
+		                    update_T_rhs,
+                             (void *) mat_slab.bp());
+
   stepper.solve(ic);
 
 
