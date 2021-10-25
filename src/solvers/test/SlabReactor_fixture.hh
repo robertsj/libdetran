@@ -57,6 +57,8 @@ const double ALPHA   = 3.830e-11;
 const double KAPPA   = 3.204e-11;
 const double B = 0.001;
 
+//---------------------------------------------------------------------------//
+
 Mesh1D::SP_mesh get_mesh(Mesh1D::size_t fmm = 50)
 {
   Mesh1D::vec_dbl cm(8);
@@ -88,12 +90,14 @@ Mesh1D::SP_mesh get_mesh(Mesh1D::size_t fmm = 50)
   return mesh;
 }
 
+//---------------------------------------------------------------------------//
+
 InputDB::SP_input get_input()
 {
   InputDB::SP_input inp(new InputDB("1D slab"));
   inp->put<int>("dimension",                      1);
   inp->put<int>("number_groups",                  2);
-  inp->put<std::string>("equation",               "diffusion");
+  inp->put<std::string>("equation",               "dd");
   inp->put<std::string>("bc_west",                "vacuum");
   inp->put<std::string>("bc_east",                "vacuum");
   inp->put<int>("bc_zero_flux",                   0);
@@ -146,7 +150,8 @@ InputDB::SP_input get_input()
 return inp;
 }
 
-/// material class
+//---------------------------------------------------------------------------//
+
 class SlabMaterial: public TimeDependentMaterial
 {
   public:
@@ -400,7 +405,6 @@ class SlabMaterial: public TimeDependentMaterial
       if (t > 0.0)
         T[i] = ALPHA * F;
     }
-    cout << " T[0]=" << T[0] <<  " F=" << sigma_f(0, 0) * phi0[0] + sigma_f(0, 1) * phi1[0] << endl;
   }
 
 
@@ -451,8 +455,6 @@ void update_T_rhs(void* data,
     // cast data as LRA
     SlabMaterial* mat = (SlabMaterial*) data;
 
-    std::cout << mat->physics()->variable(0)[0] << " "
-              << step->multiphysics()->variable(0)[0] << std::endl;
     // update
     mat->update_P_and_T(t, dt);
   }
