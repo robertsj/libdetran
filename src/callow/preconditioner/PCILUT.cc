@@ -14,15 +14,15 @@
 using std::cout;
 using std::endl;
 
-#define dbprint(s, i, k, row) void(0);//printf("%s %i %i ",s, i, k); row.display("");
+#define dbprint(s, i, k, row) void; //printf("%s %i %i ",s, i, k); row.display("");
 
 namespace callow
 {
 
 
-  bool drop_t(SparseRow  &r, int idx, double t)
+  inline bool drop_t(SparseRow  &r, int idx, double t)
   {
-    if (std::abs(r[idx]) < 0.0)
+    if (std::abs(r[idx]) < t)
     {
       r.delete_value(idx);
       return false;
@@ -33,9 +33,12 @@ namespace callow
   bool drop_p(SparseRow  &r, int d, int p, double t)
   {
     // first drop small values
-    for (int idx = 0; idx < r.number_nonzeros(); ++idx)
+    if (t > 0.0)
     {
-      drop_t(r, idx, t);
+      for (int idx = 0; idx < r.number_nonzeros(); ++idx)
+      {
+        drop_t(r, idx, t);
+      }
     }
     // then keep the p largest on either side of d
     int cL = 0;
@@ -89,6 +92,9 @@ PCILUT::PCILUT(SP_matrix A, const size_t p, const double t)
   Insist(dynamic_cast<Matrix*>(A.bp()),
     "Need an explicit matrix for use with PCILUT");
 
+
+  //printf("***** PCILUT(%i, %6.2f)\n", d_p, d_t);
+
   SP_matrixfull B(A);
 
   d_size = A->number_columns();
@@ -112,6 +118,8 @@ PCILUT::PCILUT(SP_matrix A, const size_t p, const double t)
       double diag_val = row_U.elements()[row_U.find(k)].second;
       Ensure(diag_val != 0);
       row.elements()[p].second /= diag_val;
+      //keep = false;
+      //if (d_t > 0)
       keep = drop_t(row, p, d_t);
       if (!keep)
         continue;
@@ -132,9 +140,11 @@ PCILUT::PCILUT(SP_matrix A, const size_t p, const double t)
     for (auto it = rows[i].begin(); it < rows[i].end(); ++it)
     {
       d_P->insert(i, it->first, it->second);
-	}
+	  }
   }
   d_P->assemble();
+  printf("PCILUT...construction complete.\n");
+  // d_P->print_matlab("pcilut.out");
 }
 
 //----------------------------------------------------------------------------//

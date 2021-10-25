@@ -75,6 +75,8 @@ int test_PCILUT_full(int argc, char *argv[])
 	// provide the full LU decomposition.
     Matrix::SP_matrix A = test_matrix_2(2);
 
+       
+	   
     // reference
     const int expect_n = 38;
     const double expect_v[expect_n] = {  2.687837678598e-02,
@@ -92,8 +94,9 @@ int test_PCILUT_full(int argc, char *argv[])
     		 -5.559044320205e-01, -1.713016236837e-03, -1.713021280389e-03,
     		  7.717660747840e-02 };
 
-    PCILUT P(A);
+    PCILUT P(A, 1000, 0.0);
     Matrix::SP_matrix M = P.matrix();
+	M->print_matlab("ilu_oo.out");
 
     int got_n = M->number_nonzeros();
     double *got_v = M->values();
