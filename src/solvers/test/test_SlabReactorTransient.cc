@@ -28,6 +28,65 @@ using std::endl;
 
 
 
+InputDB::SP_input get_input()
+{
+  InputDB::SP_input inp(new InputDB("1D slab"));
+  inp->put<int>("dimension",                      1);
+  inp->put<int>("number_groups",                  2);
+  inp->put<std::string>("equation",               "dd");
+  inp->put<std::string>("bc_west",                "vacuum");
+  inp->put<std::string>("bc_east",                "vacuum");
+  inp->put<int>("bc_zero_flux",                   0);
+  inp->put<double>("ts_final_time",              60);
+  inp->put<double>("ts_step_size",                0.01);
+  inp->put<int>("ts_max_steps",                   10000);
+  inp->put<int>("ts_output",                      0);
+  inp->put<int>("ts_monitor_level",               1);
+  inp->put<int>("ts_no_extrapolation",            0);
+  inp->put<int>("ts_max_iters",             1000);
+  inp->put<double>("ts_tolerance",          1.0e-8);
+  inp->put<string>("eigen_solver",                "arnoldi");
+  inp->put<string>("outer_solver",                 "GMRES");
+  inp->put<int>("outer_krylov_group_cutoff",      0);
+  inp->put<double>("eigen_solver_tol", 1e-16);
+  inp->put<int>("eigen_solver_maxit",  1000);
+  inp->put<string>("inner_solver",          "SI");
+  inp->put<double>("outer_tolerance",       1e-14);
+  inp->put<double>("inner_tolerance",       1e-14);
+  inp->put<int>("inner_max_iters",          1e5);
+
+  inp->put<int>("inner_print_level",        0);
+  inp->put<int>("outer_print_level",        1);
+  // inner gmres parameters
+  InputDB::SP_input db(new InputDB("inner_solver_db"));
+  db->put<double>("linear_solver_atol",                 1e-16);
+  db->put<double>("linear_solver_rtol",                 1e-15);
+  db->put<string>("linear_solver_type",                 "gmres");
+  db->put<string>("pc_type",                            "petsc_pc");
+  db->put<string>("petsc_pc_type",                      "lu");
+  db->put<int>("linear_solver_maxit",                   2000);
+  db->put<int>("linear_solver_gmres_restart",           30);
+  db->put<int>("linear_solver_monitor_level",           0);
+  db->put<string>("eigen_solver_type",                  "slepc");
+  db->put<double>("eigen_solver_tol",                   1e-15);
+  inp->put<InputDB::SP_input>("inner_solver_db",        db);
+  inp->put<InputDB::SP_input>("outer_solver_db",        db);
+  inp->put<InputDB::SP_input>("eigen_solver_db",        db);
+  inp->put<InputDB::SP_input>("rom_solver_db",          db);
+  inp->put<int>("compute_boundary_flux",                1);
+  inp->put<int>("linear_solver_maxit",   1000);
+  inp->put<int>("linear_solver_monitor_level", 0);
+  inp->put<int>("linear_solver_monitor_diverge", 0);
+  if (inp->get<std::string>("equation") != "diffusion")
+  {
+    inp->put<int>("ts_discrete",              1);
+    inp->put<int>("store_angular_flux",       1);
+  }
+
+return inp;
+}
+
+
 int main(int argc, char *argv[])
 {
   callow_initialize(argc, argv);
