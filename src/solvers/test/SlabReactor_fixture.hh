@@ -35,8 +35,8 @@ using std::endl;
 
 
 
-// materials are reflector, fuel, control-1, control-2
-double xs_t[2][2] = {{0.222222,  0.666667}, {0.25641,  0.66667}};
+// materials are reflector, fuel, control-1(all in ), control-2 (all in)
+double xs_t[4][2] = {{0.222222,  0.666667}, {0.25641,  0.66667}, {0.25641, 0.71667}, {0.25641, 0.71667}};
 double xs_a[4][2] = {{0.0002, 0.01}, {0.0105, 0.1140}, {0.0105, 0.1640}, {0.0105, 0.1640}};
 double xs_f[4][2] = {{0.0, 0.0}, {0.0012, 0.076}, {0.0012, 0.076}, {0.0012, 0.076}};
 double xs_s[4][2][2] = {{{0.190022, 0.0},
@@ -230,19 +230,19 @@ class SlabMaterial: public TimeDependentMaterial
      // this is the one that moves
       else if (m == 2)
      {
-       set_sigma_t(i, 0, 0.256410);
+       set_sigma_t(i, 0, xs_t[m][0]);
        set_sigma_t(i, 1,  xt_perturbed(t));
      }
      // this one stays in this position
      else if (m == 3)
      {
-       set_sigma_t(i, 0, 0.256410);
+       set_sigma_t(i, 0, xs_t[m][0]);
        set_sigma_t(i, 1, compute_xs_t(0.25));
      }
 
      for (int p=0; p < 8; p++)
      {
-      set_chi_d(i, p, 0, 1);
+       set_chi_d(i, p, 0, 1);
      }
      compute_sigma_a();
     }
@@ -282,7 +282,7 @@ class SlabMaterial: public TimeDependentMaterial
       {
         sigma_t2 = xt_perturbed(t);
         set_sigma_t(i, 1, sigma_t2);
-        set_sigma_a(i, 1, sigma_t2-0.55267); //adjust the absorption XS
+        set_sigma_a(i, 1, sigma_t2-xs_s[3][1][1]); //adjust the absorption XS
       }
 
      // update the FAST cross section
@@ -329,7 +329,7 @@ class SlabMaterial: public TimeDependentMaterial
     // linear interpolation
     float xs_a = -(pos1 - pos)*(xs1 - xs2)/(pos1 - pos2) + xs1;
     // add scattering cross section to compute total
-    return xs_a + 0.55267;
+    return xs_a + xs_s[3][1][1];
   }
 
   //---------------------------------------------------------------------------//
