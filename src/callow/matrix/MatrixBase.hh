@@ -71,7 +71,7 @@ public:
   // compute and print the explicit operator (even if shell)
   virtual void compute_explicit(std::string filename = "matrix.out");
   // print output for reading into matlab
-  virtual void print_matlab(std::string filename = "matrix.out") const;
+  virtual void print_matlab(std::string filename = "matrix.out");
 
   //---------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL MATRICES MUST IMPLEMENT

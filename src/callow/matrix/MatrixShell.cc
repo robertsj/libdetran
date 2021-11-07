@@ -8,6 +8,7 @@
 //----------------------------------------------------------------------------//
 
 #include "MatrixShell.hh"
+#include "MatrixDense.hh"
 
 namespace callow
 {
@@ -51,6 +52,24 @@ void MatrixShell::set_size(const int m, const int n)
 #endif
   set_operation();
   d_is_ready = true;
+}
+
+//----------------------------------------------------------------------------//
+void MatrixShell::print_matlab(std::string filename)
+{
+  // Create new dense matrix of same size.
+  MatrixDense A(d_m, d_n);
+
+  for (int i = 0; i < d_n; ++i)
+  {
+    Vector e_i(d_n, 0.0);  e_i[i] = 1.0;
+    Vector A_i(d_m, &A[i*d_m]);
+    multiply(e_i, A_i);
+  }
+
+  // Print the result.
+  A.print_matlab(filename);
+  
 }
 
 //----------------------------------------------------------------------------//
