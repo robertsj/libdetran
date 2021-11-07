@@ -68,6 +68,8 @@ public:
   void multiply(const Vector &x,  Vector &y) = 0;
   // the client must implement the action y <-- A' * x
   void multiply_transpose(const Vector &x, Vector &y) = 0;
+  /// print (i, j, v) to ascii file with 1-based indexing for matlab
+  void print_matlab(std::string filename);
 
 protected:
 

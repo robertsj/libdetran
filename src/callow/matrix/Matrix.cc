@@ -273,7 +273,7 @@ void Matrix::display(bool forceprint) const
 }
 
 //----------------------------------------------------------------------------//
-void Matrix::print_matlab(std::string filename) const
+void Matrix::print_matlab(std::string filename)
 {
   Require(d_is_ready);
   FILE * f;

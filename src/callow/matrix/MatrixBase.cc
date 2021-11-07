@@ -69,7 +69,7 @@ PetscViewerDestroy(&viewer);
 }
 
 //----------------------------------------------------------------------------//
-void MatrixBase::print_matlab(std::string filename) const
+void MatrixBase::print_matlab(std::string filename)
 {
   /* ... */
 }

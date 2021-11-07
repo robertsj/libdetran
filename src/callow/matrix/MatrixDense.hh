@@ -83,7 +83,7 @@ public:
   double* values() {return d_values;}
 
   /// print (i, j, v) to ascii file with 1-based indexing for matlab
-  void print_matlab(std::string filename = "matrix.out") const;
+  void print_matlab(std::string filename = "matrix.out");
 
   //--------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL MATRICES MUST IMPLEMENT

@@ -7,8 +7,10 @@
 //----------------------------------------------------------------------------//
 
 // LIST OF TEST FUNCTIONS
-#define TEST_LIST              \
-        FUNC(test_MatrixShell)
+#define TEST_LIST                   \
+        FUNC(test_MatrixShell)      \
+        FUNC(test_MatrixShell_write)
+
 
 #include "TestDriver.hh"
 #include "matrix/MatrixShell.hh"
@@ -78,6 +80,20 @@ int test_MatrixShell(int argc, char *argv[])
       TEST(soft_equiv(X[i], ref2[i]));
     }
 
+  } // end n * n
+
+  return 0;
+}
+
+// Test matlab writer
+int test_MatrixShell_write(int argc, char *argv[])
+{
+  // n * n
+  {
+    // Create test matrix
+    int n = 5;
+    TestMatrixShell A(n);
+    A.print_matlab("shell_matlab.out");
   } // end n * n
 
   return 0;
