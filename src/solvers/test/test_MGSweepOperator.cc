@@ -61,12 +61,13 @@ int test_MGSweepOperator_1g(int argc, char *argv[])
   M.set_solver();
   MGS* solver = dynamic_cast<MGS*>(M.solver().bp());
   TEST(solver);
+  data.mesh->display();
   MGSweepOperator<_1D> S(M.state(),
                                M.boundary(),
                                solver->sweeper(),
                                solver->sweepsource(),
                                0, false);
-  S.compute_explicit("sweeper.out");
+  S.print_matlab("sweeper.out");
   return 0;
 }
 

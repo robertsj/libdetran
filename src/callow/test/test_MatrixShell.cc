@@ -88,12 +88,10 @@ int test_MatrixShell(int argc, char *argv[])
 // Test matlab writer
 int test_MatrixShell_write(int argc, char *argv[])
 {
-  // n * n
-  {
-    // Create test matrix
-    int n = 5;
-    TestMatrixShell A(n);
-    A.print_matlab("shell_matlab.out");
+  // Create test matrix
+  int n = 5;
+  TestMatrixShell A(n);
+  A.print_matlab("shell_matlab.out");
   } // end n * n
 
   return 0;

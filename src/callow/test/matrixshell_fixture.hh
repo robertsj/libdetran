@@ -38,6 +38,11 @@ public:
   {
     d_B->multiply_transpose(x, y);
   }
+  Matrix::SP_matrix get_matrix()
+  {
+    return d_B;
+  }
+  
 private:
   // Regular matrix.
   Matrix::SP_matrix d_B;
