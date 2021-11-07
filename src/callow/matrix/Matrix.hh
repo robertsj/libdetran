@@ -153,7 +153,7 @@ public:
   /// is memory allocated?
   bool allocated() const {return d_allocated;}
   /// print (i, j, v) to ascii file with 1-based indexing for matlab
-  void print_matlab(std::string filename = "matrix.out") const;
+  void print_matlab(std::string filename = "matrix.out");
 
   //--------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL MATRICES MUST IMPLEMENT

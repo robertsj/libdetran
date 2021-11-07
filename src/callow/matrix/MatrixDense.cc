@@ -107,7 +107,7 @@ void MatrixDense::display(bool forceprint) const
 }
 
 //----------------------------------------------------------------------------//
-void MatrixDense::print_matlab(std::string filename) const
+void MatrixDense::print_matlab(std::string filename)
 {
   Require(d_is_ready);
   FILE * f;
