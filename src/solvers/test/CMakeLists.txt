@@ -93,9 +93,9 @@ ADD_EXECUTABLE(test_MGSweepOperator          	test_MGSweepOperator.cc)
 TARGET_LINK_LIBRARIES(test_MGSweepOperator   	solvers)
 ADD_TEST(test_MGSweepOperator             		test_MGSweepOperator 0)
 
-ADD_EXECUTABLE(test_MGCMFD          	test_MGCMFD.cc)
-TARGET_LINK_LIBRARIES(test_MGCMFD   	solvers)
-ADD_TEST(test_MGCMFD             		test_MGCMFD 0)
+# ADD_EXECUTABLE(test_MGCMFD          	test_MGCMFD.cc)
+# TARGET_LINK_LIBRARIES(test_MGCMFD   	solvers)
+# ADD_TEST(test_MGCMFD             		test_MGCMFD 0)
 
 
 ADD_EXECUTABLE(test_TimeStepper          	test_TimeStepper.cc)

@@ -24,7 +24,7 @@ using namespace detran_test;
 using namespace detran;
 using namespace detran_utilities;
 using namespace detran_geometry;
-using namespace std;
+//using namespace std;
 using std::cout;
 using std::endl;
 #define COUT(c) std::cout << c << std::endl;
