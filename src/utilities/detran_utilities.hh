@@ -17,7 +17,6 @@
 #include "MathUtilities.hh"
 #include "Profiler.hh"
 #include "SoftEquivalence.hh"
-#include "SP.hh"
 #include "Timer.hh"
 #include "Warning.hh"
 

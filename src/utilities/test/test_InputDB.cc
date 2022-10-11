@@ -33,8 +33,7 @@ int main(int argc, char *argv[])
 
 int test_InputDB(int argc, char *argv[])
 {
- InputDB::SP_input db;
- db = new InputDB();
+ InputDB::SP_input db(new InputDB());
 
  // Check that when we insert, it shows up, and we can get it.
 
@@ -86,7 +85,7 @@ int test_InputDB(int argc, char *argv[])
  TEST(db->check("db2"));
  InputDB::SP_input db2check;
  db2check = db->get<InputDB::SP_input>("db2");
- TEST(db2check);
+ TEST(db2check != NULL);
  int testint = db2check->get<int>("testint");
  TEST(testint == 99);
  double testdbl = db2check->get<double>("testdbl");
