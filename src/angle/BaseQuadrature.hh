@@ -13,7 +13,7 @@
 #include "utilities/DBC.hh"
 #include "utilities/Definitions.hh"
 #include "utilities/MathUtilities.hh"
-#include "utilities/SP.hh"
+#include <memory>
 #include <cstdio>
 
 namespace detran_angle
@@ -32,7 +32,7 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<BaseQuadrature>    SP_basequadrature;
+  typedef std::shared_ptr<BaseQuadrature>         SP_basequadrature;
   typedef detran_utilities::vec_dbl               vec_dbl;
   typedef detran_utilities::size_t                size_t;
   typedef const double                            c_dbl;

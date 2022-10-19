@@ -13,7 +13,7 @@
 #include "Quadrature.hh"
 #include "MomentIndexer.hh"
 #include "utilities/Definitions.hh"
-#include "utilities/SP.hh"
+#include <memory>
 #include <vector>
 
 namespace detran_angle
@@ -107,7 +107,7 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<MomentToDiscrete>  SP_MtoD;
+  typedef std::shared_ptr<MomentToDiscrete>       SP_MtoD;
   typedef MomentIndexer::SP_momentindexer         SP_momentindexer;
   typedef Quadrature::SP_quadrature               SP_quadrature;
   typedef detran_utilities::size_t                size_t;

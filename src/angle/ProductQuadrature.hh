@@ -12,6 +12,7 @@
 #include "angle/Quadrature.hh"
 #include "angle/PolarQuadrature.hh"
 #include "angle/AzimuthalQuadrature.hh"
+#include <memory>
 
 namespace detran_angle
 {
@@ -64,8 +65,7 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<ProductQuadrature>   SP_quadrature;
-
+  typedef std::shared_ptr<ProductQuadrature>   SP_quadrature;
   struct index_t
   {
     size_t octant;
