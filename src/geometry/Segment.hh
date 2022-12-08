@@ -12,7 +12,7 @@
 #include "geometry/geometry_export.hh"
 #include "utilities/DBC.hh"
 #include "utilities/Definitions.hh"
-#include "utilities/SP.hh"
+#include <memory>
 #include <iomanip>
 #include <ostream>
 #include <vector>

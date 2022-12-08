@@ -167,7 +167,7 @@ void Assembly::finalize(vec_int pincell_map)
   }
 
   // Create my mesh.
-  d_mesh = new Mesh2D(edges, edges, ass_mat_map);
+  d_mesh  = std::make_shared<Mesh2D>(edges, edges, ass_mat_map);
   // Add maps.
   d_mesh->add_mesh_map("REGION", ass_reg_map);
   // Assigns unique edit region for each pin in an assembly.

@@ -85,7 +85,7 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<Matrix>  SP_matrix;
+  typedef std::shared_ptr<Matrix>	SP_matrix;
   typedef triplet                       triplet_T;
 
   //--------------------------------------------------------------------------//

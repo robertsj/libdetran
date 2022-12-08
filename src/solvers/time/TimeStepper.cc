@@ -54,8 +54,7 @@ TimeStepper<D>::TimeStepper(SP_input       input,
   // SETUP FIXED SOLVER
   //-------------------------------------------------------------------------//
 
-  d_solver = new Fixed_T(d_input, d_material, d_mesh, d_multiply);
-  d_solver->setup();
+  d_solver  = std::make_shared<Fixed_T>(d_input, d_material, d_mesh, d_multiply);  d_solver->setup();
 
   // Extract the quadrature, state, and fission.  This lets us fill the
   // state without necessarily building a separate solver.
@@ -81,14 +80,16 @@ TimeStepper<D>::TimeStepper(SP_input       input,
   {
     Insist(d_quadrature,
            "Can't do time stepping using psi without a quadrature");
-    d_syntheticsource = new SyntheticDiscreteSource(d_number_groups,
+    d_syntheticsource =
+          std::make_shared<SyntheticDiscreteSource>(d_number_groups,
                                                     d_mesh,
                                                     d_quadrature,
                                                     d_material);
   }
   else
   {
-    d_syntheticsource = new SyntheticMomentSource(d_number_groups,
+    d_syntheticsource = 
+          std::make_shared<SyntheticMomentSource>(d_number_groups,
                                                   d_mesh,
                                                   d_material);
   }
@@ -139,19 +140,21 @@ TimeStepper<D>::TimeStepper(SP_input       input,
   if (d_multiply) d_precursors.resize(d_order);
   for (int i = 0; i < d_order; ++i)
   {
-    d_states[i] = new State(d_input, d_mesh, d_quadrature);
+    d_states[i]  = std::make_shared<State>(d_input, d_mesh, d_quadrature);
     if (d_multiply)
     {
-      d_precursors[i] = new Precursors(d_material->number_precursor_groups(),
+      d_precursors[i] = std::make_shared<Precursors>(d_material->number_precursor_groups(),
                                        d_mesh->number_cells());
     }
   }
-  d_state_0 = new State(d_input, d_mesh, d_quadrature);
+  d_state_0  = std::make_shared<State>(d_input, d_mesh, d_quadrature);
   if (d_multiply)
   {
-    d_precursor   = new Precursors(d_material->number_precursor_groups(),
+    d_precursor   =
+     std::make_shared<Precursors>(d_material->number_precursor_groups(),
                                    d_mesh->number_cells());
-    d_precursor_0 = new Precursors(d_material->number_precursor_groups(),
+    d_precursor_0 = 
+    std::make_shared<Precursors>(d_material->number_precursor_groups(),
                                    d_mesh->number_cells());
   }
 
@@ -170,8 +173,7 @@ TimeStepper<D>::TimeStepper(SP_input       input,
   if (d_input->check("ts_output"))
   {
     d_do_output = d_input->template get<int>("ts_output");
-    if (d_do_output) d_silooutput = new detran_ioutils::SiloOutput(d_mesh);
-  }
+    if (d_do_output) d_silooutput  = std::make_shared<detran_ioutils::SiloOutput>(d_mesh);  }
 
 }
 
@@ -610,10 +612,10 @@ set_multiphysics(SP_multiphysics ic,
 
   // Create previous physics states
   d_vec_multiphysics.resize(d_order);
-  d_multiphysics_0 = new MultiPhysics(*ic);
+  d_multiphysics_0  = std::make_shared<MultiPhysics>(*ic);
   for (int i = 0; i < d_order; ++i)
   {
-    d_vec_multiphysics[i] = new MultiPhysics(*ic);
+    d_vec_multiphysics[i]  = std::make_shared<MultiPhysics>(*ic);
   }
   std::cout << d_vec_multiphysics[0]->variable(0)[0] << std::endl;
   std::cout << " ic T=" << d_multiphysics->variable(0)[0] << std::endl;

@@ -20,7 +20,7 @@ DDF::DDF(const Parameters &p)
    "It makes no sense to use DDF for incomplete expansions!");
 
  // Allocate the basis matrix and fill diagonal.
- d_basis = new callow::MatrixDense(d_size, d_size, 0.0);
+ d_basis  = std::make_shared<callow::MatrixDense>(d_size, d_size, 0.0);
  for (size_t i = 0; i < d_order + 1; ++i)
    (*d_basis)(i, i) = 1.0;
 }

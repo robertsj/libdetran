@@ -40,14 +40,14 @@ int test_DiscreteSource(int argc, char *argv[])
   vec_int fm(1, 2);
   vec_int mt(1, 0);
   Mesh::SP_mesh mesh(new Mesh2D(fm, fm, cm, cm, mt));
-  TEST(mesh);
+  TEST(mesh != NULL);
 
   // Create quadrature.
   Quadrature::SP_quadrature quad;
   QuadratureFactory qf;
   InputDB::SP_input db = InputDB::Create();
   quad = qf.build(db, 2);
-  TEST(quad);
+  TEST(quad != NULL);
 
   // Create spectra.
   DiscreteSource::size_t num_spectra = 2;

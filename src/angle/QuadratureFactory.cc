@@ -66,8 +66,6 @@ build(SP_input input, const int dimension)
     //------------------------------------------------------------------------//
 
     if      (quad_type == "gl")
-      //q = new PolarGL(np);
-      //q = SP_quadrature(new PolarGL(np));
       q = std::make_shared<PolarGL>(np);
     else if (quad_type == "dgl")
       q = std::make_shared<PolarDGL>(np);
@@ -147,7 +145,6 @@ build(SP_input input, const int dimension)
     else if (quad_type == "asqr-dgc")
       q = std::make_shared<Product_ASQR_DGC>(dimension, na, np);
     else if (quad_type == "asqr-tg")
-      //q = new Product_ASQR_ASDR(dimension, na, np);
       q = std::make_shared<Product_ASQR_ASDR>(dimension, na, np);
 
     //------------------------------------------------------------------------//

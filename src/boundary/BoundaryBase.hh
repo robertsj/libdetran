@@ -54,7 +54,7 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<BoundaryBase>        SP_boundary;
+  typedef std::shared_ptr<BoundaryBase>	            SP_boundary;
   typedef detran_utilities::InputDB::SP_input       SP_input;
   typedef detran_geometry::Mesh                     Mesh;
   typedef detran_geometry::Mesh::SP_mesh            SP_mesh;

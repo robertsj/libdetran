@@ -165,18 +165,18 @@ detran_geometry::Mesh::SP_mesh StupidParser::parse_mesh_text()
 
   if (dimension == 1)
   {
-    if (coarse)  d_mesh = new Mesh1D(xfm, xme, mesh_map);
-    if (!coarse) d_mesh = new Mesh1D(xme, mesh_map);
+    if (coarse)  d_mesh  = std::make_shared<Mesh1D>(xfm, xme, mesh_map);
+    if (!coarse) d_mesh  = std::make_shared<Mesh1D>(xme, mesh_map);
   }
   else if (dimension == 2 && coarse)
   {
-    if (coarse)  d_mesh = new Mesh2D(xfm, yfm, xme, yme, mesh_map);
-    if (!coarse) d_mesh = new Mesh2D(xme, yme, mesh_map);
+    if (coarse)  d_mesh  = std::make_shared<Mesh2D>(xfm, yfm, xme, yme, mesh_map);
+    if (!coarse) d_mesh  = std::make_shared<Mesh2D>(xme, yme, mesh_map);
   }
   else if (dimension == 3 && coarse)
   {
-    if (coarse)  d_mesh = new Mesh3D(yfm, zfm, zfm, xme, yme, zme, mesh_map);
-    if (!coarse) d_mesh = new Mesh3D(xme, yme, zme, mesh_map);
+    if (coarse)  d_mesh  = std::make_shared<Mesh3D>(yfm, zfm, zfm, xme, yme, zme, mesh_map);
+    if (!coarse) d_mesh  = std::make_shared<Mesh3D>(xme, yme, zme, mesh_map);
   }
   else
   {

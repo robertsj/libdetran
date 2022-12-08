@@ -36,7 +36,7 @@ public:
 
   typedef detran_external_source::ExternalSource            Base;
   typedef Base::SP_externalsource                           SP_base;
-  typedef detran_utilities::SP<TimeDependentExternalSource> SP_tdsource;
+  typedef std::shared_ptr<TimeDependentExternalSource>	SP_tdsource;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR

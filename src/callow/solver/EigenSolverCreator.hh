@@ -27,7 +27,7 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<EigenSolver>   SP_solver;
+  typedef std::shared_ptr<EigenSolver>	SP_solver;
   typedef detran_utilities::InputDB::SP_input SP_db;
 
   //-------------------------------------------------------------------------//

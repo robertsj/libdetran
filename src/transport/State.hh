@@ -16,7 +16,7 @@
 #include "geometry/Mesh.hh"
 #include "utilities/Definitions.hh"
 #include "utilities/InputDB.hh"
-#include "utilities/SP.hh"
+#include <memory>
 #include <vector>
 
 namespace detran
@@ -47,7 +47,7 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<State>                   SP_state;
+  typedef std::shared_ptr<State>	SP_state;
   typedef detran_utilities::InputDB::SP_input           SP_input;
   typedef detran_geometry::Mesh::SP_mesh                SP_mesh;
   typedef detran_angle::Quadrature::SP_quadrature       SP_quadrature;

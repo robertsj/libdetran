@@ -38,7 +38,7 @@ int test_Basis(int argc, char *argv[])
 {
 
 SP_matrix U;
-U = new callow::MatrixDense(20, 5);
+U  = std::make_shared<callow::MatrixDense>(20, 5);
 const char* fname= "/home/rabab/opt/detran/source/src/solvers/test/random_basis";
 ROMBasis::GetBasis(fname, U);
 

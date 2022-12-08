@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 class Foo
 {
 public:
-  typedef SP<Foo> SP_foo;
+  typedef std::shared_ptr<>	SP_Foo;
   // A REQUIRED typedef that tells the factory what the function type is
   typedef SP_foo (*CreateFunction)(int n);
   // A REQUIRED typedef that defines the factory

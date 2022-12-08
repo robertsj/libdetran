@@ -117,7 +117,7 @@ double EigenCMFD<D>::cmfd_update()
   // Create loss matrix
   if (!d_loss)
   {
-    d_loss = new CMFDLossOperator<D>(d_input,
+    d_loss = std::make_shared<CMFDLossOperator<D> >(d_input,
                                      cmat,
                                      solver->coarse_mesh(),
                                      solver->tally(),
@@ -133,7 +133,7 @@ double EigenCMFD<D>::cmfd_update()
   // Create gain matrix
   if (!d_gain)
   {
-    d_gain = new DiffusionGainOperator(d_input,
+    d_gain = std::make_shared<DiffusionGainOperator>(d_input,
                                        cmat,
                                        coarse_mesh,
                                        d_adjoint);

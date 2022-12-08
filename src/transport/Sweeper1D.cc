@@ -22,10 +22,10 @@ Sweeper1D<EQ>::Sweeper1D(SP_input input,
                          SP_material material,
                          SP_quadrature quadrature,
                          SP_state state,
-                         SP_boundary boundary,
+                         BoundaryBase<_1D>::SP_boundary boundary,
                          SP_sweepsource sweepsource)
   : Base(input, mesh, material, quadrature, state, boundary, sweepsource)
-  , d_boundary(boundary)
+  , d_boundary(std::dynamic_pointer_cast<Boundary_T>(boundary))
 {
     // Preconditions
     Require(d_boundary);
@@ -42,8 +42,8 @@ Sweeper1D<EQ>::Create(detran_utilities::InputDB::SP_input        input,
                       BoundaryBase<_1D>::SP_boundary             boundary,
                       SweepSource<_1D>::SP_sweepsource           sweepsource)
 {
-  SP_sweeper p(new Sweeper1D(input, mesh, material, quadrature,
-                             state, boundary, sweepsource));
+  auto p = std::make_shared<Sweeper1D<EQ> >(input, mesh, material, quadrature,
+                             state, boundary, sweepsource);
   return p;
 }
 

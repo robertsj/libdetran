@@ -20,7 +20,7 @@
 #include "material/Material.hh"
 #include "utilities/DBC.hh"
 #include "utilities/Definitions.hh"
-#include "utilities/SP.hh"
+#include <memory>
 #include <vector>
 
 namespace detran
@@ -79,7 +79,7 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<SweepSource>         SP_sweepsource;
+  typedef std::shared_ptr<SweepSource>	SP_sweepsource;
   typedef State::SP_state                           SP_state;
   typedef detran_utilities::InputDB::SP_input       SP_input;
   typedef detran_geometry::Mesh::SP_mesh            SP_mesh;

@@ -39,7 +39,7 @@ MGSolverCMFD<D>::MGSolverCMFD(SP_state                  state,
   , d_omega(1.0)
 {
   // Force use of source iteration
-  d_wg_solver = new WGSolverSI<D>(d_state, d_material, d_quadrature,
+  d_wg_solver = std::make_shared<WGSolverSI<D> >(d_state, d_material, d_quadrature,
                                   d_boundary, d_externalsources,
                                   d_fissionsource, d_multiply);
 
@@ -50,11 +50,11 @@ MGSolverCMFD<D>::MGSolverCMFD(SP_state                  state,
     level = d_input->template get<int>("mgpc_coarse_mesh_level");
     Assert(level > 0);
   }
-  d_coarsener = new CoarseMesh(d_mesh, level);
+  d_coarsener  = std::make_shared<CoarseMesh>(d_mesh, level);
   d_coarse_mesh = d_coarsener->get_coarse_mesh();
 
   // Create the current tally
-  d_tally = new CurrentTally<D>(d_coarsener, d_quadrature, d_number_groups);
+  d_tally  = std::make_shared<CurrentTally<D> >(d_coarsener, d_quadrature, d_number_groups);
   d_wg_solver->get_sweeper()->set_tally(d_tally);
 
   // Check solver db
@@ -152,7 +152,7 @@ void MGSolverCMFD<D>::update(const double keff)
   const vec2_dbl &phi = H.coarse_mesh_flux();
 
   // Coarse mesh diffusion operator
-  d_operator = new CMFDLossOperator<D>(d_input,
+  d_operator = std::make_shared<CMFDLossOperator<D> >(d_input,
                                        cmat,
                                        d_coarse_mesh,
                                        d_tally,

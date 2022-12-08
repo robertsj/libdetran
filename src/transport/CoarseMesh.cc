@@ -112,22 +112,16 @@ CoarseMesh::CoarseMesh(SP_mesh fine_mesh, const size_t level)
   // Create the coarse mesh.
   if (dim == 1)
   {
-    d_coarse_mesh =
-      new detran_geometry::Mesh1D(coarse_edges[0], coarse_material_map);
+    d_coarse_mesh  = std::make_shared<detran_geometry::Mesh1D>(coarse_edges[0], coarse_material_map);
   }
   else if (dim == 2)
   {
-    d_coarse_mesh =
-      new detran_geometry::Mesh2D(coarse_edges[0], coarse_edges[1],
-                                  coarse_material_map);
-  }
+    d_coarse_mesh  = std::make_shared<detran_geometry::Mesh2D>(coarse_edges[0], coarse_edges[1], coarse_material_map);
+  }  
   else
   {
-    d_coarse_mesh =
-      new detran_geometry::Mesh3D(coarse_edges[0], coarse_edges[1],
-                                  coarse_edges[2], coarse_material_map);
+    d_coarse_mesh  = std::make_shared<detran_geometry::Mesh3D>(coarse_edges[0], coarse_edges[1], coarse_edges[2], coarse_material_map);
   }
-
   // Create fine mesh to coarse mesh map
   vec_int f2c_mesh_map(d_fine_mesh->number_cells(), 0);
   for (size_t k = 0; k < d_fine_mesh->number_cells_z(); ++k)

@@ -49,7 +49,7 @@ public:
 
   typedef detran_external_source::ExternalSource  Base;
   typedef Base::SP_externalsource                 SP_base;
-  typedef detran_utilities::SP<SyntheticSource>   SP_externalsource;
+  typedef std::shared_ptr<SyntheticSource>	      SP_externalsource;
   typedef KineticsMaterial::SP_material           SP_material;
   typedef State::SP_state                         SP_state;
   typedef std::vector<SP_state>                   vec_states;

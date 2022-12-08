@@ -14,7 +14,7 @@
 #include "LinearSolver.hh"
 #include "callow/matrix/MatrixBase.hh"
 #include "callow/vector/Vector.hh"
-#include "utilities/SP.hh"
+#include <memory>
 #include <cstdio>
 #include <string>
 #include <vector>
@@ -65,7 +65,7 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<EigenSolver>       SP_solver;
+  typedef std::shared_ptr<EigenSolver>	SP_solver;
   typedef MatrixBase::SP_matrix                   SP_matrix;
   typedef LinearSolver::SP_solver                 SP_linearsolver;
   typedef Preconditioner::SP_preconditioner       SP_preconditioner;

@@ -12,7 +12,7 @@
 
 #include "callow/matrix/MatrixDense.hh"
 #include "utilities/Definitions.hh"
-#include "utilities/SP.hh"
+#include <memory>
 #include <iostream>
 #include <string>
 #include <vector>

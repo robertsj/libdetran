@@ -42,7 +42,7 @@ public:
   //--------------------------------------------------------------------------//
 
   typedef WGPreconditioner                  Base;
-  typedef detran_utilities::SP<PC_DSA>      SP_pc;
+  typedef std::shared_ptr<PC_DSA>	SP_pc;
   typedef ScatterSource::SP_scattersource   SP_scattersource;
   typedef WGDiffusionLossOperator           Operator_T;
 

@@ -33,8 +33,8 @@ SpectrumGS::vec2_dbl SpectrumGS::spectrum(double keff)
   MatrixBase::SP_matrix U_p(new MatrixDense(ng, ng, 0.0));
   MatrixBase::SP_matrix L_p(new MatrixDense(ng, ng, 0.0));
 
-  MatrixDense &U = *(static_cast<MatrixDense*>(U_p.bp()));
-  MatrixDense &L = *(static_cast<MatrixDense*>(L_p.bp()));
+  MatrixDense &U = *(std::dynamic_pointer_cast<MatrixDense>(U_p));
+  MatrixDense &L = *(std::dynamic_pointer_cast<MatrixDense>(L_p));
 
   Eispack solver(1e-9, 1e3);
   solver.set_operators(U_p, L_p);

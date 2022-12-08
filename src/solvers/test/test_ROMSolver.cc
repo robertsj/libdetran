@@ -54,13 +54,13 @@ int test_ROM_diffusion(int argc, char *argv[])
 
 // get the basis
  SP_matrix U;
- U = new callow::MatrixDense(2*n, 2*r);
+ U  = std::make_shared<callow::MatrixDense>(2*n, 2*r);
  ROMBasis::GetBasis("../../../source/src/solvers/test/flux_basis_core0_diff", U);
 
  // ROM
  ROMSolver<_1D> ROM(input, mesh, mat);
  SP_vector  ROM_flux;
- ROM_flux = new callow::Vector(2*n, 0.0);
+ ROM_flux  = std::make_shared<callow::Vector>(2*n, 0.0);
  ROM.Solve(U, ROM_flux);
  double keff_rom = ROM.keff();
 
@@ -118,12 +118,12 @@ int test_ROM_EnergyIndependent(int argc, char *argv[])
 
   // get the basis
   SP_matrix U;
-  U = new callow::MatrixDense(n, r);
+  U  = std::make_shared<callow::MatrixDense>(n, r);
   ROMBasis::GetBasis("../../../source/src/solvers/test/fission_density_core0_transport_r=7", U);
   SP_vector  fd_rom;
 
   // ROM
-  fd_rom = new callow::Vector(n, 0.0);
+  fd_rom  = std::make_shared<callow::Vector>(n, 0.0);
   ROM.Solve(U, fd_rom);
   double keff_rom = ROM.keff();
 
@@ -172,13 +172,13 @@ int test_ROM_EnergyDependent(int argc, char *argv[])
 
   // get the basis
   SP_matrix U;
-  U = new callow::MatrixDense(2*n, 2*r);
+  U  = std::make_shared<callow::MatrixDense>(2*n, 2*r);
   ROMBasis::GetBasis("../../../source/src/solvers/test/flux_basis_core0_transport_r=7", U);
 
   // ROM
   ROMSolver<_1D> ROM(input, mesh, mat);
   SP_vector  ROM_flux;
-  ROM_flux = new callow::Vector(2*n, 0.0);
+  ROM_flux  = std::make_shared<callow::Vector>(2*n, 0.0);
   ROM.Solve(U, ROM_flux);
   double keff_rom = ROM.keff();
 

@@ -15,7 +15,7 @@
 #include "material/Material.hh"
 #include "utilities/DBC.hh"
 #include "utilities/Definitions.hh"
-#include "utilities/SP.hh"
+#include <memory>
 
 namespace detran
 {
@@ -33,7 +33,7 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<FissionSource>       SP_fissionsource;
+  typedef std::shared_ptr<FissionSource>	SP_fissionsource;
   typedef State::SP_state                           SP_state;
   typedef detran_geometry::Mesh::SP_mesh            SP_mesh;
   typedef detran_material::Material::SP_material    SP_material;

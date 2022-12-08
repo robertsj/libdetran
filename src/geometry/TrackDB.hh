@@ -15,7 +15,7 @@
 #include "utilities/DBC.hh"
 #include "utilities/Definitions.hh"
 #include "utilities/Iterators.hh"
-#include "utilities/SP.hh"
+#include <memory>
 #include <vector>
 
 namespace detran_geometry
@@ -59,7 +59,7 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<TrackDB>                       SP_trackdb;
+  typedef std::shared_ptr<TrackDB>	                          SP_trackdb;
   typedef detran_angle::ProductQuadrature::SP_quadrature      SP_quadrature;
   typedef Track::SP_track                                     SP_track;
   typedef std::vector<SP_track>                               vec_track;

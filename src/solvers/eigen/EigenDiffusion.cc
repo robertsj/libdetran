@@ -18,8 +18,8 @@ EigenDiffusion<D>::EigenDiffusion(SP_mg_solver mg_solver)
   : Base(mg_solver)
 {
   // Extract diffusion solver pointer
-  MGDiffusionSolver<D>* mg_diff =
-      dynamic_cast<MGDiffusionSolver<D>*>(mg_solver->solver().bp());
+  auto mg_diff =
+      std::dynamic_pointer_cast<MGDiffusionSolver<D> >(mg_solver->solver());
   Insist(mg_diff,
     "EigenDiffusion requires a multigroup diffusion solver");
 
@@ -29,12 +29,12 @@ EigenDiffusion<D>::EigenDiffusion(SP_mg_solver mg_solver)
 
   // Create operators and vectors
   size_t problem_size = d_mesh->number_cells() * d_material->number_groups();
-  d_phi  = new callow::Vector(problem_size, 0.0);
-  d_work = new callow::Vector(problem_size, 1.0);
+  d_phi   = std::make_shared<callow::Vector>(problem_size, 0.0);
+  d_work  = std::make_shared<callow::Vector>(problem_size, 1.0);
 
   // Get the loss operator and build the fission operator
   d_M = mg_diff->lossoperator();
-  d_F = new DiffusionGainOperator(d_input, d_material, d_mesh, d_adjoint);
+  d_F  = std::make_shared<DiffusionGainOperator>(d_input, d_material, d_mesh, d_adjoint);
 
 //  d_M->print_matlab("L.out");
 //  d_F->print_matlab("F.out");

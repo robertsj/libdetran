@@ -76,7 +76,7 @@ int test_DiffusionFixedSourceSolver_1D(int argc, char *argv[])
 
     // Input
     DiffusionFixedSourceSolver<_1D>::SP_input input;
-    input = new InputDB();
+    input  = std::make_shared<InputDB>();
     input->put<int>(     "number_groups",         1);
     input->put<string>(  "bc_west",               "reflect");
     input->put<double>(  "diffusion_tolerance",   1e-13);
@@ -122,7 +122,7 @@ int test_DiffusionFixedSourceSolver_1D(int argc, char *argv[])
 
     // Input
     DiffusionFixedSourceSolver<_1D>::SP_input input;
-    input = new InputDB();
+    input  = std::make_shared<InputDB>();
     input->put<int>("number_groups",         1);
     input->put<int>("diffusion_fixed_type",  1);
 

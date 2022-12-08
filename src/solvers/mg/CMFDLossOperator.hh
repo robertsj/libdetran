@@ -12,7 +12,7 @@
 #include "material/Material.hh"
 #include "geometry/Mesh.hh"
 #include "utilities/InputDB.hh"
-#include "utilities/SP.hh"
+#include <memory>
 #include "callow/matrix/Matrix.hh"
 #include "transport/CurrentTally.hh"
 
@@ -35,7 +35,7 @@ public:
 
   typedef callow::Matrix                                Base;
   typedef callow::MatrixBase::SP_matrix                 SP_matrix;
-  typedef detran_utilities::SP<CMFDLossOperator>        SP_lossoperator;
+  typedef std::shared_ptr<CMFDLossOperator>	SP_lossoperator;
   typedef detran_utilities::InputDB::SP_input           SP_input;
   typedef detran_material::Material::SP_material        SP_material;
   typedef detran_geometry::Mesh::SP_mesh                SP_mesh;

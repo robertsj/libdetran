@@ -29,14 +29,15 @@ WGSolverGMRES<D>::WGSolverGMRES(SP_state                  state,
   Require(d_input);
 
   // Create operator
-  d_operator = new WGTransportOperator<D>(d_state,
+  d_operator = 
+  std::make_shared<WGTransportOperator<D> >(d_state,
                                           d_boundary,
                                           d_sweeper,
                                           d_sweepsource);
 
   // Create temporary unknown and right hand size vectors
-  d_x = new callow::Vector(d_operator->number_rows(), 0.0);
-  d_b = new callow::Vector(d_operator->number_rows(), 0.0);
+  d_x  = std::make_shared<callow::Vector>(d_operator->number_rows(), 0.0);
+  d_b  = std::make_shared<callow::Vector>(d_operator->number_rows(), 0.0);
 
   // Get callow solver parameter database
   SP_input db;
@@ -46,8 +47,7 @@ WGSolverGMRES<D>::WGSolverGMRES(SP_state                  state,
   }
   else
   {
-    db = new detran_utilities::InputDB("solvergmres_db");
-    db->template put<double>("linear_solver_rtol", d_tolerance);
+    db  = std::make_shared<detran_utilities::InputDB>("solvergmres_db");    db->template put<double>("linear_solver_rtol", d_tolerance);
     db->template put<double>("linear_solver_atol", d_tolerance);
     db->template put<int>("linear_solver_maxit", d_maximum_iterations);
     db->template put<int>("linear_solver_monitor_level", d_print_level);
@@ -101,7 +101,7 @@ WGSolverGMRES<D>::WGSolverGMRES(SP_state                  state,
 
   if (pc_type == "DSA")
   {
-    d_pc = new PC_DSA(d_input,
+    d_pc = std::make_shared<PC_DSA>(d_input,
                       d_material,
                       d_mesh,
                       d_sweepsource->get_scatter_source());

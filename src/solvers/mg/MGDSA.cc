@@ -39,7 +39,7 @@ MGDSA::MGDSA(SP_input         input,
     db = d_input->get<SP_input>("outer_pc_db");
 
   // Create the loss operator for this group
-  d_operator = new Operator_T(d_input,
+  d_operator = std::make_shared<Operator_T>(d_input,
                               d_material,
                               d_mesh,
                               d_include_fission,

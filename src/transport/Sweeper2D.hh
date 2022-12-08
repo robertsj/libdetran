@@ -30,7 +30,7 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<Sweeper2D>           SP_sweeper;
+  typedef std::shared_ptr<Sweeper2D>	              SP_sweeper;
   typedef Sweeper<_2D>                              Base;
   typedef typename Base::SP_state                   SP_state;
   typedef typename Base::SP_input                   SP_input;
@@ -70,7 +70,7 @@ public:
             SP_material material,
             SP_quadrature quadrature,
             SP_state state,
-            SP_boundary boundary,
+            BoundaryBase<_2D>::SP_boundary boundary,
             SP_sweepsource sweepsource);
 
   /// Virtual destructor
@@ -83,7 +83,7 @@ public:
          SP_material    material,
          SP_quadrature  quadrature,
          SP_state       state,
-         SP_boundary    boundary,
+         BoundaryBase<_2D>::SP_boundary boundary,
          SP_sweepsource sweepsource);
 
   //-------------------------------------------------------------------------//

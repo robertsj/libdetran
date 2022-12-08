@@ -117,12 +117,9 @@ void Region::append_node(SP_node current, SP_node addition, const size_t op)
   }
   Require(op < END_NODE_OPERATORS);
   if (op == UNION)
-    d_node = new CSG_Union(current, addition);
-  else if (op == INTERSECTION)
-    d_node = new CSG_Intersection(current, addition);
-  else
-    d_node = new CSG_Difference(current, addition);
-}
+    d_node  = std::make_shared<CSG_Union>(current, addition);  else if (op == INTERSECTION)
+    d_node  = std::make_shared<CSG_Intersection>(current, addition);  else
+    d_node  = std::make_shared<CSG_Difference>(current, addition);}
 
 //----------------------------------------------------------------------------//
 void Region::add_attribute(const std::string &key, const int value)

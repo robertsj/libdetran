@@ -48,8 +48,7 @@ static SP_mesh mesh_1d_fixture()
 
   // Create the new database.
   SP_mesh mesh;
-  mesh = new detran_geometry::Mesh1D(fm, cm, mat_map);
-
+  mesh  = std::make_shared<detran_geometry::Mesh1D>(fm, cm, mat_map);
   // Return the fixture.
   return mesh;
 }
@@ -86,8 +85,7 @@ static SP_mesh mesh_2d_fixture(int id = 0)
     mat_map[0] = 0;
 
     // Construct the mesh.
-    mesh = new detran_geometry::Mesh2D(fm, fm, cm, cm, mat_map);
-
+    mesh  = std::make_shared<detran_geometry::Mesh2D>(fm, fm, cm, cm, mat_map);
     // Return the fixture.
     return mesh;
   }
@@ -98,8 +96,7 @@ static SP_mesh mesh_2d_fixture(int id = 0)
     Mesh::vec_int fm(1, 3);
     Mesh::vec_int mat_map(1, 1);
     // Construct the mesh.
-    mesh = new detran_geometry::Mesh2D(fm, fm, cm, cm, mat_map);
-
+    mesh  = std::make_shared<detran_geometry::Mesh2D>(fm, fm, cm, cm, mat_map);
   }
 
   // Return the fixture.
@@ -124,8 +121,7 @@ static SP_mesh mesh_3d_fixture()
 
   // Create the new database.
   SP_mesh mesh;
-  mesh = new detran_geometry::Mesh3D(fm, fm, fm, cm, cm, cm, mat_map);
-
+  mesh  = std::make_shared<detran_geometry::Mesh3D>(fm, fm, fm, cm, cm, cm, mat_map);
   // Return the fixture.
   return mesh;
 }

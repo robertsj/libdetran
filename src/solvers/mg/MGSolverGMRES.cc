@@ -88,7 +88,7 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
     //------------------------------------------------------------------------//
 
     // Create operator
-    d_operator = new Operator_T(d_state,
+    d_operator = std::make_shared<Operator_T>(d_state,
                                 d_boundary,
                                 d_sweeper,
                                 d_sweepsource,
@@ -97,8 +97,8 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
     //d_operator->compute_explicit("transport.out");
 
     // Create temporary unknown and right hand size vectors
-    d_x = new callow::Vector(d_operator->number_rows(), 0.0);
-    d_b = new callow::Vector(d_operator->number_rows(), 0.0);
+    d_x  = std::make_shared<callow::Vector>(d_operator->number_rows(), 0.0);
+    d_b  = std::make_shared<callow::Vector>(d_operator->number_rows(), 0.0);
 
     // Get callow solver parameter database.  If not present, create a new
     // one based on default outer solver parameters.  This way, we can
@@ -110,8 +110,7 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
     }
     else
     {
-      db = new detran_utilities::InputDB("mgsolvergmres_db");
-      db->template put<double>("linear_solver_rtol", d_tolerance);
+      db  = std::make_shared<detran_utilities::InputDB>("mgsolvergmres_db");      db->template put<double>("linear_solver_rtol", d_tolerance);
       db->template put<double>("linear_solver_atol", d_tolerance);
       db->template put<int>("linear_solver_maxit", d_maximum_iterations);
       db->template put<int>("linear_solver_monitor_level", d_print_level);
@@ -149,7 +148,7 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
     if (pc_type == "mgdsa")
     {
       Assert(d_sweepsource->get_scatter_source());
-      d_pc = new MGDSA(d_input,
+      d_pc = std::make_shared<MGDSA>(d_input,
                        d_material,
                        d_mesh,
                        d_sweepsource->get_scatter_source(),
@@ -160,7 +159,7 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
     }
     else if (pc_type == "mgcmdsa")
     {
-      d_pc = new MGCMDSA(d_input,
+      d_pc = std::make_shared<MGCMDSA>(d_input,
                          d_material,
                          d_mesh,
                          d_sweepsource->get_scatter_source(),
@@ -180,7 +179,7 @@ MGSolverGMRES<D>::MGSolverGMRES(SP_state                  state,
                           d_multiply,
                           d_adjoint));
 
-      d_pc = new MGTCDSA<D>(d_input,
+      d_pc = std::make_shared<MGTCDSA<D> >(d_input,
                             d_material,
                             d_mesh,
                             d_sweepsource->get_scatter_source(),

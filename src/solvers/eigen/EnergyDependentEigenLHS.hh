@@ -42,7 +42,7 @@ public:
 
   typedef MatrixShell                                     Base;
   typedef EnergyDependentEigenLHS<D>                      Operator_T;
-  typedef typename detran_utilities::SP<Operator_T>       SP_operator;
+  typedef typename std::shared_ptr<Operator_T>            SP_operator;
   typedef FixedSourceManager<D>                           Fixed_T;
   typedef typename Fixed_T::SP_manager                    SP_mg_solver;
   typedef typename Fixed_T::SP_state                      SP_state;

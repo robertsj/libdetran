@@ -16,7 +16,7 @@
 #include "transport/FissionSource.hh"
 #include "utilities/DBC.hh"
 #include "utilities/InputDB.hh"
-#include "utilities/SP.hh"
+#include <memory>
 
 namespace detran
 {
@@ -35,7 +35,7 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<MGSolver<D> >        SP_solver;
+  typedef std::shared_ptr<MGSolver<D> >             SP_solver;
   typedef Solver<D>                                 Base;
   typedef typename Base::SP_input                   SP_input;
   typedef typename Base::SP_state                   SP_state;

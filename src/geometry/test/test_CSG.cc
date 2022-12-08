@@ -84,8 +84,7 @@ SP_node get_box()
   vec_node primitives = get_primitives();
   SP_node box(new CSG_Intersection(primitives[0], primitives[1]));
   for (int i = 2; i < 6; ++i)
-    box = new CSG_Intersection(box, primitives[i]);
-  return box;
+    box  = std::make_shared<CSG_Intersection>(box, primitives[i]);  return box;
 }
 
 //----------------------------------------------------------------------------//

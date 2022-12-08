@@ -19,7 +19,7 @@ DCP::DCP(const Parameters &p)
   double N = (double) d_size;
 
   // Allocate the basis matrix
-  d_basis = new callow::MatrixDense(d_size, d_order + 1, 1.0);
+  d_basis  = std::make_shared<callow::MatrixDense>(d_size, d_order + 1, 1.0);
 
   // Zeroth order is just a constant
   for (int j = 0; j < d_size; ++j)

@@ -137,7 +137,7 @@ public:
 
   typedef FixedSourceManager<D>                     Fixed_T;
   typedef typename Fixed_T::SP_manager              SP_mg_solver;
-  typedef detran_utilities::SP<Eigensolver<D> >     SP_solver;
+  typedef std::shared_ptr<Eigensolver<D> >        	SP_solver;
   typedef Solver<D>                                 Base;
   typedef typename Base::SP_input                   SP_input;
   typedef typename Base::SP_state                   SP_state;

@@ -20,7 +20,7 @@ set(SRC
     Sweeper1D.cc
     Sweeper2D.cc
     Sweeper3D.cc
-    Sweeper2DMOC.cc
+    #Sweeper2DMOC.cc
     # discretization
     Equation_DD_1D.cc
     Equation_DD_2D.cc
@@ -29,7 +29,7 @@ set(SRC
     Equation_SC_2D.cc
     Equation_SD_1D.cc
     Equation_SD_2D.cc
-    Equation_SC_MOC.cc
+    #Equation_SC_MOC.cc
 )
 
 #-----------------------------------------------------------------------------#

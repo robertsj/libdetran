@@ -184,7 +184,8 @@ int test_BasisIntegration(int argc, char *argv[])
         db->put<string>("quad_type", qtypes[qt]);
         db->put<int>("quad_number_polar_octant", n);
         db->put<int>("quad_number_azimuth_octant", 2);
-        ProductQuadrature::SP_quadrature q = QuadratureFactory::build(db, 2);
+        //ProductQuadrature::SP_quadrature q = QuadratureFactory::build(db, 2);
+        auto q = std::dynamic_pointer_cast<ProductQuadrature>(QuadratureFactory::build(db, 2));
         //q->display();
         // Define the basis set
         OrthogonalBasis::Parameters p;
@@ -249,7 +250,8 @@ int test_BasisIntegration(int argc, char *argv[])
         db->put<int>("quad_number_polar_octant", nn);
         db->put<int>("quad_number_azimuth_octant", 2);
         //THROW("lala");
-        ProductQuadrature::SP_quadrature q = QuadratureFactory::build(db, 3);
+        //ProductQuadrature::SP_quadrature q = QuadratureFactory::build(db, 3);
+        auto q = std::dynamic_pointer_cast<ProductQuadrature>(QuadratureFactory::build(db, 3));
         //q->display();
         // Define the basis set
         OrthogonalBasis::Parameters p;

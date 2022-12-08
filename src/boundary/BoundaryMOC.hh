@@ -40,12 +40,12 @@ public:
 
   typedef BoundaryBase<D>                       Base;
   typedef typename Base::SP_boundary            SP_base;
-  typedef detran_utilities::SP<BoundaryMOC<D> > SP_boundary;
+  typedef std::shared_ptr<BoundaryMOC<D> >     	SP_boundary;
   typedef typename Base::SP_input               SP_input;
   typedef detran_geometry::Mesh                 Mesh;
   typedef Mesh::SP_mesh                         SP_mesh;
   typedef detran_angle::ProductQuadrature       QuadratureMOC;
-  typedef detran_utilities::SP<QuadratureMOC>   SP_quadrature;
+  typedef std::shared_ptr<QuadratureMOC>	SP_quadrature;
   typedef BoundaryConditionMOC<D>               BC_T;
   typedef typename BC_T::SP_bc                  SP_bc;
   typedef detran_utilities::size_t              size_t;

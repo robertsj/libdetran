@@ -28,7 +28,7 @@ EnergyDependentEigenLHS(SP_mg_solver mg_solver)
 
   // Create scatter-free fission operator
   d_fission =
-      new MGScatterFissionOperator(d_mg_solver->input(),
+      std::make_shared<MGScatterFissionOperator>(d_mg_solver->input(),
                                    d_mg_solver->material(),
                                    d_mg_solver->mesh(),
                                    A.sweepsource()->get_scatter_source(),
@@ -38,7 +38,7 @@ EnergyDependentEigenLHS(SP_mg_solver mg_solver)
                                    d_mg_solver->adjoint());
 
   // Create the sweep operator get_scatter_source
-  d_sweep = new MGSweepOperator<D>(d_mg_solver->state(),
+  d_sweep = std::make_shared<MGSweepOperator<D> >(d_mg_solver->state(),
                                    d_mg_solver->boundary(),
                                    A.sweeper(),
                                    A.sweepsource(),

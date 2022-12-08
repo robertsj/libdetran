@@ -24,9 +24,9 @@ namespace callow
 inline void GaussSeidel::solve_impl(const Vector &b, Vector &x)
 {
 
-  Insist(dynamic_cast< Matrix* >(d_A.bp()),
+  Insist(std::dynamic_pointer_cast<Matrix>(d_A),
     "Need an explicit matrix for use with GaussSeidel iteration");
-  Matrix::SP_matrix A = d_A;
+  auto A = std::dynamic_pointer_cast<Matrix>(d_A);
 
   // temporary storage and pointers for swapping
   Vector temp(x.size(), 0.0);

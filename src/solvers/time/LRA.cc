@@ -43,7 +43,7 @@ LRA::LRA(SP_mesh mesh, bool doingtransport, bool steady)
     if (d_unique_mesh_map[i] != 4) d_A += d_mesh->volume(i);
 
   // Create physics
-  d_physics = new detran::MultiPhysics(1);
+  d_physics  = std::make_shared<detran::MultiPhysics>(1);
   d_physics->variable(0).resize(d_mesh->number_cells(), 300.0);
 
   initialize_materials();

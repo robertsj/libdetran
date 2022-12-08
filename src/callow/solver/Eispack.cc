@@ -29,14 +29,17 @@ void Eispack::set_operators(SP_matrix  A,
                             SP_db      db)
 {
   Require(A);
-  Insist(dynamic_cast<MatrixDense*>(A.bp()),
+  Insist(std::dynamic_pointer_cast<MatrixDense>(A),
     "Need a dense matrix for use with Eispack");
-  d_A = A;
+  //d_A = A;
+  auto d_A = std::dynamic_pointer_cast<MatrixDense>(A);
+
   if (B)
   {
-    Insist(dynamic_cast<MatrixDense*>(B.bp()),
+      Insist(std::dynamic_pointer_cast<MatrixDense>(B),
       "Need a dense matrix for use with Eispack");
-    d_B = B;
+    //d_B = B;
+    auto d_B = std::dynamic_pointer_cast<MatrixDense>(B);
   }
 }
 
@@ -47,18 +50,20 @@ void Eispack::solve_complete(MatrixDense &V_R,
                              Vector      &E_I)
 {
   Require(d_A);
-  MatrixDense &A = *dynamic_cast<MatrixDense*>(d_A.bp());
+  auto A = std::dynamic_pointer_cast<MatrixDense>(d_A);
+  //MatrixDense &A = *dynamic_cast<MatrixDense*>(d_A.bp());
   // Use copies so the originals are not overwritten
-  MatrixDense tmp_A(A);
-  int m    = A.number_rows();
+  MatrixDense tmp_A(*A);
+  int m    = A->number_rows();
   int matz = 1; // positive to get the eigenvectors
   int ierr = 0;
 
   if (d_B)
   {
-    MatrixDense &B = *dynamic_cast<MatrixDense*>(d_B.bp());
+    auto B = std::dynamic_pointer_cast<MatrixDense>(d_B);
+    //MatrixDense &B = *dynamic_cast<MatrixDense*>(d_B.bp());
     // Use copies so the originals are not overwritten
-    MatrixDense tmp_B(B);
+    MatrixDense tmp_B(*B);
     //MatrixDense &tmp_B = B;
     Vector E_D(m, 0.0);
     matz=1;

@@ -69,7 +69,7 @@ int test_InnerGMRES_1D_actual()
   vec_int fm(1, 100);
   vec_int mat_map(1, 0);
   SP_mesh mesh;
-  mesh = new Mesh1D(fm, cm, mat_map);
+  mesh  = std::make_shared<Mesh1D>(fm, cm, mat_map);
 
   // Quadrature
   SP_quadrature quad = gausslegendre_fixture();
@@ -80,7 +80,7 @@ int test_InnerGMRES_1D_actual()
 
   // Input
   InnerGMRES<_1D>::SP_input input;
-  input = new InputDB();
+  input  = std::make_shared<InputDB>();
   input->put<string>(  "equation",          "dd");
   input->put<int>(     "number_groups",     1);
   input->put<int>(     "inner_max_iters",   100);

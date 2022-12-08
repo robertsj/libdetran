@@ -72,8 +72,8 @@ MGTCDSA<D>::MGTCDSA(SP_input         input,
     manager.set_solver();
 
     // Get the manager's multigroup operator
-    MGSolverGMRES<D>* mg_solver =
-      dynamic_cast<MGSolverGMRES<D>*>(manager.solver().bp());
+    auto mg_solver =
+      std::dynamic_pointer_cast<MGSolverGMRES<D> >(manager.solver());
     Assert(mg_solver);
 
     d_A_tilde = mg_solver->get_operator();

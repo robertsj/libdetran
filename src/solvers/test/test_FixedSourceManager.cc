@@ -90,9 +90,9 @@ SP_mesh test_FixedSourceManager_mesh(int d)
   vec_int ff(1, 1);
   vec_int mat_map(1, 0);
   SP_mesh mesh;
-  if (d == 1) mesh = new Mesh1D(fm, cm, mat_map);
-  if (d == 2) mesh = new Mesh2D(fm, fm, cm, cm, mat_map);
-  if (d == 3) mesh = new Mesh3D(fm, fm, fm, cm, cm, cm, mat_map);
+  if (d == 1) mesh  = std::make_shared<Mesh1D>(fm, cm, mat_map);
+  if (d == 2) mesh  = std::make_shared<Mesh2D>(fm, fm, cm, cm, mat_map);
+  if (d == 3) mesh  = std::make_shared<Mesh3D>(fm, fm, fm, cm, cm, cm, mat_map);
   Assert(mesh);
   return mesh;
 }

@@ -34,13 +34,14 @@ MGDiffusionSolver<D>::MGDiffusionSolver(SP_state                  state,
   d_problem_size = d_mesh->number_cells() * d_material->number_groups();
 
   // Create vectors
-  d_phi = new Vector_T(d_problem_size, 0.0);
-  d_Q   = new Vector_T(d_problem_size, 0.0);
+  d_phi = std::make_shared<Vector_T>(d_problem_size, 0.0);
+  d_Q   = std::make_shared<Vector_T>(d_problem_size, 0.0);
 
   // Create multigroup diffusion operator.  Note, the full energy range
   // is included.
   size_t cutoff = d_adjoint ? d_number_groups - 1 : 0;
-  d_M   = new DiffusionLossOperator(d_input,
+  d_M   =
+  std::make_shared<DiffusionLossOperator>(d_input,
                                     d_material,
                                     d_mesh,
                                     d_multiply,
@@ -56,7 +57,7 @@ MGDiffusionSolver<D>::MGDiffusionSolver(SP_state                  state,
   }
   else
   {
-    db = new detran_utilities::InputDB("mgdiffusionsolver_db");
+    db = std::make_shared<detran_utilities::InputDB>("mgdiffusionsolver_db");
     db->template put<double>("linear_solver_rtol", d_tolerance);
     db->template put<double>("linear_solver_atol", d_tolerance);
     db->template put<int>("linear_solver_maxit", d_maximum_iterations);
@@ -82,7 +83,7 @@ void MGDiffusionSolver<D>::refresh()
   // Easiest approach for now is simply to rebuild the operator.  This
   // may be less than ideal, but the cost of building a diffusion operator
   // should almost always be a small fraction of the solver cost.
-  d_M = new DiffusionLossOperator(d_input, d_material, d_mesh,
+  d_M = std::make_shared<DiffusionLossOperator>(d_input, d_material, d_mesh,
                                   d_multiply, 0, d_adjoint, d_keff);
   d_solver->set_operators(d_M);
 }
@@ -178,7 +179,7 @@ void MGDiffusionSolver<D>::build_boundary_source()
 {
 
   // Make reference to boundary for better notation
-  typename Boundary_T::SP_boundary b_sp = d_boundary;
+  auto b_sp = std::dynamic_pointer_cast<Boundary_T>(d_boundary);
   Boundary_T &J = *b_sp;
 
   // For a given dimension, provide remaining dimensions
@@ -375,7 +376,7 @@ template <class D>
 void MGDiffusionSolver<D>::fill_boundary()
 {
   // Reference to boundary for better notation
-  typename Boundary_T::SP_boundary b_sp = d_boundary;
+  auto b_sp = std::dynamic_pointer_cast<Boundary_T>(d_boundary);
   Boundary_T &J = *b_sp;
 
   // For a given dimension, provide remaining dimensions

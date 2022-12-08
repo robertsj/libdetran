@@ -17,7 +17,7 @@
 #include "transport/State.hh"
 #include "utilities/DBC.hh"
 #include "utilities/Definitions.hh"
-#include "utilities/SP.hh"
+#include <memory>
 #include <string>
 
 namespace detran_postprocess
@@ -42,7 +42,7 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<ReactionRates>       SP_reactionrates;
+  typedef std::shared_ptr<ReactionRates>	          SP_reactionrates;
   typedef detran_material::Material::SP_material    SP_material;
   typedef detran_geometry::Mesh::SP_mesh            SP_mesh;
   typedef detran::State::SP_state                   SP_state;
@@ -70,7 +70,7 @@ public:
   Create(SP_material material, SP_mesh mesh, SP_state state)
   {
     SP_reactionrates p;
-    p = new ReactionRates(material, mesh, state);
+    p  = std::make_shared<ReactionRates>(material, mesh, state);
     return p;
   }
 

@@ -37,13 +37,13 @@ MGTransportSolver<D>::MGTransportSolver(SP_state                  state,
   }
   if (wg_solver == "SI")
   {
-    d_wg_solver = new WGSolverSI<D>(d_state, d_material, d_quadrature,
+    d_wg_solver = std::make_shared<WGSolverSI<D> >(d_state, d_material, d_quadrature,
                                     d_boundary, d_externalsources,
                                     d_fissionsource, d_multiply);
   }
   else if (wg_solver == "GMRES")
   {
-    d_wg_solver = new WGSolverGMRES<D>(d_state, d_material, d_quadrature,
+    d_wg_solver = std::make_shared<WGSolverGMRES<D> >(d_state, d_material, d_quadrature,
                                        d_boundary, d_externalsources,
                                        d_fissionsource, d_multiply);
   }

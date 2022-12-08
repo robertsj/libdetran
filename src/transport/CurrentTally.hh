@@ -68,7 +68,7 @@ public:
   //-------------------------------------------------------------------------//
 
   typedef BoundaryTally<D>                              Base;
-  typedef detran_utilities::SP<CurrentTally>            SP_currenttally;
+  typedef std::shared_ptr<CurrentTally>	SP_currenttally;
   typedef CoarseMesh::SP_coarsemesh                     SP_coarsemesh;
   typedef detran_angle::Quadrature::SP_quadrature       SP_quadrature;
   typedef CoarseMesh::SP_mesh                           SP_mesh;

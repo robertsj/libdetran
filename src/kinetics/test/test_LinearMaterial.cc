@@ -53,8 +53,8 @@ int test_LinearMaterial(int argc, char *argv[])
 
   // Define the materials
   LinearMaterial::vec_material materials(2);
-  materials[0] = new KineticsMaterial(1, 2, 2, "time 0");
-  materials[1] = new KineticsMaterial(1, 2, 2, "time 1");
+  materials[0]  = std::make_shared<KineticsMaterial>(1, 2, 2, "time 0");
+  materials[1]  = std::make_shared<KineticsMaterial>(1, 2, 2, "time 1");
 
   // Loop over discrete materials
   for (int m = 0; m < 2; ++m)

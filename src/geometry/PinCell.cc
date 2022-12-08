@@ -112,7 +112,7 @@ void PinCell::meshify(int number_meshes, bool flag)
     }
 
     // Create my mesh.
-    d_mesh = new Mesh2D(edges, edges, tmp_mat_map);
+    d_mesh  = std::make_shared<Mesh2D>(edges, edges, tmp_mat_map);
 
     // Add maps
     d_mesh->add_mesh_map("MATERIAL", tmp_mat_map);
@@ -218,7 +218,7 @@ void PinCell::meshify(int number_meshes, bool flag)
     }
 
     // Create my mesh.
-    d_mesh = new Mesh2D(fine, fine, coarse, coarse, material);
+    d_mesh  = std::make_shared<Mesh2D>(fine, fine, coarse, coarse, material);
     d_mesh->add_coarse_mesh_map("REGION", regions);
 
   }

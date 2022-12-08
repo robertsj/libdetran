@@ -72,7 +72,7 @@ public:
   //-------------------------------------------------------------------------//
 
   typedef MGPreconditioner                  Base;
-  typedef detran_utilities::SP<MGCMTSA>     SP_pc;
+  typedef std::shared_ptr<MGCMTSA>	SP_pc;
   typedef ScatterSource::SP_scattersource   SP_scattersource;
   typedef DiffusionLossOperator             Operator_T;
 

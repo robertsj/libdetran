@@ -65,7 +65,7 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<Preconditioner>  SP_preconditioner;
+  typedef std::shared_ptr<Preconditioner>	SP_preconditioner;
   typedef detran_utilities::size_t              size_t;
 
   //--------------------------------------------------------------------------//
