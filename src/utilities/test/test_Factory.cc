@@ -13,6 +13,7 @@
 #include "TestDriver.hh"
 #include "utilities/Factory.hh"
 #include <vector>
+#include <memory>
 
 using namespace std;
 using namespace detran_test;
@@ -31,7 +32,7 @@ int main(int argc, char *argv[])
 class Foo
 {
 public:
-  typedef std::shared_ptr<>	SP_Foo;
+  typedef std::shared_ptr<Foo>	SP_foo;
   // A REQUIRED typedef that tells the factory what the function type is
   typedef SP_foo (*CreateFunction)(int n);
   // A REQUIRED typedef that defines the factory
@@ -87,10 +88,10 @@ int test_Factory(int argc, char *argv[])
   // illustrates creation as a base method (probably a preferred approach)
   Foo::SP_foo moo = Foo::Create("Moo", 3);
   PRINT("hello")
-  TEST(moo);
+  TEST(moo != nullptr);
   // illustrates creation as a standalone factory method
   Foo::SP_foo noo = Create("Noo", 3);
-  TEST(noo);
+  TEST(noo!= nullptr);
 
   std::cout << "moo=" << moo->value() << std::endl;
   std::cout << "noo=" << noo->value() << std::endl;
