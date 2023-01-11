@@ -12,7 +12,7 @@
 #include "angle/angle_export.hh"
 #include "utilities/Definitions.hh"
 #include "utilities/DBC.hh"
-#include "utilities/SP.hh"
+#include <memory>
 
 namespace detran_angle
 {
@@ -61,7 +61,7 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<MomentIndexer>              SP_momentindexer;
+  typedef std::shared_ptr<MomentIndexer>                   SP_momentindexer;
   typedef detran_utilities::vec_int                        vec_int;
   typedef detran_utilities::vec2_int                       vec2_int;
   typedef detran_utilities::size_t                         size_t;

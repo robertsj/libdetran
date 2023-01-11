@@ -50,7 +50,7 @@ public:
   //--------------------------------------------------------------------------//
 
   typedef MGPreconditioner                  Base;
-  typedef detran_utilities::SP<MGDSA>       SP_pc;
+  typedef std::shared_ptr<MGDSA>	SP_pc;
   typedef DiffusionLossOperator             Operator_T;
 
   //--------------------------------------------------------------------------//

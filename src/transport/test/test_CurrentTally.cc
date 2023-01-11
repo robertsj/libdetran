@@ -82,7 +82,7 @@ int test_CurrentTally_1D(int argc, char *argv[])
 
   // Get the coarse mesh
   CurrentTally_T::SP_coarsemesh mesh = coarsemesh_1d();
-  TEST(mesh);
+  TEST(mesh != NULL);
 
   // Get the fine mesh.
   CoarseMesh::SP_mesh finemesh = mesh->get_fine_mesh();
@@ -171,7 +171,7 @@ int test_CurrentTally_2D(int argc, char *argv[])
 
   // Get the coarse mesh
   CurrentTally_T::SP_coarsemesh mesh = coarsemesh_2d();
-  TEST(mesh);
+  TEST(mesh != NULL);
 
   //int ceflag[] = {0, -1, 1, -1, 2};
 
@@ -312,7 +312,7 @@ int test_CurrentTally_3D(int argc, char *argv[])
 
   // Get the coarse mesh
   CurrentTally_T::SP_coarsemesh mesh = coarsemesh_3d();
-  TEST(mesh);
+  TEST(mesh != NULL);
 
   // Get the fine mesh.
   CoarseMesh::SP_mesh finemesh = mesh->get_fine_mesh();

@@ -40,7 +40,7 @@ public:
 
   typedef MatrixShell                                 Base;
   typedef MGSweepOperator                             Operator_T;
-  typedef detran_utilities::SP<Operator_T>            SP_operator;
+  typedef std::shared_ptr<Operator_T>	SP_operator;
   typedef State::SP_state                             SP_state;
   typedef typename BoundaryBase<D>::SP_boundary       SP_boundary;
   typedef detran_utilities::size_t                    size_t;

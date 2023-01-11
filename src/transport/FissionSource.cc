@@ -41,7 +41,7 @@ FissionSource::SP_fissionsource
 FissionSource::Create(SP_state state, SP_mesh mesh, SP_material material)
 {
   SP_fissionsource p;
-  p = new FissionSource(state, mesh, material);
+  p  = std::make_shared<FissionSource>(state, mesh, material);
   return p;
 }
 

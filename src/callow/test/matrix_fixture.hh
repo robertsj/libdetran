@@ -18,7 +18,7 @@ Matrix::SP_matrix test_matrix_1(int n = 5)
 {
 
   Matrix::SP_matrix A;
-  A = new Matrix(n, n);
+  A  = std::make_shared<Matrix>(n, n);
   A->preallocate(3);
 
   double l = -0.20;
@@ -70,7 +70,7 @@ Matrix::SP_matrix test_matrix_2(int n = 10)
   // num group   = 2
   Matrix::SP_matrix A;
   int size = 2 * n * n;
-  A = new Matrix(size, size);
+  A  = std::make_shared<Matrix>(size, size);
   A->preallocate(2*2+2);
 
   // cell width
@@ -185,7 +185,7 @@ Matrix::SP_matrix test_matrix_3(int n = 10)
   // num group   = 2
   Matrix::SP_matrix A;
   int size = 2 * n * n;
-  A = new Matrix(size, size, 2);
+  A  = std::make_shared<Matrix>(size, size, 2);
   double h = 100.0 / n;
   double sigma_f[] = {0.0067,  0.1241};
   double chi[] = {1.0, 0.0};

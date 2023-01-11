@@ -283,8 +283,7 @@ detran_material::Material::SP_material IO_HDF5::read_material()
   //-------------------------------------------------------------------------//
 
   // Create the material object.
-  mat = new detran_material::Material(nm, ng, d_filename + "_material");
-
+  mat  = std::make_shared<detran_material::Material>(nm, ng, d_filename + "_material");
   hid_t dset;
   hid_t space;
 
@@ -389,12 +388,9 @@ detran_geometry::Mesh::SP_mesh IO_HDF5::read_mesh()
 
   // Create the mesh.
   if (dim == 1)
-    mesh = new detran_geometry::Mesh1D(ex, mt);
-  else if (dim == 2)
-    mesh = new detran_geometry::Mesh2D(ex, ey, mt);
-  else
-    mesh = new detran_geometry::Mesh3D(ex, ey, ez, mt);
-
+    mesh  = std::make_shared<detran_geometry::Mesh1D>(ex, mt);  else if (dim == 2)
+    mesh  = std::make_shared<detran_geometry::Mesh2D>(ex, ey, mt);  else
+    mesh  = std::make_shared<detran_geometry::Mesh3D>(ex, ey, ez, mt);
   // Add the rest of the maps.
   detran_geometry::Mesh::mesh_map_type::iterator it = map.begin();
   for (; it != map.end(); it++)

@@ -55,8 +55,8 @@ public:
   // TYPEDEFS
   //---------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<UniformEqual>  SP_quadrature;
-  typedef detran_utilities::SP<Quadrature>    SP_base;
+  typedef std::shared_ptr<UniformEqual>  SP_quadrature;
+  typedef std::shared_ptr<Quadrature>    SP_base;
 
   //---------------------------------------------------------------------------//
   // PUBLIC INTERFACE
@@ -70,7 +70,7 @@ public:
   UniformEqual(size_t order, size_t dim);
 
   /// SP constructor
-  static detran_utilities::SP<Quadrature>
+  static std::shared_ptr<Quadrature>
   Create(size_t order, size_t dim)
   {
     SP_quadrature p(new UniformEqual(order, dim));

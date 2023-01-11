@@ -16,7 +16,7 @@
 #include "geometry/Mesh.hh"
 #include "utilities/DBC.hh"
 #include "utilities/InputDB.hh"
-#include "utilities/SP.hh"
+#include <memory>
 #include <string>
 #ifdef DETRAN_ENABLE_HDF5
 #include "hdf5.h"
@@ -63,7 +63,7 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<IO_HDF5>             SP_io_hdf5;
+  typedef std::shared_ptr<IO_HDF5>	SP_io_hdf5;
   typedef detran_utilities::InputDB::SP_input       SP_input;
   typedef detran_material::Material::SP_material    SP_material;
   typedef detran_geometry::Mesh::SP_mesh            SP_mesh;

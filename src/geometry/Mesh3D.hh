@@ -76,7 +76,7 @@ public:
          vec_dbl zcme, vec_int mat_map)
   {
     SP_mesh p;
-    p = new Mesh3D(xfm, yfm, zfm, xcme, ycme, zcme, mat_map);
+    p  = std::make_shared<Mesh3D>(xfm, yfm, zfm, xcme, ycme, zcme, mat_map);
     return p;
   }
 
@@ -92,7 +92,7 @@ public:
   Create(vec_dbl xfme, vec_dbl yfme, vec_dbl zfme, vec_int mat_map)
   {
     SP_mesh p;
-    p = new Mesh3D(xfme, yfme, zfme, mat_map);
+    p  = std::make_shared<Mesh3D>(xfme, yfme, zfme, mat_map);
     return p;
   }
 

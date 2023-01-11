@@ -15,7 +15,7 @@
 #include "geometry/Mesh.hh"
 #include "utilities/DBC.hh"
 #include "utilities/MathUtilities.hh"
-#include "utilities/SP.hh"
+#include <memory>
 #include <iostream>
 
 namespace detran
@@ -39,7 +39,7 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<ScatterSource>       SP_scattersource;
+  typedef std::shared_ptr<ScatterSource>	SP_scattersource;
   typedef detran_geometry::Mesh::SP_mesh            SP_mesh;
   typedef detran_material::Material::SP_material    SP_material;
   typedef State::SP_state                           SP_state;

@@ -270,7 +270,7 @@ void MGCoarseMeshPreconditioner::build_restrict()
   // Maximum number of nonzeros in a row.
   size_t nnz = (d_mesh->number_cells() / d_coarsemesh->number_cells() + 1) *
                detran_utilities::vec_max(d_fine_per_coarse);
-  d_restrict = new callow::Matrix(d_size_coarse, d_size_fine, nnz);
+  d_restrict  = std::make_shared<callow::Matrix>(d_size_coarse, d_size_fine, nnz);
   const vec_int &coarse_map = d_mesh->mesh_map("COARSEMESH");
   // Loop over active groups
   for (size_t g = 0; g < d_number_active_groups; ++g)
@@ -305,7 +305,7 @@ void MGCoarseMeshPreconditioner::build_restrict()
 void MGCoarseMeshPreconditioner::build_prolong()
 {
   // A fine mesh gets from only one coarse mesh
-  d_prolong = new callow::Matrix(d_size_fine, d_size_coarse, 1);
+  d_prolong  = std::make_shared<callow::Matrix>(d_size_fine, d_size_coarse, 1);
   const vec_int &coarse_map = d_mesh->mesh_map("COARSEMESH");
 
   // Loop over active groups

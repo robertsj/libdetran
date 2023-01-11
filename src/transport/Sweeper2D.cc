@@ -22,10 +22,10 @@ Sweeper2D<EQ>::Sweeper2D(SP_input input,
                          SP_material material,
                          SP_quadrature quadrature,
                          SP_state state,
-                         SP_boundary boundary,
+                         BoundaryBase<_2D>::SP_boundary boundary,
                          SP_sweepsource sweepsource)
   : Base(input, mesh, material, quadrature, state, boundary, sweepsource)
-  , d_boundary(boundary)
+  , d_boundary(std::dynamic_pointer_cast<Boundary_T>(boundary))
 {
     // Preconditions
     Require(d_boundary);
@@ -39,11 +39,11 @@ Sweeper2D<EQ>::Create(SP_input       input,
                       SP_material    material,
                       SP_quadrature  quadrature,
                       SP_state       state,
-                      SP_boundary    boundary,
+                      BoundaryBase<_2D>::SP_boundary boundary,
                       SP_sweepsource sweepsource)
 {
-  SP_sweeper p(new Sweeper2D(input, mesh, material, quadrature,
-                             state, boundary, sweepsource));
+  auto p = std::make_shared<Sweeper2D<EQ> >(input, mesh, material, quadrature,
+                             state, boundary, sweepsource);
   return p;
 }
 

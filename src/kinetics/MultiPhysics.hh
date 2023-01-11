@@ -13,7 +13,7 @@
 #include "kinetics/kinetics_export.hh"
 #include "utilities/DBC.hh"
 #include "utilities/Definitions.hh"
-#include "utilities/SP.hh"
+#include <memory>
 #include <map>
 
 namespace detran
@@ -37,7 +37,7 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<MultiPhysics>    SP_multiphysics;
+  typedef std::shared_ptr<MultiPhysics>	SP_multiphysics;
   typedef detran_utilities::size_t              size_t;
   typedef detran_utilities::vec_dbl             vec_dbl;
   typedef detran_utilities::vec2_dbl            vec2_dbl;

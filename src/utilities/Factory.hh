@@ -9,7 +9,6 @@
 #ifndef detran_utilities_FACTORY_HH_
 #define detran_utilities_FACTORY_HH_
 
-#include "SP.hh"
 #include <map>
 #include <string>
 

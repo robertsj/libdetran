@@ -12,7 +12,7 @@
 #include "utilities/Definitions.hh"
 #include "callow/callow_config.hh"
 #include "callow/vector/Vector.hh"
-#include "utilities/SP.hh"
+#include <memory>
 
 namespace callow
 {
@@ -26,7 +26,7 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<MatrixBase >     SP_matrix;
+  typedef std::shared_ptr<MatrixBase>	SP_matrix;
   typedef Vector::SP_vector                     SP_vector;
   typedef detran_utilities::size_t              size_t;
 

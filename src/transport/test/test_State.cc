@@ -37,7 +37,7 @@ int test_State_basic(int argc, char *argv[])
 
   // Input
   State::SP_input input;
-  input = new InputDB();
+  input  = std::make_shared<InputDB>();
   input->put<std::string>("equation", "dd");
   input->put<int>("number_groups", 2);
 
@@ -45,7 +45,7 @@ int test_State_basic(int argc, char *argv[])
 
   // State
   State::SP_state state;
-  state = new State(input, mesh, quad);
+  state  = std::make_shared<State>(input, mesh, quad);
 
   // Fill the fluxes.
   for (int cell = 0; cell < 1; cell++)

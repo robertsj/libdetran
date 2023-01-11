@@ -56,11 +56,11 @@ void LinearSolver::set_operators(SP_matrix A, SP_db db)
       pc_type = d_db->get<std::string>("pc_type");
     if (pc_type == "ilu0")
     {
-      d_P = new PCILU0(d_A);
+      d_P  = std::make_shared<PCILU0>(d_A);
     }
     else if (pc_type == "jacobi")
     {
-      d_P = new PCJacobi(d_A);
+      d_P  = std::make_shared<PCJacobi>(d_A);
     }
     if(d_db->check("pc_side"))
       pc_side = d_db->get<int>("pc_side");

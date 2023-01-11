@@ -54,7 +54,7 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<KineticsMaterial>    SP_material;
+  typedef std::shared_ptr<KineticsMaterial>	SP_material;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR

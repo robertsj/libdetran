@@ -18,7 +18,7 @@ add_subdirectory(wg)
 add_subdirectory(mg)
 add_subdirectory(eigen)
 add_subdirectory(time)
-add_subdirectory(rom)
+#add_subdirectory(rom)
 
 set(SRC
     FixedSourceManager.cc
@@ -29,7 +29,7 @@ set(SRC
     ${MG_SRC}
     ${WG_SRC}
     ${TIME_SRC}
-    ${ROM_SRC}
+    #${ROM_SRC}
 )
 
 #-----------------------------------------------------------------------------#

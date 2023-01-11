@@ -35,7 +35,7 @@ MGCMDSA::MGCMDSA(SP_input         input,
     d_include_fission = (0 == d_input->get<int>("mgpc_disable_fission"));
 
 
-  d_SF = new MGScatterFissionOperator(d_input,
+  d_SF = std::make_shared<MGScatterFissionOperator>(d_input,
                                       d_material,
                                       d_mesh,
                                       d_scattersource,
@@ -59,7 +59,7 @@ MGCMDSA::MGCMDSA(SP_input         input,
       w = d_input->get<double>("mgpc_cmdsa_smoothing_relax");
 
     // A full diffusion operator for use in a weighted Richardson
-    d_smoothing_operator = new Operator(d_input,
+    d_smoothing_operator = std::make_shared<Operator>(d_input,
                                         d_material,
                                         d_mesh,
                                         d_include_fission,
@@ -68,9 +68,9 @@ MGCMDSA::MGCMDSA(SP_input         input,
                                         1.0);
 
     // Gauss-Seidel for the smoother
-    //d_smoothing_solver = new callow::GaussSeidel(0.0, 0.0, n, w);
-    //d_smoothing_solver = new callow::Richardson(0.0, 0.0, n, w);
-    d_smoothing_solver = new callow::Jacobi(0.0, 0.0, n, w);
+    //d_smoothing_solver  = std::make_shared<callow::GaussSeidel>(0.0, 0.0, n, w);
+    //d_smoothing_solver  = std::make_shared<callow::Richardson>(0.0, 0.0, n, w);
+    d_smoothing_solver  = std::make_shared<callow::Jacobi>(0.0, 0.0, n, w);
     d_smoothing_solver->set_operators(d_smoothing_operator);
     d_smoothing_solver->set_monitor_level(0);
   }
@@ -88,7 +88,7 @@ void MGCMDSA::build(const double keff, SP_state state)
     db = d_input->get<SP_input>("outer_pc_db");
 
   // Create coarse mesh diffusion operator
-  d_operator = new Operator(d_input,
+  d_operator = std::make_shared<Operator>(d_input,
                             d_c_material,
                             d_coarsemesh,
                             d_include_fission,

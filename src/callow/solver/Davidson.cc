@@ -61,10 +61,10 @@ void Davidson::set_operators(SP_matrix A,
   }
 
   // Create the residual function
-  d_A_minus_ritz_times_B = new DavidsonResidual(d_A, d_B, this);
+  d_A_minus_ritz_times_B  = std::make_shared<DavidsonResidual>(d_A, d_B, this);
 
   // Create the default preconditioner
-  d_P = new DavidsonDefaultP(d_A_minus_ritz_times_B, NULL, db);
+  d_P  = std::make_shared<DavidsonDefaultP>(d_A_minus_ritz_times_B, nullptr, db);
 }
 
 //----------------------------------------------------------------------------//
@@ -109,8 +109,8 @@ void Davidson::solve_impl(Vector &u, Vector &x0)
     {
       std::cout << "it=" << it << " o=" << o << " i=" << i << std::endl;
       // construct the projected problem, Ax=eBx
-      A = new MatrixDense(i+1, i+1, 0.0);
-      B = new MatrixDense(i+1, i+1, 0.0);
+      A  = std::make_shared<MatrixDense>(i+1, i+1, 0.0);
+      B  = std::make_shared<MatrixDense>(i+1, i+1, 0.0);
       for (size_t row = 0; row < i+1; ++row)
       {
         for (size_t col = 0; col < i+1; ++col)

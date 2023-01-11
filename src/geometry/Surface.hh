@@ -10,7 +10,7 @@
 #define detran_geometry_SURFACE_HH_
 
 #include "geometry/Ray.hh"
-#include "utilities/SP.hh"
+#include <memory>
 
 namespace detran_geometry
 {
@@ -28,7 +28,7 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<Surface>   SP_surface;
+  typedef std::shared_ptr<Surface>	SP_surface;
   typedef std::vector<SP_surface>         vec_surface;
   typedef std::vector<Point>              vec_point;
 

@@ -108,7 +108,7 @@ public:
   /// \name Useful Typedefs
   // \{
 
-  typedef SP<CMR>                         SP_acceleration;
+  typedef std::shared_ptr<>	SP_CMR;
   typedef WithingroupAcceleration<D>      Base;
   typedef typename Base::SP_acceleration  SP_base;
   typedef Base::SP_input                  SP_input;

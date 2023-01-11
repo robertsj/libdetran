@@ -57,12 +57,12 @@ BoundaryMOC<D>::BoundaryMOC(SP_input        input,
     }
     if (type == "vacuum")
     {
-      d_bc[side] = new VacuumMOC<D>((*this), side, d_input, d_mesh, d_quadrature);
+      d_bc[side]  = std::make_shared<VacuumMOC<D> >((*this), side, d_input, d_mesh, d_quadrature);
       d_has_vacuum = true;
     }
     else if (type == "reflect")
     {
-      d_bc[side] = new ReflectiveMOC<D>((*this), side, d_input, d_mesh, d_quadrature);
+      d_bc[side]  = std::make_shared<ReflectiveMOC<D> >((*this), side, d_input, d_mesh, d_quadrature);
       d_is_reflective[side] = true;
       d_has_reflective = true;
     }

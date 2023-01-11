@@ -14,7 +14,7 @@
 #include "geometry/Mesh.hh"
 #include "utilities/DBC.hh"
 #include "utilities/Definitions.hh"
-#include "utilities/SP.hh"
+#include <memory>
 #include <vector>
 
 namespace detran_external_source
@@ -49,7 +49,7 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<ExternalSource>      SP_externalsource;
+  typedef std::shared_ptr<ExternalSource>	SP_externalsource;
   typedef std::vector<SP_externalsource>            vec_externalsource;
   typedef detran_geometry::Mesh::SP_mesh            SP_mesh;
   typedef detran_angle::Quadrature::SP_quadrature   SP_quadrature;

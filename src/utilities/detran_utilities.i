@@ -14,7 +14,7 @@
 #include "utilities/DBC.hh"
 #include "utilities/InputDB.hh"
 #include "utilities/MathUtilities.hh"
-#include "utilities/SP.hh"
+#include <memory>
 %}
 
 // STL

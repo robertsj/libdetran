@@ -45,7 +45,7 @@ EigenvalueManager<D>::EigenvalueManager(int          argc,
   Require(mesh);
 
   /// Create the fixed source manager
-  d_mg_solver = new FixedSourceManager<D>(input, material, mesh, false, true);
+  d_mg_solver  = std::make_shared<FixedSourceManager<D> >(input, material, mesh, false, true);
   d_mg_solver->setup();
   d_mg_solver->set_solver();
   d_discretization = d_mg_solver->discretization();
@@ -67,7 +67,7 @@ EigenvalueManager<D>::EigenvalueManager(SP_input    input,
   Require(mesh);
 
   /// Create the fixed source manager
-  d_mg_solver = new FixedSourceManager<D>(input, material, mesh, false, true);
+  d_mg_solver  = std::make_shared<FixedSourceManager<D> >(input, material, mesh, false, true);
   d_mg_solver->setup();
   d_mg_solver->set_solver();
   d_discretization = d_mg_solver->discretization();
@@ -89,7 +89,7 @@ bool EigenvalueManager<D>::solve()
   }
   if (eigen_solver == "PI")
   {
-    d_solver = new EigenPI<D>(d_mg_solver);
+    d_solver  = std::make_shared<EigenPI<D> >(d_mg_solver);
   }
   else if (eigen_solver == "diffusion")
   {
@@ -99,15 +99,15 @@ bool EigenvalueManager<D>::solve()
                 << std::endl;
       return false;
     }
-    d_solver = new EigenDiffusion<D>(d_mg_solver);
+    d_solver  = std::make_shared<EigenDiffusion<D> >(d_mg_solver);
   }
   else if (eigen_solver == "arnoldi")
   {
-      d_solver = new EigenArnoldi<D>(d_mg_solver);
+      d_solver  = std::make_shared<EigenArnoldi<D> >(d_mg_solver);
   }
   else if (eigen_solver == "cmfd")
   {
-      d_solver = new EigenCMFD<D>(d_mg_solver);
+      d_solver  = std::make_shared<EigenCMFD<D> >(d_mg_solver);
   }
   else if (eigen_solver == "GD")
   {
@@ -119,7 +119,7 @@ bool EigenvalueManager<D>::solve()
       cout << "built-in implementation or use the SLEPc version. " << endl;
       return false;
     }
-    d_solver = new EigenGD<D>(d_mg_solver);
+    d_solver  = std::make_shared<EigenGD<D> >(d_mg_solver);
   }
   else
   {

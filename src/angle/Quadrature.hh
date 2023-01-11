@@ -13,7 +13,7 @@
 #include "utilities/Constants.hh"
 #include "utilities/Definitions.hh"
 #include "utilities/DBC.hh"
-#include "utilities/SP.hh"
+#include <memory>
 #include "utilities/Warning.hh"
 #include <string>
 
@@ -80,7 +80,7 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<Quadrature>      SP_quadrature;
+  typedef std::shared_ptr<Quadrature>           SP_quadrature;
   typedef detran_utilities::vec_dbl             vec_dbl;
   typedef detran_utilities::vec2_dbl            vec2_dbl;
   typedef detran_utilities::vec_int             vec_int;

@@ -56,7 +56,7 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<PinCell>   SP_pincell;
+  typedef std::shared_ptr<PinCell>	SP_pincell;
   typedef Mesh::SP_mesh                   SP_mesh;
   typedef Mesh::vec_dbl                   vec_dbl;
   typedef Mesh::vec_int                   vec_int;

@@ -37,7 +37,7 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<MatrixShell>    SP_matrix;
+  typedef std::shared_ptr<MatrixShell>	SP_matrix;
 
   //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR

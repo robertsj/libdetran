@@ -17,13 +17,15 @@ PCJacobi::PCJacobi(SP_matrix A)
 {
   Require(A);
   Require(A->number_rows() == A->number_columns());
-  Insist(dynamic_cast<Matrix*>(A.bp()),
+  Insist(std::dynamic_pointer_cast<Matrix>(A),
+  //Insist(dynamic_cast<Matrix*>(A.bp()),
     "Need an explicit matrix for use with PCILU0");
-  SP_matrixfull B(A);
+  auto B = std::dynamic_pointer_cast<Matrix>(A);
+  //SP_matrixfull B(A);
 
   // create the diagonal vector
   int n = B->number_rows();
-  d_P = new Vector(n, 0.0);
+  d_P  = std::make_shared<Vector>(n, 0.0);
 
   // load values from A and avoid divide by zero
   for (int i = 0; i < n; ++i)

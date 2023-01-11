@@ -15,7 +15,7 @@
 #include "callow/matrix/MatrixDense.hh"
 #include "callow/utils/CallowDefinitions.hh"
 #include "utilities/Definitions.hh"
-#include "utilities/SP.hh"
+#include <memory>
 #include "utilities/Factory.hh"
 
 /**
@@ -76,7 +76,7 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<OrthogonalBasis> SP_basis;
+  typedef std::shared_ptr<OrthogonalBasis>	SP_basis;
   typedef callow::Vector                        Vector;
   typedef callow::Vector::SP_vector             SP_vector;
   typedef callow::MatrixDense::SP_matrix        SP_matrix;

@@ -15,7 +15,7 @@
 #include "transport/Equation.hh"
 #include "angle/Quadrature.hh"
 #include "utilities/Definitions.hh"
-#include "utilities/SP.hh"
+#include <memory>
 #include <vector>
 
 namespace detran
@@ -53,7 +53,7 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<BoundaryTally>           SP_tally;
+  typedef std::shared_ptr<BoundaryTally>	SP_tally;
   typedef CoarseMesh::SP_coarsemesh                     SP_coarsemesh;
   typedef detran_angle::Quadrature::SP_quadrature       SP_quadrature;
   typedef CoarseMesh::SP_mesh                           SP_mesh;

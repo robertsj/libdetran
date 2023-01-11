@@ -20,7 +20,7 @@ DCT::DCT(const Parameters &p)
   using detran_utilities::pi;
 
   // Allocate the basis matrix
-  d_basis = new callow::MatrixDense(d_size, d_order + 1, 1.0);
+  d_basis  = std::make_shared<callow::MatrixDense>(d_size, d_order + 1, 1.0);
 
   for (int i = 0; i <= d_order; ++i)
     for (int j = 0; j < d_size; ++j)

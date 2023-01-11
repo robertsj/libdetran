@@ -45,7 +45,7 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<MatrixDense>  SP_matrix;
+  typedef std::shared_ptr<MatrixDense>	SP_matrix;
 
   //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR

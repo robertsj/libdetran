@@ -44,7 +44,7 @@ int test_MomentToDiscrete(int argc, char *argv[])
     MomentToDiscrete MtoD(indexer);
     // Quadrature
     q = qf.build(db, 1);
-    TEST(q);
+    TEST(q != NULL);
     // Build
     MtoD.build(q);
     // TEST
@@ -58,7 +58,7 @@ int test_MomentToDiscrete(int argc, char *argv[])
     MomentToDiscrete MtoD(indexer);
     // Quadrature
     q = qf.build(db, 2);
-    TEST(q);
+    TEST(q != NULL);
     // Build
     MtoD.build(q);
     // TEST

@@ -15,7 +15,7 @@
 #include "geometry/Point.hh"
 #include "utilities/DBC.hh"
 #include "utilities/Definitions.hh"
-#include "utilities/SP.hh"
+#include <memory>
 #include <string>
 #include <fstream>
 

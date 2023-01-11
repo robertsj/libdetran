@@ -21,11 +21,10 @@ EigenArnoldi<D>::EigenArnoldi(SP_mg_solver mg_solver)
 {
 
   // Create operator
-  d_operator = new Operator_T(mg_solver);
-
+  d_operator  = std::make_shared<Operator_T>(mg_solver);
   // Create vectors
-  d_x  = new callow::Vector(d_operator->number_rows(), 0.0);
-  d_x0 = new callow::Vector(d_operator->number_rows(), 0.0);
+  d_x   = std::make_shared<callow::Vector>(d_operator->number_rows(), 0.0);
+  d_x0  = std::make_shared<callow::Vector>(d_operator->number_rows(), 0.0);
 
   // Get callow solver parameter database
   SP_input db;

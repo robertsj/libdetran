@@ -65,7 +65,7 @@ int test_DiffusionEigensolver(int argc, char *argv[])
 
     // Input
     DiffusionEigensolver<_1D>::SP_input input;
-    input = new InputDB();
+    input  = std::make_shared<InputDB>();
     input->put<int>(     "number_groups",               1);
     input->put<string>(  "bc_west",                     "reflect");
     input->put<string>(  "diffusion_eigensolver_type",  "power");

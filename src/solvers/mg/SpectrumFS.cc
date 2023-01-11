@@ -32,7 +32,7 @@ SpectrumFS::vec2_dbl SpectrumFS::spectrum(double keff)
 
 
   MatrixBase::SP_matrix A_p(new MatrixDense(ng, ng, 0.0));
-  MatrixDense &A = *(static_cast<MatrixDense*>(A_p.bp()));
+  MatrixDense &A = *(std::dynamic_pointer_cast<MatrixDense>(A_p));
 
   GMRES solver(1e-9, 1e-9, 100, 20);
   solver.set_operators(A_p);

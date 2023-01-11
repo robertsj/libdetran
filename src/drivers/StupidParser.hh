@@ -181,8 +181,7 @@ private:
     {
 #ifdef DETRAN_ENABLE_HDF5
       // Open the HDF5 file.
-      d_hdf5 = new detran_ioutils::IO_HDF5(d_filename);
-      d_is_hdf5 = true;
+      d_hdf5  = std::make_shared<detran_ioutils::IO_HDF5>(d_filename);      d_is_hdf5 = true;
 #else
       THROW("User specified HDF5 input but HDF5 is not enabled!");
 #endif
@@ -211,8 +210,7 @@ StupidParser::parse_input_text()
   Insist(d_file.is_open(), "The input file must be open to parse!");
 
   SP_input p;
-  p = new detran_utilities::InputDB();
-
+  p  = std::make_shared<detran_utilities::InputDB>();
   string line;
   while (getline(d_file, line))
   {
@@ -315,8 +313,7 @@ StupidParser::parse_material_text()
   }
   Require(number_materials > 0);
 
-  d_material = new detran_material::Material(number_materials, number_groups);
-  d_material->set_downscatter(downscatter);
+  d_material  = std::make_shared<detran_material::Material>(number_materials, number_groups);  d_material->set_downscatter(downscatter);
 
   // Fill the rest.
   d_file.clear();

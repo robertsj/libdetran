@@ -28,7 +28,7 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<Core>    SP_core;
+  typedef std::shared_ptr<Core>	SP_core;
   typedef Mesh::SP_mesh                 SP_mesh;
   typedef Assembly::SP_assembly         SP_assembly;
   typedef std::vector<SP_assembly>      vec_assembly;

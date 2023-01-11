@@ -38,7 +38,7 @@ public:
 
   typedef MGPreconditioner                  Base;
   typedef Base::SP_preconditioner           SP_base;
-  typedef detran_utilities::SP<MGTCDSA>     SP_pc;
+  typedef std::shared_ptr<MGTCDSA>	SP_pc;
   typedef DiffusionLossOperator             DSA_T;
   typedef MGTransportOperator<D>            MGTO_T;
   typedef typename MGTO_T::SP_operator      SP_mgto;

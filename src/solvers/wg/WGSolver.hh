@@ -82,7 +82,7 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<WGSolver>            SP_solver;
+  typedef std::shared_ptr<WGSolver>	SP_solver;
   typedef Solver<D>                                 Base;
   typedef typename Base::SP_input                   SP_input;
   typedef typename Base::SP_state                   SP_state;

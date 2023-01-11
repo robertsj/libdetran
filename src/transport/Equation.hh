@@ -16,7 +16,7 @@
 #include "geometry/Mesh.hh"
 #include "angle/Quadrature.hh"
 #include "utilities/Definitions.hh"
-#include "utilities/SP.hh"
+#include <memory>
 
 /**
  *  @namespace  detran
@@ -62,7 +62,7 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<Equation>                  SP_equation;
+  typedef std::shared_ptr<Equation>	SP_equation;
   typedef detran_material::Material::SP_material          SP_material;
   typedef detran_geometry::Mesh::SP_mesh                  SP_mesh;
   typedef detran_angle::Quadrature::SP_quadrature         SP_quadrature;

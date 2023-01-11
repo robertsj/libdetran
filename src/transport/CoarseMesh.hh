@@ -14,7 +14,7 @@
 #include "transport/transport_export.hh"
 #include "geometry/Mesh.hh"
 #include "utilities/DBC.hh"
-#include "utilities/SP.hh"
+#include <memory>
 #include <iostream>
 
 namespace detran
@@ -46,7 +46,7 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<CoarseMesh>  SP_coarsemesh;
+  typedef std::shared_ptr<CoarseMesh>	SP_coarsemesh;
   typedef detran_geometry::Mesh::SP_mesh    SP_mesh;
   typedef detran_utilities::size_t          size_t;
   typedef detran_utilities::vec_int         vec_int;

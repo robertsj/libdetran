@@ -42,9 +42,9 @@ int test_Equation_DD_2D_basic(int argc, char *argv[])
   SP_material mat   = material_fixture_1g();
   LevelSymmetric::SP_quadrature q(new detran_angle::LevelSymmetric(2, 2));
 
-  TEST(mesh);
-  TEST(mat);
-  TEST(q);
+  TEST(mesh != NULL);
+  TEST(mat != NULL);
+  TEST(q != NULL);
 
   // Create
   Equation_DD_2D eq(mesh, mat, q, false);

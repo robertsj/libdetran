@@ -45,7 +45,7 @@ int test_Material_basic(int argc, char *argv[])
   SP_material mat_1g = material_fixture_1g();
 
   // Make sure something is there.
-  TEST(mat_1g);
+  TEST(mat_1g != NULL);
   TEST(mat_1g->sigma_t(0, 0)        == 1.0);
   TEST(mat_1g->sigma_s(0, 0, 0)     == 0.9);
 
@@ -57,7 +57,7 @@ int test_Material_basic(int argc, char *argv[])
 
   // Get the 2g material
   SP_material mat_2g = material_fixture_2g();
-  TEST(mat_2g);
+  TEST(mat_2g != NULL);
   TEST(mat_2g->sigma_t(1, 0)        == 0.2263);
   TEST(mat_2g->sigma_s(1, 0, 0)     == 0.2006);
   TEST(mat_2g->sigma_s(1, 0, 1)     == 0.0000);

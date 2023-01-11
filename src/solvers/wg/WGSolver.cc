@@ -10,7 +10,7 @@
 #include "transport/Sweeper1D.cc"
 #include "transport/Sweeper2D.cc"
 #include "transport/Sweeper3D.cc"
-#include "transport/Sweeper2DMOC.cc"
+//#include "transport/Sweeper2DMOC.cc"
 #include <iostream>
 
 namespace detran
@@ -51,8 +51,7 @@ WGSolver<D>::WGSolver(SP_state                  state,
 
   SP_MtoD MtoD;
   // \todo Currently limited to 1 moment (0th order)
-  MtoD = new detran_angle::MomentToDiscrete(d_state->get_momentindexer());
-  MtoD->build(d_quadrature);
+  MtoD  = std::make_shared<detran_angle::MomentToDiscrete>(d_state->get_momentindexer());  MtoD->build(d_quadrature);
 
   //-------------------------------------------------------------------------//
   // SWEEP SOURCE
@@ -60,7 +59,8 @@ WGSolver<D>::WGSolver(SP_state                  state,
 
   // Build the sweep source.
   d_sweepsource =
-    new SweepSource<D>(d_state, d_mesh, d_quadrature, d_material,
+    std::make_shared<SweepSource<D> >(d_state,
+                       d_mesh, d_quadrature, d_material,
                        MtoD, d_multiply);
 
   if (q_f) d_sweepsource->set_fission_source(q_f);
@@ -114,7 +114,7 @@ inline bool WGSolver<_3D>::set_sweep(std::string equation)
 {
   if (equation == "dd")
   {
-    d_sweeper = new Sweeper3D<Equation_DD_3D>(
+    d_sweeper = std::make_shared<Sweeper3D<Equation_DD_3D> >(
       d_input, d_mesh, d_material, d_quadrature, d_state, d_boundary,
       d_sweepsource);
     return true;
@@ -130,32 +130,32 @@ inline bool WGSolver<_2D>::set_sweep(std::string equation)
 
   if (equation == "dd")
   {
-    d_sweeper = new Sweeper2D<Equation_DD_2D>(
+    d_sweeper = std::make_shared<Sweeper2D<Equation_DD_2D> >(
       d_input, d_mesh, d_material, d_quadrature, d_state, d_boundary,
       d_sweepsource);
     return true;
   }
   else if (equation == "sc")
   {
-    d_sweeper = new Sweeper2D<Equation_SC_2D>(
+    d_sweeper = std::make_shared<Sweeper2D<Equation_SC_2D> >(
       d_input, d_mesh, d_material, d_quadrature, d_state, d_boundary,
       d_sweepsource);
     return true;
   }
   else if (equation == "sd")
   {
-    d_sweeper = new Sweeper2D<Equation_SD_2D>(
+    d_sweeper = std::make_shared<Sweeper2D<Equation_SD_2D> >(
       d_input, d_mesh, d_material, d_quadrature, d_state, d_boundary,
       d_sweepsource);
     return true;
   }
-  else if (equation == "scmoc")
-  {
-    d_sweeper = new Sweeper2DMOC<Equation_SC_MOC>(
-      d_input, d_mesh, d_material, d_quadrature, d_state, d_boundary,
-      d_sweepsource);
-    return true;
-  }
+  // else if (equation == "scmoc")
+  // {
+  //   d_sweeper = std::make_shared<Sweeper2DMOC<Equation_SC_MOC> >(
+  //     d_input, d_mesh, d_material, d_quadrature, d_state, d_boundary,
+  //     d_sweepsource);
+  //   return true;
+  // }
 
   return false;
 }
@@ -167,21 +167,21 @@ inline bool WGSolver<_1D>::set_sweep(std::string       equation)
 {
   if (equation == "dd")
   {
-    d_sweeper = new Sweeper1D<Equation_DD_1D>(
+    d_sweeper = std::make_shared<Sweeper1D<Equation_DD_1D> >(
       d_input, d_mesh, d_material, d_quadrature, d_state, d_boundary,
       d_sweepsource);
     return true;
   }
   else if (equation == "sd")
   {
-    d_sweeper = new Sweeper1D<Equation_SD_1D>(
+    d_sweeper = std::make_shared<Sweeper1D<Equation_SD_1D> >(
       d_input, d_mesh, d_material, d_quadrature, d_state, d_boundary,
       d_sweepsource);
     return true;
   }
   else if (equation == "sc")
   {
-    d_sweeper = new Sweeper1D<Equation_SC_1D>(
+    d_sweeper = std::make_shared<Sweeper1D<Equation_SC_1D> >(
       d_input, d_mesh, d_material, d_quadrature, d_state, d_boundary,
       d_sweepsource);
     return true;
