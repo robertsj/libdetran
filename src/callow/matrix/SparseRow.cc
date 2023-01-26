@@ -268,7 +268,7 @@ SparseRow::range_t SparseRow::range(const int a, const int b)
 	if (_begin->first >= a)  // insertions are before, so we want next one
 	  break;
   }
-  if (_begin == cend())
+  if (_begin == end())
 	return range_t(end(), end());
   auto _end = _begin+1;
   for (; _end < end(); ++_end)
