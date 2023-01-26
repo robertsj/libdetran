@@ -9,6 +9,7 @@
 #include "LinearSolver.hh"
 // preconditioners
 #include "callow/preconditioner/PCILU0.hh"
+#include "callow/preconditioner/PCILUT.hh"
 #include "callow/preconditioner/PCJacobi.hh"
 
 namespace callow
@@ -57,6 +58,16 @@ void LinearSolver::set_operators(SP_matrix A, SP_db db)
     if (pc_type == "ilu0")
     {
       d_P  = std::make_shared<PCILU0>(d_A);
+    }
+    else if (pc_type == "ilut")
+    {
+      double ilu_thresh = 100000000.0;
+      int ilu_levels = 0;
+      if(d_db->check("ilu_levels"))
+        ilu_levels = d_db->get<int>("ilu_levels");
+      if(d_db->check("ilu_thresh"))
+        ilu_thresh = d_db->get<double>("ilu_thresh");
+      d_P = new PCILUT(d_A, ilu_levels, ilu_thresh);
     }
     else if (pc_type == "jacobi")
     {
