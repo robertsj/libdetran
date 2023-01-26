@@ -37,7 +37,7 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<BoundaryConditionMOC>    SP_bc;
+  typedef std::shared_ptr<BoundaryConditionMOC>	SP_bc;
   typedef BoundaryMOC<D>                                Boundary_T;
   typedef typename Boundary_T::SP_boundary              SP_boundary;
   typedef typename Boundary_T::SP_input                 SP_input;

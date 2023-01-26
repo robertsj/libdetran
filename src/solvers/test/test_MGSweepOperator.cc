@@ -59,8 +59,7 @@ int test_MGSweepOperator_1g(int argc, char *argv[])
   FixedSourceManager<_1D> M(data.input, data.material, data.mesh);
   M.setup();
   M.set_solver();
-  MGS* solver = dynamic_cast<MGS*>(M.solver().bp());
-  TEST(solver);
+  auto solver = std::dynamic_pointer_cast<MGTransportSolver<_1D>>(M.solver());
   MGSweepOperator<_1D> S(M.state(),
                                M.boundary(),
                                solver->sweeper(),

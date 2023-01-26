@@ -41,7 +41,7 @@ public:
 
   typedef KineticsMaterial                              Base;
   typedef Base::SP_material                             SP_base;
-  typedef detran_utilities::SP<TimeDependentMaterial>   SP_material;
+  typedef std::shared_ptr<TimeDependentMaterial>	SP_material;
   typedef detran::State::SP_state                       SP_state;
 
   //-------------------------------------------------------------------------//

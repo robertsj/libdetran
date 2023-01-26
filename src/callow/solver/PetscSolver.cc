@@ -80,9 +80,9 @@ void PetscSolver::set_operators(SP_matrix A, SP_db db)
     if (pc_type != "petsc_pc")
     {
       if (pc_type == "ilu0")
-        d_P = new PCILU0(d_A);
+        d_P  = std::make_shared<PCILU0>(d_A);
       else if (pc_type == "jacobi")
-        d_P = new PCJacobi(d_A);
+        d_P  = std::make_shared<PCJacobi>(d_A);
       // Set callow pc as a shell and set the shell operator
       if (d_P)
       {

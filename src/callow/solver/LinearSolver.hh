@@ -14,7 +14,7 @@
 #include "callow/matrix/MatrixBase.hh"
 #include "callow/preconditioner/Preconditioner.hh"
 #include "utilities/InputDB.hh"
-#include "utilities/SP.hh"
+#include <memory>
 #include <cstdio>
 #include <string>
 #include <vector>
@@ -86,7 +86,7 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<LinearSolver>        SP_solver;
+  typedef std::shared_ptr<LinearSolver>	SP_solver;
   typedef MatrixBase::SP_matrix                     SP_matrix;
   typedef Preconditioner::SP_preconditioner         SP_preconditioner;
   typedef Vector::SP_vector                         SP_vector;

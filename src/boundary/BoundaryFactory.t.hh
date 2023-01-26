@@ -98,19 +98,19 @@ BoundaryFactory<D, BoundarySN>::build(SP_input      input,
     typename Boundary_T::SP_bc bc;
     if (type == "vacuum")
     {
-      bc = new Vacuum<D>(b, side, input, mesh, quad);
+      bc  = std::make_shared<Vacuum<D> >(b, side, input, mesh, quad);
     }
     else if (type == "reflect")
     {
-      bc = new Reflective<D>(b, side, input, mesh, quad);
+      bc  = std::make_shared<Reflective<D> >(b, side, input, mesh, quad);
     }
     else if (type == "fixed")
     {
-      bc = new FixedBoundary<D>(b, side, input, mesh, quad);
+      bc  = std::make_shared<FixedBoundary<D> >(b, side, input, mesh, quad);
     }
     else if (type == "periodic")
     {
-      bc = new Periodic<D>(b, side, input, mesh, quad);
+      bc  = std::make_shared<Periodic<D> >(b, side, input, mesh, quad);
     }
     else
     {

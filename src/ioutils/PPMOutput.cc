@@ -62,7 +62,7 @@ bool PPMOutput::initialize(SP_mesh mesh, const size_t n)
   }
 
   // create plotter
-  d_plotter = new PPMPlotter;
+  d_plotter = std::make_shared<PPMPlotter>();
 
   return true;
 }
@@ -95,7 +95,7 @@ bool PPMOutput::initialize(SP_geometry geo, const double delta)
     }
   }
   // create plotter
-  d_plotter = new PPMPlotter;
+  d_plotter = std::make_shared<PPMPlotter>();
   return true;
 }
 

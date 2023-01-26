@@ -177,8 +177,8 @@ int test_GMRES(int argc, char *argv[])
 
   Preconditioner::SP_preconditioner pcilu0;
   Preconditioner::SP_preconditioner pcjacobi;
-  pcilu0 = new PCILU0(A);
-  pcjacobi = new PCJacobi(A);
+  pcilu0  = std::make_shared<PCILU0>(A);
+  pcjacobi  = std::make_shared<PCJacobi>(A);
 
   // PCILU0 -- LEFT
   std::cout << "*** GMRES + ILU(0) on LEFT ***" << std::endl;

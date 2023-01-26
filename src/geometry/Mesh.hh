@@ -14,7 +14,7 @@
 #include "geometry/Point.hh"
 #include "utilities/Definitions.hh"
 #include "utilities/DBC.hh"
-#include "utilities/SP.hh"
+#include <memory>
 #include "utilities/Warning.hh"
 #include <cmath>
 #include <map>
@@ -69,7 +69,7 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<Mesh>        SP_mesh;
+  typedef std::shared_ptr<Mesh>	            SP_mesh;
   typedef detran_utilities::vec_int         vec_int;
   typedef detran_utilities::vec_dbl         vec_dbl;
   typedef std::map<std::string, vec_int>    mesh_map_type;

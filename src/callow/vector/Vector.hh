@@ -11,7 +11,7 @@
 
 #include "callow/callow_config.hh"
 #include "callow/utils/CallowDefinitions.hh"
-#include "utilities/SP.hh"
+#include <memory>
 #include <vector>
 
 namespace callow
@@ -30,7 +30,7 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<Vector>    SP_vector;
+  typedef std::shared_ptr<Vector>	SP_vector;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR

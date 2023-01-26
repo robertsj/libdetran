@@ -33,7 +33,7 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<Equation<_2D> >    SP_equation;
+  typedef std::shared_ptr<Equation<_2D> >       	SP_equation;
   typedef Equation<_2D>::SP_material              SP_material;
   typedef Equation<_2D>::SP_mesh                  SP_mesh;
   typedef Equation<_2D>::SP_quadrature            SP_quadrature;

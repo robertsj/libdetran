@@ -172,7 +172,7 @@ void Core::finalize(vec_int assembly_map)
   }
 
   // Create my mesh and add mesh maps.
-  d_mesh = new Mesh2D(edges, edges, core_mat_map);
+  d_mesh  = std::make_shared<Mesh2D>(edges, edges, core_mat_map);
   d_mesh->add_mesh_map("REGION",     core_reg_map);
   d_mesh->add_mesh_map("PINS",       core_pin_map);
   d_mesh->add_mesh_map("ASSEMBLIES", core_ass_map);

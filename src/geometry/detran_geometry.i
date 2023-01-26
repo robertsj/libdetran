@@ -9,7 +9,7 @@
 %module(directors="1", allprotected="1", package="detran") geometry
 %{
 #include <stddef.h>
-#include "utilities/SP.hh"
+#include <memory>
 #include "geometry/Assembly.hh"
 #include "geometry/Core.hh"
 #include "geometry/Mesh.hh"

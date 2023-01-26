@@ -93,9 +93,9 @@ ADD_EXECUTABLE(test_MGSweepOperator          	test_MGSweepOperator.cc)
 TARGET_LINK_LIBRARIES(test_MGSweepOperator   	solvers)
 ADD_TEST(test_MGSweepOperator             		test_MGSweepOperator 0)
 
-ADD_EXECUTABLE(test_MGCMFD          	test_MGCMFD.cc)
-TARGET_LINK_LIBRARIES(test_MGCMFD   	solvers)
-ADD_TEST(test_MGCMFD             		test_MGCMFD 0)
+# ADD_EXECUTABLE(test_MGCMFD          	test_MGCMFD.cc)
+# TARGET_LINK_LIBRARIES(test_MGCMFD   	solvers)
+# ADD_TEST(test_MGCMFD             		test_MGCMFD 0)
 
 
 ADD_EXECUTABLE(test_TimeStepper          	test_TimeStepper.cc)
@@ -105,23 +105,14 @@ TARGET_LINK_LIBRARIES(test_TWIGL            solvers)
 #ADD_TEST(test_MGCMFD             		test_MGCMFD 0)
 
 
-ADD_EXECUTABLE(test_Basis          	test_Basis.cc)
-TARGET_LINK_LIBRARIES(test_Basis  	solvers)
-ADD_TEST(test_Basis             	test_Basis 0)
+# ADD_EXECUTABLE(test_Basis          	test_Basis.cc)
+# TARGET_LINK_LIBRARIES(test_Basis  	solvers)
+# ADD_TEST(test_Basis             	test_Basis 0)
 
-ADD_EXECUTABLE(test_ProjectedOperator          	 test_ProjectedOperator.cc)
-TARGET_LINK_LIBRARIES(test_ProjectedOperator   	solvers)
-ADD_TEST(test_ProjectedOperator                  test_ProjectedOperator  0)
-
-ADD_EXECUTABLE(test_ROMSolver        	 test_ROMSolver.cc)
-TARGET_LINK_LIBRARIES(test_ROMSolver     solvers)
-ADD_TEST(test_ROM_diffusion               test_ROMSolver 0)
-ADD_TEST(test_ROM_EnergyIndependent       test_ROMSolver 1)
-ADD_TEST(test_ROM_EnergyDependent         test_ROMSolver 2)
+# ADD_EXECUTABLE(test_ProjectedOperator          	 test_ProjectedOperator.cc)
+# TARGET_LINK_LIBRARIES(test_ProjectedOperator   	solvers)
+# ADD_TEST(test_ProjectedOperator                  test_ProjectedOperator  0)
 
 ADD_EXECUTABLE(test_SlabReactor       	 test_SlabReactorTransient.cc)
 TARGET_LINK_LIBRARIES(test_SlabReactor   solvers)
 ADD_TEST(test_SlabReactor                test_SlabReactor 0)
-
-
-

@@ -98,7 +98,7 @@ int test_StupidParser(int argc, char *tmp_argv[])
 
   // Parse the input.
   StupidParser::SP_input input = parser.parse_input();
-  TEST(input);
+  TEST(input != nullptr);
   input->display();
   TEST(input->get<int>("number_groups") == 2);
   TEST(input->get<string>("bc_bottom") == "reflect");

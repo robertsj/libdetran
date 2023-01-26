@@ -37,10 +37,10 @@ int main(int argc, char *argv[])
 
 int test_ProjectedOperator_general(int argc, char *argv[])
 {
- typedef detran_utilities::SP<callow::MatrixDense>  SP_matrix;
+ typedef std::shared_ptr<callow::MatrixDense>	SP_matrix;
 
  SP_matrix A;
- A = new callow::MatrixDense(5, 5);
+ A  = std::make_shared<callow::MatrixDense>(5, 5);
 
  double row0[] = {-2.0, 1.1, 0.0, 0.0, 0.0};
  double row1[] = {1.0, -2.0, 1.1, 0.0, 0.0};
@@ -56,7 +56,7 @@ int test_ProjectedOperator_general(int argc, char *argv[])
  A->assemble();
 
  SP_matrix U;
- U = new callow::MatrixDense(5, 2);
+ U  = std::make_shared<callow::MatrixDense>(5, 2);
 
  double col0[] = {1, 1, 1, 1, 1};
  double col1[] = {2, 2, 2, 2, 2};
@@ -69,7 +69,7 @@ int test_ProjectedOperator_general(int argc, char *argv[])
  projector.SetOperators(A, U);
 
  SP_matrix Ar;
- Ar = new callow::MatrixDense(2, 2);
+ Ar  = std::make_shared<callow::MatrixDense>(2, 2);
  projector.Project(Ar);
 
  TEST(soft_equiv((*Ar)(0, 0), -1.6 ));

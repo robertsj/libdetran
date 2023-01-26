@@ -31,11 +31,10 @@ EigenGD<D>::EigenGD(SP_mg_solver mg_solver)
   d_A->sweeper()->set_update_boundary(false);
 
   // Fission operator
-  d_F = new LHS_Operator_T(d_mg_solver);
-
+  d_F  = std::make_shared<LHS_Operator_T>(d_mg_solver);
   // Create vectors
-  d_x  = new callow::Vector(d_A->number_rows(), 1.0);
-  d_x0 = new callow::Vector(d_A->number_rows(), 1.0);
+  d_x   = std::make_shared<callow::Vector>(d_A->number_rows(), 1.0);
+  d_x0  = std::make_shared<callow::Vector>(d_A->number_rows(), 1.0);
 
   // Get callow eigensolver parameter database
   SP_input db;
@@ -45,8 +44,7 @@ EigenGD<D>::EigenGD(SP_mg_solver mg_solver)
   }
   else
   {
-    db = new detran_utilities::InputDB();
-  }
+    db  = std::make_shared<detran_utilities::InputDB>();  }
   db->template put<std::string>("eigen_solver_type", "gd");
   // By default, GD find largest; we want smallest, equal to
   // 1/k for largest k
@@ -77,7 +75,7 @@ EigenGD<D>::EigenGD(SP_mg_solver mg_solver)
   MGTransportOperator<D> &TO = *mgs->get_operator();
   if (pc_type == "mgdsa")
   {
-    pc = new MGDSA(d_input, d_material, d_mesh,
+    pc = std::make_shared<MGDSA>(d_input, d_material, d_mesh,
                    TO.sweepsource()->get_scatter_source(),
                    d_fissionsource,
                    0, true, d_adjoint);
@@ -85,7 +83,7 @@ EigenGD<D>::EigenGD(SP_mg_solver mg_solver)
   }
   else if (pc_type == "mgcmdsa")
   {
-    pc = new MGCMDSA(d_input, d_material, d_mesh,
+    pc = std::make_shared<MGCMDSA>(d_input, d_material, d_mesh,
                      TO.sweepsource()->get_scatter_source(),
                      d_fissionsource,
                      0, true, d_adjoint);
@@ -103,7 +101,7 @@ EigenGD<D>::EigenGD(SP_mg_solver mg_solver)
                           true,
                           d_adjoint));
 
-    pc = new MGTCDSA<D>(d_input,
+    pc = std::make_shared<MGTCDSA<D> >(d_input,
                         d_material,
                         d_mesh,
                         TO.sweepsource()->get_scatter_source(),

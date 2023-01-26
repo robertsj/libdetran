@@ -74,38 +74,38 @@ LinearSolverCreator::Create(SP_db db)
   //---------------------------------------------------------------------------//
   if (solver_type == "richardson")
   {
-    solver = new Richardson(atol, rtol, maxit, omega);
+    solver  = std::make_shared<Richardson>(atol, rtol, maxit, omega);
   }
 
   //---------------------------------------------------------------------------//
   else if (solver_type == "jacobi")
   {
-    solver = new Jacobi(atol, rtol, maxit);
+    solver  = std::make_shared<Jacobi>(atol, rtol, maxit);
   }
 
   //---------------------------------------------------------------------------//
   else if (solver_type == "gauss-seidel")
   {
-    solver = new GaussSeidel(atol, rtol, maxit);
+    solver  = std::make_shared<GaussSeidel>(atol, rtol, maxit);
   }
 
   //---------------------------------------------------------------------------//
   else if (solver_type == "sor")
   {
-    solver = new GaussSeidel(atol, rtol, maxit, omega);
+    solver  = std::make_shared<GaussSeidel>(atol, rtol, maxit, omega);
   }
 
   //---------------------------------------------------------------------------//
   else if (solver_type == "gmres")
   {
-    solver = new GMRES(atol, rtol, maxit, restart);
+    solver  = std::make_shared<GMRES>(atol, rtol, maxit, restart);
   }
 
   //---------------------------------------------------------------------------//
   else if (solver_type == "petsc")
   {
 #ifdef CALLOW_ENABLE_PETSC
-    solver = new PetscSolver(atol, rtol, maxit);
+    solver  = std::make_shared<PetscSolver>(atol, rtol, maxit);
 #else
     THROW("PETSc solvers not available with this build");
 #endif

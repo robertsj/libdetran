@@ -18,7 +18,7 @@
 #include "geometry/TrackDB.hh"
 #include "geometry/Track.hh"
 #include "utilities/Definitions.hh"
-#include "utilities/SP.hh"
+#include <memory>
 
 namespace detran
 {

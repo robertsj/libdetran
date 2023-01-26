@@ -27,7 +27,7 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<TimeDependentManager<D> >  SP_manager;
+  typedef std::shared_ptr<TimeDependentManager<D> >     	SP_manager;
   typedef detran_utilities::InputDB::SP_input             SP_input;
   typedef State::SP_state                                 SP_state;
   typedef detran_geometry::Mesh::SP_mesh                  SP_mesh;

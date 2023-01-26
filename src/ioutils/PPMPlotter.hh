@@ -13,7 +13,7 @@
 #include "ioutils/ColorMap.hh"
 #include "utilities/DBC.hh"
 #include "utilities/Definitions.hh"
-#include "utilities/SP.hh"
+#include <memory>
 #include <string>
 
 namespace detran_ioutils
@@ -33,7 +33,7 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<PPMPlotter>      SP_ppmplotter;
+  typedef std::shared_ptr<PPMPlotter>	SP_ppmplotter;
   typedef detran_utilities::size_t              size_t;
   typedef detran_utilities::vec_dbl             vec_dbl;
   typedef detran_utilities::vec_int             vec_int;

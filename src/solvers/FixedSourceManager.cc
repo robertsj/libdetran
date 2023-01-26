@@ -103,16 +103,16 @@ void FixedSourceManager<D>::setup()
     d_quadrature =
       detran_angle::QuadratureFactory::build(d_input, D::dimension);
     Assert(d_quadrature);
-    if (d_discretization == MOC)
-    {
-      // Track the mesh
-      detran_geometry::Tracker tracker(d_mesh, d_quadrature);
-      // Normalize segments to conserve volume.
-      tracker.normalize();
-      // Replace the mesh with the tracked one.  This suggests refactoring
-      // to have a (possibly null) trackdb in Mesh.
-      //d_mesh = tracker.meshmoc();
-    }
+    // if (d_discretization == MOC)
+    // {
+    //   // Track the mesh
+    //   detran_geometry::Tracker tracker(d_mesh, d_quadrature);
+    //   // Normalize segments to conserve volume.
+    //   tracker.normalize();
+    //   // Replace the mesh with the tracked one.  This suggests refactoring
+    //   // to have a (possibly null) trackdb in Mesh.
+    //   //d_mesh = tracker.meshmoc();
+    // }
   }
 
   //--------------------------------------------------------------------------//
@@ -120,12 +120,12 @@ void FixedSourceManager<D>::setup()
   //--------------------------------------------------------------------------//
 
   // Setup the boundary conditions
-  if (d_discretization == MOC)
-  {
-    d_boundary = BoundaryFactory<D, BoundaryMOC>::
-      build(d_input, d_mesh, d_quadrature);
-  }
-  else if (d_discretization == SN)
+  // if (d_discretization == MOC)
+  // {
+  //   d_boundary = BoundaryFactory<D, BoundaryMOC>::
+  //     build(d_input, d_mesh, d_quadrature);
+  // }
+  if (d_discretization == SN)
   {
     d_boundary = BoundaryFactory<D, BoundarySN>::
       build(d_input, d_mesh, d_quadrature);
@@ -137,14 +137,14 @@ void FixedSourceManager<D>::setup()
   }
   Insist(d_boundary, "bad boundary");
   // Setup the state vector.
-  d_state = new State(d_input, d_mesh, d_quadrature);
+  d_state  = std::make_shared<State>(d_input, d_mesh, d_quadrature);
 
   //--------------------------------------------------------------------------//
   // FISSION SOURCE
   //--------------------------------------------------------------------------//
 
   if (d_fission)
-    d_fissionsource = new FissionSource(d_state, d_mesh, d_material);
+    d_fissionsource  = std::make_shared<FissionSource>(d_state, d_mesh, d_material);
 
   // Signify the manager is ready to solve
   d_is_setup = true;
@@ -183,7 +183,7 @@ bool FixedSourceManager<D>::set_solver()
   if (d_discretization == DIFF)
   {
     // Only option is explicit matrix construction
-    d_solver = new MGDiffusionSolver<D>(d_state, d_material, d_boundary,
+    d_solver = std::make_shared<MGDiffusionSolver<D> >(d_state, d_material, d_boundary,
                                         d_sources, d_fissionsource,
                                         d_multiply);
     d_is_ready = true;
@@ -197,17 +197,17 @@ bool FixedSourceManager<D>::set_solver()
 
     if (outer_solver == "GS")
     {
-      d_solver = new MGSolverGS<D>(d_state, d_material, d_boundary,
+      d_solver = std::make_shared<MGSolverGS<D> >(d_state, d_material, d_boundary,
                                    d_sources, d_fissionsource, d_multiply);
     }
     else if (outer_solver == "CMFD")
     {
-      d_solver = new MGSolverCMFD<D>(d_state, d_material, d_boundary,
+      d_solver = std::make_shared<MGSolverCMFD<D> >(d_state, d_material, d_boundary,
                                      d_sources, d_fissionsource, d_multiply);
     }
     else if (outer_solver == "GMRES")
     {
-      d_solver = new MGSolverGMRES<D>(d_state, d_material, d_boundary,
+      d_solver = std::make_shared<MGSolverGMRES<D> >(d_state, d_material, d_boundary,
                                       d_sources, d_fissionsource, d_multiply);
     }
     else

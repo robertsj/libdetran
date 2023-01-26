@@ -50,14 +50,14 @@ EigenSolverCreator::Create(SP_db db)
   }
 
   if (solver_type == "power")
-    solver = new PowerIteration(tol, maxit);
+    solver  = std::make_shared<PowerIteration>(tol, maxit);
   else if (solver_type == "slepc")
   {
 #ifdef CALLOW_ENABLE_SLEPC
     std::string slepc_type = "krylovschur";
     if (db->check("eigen_solver_slepc_type"))
       slepc_type = db->get<std::string>("eigen_solver_slepc_type");
-    solver = new SlepcSolver(slepc_type, tol, maxit, number_values);
+    solver  = std::make_shared<SlepcSolver>(slepc_type, tol, maxit, number_values);
 #else
     THROW("SLEPc solvers not available with this build");
 #endif
@@ -66,13 +66,13 @@ EigenSolverCreator::Create(SP_db db)
   {
     if (db->check("eigen_solver_subspace_size"))
       subspace_size = db->get<int>("eigen_solver_subspace_size");
-    solver = new Davidson(tol, maxit, subspace_size);
+    solver  = std::make_shared<Davidson>(tol, maxit, subspace_size);
   }
   else if (solver_type == "eispack")
   {
     if (db->check("eigen_solver_subspace_size"))
       subspace_size = db->get<int>("eigen_solver_subspace_size");
-    solver = new Eispack(tol, maxit);
+    solver  = std::make_shared<Eispack>(tol, maxit);
   }
   else
     THROW("Unsupported solver type: " + solver_type);

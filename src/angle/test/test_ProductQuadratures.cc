@@ -77,7 +77,8 @@ int test_ProductQuadratureIndexing(int argc, char *argv[])
 
   // 2-D
   if (0) {
-    ProductQuadrature::SP_quadrature q = QuadratureFactory::build(db, 2);
+    //Insist(std::dynamic_pointer_cast<Matrix::SP_matrix>(d_A)
+    auto q = std::dynamic_pointer_cast<ProductQuadrature>(QuadratureFactory::build(db, 2));
     printf(" s  azi pol  o   a        mu            eta          xi \n");
     for (int s = 0; s < 4; ++s)
     {
@@ -103,7 +104,8 @@ int test_ProductQuadratureIndexing(int argc, char *argv[])
 
   // 3-D
   if (1) {
-    ProductQuadrature::SP_quadrature q = QuadratureFactory::build(db, 3);
+    //ProductQuadrature::SP_quadrature q = QuadratureFactory::build(db, 3);
+    auto q = std::dynamic_pointer_cast<ProductQuadrature>(QuadratureFactory::build(db, 3));
     printf(" s  azi pol  o   a        mu            eta          xi \n");
     for (int s = 0; s < 6; ++s)
     {

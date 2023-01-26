@@ -57,11 +57,10 @@ void ROMSolver<D>::Set_FullOperators()
     d_input->put<int>("outer_krylov_group_cutoff", 0);
     d_input->put<std::string>("eigen_solver", "GD");
     SP_mg_solver mg_solver;
-    mg_solver = new FixedSourceManager<D>(d_input, d_mat, d_mesh, false, true);
+    mg_solver  = std::make_shared<FixedSourceManager<D> >(d_input, d_mat, d_mesh, false, true);
     mg_solver->setup();
     mg_solver->set_solver();
-    d_B = new LHS_Operator_T(mg_solver);
-
+    d_B  = std::make_shared<LHS_Operator_T>(mg_solver);
     typename RHS_Operator_T::SP_operator A;
     MGSolverGMRES<D>* mgs =
     dynamic_cast<MGSolverGMRES<D>*>(&(*mg_solver->solver()));
@@ -76,11 +75,10 @@ void ROMSolver<D>::Set_FullOperators()
   else if (d_operator == "EnergyIndependent")
   {
     SP_mg_solver mg_solver;
-    mg_solver = new FixedSourceManager<D>(d_input, d_mat, d_mesh, false, true);
+    mg_solver  = std::make_shared<FixedSourceManager<D> >(d_input, d_mat, d_mesh, false, true);
     mg_solver->setup();
     mg_solver->set_solver();
-    d_A = new Operator_T(mg_solver);
-  }
+    d_A  = std::make_shared<Operator_T>(mg_solver);  }
 }
 
 template <class D>
@@ -93,7 +91,7 @@ void ROMSolver<D>::Solve(SP_matrix d_U, SP_vector sol)
   int d_r = d_U->number_columns();
 
   SP_matrix Ar;
-  Ar = new MatrixDense(d_r, d_r);
+  Ar  = std::make_shared<MatrixDense>(d_r, d_r);
   P.Project(Ar);
 
   SP_eigensolver eigensolver;
@@ -103,7 +101,7 @@ void ROMSolver<D>::Solve(SP_matrix d_U, SP_vector sol)
   {
    P.SetOperators(d_B, d_U);
    SP_matrix Br;
-   Br = new MatrixDense(d_r, d_r);
+   Br  = std::make_shared<MatrixDense>(d_r, d_r);
    P.Project(Br);
    eigensolver->set_operators(Br, Ar);
   }
@@ -112,8 +110,8 @@ void ROMSolver<D>::Solve(SP_matrix d_U, SP_vector sol)
 
   SP_vector x_rom;
   SP_vector x;
-  x_rom = new Vector(d_r, 0.0);
-  x = new Vector(d_r, 1.0);
+  x_rom  = std::make_shared<Vector>(d_r, 0.0);
+  x  = std::make_shared<Vector>(d_r, 1.0);
   eigensolver->solve(x_rom, x);
 
   d_keff =  eigensolver->eigenvalue();

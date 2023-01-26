@@ -12,7 +12,7 @@
 #include "utilities/utilities_export.hh"
 #include "utilities/DBC.hh"
 #include "utilities/Definitions.hh"
-#include "utilities/SP.hh"
+#include <memory>
 #include <string>
 #include <map>
 #ifdef DETRAN_ENABLE_BOOST
@@ -60,7 +60,7 @@ public:
     SPINPUT
   };
 
-  typedef SP<InputDB> SP_input;
+  typedef std::shared_ptr<InputDB> SP_input;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -71,8 +71,7 @@ public:
 
   static SP_input Create(std::string name = "InputDB")
   {
-    SP_input p;
-    p = new InputDB(name);
+    SP_input p(new InputDB(name));
     return p;
   }
 

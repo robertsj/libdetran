@@ -58,7 +58,7 @@ int test_Tracker_2d_mesh(int argc, char *argv[])
   db->put<std::string>("quad_type", "u-dgl");
   db->put<int>("quad_number_azimuth_octant", 1);
 
-  Tracker::SP_quadrature q = detran_angle::QuadratureFactory::build(db, 2);
+  auto q = std::dynamic_pointer_cast<ProductQuadrature>(QuadratureFactory::build(db, 2));   
 
   Tracker tracker(db, q);
   tracker.trackit(mesh);
@@ -114,7 +114,9 @@ int test_Tracker_3d_mesh(int argc, char *argv[])
   db->put<int>("quad_number_azimuth_octant", 1);
   db->put<int>("quad_number_polar_octant",   1);
 
-  Tracker::SP_quadrature q = detran_angle::QuadratureFactory::build(db, 3);
+
+  auto q = std::dynamic_pointer_cast<ProductQuadrature>(QuadratureFactory::build(db, 3));   
+
   q->display();
   // 0     0.6123724356958    0.6123724356958    0.5000000000000    1.5707963267949
 
@@ -186,9 +188,9 @@ int test_Tracker_pin_2d(int argc, char *argv[])
   db->put<std::string>("quad_type", "u-dgl");
   db->put<int>("quad_number_azimuth_octant", 1);
 
-  Tracker::SP_quadrature q = detran_angle::QuadratureFactory::build(db, 2);
+  auto q = std::dynamic_pointer_cast<ProductQuadrature>(QuadratureFactory::build(db, 2));   
 
-  COUT("FUCK THIS BOX: " << pin->region(1)->bound_min() << " " << pin->region(1)->bound_max())
+  COUT("DUCK THIS BOX: " << pin->region(1)->bound_min() << " " << pin->region(1)->bound_max())
 //  Tracker tracker(db, q);
 //
 //  tracker.trackit(pin);
@@ -237,7 +239,7 @@ int test_Tracker_box_3d(int argc, char *argv[])
   db->put<int>("quad_number_azimuth_octant", 1);
   db->put<int>("quad_number_polar_octant", 1);
 
-  Tracker::SP_quadrature q = detran_angle::QuadratureFactory::build(db, 3);
+  auto q = std::dynamic_pointer_cast<ProductQuadrature>(QuadratureFactory::build(db, 3));   
 
   Tracker tracker(db, q);
 

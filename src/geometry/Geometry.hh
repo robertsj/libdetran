@@ -27,7 +27,7 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<Geometry>    SP_geometry;
+  typedef std::shared_ptr<Geometry>	SP_geometry;
   typedef Region::SP_region                 SP_region;
   typedef std::vector<SP_region>            vec_region;
   typedef detran_utilities::size_t          size_t;

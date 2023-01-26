@@ -16,7 +16,7 @@
 #include "angle/ProductQuadrature.hh"
 #include "utilities/DBC.hh"
 #include "utilities/InputDB.hh"
-#include "utilities/SP.hh"
+#include <memory>
 #include <vector>
 
 namespace detran_geometry
@@ -42,7 +42,7 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<Tracker>                   SP_tracker;
+  typedef std::shared_ptr<Tracker>	                      SP_tracker;
   typedef detran_utilities::InputDB::SP_input             SP_db;
   typedef Mesh::SP_mesh                                   SP_mesh;
   typedef Geometry::SP_geometry                           SP_geometry;

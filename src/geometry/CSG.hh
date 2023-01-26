@@ -34,7 +34,7 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<CSG_Node>    SP_node;
+  typedef std::shared_ptr<CSG_Node>	SP_node;
   typedef detran_utilities::size_t          size_t;
   typedef std::vector<Point>                vec_point;
   typedef const Ray                         c_Ray;

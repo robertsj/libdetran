@@ -85,7 +85,7 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<Matrix>  SP_matrix;
+  typedef std::shared_ptr<Matrix>	SP_matrix;
   typedef triplet                       triplet_T;
 
   //--------------------------------------------------------------------------//
@@ -153,7 +153,7 @@ public:
   /// is memory allocated?
   bool allocated() const {return d_allocated;}
   /// print (i, j, v) to ascii file with 1-based indexing for matlab
-  void print_matlab(std::string filename = "matrix.out") const;
+  void print_matlab(std::string filename = "matrix.out");
 
   //--------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL MATRICES MUST IMPLEMENT

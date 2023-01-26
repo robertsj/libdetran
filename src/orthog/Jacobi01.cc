@@ -34,7 +34,7 @@ Jacobi01::Jacobi01(const Parameters &p)
   //d_orthonormal = false;
 
   // Allocate the basis matrix
-  d_basis = new callow::MatrixDense(d_size, d_order + 1, 0.0);
+  d_basis  = std::make_shared<callow::MatrixDense>(d_size, d_order + 1, 0.0);
 
   // Allocate the normalization array
   d_a = Vector::Create(d_order + 1, 0.0);

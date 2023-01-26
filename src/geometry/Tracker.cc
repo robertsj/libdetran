@@ -51,7 +51,7 @@ Tracker::Tracker(SP_db db, SP_quadrature q)
 //----------------------------------------------------------------------------//
 Tracker::SP_tracker Tracker::Create(SP_db db, SP_quadrature quadrature)
 {
-  SP_tracker p(new Tracker(db, quadrature));
+  auto p = std::make_shared<Tracker>(db, quadrature);
   return p;
 }
 
@@ -117,7 +117,7 @@ void Tracker::trackit(SP_geometry geo)
   d_Z = d_geometry->width_z();
 
   // Create database
-  d_tracks = new TrackDB(d_quadrature);
+  d_tracks  = std::make_shared<TrackDB>(d_quadrature);
 
 
   if (d_quadrature->dimension() == 2)

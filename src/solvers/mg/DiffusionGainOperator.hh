@@ -12,7 +12,7 @@
 #include "material/Material.hh"
 #include "geometry/Mesh.hh"
 #include "utilities/InputDB.hh"
-#include "utilities/SP.hh"
+#include <memory>
 #include "callow/matrix/Matrix.hh"
 
 namespace detran
@@ -29,7 +29,7 @@ public:
   //--------------------------------------------------------------------------//
 
   typedef callow::Matrix                                Base;
-  typedef detran_utilities::SP<DiffusionGainOperator>   SP_gainoperator;
+  typedef std::shared_ptr<DiffusionGainOperator>	SP_gainoperator;
   typedef detran_utilities::InputDB::SP_input           SP_input;
   typedef detran_material::Material::SP_material        SP_material;
   typedef detran_geometry::Mesh::SP_mesh                SP_mesh;

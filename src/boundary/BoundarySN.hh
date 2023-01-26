@@ -39,7 +39,7 @@ public:
 
   typedef BoundaryBase<D>                           Base;
   typedef typename Base::SP_boundary                SP_base;
-  typedef detran_utilities::SP<BoundarySN<D> >      SP_boundary;
+  typedef std::shared_ptr<BoundarySN<D> >          	SP_boundary;
   typedef typename Base::SP_input                   SP_input;
   typedef typename Base::SP_mesh                    SP_mesh;
   typedef detran_angle::Quadrature::SP_quadrature   SP_quadrature;

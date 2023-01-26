@@ -19,7 +19,7 @@ UserBasis::UserBasis(const Parameters &p)
   d_orthonormal = true;
 
   // Allocate the basis matrix
-  d_basis = new callow::MatrixDense(d_size, d_order + 1, 0.0);
+  d_basis  = std::make_shared<callow::MatrixDense>(d_size, d_order + 1, 0.0);
 
 
   // Build the basis

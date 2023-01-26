@@ -89,8 +89,7 @@ void Execute::solve()
       double strength = 1.0;
       if (d_input->check("source_type"))
         strength = d_input->get<double>("source_strength");
-      d_externalsource = new detran_external_source::
-        ConstantSource(d_number_groups, d_mesh, strength, q);
+      d_externalsource = std::make_shared<detran_external_source::ConstantSource>(d_number_groups, d_mesh, strength, q);
 
     }
     else if (source_type == "isotropic")
@@ -109,8 +108,8 @@ void Execute::solve()
       Insist(d_input->check("source_spectra_map"),
              "Isotropic source requested, but no source map provided!");
       vec_int spectra_map = d_input->get<vec_int>("source_spectra_map");
-      d_externalsource = new detran_external_source::
-        IsotropicSource(d_number_groups, d_mesh, spectra, spectra_map, q);
+
+      d_externalsource = std::make_shared<detran_external_source::IsotropicSource>(d_number_groups, d_mesh, spectra, spectra_map, q);
 
     }
     else

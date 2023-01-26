@@ -35,7 +35,7 @@ public:
   //--------------------------------------------------------------------------//
 
   typedef callow::PCShell                           Base;
-  typedef detran_utilities::SP<MGPreconditioner>    SP_preconditioner;
+  typedef std::shared_ptr<MGPreconditioner>	SP_preconditioner;
   typedef detran_utilities::InputDB::SP_input       SP_input;
   typedef detran_material::Material::SP_material    SP_material;
   typedef detran_geometry::Mesh::SP_mesh            SP_mesh;

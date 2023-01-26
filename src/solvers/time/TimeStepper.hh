@@ -20,7 +20,7 @@
 #include "kinetics/SyntheticSource.hh"
 #include "utilities/DBC.hh"
 #include "utilities/Definitions.hh"
-#include "utilities/SP.hh"
+#include <memory>
 #include "transport/State.hh"
 #include <cstdio>
 
@@ -55,7 +55,7 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<TimeStepper<D> >           SP_timestepper;
+  typedef std::shared_ptr<TimeStepper<D> >	              SP_timestepper;
   typedef detran_utilities::InputDB::SP_input             SP_input;
   typedef TimeDependentMaterial::SP_material              SP_material;
   typedef detran_geometry::Mesh::SP_mesh                  SP_mesh;

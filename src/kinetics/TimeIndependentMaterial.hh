@@ -12,7 +12,7 @@
 
 #include "TimeDependentMaterial.hh"
 #include "utilities/Definitions.hh"
-#include "utilities/SP.hh"
+#include <memory>
 
 namespace detran
 {
@@ -32,7 +32,7 @@ public:
 
   typedef TimeDependentMaterial                             Base;
   typedef Base::SP_material                                 SP_base;
-  typedef detran_utilities::SP<TimeIndependentMaterial>     SP_material;
+  typedef std::shared_ptr<TimeIndependentMaterial>	SP_material;
 
   //-------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR

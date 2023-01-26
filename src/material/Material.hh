@@ -11,7 +11,7 @@
 
 #include "material/material_export.hh"
 #include "utilities/Definitions.hh"
-#include "utilities/SP.hh"
+#include <memory>
 #include <string>
 #ifdef DETRAN_ENABLE_BOOST
 #include <boost/archive/binary_iarchive.hpp>
@@ -42,7 +42,7 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<Material> SP_material;
+  typedef std::shared_ptr<Material>	SP_material;
   typedef detran_utilities::vec_dbl      vec_dbl;
   typedef detran_utilities::vec2_dbl     vec2_dbl;
   typedef detran_utilities::vec3_dbl     vec3_dbl;

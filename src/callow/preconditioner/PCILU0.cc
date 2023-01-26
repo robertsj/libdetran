@@ -17,14 +17,16 @@ PCILU0::PCILU0(SP_matrix A)
 {
   Require(A);
   Require(A->number_rows() == A->number_columns());
-  Insist(dynamic_cast<Matrix*>(A.bp()),
+  Insist(std::dynamic_pointer_cast<Matrix>(A),
+  //Insist(dynamic_cast<Matrix*>(A.bp()),
     "Need an explicit matrix for use with PCILU0");
-  SP_matrixfull B(A);
+  auto B = std::dynamic_pointer_cast<Matrix>(A);
+  //SP_matrixfull B(A);
 
   d_size = A->number_columns();
 
   // copy A
-  d_P = new Matrix(*B);
+  d_P  = std::make_shared<Matrix>(*B);
 
   using std::cout;
   using std::endl;

@@ -13,7 +13,7 @@
 #include "geometry/Segment.hh"
 #include "utilities/DBC.hh"
 #include "utilities/Iterators.hh"
-#include "utilities/SP.hh"
+#include <memory>
 #include <iomanip>
 #include <ostream>
 #include <vector>
@@ -40,7 +40,7 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<Track>                 SP_track;
+  typedef std::shared_ptr<Track>	SP_track;
   typedef std::vector<Segment>                        vec_segment;
   typedef detran_utilities::Reversible<vec_segment>   iterator;
   typedef detran_utilities::size_t                    size_t;

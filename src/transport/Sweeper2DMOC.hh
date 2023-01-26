@@ -34,7 +34,7 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<Sweeper2DMOC>            SP_sweeper;
+  typedef std::shared_ptr<Sweeper2DMOC>	                SP_sweeper;
   typedef Sweeper<_2D>                                  Base;
   typedef typename Base::SP_state                       SP_state;
   typedef typename Base::SP_input                       SP_input;

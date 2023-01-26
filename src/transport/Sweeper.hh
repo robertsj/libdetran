@@ -23,7 +23,7 @@
 #include "utilities/DBC.hh"
 #include "utilities/Definitions.hh"
 #include "utilities/InputDB.hh"
-#include "utilities/SP.hh"
+#include <memory>
 #include <iostream>
 
 namespace detran
@@ -63,7 +63,7 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<Sweeper>             SP_sweeper;
+  typedef std::shared_ptr<Sweeper>	                SP_sweeper;
   typedef State::SP_state                           SP_state;
   typedef detran_utilities::InputDB::SP_input       SP_input;
   typedef detran_material::Material::SP_material    SP_material;

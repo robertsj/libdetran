@@ -16,7 +16,7 @@ DLP::DLP(const Parameters &p)
   : OrthogonalBasis(p)
 {
   // Allocate the basis matrix
-  d_basis = new callow::MatrixDense(d_size, d_order + 1, 1.0);
+  d_basis  = std::make_shared<callow::MatrixDense>(d_size, d_order + 1, 1.0);
 
   // Zeroth built by initialization. Build first order if needed.
   if (d_order > 0)

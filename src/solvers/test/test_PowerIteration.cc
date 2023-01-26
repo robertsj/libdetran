@@ -49,14 +49,14 @@ int test_PowerIteration_2D(int argc, char *argv[])
   vec_int fm(2, 5);
   vec_int mat_map(4, 2);
   SP_mesh mesh;
-  mesh = new Mesh2D(fm, fm, cm, cm, mat_map);
+  mesh  = std::make_shared<Mesh2D>(fm, fm, cm, cm, mat_map);
 
   // Quadrature
   SP_quadrature quad = quadruplerange_fixture();
 
   // Input
   PowerIteration<_2D>::SP_input input;
-  input = new InputDB();
+  input  = std::make_shared<InputDB>();
   input->put<string>(  "equation",          "sc");
   input->put<int>(     "number_groups",     1);
   input->put<int>(     "inner_max_iters",   100);
@@ -74,16 +74,15 @@ int test_PowerIteration_2D(int argc, char *argv[])
 
   // State
   PowerIteration<_2D>::SP_state state;
-  state = new State(input, mesh, quad);
+  state  = std::make_shared<State>(input, mesh, quad);
 
   // Fission source
   PowerIteration<_2D>::SP_fissionsource q_f;
-  q_f = new FissionSource(state, mesh, mat);
+  q_f  = std::make_shared<FissionSource>(state, mesh, mat);
 
   // Boundary
   PowerIteration<_2D>::SP_boundary bound;
-  bound = new BoundarySN<_2D>(input, mesh, quad);
-
+  bound  = std::make_shared<BoundarySN<_2D> >(input, mesh, quad);
   // SI
   PowerIteration<_2D> solver(input, state, mesh, mat,
                              quad, bound, q_f);

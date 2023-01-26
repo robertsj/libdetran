@@ -44,7 +44,7 @@ int test_Sweeper2D_basic(int argc, char *argv[])
 
   // Input
   Sweeper_T::SP_input input;
-  input = new InputDB();
+  input  = std::make_shared<InputDB>();
   input->put<std::string>("equation", "dd");
   input->put<int>("number_groups", 2);
 
@@ -52,12 +52,11 @@ int test_Sweeper2D_basic(int argc, char *argv[])
 
   // State
   Sweeper_T::SP_state state;
-  state = new State(input, mesh, quad);
+  state  = std::make_shared<State>(input, mesh, quad);
 
   // Boundary
   Sweeper_T::SP_boundary bound;
-  bound = new Sweeper_T::Boundary_T(input, mesh, quad);
-
+  bound  = std::make_shared<Sweeper_T::Boundary_T>(input, mesh, quad);
   // Sweeper
 //  Sweeper2D sweeper(input, mesh, mat,
 //                    quad, state, bound, source);

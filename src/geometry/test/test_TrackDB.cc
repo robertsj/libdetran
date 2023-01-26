@@ -38,7 +38,8 @@ int test_TrackDB_2D(int argc, char *argv[])
   db->put<string>("quad_type", "u-dgl");
   db->put<int>("quad_number_azimuth_octant", 2);
   db->put<int>("quad_number_polar_octant",   1);
-  QF::SP_quadrature q = QF::build(db, 2);
+
+  auto q = std::dynamic_pointer_cast<ProductQuadrature>(QF::build(db, 2));   
 
   TrackDB trackdb(q);
 
@@ -92,7 +93,8 @@ int test_TrackDB_3D(int argc, char *argv[])
   db->put<string>("quad_type", "u-dgl");
   db->put<int>("quad_number_azimuth_octant", 1);
   db->put<int>("quad_number_polar_octant", 2);
-  QF::SP_quadrature q = QF::build(db, 3);
+
+  auto q = std::dynamic_pointer_cast<ProductQuadrature>(QF::build(db, 3));   
 
   TrackDB tracks(q);
 

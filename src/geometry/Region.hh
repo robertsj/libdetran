@@ -13,7 +13,7 @@
 #include "Ray.hh"
 #include "utilities/Definitions.hh"
 #include "utilities/DBC.hh"
-#include "utilities/SP.hh"
+#include <memory>
 #include "utilities/TinyVector.hh"
 #include <map>
 
@@ -37,7 +37,7 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<Region>            SP_region;
+  typedef std::shared_ptr<Region>	SP_region;
   typedef std::vector<SP_region>                  vec_region;
   typedef Surface::SP_surface                     SP_surface;
   typedef Surface::vec_surface                    vec_surface;

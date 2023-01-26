@@ -33,7 +33,7 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef detran_utilities::SP<Assembly>    SP_assembly;
+  typedef std::shared_ptr<Assembly>	SP_assembly;
   typedef Mesh::SP_mesh                     SP_mesh;
   typedef PinCell::SP_pincell               SP_pincell;
   typedef std::vector<SP_pincell>           vec_pincell;

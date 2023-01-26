@@ -33,7 +33,7 @@ TransformedBasis::TransformedBasis(const Parameters &p)
     "Cannot transform a transformed basis.");
   SP_basis original = OrthogonalBasis::Create(p.transformed_key, p);
   const MatrixDense &P = *(original->basis());
-  d_basis = new callow::MatrixDense(P);
+  d_basis  = std::make_shared<callow::MatrixDense>(P);
 
   // Allocate the normalization array
   d_a = Vector::Create(d_order + 1, 0.0);
