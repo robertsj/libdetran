@@ -10,7 +10,7 @@
 #ifndef detran_TIMESTEPPER_HH_
 #define detran_TIMESTEPPER_HH_
 
-#include "FixedSourceManager.hh"
+#include "solvers/FixedSourceManager.hh"
 #include "angle/Quadrature.hh"
 #include "ioutils/SiloOutput.hh"
 #include "kinetics/BDFCoefficients.hh"

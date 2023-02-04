@@ -67,7 +67,7 @@ void LinearSolver::set_operators(SP_matrix A, SP_db db)
         ilu_levels = d_db->get<int>("ilu_levels");
       if(d_db->check("ilu_thresh"))
         ilu_thresh = d_db->get<double>("ilu_thresh");
-      d_P = new PCILUT(d_A, ilu_levels, ilu_thresh);
+      d_P = std::make_shared<PCILUT>(d_A, ilu_levels, ilu_thresh);
     }
     else if (pc_type == "jacobi")
     {

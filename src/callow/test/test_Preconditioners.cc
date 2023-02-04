@@ -180,8 +180,7 @@ int test_performance(int argc, char *argv[])
 	// PC ILU0
 	{
 	x.set(0.0);
-	typedef detran_utilities::SP<PCILU0> SP_pc;
-	SP_pc P(new PCILU0(A));
+	auto P = std::make_shared<PCILU0>(A);
 	P->matrix()->print_matlab("ilu0.out");
 	solver.set_preconditioner(P, 1);
 	solver.solve(b, x);
@@ -190,8 +189,7 @@ int test_performance(int argc, char *argv[])
 	// PC ILUT(oo, 0)
 	{
 	x.set(0.0);
-	typedef detran_utilities::SP<PCILUT> SP_pc;
-	SP_pc P(new PCILUT(A, 10000, 0.0));
+	auto P = std::make_shared<PCILUT>(A, 10000, 0.0);
 	P->matrix()->print_matlab("ilutoo.out");
 	solver.set_preconditioner(P, 1);
 	solver.solve(b, x);
@@ -200,8 +198,7 @@ int test_performance(int argc, char *argv[])
 	// PC ILUT(0, 0)
 	{
 	x.set(0.0);
-	typedef detran_utilities::SP<PCILUT> SP_pc;
-	SP_pc P(new PCILUT(A, 0, 0));
+	auto P = std::make_shared<PCILUT>(A, 0, 0.0);
 	P->matrix()->print_matlab("ilut0.out");
 	solver.set_preconditioner(P, 1);
 	solver.solve(b, x);
@@ -210,8 +207,7 @@ int test_performance(int argc, char *argv[])
 	// PC ILUT(10, 1e-3)
 	{
 	x.set(0.0);
-	typedef detran_utilities::SP<PCILUT> SP_pc;
-	SP_pc P(new PCILUT(A, 10, 1e-3));
+	auto P = std::make_shared<PCILUT>(A, 10, 1e-3);
 	P->matrix()->print_matlab("ilut2.out");
 	solver.set_preconditioner(P, 1);
 	solver.solve(b, x);

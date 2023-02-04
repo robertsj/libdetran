@@ -11,10 +11,11 @@
 #include <cmath>
 #include <algorithm>
 #include <iostream>
+#include <memory>
 using std::cout;
 using std::endl;
 
-#define dbprint(s, i, k, row) void; //printf("%s %i %i ",s, i, k); row.display("");
+#define dbprint(s, i, k, row);// printf("%s %i %i ",s, i, k); row.display("");
 
 namespace callow
 {
@@ -89,13 +90,13 @@ PCILUT::PCILUT(SP_matrix A, const size_t p, const double t)
 {
   Require(A);
   Require(A->number_rows() == A->number_columns());
-  Insist(dynamic_cast<Matrix*>(A.bp()),
+  Insist(std::dynamic_pointer_cast<Matrix>(A),
     "Need an explicit matrix for use with PCILUT");
 
 
   //printf("***** PCILUT(%i, %6.2f)\n", d_p, d_t);
 
-  SP_matrixfull B(A);
+  auto B = std::dynamic_pointer_cast<Matrix>(A);
 
   d_size = A->number_columns();
 
@@ -134,7 +135,7 @@ PCILUT::PCILUT(SP_matrix A, const size_t p, const double t)
   }
 
   // copy A
-  d_P = new Matrix(n, n, 2*d_p+1);
+  d_P = std::make_shared<Matrix>(n, n, 2*d_p+1);
   for (int i = 0; i < n; ++i)
   {
     for (auto it = rows[i].begin(); it < rows[i].end(); ++it)

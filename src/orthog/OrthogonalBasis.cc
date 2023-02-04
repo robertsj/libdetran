@@ -46,7 +46,7 @@ OrthogonalBasis::OrthogonalBasis(const Parameters &p)
   Requirev(d_order < d_size, AsString(d_order)+" < "+AsString(d_size));
   if (p.w.size())
   {
-  d_w = new callow::Vector(p.size, 0.0);
+  d_w = std::make_shared<callow::Vector>(p.size, 0.0);
   for (int i = 0; i < p.size; ++i) (*d_w)[i]=p.w[i];
   }
 }

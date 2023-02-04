@@ -11,3 +11,7 @@ SET(EIGEN_SRC
   ${SRC_DIR}/EnergyDependentEigenLHS.cc
   PARENT_SCOPE
 )
+
+# Install
+INSTALL_FILES(/include/solvers/eigen .hh)
+
