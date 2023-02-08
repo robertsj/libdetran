@@ -417,7 +417,7 @@ herr_t find_db_groups(hid_t              loc_id,
   std::vector<std::string> &names = *((std::vector<std::string>*)data);
 
   // Get type of the object.  There should *only* be groups.
-  status = H5Oget_info_by_name(loc_id, name, &infobuf, H5P_DEFAULT);
+  status = H5Oget_info_by_name(loc_id, name, &infobuf, H5O_INFO_BASIC, H5P_DEFAULT);
   Insist(infobuf.type == H5O_TYPE_GROUP,
          "Something other than a group was found nested in a parameter DB.");
 
