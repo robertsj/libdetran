@@ -9,6 +9,10 @@
 #include "Eispack.hh"
 #include "callow/matrix/MatrixDense.hh"
 #include <complex>
+#include <iostream>
+
+#define DISP(c) std::cout << c << std::endl;
+#define W() std::cout << "line " << __LINE__ << " on file " << __FILE__ << std::endl;
 
 namespace callow
 {
@@ -21,7 +25,8 @@ Eispack::Eispack(const double tol,
   , d_which_value(which)
 {
   /* ... */
-}
+    
+} 
 
 //----------------------------------------------------------------------------//
 void Eispack::set_operators(SP_matrix  A,
@@ -31,15 +36,13 @@ void Eispack::set_operators(SP_matrix  A,
   Require(A);
   Insist(std::dynamic_pointer_cast<MatrixDense>(A),
     "Need a dense matrix for use with Eispack");
-  //d_A = A;
-  auto d_A = std::dynamic_pointer_cast<MatrixDense>(A);
+  d_A = A;
 
   if (B)
   {
-      Insist(std::dynamic_pointer_cast<MatrixDense>(B),
+    Insist(std::dynamic_pointer_cast<MatrixDense>(B),
       "Need a dense matrix for use with Eispack");
-    //d_B = B;
-    auto d_B = std::dynamic_pointer_cast<MatrixDense>(B);
+    d_B = B;
   }
 }
 
@@ -53,11 +56,11 @@ void Eispack::solve_complete(MatrixDense &V_R,
   auto A = std::dynamic_pointer_cast<MatrixDense>(d_A);
   //MatrixDense &A = *dynamic_cast<MatrixDense*>(d_A.bp());
   // Use copies so the originals are not overwritten
+  
   MatrixDense tmp_A(*A);
-  int m    = A->number_rows();
+  int m = A->number_rows();
   int matz = 1; // positive to get the eigenvectors
   int ierr = 0;
-
   if (d_B)
   {
     auto B = std::dynamic_pointer_cast<MatrixDense>(d_B);
@@ -67,8 +70,8 @@ void Eispack::solve_complete(MatrixDense &V_R,
     //MatrixDense &tmp_B = B;
     Vector E_D(m, 0.0);
     matz=1;
-    tmp_A.print_matlab("A.out");
-    tmp_B.print_matlab("B.out");
+    //tmp_A.print_matlab("A.out");
+    //tmp_B.print_matlab("B.out");
     rgg_(&m, &m, &tmp_A[0], &tmp_B[0],
          &E_R[0], &E_I[0], &E_D[0], &matz, &V_R[0], &ierr);
     Assert(!ierr);
@@ -91,6 +94,7 @@ void Eispack::solve_complete(MatrixDense &V_R,
 //----------------------------------------------------------------------------//
 void Eispack::solve_impl(Vector &x, Vector &x0)
 {
+  
   int m = d_A->number_columns();
   MatrixDense V_R(m, m, 0.0);
   MatrixDense V_I(m, m, 0.0);

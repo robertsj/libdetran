@@ -23,6 +23,7 @@ using std::cout;
 using std::endl;
 
 #define DISP(c) cout << c << endl;
+#define W() std::cout << "line " << __LINE__ << " on file " << __FILE__ << std::endl;
 
 int main(int argc, char *argv[])
 {
@@ -65,8 +66,9 @@ MatrixDense::SP_matrix get_B()
 int test_Eispack_standard(int argc, char *argv[])
 {
   Eispack S(1.e-5, 1000);
-  S.set_operators(get_A());
-
+  auto A = get_A();
+  Require(A);
+  S.set_operators(A);
   // test single eigenvalue and vector
   {
     Vector X0(n, 0.0), X(n, 0.0);
