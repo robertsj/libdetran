@@ -7,6 +7,7 @@
 //----------------------------------------------------------------------------//
 
 #include "EigenSolver.hh"
+#include "LinearSolverCreator.hh"
 #include "preconditioner/PCILU0.hh"
 #define W() std::cout << "line " << __LINE__ << " on file " << __FILE__ << std::endl;
 

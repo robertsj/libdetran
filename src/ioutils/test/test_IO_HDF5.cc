@@ -177,7 +177,6 @@ int test_IO_HDF5_material(int argc, char *argv[])
   io.close();
 
   // Tests
-  TEST(mat2);
   TEST(mat2->number_groups()    == 2);
   TEST(mat2->number_materials() == 2);
   //
@@ -223,12 +222,11 @@ int test_IO_HDF5_mesh(int argc, char *argv[])
   // to write out, or a default is used.
   io.write(mesh);
   io.close();
-return 0;
+
   // Create a new mesh.
   Mesh::SP_mesh mesh2;
   mesh2 = io.read_mesh();
   io.close();
-  TEST(mesh2);
 
   // Tests.
   TEST(mesh2->dimension()      == 3);

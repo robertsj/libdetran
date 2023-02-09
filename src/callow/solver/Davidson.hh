@@ -12,6 +12,7 @@
 #include "EigenSolver.hh"
 #include "callow/preconditioner/PCShell.hh"
 #include "callow/matrix/MatrixShell.hh"
+#include "LinearSolverCreator.hh"
 
 namespace callow
 {
