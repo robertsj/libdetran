@@ -65,3 +65,7 @@ ADD_TEST(test_RegionFactory_PinCell         test_RegionFactory 0)
 ADD_EXECUTABLE(test_Region                  test_Region.cc)
 TARGET_LINK_LIBRARIES(test_Region           geometry utilities angle)
 ADD_TEST(test_Region                        test_Region 0)
+
+ADD_EXECUTABLE(test_Geometry                test_Geometry.cc)
+TARGET_LINK_LIBRARIES(test_Geometry         geometry utilities angle)
+ADD_TEST(test_Geometry                      test_Geometry 0)
