@@ -21,14 +21,6 @@ Geometry::Geometry(const double x, const double y, const double z)
 }
 
 //----------------------------------------------------------------------------//
-Geometry::SP_geometry
-Geometry::Create(const double x, const double y, const double z)
-{
-  SP_geometry p(new Geometry(x, y, z));
-  return p;
-}
-
-//----------------------------------------------------------------------------//
 void Geometry::add_region(SP_region r)
 {
   Require(r);

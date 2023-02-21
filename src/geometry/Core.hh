@@ -56,14 +56,6 @@ public:
    */
   explicit Core(int dimension);
 
-  /// SP Constructor
-  static SP_core
-  Create(int dimension)
-  {
-    SP_core p(new Core(dimension));
-    return p;
-  }
-
   /// Return underlying meshed object.
   Mesh::SP_mesh mesh()
   {

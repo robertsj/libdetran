@@ -73,11 +73,11 @@ EigenvalueData get_eigenvalue_data(unsigned int dim, unsigned int ng)
   vec_int fm(1, 5);
   vec_int mt(1, 2);
   if (dim == 1)
-    data.mesh = Mesh1D::Create(fm, cm, mt);
+    data.mesh = std::make_shared<Mesh1D>(fm, cm, mt);
   else if (dim == 2)
-    data.mesh = Mesh2D::Create(fm, fm, cm, cm, mt);
+    data.mesh = std::make_shared<Mesh2D>(fm, fm, cm, cm, mt);
   else if (dim == 3)
-    data.mesh = Mesh3D::Create(fm, fm, fm, cm, cm, cm, mt);
+    data.mesh = std::make_shared<Mesh3D>(fm, fm, fm, cm, cm, cm, mt);
 
   return data;
 }

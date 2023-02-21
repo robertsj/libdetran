@@ -124,14 +124,6 @@ public:
    */
   explicit MomentToDiscrete(SP_momentindexer indexer);
 
-  /// SP contructor
-  static SP_MtoD Create(SP_momentindexer indexer, SP_quadrature q)
-  {
-    SP_MtoD m(new MomentToDiscrete(indexer));
-    m->build(q);
-    return m;
-  }
-
   //-------------------------------------------------------------------------//
   // PUBLIC INTERFACE
   //-------------------------------------------------------------------------//

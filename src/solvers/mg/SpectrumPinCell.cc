@@ -57,7 +57,7 @@ SpectrumPinCell::SpectrumPinCell(SP_input    input,
     Assert(db->check("radii_"+AsString(p)));
     vec_dbl rad  = db->get<vec_dbl>("radii_"+AsString(p));
 
-    d_pincells[p] = detran_geometry::PinCell::Create(pitch, mat, rad);
+    d_pincells[p] = std::make_shared<detran_geometry::PinCell>(pitch, mat, rad);
     d_pincells[p]->meshify(20, false);
   }
 

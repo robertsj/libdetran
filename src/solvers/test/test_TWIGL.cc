@@ -249,7 +249,7 @@ Mesh2D::SP_mesh get_mesh(Mesh2D::size_t fmm = 1)
     mt[0] = 2; mt[1] = 1; mt[2] = 2;
     mt[3] = 1; mt[4] = 0; mt[5] = 2;
     mt[6] = 2; mt[7] = 2; mt[8] = 2;
-    Mesh2D::SP_mesh mesh = Mesh2D::Create(fm, fm, cm, cm, mt);
+    Mesh2D::SP_mesh mesh = std::make_shared<Mesh2D>(fm, fm, cm, cm, mt);
     return mesh;
   }
   else
@@ -260,7 +260,7 @@ Mesh2D::SP_mesh get_mesh(Mesh2D::size_t fmm = 1)
     fm[0] = 3;
     Mesh2D::vec_int mt(1);
     mt[0] = 0;
-    Mesh2D::SP_mesh mesh = Mesh2D::Create(fm, fm, cm, cm, mt);
+    Mesh2D::SP_mesh mesh = std::make_shared<Mesh2D>(fm, fm, cm, cm, mt);
     return mesh;
   }
 }

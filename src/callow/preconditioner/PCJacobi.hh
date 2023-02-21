@@ -53,9 +53,6 @@ public:
   /// Construct a Jacobi preconditioner for the explicit matrix A
   PCJacobi(SP_matrix A);
 
-  /// SP constructor
-  static SP_preconditioner Create(SP_matrix A);
-
   /// Virtual destructor
   virtual ~PCJacobi(){};
 

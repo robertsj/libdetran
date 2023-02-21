@@ -57,8 +57,6 @@ public:
   MatrixDense(const MatrixDense &A);
   // destructor
   virtual ~MatrixDense();
-  // sp constructor
-  static SP_matrix Create(const int m, const int n, const double v = 0.0);
 
   //--------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS

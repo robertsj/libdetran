@@ -49,7 +49,7 @@ int test_Sweeper3D_basic(int argc, char *argv[])
   vec_int mt(1, 0);
 
   // Test fixtures
-  Sweeper_T::SP_mesh mesh       = Mesh3D::Create(fm, fm, fm, cm, cm, cm, mt);
+  Sweeper_T::SP_mesh mesh       = std::make_shared<Mesh3D>(fm, fm, fm, cm, cm, cm, mt);
   Sweeper_T::SP_material mat    = material_fixture_1g();
   Sweeper_T::SP_quadrature quad = LevelSymmetric::Create(2, 3);
 

@@ -28,7 +28,7 @@ static Geometry::SP_geometry test_2D_pincell_simple()
   double HP = 0.5 * P; // half pitch
   double R  = 0.54;    // pin radius
 
-  Geometry::SP_geometry geo = Geometry::Create(P, P, 0.0);
+  auto geo = std::make_shared<Geometry>(P, P, 0.0);
 
   // Surfaces
   SP_surface W = QSF::CreatePlaneX(0.0);
@@ -65,7 +65,7 @@ static Geometry::SP_geometry test_2D_pincell_complex()
   double HP = 0.5 * P; // half pitch
   double R  = 0.54;    // pin radius
 
-  Geometry::SP_geometry geo = Geometry::Create(P, P, 0.0);
+  auto geo = std::make_shared<Geometry>(P, P, 0.0);
 
   // Surfaces
   SP_surface surfaces[] = {QSF::CreatePlaneX(0.0),                 // 1  W
@@ -125,12 +125,12 @@ test_2D_pincell_via_factory(const size_t div, const size_t nrad)
 
   PinCell::SP_pincell pin;
   Point center(0, 0);
-  pin = PinCell::Create(pitch, mat_map, radii, div, center);
+  pin = std::make_shared<PinCell>(pitch, mat_map, radii, div, center);
 
   RF::vec_region regions;
   regions = RF::CreatePinCell(pin);
 
-  Geometry::SP_geometry geo = Geometry::Create(1.26, 1.26, 0.0);
+  auto geo = std::make_shared<Geometry>(1.26, 1.26, 0.0);
   for (size_t i = 0; i < regions.size(); ++i)
   {
     geo->add_region(regions[i]);
@@ -159,11 +159,11 @@ static Geometry::SP_geometry test_2D_assembly(int n = 3)
   radii[1] = 0.54;
 
   PinCell::SP_pincell M, F_I, F_II;
-  M    = PinCell::Create(P, mat_M);
-  F_I  = PinCell::Create(P, mat_I, radii, PinCell::DIVISION_HV_DIAG);
-  F_II = PinCell::Create(P, mat_I, radii, PinCell::DIVISION_HV_DIAG);
+  M    = std::make_shared<PinCell>(P, mat_M);
+  F_I  = std::make_shared<PinCell>(P, mat_I, radii, PinCell::DIVISION_HV_DIAG);
+  F_II = std::make_shared<PinCell>(P, mat_I, radii, PinCell::DIVISION_HV_DIAG);
 
-  Assembly::SP_assembly a = Assembly::Create(n, n);
+  Assembly::SP_assembly a = std::make_shared<Assembly>(n, n);
   int* pin_map_a;
   int pin_map_a_8[] =
   {
@@ -201,7 +201,7 @@ static Geometry::SP_geometry test_2D_assembly(int n = 3)
   RF::vec_region regions = RF::CreateAssembly(a);
   std::cout << " # reg = " << regions.size() << std::endl;
 
-  Geometry::SP_geometry geo = Geometry::Create(n*1.26, n*1.26, 0.0);
+  auto geo = std::make_shared<Geometry>(n*1.26, n*1.26, 0.0);
   for (size_t i = 0; i < regions.size(); ++i)
   {
     geo->add_region(regions[i]);
