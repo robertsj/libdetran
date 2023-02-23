@@ -33,3 +33,7 @@ ADD_TEST(test_Random                        test_Random 0)
 ADD_EXECUTABLE(test_Factory                 test_Factory.cc)
 TARGET_LINK_LIBRARIES(test_Factory          utilities)
 ADD_TEST(test_Factory                       test_Factory 0)
+
+ADD_EXECUTABLE(test_Iterators               test_Iterators.cc)
+TARGET_LINK_LIBRARIES(test_Iterators        utilities)
+ADD_TEST(test_Iterators                       test_Iterators 0)
