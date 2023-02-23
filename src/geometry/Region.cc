@@ -21,7 +21,9 @@ Region::Region(const size_t mat, const Point &b_min, const Point &b_max)
     d_have_bound = true;
   if (d_have_bound)
   {
-    Require(d_bounds[0] <= d_bounds[1]);
+    Require(d_bounds[0].x() < d_bounds[1].x());
+    Require(d_bounds[0].y() < d_bounds[1].y());
+    Require(d_bounds[0].z() <= d_bounds[1].z());
     if (d_bounds[1].z() > d_bounds[0].z())
       d_have_bound_z = true;
   }
