@@ -2,7 +2,6 @@
 /**
  *  @file  TrackDB.hh
  *  @brief TrackDB class definition
- *  @note  Copyright (C) 2013 Jeremy Roberts
  */
 //----------------------------------------------------------------------------//
 
@@ -25,16 +24,24 @@ namespace detran_geometry
  *  @class TrackDB
  *  @brief Database of tracks.
  *
- *  The track database contains all the information needed to represent the
- *  MOC problem with respect to space and angle.  In 2-D, tracks are
- *  stored only for the first two quadrants, phi = [0, pi].  In 3-D, tracks are
- *  similarly stored only for the first four octants, phi = [0, 2*pi] and
- *  theta = [0, pi/2].
+ *  NEW IDEA
+ *   - Have tracker add all tracks to a single vector of tracks.
+ *   - Construct TrackDB from this vector
+ *   - Provide groupings that make sense (e.g., tracks for an octant, tracks for a face, etc.)
+ *
+ *  Tracks are defined according to an azimuth, polar angle (3-D), and
+ *  track spacing by Tracker.  Within TrackDB, a vector of Track
+ *  pointers is stored as an element of a 2-D vector indexed by
+ *  azimuth and polar angle.
+ *
+ *  In 2-D, tracks are stored only for the first two quadrants.
+ *  In 3-D, tracks are similarly stored only for the first four octants.
+ *
+ *  For the other quadrants and octants, track reverse iterat
  *
  *  Tracks are not guaranteed to be stored in any particular order within
  *  an angle.  The client needs to post process to obtain proper indexing,
  *  e.g. for boundary conditions.
- *
  */
 /**
  *  @example geometry/test/test_TrackDB.cc
@@ -59,20 +66,9 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef std::shared_ptr<TrackDB>	                          SP_trackdb;
-  typedef detran_angle::ProductQuadrature::SP_quadrature      SP_quadrature;
-  typedef Track::SP_track                                     SP_track;
-  typedef std::vector<SP_track>                               vec_track;
-  typedef std::vector<vec_track>                              vec2_track;
-  typedef std::vector<vec2_track>                             vec3_track;
-  typedef detran_utilities::size_t                            size_t;
-  typedef const size_t                                        c_size_t;
-  typedef detran_utilities::vec_int                           vec_int;
-  typedef detran_utilities::vec_dbl                           vec_dbl;
-
-  typedef vec_track::iterator                                 iterator_angle;
-  //typedef detran_utilities::Reversible<vec_track>         iterator;
-
+  typedef std::shared_ptr<detran_angle::ProductQuadrature>    SP_quadrature;
+  typedef std::vector<std::shared_ptr<Track>>                 vec_track;
+  typedef std::map<std::pair<int, int>, vec_track>            map_track;
 
   //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -80,7 +76,9 @@ public:
 
   /**
    *  @brief Constructor
-   *  @param    q   product quadrature
+   *  @param q        product quadrature
+   *  @param tracks   vector of track pointers
+   *  @param symmetry is symmetry used to reduce the number of tracks by half?
    */
   TrackDB(SP_quadrature q);
 
@@ -88,60 +86,21 @@ public:
   // PUBLIC FUNCTIONS
   //--------------------------------------------------------------------------//
 
-  /**
-   *  @brief Get a track
-   *  @param    a       azimuth index
-   *  @param    p       polar index
-   *  @param    t       track index within [a, p]
-   */
-  SP_track track(c_size_t a, c_size_t p, c_size_t t);
-
-  struct iterator_anglea
+  /// Get the tracks.
+  const map_track& tracks() const
   {
-
+    return d_tracks;
+  };
+  map_track& tracks()
+  {
+    return d_tracks;
   };
 
-
-  //@{
-  /// Iterators to all tracks
-//  iterator begin(bool forward = true);
-//  iterator end(bool forward = true);
-  /// Iterators to tracks for a given angle
-  iterator_angle begin(c_size_t a, c_size_t p);
-  iterator_angle end(c_size_t a, c_size_t p);
-  //@}
-
-  /**
-   *  @brief Number of tracks in a given angle
-   *  @param    a       azimuth index
-   *  @param    p       polar index
-   */
-  size_t number_tracks(c_size_t a, c_size_t p = 0) const;
-
-  /**
-   *  @brief Add a track
-   *  @param    a       azimuth index
-   *  @param    p       polar index
-   *  @param    t       track index within azimuths
-   */
-  void add_track(c_size_t a, c_size_t p, SP_track t);
-
   /// Normalize the tracks given a vector of true region volumes.
-  void normalize(const vec_dbl &volume);
-
-  /// Get the number of azimuths stored
-  size_t number_azimuths() const;
-
-  /// Get the number of polar angles stored
-  size_t number_polar() const;
-
-  /// Return the dimension
-  size_t dimension() const;
-
-  /// Sort the tracks from left-to-right, bottom-to-top on an incident side
+  void normalize(const std::vector<double> &volume);
+  /// Sort the tracks from left-to-right, bottom-to-top on an incident side.
   void sort();
-
-  /// Pretty display of all track
+  /// Pretty display of all tracks.
   void display() const;
 
 private:
@@ -149,17 +108,11 @@ private:
   //--------------------------------------------------------------------------//
   // DATA
   //--------------------------------------------------------------------------//
-
+  /// map of octant,angle indices to vector of tracks.
+  map_track d_tracks;
   /// Quadrature
   SP_quadrature d_quadrature;
-  /// Dimension
-  size_t d_dimension;
-  /// Number of azimuths stored
-  size_t d_number_azimuths;
-  /// Number of polar angles stored
-  size_t d_number_polar;
-  /// Tracks by [azimuth][polar][space]
-  vec3_track d_tracks;
+
 
 };
 

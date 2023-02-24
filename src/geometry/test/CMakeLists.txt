@@ -43,10 +43,6 @@ TARGET_LINK_LIBRARIES(test_QuadraticSurface geometry utilities angle)
 ADD_TEST(test_QuadraticSurface_plane        test_QuadraticSurface 0)
 ADD_TEST(test_QuadraticSurface_circle       test_QuadraticSurface 1)
 
-ADD_EXECUTABLE(test_Point                   test_Point.cc)
-TARGET_LINK_LIBRARIES(test_Point            geometry utilities angle)
-ADD_TEST(test_Point                         test_Point 0)
-
 ADD_EXECUTABLE(test_Ray                     test_Ray.cc)
 TARGET_LINK_LIBRARIES(test_Ray              geometry utilities angle)
 ADD_TEST(test_Ray                           test_Ray 0)
@@ -69,3 +65,16 @@ ADD_TEST(test_Region                        test_Region 0)
 ADD_EXECUTABLE(test_Geometry                test_Geometry.cc)
 TARGET_LINK_LIBRARIES(test_Geometry         geometry utilities angle)
 ADD_TEST(test_Geometry                      test_Geometry 0)
+
+macro(test)
+  add_executable(${ARGV0} ${ARGV0}.cc)
+  target_link_libraries(${ARGV0}
+    geometry utilities angle
+    GTest::gtest_main
+  )
+  gtest_discover_tests(${ARGV0})
+endmacro()
+
+test(test_Point)
+test(test_Tracker2)
+
