@@ -35,13 +35,13 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------------------------------------//
 
-int test_PPMOutput_mesh(int argc, char *argv[])
+int test_PPMOutput_mesh(int argc, char *argv[]) //not testing anything
 {
 
   return 0;
 }
 
-int test_PPMOutput_geo(int argc, char *argv[])
+int test_PPMOutput_geo(int argc, char *argv[]) //not testing anything
 {
 //  // simple pin cell
 //  {

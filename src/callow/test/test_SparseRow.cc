@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 //----------------------------------------------------------------------------//
 
 // Test of basic public interface
-int test_SparseRow(int argc, char *argv[])
+int test_SparseRow(int argc, char *argv[]) 
 {
   callow_initialize(argc, argv);
 

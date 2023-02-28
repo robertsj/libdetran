@@ -48,7 +48,7 @@ InputDB::SP_input get_pcdb()
 }
 
 //----------------------------------------------------------------------------//
-int test_MGSweepOperator_1g(int argc, char *argv[])
+int test_MGSweepOperator_1g(int argc, char *argv[]) //not testing anything
 {
   typedef MGTransportSolver<_1D> MGS;
   FixedSourceData data = get_fixedsource_data(1, 1, 100);

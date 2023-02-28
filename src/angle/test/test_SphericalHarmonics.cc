@@ -71,7 +71,7 @@ int test_SphericalHarmonics(int argc, char *argv[])
  *
  *  This could be made a public function at some point.
  */
-int test_SphericalHarmonics_integration(int argc, char *argv[])
+int test_SphericalHarmonics_integration(int argc, char *argv[])//not testing anything
 {
   InputDB::SP_input inp(new InputDB());
   inp->put<int>("quad_number_polar_octant",   4);

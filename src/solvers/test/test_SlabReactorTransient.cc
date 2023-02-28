@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
 //---------------------------------------------------------------------------//
 
 void test_monitor(void* data, TimeStepper<_1D>* ts, int step, double t,
-                  double dt, int it, bool conv)
+                  double dt, int it, bool conv) //not testing anything
 {
   static double maxp = 0;
   double F = 0;
@@ -132,7 +132,7 @@ void test_monitor(void* data, TimeStepper<_1D>* ts, int step, double t,
 //---------------------------------------------------------------------------//
 
 
-int test_SlabReactor(int argc, char *argv[])
+int test_SlabReactor(int argc, char *argv[])//not testing anything
 {
   typedef TimeStepper<_1D> TS_1D;
   InputDB::SP_input inp = get_input();

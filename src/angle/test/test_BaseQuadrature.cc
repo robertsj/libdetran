@@ -62,7 +62,7 @@ const char* types[] = {"gl", "dgl", "gc", "dgc",
                        "uniform", "uniformcosine", "simpson"};
 
 //----------------------------------------------------------------------------//
-int test_BaseQuadrature_regression(int argc, char *argv[])
+int test_BaseQuadrature_regression(int argc, char *argv[]) //not testing anything
 {
   // All available 1-D quadratures are tested on three simple
   // problems to ensure the expected value for each is computed.
@@ -91,7 +91,7 @@ int test_BaseQuadrature_regression(int argc, char *argv[])
 }
 
 //----------------------------------------------------------------------------//
-int test_BaseQuadrature_GL(int argc, char *argv[])
+int test_BaseQuadrature_GL(int argc, char *argv[]) //not testing anything
 {
   {
     QuadratureFactory::SP_basequadrature Q;
@@ -113,14 +113,14 @@ int test_BaseQuadrature_GL(int argc, char *argv[])
 }
 
 //----------------------------------------------------------------------------//
-int test_BaseQuadrature_CL(int argc, char *argv[])
+int test_BaseQuadrature_CL(int argc, char *argv[]) //not testing anything
 {
 
   return 0;
 }
 
 //----------------------------------------------------------------------------//
-int test_BaseQuadrature_Uniform(int argc, char *argv[])
+int test_BaseQuadrature_Uniform(int argc, char *argv[]) //not testing anything
 {
   using detran_utilities::pi;
   QuadratureFactory::SP_basequadrature Q;

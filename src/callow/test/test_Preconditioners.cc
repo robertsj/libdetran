@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 //----------------------------------------------------------------------------//
 
 //----------------------------------------------------------------------------//
-int test_PCJacobi(int argc, char *argv[])
+int test_PCJacobi(int argc, char *argv[]) //not testing anything
 {
   Matrix::SP_matrix A = test_matrix_1(5);
 
@@ -55,7 +55,7 @@ int test_PCJacobi(int argc, char *argv[])
 }
 
 //----------------------------------------------------------------------------//
-int test_PCILU0(int argc, char *argv[])
+int test_PCILU0(int argc, char *argv[])//not testing anything
 {
   Matrix::SP_matrix A = test_matrix_1(5);
 
@@ -157,7 +157,7 @@ int test_PCILUT_P0(int argc, char *argv[])
 }
 
 //----------------------------------------------------------------------------//
-int test_performance(int argc, char *argv[])
+int test_performance(int argc, char *argv[])//not testing anything
 {
 	/*
 	 *  Test the performance of the difference built-in PC's with

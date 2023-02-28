@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
 //----------------------------------------------//
 
 void test_monitor(void* data, TimeStepper<_1D>* ts, int step, double t, double dt, int it, bool conv)
-{
+{ //not testing anything
   printf(" %16.13f  %16.13f  %16.13f \n", t, ts->state()->phi(0)[0], ts->precursor()->C(0)[0]);
 }
 
@@ -54,7 +54,7 @@ void test_monitor(void* data, TimeStepper<_1D>* ts, int step, double t, double d
  *  1D time dependent SN problem with a TD source and no
  *  fission.  Constant source from 0:1.  Final time 10.
  */
-int test_TimeStepper(int argc, char *argv[])
+int test_TimeStepper(int argc, char *argv[])//not testing anything
 {
 
   typedef TimeStepper<_1D> TS_1D;

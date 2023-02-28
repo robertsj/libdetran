@@ -68,7 +68,7 @@ int test_ProductQuadratures(int argc, char *argv[])
  *  given a dimension and surface, an easy way to access the angles in
  *  order is crucial.
  */
-int test_ProductQuadratureIndexing(int argc, char *argv[])
+int test_ProductQuadratureIndexing(int argc, char *argv[])//not testing anything
 {
   InputDB::SP_input db = InputDB::Create();
   db->put<int>("quad_number_azimuth_octant", 3);

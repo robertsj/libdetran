@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------//
 
-SP_material test_EigenvalueManager_material()
+SP_material test_EigenvalueManager_material() //not testing anything
 {
   // Material (kinf = 1.0)
 //  SP_material mat(new Material(1, 1));
@@ -91,7 +91,7 @@ SP_material test_EigenvalueManager_material()
   return mat;
 }
 
-SP_mesh test_EigenvalueManager_mesh(int d)
+SP_mesh test_EigenvalueManager_mesh(int d) //not testing anything
 {
   vec_dbl cm(2, 0.0); cm[1] = 100.0;
   vec_dbl cc(2, 0.0); cc[1] = 0.1;
@@ -106,7 +106,7 @@ SP_mesh test_EigenvalueManager_mesh(int d)
   return mesh;
 }
 
-InputDB::SP_input test_EigenvalueManager_input()
+InputDB::SP_input test_EigenvalueManager_input() //not testing anything
 {
   InputDB::SP_input inp(new InputDB());
   // BASIC INPUT

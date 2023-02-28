@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 
 //---------------------------------------------------------------------------//
 void test_monitor(void* data, TimeStepper<_2D>* ts, int step, double t,
-                  double dt, int it, bool conv)
+                  double dt, int it, bool conv) //not testing anything
 {
   static double maxp = 0;
   double F = 0;
@@ -87,7 +87,7 @@ void test_monitor(void* data, TimeStepper<_2D>* ts, int step, double t,
 }
 
 //---------------------------------------------------------------------------//
-Mesh2D::SP_mesh get_mesh(Mesh2D::size_t fmm = 1)
+Mesh2D::SP_mesh get_mesh(Mesh2D::size_t fmm = 1) //not testing anything
 {
   Mesh2D::vec_dbl cm(12, 0.0);
   for (int i = 1; i < 12; ++i) cm[i] = cm[i-1] + 15.0;
@@ -135,7 +135,7 @@ Mesh2D::SP_mesh get_mesh(Mesh2D::size_t fmm = 1)
 }
 
 //---------------------------------------------------------------------------//
-int test_LRA(int argc, char *argv[])
+int test_LRA(int argc, char *argv[]) //not testing anything
 {
 
   typedef TimeStepper<_2D> TS_2D;

@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------------------------------------//
 
-int test_RegionFactory_PinCell(int argc, char *argv[])
+int test_RegionFactory_PinCell(int argc, char *argv[]) //not testing anything
 {
   typedef RegionFactory RF;
 

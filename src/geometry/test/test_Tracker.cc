@@ -176,7 +176,7 @@ int test_Tracker_3d_mesh(int argc, char *argv[])
 }
 
 //----------------------------------------------------------------------------//
-int test_Tracker_pin_2d(int argc, char *argv[])
+int test_Tracker_pin_2d(int argc, char *argv[]) //not testing anything
 {
   // P = 1.26, R = 0.54 --> V_f = 0.916088417786784, V_m =  0.0839115822132163
 
@@ -202,7 +202,7 @@ int test_Tracker_pin_2d(int argc, char *argv[])
 }
 
 // Track something shifted
-int test_Tracker_box_3d(int argc, char *argv[])
+int test_Tracker_box_3d(int argc, char *argv[]) //not testing anything
 {
 
 

@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------//
 
-SP_material test_FixedSourceManager_material()
+SP_material test_FixedSourceManager_material() //not testing anything
 {
 // // Material (kinf = 1)
 //  SP_material mat(new Material(1, 1, "test"));
@@ -82,7 +82,7 @@ SP_material test_FixedSourceManager_material()
   return mat;
 }
 
-SP_mesh test_FixedSourceManager_mesh(int d)
+SP_mesh test_FixedSourceManager_mesh(int d) //not testing anything
 {
   vec_dbl cm(2, 0.0); cm[1] = 10.0;
   vec_dbl cc(2, 0.0); cc[1] = 0.1;
@@ -97,7 +97,7 @@ SP_mesh test_FixedSourceManager_mesh(int d)
   return mesh;
 }
 
-InputDB::SP_input test_FixedSourceManager_input()
+InputDB::SP_input test_FixedSourceManager_input() //not testing anything
 {
   //--------------------------------------------------------------------------//
   // Base problem parameters
@@ -375,7 +375,7 @@ int test_FixedSourceManager_T()
   return 0;
 }
 
-int test_FixedSourceManager_1D(int argc, char *argv[])
+int test_FixedSourceManager_1D(int argc, char *argv[]) //not testing anything
 {
   int flag = 0;
 //  try

@@ -47,7 +47,7 @@ double tol    = 1e-10;
 int    maxit  = 1000;
 
 //----------------------------------------------------------------------------//
-int test_PowerIteration(int argc, char *argv[])
+int test_PowerIteration(int argc, char *argv[]) //not testing anything
 {
   Vector X(n, 0.0);
   Vector X0(n, 1.0);
@@ -64,7 +64,7 @@ int test_PowerIteration(int argc, char *argv[])
 }
 
 //----------------------------------------------------------------------------//
-int test_SlepcSolver(int argc, char *argv[])
+int test_SlepcSolver(int argc, char *argv[])//not testing anything
 {
   Vector X(n, 0.0);
   Vector X0(n, 1.0);
@@ -103,7 +103,7 @@ private:
 };
 
 //----------------------------------------------------------------------------//
-int test_SlepcGD(int argc, char *argv[])
+int test_SlepcGD(int argc, char *argv[])//not testing anything
 {
   // Solve a generalized eigenvalue problem with GD.
   //   A * x = e * B * x

@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------------------------------------//
 
-int test_Sweeper3D_basic(int argc, char *argv[])
+int test_Sweeper3D_basic(int argc, char *argv[]) //not testing anything
 {
   typedef Sweeper3D<Equation_DD_3D> Sweeper_T;
 

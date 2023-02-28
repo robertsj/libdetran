@@ -41,9 +41,9 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------//
 
-int test_InnerGMRES_1D_actual();
+int test_InnerGMRES_1D_actual(); //not testing anything
 
-int test_InnerGMRES_1D(int argc, char *argv[])
+int test_InnerGMRES_1D(int argc, char *argv[]) //not testing anything
 {
   // Initialize PETSc
   PetscInitialize(&argc, &argv, PETSC_NULL, PETSC_NULL);
@@ -57,7 +57,7 @@ int test_InnerGMRES_1D(int argc, char *argv[])
   return result;
 }
 
-int test_InnerGMRES_1D_actual()
+int test_InnerGMRES_1D_actual() //not testing anything
 {
 
   // Test fixtures.  Material 0 has sigma = 1, c = 0.9.

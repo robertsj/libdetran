@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
  *  an analytic (trig) function defined at evenly-spaced points.
  *  Results are given based on L1, L2, and Linf norms.
  */
-int test_BasisComparisonAnalytic(int argc, char *argv[])
+int test_BasisComparisonAnalytic(int argc, char *argv[])//not testing anything
 {
 
   int N = 20; // Size of the vector
@@ -137,7 +137,7 @@ int test_BasisComparisonAnalytic(int argc, char *argv[])
  *  an analytic (trig) function defined at evenly-spaced points.
  *  Results are given based on L1, L2, and Linf norms.
  */
-int test_BasisComparisonDiscontinuous(int argc, char *argv[])
+int test_BasisComparisonDiscontinuous(int argc, char *argv[])//not testing anything
 {
   return 0;
 }

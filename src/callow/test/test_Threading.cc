@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
 //----------------------------------------------------------------------------//
 
 //----------------------------------------------------------------------------//
-int test_ThreadedMatVec(int argc, char *argv[])
+int test_ThreadedMatVec(int argc, char *argv[]) //not testing anything
 {
   callow_initialize(argc, argv);
   {
@@ -71,7 +71,7 @@ int test_ThreadedMatVec(int argc, char *argv[])
 }
 
 //----------------------------------------------------------------------------//
-int test_ThreadedJacobi(int argc, char *argv[])
+int test_ThreadedJacobi(int argc, char *argv[]) //not testing anything
 {
   callow_initialize(argc, argv);
   {

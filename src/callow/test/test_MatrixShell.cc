@@ -86,7 +86,7 @@ int test_MatrixShell(int argc, char *argv[])
 }
 
 // Test matlab writer
-int test_MatrixShell_write(int argc, char *argv[])
+int test_MatrixShell_write(int argc, char *argv[]) //not testing anything
 {
   // n * n
   {

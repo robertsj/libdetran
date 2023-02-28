@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------------------------------------//
 
-int test_Equation_SC_MOC(int argc, char *argv[])
+int test_Equation_SC_MOC(int argc, char *argv[]) //not testing anything
 {
 
 //  // Create mesh

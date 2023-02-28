@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------------------------------------//
 
-int test_Ray(int argc, char *argv[])
+int test_Ray(int argc, char *argv[]) //not testing anything
 {
   Point origin(-2.0, 0.5, 0.5);
   Point direction(1.0, 0.0, 0.0);

@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
 //---------------------------------------------------------------------------//
 
 void test_monitor(void* data, TimeStepper<_2D>* ts, int step, double t,
-                  double dt, int it, bool conv)
+                  double dt, int it, bool conv)//not testing anything
 {
   double F = 0;
   TimeStepper<_2D>::vec_int matmap = ts->mesh()->mesh_map("MATERIAL");
@@ -266,7 +266,7 @@ Mesh2D::SP_mesh get_mesh(Mesh2D::size_t fmm = 1)
 }
 
 //---------------------------------------------------------------------------//
-int test_TWIGL(int argc, char *argv[])
+int test_TWIGL(int argc, char *argv[]) //not testing anything
 {
 
   typedef TimeStepper<_2D> TS_2D;

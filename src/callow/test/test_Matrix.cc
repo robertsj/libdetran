@@ -225,7 +225,7 @@ int test_Matrix(int argc, char *argv[])
   return 0;
 }
 
-int test_MatrixDiff(int argc, char *argv[])
+int test_MatrixDiff(int argc, char *argv[]) //not testing anything
 {
   Matrix::SP_matrix L = test_matrix_2(10);
   Matrix::SP_matrix F = test_matrix_3(10);

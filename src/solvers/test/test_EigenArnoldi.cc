@@ -67,7 +67,7 @@ int test_EigenArnoldi_7g_forward(int argc, char *argv[])
   return 0;
 }
 
-int test_EigenArnoldi_7g_adjoint(int argc, char *argv[])
+int test_EigenArnoldi_7g_adjoint(int argc, char *argv[]) //not testing anything
 {
   EigenvalueData data = get_eigenvalue_data(1, 7);
   data.input->put<std::string>("eigen_solver", "arnoldi");

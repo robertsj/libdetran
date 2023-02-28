@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 //----------------------------------------------//
 
 // Test of basic public interface
-int test_LinearMaterial(int argc, char *argv[])
+int test_LinearMaterial(int argc, char *argv[]) //not testing anything
 {
   // Kinetics data
   double lambda[]   = {0.1, 1.0};

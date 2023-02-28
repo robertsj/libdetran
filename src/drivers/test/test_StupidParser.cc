@@ -89,7 +89,7 @@ static void write_test_input()
   f.close();
 }
 
-int test_StupidParser(int argc, char *tmp_argv[])
+int test_StupidParser(int argc, char *tmp_argv[]) 
 {
   write_test_input();
   cout << endl;
@@ -141,7 +141,7 @@ int test_StupidParser(int argc, char *tmp_argv[])
   return 0;
 }
 
-int test_StupidParser_hdf5(int argc, char *tmp_argv[])
+int test_StupidParser_hdf5(int argc, char *tmp_argv[]) //not testing anything
 {
   cout << endl;
   char *argv[] = {"n/a", "test.h5"};
