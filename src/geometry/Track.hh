@@ -57,7 +57,8 @@ public:
    */
   Track(const Point &r0, const Point  &r1, double w);
 
-  Track reverse();
+  SP_track reverse();
+  bool reversed() const {return d_reversed;}
 
   //--------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS

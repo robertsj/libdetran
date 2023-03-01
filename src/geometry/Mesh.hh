@@ -10,7 +10,6 @@
 #define detran_geometry_MESH_HH_
 
 #include "geometry/geometry_export.hh"
-#include "geometry/TrackDB.hh"
 #include "geometry/Point.hh"
 #include "utilities/Definitions.hh"
 #include "utilities/DBC.hh"

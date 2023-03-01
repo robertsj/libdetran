@@ -15,67 +15,76 @@ namespace detran_geometry
 #define COUT(c) std::cout << c << std::endl;
 
 //----------------------------------------------------------------------------//
-TrackDB::TrackDB(SP_quadrature q)
+TrackDB::TrackDB(SP_quadrature q, const map_track& tracks)
   : d_quadrature(q)
+  , d_tracks(tracks)
 {
   Require(d_quadrature);
 }
 
-
 //----------------------------------------------------------------------------//
-void TrackDB::normalize(const std::vector<double> &volume)
+std::vector<double> TrackDB::volume() const
 {
-  std::vector<double> volume_appx(volume.size(), 0.0);
-  //size_t na = d_quadrature->number_azimuths_octant();
-
-  // compute approximate volumes from track widths, segment lengths, and
+  // compute volumes from track widths, segment lengths, and
   // angular weights.
-  for (auto &track: d_tracks)
+  std::map<int, double> volume_appx;
+  double total_angle_weight = 0;
+  for (auto &angle_tracks: d_tracks)
   {
-
+    int a = angle_tracks.first.second;
+    double angle_weight = d_quadrature->weight(a);
+    total_angle_weight += angle_weight;
+    for (auto track: angle_tracks.second)
+    {
+      for (auto segment: track->segments())
+      {
+        int region = segment.region();
+        double dV = segment.length() * track->spatial_weight() * angle_weight;
+        COUT(" region = " << region << " dV = " << dV << " angle_weight = " << angle_weight);
+        if (volume_appx.count(region)==0)
+          volume_appx[region] = 0.0;
+        volume_appx[region] += dV;
+      }
+    }
+  }
+  COUT(" total_angle_weight = " << total_angle_weight);
+  // could check angular weight
+  std::vector<double> volume_appx_v(volume_appx.size(), 0.0);
+  for (auto &v: volume_appx)
+  {
+    auto r = v.first;
+    Assertv(r < volume_appx.size(), "missing region?"); // regions should be 0, 1, ...
+    volume_appx_v[r] = v.second / total_angle_weight;
   }
 
+  return volume_appx_v;
+}
 
 
-//  for (size_t a = 0; a < d_tracks.size(); ++a)
-//  {
-//    double a_wt = d_quadrature->azimuth_weight(a % na) / detran_utilities::pi;
-//    for (size_t p = 0; p < d_tracks[a].size(); ++p)
-//    {
-//      if (d_dimension == 3) a_wt *= d_quadrature->polar_weight(p)/2.0;
-//      for (size_t t = 0; t < d_tracks[a][p].size(); t++)
-//      {
-//        SP_track trk =  d_tracks[a][p][t];
-//        for (size_t s = 0; s < trk->number_segments(); ++s)
-//        {
-//          size_t region = trk->segment(s).region();
-//          Assert(region < volume.size());
-//          volume_appx[region] += trk->segment(s).length() * trk->width() * a_wt;
-//        }
-//      }
-//    }
-//  }
-////  for (int r = 0; r < d_number_regions; r++)
-////  {
-////    std::cout << " REGION: " << r
-////              << " volume: " << volume[r]
-////              << " appx: " << appx_volume[r] << std::endl;
-////  }
-//  for (size_t a = 0; a < d_tracks.size(); ++a)
-//  {
-//    for (size_t p = 0; p < d_tracks[a].size(); ++p)
-//    {
-//      for (size_t t = 0; t < d_tracks[a][p].size(); ++t)
-//      {
-//        SP_track trk =  d_tracks[a][p][t];
-//        for (int s = 0; s < d_tracks[a][p][t]->number_segments(); ++s)
-//        {
-//          size_t r = trk->segment(s).region();
-//          trk->segment(s).scale(volume[r] / volume_appx[r]);
-//        }
-//      }
-//    }
-//  }
+//----------------------------------------------------------------------------//
+void TrackDB::normalize(const std::vector<double> &ref_volume)
+{
+  std::vector<double> appx_volume = volume();
+  Assert(ref_volume.size()==appx_volume.size());
+
+  for (int r = 0; r < ref_volume.size(); r++)
+  {
+    std::cout << " REGION: " << r
+              << " volume: " << ref_volume[r]
+              << "   appx: " << appx_volume[r] << std::endl;
+  }
+
+  for (auto &angle_tracks: d_tracks)
+   {
+     for (auto track: angle_tracks.second)
+     {
+       for (auto& segment: track->segments())
+       {
+         int r = segment.region();
+         segment.scale(ref_volume[r] / appx_volume[r]);
+       }
+     }
+   }
 }
 
 //----------------------------------------------------------------------------//
@@ -125,6 +134,7 @@ struct TrackEntranceCompare
 //----------------------------------------------------------------------------//
 void TrackDB::sort()
 {
+  // \todo Ensure this sort is needed or delete.
 //  size_t nq = (d_dimension == 2) ? 2 : 4;
 //  size_t na = d_quadrature->number_azimuths_octant();
 //  for (size_t q = 0; q < nq; ++q)
@@ -144,28 +154,23 @@ void TrackDB::sort()
 //----------------------------------------------------------------------------//
 void TrackDB::display() const
 {
-//  using std::cout;
-//  using std::endl;
-//  cout << endl;
-//  cout << "------------" << endl;
-//  cout << "TrackDB data" << endl;
-//  cout << "------------" << endl;
-//  cout << endl << endl;
-//  cout << "dimension: " << d_dimension << endl;
-//
-//  for (size_t a = 0; a < d_tracks.size(); ++a)
-//  {
-//    cout << "  azimuth = " << a << endl;
-//    for (size_t p = 0; p < d_tracks[a].size(); ++p)
-//    {
-//      cout << "      polar = " << p << endl;
-//      for (size_t t = 0; t < d_tracks[a][p].size(); ++t)
-//      {
-//        Assert(d_tracks[a][p][t]);
-//        cout << "        track = " << t << *d_tracks[a][p][t];
-//      }
-//    }
-//  }
+  using std::cout;
+  using std::endl;
+  cout << endl;
+  cout << "------------" << endl;
+  cout << "TrackDB data" << endl;
+  cout << "------------" << endl;
+  cout << endl << endl;
+  for (auto &angle_tracks : d_tracks)
+  {
+    int o = angle_tracks.first.first;
+    int a = angle_tracks.first.second;
+    cout << "  octant =  " << o << "  angle = " << a << endl;
+    for (auto track : angle_tracks.second)
+    {
+      cout << *track << endl;
+    }
+  }
 }
 
 } // end namespace detran_geometry

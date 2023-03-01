@@ -48,6 +48,8 @@ public:
 
   typedef detran_utilities::InputDB::SP_input             SP_db;
   typedef detran_angle::ProductQuadrature::SP_quadrature  SP_quadrature;
+  typedef std::vector<std::shared_ptr<Track>>                 vec_track;
+  typedef std::map<std::pair<int, int>, vec_track>            map_track;
 
   //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -97,6 +99,7 @@ private:
 
   /// map of octant,angle indices to vector of tracks.
   std::shared_ptr<TrackDB> d_trackdb;
+  map_track d_tracks;
 
   //--------------------------------------------------------------------------//
   // IMPLEMENTATION

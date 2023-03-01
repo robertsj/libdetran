@@ -29,8 +29,6 @@ int main(int argc, char *argv[])
 
 int test_Track(int argc, char *argv[])
 {
-
-
   // Test track creation.
   Point enter(0.0, 0.5);
   Point exit(0.5, 1.0);
@@ -58,15 +56,15 @@ int test_Track(int argc, char *argv[])
   it++;
   TEST((*it).region() == 1);
 
-
-  auto rtrack = track.reverse();
+  // Test reverse
+  Track::SP_track p_rtrack = track.reverse();
+  auto &rtrack = *p_rtrack;
   std::cout << rtrack << std::endl;
   it = rtrack.begin();
   *it;
   TEST((*it).region() == 1);
   it++;
   TEST((*it).region() == 0);
-
   return 0;
 }
 

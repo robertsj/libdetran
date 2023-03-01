@@ -28,10 +28,11 @@ Track::Track(const Point  &r0, const Point  &r1, double w)
 }
 
 //----------------------------------------------------------------------------//
-Track Track::reverse()
+Track::SP_track Track::reverse()
 {
-  return Track(*this, true);
+  return SP_track(new Track(*this, true));
 }
+
 
 //----------------------------------------------------------------------------//
 Track::Track(Track &t0, bool reversed)

@@ -29,9 +29,11 @@ Tracker::Tracker(SP_db db, SP_quadrature q)
   , d_average_width(0.1)
   , d_minimum_number(1)
   , d_spatial_quad_type("uniform")
+  , d_symmetric_tracks(false)
 {
   Require(db);
   Require(d_quadrature);
+  Assertv(d_quadrature->dimension()==2, "Only 2-d tracking is implemented.");
   if (db->check("tracker_maximum_spacing"))
   {
     d_average_width = db->get<double>("tracker_maximum_spacing");
@@ -48,9 +50,9 @@ Tracker::Tracker(SP_db db, SP_quadrature q)
   }
   if (db->check("tracker_symmetric_tracks"))
   {
-    d_symmetric_tracks = 0 != db->get<int>("tracker_symmetric_tracks");
+    bool symmetric = 0 != db->get<int>("tracker_symmetric_tracks");
+    Assertv(!symmetric, "Symmetric tracking is not yet implemented, i.e., all tracks are used in both directions.");
   }
-  d_trackdb = std::make_shared<TrackDB>(q);
 }
 
 //----------------------------------------------------------------------------//
@@ -72,13 +74,15 @@ std::shared_ptr<TrackDB> Tracker::trackit(std::shared_ptr<Geometry> geo)
   else
     generate_tracks_3D_cartesian();
   TRKRMSG("segmentizing...")
-  for (auto& angle_track: d_trackdb->tracks())
+  for (auto& angle_track: d_tracks)
+  {
     for (auto &track: angle_track.second)
       segmentize(track);
+  }
   TRKRMSG("...tracking complete.");
 
-  std::shared_ptr<TrackDB> track_db;
-  return track_db;
+  d_trackdb = std::make_shared<TrackDB>(d_quadrature, d_tracks);
+  return d_trackdb;
 }
 
 //----------------------------------------------------------------------------//
@@ -137,18 +141,20 @@ void Tracker::generate_tracks_2D_cartesian()
 	typedef detran_angle::QuadratureFactory   QF;
 	auto& Q = *d_quadrature;
 
-	auto& d_tracks = d_trackdb->tracks();
+	//auto& d_tracks = d_trackdb->tracks();
 
 	// generate first-quadrant tracks
-	for (int a = 0; a < Q.number_azimuths_octant(); ++a)
+	for (int azi = 0; azi < Q.number_azimuths_octant(); ++azi)
 	{
+	  TRKRMSG(" ========= FIRST QUADRANT ")
+
 	  // sanity checks to ensure product quadrature implementation
 	  // doesn't break things
 	  std::vector<Track::SP_track> tracks;
 
 		// number of points on each face
-		int num_horz = std::max(d_minimum_number, (int)std::ceil(d_X / (d_average_width / Q.cos_phi(a))));
-		int num_vert = std::max(d_minimum_number, (int)std::ceil(d_Y / (d_average_width / Q.sin_phi(a))));
+		int num_horz = std::max(d_minimum_number, (int)std::ceil(d_X / (d_average_width / Q.cos_phi(azi))));
+		int num_vert = std::max(d_minimum_number, (int)std::ceil(d_Y / (d_average_width / Q.sin_phi(azi))));
 
 		// define quadratures
 		auto q_horz = QF::build_base(d_spatial_quad_type, num_horz, 0.0, d_X);
@@ -160,8 +166,8 @@ void Tracker::generate_tracks_2D_cartesian()
 		  for (int j = 0; j < y.size(); ++j)
 		  {
 		    Point entry(x[j], y[j]);
-		    Point exit = find_exit(entry, Point(Q.cos_phi(a), Q.sin_phi(a)));
-		    auto track = std::make_shared<Track>(entry, exit, w[j]*Q.sin_phi(a));
+		    Point exit = find_exit(entry, Point(Q.cos_phi(azi), Q.sin_phi(azi)));
+		    auto track = std::make_shared<Track>(entry, exit, w[j]*Q.sin_phi(azi));
 		    tracks.push_back(track);
 		  }
 		}
@@ -172,21 +178,22 @@ void Tracker::generate_tracks_2D_cartesian()
 		  for (int i = 0; i < x.size(); ++i)
 		  {
         Point entry(x[i], y[i]);
-        Point exit = find_exit(entry, Point(Q.cos_phi(a), Q.sin_phi(a)));
-        auto track = std::make_shared<Track>(entry, exit, w[i]*Q.cos_phi(a));
+        Point exit = find_exit(entry, Point(Q.cos_phi(azi), Q.sin_phi(azi)));
+        auto track = std::make_shared<Track>(entry, exit, w[i]*Q.cos_phi(azi));
         tracks.push_back(track);
 		  }
 		}
-		d_tracks[{Q.angle(a, 0), 0}] = tracks;
+		// Q.angle(azi, 0) gives us the cardinal angle index
+		d_tracks[{0, Q.angle(azi, 0)}] = tracks;
 	}
 
 	// create mirrors such that, e.g., entry.x() becomes d_X - entry.x()
-	std::map<std::pair<int,int>,std::vector<Track::SP_track>> mirror_tracks;
-
+	map_track new_angle_tracks;
   for (auto angle_track: d_tracks)
   {
+    TRKRMSG(" ========= SECOND QUADRANT ")
     std::vector<Track::SP_track>& tracks = angle_track.second;
-    int a = angle_track.first.first;
+    int a = angle_track.first.second;
     std::vector<Track::SP_track> new_tracks;
     for (auto track: tracks)
     {
@@ -195,12 +202,47 @@ void Tracker::generate_tracks_2D_cartesian()
       const auto &exit = track->exit();
       auto new_exit = Point(d_X-exit.x(), exit.y());
       auto new_track = std::make_shared<Track>(new_enter, new_exit, track->spatial_weight());
-      new_tracks.push_back(track);
+      new_tracks.push_back(new_track);
     }
     Assert(Q.mu(0, a)==-Q.mu(1, a));
     Assert(Q.eta(0, a)==Q.eta(1, a));
-    d_tracks[{a, 1}] = new_tracks;
+    new_angle_tracks[{1, a}] = new_tracks; // can't update d_tracks when we're iterating
   }
+  d_tracks.insert(new_angle_tracks.begin(), new_angle_tracks.end());
+  new_angle_tracks.clear();
+
+  // now add all the reverses
+  for (auto angle_track: d_tracks)
+  {
+    TRKRMSG(" ========= REVERSES ")
+    std::vector<Track::SP_track>& tracks = angle_track.second;
+    int o = angle_track.first.first;
+    int a = angle_track.first.second;
+    std::vector<Track::SP_track> new_tracks;
+    for (auto track: tracks)
+    {
+      TRKRMSG(" ============= ")
+      if (!d_symmetric_tracks)
+      {
+        auto new_track = track->reverse();
+        new_tracks.push_back(new_track);
+      }
+      else
+      {
+        // NOT IMPLEMENTED YET
+      }
+    }
+    int new_o = 2;
+    if (o == 1)
+      new_o = 3;
+    TRKRMSG(" ========= o = " << o << "  a = " << a)
+    TRKRMSG(" ========= o = " << new_o << "  a = " << a)
+    TRKRMSG(Q.mu(o, a)<< " " << Q.mu(new_o, a) << " " << Q.eta(o, a) << " " << Q.eta(new_o, a))
+    Assert(detran_utilities::soft_equiv(Q.mu(o, a), -Q.mu(new_o, a)));
+    Assert(detran_utilities::soft_equiv(Q.eta(o, a),-Q.eta(new_o, a)));
+    new_angle_tracks[{new_o, a}] = new_tracks;
+  }
+  d_tracks.insert(new_angle_tracks.begin(), new_angle_tracks.end());
 
   TRKRMSG(" all tracks initiated for 2-d problem. ")
 }
@@ -354,6 +396,8 @@ struct MidpointSegmentCompare
 //----------------------------------------------------------------------------//
 void Tracker::segmentize(std::shared_ptr<Track> track)
 {
+  if (track->reversed())
+    return;
   using detran_utilities::soft_equiv;
   typedef CSG_Node::vec_point vec_point;
 
