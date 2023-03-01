@@ -20,6 +20,7 @@
 namespace detran_utilities
 {
 
+
 /**
  *  A generic mechanism to manually manage exceptions
  */
