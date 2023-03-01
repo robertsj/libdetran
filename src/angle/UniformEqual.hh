@@ -68,15 +68,6 @@ public:
    *  @param    dim         Problem dimension
    */
   UniformEqual(size_t order, size_t dim);
-
-  /// SP constructor
-  static std::shared_ptr<Quadrature>
-  Create(size_t order, size_t dim)
-  {
-    SP_quadrature p(new UniformEqual(order, dim));
-    return p;
-  }
-
 };
 
 } // end namespace detran_angle

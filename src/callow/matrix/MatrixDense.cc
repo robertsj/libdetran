@@ -71,15 +71,6 @@ MatrixDense::~MatrixDense()
 }
 
 //----------------------------------------------------------------------------//
-MatrixDense::SP_matrix
-MatrixDense::Create(const int m, const int n, const double v)
-{
-  SP_matrix p(new MatrixDense(m, n, v));
-  return p;
-}
-
-
-//----------------------------------------------------------------------------//
 void MatrixDense::display(bool forceprint) const
 {
   Require(d_is_ready);

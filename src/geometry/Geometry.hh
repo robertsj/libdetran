@@ -39,8 +39,6 @@ public:
 
   /// Constructor
   Geometry(const double x, const double y, const double z);
-  /// SP constructor
-  static SP_geometry Create(const double x, const double y, const double z);
   /// Add a region
   void add_region(SP_region r);
   /// Get region

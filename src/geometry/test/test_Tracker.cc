@@ -229,7 +229,7 @@ int test_Tracker_box_3d(int argc, char *argv[])
   box->append(surfaces[4], true);
   box->append(surfaces[5], false);
 
-  Geometry::SP_geometry geo = Geometry::Create(1.0, 1.0, 1.0);
+  auto geo = std::make_shared<Geometry>(1.0, 1.0, 1.0);
   geo->add_region(box);
 
   InputDB::SP_input db = InputDB::Create();

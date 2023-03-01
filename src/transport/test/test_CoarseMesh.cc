@@ -77,7 +77,7 @@ int test_CoarseMesh(int argc, char *argv[])
     vec_int fm(1, 5);
     vec_dbl cm(2, 0.0); cm[1] = 1.0;
     vec_int mt(1, 0);
-    Mesh::SP_mesh mesh = Mesh1D::Create(fm, cm, mt);
+    Mesh::SP_mesh mesh = std::make_shared<Mesh1D>(fm, cm, mt);
     CoarseMesh::SP_coarsemesh mesher(new CoarseMesh(mesh, 3));
     TEST(mesher->get_coarse_mesh()->number_cells() == 1);
   }

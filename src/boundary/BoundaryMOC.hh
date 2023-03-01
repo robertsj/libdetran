@@ -73,13 +73,6 @@ public:
   BoundaryMOC(SP_input        input,
               SP_mesh         mesh,
               SP_quadrature   quadrature);
-
-  /// SP Constructor.
-  static SP_base
-  Create(SP_input       input,
-         SP_mesh        mesh,
-         SP_quadrature  quadrature);
-
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL BOUNDARY TYPES MUST IMPLEMENT THESE
   //-------------------------------------------------------------------------//

@@ -31,16 +31,6 @@ QuadraticSurface(c_double A, c_double B, c_double C, c_double D, c_double E,
 }
 
 //----------------------------------------------------------------------------//
-QuadraticSurface::SP_surface
-QuadraticSurface::
-Create(c_double A, c_double B, c_double C, c_double D, c_double E,
-       c_double F, c_double G, c_double H, c_double I, c_double J)
-{
-  SP_surface p(new QuadraticSurface(A, B, C, D, E, F, G, H, I, J));
-  return p;
-}
-
-//----------------------------------------------------------------------------//
 double QuadraticSurface::f(const Point &r)
 {
   double x = r.x(), y = r.y(), z = r.z();

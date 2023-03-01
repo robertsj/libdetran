@@ -46,7 +46,7 @@ int test_PulsedExternalSource(int argc, char *argv[])
   vec_dbl cm(2, 0.0); cm[1] = 1.0;
   vec_int mt(1, 0);
   detran_geometry::Mesh1D::SP_mesh mesh =
-    detran_geometry::Mesh1D::Create(fm, cm, mt);
+    std::make_shared<detran_geometry::Mesh1D>(fm, cm, mt);
 
   // Define the fixed external source
   PulsedExternalSource::SP_externalsource fixed_source;

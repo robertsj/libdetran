@@ -121,7 +121,7 @@ Mesh2D::SP_mesh get_mesh(Mesh2D::size_t fmm = 1)
   Mesh2D::vec_int bmm(121);
   for (int i = 0; i < 121; ++i) bmm[i] = ibmm[i];
 
-  Mesh2D::SP_mesh mesh = Mesh2D::Create(fm, fm, cm, cm, cmm);
+  Mesh2D::SP_mesh mesh = std::make_shared<Mesh2D>(fm, fm, cm, cm, cmm);
   mesh->add_coarse_mesh_map("ASSEMBLY",    bmm);
   mesh->add_coarse_mesh_map("SUBASSEMBLY", bmm);
   mesh->add_coarse_mesh_map("COARSEMESH",  cmm);

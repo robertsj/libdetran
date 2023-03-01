@@ -58,9 +58,6 @@ public:
   /// Construct an ILU0 preconditioner for the explicit matrix A
   PCILU0(SP_matrix A);
 
-  /// SP constructor
-  static SP_preconditioner Create(SP_matrix A);
-
   /// Virtual destructor
   virtual ~PCILU0(){};
 

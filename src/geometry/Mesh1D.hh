@@ -52,22 +52,6 @@ public:
    */
   Mesh1D(vec_dbl xfme, vec_int mat_map);
 
-  /// SP constructor
-  static SP_mesh
-  Create(vec_int xfm, vec_dbl xcme, vec_int mat_map)
-  {
-    SP_mesh p(new Mesh1D(xfm, xcme, mat_map));
-    return p;
-  }
-
-  /// SP constructor
-  static SP_mesh
-  Create(vec_dbl xfme, vec_int mat_map)
-  {
-    SP_mesh p(new Mesh1D(xfme, mat_map));
-    return p;
-  }
-
 protected:
 
   /**

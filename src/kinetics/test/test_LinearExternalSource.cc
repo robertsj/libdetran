@@ -46,7 +46,7 @@ int test_LinearExternalSource(int argc, char *argv[])
   vec_dbl cm(2, 0.0); cm[1] = 1.0;
   vec_int mt(1, 0);
   detran_geometry::Mesh1D::SP_mesh mesh =
-    detran_geometry::Mesh1D::Create(fm, cm, mt);
+    std::make_shared<detran_geometry::Mesh1D>(fm, cm, mt);
 
   // Define the times, [0, 1, 2]
   vec_dbl times(3, 1.0);

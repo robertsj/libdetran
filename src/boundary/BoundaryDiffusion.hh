@@ -64,11 +64,6 @@ public:
   BoundaryDiffusion(SP_input        input,
                     SP_mesh         mesh);
 
-  /// SP Constructor
-  static SP_base
-  Create(SP_input         input,
-         SP_mesh          mesh);
-
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL BOUNDARY TYPES MUST IMPLEMENT THESE
   //-------------------------------------------------------------------------//

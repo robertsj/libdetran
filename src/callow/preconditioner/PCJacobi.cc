@@ -41,13 +41,6 @@ PCJacobi::PCJacobi(SP_matrix A)
   d_size = n;
 }
 
-//----------------------------------------------------------------------------//
-PCJacobi::SP_preconditioner PCJacobi::Create(SP_matrix A)
-{
-  SP_preconditioner p(new PCJacobi(A));
-  return p;
-}
-
 } // end namespace detran
 
 //----------------------------------------------------------------------------//

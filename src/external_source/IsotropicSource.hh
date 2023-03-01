@@ -52,19 +52,6 @@ public:
                   vec_int &map,
                   SP_quadrature quadrature = SP_quadrature(0));
 
-  /// SP constructor
-  static SP_externalsource
-  Create(detran_utilities::size_t          number_groups,
-         detran_geometry::Mesh::SP_mesh    mesh,
-         std::vector<std::vector<double> > &spectra,
-         std::vector<int>                  &map,
-         SP_quadrature quadrature = SP_quadrature(0))
-  {
-    SP_externalsource
-      p(new IsotropicSource(number_groups, mesh, spectra, map, quadrature));
-    return p;
-  }
-
   //--------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL EXTERNAL SOURCES MUST IMPLEMENT THESE
   //--------------------------------------------------------------------------//

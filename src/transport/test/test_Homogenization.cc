@@ -65,7 +65,7 @@ int test_Homogenization(int argc, char *argv[])
   vec_int fm(2, 1);
   vec_int mt(2, 0);
   mt[1] = 1;
-  SP_mesh mesh = detran_geometry::Mesh1D::Create(fm, cm, mt);
+  SP_mesh mesh = std::make_shared<detran_geometry::Mesh1D>(fm, cm, mt);
 
   // State
   State::SP_state state(new State(input, mesh));
@@ -162,8 +162,8 @@ int test_HomogenizeCoarseMesh(int argc, char *argv[])
   vec_int fm(1, 5);
   vec_dbl cm(2, 0.0); cm[1] = 100.0;
   vec_int mt(1, 0);
-  Mesh::SP_mesh mesh = Mesh1D::Create(fm, cm, mt);
-  //Mesh::SP_mesh mesh = Mesh2D::Create(fm, fm, cm, cm, mt);
+  Mesh::SP_mesh mesh = std::make_shared<Mesh1D>(fm, cm, mt);
+  //Mesh::SP_mesh mesh = std::make_shared<Mesh2D>(fm, fm, cm, cm, mt);
 
   CoarseMesh::SP_coarsemesh mesher(new CoarseMesh(mesh, 3));
   mesher->get_coarse_mesh()->display();

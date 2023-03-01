@@ -70,16 +70,6 @@ public:
              size_t num_polar,
              std::string polar);
 
-  /// SP Constructor.
-  static detran_utilities::SP<Quadrature>
-    Create(size_t dim, size_t num_azimuths_octant, size_t multiplier,
-           size_t num_polar, std::string polar)
-  {
-    SP_quadrature p(new Collocated(dim, num_azimuths_octant,
-                                   multiplier, num_polar, polar));
-    return p;
-  }
-
   ~Collocated(){};
 
 private:

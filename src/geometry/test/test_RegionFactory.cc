@@ -43,7 +43,7 @@ int test_RegionFactory_PinCell(int argc, char *argv[])
   radii[1] = 0.54;
   PinCell::SP_pincell pin;
   Point center(0, 0);
-  pin = PinCell::Create(pitch, mat_map, radii, PinCell::DIVISION_NONE, center);
+  pin = std::make_shared<PinCell>(pitch, mat_map, radii, PinCell::DIVISION_NONE, center);
 
   RF::vec_region regions;
   regions = RF::CreatePinCell(pin);
@@ -58,7 +58,7 @@ int test_RegionFactory_Translated(int argc, char *argv[])
 
   Point pitch(1.26);
   PinCell::vec_int mat_map(1, 0);
-  PinCell::SP_pincell pin = PinCell::Create(pitch, mat_map);
+  PinCell::SP_pincell pin = std::make_shared<PinCell>(pitch, mat_map);
   RF::vec_region regions = RF::CreatePinCell(pin);
 
   TEST( regions[0]->contains(Point(0.5, 0.5)));

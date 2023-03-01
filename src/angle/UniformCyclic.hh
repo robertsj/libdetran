@@ -50,13 +50,6 @@ public:
           size_t num_polar,
           std::string polar);
 
-  /// SP Constructor.
-  static detran_utilities::SP<Quadrature>
-    Create(size_t dim,
-           size_t num_azimuths_octant,
-           size_t num_space,
-           size_t num_polar,
-           std::string polar)
   {
     SP_quadrature
       p(new UniformCyclic(dim, num_azimuths_octant, num_space, num_polar, polar));

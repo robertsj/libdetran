@@ -48,17 +48,6 @@ PinCell::PinCell(const Point      &pitch,
 }
 
 //----------------------------------------------------------------------------//
-PinCell::SP_pincell PinCell::Create(const Point      &pitch,
-                                    const vec_int    &mat_map,
-                                    const vec_dbl    &radii,
-                                    const size_t      division,
-                                    const Point      &pincenter)
-{
-  SP_pincell p(new PinCell(pitch, mat_map, radii, division, pincenter));
-  return p;
-}
-
-//----------------------------------------------------------------------------//
 void PinCell::meshify(int number_meshes, bool flag)
 {
   Require(number_meshes > 0);
