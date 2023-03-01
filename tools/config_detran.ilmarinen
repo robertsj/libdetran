@@ -4,9 +4,7 @@ cmake                                              \
 -D CMAKE_BUILD_TYPE=Release                        \
 -D DETRAN_ENABLE_DEBUG=NO                          \
 -D DETRAN_ENABLE_OPENMP=NO                         \
--D DETRAN_ENABLE_PYTHON=YES                        \
 -D DETRAN_ENABLE_TEST=YES                           \
--D SWIG_EXECUTABLE=/usr/bin/swig                   \
 -D CMAKE_INSTALL_PREFIX=/home/robertsj/Research/detran/install \
 -D DETRAN_ENABLE_GPERFTOOLS=YES \
 /home/robertsj/Research/detran/source/src

@@ -27,9 +27,6 @@ endif()
 
 # Options for unit tests. On or Off.
 set(DETRAN_ENABLE_TEST NO CACHE BOOL        "Enable the units tests.")
-
-# Options for Python bindings. On or Off.
-set(DETRAN_ENABLE_PYTHON NO CACHE BOOL      "Enable Python bindings via SWIG.")
 # Options for OpenMP directives. On or Off.
 set(DETRAN_ENABLE_OPENMP NO CACHE BOOL      "Enable OpenMP for multithreaded solves.")
 # Options for PETSc. On or Off.
@@ -88,32 +85,6 @@ endif()
 #------------------------------------------------------------------------------#
 # EXTERNAL LIBRARIES
 #------------------------------------------------------------------------------#
-
-if(DETRAN_ENABLE_PYTHON)
-  if(BUILD_SHARED_LIBS)
-    find_package(SWIG REQUIRED)
-    include(${SWIG_USE_FILE})
-    find_package(PythonLibs REQUIRED)
-    # find numpy/arrayobject.h
-    exec_program(python 
-                 ARGS            -c "'import numpy; print numpy.get_include()'"
-                 OUTPUT_VARIABLE NPARRAYPATHHINT)
-    find_path(NPARRAYPATH NAMES numpy/arrayobject.h PATHS ${NPARRAYPATHHINT})
-    if (${NPARRAYPATH-NOTFOUND})
-      message("!! Numpy could not be found and is needed for Python builds." 
-              FATAL_ERROR)
-    else()
-      message("-- Found Numpy include: ${NPARRAYPATH}")
-      include_directories(${NPARRAYPATH})
-    endif()
-    include_directories(${PYTHON_INCLUDE_PATH})
-    include_directories(${PROJECT_BINARY_DIR}/detran_config)
-    set(CMAKE_SWIG_FLAGS "-v")
-  else()
-    set(DETRAN_ENABLE_PYTHON OFF)
-    message(STATUS "** Disabling Python since it required shared libraries.")
-  endif()
-endif()
 
 if(DETRAN_ENABLE_OPENMP)
   find_package(OpenMP REQUIRED)
@@ -211,8 +182,6 @@ endif()
 #------------------------------------------------------------------------------#
 
 include_directories(${DETRAN_DIR})
-#
-include_directories(python)
 # level 0
 include_directories(utilities)
 # level 1
@@ -261,11 +230,6 @@ add_subdirectory(solvers)
 add_subdirectory(postprocess)
 add_subdirectory(drivers)
 add_subdirectory(cmake)
-
-# Python things for installation
-if(DETRAN_ENABLE_PYTHON)
-  add_subdirectory(python)
-endif()
 
 #------------------------------------------------------------------------------#
 # CPACK -- Packs up the build for installation elsewhere
@@ -323,11 +287,6 @@ if(BUILD_SHARED_LIBS)
 message("++++ Shared:      enabled")
 else()
 message("++++ Shared:      disabled")
-endif()
-if(DETRAN_ENABLE_PYTHON)
-message("++++ Python:      enabled")
-else()
-message("++++ Python:      disabled")
 endif()
 if(DETRAN_ENABLE_OPENMP)
 message("++++ OpenMP:      enabled")
