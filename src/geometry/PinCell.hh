@@ -78,15 +78,7 @@ public:
           const vec_dbl    &radii = vec_dbl(0),
           const size_t      division = DIVISION_NONE,
           const Point      &pincenter = Point(0));
-
-  /// SP Constructor
-  static SP_pincell
-  Create(const Point      &pitch,
-         const vec_int    &mat_map,
-         const vec_dbl    &radii = vec_dbl(0),
-         const size_t      division = DIVISION_NONE,
-         const Point      &pincenter = Point(0));
-
+          
   /// Return the smart pointer to my mesh.
   Mesh::SP_mesh mesh()
   {

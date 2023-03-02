@@ -77,7 +77,7 @@ Mesh1D::SP_mesh get_mesh(Mesh1D::size_t fmm = 50)
   assembly[3] = 3; assembly[4] = 4; assembly[5] = 5;
   assembly[6] = 0;
 
-  Mesh1D::SP_mesh mesh = Mesh1D::Create(fm, cm, mt);
+  Mesh1D::SP_mesh mesh = std::make_shared<Mesh1D>(fm, cm, mt);
   mesh->add_coarse_mesh_map("COARSEMESH", mt);
   mesh->add_coarse_mesh_map("ASSEMBLY", assembly);
 

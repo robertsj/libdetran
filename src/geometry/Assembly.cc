@@ -23,13 +23,6 @@ Assembly::Assembly(const size_t nx, const size_t ny)
 }
 
 //----------------------------------------------------------------------------//
-Assembly::SP_assembly Assembly::Create(const size_t nx, const size_t ny)
-{
-  SP_assembly p(new Assembly(nx, ny));
-  return p;
-}
-
-//----------------------------------------------------------------------------//
 Assembly::SP_mesh Assembly::mesh()
 {
   return d_mesh;

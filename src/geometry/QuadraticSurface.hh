@@ -47,11 +47,6 @@ public:
   /// Virtual destructor
   virtual ~QuadraticSurface(){}
 
-  /// SP constructor
-  static SP_surface Create(c_double A, c_double B, c_double C, c_double D,
-                           c_double E, c_double F, c_double G, c_double H,
-                           c_double I, c_double J);
-
   //--------------------------------------------------------------------------//
   // ABSTRACT INTERFACE --- ALL SURFACE TYPES MUST IMPLEMENT THESE
   //--------------------------------------------------------------------------//

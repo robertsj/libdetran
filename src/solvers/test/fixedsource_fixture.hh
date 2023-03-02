@@ -67,11 +67,11 @@ FixedSourceData get_fixedsource_data(unsigned int dim,
   vec_int fm(1, nfm);
   vec_int mt(1, 0);
   if (dim == 1)
-    data.mesh = Mesh1D::Create(fm, cm, mt);
+    data.mesh = std::make_shared<Mesh1D>(fm, cm, mt);
   else if (dim == 2)
-    data.mesh = Mesh2D::Create(fm, fm, cm, cm, mt);
+    data.mesh = std::make_shared<Mesh2D>(fm, fm, cm, cm, mt);
   else if (dim == 3)
-    data.mesh = Mesh3D::Create(fm, fm, fm, cm, cm, cm, mt);
+    data.mesh = std::make_shared<Mesh3D>(fm, fm, fm, cm, cm, cm, mt);
 
   // fixed source
   data.source = ConstantSource::Create(ng, data.mesh, 1.0);

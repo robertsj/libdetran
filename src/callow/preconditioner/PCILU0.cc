@@ -95,13 +95,6 @@ PCILU0::PCILU0(SP_matrix A)
 
 }
 
-//----------------------------------------------------------------------------//
-PCILU0::SP_preconditioner PCILU0::Create(SP_matrix A)
-{
-  SP_preconditioner p(new PCILU0(A));
-  return p;
-}
-
 } // end namespace callow
 
 //----------------------------------------------------------------------------//

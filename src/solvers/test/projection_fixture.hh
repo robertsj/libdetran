@@ -204,13 +204,13 @@ Mesh1D::SP_mesh get_mesh(int fmm = 1, std::string id="assembly")
 
   if (id == "assembly")
   {
-  Mesh1D::SP_mesh mesh = Mesh1D::Create(fm_assembly, cm_assembly, mt_0);
+  Mesh1D::SP_mesh mesh = std::make_shared<Mesh1D>(fm_assembly, cm_assembly, mt_0);
   return mesh;
   }
   else if (id == "core")
   {
    std::cout << " core mesh" << "\n";
-   Mesh1D::SP_mesh mesh = Mesh1D::Create(fm_core, cm_core, mt_core0);
+   Mesh1D::SP_mesh mesh = std::make_shared<Mesh1D>(fm_core, cm_core, mt_core0);
 
    return mesh;
   }

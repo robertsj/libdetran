@@ -77,10 +77,6 @@ public:
   /// Construct an ILUT preconditioner for the explicit matrix A
   PCILUT(SP_matrix A, const size_t p = 1000, const double t = 0);
 
-  /// SP constructor
-  static SP_preconditioner
-  Create(SP_matrix A, const size_t p = 1000, const double t = 0);
-
   /// Virtual destructor
   virtual ~PCILUT(){};
 

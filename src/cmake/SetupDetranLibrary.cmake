@@ -46,23 +46,4 @@ if(DETRAN_ENABLE_TEST)
   add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/test)
 endif()
 
-# Setup for Python front end
-if(DETRAN_ENABLE_PYTHON)
-  # SWIG setup
-  set_source_files_properties(detran_${LIB_NAME}.i PROPERTIES CPLUSPLUS ON)
-  swig_add_module(${LIB_NAME} python detran_${LIB_NAME}.i)
-  swig_link_libraries(${LIB_NAME} ${PYTHON_LIBRARIES} ${LIB_NAME})
-  # Install the module and library
-  install(FILES ${CMAKE_BINARY_DIR}/${LIB_NAME}/${LIB_NAME}.py
-          DESTINATION python/detran)
-  set(PYEXT ".so")
-  set(PYPATH ${CMAKE_CURRENT_BINARY_DIR})
-  if (MSVC)
-    set(PYEXT ".pyd")
-    set(PYPATH "${CMAKE_CURRENT_BINARY_DIR}/Release")
-  endif()
-  install(FILES       ${PYPATH}/_${LIB_NAME}${PYEXT}
-          DESTINATION python/detran)
-endif()
-
 endfunction()

@@ -52,18 +52,6 @@ public:
                  vec_int        map,
                  SP_quadrature  quadrature);
 
-  static SP_externalsource
-  Create(size_t                     number_groups,
-         SP_mesh                    mesh,
-         detran_utilities::vec3_dbl spectra,
-         detran_utilities::vec_int  map,
-         SP_quadrature  quadrature)
-  {
-    SP_externalsource
-      p(new DiscreteSource(number_groups, mesh, spectra, map, quadrature));
-    return p;
-  }
-
   //--------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL EXTERNAL SOURCES MUST IMPLEMENT THESE
   //--------------------------------------------------------------------------//

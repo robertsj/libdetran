@@ -149,14 +149,6 @@ PCILUT::PCILUT(SP_matrix A, const size_t p, const double t)
 }
 
 //----------------------------------------------------------------------------//
-PCILUT::SP_preconditioner
-PCILUT::Create(SP_matrix A, const size_t p, const double t)
-{
-  SP_preconditioner pc(new PCILUT(A, p, t));
-  return pc;
-}
-
-//----------------------------------------------------------------------------//
 void PCILUT::display(const std::string &name)
 {
   cout << " PCILU " << name << endl;

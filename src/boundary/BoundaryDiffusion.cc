@@ -22,16 +22,6 @@ BoundaryDiffusion<D>::BoundaryDiffusion(SP_input        input,
   initialize();
 }
 
-//---------------------------------------------------------------------------/
-template <class D>
-typename BoundaryDiffusion<D>::SP_base
-BoundaryDiffusion<D>::Create(SP_input         input,
-                             SP_mesh          mesh)
-{
-  SP_boundary p(new BoundaryDiffusion(input, mesh));
-  return p;
-}
-
 //---------------------------------------------------------------------------//
 // Implementation
 //---------------------------------------------------------------------------//

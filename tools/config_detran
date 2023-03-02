@@ -1,7 +1,7 @@
 # This is an example of a relatively complete configuration
 
 rm CMakeCache.txt
-/home/robertsj/opt/cmake/bin/cmake                              \
+cmake                                                           \
 CMAKE_CXX_FLAGS="-Wall -ansi -pedantic"                         \
 -G "Eclipse CDT4 - Unix Makefiles"                              \
 -D CMAKE_VERBOSE_MAKEFILE=ON                                    \
@@ -14,12 +14,10 @@ CMAKE_CXX_FLAGS="-Wall -ansi -pedantic"                         \
 -D HDF5_DIR=/home/robertsj/opt/hdf5/1.8.10                      \
 -D DETRAN_ENABLE_HDF5=NO                                       \
 -D DETRAN_ENABLE_OPENMP=NO                                      \
--D DETRAN_ENABLE_PYTHON=NO                                     \
 -D DETRAN_ENABLE_GPERFTOOLS=NO                                  \
 -D DETRAN_ENABLE_TEST=YES                                      \
 -D DETRAN_ENABLE_BOOST=NO                                      \
--D SWIG_EXECUTABLE=/home/robertsj/opt/swig/bin/swig             \
 -D BOOST_ROOT=/home/robertsj/opt/boost                          \
 -D CMAKE_INSTALL_PREFIX=/home/hutchinsonkeely/detran/libdetran/install  \
-/home/hutchinsonkeely/detran/libdetran/source/src
+/home/hutchinsonkeely/detran/detran/libdetran/src
 

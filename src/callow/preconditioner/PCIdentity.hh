@@ -46,13 +46,6 @@ public:
     , d_factor(factor)
   {/* ... */}
 
-  /// SP constructor
-  static SP_preconditioner Create(double factor = 1.0)
-  {
-    SP_preconditioner p(new PCIdentity(factor));
-    return p;
-  }
-
   /// Virtual destructor
   virtual ~PCIdentity(){};
 

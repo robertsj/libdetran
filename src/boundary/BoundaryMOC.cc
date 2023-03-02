@@ -77,18 +77,6 @@ BoundaryMOC<D>::BoundaryMOC(SP_input        input,
 }
 
 //---------------------------------------------------------------------------//
-template <class D>
-typename BoundaryMOC<D>::SP_base
-BoundaryMOC<D>::Create(SP_input       input,
-                       SP_mesh        mesh,
-                       SP_quadrature  quadrature)
-{
-  SP_boundary p(new BoundaryMOC(input, mesh, quadrature));
-  return p;
-}
-
-
-//---------------------------------------------------------------------------//
 // IMPLEMENTATION
 //---------------------------------------------------------------------------//
 

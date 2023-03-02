@@ -42,8 +42,6 @@ public:
   Geometry(double x, double y, double z);
   /// Constructor from mesh.  Region indices retain mesh-cell order.
   Geometry(Mesh::SP_mesh mesh);
-  /// SP constructor
-  static SP_geometry Create(const double x, const double y, const double z);
   /// Add a region
   void add_region(SP_region r);
   /// Get region

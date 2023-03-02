@@ -53,10 +53,6 @@ public:
    */
   Assembly(const size_t nx, const size_t ny = 0);
 
-  /// SP Constructor
-  static SP_assembly Create(const size_t number_x,
-                            const size_t number_y = 0);
-
   /// Return underlying meshed object.
   Mesh::SP_mesh mesh();
 
