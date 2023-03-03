@@ -25,7 +25,7 @@ FixedBoundary<D>::FixedBoundary(SP_boundary boundary,
   , d_psi(d_number_groups,
           vec2_bflux(d_quadrature->number_octants()/2,
                      vec1_bflux(d_quadrature->number_angles_octant(),
-                                (*d_boundary)(side, 0, 0, 0))))
+                                (*boundary)(side, 0, 0, 0))))
 {
   /* ... */
 }
@@ -35,12 +35,13 @@ FixedBoundary<D>::FixedBoundary(SP_boundary boundary,
 template <class D>
 inline void FixedBoundary<D>::set(const size_t g)
 {
+  auto b = d_boundary.lock();
   for (size_t io = 0; io < d_quadrature->incident_octant(d_side).size(); ++io)
   {
     size_t o = d_quadrature->incident_octant(d_side)[io];
     for (size_t a = 0; a < d_quadrature->number_angles_octant(); ++a)
     {
-      (*d_boundary)(d_side, o, a, g) = d_psi[g][io][a];
+      (*b)(d_side, o, a, g) = d_psi[g][io][a];
     }
   }
 }

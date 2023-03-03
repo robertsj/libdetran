@@ -43,9 +43,7 @@ public:
 //---------------------------------------------------------------------------//
 template <class D>
 typename BoundaryFactory<D, BoundaryDiffusion>::SP_boundary
-BoundaryFactory<D, BoundaryDiffusion>::build(SP_input       input,
-                                             SP_mesh        mesh,
-                                             SP_quadrature  quad)
+BoundaryFactory<D, BoundaryDiffusion>::build(SP_input input, SP_mesh mesh, SP_quadrature quad)
 {
   SP_boundary b(new BoundaryDiffusion<D>(input, mesh));
   return b;
@@ -71,11 +69,9 @@ public:
 //---------------------------------------------------------------------------//
 template <class D>
 typename BoundaryFactory<D, BoundarySN>::SP_boundary
-BoundaryFactory<D, BoundarySN>::build(SP_input      input,
-                                      SP_mesh       mesh,
-                                      SP_quadrature quad)
+BoundaryFactory<D, BoundarySN>::build(SP_input input, SP_mesh mesh, SP_quadrature quad)
 {
-  SP_boundary b(new BoundarySN<D>(input, mesh, quad));
+  auto b = std::make_shared<BoundarySN<D>>(input, mesh, quad);
 
   using namespace detran_geometry;
 
@@ -121,7 +117,6 @@ BoundaryFactory<D, BoundarySN>::build(SP_input      input,
     b->set_bc(side, bc);
     Ensure(b->bc(side));
   }
-
   return b;
 }
 

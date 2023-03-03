@@ -12,6 +12,7 @@
 
 #include "TestDriver.hh"
 #include "boundary/BoundarySN.hh"
+#include "boundary/BoundaryFactory.t.hh"
 #include "angle/QuadratureFactory.hh"
 #include "geometry/Mesh1D.hh"
 #include "geometry/Mesh2D.hh"
@@ -26,6 +27,8 @@ using std::cout;
 using std::endl;
 using std::string;
 
+#define COUT(c) std::cout << c << std::endl;
+
 int main(int argc, char *argv[])
 {
   RUN(argc, argv);
@@ -34,6 +37,9 @@ int main(int argc, char *argv[])
 //----------------------------------------------------------------------------//
 // TEST DEFINITIONS
 //----------------------------------------------------------------------------//
+
+
+
 
 int test_BoundarySN(int argc, char *argv[])
 {
@@ -101,7 +107,7 @@ int test_BoundarySN(int argc, char *argv[])
   {
     typedef BoundarySN<_3D> Boundary_T;
     // Input
-    Boundary_T::SP_input inp(new InputDB());
+    auto inp = std::make_shared<InputDB>();
     inp->put<int>("number_groups", 2);
     inp->put<string>("bc_west",   "reflect");
     inp->put<string>("bc_left",   "vacuum");
@@ -119,7 +125,7 @@ int test_BoundarySN(int argc, char *argv[])
     vec_int mt(1, 0);
     Boundary_T::SP_mesh mesh(new Mesh3D(fm, fm, fm, cm, cm, cm, mt));
     // Boundary
-    Boundary_T::SP_boundary b(new Boundary_T(inp, mesh, q));
+    auto b = BoundaryFactory<_3D, BoundarySN>::build(inp, mesh, q);
     // Tests
     TEST(b->is_reflective(0));
     TEST(!b->is_reflective(1));
