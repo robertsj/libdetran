@@ -87,7 +87,7 @@ int test_Vector(int argc, char *argv[])
   return 0;
 }
 
-int test_Vector_resize(int argc, char *argv[])
+int test_Vector_resize(int argc, char *argv[]) // not testing anything
 {
   typedef Vector Vec_T;
   Vec_T v;

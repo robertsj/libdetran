@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
 typedef FixedSourceManager<_1D> Manager;
 typedef Manager::SP_manager SP_manager;
 
-void set_data(InputDB::SP_input db) //not testing anything
+void set_data(InputDB::SP_input db)
 {
   db->put<std::string>("outer_solver", "GS");
   db->put<int>("inner_max_iters", 1);

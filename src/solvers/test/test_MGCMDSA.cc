@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 //----------------------------------------------------------------------------//
 
 //----------------------------------------------------------------------------//
-void set_data(InputDB::SP_input input) //not testing anything
+void set_data(InputDB::SP_input input)
 {
   input->put<std::string>("outer_solver", "GMRES");
   input->put<double>("inner_tolerance",   1e-14);
