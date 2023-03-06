@@ -3,7 +3,7 @@
 #------------------------------------------------------------------------------#
 
 project(detran)
-cmake_minimum_required(VERSION 2.8.4 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.15.1 FATAL_ERROR)
 set(DETRAN_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
