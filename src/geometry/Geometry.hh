@@ -10,6 +10,7 @@
 #define detran_GEOMETRY_HH_
 
 #include "geometry/Region.hh"
+#include "geometry/Mesh.hh"
 
 namespace detran_geometry
 {
@@ -27,7 +28,7 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef std::shared_ptr<Geometry>	SP_geometry;
+  typedef std::shared_ptr<Geometry>         SP_geometry;
   typedef Region::SP_region                 SP_region;
   typedef std::vector<SP_region>            vec_region;
   typedef detran_utilities::size_t          size_t;
@@ -38,24 +39,26 @@ public:
   //--------------------------------------------------------------------------//
 
   /// Constructor
-  Geometry(const double x, const double y, const double z);
+  Geometry(double x, double y, double z);
+  /// Constructor from mesh.  Region indices retain mesh-cell order.
+  Geometry(Mesh::SP_mesh mesh);
   /// Add a region
   void add_region(SP_region r);
   /// Get region
-  SP_region region(const size_t r);
+  SP_region region(int r) const;
   /// Find region containing cell. Returns index >= 0 or -1 if none found
   int find(const Point &r);
   /// Return number of regions in the system
-  size_t number_regions() const;
+  int number_regions() const;
   /// Return material index for a region
-  size_t material_index(const size_t r) const;
+  int material_index(int r) const;
   //@{
   /// Get geometry bounding box coordinates
   double width_x() const {return d_x;}
   double width_y() const {return d_y;}
   double width_z() const {return d_z;}
   //@}
-  size_t dimension() const {return 2;}
+  int dimension() const {return 2;}
 
 private:
 
@@ -69,11 +72,9 @@ private:
   double d_y;
   double d_z;
   //@}
+
   /// Regions
   vec_region d_regions;
-  /// Map specifying materials in each region
-  vec_size_t d_material_map;
-
 };
 
 } // end namespace detran_geometry

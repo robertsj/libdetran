@@ -52,7 +52,7 @@ public:
   typedef typename Boundary_T::SP_boundary              SP_boundary;
   typedef detran_geometry::Mesh::SP_mesh                SP_mesh;
   typedef detran_angle::ProductQuadrature::SP_quadrature SP_quadrature;
-  typedef detran_geometry::TrackDB::SP_trackdb          SP_trackdb;
+  typedef std::shared_ptr<detran_geometry::TrackDB>     SP_trackdb;
   typedef detran_geometry::Track::SP_track              SP_track;
 
   //-------------------------------------------------------------------------//
@@ -95,7 +95,7 @@ public:
   //-------------------------------------------------------------------------//
 
   /// Sweep.
-  inline void sweep(moments_type &phi);
+  void sweep(moments_type &phi);
 
 private:
 
@@ -111,11 +111,5 @@ private:
 };
 
 } // end namespace detran
-
-//---------------------------------------------------------------------------//
-// INLINE MEMBER DEFINITIONS
-//---------------------------------------------------------------------------//
-
-#include "Sweeper2DMOC.i.hh"
 
 #endif /* detran_SWEEPER2DMOC_HH_ */

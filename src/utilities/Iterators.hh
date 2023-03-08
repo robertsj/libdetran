@@ -52,6 +52,30 @@ public:
   /// Dereference
   value_type& operator*();
   base_iterator& operator->();
+  Reversible begin()
+  {
+    if (d_increment == -1)
+    {
+      d_p = d_container->end()-1;
+    }
+    else
+    {
+      d_p = d_container->begin();
+    }
+    return *this;
+  }
+  Reversible end()
+  {
+    if (d_increment == 1)
+    {
+      d_p = d_container->end();
+    }
+    else
+    {
+      d_p = d_container->begin()-1;
+    }
+    return *this;
+  }
 
 private:
 

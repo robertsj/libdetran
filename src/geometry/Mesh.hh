@@ -10,7 +10,6 @@
 #define detran_geometry_MESH_HH_
 
 #include "geometry/geometry_export.hh"
-#include "geometry/TrackDB.hh"
 #include "geometry/Point.hh"
 #include "utilities/Definitions.hh"
 #include "utilities/DBC.hh"
@@ -74,7 +73,6 @@ public:
   typedef detran_utilities::vec_dbl         vec_dbl;
   typedef std::map<std::string, vec_int>    mesh_map_type;
   typedef detran_utilities::size_t          size_t;
-  typedef TrackDB::SP_trackdb               SP_trackdb;
 
   // Note, these constructors are protected to hide them from the
   // user.  These are to be called by inherited classes.  I keep
@@ -240,12 +238,6 @@ public:
   /// Display some key features
   void display() const;
 
-  void set_tracks(SP_trackdb tracks)
-  {
-    Require(tracks);
-    d_tracks = tracks;
-  }
-
 protected:
 
   /// Mesh spatial dimension
@@ -282,8 +274,6 @@ protected:
   size_t d_number_cells_y;
   /// Number of cells in y direction
   size_t d_number_cells_z;
-  /// Track database
-  SP_trackdb d_tracks;
 
   /**
    *  Map container containing a key describing a mesh property and a fine

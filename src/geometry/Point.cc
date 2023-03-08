@@ -72,25 +72,40 @@ std::ostream& operator<< (std::ostream &out, const Point &p)
 //----------------------------------------------------------------------------//
 bool operator< (const Point &P0, const Point &P1)
 {
-  return (P0.x() < P1.x()) && (P0.y() < P1.y()) && (P0.z() < P1.z());
+  if (P0 == P1)
+    return true;
+  return P0 <= P1;
 }
 
 //----------------------------------------------------------------------------//
 bool operator<= (const Point &P0, const Point &P1)
 {
   return (P0.x() <= P1.x()) && (P0.y() <= P1.y()) && (P0.z() <= P1.z());
+;
 }
 
 //----------------------------------------------------------------------------//
 bool operator> (const Point &P0, const Point &P1)
 {
-  return (P0.x() > P1.x()) && (P0.y() > P1.y()) && (P0.z() > P1.z());
+  return P1 >= P0;
 }
 
 //----------------------------------------------------------------------------//
 bool operator>= (const Point &P0, const Point &P1)
 {
-  return (P0.x() >= P1.x()) && (P0.y() >= P1.y()) && (P0.z() >= P1.z());
+  return P1 < P0;
+}
+
+//----------------------------------------------------------------------------//
+bool operator==(const Point &P0, const Point &P1)
+{
+  return (P0.x() == P1.x()) && (P0.y() == P1.y()) && (P0.z() == P1.z());
+}
+
+//----------------------------------------------------------------------------//
+bool operator!=(const Point &P0, const Point &P1)
+{
+  return not (P0 == P1);
 }
 
 } // end namespace detran_geometry

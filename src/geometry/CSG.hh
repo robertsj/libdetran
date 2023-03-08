@@ -18,7 +18,7 @@ namespace detran_geometry
 
 enum NODE_OPERATORS
 {
-  UNION, INTERSECTION, SUBSTRACTION, END_NODE_OPERATORS
+  UNION, INTERSECTION, DIFFERENCE, END_NODE_OPERATORS
 };
 
 /**
@@ -34,7 +34,7 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef std::shared_ptr<CSG_Node>	SP_node;
+  typedef std::shared_ptr<CSG_Node>         SP_node;
   typedef detran_utilities::size_t          size_t;
   typedef std::vector<Point>                vec_point;
   typedef const Ray                         c_Ray;
