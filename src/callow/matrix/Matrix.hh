@@ -102,11 +102,6 @@ public:
   Matrix(Matrix &A);
   // destructor
   virtual ~Matrix();
-  /// sp constructor
-  //@{
-  static SP_matrix Create(const int m, const int n);
-  static SP_matrix Create(const int m, const int n, const int nnz);
-  //@}
 
   //--------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS

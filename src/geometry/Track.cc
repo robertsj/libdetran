@@ -31,15 +31,6 @@ Track::Track(const Point &r0,
 }
 
 //----------------------------------------------------------------------------//
-Track::SP_track Track::Create(const Point  &r0,
-                              const Point  &r1,
-                              const double  w)
-{
-  SP_track p(new Track(r0, r1, w));
-  return p;
-}
-
-//----------------------------------------------------------------------------//
 void Track::add_segment(const Segment &s)
 {
   d_segments.push_back(s);

@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 int test_QuadrupleRange_basic(int argc, char *argv[])
 {
   // Get quadrature fixture
-  QuadrupleRange::SP_quadrature q = QuadrupleRange::Create(2, 2, 1);
+  QuadrupleRange::SP_quadrature q = std::make_shared<QuadrupleRange>(2, 2, 1);
   TEST(q);
   q->display();
   TEST(q->number_angles()   == 8);

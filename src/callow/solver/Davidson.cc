@@ -23,7 +23,7 @@ Davidson::Davidson(const double    tol,
   , d_subspace_size(subspace_size)
 {
   // create projected system solver
-  SP_db db = detran_utilities::InputDB::Create();
+  SP_db db = std::make_shared<detran_utilities::InputDB>();
   db->put<std::string>("eigen_solver_type",   "eispack");
   db->put<double>("eigen_solver_tol",         d_tolerance);
   db->put<int>("eigen_solver_maxit",          10000);

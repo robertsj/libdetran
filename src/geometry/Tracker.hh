@@ -66,9 +66,6 @@ public:
    */
   Tracker(SP_db db, SP_quadrature q);
 
-  /// SP constructor
-  static SP_tracker Create(SP_db db, SP_quadrature q);
-
   //--------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
   //--------------------------------------------------------------------------//

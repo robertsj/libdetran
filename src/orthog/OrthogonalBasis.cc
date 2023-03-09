@@ -71,7 +71,7 @@ void OrthogonalBasis::compute_a()
 {
   Require(d_basis);
 
-  if (!d_a) d_a = Vector::Create(d_order + 1);
+  if (!d_a) d_a = std::make_shared<Vector>(d_order + 1);
   d_a->set(1.0);
 
   // If we're orthonormal, then we pre-normalize the basis.

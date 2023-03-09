@@ -57,11 +57,6 @@ public:
                  const vec_material &materials,
                  std::string        name = "LinearMaterial");
 
-  /// SP constructor
-  static SP_material Create(const vec_dbl      &times,
-                            const vec_material &materials,
-                            std::string        name = "LinearMaterials");
-
   /// Virtual destructor
   virtual ~LinearMaterial(){};
 

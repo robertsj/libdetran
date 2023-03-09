@@ -29,22 +29,6 @@ Sweeper2DMOC<EQ>::Sweeper2DMOC(SP_input input,
 }
 
 //---------------------------------------------------------------------------//
-template <class EQ>
-typename Sweeper2DMOC<EQ>::SP_sweeper
-Sweeper2DMOC<EQ>::Create(SP_input       input,
-                         SP_mesh        mesh,
-                         SP_material    material,
-                         SP_quadrature  quadrature,
-                         SP_state       state,
-                         SP_boundary    boundary,
-                         SP_sweepsource sweepsource)
-{
-  SP_sweeper p(new Sweeper2DMOC(input, mesh, material, quadrature,
-                                state, boundary, sweepsource));
-  return p;
-}
-
-//---------------------------------------------------------------------------//
 // EXPLICIT INSTANTIATIONS
 //---------------------------------------------------------------------------//
 

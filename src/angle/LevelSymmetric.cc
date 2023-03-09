@@ -377,14 +377,5 @@ void LevelSymmetric::set_quad_values(const size_t order, vec_dbl &att, vec_dbl &
 
   }
 }
-
-//---------------------------------------------------------------------------//
-LevelSymmetric::SP_quadrature
-LevelSymmetric::Create(const size_t np, const size_t dim)
-{
-  SP_quadrature p(new LevelSymmetric(np, dim));
-  return p;
-}
-
 }
 

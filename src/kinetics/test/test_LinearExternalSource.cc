@@ -58,9 +58,9 @@ int test_LinearExternalSource(int argc, char *argv[])
   // produces a tent fuction from 1 to 3, peaked
   // at 2.
   LinearExternalSource::vec_source sources(3);
-  sources[0] = ConstantSource::Create(2, mesh, 0.0);
-  sources[1] = ConstantSource::Create(2, mesh, 1.0);
-  sources[2] = ConstantSource::Create(2, mesh, 0.0);
+  sources[0] = std::make_shared<ConstantSource>(2, mesh, 0.0);
+  sources[1] = std::make_shared<ConstantSource>(2, mesh, 1.0);
+  sources[2] = std::make_shared<ConstantSource>(2, mesh, 0.0);
 
 
   // Define the time dependent source

@@ -42,7 +42,7 @@ int test_PolarQuadrature(int argc, char *argv[])
                      {0.2588190451025, 0.2411809548975, 0.2071067811865}};
   int norm[4] = {0, 0, 0, 1};
 
-  InputDB::SP_input db = InputDB::Create();
+  InputDB::SP_input db = std::make_shared<InputDB>();
   db->put<int>("quad_number_polar_octant",   6);
   for (int i = 0; i < N; ++i)
   {

@@ -29,19 +29,6 @@ LinearExternalSource::LinearExternalSource(const size_t   number_groups,
    d_number_times = d_times.size();
 }
 
-//---------------------------------------------------------------------------//
-LinearExternalSource::SP_tdsource
-LinearExternalSource::Create(const size_t   number_groups,
-                             SP_mesh        mesh,
-                             vec_dbl        times,
-                             vec_source     sources,
-                             bool           discrete)
-{
-  SP_tdsource p(new LinearExternalSource(number_groups, mesh,
-                                         times, sources, discrete));
-  return p;
-}
-
 } // end namespace detran
 
 //---------------------------------------------------------------------------//

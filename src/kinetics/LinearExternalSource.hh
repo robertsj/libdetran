@@ -54,13 +54,6 @@ public:
                        vec_source     sources,
                        bool           discrete = false);
 
-  /// SP constructor
-  static SP_tdsource Create(const size_t   number_groups,
-                            SP_mesh        mesh,
-                            vec_dbl        times,
-                            vec_source     sources,
-                            bool           discrete = false);
-
   /// Virtual destructor
   virtual ~LinearExternalSource(){}
 

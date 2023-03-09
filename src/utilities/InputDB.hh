@@ -69,12 +69,6 @@ public:
   /// Constructor with optional name
   InputDB(std::string name = "InputDB");
 
-  static SP_input Create(std::string name = "InputDB")
-  {
-    SP_input p(new InputDB(name));
-    return p;
-  }
-
   //-------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
   //-------------------------------------------------------------------------//

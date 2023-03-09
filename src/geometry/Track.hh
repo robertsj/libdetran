@@ -59,11 +59,6 @@ public:
         const Point  &r1,
         const double  w);
 
-  /// SP_constructor
-  static SP_track Create(const Point  &r0,
-                         const Point  &r1,
-                         const double  w);
-
   //--------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
   //--------------------------------------------------------------------------//

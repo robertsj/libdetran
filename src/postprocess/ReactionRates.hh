@@ -65,15 +65,6 @@ public:
   /// Virtual destructor
   virtual ~ReactionRates(){}
 
-  /// SP Constructor
-  static SP_reactionrates
-  Create(SP_material material, SP_mesh mesh, SP_state state)
-  {
-    SP_reactionrates p;
-    p  = std::make_shared<ReactionRates>(material, mesh, state);
-    return p;
-  }
-
   //-------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
   //-------------------------------------------------------------------------//

@@ -52,7 +52,7 @@ int test_Tracker_2d_mesh(int argc, char *argv[])
   vec_int mt(1,  0);
   Mesh::SP_mesh mesh(new Mesh2D(fm, fm, cm, cm, mt));
 
-  InputDB::SP_input db = InputDB::Create();
+  InputDB::SP_input db =std::make_shared<InputDB>();
   db->put<double>("tracker_maximum_spacing", 1.0);
   db->put<std::string>("tracker_spatial_quad_type", "uniform");
   db->put<std::string>("quad_type", "u-dgl");
@@ -107,7 +107,7 @@ int test_Tracker_3d_mesh(int argc, char *argv[])
   vec_int mt(1,  0);
   Mesh::SP_mesh mesh(new Mesh3D(fm, fm, fm, cm, cm, cm, mt));
 
-  InputDB::SP_input db = InputDB::Create();
+  InputDB::SP_input db =std::make_shared<InputDB>();
   db->put<double>("tracker_maximum_spacing", 1.0);
   db->put<std::string>("tracker_spatial_quad_type", "uniform");
   db->put<std::string>("quad_type", "u-dgl");
@@ -182,7 +182,7 @@ int test_Tracker_pin_2d(int argc, char *argv[])
 
   Geometry::SP_geometry pin = test_2D_pincell_simple();
 
-  InputDB::SP_input db = InputDB::Create();
+  InputDB::SP_input db =std::make_shared<InputDB>();
   db->put<double>("tracker_maximum_spacing", 0.7);
   db->put<std::string>("tracker_spatial_quad_type", "uniform");
   db->put<std::string>("quad_type", "u-dgl");
@@ -221,7 +221,7 @@ int test_Tracker_box_3d(int argc, char *argv[])
   surfaces[4] = QSF::CreatePlaneZ(0.0);
   surfaces[5] = QSF::CreatePlaneZ(1.0);
 
-  SP_region box = Region::Create(0, Point(0,0,0)-0.001, Point(1,1,1)+.001);
+  SP_region box =std::make_shared<Region>(0, Point(0,0,0)-0.001, Point(1,1,1)+.001);
   box->append(surfaces[0], true);
   box->append(surfaces[1], false);
   box->append(surfaces[2], true);
@@ -232,7 +232,7 @@ int test_Tracker_box_3d(int argc, char *argv[])
   auto geo = std::make_shared<Geometry>(1.0, 1.0, 1.0);
   geo->add_region(box);
 
-  InputDB::SP_input db = InputDB::Create();
+  InputDB::SP_input db =std::make_shared<InputDB>();
   db->put<double>("tracker_maximum_spacing", 0.1);
   db->put<std::string>("tracker_spatial_quad_type", "uniform");
   db->put<std::string>("quad_type", "u-dgl");

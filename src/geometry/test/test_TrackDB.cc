@@ -34,7 +34,7 @@ typedef QuadratureFactory QF;
 
 int test_TrackDB_2D(int argc, char *argv[])
 {
-  InputDB::SP_input db = InputDB::Create();
+  InputDB::SP_input db =std::make_shared<InputDB>();
   db->put<string>("quad_type", "u-dgl");
   db->put<int>("quad_number_azimuth_octant", 2);
   db->put<int>("quad_number_polar_octant",   1);
@@ -89,7 +89,7 @@ int test_TrackDB_2D(int argc, char *argv[])
 //----------------------------------------------------------------------------//
 int test_TrackDB_3D(int argc, char *argv[])
 {
-  InputDB::SP_input db = InputDB::Create();
+  InputDB::SP_input db =std::make_shared<InputDB>();
   db->put<string>("quad_type", "u-dgl");
   db->put<int>("quad_number_azimuth_octant", 1);
   db->put<int>("quad_number_polar_octant", 2);

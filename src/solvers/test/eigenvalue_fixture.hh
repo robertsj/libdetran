@@ -40,7 +40,7 @@ EigenvalueData get_eigenvalue_data(unsigned int dim, unsigned int ng)
   EigenvalueData data;
 
   // input
-  data.input = InputDB::Create();
+  data.input = std::make_shared<InputDB>();
   data.input->put<int>("number_groups",      ng);
   data.input->put<int>("outer_print_level",  1);
   data.input->put<int>("inner_print_level",  0);
@@ -53,7 +53,7 @@ EigenvalueData get_eigenvalue_data(unsigned int dim, unsigned int ng)
   data.input->put<int>("outer_max_iters",    1000000);
   data.input->put<int>("eigen_max_iters",    1000000);
 
-  InputDB::SP_input callow_db = InputDB::Create();
+  InputDB::SP_input callow_db = std::make_shared<InputDB>();
   callow_db->put<std::string>("eigen_solver_type", "gd");
   callow_db->put<int>("eigen_solver_monitor_level", 2);
   callow_db->put<double>("eigen_solver_tol", 1.0e-14);

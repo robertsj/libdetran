@@ -64,15 +64,7 @@ public:
                        const double       peak_time,
                        const double       fwhm,
                        bool               discrete = false);
-
-  /// SP constructor
-  static SP_tdsource Create(const size_t       number_groups,
-                            SP_mesh            mesh,
-                            SP_externalsource  fixed_source,
-                            const double       peak_time,
-                            const double       fwhm,
-                            bool               discrete = false);
-
+                       
   /// Virtual destructor
   virtual ~PulsedExternalSource(){}
 

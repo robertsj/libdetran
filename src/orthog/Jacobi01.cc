@@ -37,7 +37,7 @@ Jacobi01::Jacobi01(const Parameters &p)
   d_basis  = std::make_shared<callow::MatrixDense>(d_size, d_order + 1, 0.0);
 
   // Allocate the normalization array
-  d_a = Vector::Create(d_order + 1, 0.0);
+  d_a = std::make_shared<Vector>(d_order + 1, 0.0);
 
   // The weights are the quadrature weights times the actual weight
   double L = d_upper_bound - d_lower_bound;

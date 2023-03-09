@@ -115,7 +115,7 @@ int test_SlepcGD(int argc, char *argv[])
   int m = 10;
   Matrix::SP_matrix A = test_matrix_2(m);
   m = A->number_columns();
-  Matrix::SP_matrix B = Matrix::Create(m, m, 1);
+  Matrix::SP_matrix B = std::make_shared<Matrix>(m, m, 1);
   for (int i = 0; i < m; ++i) B->insert(i, i, 0.176376589713020);
   B->assemble();
   A->print_matlab("A.out");

@@ -51,7 +51,7 @@ int test_Sweeper3D_basic(int argc, char *argv[])
   // Test fixtures
   Sweeper_T::SP_mesh mesh       = std::make_shared<Mesh3D>(fm, fm, fm, cm, cm, cm, mt);
   Sweeper_T::SP_material mat    = material_fixture_1g();
-  Sweeper_T::SP_quadrature quad = LevelSymmetric::Create(2, 3);
+  Sweeper_T::SP_quadrature quad = std::make_shared<LevelSymmetric>(2, 3);
 
   // Input
   Sweeper_T::SP_input input(new InputDB());
@@ -65,7 +65,7 @@ int test_Sweeper3D_basic(int argc, char *argv[])
     bound(new Sweeper_T::Boundary_T(input, mesh, quad));
 
   // Moment to Discrete
-  MomentIndexer::SP_momentindexer indexer = MomentIndexer::Create(3, 0);
+  MomentIndexer::SP_momentindexer indexer = std::make_shared<MomentIndexer>(3, 0);
   MomentToDiscrete::SP_MtoD m2d(new MomentToDiscrete(indexer));
   m2d->build(quad);
 
