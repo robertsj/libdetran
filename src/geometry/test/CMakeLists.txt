@@ -2,6 +2,18 @@
 # libdetran/src/geometry/test/CMakeLists.txt
 #------------------------------------------------------------------------------#
 
+macro(test)
+  add_executable(${ARGV0} ${ARGV0}.cc)
+  target_link_libraries(${ARGV0}
+    geometry utilities angle
+    GTest::gtest_main
+  )
+  gtest_discover_tests(${ARGV0})
+endmacro()
+
+test(test_Point)
+test(test_Tracker)
+
 ADD_EXECUTABLE(test_Mesh1D                  test_Mesh1D.cc)
 TARGET_LINK_LIBRARIES(test_Mesh1D           geometry utilities angle)
 ADD_TEST(test_Mesh1D                        test_Mesh1D 0)
@@ -31,21 +43,10 @@ TARGET_LINK_LIBRARIES(test_TrackDB          geometry utilities angle)
 ADD_TEST(test_TrackDB_2D                    test_TrackDB 0)
 ADD_TEST(test_TrackDB_3D                    test_TrackDB 1)
 
-ADD_EXECUTABLE(test_Tracker                 test_Tracker.cc)
-TARGET_LINK_LIBRARIES(test_Tracker          geometry utilities angle)
-ADD_TEST(test_Tracker_2x2                   test_Tracker    0)
-ADD_TEST(test_Tracker_3x3                   test_Tracker    1)
-ADD_TEST(test_Tracker_pin_2d                test_Tracker    2)
-ADD_TEST(test_Tracker_box_3d                test_Tracker    3)
-
 ADD_EXECUTABLE(test_QuadraticSurface        test_QuadraticSurface.cc)
 TARGET_LINK_LIBRARIES(test_QuadraticSurface geometry utilities angle)
 ADD_TEST(test_QuadraticSurface_plane        test_QuadraticSurface 0)
 ADD_TEST(test_QuadraticSurface_circle       test_QuadraticSurface 1)
-
-ADD_EXECUTABLE(test_Point                   test_Point.cc)
-TARGET_LINK_LIBRARIES(test_Point            geometry utilities angle)
-ADD_TEST(test_Point                         test_Point 0)
 
 ADD_EXECUTABLE(test_Ray                     test_Ray.cc)
 TARGET_LINK_LIBRARIES(test_Ray              geometry utilities angle)
@@ -65,3 +66,9 @@ ADD_TEST(test_RegionFactory_PinCell         test_RegionFactory 0)
 ADD_EXECUTABLE(test_Region                  test_Region.cc)
 TARGET_LINK_LIBRARIES(test_Region           geometry utilities angle)
 ADD_TEST(test_Region                        test_Region 0)
+
+ADD_EXECUTABLE(test_Geometry                test_Geometry.cc)
+TARGET_LINK_LIBRARIES(test_Geometry         geometry utilities angle)
+ADD_TEST(test_Geometry                      test_Geometry 0)
+
+

@@ -40,10 +40,10 @@ public:
   // TYPEDEFS
   //--------------------------------------------------------------------------//
 
-  typedef std::shared_ptr<Track>	SP_track;
   typedef std::vector<Segment>                        vec_segment;
   typedef detran_utilities::Reversible<vec_segment>   iterator;
   typedef detran_utilities::size_t                    size_t;
+  typedef std::shared_ptr<Track>                      SP_track;
 
   //--------------------------------------------------------------------------//
   // CONSTRUCTOR & DESTRUCTOR
@@ -53,16 +53,12 @@ public:
    *  @brief Constructor
    *  @param r0   entrance point
    *  @param r1   exit point
-   *  @param w    track width (or, in 3-d, its area)
+   *  @param w    spatial weight (width in 2d, area in 3d)
    */
-  Track(const Point  &r0,
-        const Point  &r1,
-        const double  w);
+  Track(const Point &r0, const Point  &r1, double w);
 
-  /// SP_constructor
-  static SP_track Create(const Point  &r0,
-                         const Point  &r1,
-                         const double  w);
+  SP_track reverse();
+  bool reversed() const {return d_reversed;}
 
   //--------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
@@ -71,29 +67,30 @@ public:
   /// Add a segment
   void add_segment(const Segment &s);
   /// Mutable reference to segment
-  Segment& segment(const size_t i);
-  /// Const reference to segment
-  const Segment& segment(const size_t i) const;
+  const Segment& segment(const int i) const
+  {
+    if (d_reversed)
+      return d_segments[number_segments()-i-1];
+    return d_segments[i];
+  }
+
+  const vec_segment& segments() const { return d_segments;}
+  vec_segment& segments() { return d_segments;}
+
   /// Return my entrance point
-  Point enter() const;
+  const Point& enter() const;
   /// Return my exit point
-  Point exit() const;
+  const Point& exit() const;
   /// Iterator to the beginning of the track
-  iterator begin(bool forward = true);
+  iterator begin();
   /// Iterator to the end of the track
-  iterator end(bool forward = true);
-  /// Return the track cosine
-  double mu() const;
-  /// Return the track sine
-  double eta() const;
-  /// Return the track polar cosine
-  double xi() const;
+  iterator end();
   /// Number of segments along this track
-  size_t number_segments() const;
+  int number_segments() const;
   /// Return the track width
-  double width() const;
-  /// Indentifier
-  size_t identifier() const;
+  double spatial_weight() const;
+  /// Identifying integer
+  const int& identifier() const;
 
 private:
 
@@ -102,29 +99,37 @@ private:
   //--------------------------------------------------------------------------//
 
   /// Track segments
-  vec_segment d_segments;
+  vec_segment& d_segments;
+  ///
+  vec_segment d_segments_;
   /// Track entrance point
   Point d_enter;
   /// Track exit point
   Point d_exit;
-  /// Cosine with respect to x
-  double d_mu;
-  /// Cosine with respect to y
-  double d_eta;
-  /// Cosine with respect to z
-  double d_xi;
-  /// Track width
-  double d_width;
+  /// Track spatial weight
+  double d_spatial_weight;
   /// Unique identifier
-  size_t d_identifier;
+  int d_identifier;
   /// Counts every track added
   static size_t d_number_tracks;
+  /// Reversed?
+  bool d_reversed;
+  /// My reversed one's identifier
+  const int& d_reversed_identifier;
 
   //--------------------------------------------------------------------------//
   // IMPLEMENTATION
   //--------------------------------------------------------------------------//
 
+  Track(Track &t0, bool reversed);
+
   friend std::ostream& operator<< (std::ostream &out, Track &t);
+
+  // Comparison by entrance, mu, and xi.  Should be unique.
+  bool operator< (const Track &other) const;
+
+  // Equality by entrance, mu, and xi.  Should be unique.
+  bool operator== (const Track &other) const;
 
 };
 
@@ -136,12 +141,6 @@ GEOMETRY_TEMPLATE_EXPORT(std::vector<detran_utilities::SP<Track> >)
 GEOMETRY_TEMPLATE_EXPORT(std::vector<std::vector<detran_utilities::SP<Track> > >)
 
 } // end namespace detran_geometry
-
-//----------------------------------------------------------------------------//
-// INLINE FUNCTIONS
-//----------------------------------------------------------------------------//
-
-#include "Track.i.hh"
 
 #endif /* detran_geometry_TRACK_HH_ */
 

@@ -87,7 +87,7 @@ public:
   }
 
   /// Virtual destructor
-  virtual ~BoundaryBase(){}
+  virtual ~BoundaryBase() {};
 
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL BOUNDARY TYPES MUST IMPLEMENT THESE

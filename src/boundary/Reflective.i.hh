@@ -19,13 +19,14 @@ namespace detran
 template <class D>
 void Reflective<D>::update(const size_t g)
 {
+  auto b = d_boundary.lock();
   for (size_t o = 0; o < d_quadrature->number_octants()/2; ++o)
   {
     for (size_t a = 0; a < d_quadrature->number_angles_octant(); ++a)
     {
       // Reroute reflecting fluxes.
-      (*d_boundary)(d_side, d_octants[o][Boundary_T::IN], a, g) =
-        (*d_boundary)(d_side, d_octants[o][Boundary_T::OUT], a, g);
+      b->operator()(d_side, d_octants[o][Boundary_T::IN], a, g) =
+        b->operator()(d_side, d_octants[o][Boundary_T::OUT], a, g);
     }
   }
 }
@@ -47,8 +48,9 @@ void Reflective<D>::update(const size_t g, const size_t o, const size_t a)
   if (o_out >= 0)
   {
     // Reroute reflecting fluxes.
-    (*d_boundary)(d_side, o, a, g) =
-      (*d_boundary)(d_side, o_out, a, g);
+    auto b = d_boundary.lock();
+    b->operator()(d_side, o, a, g) =
+        b->operator()(d_side, o_out, a, g);
   }
 }
 
