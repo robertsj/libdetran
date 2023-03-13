@@ -26,7 +26,7 @@ ContinuousOrthogonalBasis::ContinuousOrthogonalBasis(const Parameters &p)
   Require(d_upper_bound >= d_x[d_x.size()-1]);
 
   // Allocate the weight vector, since this will store at least the qw's
-  d_w = Vector::Create(d_size, 0.0);
+  d_w = std::make_shared<Vector>(d_size, 0.0);
 }
 
 //----------------------------------------------------------------------------//

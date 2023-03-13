@@ -36,7 +36,7 @@ TransformedBasis::TransformedBasis(const Parameters &p)
   d_basis  = std::make_shared<callow::MatrixDense>(P);
 
   // Allocate the normalization array
-  d_a = Vector::Create(d_order + 1, 0.0);
+  d_a = std::make_shared<Vector>(d_order + 1, 0.0);
 
   // Set the zeroth order, located in the abscissa vector for now
   for (int i = 0; i < d_size; ++i)

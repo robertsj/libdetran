@@ -50,13 +50,6 @@ LRA::LRA(SP_mesh mesh, bool doingtransport, bool steady)
 }
 
 //---------------------------------------------------------------------------//
-LRA::SP_material LRA::Create(SP_mesh mesh, bool flag, bool steady)
-{
-  SP_material p(new LRA(mesh, flag, steady));
-  return p;
-}
-
-//---------------------------------------------------------------------------//
 void LRA::set_state(SP_state state)
 {
   Require(state);

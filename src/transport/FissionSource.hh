@@ -56,11 +56,6 @@ public:
    */
   FissionSource(SP_state state, SP_mesh mesh, SP_material material);
 
-  /// SP Constructor
-  static SP_fissionsource Create(SP_state    state,
-                                 SP_mesh     mesh,
-                                 SP_material material);
-
   //--------------------------------------------------------------------------//
   // PUBLIC INTERFACE
   //--------------------------------------------------------------------------//

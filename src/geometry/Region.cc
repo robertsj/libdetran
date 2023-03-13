@@ -31,14 +31,6 @@ Region::Region(const size_t mat, const Point &b_min, const Point &b_max)
 }
 
 //----------------------------------------------------------------------------//
-Region::SP_region
-Region::Create(const size_t mat, const Point &b_min, const Point &b_max)
-{
-  SP_region p(new Region(mat, b_min, b_max));
-  return p;
-}
-
-//----------------------------------------------------------------------------//
 void Region::append(SP_region r, const size_t op)
 {
   Require(r);

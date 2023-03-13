@@ -33,22 +33,6 @@ KineticsMaterial::KineticsMaterial(const size_t num_materials,
 }
 
 //---------------------------------------------------------------------------//
-KineticsMaterial::SP_material
-KineticsMaterial::Create(const size_t number_materials,
-                         const size_t number_energy_groups,
-                         const size_t number_precursor_groups,
-                         std::string  name)
-{
-  SP_material p(new KineticsMaterial(number_materials,
-                                     number_energy_groups,
-                                     number_precursor_groups,
-                                     name));
-  // Postconditions
-  Ensure(p);
-  return p;
-}
-
-//---------------------------------------------------------------------------//
 void KineticsMaterial::set_velocity(const size_t g, const double v)
 {
   Require(g < d_number_groups);

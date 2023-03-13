@@ -22,14 +22,6 @@ MultiPhysics::MultiPhysics(size_t number_variables)
 }
 
 //---------------------------------------------------------------------------//
-MultiPhysics::SP_multiphysics
-MultiPhysics::Create(size_t number_variables)
-{
-  SP_multiphysics p(new MultiPhysics(number_variables));
-  return p;
-}
-
-//---------------------------------------------------------------------------//
 const MultiPhysics::vec_dbl&
 MultiPhysics::variable(const size_t id) const
 {

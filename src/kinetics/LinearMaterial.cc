@@ -55,17 +55,6 @@ LinearMaterial::LinearMaterial(const vec_dbl      &times,
 }
 
 //---------------------------------------------------------------------------//
-LinearMaterial::SP_material
-LinearMaterial::Create(const vec_dbl      &times,
-                       const vec_material &materials,
-                       std::string        name)
-{
-  SP_material p(new LinearMaterial(times, materials, name));
-  return p;
-}
-
-
-//---------------------------------------------------------------------------//
 // IMPLEMENTATION
 //---------------------------------------------------------------------------//
 

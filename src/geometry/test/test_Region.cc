@@ -47,11 +47,11 @@ int test_Region(int argc, char *argv[])
   Surface::SP_surface C = QSF::CreateCylinderZ(0.5, 0.5, 0.4);
 
   Region::SP_region region0 =
-    Region::Create(0, Point(0, 0, 0) - 0.1, Point(1, 1, 1) + 0.1);
+   std::make_shared<Region>(0, Point(0, 0, 0) - 0.1, Point(1, 1, 1) + 0.1);
   region0->append(C, false);
 
   Region::SP_region region1 =
-    Region::Create(1, Point(0, 0, 0) - 0.1, Point(1, 1, 1) + 0.1);
+   std::make_shared<Region>(1, Point(0, 0, 0) - 0.1, Point(1, 1, 1) + 0.1);
   region1->append(W, true);
   region1->append(E, false);
   region1->append(S, true);

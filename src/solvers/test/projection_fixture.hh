@@ -31,7 +31,7 @@ using std::endl;
 Material::SP_material get_mat()
 {
 
-  Material::SP_material mat = Material::Create(4, 2, "slabreactor");
+  Material::SP_material mat = std::make_shared<Material>(4, 2, "slabreactor");
   // Material 0: Water
   // Total
   mat->set_sigma_t(0, 0, 0.1890);

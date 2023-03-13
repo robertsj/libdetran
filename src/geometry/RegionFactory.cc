@@ -96,7 +96,7 @@ RegionFactory::CreatePinCell(SP_pincell pin)
     for (size_t a = 0; a < number_divisions; ++a)
     {
       Assert(r < pin->mat_map().size());
-      SP_region region = Region::Create(pin->mat_map()[r], bbox_min, bbox_max);
+      SP_region region =std::make_shared<Region>(pin->mat_map()[r], bbox_min, bbox_max);
 
       // cylinder bounds
       if (r < radii.size())

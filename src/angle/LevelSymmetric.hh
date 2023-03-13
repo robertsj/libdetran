@@ -52,9 +52,6 @@ public:
    */
   LevelSymmetric(size_t np, size_t dim);
 
-  /// SP Constructor.
-  static SP_quadrature Create(size_t np, size_t dim);
-
 private:
 
   //-------------------------------------------------------------------------//

@@ -70,9 +70,6 @@ public:
    */
   LRA(SP_mesh mesh, bool doingtransport, bool steady);
 
-  // SP constructor
-  static SP_material Create(SP_mesh, bool flag, bool steady);
-
   //-------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
   //-------------------------------------------------------------------------//

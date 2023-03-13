@@ -32,22 +32,6 @@ Sweeper1D<EQ>::Sweeper1D(SP_input input,
 }
 
 //---------------------------------------------------------------------------//
-template <class EQ>
-typename Sweeper1D<EQ>::SP_sweeper
-Sweeper1D<EQ>::Create(detran_utilities::InputDB::SP_input        input,
-                      detran_geometry::Mesh::SP_mesh             mesh,
-                      detran_material::Material::SP_material     material,
-                      detran_angle::Quadrature::SP_quadrature    quadrature,
-                      State::SP_state                            state,
-                      BoundaryBase<_1D>::SP_boundary             boundary,
-                      SweepSource<_1D>::SP_sweepsource           sweepsource)
-{
-  auto p = std::make_shared<Sweeper1D<EQ> >(input, mesh, material, quadrature,
-                             state, boundary, sweepsource);
-  return p;
-}
-
-//---------------------------------------------------------------------------//
 // EXPLICIT INSTANTIATIONS
 //---------------------------------------------------------------------------//
 

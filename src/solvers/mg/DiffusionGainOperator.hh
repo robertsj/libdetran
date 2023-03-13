@@ -53,16 +53,6 @@ public:
                         SP_mesh       mesh,
                         bool          adjoint = false);
 
-  /// SP constructor
-  static SP_gainoperator Create(SP_input    input,
-                                SP_material material,
-                                SP_mesh     mesh,
-                                bool        adjoint = false)
-  {
-    SP_gainoperator p(new DiffusionGainOperator(input, material, mesh, adjoint));
-    return p;
-  }
-
   //--------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
   //--------------------------------------------------------------------------//

@@ -55,14 +55,6 @@ public:
 
   /// @}
 
-  /// SP constructor
-  static SP_vector
-  Create(const int n, const double v = 0.0)
-  {
-    SP_vector p(new Vector(n, v));
-    return p;
-  }
-
   /// Virtual destructor
   virtual ~Vector();
 

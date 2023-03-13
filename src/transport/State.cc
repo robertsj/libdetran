@@ -42,8 +42,8 @@ State::State(SP_input        input,
     size_t order = 0;
     if (input->check("moment_order"))
       order = input->get<int>("moment_order");
-    d_momentindexer =
-        detran_angle::MomentIndexer::Create(d_mesh->dimension(), order);
+    d_momentindexer = 
+      std::make_shared<detran_angle::MomentIndexer>(d_mesh->dimension(), order);
     d_number_moments = d_momentindexer->number_moments();
   }
 

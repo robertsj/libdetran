@@ -43,7 +43,7 @@ TEST(Tracker, TrackerBasic2D)
    *     |------------
    */
 
-  InputDB::SP_input db = InputDB::Create();
+  InputDB::SP_input db =std::make_shared<InputDB>();
   db->put<double>("tracker_maximum_spacing", 1.0);
   db->put<int>("tracker_minimum_number", 3);
   db->put<std::string>("tracker_spatial_quad_type", "uniform");

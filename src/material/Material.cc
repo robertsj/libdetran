@@ -48,16 +48,6 @@ Material::Material(const size_t number_materials,
   d_upscatter_cutoff[1] = 0;
 }
 
-//---------------------------------------------------------------------------//
-Material::SP_material
-Material::Create(const size_t number_materials,
-                 const size_t number_groups,
-                 std::string  name)
-{
-  SP_material p(new Material(number_materials, number_groups, name));
-  return p;
-}
-
 //----------------------------------------------------------------------------//
 // Setters
 //----------------------------------------------------------------------------//

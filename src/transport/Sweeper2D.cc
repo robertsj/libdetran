@@ -32,23 +32,6 @@ Sweeper2D<EQ>::Sweeper2D(SP_input input,
 }
 
 //---------------------------------------------------------------------------//
-template <class EQ>
-typename Sweeper2D<EQ>::SP_sweeper
-Sweeper2D<EQ>::Create(SP_input       input,
-                      SP_mesh        mesh,
-                      SP_material    material,
-                      SP_quadrature  quadrature,
-                      SP_state       state,
-                      BoundaryBase<_2D>::SP_boundary boundary,
-                      SP_sweepsource sweepsource)
-{
-  auto p = std::make_shared<Sweeper2D<EQ> >(input, mesh, material, quadrature,
-                             state, boundary, sweepsource);
-  return p;
-}
-
-
-//---------------------------------------------------------------------------//
 // EXPLICIT INSTANTIATIONS
 //---------------------------------------------------------------------------//
 

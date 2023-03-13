@@ -89,20 +89,6 @@ Matrix::~Matrix()
 }
 
 //----------------------------------------------------------------------------//
-Matrix::SP_matrix Matrix::Create(const int m, const int n)
-{
-  SP_matrix p(new Matrix(m, n));
-  return p;
-}
-
-//----------------------------------------------------------------------------//
-Matrix::SP_matrix Matrix::Create(const int m, const int n, const int nnz)
-{
-  SP_matrix p(new Matrix(m, n, nnz));
-  return p;
-}
-
-//----------------------------------------------------------------------------//
 void Matrix::preallocate(const int nnzrow)
 {
   Require(d_sizes_set);

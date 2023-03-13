@@ -32,22 +32,6 @@ Sweeper3D<EQ>::Sweeper3D(SP_input input,
 }
 
 //---------------------------------------------------------------------------//
-template <class EQ>
-typename Sweeper3D<EQ>::SP_sweeper
-Sweeper3D<EQ>::Create(SP_input       input,
-                      SP_mesh        mesh,
-                      SP_material    material,
-                      SP_quadrature  quadrature,
-                      SP_state       state,
-                      BoundaryBase<_3D>::SP_boundary boundary,
-                      SP_sweepsource sweepsource)
-{
-  auto p = std::make_shared<Sweeper3D<EQ> >(input, mesh, material, quadrature,
-                             state, boundary, sweepsource);
-  return p;
-}
-
-//---------------------------------------------------------------------------//
 // EXPLICIT INSTANTIATIONS
 //---------------------------------------------------------------------------//
 

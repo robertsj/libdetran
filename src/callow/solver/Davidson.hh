@@ -205,7 +205,7 @@ public:
   {
     if (!db)
     {
-      db = detran_utilities::InputDB::Create();
+      db = std::make_shared<detran_utilities::InputDB>();
       db->put<std::string>("linear_solver_type",  "gmres");
       db->put<double>("linear_solver_atol",       0.0);
       db->put<double>("linear_solver_rtol",       0.1);

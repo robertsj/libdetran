@@ -38,7 +38,7 @@ typedef QuadratureFactory QF;
 int test_TrackDB_2D(int argc, char *argv[])
 {
   // initialize simple set of tracks
-  InputDB::SP_input db = InputDB::Create();
+  InputDB::SP_input db = std::make_shared<InputDB>();
   db->put<string>("quad_type", "u-dgl");
   db->put<int>("quad_number_azimuth_octant", 2);
   db->put<int>("quad_number_polar_octant",   1);
