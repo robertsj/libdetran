@@ -36,10 +36,7 @@ int test_Track(int argc, char *argv[])
   TEST(soft_equiv(track.enter().x(), 0.0));
   TEST(soft_equiv(track.exit().y(),  1.0));
   TEST(soft_equiv(track.exit().z(),  0.0));
-  TEST(soft_equiv(track.width(),     0.123));
-  TEST(soft_equiv(track.mu(),  0.5 * sqrt(2.0)));
-  TEST(soft_equiv(track.eta(), 0.5 * sqrt(2.0)));
-  TEST(soft_equiv(track.xi(),  0.0));
+  TEST(soft_equiv(track.spatial_weight(),     0.123));
 
   // Test track addition of segments.
   track.add_segment(Segment(0, 1.0));
@@ -51,15 +48,23 @@ int test_Track(int argc, char *argv[])
   TEST(soft_equiv(track.segment(1).length(), 2.0));
 
   // Test iterator
+  std::cout << track << std::endl;
   Track::iterator it = track.begin();
-  TEST((*it).region() == 0);
-  it++;
-  TEST((*it).region() == 1);
-  it = track.begin(false);
-  TEST((*it).region() == 1);
-  it++;
-  TEST((*it).region() == 0);
+  std::cout << " region = " << it->region() << std::endl;
 
+  TEST((*it).region() == 0);
+  it++;
+  TEST((*it).region() == 1);
+
+  // Test reverse
+  Track::SP_track p_rtrack = track.reverse();
+  auto &rtrack = *p_rtrack;
+  std::cout << rtrack << std::endl;
+  it = rtrack.begin();
+  *it;
+  TEST((*it).region() == 1);
+  it++;
+  TEST((*it).region() == 0);
   return 0;
 }
 

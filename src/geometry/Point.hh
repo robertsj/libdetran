@@ -13,7 +13,7 @@
 #include <cmath>
 #include <ostream>
 #include <iomanip>
-
+#include <iostream>
 namespace detran_geometry
 {
 
@@ -97,12 +97,11 @@ GEOMETRY_EXPORT Point operator*(const double scale, const Point &p);
 /// Distance between two points.
 GEOMETRY_EXPORT double distance(const Point &p1, const Point &p2 = Point());
 
-GEOMETRY_EXPORT bool operator> (const Point &P0, const Point &P1);
-
-GEOMETRY_EXPORT bool operator<= (const Point &P0, const Point &P1);
-
 GEOMETRY_EXPORT bool operator< (const Point &P0, const Point &P1);
-
+GEOMETRY_EXPORT bool operator<= (const Point &P0, const Point &P1);
+GEOMETRY_EXPORT bool operator== (const Point &P0, const Point &P1);
+GEOMETRY_EXPORT bool operator!= (const Point &P0, const Point &P1);
+GEOMETRY_EXPORT bool operator> (const Point &P0, const Point &P1);
 GEOMETRY_EXPORT bool operator>= (const Point &P0, const Point &P1);
 
 /// Pretty print of a point

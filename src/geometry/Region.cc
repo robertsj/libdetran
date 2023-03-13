@@ -21,7 +21,9 @@ Region::Region(const size_t mat, const Point &b_min, const Point &b_max)
     d_have_bound = true;
   if (d_have_bound)
   {
-    Require(d_bounds[0] <= d_bounds[1]);
+    Require(d_bounds[0].x() < d_bounds[1].x());
+    Require(d_bounds[0].y() < d_bounds[1].y());
+    Require(d_bounds[0].z() <= d_bounds[1].z());
     if (d_bounds[1].z() > d_bounds[0].z())
       d_have_bound_z = true;
   }
@@ -109,9 +111,12 @@ void Region::append_node(SP_node current, SP_node addition, const size_t op)
   }
   Require(op < END_NODE_OPERATORS);
   if (op == UNION)
-    d_node  = std::make_shared<CSG_Union>(current, addition);  else if (op == INTERSECTION)
-    d_node  = std::make_shared<CSG_Intersection>(current, addition);  else
-    d_node  = std::make_shared<CSG_Difference>(current, addition);}
+    d_node  = std::make_shared<CSG_Union>(current, addition);
+  else if (op == INTERSECTION)
+    d_node  = std::make_shared<CSG_Intersection>(current, addition);
+  else if (op == DIFFERENCE)
+    d_node  = std::make_shared<CSG_Difference>(current, addition);
+}
 
 //----------------------------------------------------------------------------//
 void Region::add_attribute(const std::string &key, const int value)

@@ -21,6 +21,9 @@ using namespace detran_utilities;
 using namespace detran_test;
 using namespace std;
 
+#define COUT(c) std::cout << c << std::endl;
+
+
 int main(int argc, char *argv[])
 {
   RUN(argc, argv);
@@ -34,58 +37,54 @@ typedef QuadratureFactory QF;
 
 int test_TrackDB_2D(int argc, char *argv[])
 {
+<<<<<<< HEAD
   InputDB::SP_input db =std::make_shared<InputDB>();
+=======
+  // initialize simple set of tracks
+  InputDB::SP_input db = InputDB::Create();
+>>>>>>> dev
   db->put<string>("quad_type", "u-dgl");
   db->put<int>("quad_number_azimuth_octant", 2);
   db->put<int>("quad_number_polar_octant",   1);
-
-  auto q = std::dynamic_pointer_cast<ProductQuadrature>(QF::build(db, 2));   
-
-  TrackDB trackdb(q);
-
-  // Add tracks for only the first two quadrants; we go in reverse otherwise.
-  for (int o = 0; o < 2; ++o)
-  {
-    for (int a = 0; a < 2; ++a)
-    {
-      for (int t = 0; t < a + 1; ++t)
-      {
-      TrackDB::SP_track track(new Track(Point(a, 0+t), Point(1-a, 1+t), 1.0));
-      trackdb.add_track(a + 2*o, 0, track);
-      }
-    }
-  }
-  // Test basics
-  TEST(trackdb.number_tracks(0) == 1);
-  TEST(trackdb.number_tracks(1) == 2);
-  TEST(trackdb.number_tracks(2) == 1);
-  TEST(trackdb.number_tracks(3) == 2);
-
-  // Go around all four quadrants and iterate over the tracks in each one
+  auto q = std::dynamic_pointer_cast<ProductQuadrature>(QF::build(db, 2));
+  q->display();
+  TrackDB::map_track all_tracks;
   for (int o = 0; o < 4; ++o)
   {
     for (int a = 0; a < 2; ++a)
     {
-      int az = a + 2*o;
-      TrackDB::iterator_angle track = trackdb.begin(az, 0);
-      for (; track != trackdb.end(az, 0); ++track)
+      TrackDB::vec_track tracks;
+      for (int t = 0; t < a + 1; ++t)
       {
-        std::cout << " azimuth= " << az
-                  << " entrance=" << (*track)->enter() << std::endl;
+        Point entry(a, 0+t);
+        Point exit(o, 1+t);
+        auto track = std::make_shared<Track>(entry, exit, 1.0);
+        Segment s(a, 1.0);
+        track->add_segment(s);
+        tracks.push_back(track);
       }
+      all_tracks[{o, a}] = tracks;
     }
   }
+  TrackDB trackdb(q, all_tracks);
+  trackdb.display();
 
-  // Iterate over all tracks at once
-//  TrackDB::iterator track = trackdb.begin();
-//  for (; track != trackdb.end(); ++track)
-//  {
-//    std::cout << " entrance=" << track->enter() << std::endl;
-//  }
+  // test sizes are correct
+  TEST(trackdb.tracks().size() == 8);
+  for (int o = 0; o < 4; ++o)
+    for (int a = 0; a < 2; ++a)
+      TEST(trackdb.tracks(o, a).size() == a+1);
 
-  return 0;
-}
+  // test that the volume is correct
+  auto volume = trackdb.volume();
+  TEST(volume.size() == 2);
+  double volume_0 = 0.5; // one track/segment of width 1 * length 1 * 0.5 (for half the angles)
+  double volume_1 = 1.0; // two track/segments of width 1 * length 1 * 0.5 (for half the angles)
 
+  COUT("vol 0 = " << volume[0]);
+  COUT("vol 1 = " << volume[1]);
+
+<<<<<<< HEAD
 //----------------------------------------------------------------------------//
 int test_TrackDB_3D(int argc, char *argv[])
 {
@@ -93,29 +92,38 @@ int test_TrackDB_3D(int argc, char *argv[])
   db->put<string>("quad_type", "u-dgl");
   db->put<int>("quad_number_azimuth_octant", 1);
   db->put<int>("quad_number_polar_octant", 2);
+=======
+  TEST(volume[0] == volume_0);
+  TEST(volume[1] == volume_1);
+>>>>>>> dev
 
-  auto q = std::dynamic_pointer_cast<ProductQuadrature>(QF::build(db, 3));   
 
-  TrackDB tracks(q);
+  // test normalization.  now a=0 segments should have length 4.2
+  //  and a=1 segments should have length 2.1
+  std::vector<double> ref_vols(2, 2.1);
+  trackdb.normalize(ref_vols);
 
-  for (int a = 0; a < 4; ++a)
-  {
-    for (int p = 0; p < 2; ++p)
-    {
-      TrackDB::SP_track t(new Track(Point(a, 0), Point(a+1, 1+p), 1.0));
-      tracks.add_track(a, p, t);
-    }
-  }
+  // first check the volume is updated
+  volume = trackdb.volume();
 
-  TEST(tracks.number_tracks(0, 0) == 1);
-  TEST(tracks.number_tracks(0, 1) == 1);
-  TEST(tracks.number_tracks(1, 0) == 1);
-  TEST(tracks.number_tracks(1, 1) == 1);
-  TEST(tracks.number_tracks(2, 0) == 1);
-  TEST(tracks.number_tracks(2, 1) == 1);
-  TEST(tracks.number_tracks(3, 0) == 1);
-  TEST(tracks.number_tracks(3, 1) == 1);
+  COUT("vol 0 = " << volume[0]);
+  COUT("vol 1 = " << volume[1]);
 
+  TEST(soft_equiv(volume[0], 2.1));
+  TEST(soft_equiv(volume[1], 2.1));
+
+  TEST(soft_equiv(trackdb.tracks(0, 0)[0]->segment(0).length(), 4.2));
+  TEST(soft_equiv(trackdb.tracks(0, 1)[0]->segment(0).length(), 2.1));
+
+  trackdb.display();
+
+  return 0;
+}
+
+//----------------------------------------------------------------------------//
+int test_TrackDB_3D(int argc, char *argv[])
+{
+  // Nothing here till 3D tracking is implemented.
 
   return 0;
 }

@@ -36,9 +36,10 @@ public:
   // TYPEDEFS
   //-------------------------------------------------------------------------//
 
-  typedef std::shared_ptr<BoundaryCondition>	SP_bc;
+  typedef std::shared_ptr<BoundaryCondition>	      SP_bc;
   typedef BoundarySN<D>                             Boundary_T;
-  typedef typename Boundary_T::SP_boundary          SP_boundary;
+  typedef std::shared_ptr<Boundary_T>               SP_boundary;
+  typedef std::weak_ptr<Boundary_T>                 WP_boundary;
   typedef typename Boundary_T::SP_input             SP_input;
   typedef typename Boundary_T::SP_mesh              SP_mesh;
   typedef typename Boundary_T::SP_quadrature        SP_quadrature;
@@ -101,7 +102,7 @@ protected:
   //-------------------------------------------------------------------------//
 
   /// Boundary flux container.
-  SP_boundary d_boundary;
+  WP_boundary d_boundary;
   /// My surface.
   const size_t d_side;
   /// Input

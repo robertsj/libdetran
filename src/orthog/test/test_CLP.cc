@@ -35,6 +35,9 @@ int main(int argc, char *argv[])
 
 int test_CLP(int argc, char *argv[])
 {
+#ifndef DETRAN_ENABLE_BOOST
+  return 0;
+#endif
   CLP::Parameters p;
   p.size = 10;
   p.order = 3;
