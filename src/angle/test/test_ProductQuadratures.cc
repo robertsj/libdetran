@@ -47,7 +47,7 @@ int test_ProductQuadratures(int argc, char *argv[])
                        0.476302301137400, 0.319351268497600, 0.115347033458600,
                        0.106826722495100, 0.071625203692600, 0.025870430406300}};
 
-  InputDB::SP_input db = InputDB::Create();
+  InputDB::SP_input db = std::make_shared<InputDB>();
   db->put<int>("quad_number_azimuth_octant", 4);
   db->put<int>("quad_number_polar_octant",   3);
   for (int i = 0; i < N; ++i)
@@ -70,7 +70,7 @@ int test_ProductQuadratures(int argc, char *argv[])
  */
 int test_ProductQuadratureIndexing(int argc, char *argv[])//not testing anything
 {
-  InputDB::SP_input db = InputDB::Create();
+  InputDB::SP_input db = std::make_shared<InputDB>();
   db->put<int>("quad_number_azimuth_octant", 3);
   db->put<int>("quad_number_polar_octant",   1);
   db->put<std::string>("quad_type",          "u-dgl");

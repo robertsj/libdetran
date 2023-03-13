@@ -49,9 +49,6 @@ public:
   /// Constructor
   MultiPhysics(size_t number_variables = 0);
 
-  /// SP constructor
-  static SP_multiphysics Create(size_t number_variables = 0);
-
   //-------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
   //-------------------------------------------------------------------------//

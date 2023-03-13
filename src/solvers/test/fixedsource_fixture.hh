@@ -48,7 +48,7 @@ FixedSourceData get_fixedsource_data(unsigned int dim,
   FixedSourceData data;
 
   // input
-  data.input = InputDB::Create();
+  data.input = std::make_shared<InputDB>();
   data.input->put<int>("number_groups",     ng);
   data.input->put<int>("outer_print_level", 1);
   data.input->put<int>("inner_print_level", 0);
@@ -74,7 +74,7 @@ FixedSourceData get_fixedsource_data(unsigned int dim,
     data.mesh = std::make_shared<Mesh3D>(fm, fm, fm, cm, cm, cm, mt);
 
   // fixed source
-  data.source = ConstantSource::Create(ng, data.mesh, 1.0);
+  data.source = std::make_shared<ConstantSource>(ng, data.mesh, 1.0);
 
   return data;
 }

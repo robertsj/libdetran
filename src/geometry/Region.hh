@@ -56,11 +56,6 @@ public:
   Region(const size_t  mat,
          const Point  &lower_bound,
          const Point  &upper_bound);
-
-  /// SP constructor
-  static SP_region Create(const size_t  mat,
-                          const Point  &lower_bound,
-                          const Point  &upper_bound);
   /// Add a region
   void append(SP_region region, const size_t op);
   /// Add a new node

@@ -36,11 +36,11 @@ int test_Homogenization(int argc, char *argv[])
 {
 
   // Input
-  InputDB::SP_input input = InputDB::Create();
+  InputDB::SP_input input = std::make_shared<InputDB>();
   input->put<int>("number_groups",    2);
 
   // Material
-  Material::SP_material mat = Material::Create(2, 2);
+  Material::SP_material mat = std::make_shared<Material>(2, 2);
   mat->set_sigma_t(0, 0, 1.0);
   mat->set_sigma_t(0, 1, 2.0);
   mat->set_sigma_s(0, 0, 0, 0.1);
@@ -148,11 +148,11 @@ int test_Homogenization(int argc, char *argv[])
 int test_HomogenizeCoarseMesh(int argc, char *argv[])
 {
   // Input
-  InputDB::SP_input input = InputDB::Create();
+  InputDB::SP_input input = std::make_shared<InputDB>();
   input->put<int>("number_groups", 1);
 
   // Fine mesh material
-  Material::SP_material mat = Material::Create(2, 1);
+  Material::SP_material mat = std::make_shared<Material>(2, 1);
   mat->set_sigma_t(0, 0, 1.0);
   mat->set_sigma_a(0, 0, 0.5);
   mat->set_sigma_t(1, 0, 2.0);

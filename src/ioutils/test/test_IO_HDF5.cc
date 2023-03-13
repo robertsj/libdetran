@@ -256,20 +256,20 @@ int test_IO_HDF5_nested(int argc, char *argv[])
 	{
 
 		//-- Create the main db
-		InputDB::SP_input db = InputDB::Create("outer_db");
+		InputDB::SP_input db = std::make_shared<InputDB>("outer_db");
 		db->put<int>("ip", 1);
 		db->put<double>("dp", 2.0);
 
 		//---- Create first nested db
-		InputDB::SP_input db2 = InputDB::Create("db2");
+		InputDB::SP_input db2 = std::make_shared<InputDB>("db2");
 		db2->put<int>("ip2", 2);
 		db->put<InputDB::SP_input>("database2", db2);
 
 		//---- Create second nested db
-		InputDB::SP_input db3 = InputDB::Create("db3");
+		InputDB::SP_input db3 = std::make_shared<InputDB>("db3");
 		db3->put<int>("ip3", 3);
 		//-------- A second level of nesting
-		InputDB::SP_input db4 = InputDB::Create("db4");
+		InputDB::SP_input db4 = std::make_shared<InputDB>("db4");
 		db4->put<int>("ip4", 4);
 		db3->put<InputDB::SP_input>("database4", db4);
 		db->put<InputDB::SP_input>("database3", db3);

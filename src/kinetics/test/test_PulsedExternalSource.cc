@@ -50,7 +50,7 @@ int test_PulsedExternalSource(int argc, char *argv[])
 
   // Define the fixed external source
   PulsedExternalSource::SP_externalsource fixed_source;
-  fixed_source = ConstantSource::Create(2, mesh, 1.0);
+  fixed_source = std::make_shared<ConstantSource>(2, mesh, 1.0);
 
   // Define the time dependent source.  It's a pulse centered
   // at t = 2.

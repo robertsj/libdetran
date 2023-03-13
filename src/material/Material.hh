@@ -69,11 +69,6 @@ public:
   /// Virtual destructor
   virtual ~Material(){}
 
-  /// SP constructor
-  static SP_material Create(const size_t number_materials,
-                            const size_t number_groups,
-                            std::string  name = "no name given");
-
   //--------------------------------------------------------------------------//
   // Setters
   //--------------------------------------------------------------------------//

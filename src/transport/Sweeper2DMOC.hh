@@ -80,16 +80,6 @@ public:
   /// Virtual destructor
   virtual ~Sweeper2DMOC(){}
 
-  /// SP Constructor
-  static SP_sweeper
-  Create(SP_input       input,
-         SP_mesh        mesh,
-         SP_material    material,
-         SP_quadrature  quadrature,
-         SP_state       state,
-         SP_boundary    boundary,
-         SP_sweepsource sweepsource);
-
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL SWEEPERS MUST IMPLEMENT THESE
   //-------------------------------------------------------------------------//

@@ -130,15 +130,7 @@ class SlabMaterial: public TimeDependentMaterial
   }
 
   //---------------------------------------------------------------------------//
-
-  SP_material Create(SP_mesh mesh, bool flag, bool steady, int perturbation)
-  {
-    SP_material p(new SlabMaterial(mesh, flag,  perturbation));
-    return p;
-  }
-
-  //---------------------------------------------------------------------------//
-
+  
   void initialize_materials()
   {
     double t = 0;

@@ -29,21 +29,6 @@ PulsedExternalSource::PulsedExternalSource(const size_t       number_groups,
   Require(d_fixed_source);
 }
 
-//---------------------------------------------------------------------------//
-PulsedExternalSource::SP_tdsource
-PulsedExternalSource::Create(const size_t       number_groups,
-                             SP_mesh            mesh,
-                             SP_externalsource  fixed_source,
-                             const double       peak_time,
-                             const double       fwhm,
-                             bool               discrete)
-{
-  SP_tdsource p(new PulsedExternalSource(number_groups, mesh,
-                                         fixed_source, peak_time, fwhm,
-                                         discrete));
-  return p;
-}
-
 } // end namespace detran
 
 //---------------------------------------------------------------------------//

@@ -77,10 +77,6 @@ public:
    */
   MomentIndexer(const size_t dimension, const size_t legendre_order);
 
-  /// SP constructor
-  static SP_momentindexer Create(const size_t dimension,
-                                 const size_t legendre_order);
-
   //-------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
   //-------------------------------------------------------------------------//

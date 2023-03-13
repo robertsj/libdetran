@@ -22,14 +22,6 @@ TimeIndependentMaterial(KineticsMaterial::SP_material km)
 	 update_impl();
 }
 
-TimeIndependentMaterial::SP_material
-TimeIndependentMaterial::Create(KineticsMaterial::SP_material KM)
-{
-  SP_material p(new TimeIndependentMaterial(KM));
-
-  return p;
-}
-
 void TimeIndependentMaterial::update_impl()
 {
   size_t m = d_number_materials - 1;

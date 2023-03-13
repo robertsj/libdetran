@@ -44,8 +44,6 @@ public:
    */
   TimeIndependentMaterial(KineticsMaterial::SP_material km);
 
-  static SP_material Create(KineticsMaterial::SP_material km);
-
   KineticsMaterial ::SP_material d_km;
 
   void update_impl();

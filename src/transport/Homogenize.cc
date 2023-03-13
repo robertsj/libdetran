@@ -100,7 +100,7 @@ Homogenize::homogenize(SP_mesh            mesh,
 
   // Create new material
   SP_material cmat =
-      detran_material::Material::Create(num_coarse_cells, num_coarse_groups);
+      std::make_shared<detran_material::Material>(num_coarse_cells, num_coarse_groups);
 
   // Size the averaged flux
   d_coarse_mesh_flux.resize(num_coarse_groups, vec_dbl(num_coarse_cells, 0.0));

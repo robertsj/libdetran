@@ -45,7 +45,7 @@ int test_ConstantSource(int argc, char *argv[])
   // Create quadrature.
   Quadrature::SP_quadrature quad;
   QuadratureFactory qf;
-  InputDB::SP_input db = InputDB::Create();
+  InputDB::SP_input db =std::make_shared<InputDB>();
   quad = qf.build(db, 2);
   TEST(quad != NULL);
 

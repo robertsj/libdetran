@@ -75,12 +75,6 @@ public:
   /// Virtual destructor
   virtual ~KineticsMaterial(){}
 
-  /// SP constructor
-  static SP_material Create(const size_t number_materials,
-                            const size_t number_energy_groups,
-                            const size_t number_precursor_groups,
-                            std::string  name = "KineticsMaterial");
-
   //-------------------------------------------------------------------------//
   // PUBLIC FUNCTIONS
   //-------------------------------------------------------------------------//

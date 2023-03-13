@@ -130,19 +130,6 @@ public:
     Require(d_MtoD);
   }
 
-  /// SP Constructor
-  static SP_sweepsource Create(SP_state      state,
-                               SP_mesh       mesh,
-                               SP_quadrature quadrature,
-                               SP_material   material,
-                               SP_MtoD       MtoD,
-                               bool          multiply = false)
-  {
-    SP_sweepsource p(new SweepSource(state, mesh, quadrature, material,
-                                     MtoD, multiply));
-    return p;
-  }
-
   //--------------------------------------------------------------------------//
   // PUBLIC INTERFACE
   //--------------------------------------------------------------------------//

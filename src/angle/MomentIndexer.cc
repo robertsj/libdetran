@@ -42,15 +42,6 @@ MomentIndexer::MomentIndexer(const size_t dimension,
 }
 
 //---------------------------------------------------------------------------//
-MomentIndexer::SP_momentindexer
-MomentIndexer::Create(const size_t dimension,
-                      const size_t legendre_order)
-{
-  SP_momentindexer p(new MomentIndexer(dimension, legendre_order));
-  return p;
-}
-
-//---------------------------------------------------------------------------//
 void MomentIndexer::display() const
 {
   std::cout << " MOMENTS INDEXER: " << std::endl;

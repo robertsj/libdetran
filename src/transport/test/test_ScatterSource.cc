@@ -62,7 +62,7 @@ State::SP_state get_state(int adjoint)
   vec_int fm(1, 1);
   vec_dbl cm(2, 0); cm[1] = 1.0;
   ScatterSource::SP_mesh mesh = std::make_shared<Mesh1D>(fm, cm, mt);
-  State::SP_input db = InputDB::Create();
+  State::SP_input db = std::make_shared<InputDB>();
   db->put<int>("number_groups", 3);
   db->put<int>("adjoint",       adjoint);
   State::SP_state state(new State(db, mesh));

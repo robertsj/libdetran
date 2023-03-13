@@ -75,17 +75,7 @@ public:
 
   /// Virtual destructor
   virtual ~Sweeper1D(){}
-
-  /// SP Constructor
-  static SP_sweeper
-  Create(detran_utilities::InputDB::SP_input        input,
-         detran_geometry::Mesh::SP_mesh             mesh,
-         detran_material::Material::SP_material     material,
-         detran_angle::Quadrature::SP_quadrature    quadrature,
-         State::SP_state                            state,
-         BoundaryBase<_1D>::SP_boundary             boundary,
-         SweepSource<_1D>::SP_sweepsource           sweepsource);
-
+  
   //-------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL SWEEPERS MUST IMPLEMENT THESE
   //-------------------------------------------------------------------------//

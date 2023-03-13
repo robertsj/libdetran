@@ -35,11 +35,11 @@ int test_MomentToDiscrete(int argc, char *argv[])
 {
   QuadratureFactory qf;
   Quadrature::SP_quadrature q;
-  InputDB::SP_input db = InputDB::Create();
+  InputDB::SP_input db = std::make_shared<InputDB>();
   // 1d test
   {
     // Indexer
-    MomentIndexer::SP_momentindexer indexer = MomentIndexer::Create(1, 0);
+    MomentIndexer::SP_momentindexer indexer = std::make_shared<MomentIndexer>(1, 0);
     // MtoD
     MomentToDiscrete MtoD(indexer);
     // Quadrature
@@ -53,7 +53,7 @@ int test_MomentToDiscrete(int argc, char *argv[])
   // 2d test
   {
     // Indexer
-    MomentIndexer::SP_momentindexer indexer = MomentIndexer::Create(2, 0);
+    MomentIndexer::SP_momentindexer indexer = std::make_shared<MomentIndexer>(2, 0);
     // MtoD
     MomentToDiscrete MtoD(indexer);
     // Quadrature

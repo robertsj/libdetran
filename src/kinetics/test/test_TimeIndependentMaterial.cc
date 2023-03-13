@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
 int test_TimeIndependentMaterial(int argc, char *argv[])
 {
   // Get the 1g KineticsParameters.
-  KineticsMaterial::SP_material k_mat = KineticsMaterial::Create(2, 1, 8);
+  KineticsMaterial::SP_material k_mat = make_shared<KineticsMaterial>(2, 1, 8);
 
   // Reference
   double lambda[] = {0.012466675909352, 0.028291721655508, 0.042524366905518, 0.133041685328204,
@@ -65,7 +65,7 @@ int test_TimeIndependentMaterial(int argc, char *argv[])
   k_mat->finalize();
 
   // TimeIndependentMaterial
-  TimeIndependentMaterial::SP_material t_mat = TimeIndependentMaterial::Create(k_mat);
+  TimeIndependentMaterial::SP_material t_mat = std::make_shared<TimeIndependentMaterial>(k_mat);
   for (int i = 0; i < 8; ++i)
   {
     TEST(soft_equiv(t_mat->lambda(i), lambda[i]));

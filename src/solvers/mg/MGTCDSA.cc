@@ -54,7 +54,7 @@ MGTCDSA<D>::MGTCDSA(SP_input         input,
   // Build the approximate transport preconditioner
   {
     // Copy the real input but assign coarser quadrature
-    SP_input db = detran_utilities::InputDB::Create();
+    SP_input db = std::make_shared<detran_utilities::InputDB>();
     *db = *d_input; // copy the input
     int na = 1, np = 1;
     if (d_input->check("mgpc_number_polar_octant"))

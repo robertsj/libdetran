@@ -38,12 +38,12 @@ static Geometry::SP_geometry test_2D_pincell_simple()
   SP_surface C = QSF::CreateCylinderZ(HP, HP, R);
 
   // Pin
-  SP_region pin = Region::Create(0, Point(0,0,0)-1.0e-8, Point(P,P,0)+1.0e-8);
+  SP_region pin =std::make_shared<Region>(0, Point(0,0,0)-1.0e-8, Point(P,P,0)+1.0e-8);
   pin->append(C, false);
   geo->add_region(pin);
 
   // Moderator
-  SP_region mod = Region::Create(1, Point(0,0,0)-1.0e-8, Point(P,P,0)+1.0e-8);
+  SP_region mod =std::make_shared<Region>(1, Point(0,0,0)-1.0e-8, Point(P,P,0)+1.0e-8);
   mod->append(C, true);
   mod->append(W, true);
   mod->append(E, false);
@@ -98,7 +98,7 @@ static Geometry::SP_geometry test_2D_pincell_complex()
   for (int r = 0; r < 12; ++r)
   {
     SP_region tmp =
-      Region::Create(mat[r], Point(0,0,0)-1.0e-8, Point(P,P,0)+1.0e-8);
+     std::make_shared<Region>(mat[r], Point(0,0,0)-1.0e-8, Point(P,P,0)+1.0e-8);
     for (int s = 0; s < 5; ++s)
     {
       if (slist[r][s] == 9) break;

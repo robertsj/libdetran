@@ -43,13 +43,6 @@ public:
                  double strength,
                  SP_quadrature quadrature = SP_quadrature(0));
 
-  /// SP constructor
-  static SP_externalsource
-  Create(size_t number_groups,
-         SP_mesh mesh,
-         double source,
-         SP_quadrature quadrature = SP_quadrature(0));
-
   //--------------------------------------------------------------------------//
   // ABSTRACT INTERFACE -- ALL EXTERNAL SOURCES MUST IMPLEMENT THESE
   //--------------------------------------------------------------------------//
