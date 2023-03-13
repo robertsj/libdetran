@@ -67,7 +67,7 @@ Geometry::Geometry(Mesh::SP_mesh mesh)
         Point b_min, b_max;
         b_min = Point(edges[0][i  ], edges[1][j  ], edges[2][k  ]) - 1e-5;
         b_max = Point(edges[0][i+1], edges[1][j+1], edges[2][k+1]) + 1e-5;
-        SP_region r = Region::Create(m, b_min, b_max);
+        SP_region r = std::make_shared<Region>(m, b_min, b_max);
         r->append(surfaces[0][i  ], true);
         r->append(surfaces[0][i+1], false);
         r->append(surfaces[1][j  ], true);

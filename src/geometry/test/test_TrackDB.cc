@@ -37,12 +37,8 @@ typedef QuadratureFactory QF;
 
 int test_TrackDB_2D(int argc, char *argv[])
 {
-<<<<<<< HEAD
-  InputDB::SP_input db =std::make_shared<InputDB>();
-=======
   // initialize simple set of tracks
-  InputDB::SP_input db = InputDB::Create();
->>>>>>> dev
+  InputDB::SP_input db = std::make_shared<InputDB>();
   db->put<string>("quad_type", "u-dgl");
   db->put<int>("quad_number_azimuth_octant", 2);
   db->put<int>("quad_number_polar_octant",   1);
@@ -84,18 +80,8 @@ int test_TrackDB_2D(int argc, char *argv[])
   COUT("vol 0 = " << volume[0]);
   COUT("vol 1 = " << volume[1]);
 
-<<<<<<< HEAD
-//----------------------------------------------------------------------------//
-int test_TrackDB_3D(int argc, char *argv[])
-{
-  InputDB::SP_input db =std::make_shared<InputDB>();
-  db->put<string>("quad_type", "u-dgl");
-  db->put<int>("quad_number_azimuth_octant", 1);
-  db->put<int>("quad_number_polar_octant", 2);
-=======
   TEST(volume[0] == volume_0);
   TEST(volume[1] == volume_1);
->>>>>>> dev
 
 
   // test normalization.  now a=0 segments should have length 4.2

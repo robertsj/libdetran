@@ -120,31 +120,10 @@ Point Tracker::find_exit(const Point &entry, const Point &direction)
   }
   if (direction.z() != 0)
   {
-<<<<<<< HEAD
-    for (size_t j = 0; j < d_mesh->number_cells_y(); ++j)
-    {
-      for (size_t i = 0; i < d_mesh->number_cells_x(); ++i)
-      {
-        size_t m    = mat_map[d_mesh->index(i, j, k)];
-        Point b_min, b_max;
-        b_min = Point(edges[0][i  ], edges[1][j  ], edges[2][k  ]) - 1e-5;
-        b_max = Point(edges[0][i+1], edges[1][j+1], edges[2][k+1]) + 1e-5;
-        SP_region r =std::make_shared<Region>(m, b_min, b_max);
-        r->append(surfaces[0][i  ], true);
-        r->append(surfaces[0][i+1], false);
-        r->append(surfaces[1][j  ], true);
-        r->append(surfaces[1][j+1], false);
-        if (d_mesh->dimension() == 3) r->append(surfaces[2][k  ], true);
-        if (d_mesh->dimension() == 3) r->append(surfaces[2][k+1], false);
-        geo->add_region(r);
-      }
-    }
-=======
     auto intersection_Z = Z_plane_top->intersections(ray);
     Ensure(intersection_Z.size() == 1);
     double dist_Z = distance(intersection_Z[0], entry);
     if (dist_Z < dist) exit = intersection_Z[0];
->>>>>>> dev
   }
   return exit;
 }
