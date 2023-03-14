@@ -6,6 +6,8 @@
  */
 //----------------------------------------------------------------------------//
 
+#include <gtest/gtest.h>
+
 // LIST OF TEST FUNCTIONS
 #define TEST_LIST              \
         FUNC(test_Random)
@@ -28,7 +30,7 @@ int main(int argc, char *argv[])
 // TEST DEFINITIONS
 //----------------------------------------------------------------------------//
 
-int test_Random(int argc, char *argv[])
+TEST(Random, RandomBasic)
 {
   const double expected_vals[] =
   { 0.33480420098231534, 0.00626434885800720, 0.80570957030638723,
@@ -42,10 +44,8 @@ int test_Random(int argc, char *argv[])
     double got = R.rnd();
     double expect = expected_vals[i];
     printf(" %16.10f \n", got);
-    TEST(soft_equiv(got, expect));
+    EXPECT_TRUE(soft_equiv(got, expect));
   }
-
-  return 0;
 }
 
 //----------------------------------------------------------------------------//

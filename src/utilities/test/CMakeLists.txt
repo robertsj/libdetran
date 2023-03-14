@@ -2,6 +2,15 @@
 # libdetran/src/utilities/test/CMakeLists.txt
 #------------------------------------------------------------------------------#
 
+macro(test)
+  add_executable(${ARGV0} ${ARGV0}.cc)
+  target_link_libraries(${ARGV0}
+    utilities
+    GTest::gtest_main
+  )
+  gtest_discover_tests(${ARGV0})
+endmacro()
+
 ADD_EXECUTABLE(test_Testing                 test_Testing.cc)
 TARGET_LINK_LIBRARIES(test_Testing          utilities)
 ADD_TEST(test_Testing_pass                  test_Testing 0)
