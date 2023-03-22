@@ -12,20 +12,13 @@
 #define TEST_LIST          \
         FUNC(test_Factory)
 
-#include "TestDriver.hh"
 #include "utilities/Factory.hh"
 #include <vector>
 #include <memory>
 
 using namespace std;
-using namespace detran_test;
 using namespace detran_utilities;
 #define PRINT(c) cout << c << endl;
-
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
 
 //----------------------------------------------------------------------------//
 // TEST DEFINITIONS
@@ -89,7 +82,7 @@ TEST(Factory, FactoryBasic)
 {
   // illustrates creation as a base method (probably a preferred approach)
   Foo::SP_foo moo = Foo::Create("Moo", 3);
-  PRINT("hello")
+  PRINT("hello");
   EXPECT_NE(moo, nullptr);
   // illustrates creation as a standalone factory method
   Foo::SP_foo noo = Create("Noo", 3);
@@ -98,8 +91,8 @@ TEST(Factory, FactoryBasic)
   std::cout << "moo=" << moo->value() << std::endl;
   std::cout << "noo=" << noo->value() << std::endl;
 
-  EXPECT_EQ(moo->value(), 3)
-  EXPECT_EQ(noo->value(), 6)
+  EXPECT_EQ(moo->value(), 3);
+  EXPECT_EQ(noo->value(), 6);
 }
 
 //----------------------------------------------------------------------------//

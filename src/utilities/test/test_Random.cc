@@ -12,19 +12,13 @@
 #define TEST_LIST              \
         FUNC(test_Random)
 
-#include "TestDriver.hh"
 #include "utilities/Random.hh"
 #include "utilities/SoftEquivalence.hh"
 #include <cstdio>
 
 using namespace std;
-using namespace detran_test;
 using namespace detran_utilities;
 
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
 
 //----------------------------------------------------------------------------//
 // TEST DEFINITIONS
@@ -44,7 +38,7 @@ TEST(Random, RandomBasic)
     double got = R.rnd();
     double expect = expected_vals[i];
     printf(" %16.10f \n", got);
-    EXPECT_TRUE(soft_equiv(got, expect));
+    EXPECT_NEAR(got, expect, 1.0e-12);
   }
 }
 

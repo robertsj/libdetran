@@ -12,18 +12,12 @@
 #define TEST_LIST                       \
         FUNC(test_Iterators_Reversible)
 
-#include "TestDriver.hh"
 #include "utilities/Iterators.hh"
 #include <vector>
 #include <cstdio>
 
-using namespace detran_test;
 using namespace detran_utilities;
 
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
 
 //----------------------------------------------------------------------------//
 // TEST DEFINITIONS

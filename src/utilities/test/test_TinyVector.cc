@@ -12,16 +12,10 @@
 #define TEST_LIST              \
         FUNC(test_TinyVector)
 
-#include "TestDriver.hh"
 #include "utilities/TinyVector.hh"
 
-using namespace detran_test;
 using namespace detran_utilities;
 
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
 
 //----------------------------------------------------------------------------//
 // TEST DEFINITIONS
