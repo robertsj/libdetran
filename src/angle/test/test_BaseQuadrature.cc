@@ -8,29 +8,12 @@
  */
 //----------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                            \
-        FUNC(test_BaseQuadrature_regression) \
-        FUNC(test_BaseQuadrature_GL)         \
-        FUNC(test_BaseQuadrature_CL)         \
-        FUNC(test_BaseQuadrature_Uniform)
-
-#include "TestDriver.hh"
+#include <gtest/gtest.h>
 #include "angle/QuadratureFactory.hh"
 
 using namespace detran_angle;
 using namespace detran_utilities;
-using namespace detran_test;
 using namespace std;
-
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
-
-//----------------------------------------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------------------------------------//
 
 /*    integrand          range    value
  *  ----------------------------------------------------------------------
@@ -62,7 +45,7 @@ const char* types[] = {"gl", "dgl", "gc", "dgc",
                        "uniform", "uniformcosine", "simpson"};
 
 //----------------------------------------------------------------------------//
-int test_BaseQuadrature_regression(int argc, char *argv[])
+TEST(BaseQuadrature, Regression)
 {
   // All available 1-D quadratures are tested on three simple
   // problems to ensure the expected value for each is computed.
@@ -86,12 +69,9 @@ int test_BaseQuadrature_regression(int argc, char *argv[])
                    j, ref_val[j], val[i][j], err[i][j], vec_sum(Q->get_w()));
     }
   }
-
-  return 0;
 }
 
-//----------------------------------------------------------------------------//
-int test_BaseQuadrature_GL(int argc, char *argv[])
+TEST(BaseQuadrature, GL)
 {
   {
     QuadratureFactory::SP_basequadrature Q;
@@ -109,23 +89,21 @@ int test_BaseQuadrature_GL(int argc, char *argv[])
 //    std::cout << " v_0=" << v_0 << " v_1=" << v_1 << std::endl;
 //  }
   }
-  return 0;
 }
 
-//----------------------------------------------------------------------------//
-int test_BaseQuadrature_CL(int argc, char *argv[])
+TEST(BaseQuadrature, CL)
 {
-
-  return 0;
 }
 
-//----------------------------------------------------------------------------//
-int test_BaseQuadrature_Uniform(int argc, char *argv[])
+TEST(BaseQuadrature, Uniform)
 {
   using detran_utilities::pi;
   QuadratureFactory::SP_basequadrature Q;
   Q = QuadratureFactory::build_base("uniformcosine", 6,
                                     0.0, 1.0);
   Q->display();
-  return 0;
 }
+
+//---------------------------------------------------------------------------//
+//              end of test_BaseQuadrature.cc                                //
+//---------------------------------------------------------------------------//

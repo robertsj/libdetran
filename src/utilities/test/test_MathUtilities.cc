@@ -6,31 +6,11 @@
  */
 
 #include <gtest/gtest.h>
-
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST            \
-        FUNC(test_norm_L2)   \
-        FUNC(test_norm_L1)   \
-        FUNC(test_norm_Linf) \
-        FUNC(test_vec_scale) \
-        FUNC(test_norm_residual_L2) \
-        FUNC(test_norm_residual_L1) \
-        FUNC(test_norm_residual_Linf) \
-        FUNC(test_linspace) \
-        FUNC(test_range)
-
-
-// Detran headers
 #include "MathUtilities.hh"
-
-// System
 #include <iostream>
 
 using namespace detran_utilities;
 using namespace std;
-
-
-// Test definitions.
 
 TEST(MathUtilities, NormL2)
 {
@@ -38,18 +18,21 @@ TEST(MathUtilities, NormL2)
   double norm_v = norm(v, "L2");
   EXPECT_NEAR(norm_v, 3.478505426185218, 1.0e-12);
 }
+
 TEST(MathUtilities, NormL1)
 {
   vec_dbl v(10, 1.1);
   double norm_v = norm(v, "L1");
   EXPECT_NEAR(norm_v, 11.0, 1.0e-12);
 }
+
 TEST(MathUtilities, NormLinf)
 {
   vec_dbl v(10, 1.1);
   double norm_v = norm(v, "Linf");
   EXPECT_NEAR(norm_v, 1.1, 1.0e-12);
 }
+
 TEST(MathUtilities, VecScale)
 {
   vec_dbl v(10, 1.1);
@@ -59,6 +42,7 @@ TEST(MathUtilities, VecScale)
     EXPECT_NEAR(v[i], 2.574, 1.0e-12);
   }
 }
+
 TEST(MathUtilities, NormResidualL2)
 {
   vec_dbl v(10, 1.1);
@@ -66,6 +50,7 @@ TEST(MathUtilities, NormResidualL2)
   double norm_res = norm_residual(v, y, "L2");
   EXPECT_NEAR(norm_res, 0.316227766016838, 1.0e-12);
 }
+
 TEST(MathUtilities, NormResidualL1)
 {
   vec_dbl v(10, 1.1);
@@ -73,6 +58,7 @@ TEST(MathUtilities, NormResidualL1)
   double norm_res = norm_residual(v, y, "L1");
   EXPECT_NEAR(norm_res, 1.0, 1.0e-12);
 }
+
 TEST(MathUtilities, NormResidualLinf)
 {
   vec_dbl v(10, 1.1);
@@ -80,6 +66,7 @@ TEST(MathUtilities, NormResidualLinf)
   double norm_res = norm_residual(v, y, "Linf");
   EXPECT_NEAR(norm_res, 0.1, 1.0e-12);
 }
+
 TEST(MathUtilities, LinSpace)
 {
   vec_dbl v = linspace(0, 4, 5);
@@ -132,9 +119,7 @@ TEST(MathUtilities, Range)
 
   v = range<int>(0, 0);
   EXPECT_EQ(v.size(), 0);
-
 }
-
 
 //---------------------------------------------------------------------------//
 //              end of test_MathUtilities.cc

@@ -6,21 +6,10 @@
 //----------------------------------------------------------------------------//
 
 #include <gtest/gtest.h>
-
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                \
-        FUNC(test_Testing_pass)  \
-        FUNC(test_Testing_fail)
-
 #include <iostream>
 #include <cstdlib>
 
 using namespace std;
-
-
-//----------------------------------------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------------------------------------//
 
 TEST(Testing, TestPass)
 {

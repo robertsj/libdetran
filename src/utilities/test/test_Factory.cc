@@ -7,11 +7,6 @@
 //----------------------------------------------------------------------------//
 
 #include <gtest/gtest.h>
-
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST          \
-        FUNC(test_Factory)
-
 #include "utilities/Factory.hh"
 #include <vector>
 #include <memory>
@@ -19,10 +14,6 @@
 using namespace std;
 using namespace detran_utilities;
 #define PRINT(c) cout << c << endl;
-
-//----------------------------------------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------------------------------------//
 
 /// The base class
 class Foo
@@ -61,7 +52,6 @@ Foo::SP_foo Create(int n)
   return Foo::SP_foo(new D(n));
 }
 
-
 class Moo: public Foo
 {
 public:
@@ -78,7 +68,7 @@ public:
 };
 REGISTER_CLASS(Foo, Noo, "Noo")
 
-TEST(Factory, FactoryBasic)
+TEST(Factory, Basic)
 {
   // illustrates creation as a base method (probably a preferred approach)
   Foo::SP_foo moo = Foo::Create("Moo", 3);
