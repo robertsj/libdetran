@@ -6,13 +6,7 @@
  */
 //----------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                 \
-        FUNC(test_PowerIteration) \
-        FUNC(test_SlepcSolver)    \
-        FUNC(test_SlepcGD)
-
-#include "utilities/TestDriver.hh"
+#include <gtest/gtest.h>
 #include "callow/utils/Initialization.hh"
 #include "callow/solver/EigenSolverCreator.hh"
 #include "callow/solver/SlepcSolver.hh"
@@ -23,17 +17,9 @@
 #include <iostream>
 
 using namespace callow;
-using namespace detran_test;
-using detran_utilities::soft_equiv;
+
 using std::cout;
 using std::endl;
-
-int main(int argc, char *argv[])
-{
-  callow_initialize(argc, argv);
-  RUN(argc, argv);
-  callow_finalize();
-}
 
 //----------------------------------------------------------------------------//
 // TEST DEFINITIONS
@@ -47,7 +33,7 @@ double tol    = 1e-10;
 int    maxit  = 1000;
 
 //----------------------------------------------------------------------------//
-int test_PowerIteration(int argc, char *argv[])
+TEST(EigenSolver, PowerIteration)
 {
   Vector X(n, 0.0);
   Vector X0(n, 1.0);
@@ -60,11 +46,10 @@ int test_PowerIteration(int argc, char *argv[])
   solver->set_operators(test_matrix_1(n));
   solver->set_monitor_level(2);
   cout << solver->eigenvalue() << endl;
-  return 0;
 }
 
 //----------------------------------------------------------------------------//
-int test_SlepcSolver(int argc, char *argv[])
+TEST(EigenSolver, SlepcSolver)
 {
   Vector X(n, 0.0);
   Vector X0(n, 1.0);
@@ -77,7 +62,6 @@ int test_SlepcSolver(int argc, char *argv[])
   solver->set_operators(test_matrix_1(n));
   solver->set_monitor_level(1);
   cout << solver->eigenvalue() << endl;
-  return 0;
 }
 
 #include "matrix/MatrixShell.hh"
@@ -103,7 +87,7 @@ private:
 };
 
 //----------------------------------------------------------------------------//
-int test_SlepcGD(int argc, char *argv[])
+TEST(EigenSolver, SlepcGD)
 {
   // Solve a generalized eigenvalue problem with GD.
   //   A * x = e * B * x
@@ -147,7 +131,6 @@ int test_SlepcGD(int argc, char *argv[])
   solver.set_monitor_level(1);
   solver.solve(X1, X0);
   cout << " EV = " << solver.eigenvalue() << endl;
-  return 0;
 }
 
 //----------------------------------------------------------------------------//
