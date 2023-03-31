@@ -6,11 +6,7 @@
  */
 //----------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST         \
-        FUNC(test_Region)
-
-#include "TestDriver.hh"
+#include <gtest/gtest.h>
 #include "geometry/Region.hh"
 #include "geometry/CSG.hh"
 #include "geometry/QuadraticSurfaceFactory.hh"
@@ -19,22 +15,10 @@
 
 using namespace detran_geometry;
 using namespace detran_utilities;
-using namespace detran_test;
 using std::cout;
 using std::endl;
 
-int main(int argc, char *argv[])
-{
-  callow_initialize(argc, argv);
-  RUN(argc, argv);
-  callow_finalize();
-}
-
-//----------------------------------------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------------------------------------//
-
-int test_Region(int argc, char *argv[])
+TEST(Region, Basic)
 {
   typedef QuadraticSurfaceFactory QSF;
 
@@ -61,14 +45,12 @@ int test_Region(int argc, char *argv[])
   region1->append(C, true);
 
   // test contains
-  TEST(region0->contains(Point(0.5, 0.5, 0.5)));
-  TEST(region1->contains(Point(0.1, 0.1, 0.1)));
+  EXPECT_TRUE(region0->contains(Point(0.5, 0.5, 0.5)));;
+  EXPECT_TRUE(region1->contains(Point(0.1, 0.1, 0.1)));;
 
   // test bounding box intersections
   Ray r(Point(-2.0, 0.5, 0.5), Point(1, 0, 0));
-  TEST(region0->intersects_bounding_box(r, 20.0));
-
-  return 0;
+  EXPECT_TRUE(region0->intersects_bounding_box(r, 20.0));;
 }
 
 //----------------------------------------------------------------------------//
