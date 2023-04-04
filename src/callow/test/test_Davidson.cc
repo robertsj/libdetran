@@ -6,12 +6,7 @@
  */
 //----------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                    \
-        FUNC(test_Davidson_standard) \
-        FUNC(test_Davidson_general)
-
-#include "utilities/TestDriver.hh"
+#include <gtest/gtest.h>
 #include "callow/utils/Initialization.hh"
 #include "callow/solver/Davidson.hh"
 #include "callow/solver/PowerIteration.hh"
@@ -20,17 +15,9 @@
 #include <iostream>
 
 using namespace callow;
-using namespace detran_test;
-using detran_utilities::soft_equiv;
+
 using std::cout;
 using std::endl;
-
-int main(int argc, char *argv[])
-{
-  callow_initialize(argc, argv);
-  RUN(argc, argv);
-  callow_finalize();
-}
 
 //----------------------------------------------------------------------------//
 // TEST DEFINITIONS
@@ -61,7 +48,7 @@ private:
  *  Solves Ax = e*B*x where A is the standard 2nd difference
  *  operator and B is diagonal matrix of 1 through n.
  */
-int test_Davidson_standard(int argc, char *argv[])
+TEST(Davidson, Standard)
 {
   Matrix::SP_matrix M = test_matrix_2(10);
   Matrix::SP_matrix F = test_matrix_3(10);
@@ -83,18 +70,16 @@ int test_Davidson_standard(int argc, char *argv[])
     solver.solve(X, X0);
     X.scale(1.0/X[0]);
     printf("%16.8f  %16.8f \n", solver.eigenvalue(), ref_L);
-    TEST(soft_equiv(solver.eigenvalue(), ref_L, 1.0e-8));
+    EXPECT_NEAR(solver.eigenvalue(), ref_L, 1.0e-8);
     for (int i = 0; i < 3; ++i)
     {
       printf("%16.8f  %16.8f \n", X[i], ref_V[i]);
-      TEST(soft_equiv(X[i], ref_V[i], 1.0e-8));
+      EXPECT_NEAR(X[i], ref_V[i], 1.0e-8);
     }
-  }
-
-  return 0;
+  }  
 }
 
-int test_Davidson_general(int argc, char *argv[])
+TEST(Davidson, General)
 {
   Matrix::SP_matrix M = test_matrix_2(10);
   Matrix::SP_matrix F = test_matrix_3(10);
@@ -112,15 +97,13 @@ int test_Davidson_general(int argc, char *argv[])
     solver.solve(X, X0);
     X.scale(1.0/X[0]);
     printf("%16.8f  %16.8f \n", solver.eigenvalue(), ref_L);
-    TEST(soft_equiv(solver.eigenvalue(), ref_L, 1.0e-8));
+    EXPECT_NEAR(solver.eigenvalue(), ref_L, 1.0e-8);
     for (int i = 0; i < 3; ++i)
     {
       printf("%16.8f  %16.8f \n", X[i], ref_V[i]);
-      TEST(soft_equiv(X[i], ref_V[i], 1.0e-8));
+      EXPECT_NEAR(X[i], ref_V[i], 1.0e-8);
     }
   }
-
-  return 0;
 }
 
 //---------------------------------------------------------------------------//

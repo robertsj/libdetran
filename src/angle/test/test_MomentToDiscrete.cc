@@ -8,30 +8,15 @@
  */
 //---------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                   \
-        FUNC(test_MomentToDiscrete)
-
-// Detran headers
-#include "TestDriver.hh"
+#include <gtest/gtest.h>
 #include "MomentToDiscrete.hh"
 #include "QuadratureFactory.hh"
 
 using namespace detran_angle;
 using namespace detran_utilities;
-using namespace detran_test;
 using namespace std;
 
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
-
-//----------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------//
-
-int test_MomentToDiscrete(int argc, char *argv[])
+TEST(MomentToDiscrete, Basic)
 {
   QuadratureFactory qf;
   Quadrature::SP_quadrature q;
@@ -44,11 +29,11 @@ int test_MomentToDiscrete(int argc, char *argv[])
     MomentToDiscrete MtoD(indexer);
     // Quadrature
     q = qf.build(db, 1);
-    TEST(q != NULL);
+    EXPECT_TRUE(q != NULL);
     // Build
     MtoD.build(q);
     // TEST
-    TEST(MtoD(0, 0, 0) == 0.5);
+    EXPECT_EQ(MtoD(0, 0, 0), 0.5);
   }
   // 2d test
   {
@@ -58,15 +43,13 @@ int test_MomentToDiscrete(int argc, char *argv[])
     MomentToDiscrete MtoD(indexer);
     // Quadrature
     q = qf.build(db, 2);
-    TEST(q != NULL);
+    EXPECT_TRUE(q != NULL);
     // Build
     MtoD.build(q);
     // TEST
-    TEST(MtoD(0, 0, 0) == inv_four_pi);
+    EXPECT_EQ(MtoD(0, 0, 0), inv_four_pi);
   }
-  return 0;
 }
-
 
 //---------------------------------------------------------------------------//
 //              end of test_MomentToDiscrete.cc

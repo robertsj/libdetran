@@ -6,16 +6,7 @@
  */
 //----------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST              \
-        FUNC(test_Richardson)  \
-        FUNC(test_Jacobi)      \
-        FUNC(test_GaussSeidel) \
-        FUNC(test_SOR)         \
-        FUNC(test_GMRES)       \
-        FUNC(test_PetscSolver)
-
-#include "utilities/TestDriver.hh"
+#include <gtest/gtest.h>
 #include "callow/utils/Initialization.hh"
 #include "LinearSolverCreator.hh"
 // solvers
@@ -35,17 +26,9 @@
 #include <iostream>
 
 using namespace callow;
-using namespace detran_test;
-using detran_utilities::soft_equiv;
+
 using std::cout;
 using std::endl;
-
-int main(int argc, char *argv[])
-{
-  callow_initialize(argc, argv);
-  RUN(argc, argv);
-  callow_finalize();
-}
 
 //---------------------------------------------------------------------------//
 // TEST DEFINITIONS
@@ -81,7 +64,7 @@ double X_ref[] = {5.459135698786395e+00, 8.236037378063020e+00,
                   1.020677234863001e+01, 9.418093128951856e+00,
                   7.941390927380783e+00, 5.176556370952343e+00};
 
-int test_Richardson(int argc, char *argv[])
+TEST(LinearSolver, Richardson)
 {
   Vector X(n, 0.0);
   Vector B(n, 1.0);
@@ -93,15 +76,14 @@ int test_Richardson(int argc, char *argv[])
   //Preconditioner::SP_preconditioner pcilu0(new PCILU0(test_matrix_1(n)));
   //solver->set_preconditioner(pcilu0, LinearSolver::LEFT);
   int status = solver->solve(B, X);
-  TEST(status == SUCCESS);
+  EXPECT_EQ(status, SUCCESS);
   for (int i = 0; i < 20; ++i)
   {
-    TEST(soft_equiv(X[i],  X_ref[i], 1e-9));
+    EXPECT_NEAR(X[i],  X_ref[i], 1e-9);
   }
-  return 0;
 }
 
-int test_Jacobi(int argc, char *argv[])
+TEST(LinearSolver, Jacobi)
 {
   Vector X(n, 0.0);
   Vector B(n, 1.0);
@@ -110,15 +92,14 @@ int test_Jacobi(int argc, char *argv[])
   solver = LinearSolverCreator::Create(db);
   solver->set_operators(test_matrix_1(n));
   int status = solver->solve(B, X);
-  TEST(status == SUCCESS);
+  EXPECT_EQ(status, SUCCESS);
   for (int i = 0; i < 20; ++i)
   {
-    TEST(soft_equiv(X[i],  X_ref[i], 1e-9));
-  }
-  return 0;
+    EXPECT_NEAR(X[i],  X_ref[i], 1e-9);
+  } 
 }
 
-int test_GaussSeidel(int argc, char *argv[])
+TEST(LinearSolver, GaussSeidel)
 {
   Vector X(n, 0.0);
   Vector B(n, 1.0);
@@ -127,15 +108,14 @@ int test_GaussSeidel(int argc, char *argv[])
   solver = LinearSolverCreator::Create(db);
   solver->set_operators(test_matrix_1(n));
   int status = solver->solve(B, X);
-  TEST(status == SUCCESS);
+  EXPECT_EQ(status, SUCCESS);
   for (int i = 0; i < 20; ++i)
   {
-    TEST(soft_equiv(X[i],  X_ref[i], 1e-9));
+    EXPECT_NEAR(X[i],  X_ref[i], 1e-9);
   }
-  return 0;
 }
 
-int test_SOR(int argc, char *argv[])
+TEST(LinearSolver, SOR)
 {
   Vector X(n, 0.0);
   Vector B(n, 1.0);
@@ -145,15 +125,14 @@ int test_SOR(int argc, char *argv[])
   solver = LinearSolverCreator::Create(db);
   solver->set_operators(test_matrix_1(n));
   int status = solver->solve(B, X);
-  TEST(status == SUCCESS);
+  EXPECT_EQ(status, SUCCESS);
   for (int i = 0; i < 20; ++i)
   {
-    TEST(soft_equiv(X[i],  X_ref[i], 1e-9));
+    EXPECT_NEAR(X[i],  X_ref[i], 1e-9);
   }
-  return 0;
 }
 
-int test_GMRES(int argc, char *argv[])
+TEST(LinearSolver, GMRES)
 {
 
   GMRES::SP_matrix A;
@@ -169,10 +148,10 @@ int test_GMRES(int argc, char *argv[])
   solver = LinearSolverCreator::Create(db);
   solver->set_operators(test_matrix_1(n));
   int status = solver->solve(B, X);
-  TEST(status == SUCCESS);
+  EXPECT_EQ(status, SUCCESS);
   for (int i = 0; i < 20; ++i)
   {
-    TEST(soft_equiv(X[i],  X_ref[i], 1e-9));
+    EXPECT_NEAR(X[i],  X_ref[i], 1e-9);
   }
 
   Preconditioner::SP_preconditioner pcilu0;
@@ -185,10 +164,10 @@ int test_GMRES(int argc, char *argv[])
   X.set(0.0);
   solver->set_preconditioner(pcilu0, GMRES::LEFT);
   status = solver->solve(B, X);
-  TEST(status == SUCCESS);
+  EXPECT_EQ(status, SUCCESS);
   for (int i = 0; i < 20; ++i)
   {
-    TEST(soft_equiv(X[i],  X_ref[i], 1e-9));
+    EXPECT_NEAR(X[i],  X_ref[i], 1e-9);
   }
 
   // PCILU0 -- RIGHT
@@ -196,10 +175,10 @@ int test_GMRES(int argc, char *argv[])
   X.set(0.0);
   solver->set_preconditioner(pcilu0, GMRES::RIGHT);
   status = solver->solve(B, X);
-  TEST(status == SUCCESS);
+  EXPECT_EQ(status, SUCCESS);
   for (int i = 0; i < 20; ++i)
   {
-    TEST(soft_equiv(X[i],  X_ref[i], 1e-9));
+    EXPECT_NEAR(X[i],  X_ref[i], 1e-9);
   }
 
   // PCJacobi -- LEFT
@@ -207,10 +186,10 @@ int test_GMRES(int argc, char *argv[])
   X.set(0.0);
   solver->set_preconditioner(pcjacobi, GMRES::LEFT);
   status = solver->solve(B, X);
-  TEST(status == SUCCESS);
+  EXPECT_EQ(status, SUCCESS);
   for (int i = 0; i < 20; ++i)
   {
-    TEST(soft_equiv(X[i],  X_ref[i], 1e-9));
+    EXPECT_NEAR(X[i],  X_ref[i], 1e-9);
   }
 
   // PCJacobi -- RIGHT
@@ -218,16 +197,14 @@ int test_GMRES(int argc, char *argv[])
   X.set(0.0);
   solver->set_preconditioner(pcjacobi, GMRES::RIGHT);
   status = solver->solve(B, X);
-  TEST(status == SUCCESS);
+  EXPECT_EQ(status, SUCCESS);
   for (int i = 0; i < 20; ++i)
   {
-    TEST(soft_equiv(X[i],  X_ref[i], 1e-9));
-  }
-
-  return 0;
+    EXPECT_NEAR(X[i],  X_ref[i], 1e-9);
+  }  
 }
 
-int test_PetscSolver(int argc, char *argv[])
+TEST(LinearSolver, PetscSolver)
 {
 #ifdef CALLOW_ENABLE_PETSC
   Vector X(n, 0.0);
@@ -240,16 +217,13 @@ int test_PetscSolver(int argc, char *argv[])
   solver = LinearSolverCreator::Create(db);
   solver->set_operators(test_matrix_1(n), db);
   int status = solver->solve(B, X);
-  TEST(status == SUCCESS);
+  EXPECT_EQ(status, SUCCESS);
   for (int i = 0; i < 20; ++i)
   {
-    TEST(soft_equiv(X[i],  X_ref[i], 1e-9));
+    EXPECT_NEAR(X[i],  X_ref[i], 1e-9);
   }
 #endif
-  return 0;
 }
-
-
 
 //---------------------------------------------------------------------------//
 //              end of test_LinearSolver.cc

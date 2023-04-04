@@ -6,32 +6,16 @@
  */
 //---------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                    \
-        FUNC(test_InputDB)           \
-        FUNC(test_InputDB_serialize)
-
-// Detran headers
-#include "TestDriver.hh"
+#include <gtest/gtest.h>
 #include "InputDB.hh"
-
-// System headers
 #include <iostream>
 #include <cstdlib>
 #include <fstream>
 
-using namespace detran_test;
 using namespace detran_utilities;
 using namespace std;
 
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
-
-// Test definitions.
-
-int test_InputDB(int argc, char *argv[])
+TEST(InputDB, Basic)
 {
  InputDB::SP_input db(new InputDB());
 
@@ -39,65 +23,63 @@ int test_InputDB(int argc, char *argv[])
 
  // int
  db->put<int>("number_groups", 2);
- TEST(db->check("number_groups"));
+ EXPECT_TRUE(db->check("number_groups"));
  int ng = db->get<int>("number_groups");
- TEST(ng == 2);
+ EXPECT_EQ(ng, 2);
 
  // double
  db->put<double>("inner_tolerance", 0.0001);
- TEST(db->check("inner_tolerance"));
+ EXPECT_TRUE(db->check("inner_tolerance"));
  double tol = db->get<double>("inner_tolerance");
- TEST(soft_equiv(tol, 0.0001));
+ EXPECT_NEAR(tol, 0.0001, 1.0e-12);
 
  // vecint
  vec_int vint(10, 1);
  db->put<vec_int>("vector_of_ints", vint);
- TEST(db->check("vector_of_ints"));
+ EXPECT_TRUE(db->check("vector_of_ints"));
  vec_int vint2 = db->get<vec_int>("vector_of_ints");
- TEST(vint2.size() == 10);
+ EXPECT_EQ(vint2.size(), 10);
  for (int i = 0; i < 10; i++)
  {
-   TEST(vint[i] == vint2[i]);
+    EXPECT_EQ(vint[i], vint2[i]);
  }
 
  // vecdbl
  vec_dbl vdbl(10, 1.0);
  db->put<vec_dbl>("vector_of_dbls", vdbl);
- TEST(db->check("vector_of_dbls"));
+ EXPECT_TRUE(db->check("vector_of_dbls"));
  vec_dbl vdbl2 = db->get<vec_dbl>("vector_of_dbls");
- TEST(vdbl2.size() == 10);
+ EXPECT_EQ(vdbl2.size(), 10);
  for (int i = 0; i < 10; i++)
  {
-   TEST(soft_equiv(vdbl[i], vdbl2[i]));
+   EXPECT_NEAR(vdbl[i], vdbl2[i] ,1.0e-12);
  }
 
  // string
  db->put<string>("equation", "dd");
- TEST(db->check("equation"));
+ EXPECT_TRUE(db->check("equation"));
  string eq = db->get<string>("equation");
- TEST(eq=="dd");
+ EXPECT_EQ(eq, "dd");
 
  // input db
  InputDB::SP_input db2(new InputDB("DB2"));
  db2->put<int>("testint", 99);
  db2->put<double>("testdbl", 1.23);
  db->put<InputDB::SP_input>("db2", db2);
- TEST(db->check("db2"));
+ EXPECT_TRUE(db->check("db2"));
  InputDB::SP_input db2check;
  db2check = db->get<InputDB::SP_input>("db2");
- TEST(db2check != NULL);
+ EXPECT_TRUE(db2check != NULL);
  int testint = db2check->get<int>("testint");
- TEST(testint == 99);
+ EXPECT_EQ(testint, 99);
  double testdbl = db2check->get<double>("testdbl");
- TEST(soft_equiv(testdbl, 1.23));
+ EXPECT_NEAR(testdbl, 1.23, 1.0e-12);
 
  // Test that something is not there.
- TEST(!db->check("i_am_not_here"));
-
- return 0;
+ EXPECT_FALSE(db->check("i_am_not_here"));
 }
 
-int test_InputDB_serialize(int argc, char *argv[])
+TEST(InputDB, Serialize)
 {
 
 #ifdef DETRAN_ENABLE_BOOST
@@ -133,28 +115,26 @@ int test_InputDB_serialize(int argc, char *argv[])
     ifs.close();
 
     // Test
-    TEST(db->check("number_groups"));
-    TEST(db->get<int>("number_groups") == 2);
-    TEST(db->check("inner_tolerance"));
-    TEST(soft_equiv(db->get<double>("inner_tolerance"), 0.0001));
-    TEST(db->check("vector_of_ints"));
+    EXPECT_TRUE(db->check("number_groups"));
+    EXPECT_EQ(db->get<int>("number_groups"), 2);
+    EXPECT_TRUE(db->check("inner_tolerance"));
+    EXPECT_NEAR(db->get<double>("inner_tolerance"), 0.0001, 1.0e-12);
+    EXPECT_TRUE(db->check("vector_of_ints"));
     vec_int vi = db->get<vec_int>("vector_of_ints");
-    TEST(vi.size() == 10);
+    EXPECT_EQ(vi.size() == 10);
     for (int i = 0; i < 10; i++)
-      TEST(vi[i] == 1);
-    TEST(db->check("vector_of_dbls"));
+      EXPECT_EQ(vi[i], 1);
+    EXPECT_TRUE((db->check("vector_of_dbls"));
     vec_dbl vd = db->get<vec_dbl>("vector_of_dbls");
-    TEST(vd.size() == 10);
+    EXPECT_EQ(vd.size(), 10);
     for (int i = 0; i < 10; i++)
-      TEST(soft_equiv(vd[i], 1.0));
-    TEST(db->check("equation"));
+      EXPECT_NEAR(vd[i], 1.0, 1.0e-12);
+    EXPECT_TRUE(db->check("equation"));
     string eq = db->get<string>("equation");
-    TEST(eq == db->get<string>("equation"));
-    TEST(!db->check("i_am_not_here"));
+    EXPECT_EQ(eq, db->get<string>("equation"));
+    EXPECT_FALSE(db->check("i_am_not_here"));
   }
 #endif
-
- return 0;
 }
 
 //---------------------------------------------------------------------------//

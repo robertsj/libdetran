@@ -8,39 +8,20 @@
  */
 //---------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                     \
-        FUNC(test_TabuchiYamamoto)
-
-// Detran headers
-#include "TestDriver.hh"
+#include <gtest/gtest.h>
 #include "TabuchiYamamoto.hh"
-
-// Setup
-/* ... */
 
 using namespace detran_utilities;
 using namespace detran_angle;
-using namespace detran_test;
 using namespace std;
 
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
-
-//----------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------//
-
-int test_TabuchiYamamoto(int argc, char *argv[])
+TEST(TabuchiYamamoto, Basic)
 {
   // Construct quadrature.
   TabuchiYamamoto q(1);
-  TEST(q.number_polar() == 1);
-  TEST(soft_equiv(q.sin_theta(0),  0.798184));
-  TEST(soft_equiv(q.weight(0),     1.000000));
-  return 0;
+  EXPECT_EQ(q.number_polar(), 1);
+  EXPECT_NEAR(q.sin_theta(0),  0.798184, 1.0e-12);
+  EXPECT_NEAR(q.weight(0),     1.000000, 1.0e-12);
 }
 
 //---------------------------------------------------------------------------//
