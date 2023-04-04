@@ -5,37 +5,20 @@
  */
 //----------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                \
-        FUNC(test_Testing_pass)  \
-        FUNC(test_Testing_fail)
-
-#include "TestDriver.hh"
+#include <gtest/gtest.h>
 #include <iostream>
 #include <cstdlib>
 
-using namespace detran_test;
 using namespace std;
 
-int main(int argc, char *argv[])
+TEST(Testing, TestPass)
 {
-  RUN(argc, argv);
+  EXPECT_TRUE(1==1);
 }
 
-//----------------------------------------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------------------------------------//
-
-int test_Testing_pass(int argc, char *argv[])
+TEST(Testing, TestFailure)
 {
-  TEST(1==1)
-  return 0;
-}
-
-int test_Testing_fail(int argc, char *argv[])
-{
-  TESTFALSE(1==0)
-  return 0;
+  EXPECT_FALSE(1==0);
 }
 
 //---------------------------------------------------------------------------//

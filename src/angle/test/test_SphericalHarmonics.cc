@@ -6,12 +6,7 @@
  */
 //----------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                                 \
-        FUNC(test_SphericalHarmonics)             \
-        FUNC(test_SphericalHarmonics_integration)
-
-#include "utilities/TestDriver.hh"
+#include <gtest/gtest.h>
 #include "angle/SphericalHarmonics.hh"
 #include "angle/QuadratureFactory.hh"
 #ifdef DETRAN_ENABLE_BOOST
@@ -23,35 +18,22 @@ using boost::math::factorial;
 #endif
 #include "utilities/Constants.hh"
 #include <cstdio>
-// Setup
-/* ... */
 
 using namespace detran_angle;
 using namespace detran_utilities;
-using namespace detran_test;
 using std::cout;
 using std::endl;
 using std::printf;
 
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
-
-//----------------------------------------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------------------------------------//
-
-int test_SphericalHarmonics(int argc, char *argv[])
+TEST(SphericalHarmonics, Basic)
 {
   double mu  = 0.350021174581540677777041;
   double eta = 0.350021174581540677777041;
   double xi  = 0.868890300722201205229788;
-  TEST(soft_equiv(SphericalHarmonics::Y_lm(0, 0, mu, eta, xi), 1.0));
-  TEST(soft_equiv(SphericalHarmonics::Y_lm(1,-1, mu, eta, xi), eta));
-  TEST(soft_equiv(SphericalHarmonics::Y_lm(1, 0, mu, eta, xi), xi));
-  TEST(soft_equiv(SphericalHarmonics::Y_lm(1, 1, mu, eta, xi), mu));
-  return 0;
+  EXPECT_NEAR(SphericalHarmonics::Y_lm(0, 0, mu, eta, xi), 1.0, 1.0e-12);
+  EXPECT_NEAR(SphericalHarmonics::Y_lm(1,-1, mu, eta, xi), eta, 1.0e-12);
+  EXPECT_NEAR(SphericalHarmonics::Y_lm(1, 0, mu, eta, xi), xi, 1.0e-12);
+  EXPECT_NEAR(SphericalHarmonics::Y_lm(1, 1, mu, eta, xi), mu, 1.0e-12);
 }
 
 /*
@@ -71,7 +53,7 @@ int test_SphericalHarmonics(int argc, char *argv[])
  *
  *  This could be made a public function at some point.
  */
-int test_SphericalHarmonics_integration(int argc, char *argv[])
+TEST(SphericalHarmonics, Integration)
 {
   InputDB::SP_input inp(new InputDB());
   inp->put<int>("quad_number_polar_octant",   4);
@@ -143,7 +125,6 @@ int test_SphericalHarmonics_integration(int argc, char *argv[])
     printf("\n");
   }
 
-  return 0;
 }
 
 //----------------------------------------------------------------------------//

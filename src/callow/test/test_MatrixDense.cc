@@ -7,34 +7,22 @@
  */
 //---------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST         \
-        FUNC(test_MatrixDense)
-
-#include "TestDriver.hh"
+#include <gtest/gtest.h>
 #include "matrix/MatrixDense.hh"
 #include "utils/Initialization.hh"
 #include <iostream>
 
 using namespace callow;
-using namespace detran_test;
-using detran_utilities::soft_equiv;
+
 using std::cout;
 using std::endl;
-
-int main(int argc, char *argv[])
-{
-  callow_initialize(argc, argv);
-  RUN(argc, argv);
-  callow_finalize();
-}
 
 //---------------------------------------------------------------------------//
 // TEST DEFINITIONS
 //---------------------------------------------------------------------------//
 
 // Test of basic public interface
-int test_MatrixDense(int argc, char *argv[])
+TEST(MatrixDense, Basic)
 {
   typedef MatrixDense Mat;
   typedef Vector Vec;
@@ -44,8 +32,8 @@ int test_MatrixDense(int argc, char *argv[])
     // Create test matrix
     int n = 5;
     Mat A(n, n, 0.0);
-    TEST(A.number_rows()    == n);
-    TEST(A.number_columns() == n);
+    EXPECT_EQ(A.number_rows()   , n);
+    EXPECT_EQ(A.number_columns(), n);
 
     double row0[] = {-2.0, 1.1, 0.0, 0.0, 0.0};
     double row1[] = {1.0, -2.0, 1.1, 0.0, 0.0};
@@ -53,11 +41,11 @@ int test_MatrixDense(int argc, char *argv[])
     double row3[] = {0.0, 0.0, 1.0, -2.0, 1.1};
     double row4[] = {0.0, 0.0, 0.0, 1.0, -2.0};
 
-    TEST(A.insert_row(0, row0, A.INSERT));
-    TEST(A.insert_row(1, row1, A.INSERT));
-    TEST(A.insert_row(2, row2, A.INSERT));
-    TEST(A.insert_row(3, row3, A.INSERT));
-    TEST(A.insert_row(4, row4, A.INSERT));
+    EXPECT_TRUE(A.insert_row(0, row0, A.INSERT));
+    EXPECT_TRUE(A.insert_row(1, row1, A.INSERT));
+    EXPECT_TRUE(A.insert_row(2, row2, A.INSERT));
+    EXPECT_TRUE(A.insert_row(3, row3, A.INSERT));
+    EXPECT_TRUE(A.insert_row(4, row4, A.INSERT));
     A.assemble();
     A.print_matlab("A.out");
 
@@ -79,7 +67,7 @@ int test_MatrixDense(int argc, char *argv[])
     for (int i = 0; i < Y.size(); i++)
     {
       Y.display();
-      TEST(soft_equiv(Y[i], ref[i]));
+      EXPECT_NEAR(Y[i], ref[i], 1.0e-12);
     }
 
     // Transpose
@@ -88,7 +76,7 @@ int test_MatrixDense(int argc, char *argv[])
     { 0.2, -0.69, 0.44, -27.01, 49.96 };
     for (int i = 0; i < X.size(); i++)
     {
-      TEST(soft_equiv(X[i], ref2[i]));
+      EXPECT_NEAR(X[i], ref2[i], 1.0e-12);
     }
 
     A.display();
@@ -104,8 +92,8 @@ int test_MatrixDense(int argc, char *argv[])
 
     // Create test matrix
     Mat A(m, n);
-    TEST(A.number_rows()    == m);
-    TEST(A.number_columns() == n);
+    EXPECT_EQ(A.number_rows()   , m);
+    EXPECT_EQ(A.number_columns(), n);
     /*
      *  1 2
      *  3 4
@@ -129,7 +117,7 @@ int test_MatrixDense(int argc, char *argv[])
     { 3.0, 7.0, 11.0 };
     for (int i = 0; i < Y.size(); i++)
     {
-      TEST(soft_equiv(Y[i], ref[i]));
+      EXPECT_NEAR(Y[i], ref[i], 1.0e-12);
     }
 
     // Transpose
@@ -139,7 +127,7 @@ int test_MatrixDense(int argc, char *argv[])
     { 79.0, 100.0 };
     for (int i = 0; i < X.size(); i++)
     {
-      TEST(soft_equiv(X[i], ref2[i]));
+      EXPECT_NEAR(X[i], ref2[i], 1.0e-12);
     }
 
     A.display();
@@ -147,8 +135,6 @@ int test_MatrixDense(int argc, char *argv[])
     Y.display();
 
   } // end m * n
-
-  return 0;
 }
 
 //---------------------------------------------------------------------------//

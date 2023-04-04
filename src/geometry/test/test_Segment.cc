@@ -5,33 +5,17 @@
  *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
 //----------------------------------------------------------------------------//
-
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST          \
-        FUNC(test_Segment)
-
-#include "TestDriver.hh"
+#include <gtest/gtest.h>
 #include "geometry/Segment.hh"
 
 using namespace detran_geometry;
 using namespace detran_utilities;
-using namespace detran_test;
 
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
-
-//----------------------------------------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------------------------------------//
-
-int test_Segment(int argc, char *argv[])
+TEST(Segment, Basic)
 {
   Segment s(0, 1.0);
-  TEST(s.region() == 0);
-  TEST(soft_equiv(s.length(), 1.0));
-  return 0;
+  EXPECT_EQ(s.region(), 0);
+  EXPECT_NEAR(s.length(), 1.0, 1.0e-12);
 }
 
 //----------------------------------------------------------------------------//

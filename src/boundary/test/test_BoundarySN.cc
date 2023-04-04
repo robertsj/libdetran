@@ -6,11 +6,7 @@
  */
 //----------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                    \
-        FUNC(test_BoundarySN)
-
-#include "TestDriver.hh"
+#include <gtest/gtest.h>
 #include "boundary/BoundarySN.hh"
 #include "boundary/BoundaryFactory.t.hh"
 #include "angle/QuadratureFactory.hh"
@@ -22,26 +18,13 @@ using namespace detran;
 using namespace detran_geometry;
 using namespace detran_angle;
 using namespace detran_utilities;
-using namespace detran_test;
 using std::cout;
 using std::endl;
 using std::string;
 
 #define COUT(c) std::cout << c << std::endl;
 
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
-
-//----------------------------------------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------------------------------------//
-
-
-
-
-int test_BoundarySN(int argc, char *argv[])
+TEST(BoundarySN, Basic)
 {
 
   // 1-D test
@@ -63,11 +46,11 @@ int test_BoundarySN(int argc, char *argv[])
     // Boundary
     Boundary_T::SP_boundary b(new Boundary_T(inp, mesh, q));
     // Tests
-    TEST(b->is_reflective(0));
-    TEST(!b->is_reflective(1));
-    TEST(b->has_reflective());
-    TEST(b->boundary_flux_size(0) == 4);
-    TEST(b->boundary_flux_size(1) == 4);
+    EXPECT_TRUE(b->is_reflective(0));
+    EXPECT_TRUE(!b->is_reflective(1));
+    EXPECT_TRUE(b->has_reflective());
+    EXPECT_EQ(b->boundary_flux_size(0), 4);
+    EXPECT_EQ(b->boundary_flux_size(1), 4);
   }
 
   // 2-D test
@@ -92,15 +75,15 @@ int test_BoundarySN(int argc, char *argv[])
     // Boundary
     Boundary_T::SP_boundary b(new Boundary_T(inp, mesh, q));
     // Tests
-    TEST(b->is_reflective(0));
-    TEST(!b->is_reflective(1));
-    TEST(b->is_reflective(2));
-    TEST(!b->is_reflective(3));
-    TEST(b->has_reflective());
-    TEST(b->boundary_flux_size(0) == 4*2*2*10);
-    TEST(b->boundary_flux_size(1) == 4*2*2*10);
-    TEST(b->boundary_flux_size(2) == 4*2*2*10);
-    TEST(b->boundary_flux_size(3) == 4*2*2*10);
+    EXPECT_TRUE(b->is_reflective(0));
+    EXPECT_TRUE(!b->is_reflective(1));
+    EXPECT_TRUE(b->is_reflective(2));
+    EXPECT_TRUE(!b->is_reflective(3));
+    EXPECT_TRUE(b->has_reflective());
+    EXPECT_EQ(b->boundary_flux_size(0), 4*2*2*10);
+    EXPECT_EQ(b->boundary_flux_size(1), 4*2*2*10);
+    EXPECT_EQ(b->boundary_flux_size(2), 4*2*2*10);
+    EXPECT_EQ(b->boundary_flux_size(3), 4*2*2*10);
   }
 
   // 3-D test
@@ -127,24 +110,21 @@ int test_BoundarySN(int argc, char *argv[])
     // Boundary
     auto b = BoundaryFactory<_3D, BoundarySN>::build(inp, mesh, q);
     // Tests
-    TEST(b->is_reflective(0));
-    TEST(!b->is_reflective(1));
-    TEST(b->is_reflective(2));
-    TEST(!b->is_reflective(3));
-    TEST(b->is_reflective(4));
-    TEST(!b->is_reflective(5));
-    TEST(b->has_reflective());
-    TEST(b->boundary_flux_size(0) == 8*2*2*10*10);
-    TEST(b->boundary_flux_size(1) == 8*2*2*10*10);
-    TEST(b->boundary_flux_size(2) == 8*2*2*10*10);
-    TEST(b->boundary_flux_size(3) == 8*2*2*10*10);
-    TEST(b->boundary_flux_size(4) == 8*2*2*10*10);
-    TEST(b->boundary_flux_size(5) == 8*2*2*10*10);
+    EXPECT_TRUE(b->is_reflective(0));
+    EXPECT_TRUE(!b->is_reflective(1));
+    EXPECT_TRUE(b->is_reflective(2));
+    EXPECT_TRUE(!b->is_reflective(3));
+    EXPECT_TRUE(b->is_reflective(4));
+    EXPECT_TRUE(!b->is_reflective(5));
+    EXPECT_TRUE(b->has_reflective());
+    EXPECT_EQ(b->boundary_flux_size(0), 8*2*2*10*10);
+    EXPECT_EQ(b->boundary_flux_size(1), 8*2*2*10*10);
+    EXPECT_EQ(b->boundary_flux_size(2), 8*2*2*10*10);
+    EXPECT_EQ(b->boundary_flux_size(3), 8*2*2*10*10);
+    EXPECT_EQ(b->boundary_flux_size(4), 8*2*2*10*10);
+    EXPECT_EQ(b->boundary_flux_size(5), 8*2*2*10*10);
   }
-
-  return 0;
 }
-
 
 //---------------------------------------------------------------------------//
 //              end of test_BoundarySN.cc
