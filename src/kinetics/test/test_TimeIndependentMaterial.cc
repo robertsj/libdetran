@@ -7,37 +7,17 @@
  */
 //---------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                       \
-        FUNC(test_TimeIndependentMaterial)
-
-// Detran headers
-#include "utilities/TestDriver.hh"
+#include <gtest/gtest.h>
 #include "kinetics/KineticsMaterial.hh"
 #include "kinetics/TimeIndependentMaterial.hh"
-
-
-
-// System
 #include <iostream>
 #include <fstream>
 
-using namespace detran_test;
 using namespace detran_utilities;
 using namespace detran;
 using namespace std;
-using detran_utilities::soft_equiv;
 
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
-
-//----------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------//
-
-int test_TimeIndependentMaterial(int argc, char *argv[])
+TEST(TimeIndependentMaterial, Basic)
 {
   // Get the 1g KineticsParameters.
   KineticsMaterial::SP_material k_mat = make_shared<KineticsMaterial>(2, 1, 8);
@@ -68,22 +48,19 @@ int test_TimeIndependentMaterial(int argc, char *argv[])
   TimeIndependentMaterial::SP_material t_mat = std::make_shared<TimeIndependentMaterial>(k_mat);
   for (int i = 0; i < 8; ++i)
   {
-    TEST(soft_equiv(t_mat->lambda(i), lambda[i]));
+    EXPECT_NEAR(t_mat->lambda(i), lambda[i], 1.0e-12);
 
     for (int m = 0; m < 2; ++m)
     {
-      TEST(soft_equiv(t_mat->beta(m, i), beta[i]));
-      TEST(soft_equiv(t_mat->sigma_s(m, 0, 0), 0.5));
-      TEST(soft_equiv(t_mat->beta(m, i), beta[i]));
-      TEST(soft_equiv(t_mat->beta_total(m), beta_total));
+      EXPECT_NEAR(t_mat->beta(m, i), beta[i], 1.0e-12);
+      EXPECT_NEAR(t_mat->sigma_s(m, 0, 0), 0.5, 1.0e-12);
+      EXPECT_NEAR(t_mat->beta(m, i), beta[i], 1.0e-12);
+      EXPECT_NEAR(t_mat->beta_total(m), beta_total, 1.0e-12);
     }
   }
-      TEST(soft_equiv(t_mat->velocity(0), 2200.0));
-      TEST(soft_equiv(t_mat->chi_d(0, 0, 0), 1.0));
-  return 0;
+      EXPECT_NEAR(t_mat->velocity(0), 2200.0, 1.0e-12);
+      EXPECT_NEAR(t_mat->chi_d(0, 0, 0), 1.0, 1.0e-12);
 }
-
-
 
 //---------------------------------------------------------------------------//
 //              end of test_TimeIndependentMaterial.cc

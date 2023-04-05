@@ -7,38 +7,20 @@
  */
 //---------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                       \
-        FUNC(test_LinearExternalSource)
-
-// Detran headers
-#include "utilities/TestDriver.hh"
+#include <gtest/gtest.h>
 #include "kinetics/LinearExternalSource.hh"
 #include "geometry/Mesh1D.hh"
 #include "external_source/ConstantSource.hh"
-// System
 #include <iostream>
 #include <fstream>
 #include <cstdio>
 
-using namespace detran_test;
 using namespace detran;
 using namespace detran_external_source;
 using namespace detran_utilities;
-using detran_utilities::soft_equiv;
-
-
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
-
-//----------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------//
 
 // Test of basic public interface
-int test_LinearExternalSource(int argc, char *argv[])
+TEST(LinearExternalSource, Basic)
 {
 
   // Create a mesh
@@ -62,7 +44,6 @@ int test_LinearExternalSource(int argc, char *argv[])
   sources[1] = std::make_shared<ConstantSource>(2, mesh, 1.0);
   sources[2] = std::make_shared<ConstantSource>(2, mesh, 0.0);
 
-
   // Define the time dependent source
   LinearExternalSource Q(2, mesh, times, sources);
 
@@ -75,20 +56,16 @@ int test_LinearExternalSource(int argc, char *argv[])
   }
 
   Q.set_time(1.0);
-  TEST(soft_equiv(Q.source(0, 0), 0.0));
+  EXPECT_NEAR(Q.source(0, 0), 0.0, 1.0e-12);
   Q.set_time(1.5);
-  TEST(soft_equiv(Q.source(0, 0), 0.5));
+  EXPECT_NEAR(Q.source(0, 0), 0.5, 1.0e-12);
   Q.set_time(2.0);
-  TEST(soft_equiv(Q.source(0, 0), 1.0));
+  EXPECT_NEAR(Q.source(0, 0), 1.0, 1.0e-12);
   Q.set_time(2.5);
-  TEST(soft_equiv(Q.source(0, 0), 0.5));
+  EXPECT_NEAR(Q.source(0, 0), 0.5, 1.0e-12);
   Q.set_time(3.0);
-  TEST(soft_equiv(Q.source(0, 0), 0.0));
-
-  return 0;
+  EXPECT_NEAR(Q.source(0, 0), 0.0, 1.0e-12);
 }
-
-
 
 //---------------------------------------------------------------------------//
 //              end of test_KineticsMaterial.cc
