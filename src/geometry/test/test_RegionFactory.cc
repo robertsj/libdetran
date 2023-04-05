@@ -6,34 +6,17 @@
  */
 //----------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                           \
-        FUNC(test_RegionFactory_PinCell)    \
-        FUNC(test_RegionFactory_Translated)
-
-#include "TestDriver.hh"
+#include <gtest/gtest.h>
 #include "geometry/RegionFactory.hh"
 #include "callow/utils/Initialization.hh"
 #include <cmath>
 
 using namespace detran_geometry;
 using namespace detran_utilities;
-using namespace detran_test;
 using std::cout;
 using std::endl;
 
-int main(int argc, char *argv[])
-{
-  callow_initialize(argc, argv);
-  RUN(argc, argv);
-  callow_finalize();
-}
-
-//----------------------------------------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------------------------------------//
-
-int test_RegionFactory_PinCell(int argc, char *argv[])
+TEST(RegionFactory, PinCell)
 {
   typedef RegionFactory RF;
 
@@ -48,11 +31,9 @@ int test_RegionFactory_PinCell(int argc, char *argv[])
   RF::vec_region regions;
   regions = RF::CreatePinCell(pin);
 
-
-  return 0;
 }
 
-int test_RegionFactory_Translated(int argc, char *argv[])
+TEST(RegionFactory, Translated)
 {
   typedef RegionFactory RF;
 
@@ -61,16 +42,14 @@ int test_RegionFactory_Translated(int argc, char *argv[])
   PinCell::SP_pincell pin = std::make_shared<PinCell>(pitch, mat_map);
   RF::vec_region regions = RF::CreatePinCell(pin);
 
-  TEST( regions[0]->contains(Point(0.5, 0.5)));
-  TEST(!regions[0]->contains(Point(1.5, 0.5)));
+  EXPECT_TRUE(regions[0]->contains(Point(0.5, 0.5)));;
+  EXPECT_FALSE(regions[0]->contains(Point(1.5, 0.5)));;
 
   RF::SP_region translated =
     RF::CreateTranslatedRegion(regions[0], Point(10, 10));
 
-  TEST( translated->contains(Point(10.5, 10.5)));
-  TEST(!translated->contains(Point(11.5, 10.5)));
-
-  return 0;
+  EXPECT_TRUE(translated->contains(Point(10.5, 10.5)));;
+  EXPECT_FALSE(translated->contains(Point(11.5, 10.5)));;
 }
 
 //----------------------------------------------------------------------------//

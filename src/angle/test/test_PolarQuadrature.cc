@@ -6,29 +6,15 @@
  */
 //----------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                    \
-        FUNC(test_PolarQuadrature)
-
-#include "TestDriver.hh"
+#include <gtest/gtest.h>
 #include "QuadratureFactory.hh"
 
 using namespace detran_angle;
 using namespace detran_utilities;
-using namespace detran_test;
 using namespace std;
 
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
-
-//----------------------------------------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------------------------------------//
-
 // Make sure the a few quadratures give expected numbers
-int test_PolarQuadrature(int argc, char *argv[])
+TEST(PolarQuadrature, Basic)
 {
   int N = 4;
   const char* types[] = {"gl", "dgl", "gc", "gc"};
@@ -51,14 +37,12 @@ int test_PolarQuadrature(int argc, char *argv[])
     QuadratureFactory::SP_quadrature q = QuadratureFactory::build(db, 1);
     for (int j = 0; j < 3; ++j)
     {
-      TEST(soft_equiv(mu[i][j], q->mu(0, j),  1e-11));
-      TEST(soft_equiv(wt[i][j], q->weight(j), 1e-11));
+      EXPECT_NEAR(mu[i][j], q->mu(0, j),  1e-11);
+      EXPECT_NEAR(wt[i][j], q->weight(j), 1e-11);
     }
   }
 
-  return 0;
 }
-
 
 //---------------------------------------------------------------------------//
 //              end of test_PolarQuadrature.cc

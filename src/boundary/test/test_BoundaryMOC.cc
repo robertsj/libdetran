@@ -6,12 +6,7 @@
  */
 //----------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                \
-        FUNC(test_BoundaryMOC)   \
-        FUNC(test_BoundaryMOC_2)
-
-#include "TestDriver.hh"
+#include <gtest/gtest.h>
 #include "boundary/BoundaryMOC.hh"
 #include "geometry/Mesh2D.hh"
 #include "geometry/Tracker.hh"
@@ -20,21 +15,11 @@ using namespace detran;
 using namespace detran_geometry;
 using namespace detran_angle;
 using namespace detran_utilities;
-using namespace detran_test;
 using std::cout;
 using std::endl;
 using std::string;
 
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
-
-//----------------------------------------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------------------------------------//
-
-int test_BoundaryMOC(int argc, char *argv[])
+TEST(BoundaryMOC, 1)
 {
 //  typedef detran_utilities::size_t size_t;
 //
@@ -168,10 +153,9 @@ int test_BoundaryMOC(int argc, char *argv[])
 //  }
 
 
-  return 0;
 }
 
-int test_BoundaryMOC_2(int argc, char *argv[])
+TEST(BoundaryMOC, 2)
 {
 //  typedef detran_utilities::size_t size_t;
 //
@@ -280,7 +264,6 @@ int test_BoundaryMOC_2(int argc, char *argv[])
 //  TEST(o == 0);
 //  TEST(t == 2);
 
-  return 0;
 }
 
 

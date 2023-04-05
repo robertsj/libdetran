@@ -6,29 +6,15 @@
  */
 //----------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST         \
-        FUNC(test_Ray)
-
-#include "TestDriver.hh"
+#include <gtest/gtest.h>
 #include "Ray.hh"
 
 using namespace detran_geometry;
 using namespace detran_utilities;
-using namespace detran_test;
 using std::cout;
 using std::endl;
 
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
-
-//----------------------------------------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------------------------------------//
-
-int test_Ray(int argc, char *argv[])
+TEST(Ray, Basic)
 {
   Point origin(-2.0, 0.5, 0.5);
   Point direction(1.0, 0.0, 0.0);
@@ -37,8 +23,6 @@ int test_Ray(int argc, char *argv[])
   Point p =  r.origin + tt*r.direction;
   cout << origin << endl;
   cout << p      << endl;
-
-  return 0;
 }
 
 //---------------------------------------------------------------------------//
