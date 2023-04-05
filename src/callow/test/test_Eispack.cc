@@ -5,32 +5,19 @@
  *  @note  Copyright (C) 2012-2013 Jeremy Roberts
  */
 //----------------------------------------------------------------------------//
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                      \
-        FUNC(test_Eispack_standard)    \
-        FUNC(test_Eispack_generalized)
 
-
-#include "utilities/TestDriver.hh"
+#include <gtest/gtest.h>
 #include "callow/utils/Initialization.hh"
 #include "callow/solver/Eispack.hh"
 #include <iostream>
 
 using namespace callow;
-using namespace detran_test;
-using detran_utilities::soft_equiv;
+
 using std::cout;
 using std::endl;
 
 #define DISP(c) cout << c << endl;
 #define W() std::cout << "line " << __LINE__ << " on file " << __FILE__ << std::endl;
-
-int main(int argc, char *argv[])
-{
-  callow_initialize(argc, argv);
-  RUN(argc, argv);
-  callow_finalize();
-}
 
 //----------------------------------------------------------------------------//
 // TEST DEFINITIONS
@@ -63,7 +50,7 @@ MatrixDense::SP_matrix get_B()
 }
 
 //----------------------------------------------------------------------------//
-int test_Eispack_standard(int argc, char *argv[])
+TEST(Eispack, Standard)
 {
   Eispack S(1.e-5, 1000);
   auto A = get_A();
@@ -73,12 +60,12 @@ int test_Eispack_standard(int argc, char *argv[])
   {
     Vector X0(n, 0.0), X(n, 0.0);
     S.solve(X, X0);
-    TEST(soft_equiv(S.eigenvalue(), 1.216310176599158e+01));
+    EXPECT_NEAR(S.eigenvalue(), 1.216310176599158e+01, 1.0e-12);
     double ref[] = {-5.332899955518561e-02, -2.210866243722326e-01,
         -3.907759112294125e-01, -5.515953428318574e-01, -7.009375773199511e-01};
     for (int i = 0; i < n; ++i)
     {
-      TEST(soft_equiv(X[i], ref[i]));
+      EXPECT_NEAR(X[i], ref[i], 1.0e-12);
     }
   }
 
@@ -92,16 +79,14 @@ int test_Eispack_standard(int argc, char *argv[])
     double ref_i[] = {0, 3.504177633722163e-01, -3.504177633722163e-01, 0, 0};
     for (int i = 0; i < n; ++i)
     {
-      TEST(soft_equiv(E_R[i], ref_r[i]));
-      TEST(soft_equiv(E_I[i], ref_i[i]));
+      EXPECT_NEAR(E_R[i], ref_r[i], 1.0e-12);
+      EXPECT_NEAR(E_I[i], ref_i[i], 1.0e-12);
     }
   }
-
-  return 0;
 }
 
 //----------------------------------------------------------------------------//
-int test_Eispack_generalized(int argc, char *argv[])
+TEST(Eispack, General)
 {
   Eispack S(1.e-5, 1000);
   S.set_operators(get_A(), get_B());
@@ -110,13 +95,13 @@ int test_Eispack_generalized(int argc, char *argv[])
   {
     Vector X0(n, 0.0), X(n, 0.0);
     S.solve(X, X0);
-    TEST(soft_equiv(S.eigenvalue(), 8.151729277070530e+00));
+    EXPECT_NEAR(S.eigenvalue(), 8.151729277070530e+00, 1.0e-12);
     double ref[] = {3.324109144209688e-01, -6.153722684382446e-02,
         -6.525478413205275e-01, -6.731740329299938e-01, -8.206210978810474e-02};
     X.display();
     for (int i = 0; i < n; ++i)
     {
-       TEST(soft_equiv(X[i], ref[i]));
+       EXPECT_NEAR(X[i], ref[i], 1.0e-12);
     }
   }
 
@@ -130,12 +115,10 @@ int test_Eispack_generalized(int argc, char *argv[])
     E_R.display();
     for (int i = 0; i < n; ++i)
     {
-      TEST(soft_equiv(E_R[i], ref_r[i]));
-      TEST(soft_equiv(E_I[i], ref_i[i]));
+      EXPECT_NEAR(E_R[i], ref_r[i], 1.0e-12);
+      EXPECT_NEAR(E_I[i], ref_i[i], 1.0e-12);
     }
   }
-
-  return 0;
 }
 
 //----------------------------------------------------------------------------//

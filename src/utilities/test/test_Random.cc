@@ -6,29 +6,15 @@
  */
 //----------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST              \
-        FUNC(test_Random)
-
-#include "TestDriver.hh"
+#include <gtest/gtest.h>
 #include "utilities/Random.hh"
 #include "utilities/SoftEquivalence.hh"
 #include <cstdio>
 
 using namespace std;
-using namespace detran_test;
 using namespace detran_utilities;
 
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
-
-//----------------------------------------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------------------------------------//
-
-int test_Random(int argc, char *argv[])
+TEST(Random, Basic)
 {
   const double expected_vals[] =
   { 0.33480420098231534, 0.00626434885800720, 0.80570957030638723,
@@ -42,10 +28,8 @@ int test_Random(int argc, char *argv[])
     double got = R.rnd();
     double expect = expected_vals[i];
     printf(" %16.10f \n", got);
-    TEST(soft_equiv(got, expect));
+    EXPECT_NEAR(got, expect, 1.0e-12);
   }
-
-  return 0;
 }
 
 //----------------------------------------------------------------------------//

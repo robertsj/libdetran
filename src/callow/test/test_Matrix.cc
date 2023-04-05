@@ -6,44 +6,31 @@
  */
 //----------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST             \
-        FUNC(test_Matrix)     \
-        FUNC(test_MatrixDiff) 
-
-#include "TestDriver.hh"
+#include <gtest/gtest.h>
 #include "matrix_fixture.hh"
 #include "matrix/Matrix.hh"
 #include "utils/Initialization.hh"
 #include <iostream>
 
 using namespace callow;
-using namespace detran_test;
-using detran_utilities::soft_equiv;
+
 using std::cout;
 using std::endl;
-
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
 
 //----------------------------------------------------------------------------//
 // TEST DEFINITIONS
 //----------------------------------------------------------------------------//
 
 // Test of basic public interface
-int test_Matrix(int argc, char *argv[])
+TEST(Matrix, Basic)
 {
-  callow_initialize(argc, argv);
-
   // n * n
   {
     // Create test matrix
     int n = 5;
     Matrix A(n, n);
-    TEST(A.number_rows()    == n);
-    TEST(A.number_columns() == n);
+    EXPECT_EQ(A.number_rows()   , n);
+    EXPECT_EQ(A.number_columns(), n);
     A.preallocate(3);
 
     for (int row = n - 1; row >= 0; row--)
@@ -52,19 +39,19 @@ int test_Matrix(int argc, char *argv[])
       {
         int c[]    = { 0, 1  };
         double v[] = {-2, 1.1};
-        TEST(A.insert(row, c, v, 2));
+        EXPECT_TRUE(A.insert(row, c, v, 2));
       }
       else if (row == A.number_rows() - 1)
       {
         int c[] = {A.number_rows() - 2, A.number_rows() - 1};
         double v[] = {1, -2};
-        TEST(A.insert(row, c, v, 2));
+        EXPECT_TRUE(A.insert(row, c, v, 2));
       }
       else
       {
         int c[] = {row - 1, row, row + 1};
         double v[] = {1, -2, 1.1};
-        TEST(A.insert(row, c, v, 3));
+        EXPECT_TRUE(A.insert(row, c, v, 3));
       }
     }
     A.assemble();
@@ -76,11 +63,10 @@ int test_Matrix(int argc, char *argv[])
       for (int p = A.start(i); p < A.end(i); ++p)
       {
         c1 = A.column(p);
-        TEST(c1 > c0);
+        EXPECT_TRUE(c1 > c0);
         c0 = c1;
       }
     }
-
 
     // Create two vectors
     Vector X(n, 0.0);
@@ -98,7 +84,7 @@ int test_Matrix(int argc, char *argv[])
     { 1.1, 2.4, 2.9, 3.6, -23.0 };
     for (int i = 0; i < Y.size(); i++)
     {
-      TEST(soft_equiv(Y[i], ref[i]));
+      EXPECT_NEAR(Y[i], ref[i], 1.0e-12);
     }
 
     // Transpose
@@ -107,7 +93,7 @@ int test_Matrix(int argc, char *argv[])
     { 0.2, -0.69, 0.44, -27.01, 49.96 };
     for (int i = 0; i < X.size(); i++)
     {
-      TEST(soft_equiv(X[i], ref2[i]));
+      EXPECT_NEAR(X[i], ref2[i], 1.0e-12);
     }
 
     // Indexing
@@ -134,8 +120,8 @@ int test_Matrix(int argc, char *argv[])
 
     // Create test matrix
     Matrix A(m, n);
-    TEST(A.number_rows()    == m);
-    TEST(A.number_columns() == n);
+    EXPECT_EQ(A.number_rows()   , m);
+    EXPECT_EQ(A.number_columns(), n);
     A.preallocate(2);
     /*!
      *  1 2
@@ -160,7 +146,7 @@ int test_Matrix(int argc, char *argv[])
     { 3.0, 7.0, 11.0 };
     for (int i = 0; i < Y.size(); i++)
     {
-      TEST(soft_equiv(Y[i], ref[i]));
+      EXPECT_NEAR(Y[i], ref[i], 1.0e-12);
     }
 
     // Transpose
@@ -169,9 +155,8 @@ int test_Matrix(int argc, char *argv[])
     { 79.0, 100.0 };
     for (int i = 0; i < X.size(); i++)
     {
-      TEST(soft_equiv(X[i], ref2[i]));
+      EXPECT_NEAR(X[i], ref2[i], 1.0e-12);
     }
-
 
     A.display();
     X.display();
@@ -220,18 +205,15 @@ int test_Matrix(int argc, char *argv[])
     A.assemble();
     A.display();
   }
-
   callow_finalize();
-  return 0;
 }
 
-int test_MatrixDiff(int argc, char *argv[])
+TEST(Matrix, Diff)
 {
   Matrix::SP_matrix L = test_matrix_2(10);
   Matrix::SP_matrix F = test_matrix_3(10);
   L->print_matlab("L.out");
   F->print_matlab("F.out");
-  return 0;
 }
 
 //----------------------------------------------------------------------------//

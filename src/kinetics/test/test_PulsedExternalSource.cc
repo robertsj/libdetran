@@ -7,38 +7,20 @@
  */
 //---------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                       \
-        FUNC(test_PulsedExternalSource)
-
-// Detran headers
-#include "utilities/TestDriver.hh"
+#include <gtest/gtest.h>
 #include "kinetics/PulsedExternalSource.hh"
 #include "geometry/Mesh1D.hh"
 #include "external_source/ConstantSource.hh"
-// System
 #include <iostream>
 #include <fstream>
 #include <cstdio>
 
-using namespace detran_test;
 using namespace detran;
 using namespace detran_external_source;
 using namespace detran_utilities;
-using detran_utilities::soft_equiv;
-
-
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
-
-//----------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------//
 
 // Test of basic public interface
-int test_PulsedExternalSource(int argc, char *argv[])
+TEST(PulsedExternalSource, Basic)
 {
 
   // Create a mesh
@@ -66,16 +48,12 @@ int test_PulsedExternalSource(int argc, char *argv[])
 
 
   Q.set_time(1.8);
-  TEST(soft_equiv(Q.source(0, 0), 0.0625));
+  EXPECT_NEAR(Q.source(0, 0), 0.0625, 1.0e-12);
   Q.set_time(2.0);
-  TEST(soft_equiv(Q.source(0, 0), 1.0));
+  EXPECT_NEAR(Q.source(0, 0), 1.0, 1.0e-12);
   Q.set_time(2.2);
-  TEST(soft_equiv(Q.source(0, 0), 0.0625));
-
-  return 0;
+  EXPECT_NEAR(Q.source(0, 0), 0.0625, 1.0e-12);
 }
-
-
 
 //---------------------------------------------------------------------------//
 //              end of test_KineticsMaterial.cc

@@ -2,39 +2,18 @@
 # libdetran/src/kinetics/test/CMakeLists.txt
 #------------------------------------------------------------------------------#
 
-#------------------------------------------------------------------------------#
-# Create test executables
-#------------------------------------------------------------------------------#
+macro(test)
+  add_executable(${ARGV0} ${ARGV0}.cc)
+  target_link_libraries(${ARGV0}
+    kinetics
+    GTest::gtest_main
+  )
+  gtest_discover_tests(${ARGV0})
+endmacro()
 
-ADD_EXECUTABLE(test_KineticsMaterial            test_KineticsMaterial.cc)
-TARGET_LINK_LIBRARIES(test_KineticsMaterial     kinetics)
-
-ADD_EXECUTABLE(test_LinearMaterial              test_LinearMaterial.cc)
-TARGET_LINK_LIBRARIES(test_LinearMaterial       kinetics)
-
-ADD_EXECUTABLE(test_LinearExternalSource             test_LinearExternalSource.cc)
-TARGET_LINK_LIBRARIES(test_LinearExternalSource      kinetics)
-ADD_EXECUTABLE(test_PulsedExternalSource             test_PulsedExternalSource.cc)
-TARGET_LINK_LIBRARIES(test_PulsedExternalSource      kinetics)
-
-ADD_EXECUTABLE(test_MultiPhysics             		test_MultiPhysics.cc)
-TARGET_LINK_LIBRARIES(test_MultiPhysics             kinetics)
-
-ADD_EXECUTABLE(test_TimeIndependentMaterial           test_TimeIndependentMaterial.cc)
-TARGET_LINK_LIBRARIES(test_TimeIndependentMaterial     kinetics)
-
-
-#------------------------------------------------------------------------------#
-# Define tests
-#------------------------------------------------------------------------------#
-
-ADD_TEST(test_KineticsMaterial       test_KineticsMaterial 0)
-ADD_TEST(test_LinearMaterial         test_LinearMaterial 0)
-
-ADD_TEST(test_LinearExternalSource   test_LinearExternalSource 0)
-ADD_TEST(test_PulsedExternalSource   test_PulsedExternalSource 0)
-
-ADD_TEST(test_MultiPhysics           test_MultiPhysics 0)
-ADD_TEST(test_TimeIndependentMaterial   test_TimeIndependentMaterial 0)
-
-
+test(test_KineticsMaterial)
+test(test_LinearExternalSource)
+test(test_LinearMaterial)
+test(test_MultiPhysics)
+test(test_PulsedExternalSource)
+test(test_TimeIndependentMaterial)

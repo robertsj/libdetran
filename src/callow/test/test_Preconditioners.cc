@@ -6,16 +6,7 @@
  */
 //----------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST              \
-        FUNC(test_PCJacobi)    \
-        FUNC(test_PCILU0)      \
-        FUNC(test_PCILUT_full) \
-        FUNC(test_PCILUT_P0)   \
-		FUNC(test_performance)
-
-
-#include "TestDriver.hh"
+#include <gtest/gtest.h>
 #include "preconditioner/PCJacobi.hh"
 #include "preconditioner/PCILU0.hh"
 #include "preconditioner/PCILUT.hh"
@@ -27,55 +18,36 @@
 #include <iostream>
 
 using namespace callow;
-using namespace detran_test;
-using detran_utilities::soft_equiv;
+
 using std::cout;
 using std::endl;
-
-int main(int argc, char *argv[])
-{
-  callow_initialize(argc, argv);
-  RUN(argc, argv);
-  callow_finalize();
-}
 
 //----------------------------------------------------------------------------//
 // TEST DEFINITIONS
 //----------------------------------------------------------------------------//
 
 //----------------------------------------------------------------------------//
-int test_PCJacobi(int argc, char *argv[])
+TEST(Preconditioner, PCJacobi)
 {
   Matrix::SP_matrix A = test_matrix_1(5);
-
   PCJacobi P(A);
   P.display("pc_jacobi.out");
-
-  return 0;
 }
 
 //----------------------------------------------------------------------------//
-int test_PCILU0(int argc, char *argv[])
+TEST(Preconditioner, PCILU0)
 {
   Matrix::SP_matrix A = test_matrix_1(5);
-
   PCILU0 P(A);
   P.display("pc_ilu0.out");
-
-  return 0;
 }
 
-
 //----------------------------------------------------------------------------//
-int test_PCILUT_full(int argc, char *argv[])
+TEST(Preconditioner, FullPCILUT)
 {
-
-  {
 	// small 2-d diffusion matrix.  By default, ILUT should
 	// provide the full LU decomposition.
-    Matrix::SP_matrix A = test_matrix_2(2);
-
-       
+    Matrix::SP_matrix A = test_matrix_2(2);       
 	   
     // reference
     const int expect_n = 38;
@@ -101,10 +73,10 @@ int test_PCILUT_full(int argc, char *argv[])
     int got_n = M->number_nonzeros();
     double *got_v = M->values();
 
-    TEST(got_n == expect_n);
+    EXPECT_EQ(got_n, expect_n);
     for (int i = 0; i < got_n; ++i)
     {
-    	TEST(soft_equiv(got_v[i], expect_v[i]));
+    	EXPECT_NEAR(got_v[i], expect_v[i], 1.0e-12);
     }
 
     Vector given(M->number_columns(), 1.0);
@@ -116,19 +88,13 @@ int test_PCILUT_full(int argc, char *argv[])
 						2.089593865027e+01, 2.054236209448e+01};
     for (int i = 0; i < 8; ++i)
     {
-    	TEST(soft_equiv(got[i], expect[i]));
+    	EXPECT_NEAR(got[i], expect[i], 1.0e-12);
     }
-
-  }
-
-  return 0;
 }
 
 //----------------------------------------------------------------------------//
-int test_PCILUT_P0(int argc, char *argv[])
+TEST(Preconditioner, P0PCILUT)
 {
-
-  {
 	// small 2-d diffusion matrix.
     Matrix::SP_matrix A = test_matrix_2(2);
 
@@ -146,25 +112,20 @@ int test_PCILUT_P0(int argc, char *argv[])
     int got_n = M->number_nonzeros();
     double *got_v = M->values();
 
-    TEST(got_n == expect_n);
+    EXPECT_EQ(got_n, expect_n);
     for (int i = 0; i < got_n; ++i)
     {
-    	TEST(soft_equiv(got_v[i], expect_v[i]));
-    }
-  }
-
-  return 0;
+    	EXPECT_NEAR(got_v[i], expect_v[i], 1.0e-12);
+	}    
 }
 
 //----------------------------------------------------------------------------//
-int test_performance(int argc, char *argv[])
+TEST(Preconditioner, Performance)
 {
 	/*
 	 *  Test the performance of the difference built-in PC's with
 	 *  GMRES to ensure things "seem" right.
 	 */
-
-
 	Matrix::SP_matrix A = test_matrix_2(20);
 	Vector b(A->number_rows(), 1.0);
 	Vector x(A->number_rows(), 0.0);
@@ -211,9 +172,7 @@ int test_performance(int argc, char *argv[])
 	P->matrix()->print_matlab("ilut2.out");
 	solver.set_preconditioner(P, 1);
 	solver.solve(b, x);
-	}
-
-	return 0;
+	}	
 }
 
 //----------------------------------------------------------------------------//
