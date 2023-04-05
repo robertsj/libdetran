@@ -2,24 +2,15 @@
 # src/transport/test/CMakeLists.txt
 #------------------------------------------------------------------------------#
 
-#------------------------------------------------------------------------------#
-# Create test executables
-#------------------------------------------------------------------------------#
+macro(test)
+  add_executable(${ARGV0} ${ARGV0}.cc)
+  target_link_libraries(${ARGV0}
+    external_source
+    GTest::gtest_main
+  )
+  gtest_discover_tests(${ARGV0})
+endmacro()
 
-ADD_EXECUTABLE(test_ConstantSource          test_ConstantSource.cc)
-TARGET_LINK_LIBRARIES(test_ConstantSource   external_source)
-
-ADD_EXECUTABLE(test_IsotropicSource         test_IsotropicSource.cc)
-TARGET_LINK_LIBRARIES(test_IsotropicSource  external_source)
-
-ADD_EXECUTABLE(test_DiscreteSource          test_DiscreteSource.cc)
-TARGET_LINK_LIBRARIES(test_DiscreteSource   external_source)
-
-#------------------------------------------------------------------------------#
-# Define tests
-#------------------------------------------------------------------------------#
-
-ADD_TEST(test_ConstantSource 		test_ConstantSource  0)
-ADD_TEST(test_IsotropicSource      	test_IsotropicSource 0)
-ADD_TEST(test_DiscreteSource       	test_DiscreteSource  0)
-
+test(test_ConstantSource)
+test(test_DiscreteSource)
+test(test_IsotropicSource)

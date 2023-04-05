@@ -6,11 +6,7 @@
  */
 //----------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                  \
-        FUNC(test_DiscreteSource)
-
-#include "TestDriver.hh"
+#include <gtest/gtest.h>
 #include "DiscreteSource.hh"
 #include "Mesh2D.hh"
 #include "QuadratureFactory.hh"
@@ -19,19 +15,9 @@ using namespace detran_external_source;
 using namespace detran_geometry;
 using namespace detran_angle;
 using namespace detran_utilities;
-using namespace detran_test;
 using namespace std;
 
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
-
-//----------------------------------------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------------------------------------//
-
-int test_DiscreteSource(int argc, char *argv[])
+TEST(DiscreteSource, Basic)
 {
 
   // Create mesh
@@ -40,14 +26,14 @@ int test_DiscreteSource(int argc, char *argv[])
   vec_int fm(1, 2);
   vec_int mt(1, 0);
   Mesh::SP_mesh mesh(new Mesh2D(fm, fm, cm, cm, mt));
-  TEST(mesh != NULL);
+  EXPECT_TRUE(mesh != NULL);
 
   // Create quadrature.
   Quadrature::SP_quadrature quad;
   QuadratureFactory qf;
   InputDB::SP_input db =std::make_shared<InputDB>();
   quad = qf.build(db, 2);
-  TEST(quad != NULL);
+  EXPECT_TRUE(quad != NULL);
 
   // Create spectra.
   DiscreteSource::size_t num_spectra = 2;
@@ -66,14 +52,13 @@ int test_DiscreteSource(int argc, char *argv[])
 
   DiscreteSource q_e(num_groups, mesh, spectra, map, quad);
 
-  TEST(soft_equiv(q_e.source(0, 0),    0.0));
-  TEST(soft_equiv(q_e.source(0, 0, 1), 0.0));
-  TEST(soft_equiv(q_e.source(0, 1),    (double)quad->number_angles()));
-  TEST(soft_equiv(q_e.source(0, 1, 1), 1/quad->weight(0)));
-  TEST(soft_equiv(q_e.source(1, 0),    0.0));
-  TEST(soft_equiv(q_e.source(1, 0, 0), 0.0));
+  EXPECT_NEAR(q_e.source(0, 0),    0.0, 1.0e-12);
+  EXPECT_NEAR(q_e.source(0, 0, 1), 0.0, 1.0e-12);
+  EXPECT_NEAR(q_e.source(0, 1),    (double)quad->number_angles(), 1.0e-12);
+  EXPECT_NEAR(q_e.source(0, 1, 1), 1/quad->weight(0),             1.0e-12);
+  EXPECT_NEAR(q_e.source(1, 0),    0.0, 1.0e-12);
+  EXPECT_NEAR(q_e.source(1, 0, 0), 0.0, 1.0e-12);
 
-  return 0;
 }
 
 //----------------------------------------------------------------------------//

@@ -6,11 +6,7 @@
  */
 //----------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                   \
-        FUNC(test_IsotropicSource)
-
-#include "TestDriver.hh"
+#include <gtest/gtest.h>
 #include "IsotropicSource.hh"
 #include "Mesh2D.hh"
 #include "QuadratureFactory.hh"
@@ -19,35 +15,24 @@ using namespace detran_external_source;
 using namespace detran_geometry;
 using namespace detran_angle;
 using namespace detran_utilities;
-using namespace detran_test;
 using namespace std;
 
-int main(int argc, char *argv[])
+TEST(IsotropicSource, Basic)
 {
-  RUN(argc, argv);
-}
-
-//----------------------------------------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------------------------------------//
-
-int test_IsotropicSource(int argc, char *argv[])
-{
-
   // Create mesh
   vec_dbl cm(2, 0.0);
   cm[1] = 1.0;
   vec_int fm(1, 2);
   vec_int mt(1, 0);
   Mesh::SP_mesh mesh(new Mesh2D(fm, fm, cm, cm, mt));
-  TEST(mesh != NULL);
+  EXPECT_TRUE(mesh != NULL);
 
   // Create quadrature.
   Quadrature::SP_quadrature quad;
   QuadratureFactory qf;
   InputDB::SP_input db =std::make_shared<InputDB>();
   quad = qf.build(db, 2);
-  TEST(quad != NULL);
+  EXPECT_TRUE(quad != NULL);
 
   // Create spectra.  Two different spectra: the first
   // is zero (the only way to have no source with this
@@ -64,14 +49,12 @@ int test_IsotropicSource(int argc, char *argv[])
   //IsotropicSource q_e(num_groups, mesh, spectra, map, quad);
   auto q_e = std::make_shared<IsotropicSource>(num_groups, mesh, spectra, map, quad);
 
-  TEST(soft_equiv(q_e->source(0, 0),    1.0));
-  TEST(soft_equiv(q_e->source(0, 0, 0), 1.0*inv_four_pi));
-  TEST(soft_equiv(q_e->source(0, 1),    2.0));
-  TEST(soft_equiv(q_e->source(0, 1, 0), 2.0*inv_four_pi));
-  TEST(soft_equiv(q_e->source(1, 0),    0.0));
-  TEST(soft_equiv(q_e->source(1, 0, 0), 0.0));
-
-  return 0;
+  EXPECT_NEAR(q_e->source(0, 0),    1.0,             1.0e-12);
+  EXPECT_NEAR(q_e->source(0, 0, 0), 1.0*inv_four_pi, 1.0e-12);
+  EXPECT_NEAR(q_e->source(0, 1),    2.0,             1.0e-12);
+  EXPECT_NEAR(q_e->source(0, 1, 0), 2.0*inv_four_pi, 1.0e-12);
+  EXPECT_NEAR(q_e->source(1, 0),    0.0,             1.0e-12);
+  EXPECT_NEAR(q_e->source(1, 0, 0), 0.0,             1.0e-12);
 }
 
 //----------------------------------------------------------------------------//
