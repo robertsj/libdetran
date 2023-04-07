@@ -6,12 +6,7 @@
  */
 //----------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                        \
-        FUNC(test_ScatterSource_forward) \
-        FUNC(test_ScatterSource_adjoint) \
-
-#include "utilities/TestDriver.hh"
+#include <gtest/gtest.h>
 #include "transport/ScatterSource.hh"
 #include "geometry/Mesh1D.hh"
 
@@ -19,21 +14,10 @@ using namespace detran;
 using namespace detran_geometry;
 using namespace detran_material;
 using namespace detran_utilities;
-using namespace detran_test;
 using std::cout;
 using std::endl;
 #define COUT(c) cout << c << endl;
 
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
-
-//----------------------------------------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------------------------------------//
-
-//----------------------------------------------------------------------------//
 ScatterSource::SP_material get_material()
 {
   // Material
@@ -72,7 +56,7 @@ State::SP_state get_state(int adjoint)
 }
 
 //----------------------------------------------------------------------------//
-int test_ScatterSource_forward(int argc, char *argv[])
+TEST(ScatterSource, forward)
 {
   // Setup
   ScatterSource::SP_material mat = get_material();
@@ -85,64 +69,63 @@ int test_ScatterSource_forward(int argc, char *argv[])
   // Within-group source
   // g = 0
   source.build_within_group_source(0, state->phi(0), s);
-  TEST(soft_equiv(s[0], 1.0));
+  EXPECT_NEAR(s[0], 1.0, 1.0e-12);
   s[0] = 0.0;
   // g = 1
   source.build_within_group_source(1, state->phi(1), s);
-  TEST(soft_equiv(s[0], 8.0));
+  EXPECT_NEAR(s[0], 8.0, 1.0e-12);
   s[0] = 0.0;
   // g = 2
   source.build_within_group_source(2, state->phi(2), s);
-  TEST(soft_equiv(s[0], 24.0));
+  EXPECT_NEAR(s[0], 24.0, 1.0e-12);
   s[0] = 0.0;
 
   // In-scatter source
   // g = 0
   source.build_in_scatter_source(0, s);
-  TEST(soft_equiv(s[0], 4.0));
+  EXPECT_NEAR(s[0], 4.0, 1.0e-12);
   s[0] = 0.0;
   // g = 1
   source.build_in_scatter_source(1, s);
-  TEST(soft_equiv(s[0], 18.0));
+  EXPECT_NEAR(s[0], 18.0, 1.0e-12);
   s[0] = 0.0;
   // g = 2
   source.build_in_scatter_source(2, s);
-  TEST(soft_equiv(s[0], 20.0));
+  EXPECT_NEAR(s[0], 20.0, 1.0e-12);
   s[0] = 0.0;
 
   // Downscatter source
   // g = 0
   source.build_downscatter_source(0, 0, s);
-  TEST(soft_equiv(s[0], 0.0));
+  EXPECT_NEAR(s[0], 0.0, 1.0e-12);
   s[0] = 0.0;
   // g = 1
   source.build_downscatter_source(1, 1, s);
-  TEST(soft_equiv(s[0], 3.0));
+  EXPECT_NEAR(s[0], 3.0, 1.0e-12);
   s[0] = 0.0;
   // g = 2
   source.build_downscatter_source(2, 2, s);
-  TEST(soft_equiv(s[0], 20.0));
+  EXPECT_NEAR(s[0], 20.0, 1.0e-12);
   s[0] = 0.0;
 
   // Total group source
   // g = 0
   source.build_total_group_source(0, 0, state->all_phi(), s);
-  TEST(soft_equiv(s[0], 5.0));
+  EXPECT_NEAR(s[0], 5.0, 1.0e-12);
   s[0] = 0.0;
   // g = 1
   source.build_total_group_source(1, 0, state->all_phi(), s);
-  TEST(soft_equiv(s[0], 26.0));
+  EXPECT_NEAR(s[0], 26.0, 1.0e-12);
   s[0] = 0.0;
   // g = 2
   source.build_total_group_source(2, 0, state->all_phi(), s);
-  TEST(soft_equiv(s[0], 44.0));
+  EXPECT_NEAR(s[0], 44.0, 1.0e-12);
   s[0] = 0.0;
 
-  return 0;
 }
 
 //----------------------------------------------------------------------------//
-int test_ScatterSource_adjoint(int argc, char *argv[])
+TEST(ScatterSource, Adjoint)
 {
   // Setup
   ScatterSource::SP_material mat = get_material();
@@ -155,60 +138,59 @@ int test_ScatterSource_adjoint(int argc, char *argv[])
   // Within-group source
   // g = 0
   source.build_within_group_source(0, state->phi(0), s);
-  TEST(soft_equiv(s[0], 1.0));
+  EXPECT_NEAR(s[0], 1.0, 1.0e-12);
   s[0] = 0.0;
   // g = 1
   source.build_within_group_source(1, state->phi(1), s);
-  TEST(soft_equiv(s[0], 8.0));
+  EXPECT_NEAR(s[0], 8.0, 1.0e-12);
   s[0] = 0.0;
   // g = 2
   source.build_within_group_source(2, state->phi(2), s);
-  TEST(soft_equiv(s[0], 24.0));
+  EXPECT_NEAR(s[0], 24.0, 1.0e-12);
   s[0] = 0.0;
 
   // In-scatter source
   // g = 0
   source.build_in_scatter_source(0, s);
-  TEST(soft_equiv(s[0], 24.0));
+  EXPECT_NEAR(s[0], 24.0, 1.0e-12);
   s[0] = 0.0;
   // g = 1
   source.build_in_scatter_source(1, s);
-  TEST(soft_equiv(s[0], 23.0));
+  EXPECT_NEAR(s[0], 23.0, 1.0e-12);
   s[0] = 0.0;
   // g = 2
   source.build_in_scatter_source(2, s);
-  TEST(soft_equiv(s[0], 10.0));
+  EXPECT_NEAR(s[0], 10.0, 1.0e-12);
   s[0] = 0.0;
 
   // Upscatter source
   // g = 0
   source.build_downscatter_source(0, 0, s);
-  TEST(soft_equiv(s[0], 24.0));
+  EXPECT_NEAR(s[0], 24.0, 1.0e-12);
   s[0] = 0.0;
   // g = 1
   source.build_downscatter_source(1, 1, s);
-  TEST(soft_equiv(s[0], 21.0));
+  EXPECT_NEAR(s[0], 21.0, 1.0e-12);
   s[0] = 0.0;
   // g = 2
   source.build_downscatter_source(2, 2, s);
-  TEST(soft_equiv(s[0], 0.0));
+  EXPECT_NEAR(s[0], 0.0, 1.0e-12);
   s[0] = 0.0;
 
   // Total group source
   // g = 0
   source.build_total_group_source(0, 2, state->all_phi(), s);
-  TEST(soft_equiv(s[0], 25.0));
+  EXPECT_NEAR(s[0], 25.0, 1.0e-12);
   s[0] = 0.0;
   // g = 1
   source.build_total_group_source(1, 2, state->all_phi(), s);
-  TEST(soft_equiv(s[0], 31.0));
+  EXPECT_NEAR(s[0], 31.0, 1.0e-12);
   s[0] = 0.0;
   // g = 2
   source.build_total_group_source(2, 2, state->all_phi(), s);
-  TEST(soft_equiv(s[0], 34.0));
+  EXPECT_NEAR(s[0], 34.0, 1.0e-12);
   s[0] = 0.0;
 
-  return 0;
 }
 
 //----------------------------------------------------------------------------//

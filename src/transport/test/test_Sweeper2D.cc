@@ -6,11 +6,7 @@
  */
 //----------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                     \
-        FUNC(test_Sweeper2D_basic)
-
-#include "utilities/TestDriver.hh"
+#include <gtest/gtest.h>
 #include "Sweeper2D.hh"
 #include "Equation_DD_2D.hh"
 #include "Equation_SD_2D.hh"
@@ -25,16 +21,7 @@ using namespace detran_geometry;
 using namespace detran_utilities;
 using namespace detran_test;
 
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
-
-//----------------------------------------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------------------------------------//
-
-int test_Sweeper2D_basic(int argc, char *argv[])
+TEST(Sweeper2D, Basic)
 {
   typedef Sweeper2D<Equation_DD_2D> Sweeper_T;
 
@@ -72,7 +59,6 @@ int test_Sweeper2D_basic(int argc, char *argv[])
 
   // Tests.
 
-  return 0;
 }
 
 //----------------------------------------------------------------------------//

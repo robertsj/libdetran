@@ -6,12 +6,7 @@
  */
 //----------------------------------------------------------------------------//
 
-
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                     \
-        FUNC(test_Sweeper3D_basic)
-
-#include "utilities/TestDriver.hh"
+#include <gtest/gtest.h>
 #include "Sweeper3D.hh"
 #include "Equation_DD_3D.hh"
 #include "angle/LevelSymmetric.hh"
@@ -29,16 +24,7 @@ using namespace detran_test;
 using std::cout;
 using std::endl;
 
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
-
-//----------------------------------------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------------------------------------//
-
-int test_Sweeper3D_basic(int argc, char *argv[])
+TEST(Sweeper3D, Basic)
 {
   typedef Sweeper3D<Equation_DD_3D> Sweeper_T;
 
@@ -104,7 +90,6 @@ int test_Sweeper3D_basic(int argc, char *argv[])
 //  cout << "...wrote scalar flux." << endl;
 //
 //  out.finalize();
-  return 0;
 }
 
 //----------------------------------------------------------------------------//

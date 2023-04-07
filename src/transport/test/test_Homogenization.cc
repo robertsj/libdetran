@@ -6,12 +6,7 @@
  */
 //----------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                       \
-        FUNC(test_Homogenization)       \
-        FUNC(test_HomogenizeCoarseMesh)
-
-#include "utilities/TestDriver.hh"
+#include <gtest/gtest.h>
 #include "Homogenize.hh"
 #include "geometry/Mesh1D.hh"
 #include "material/Material.hh"
@@ -23,16 +18,7 @@ using namespace detran_material;
 using namespace detran_utilities;
 using namespace detran_test;
 
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
-
-//----------------------------------------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------------------------------------//
-
-int test_Homogenization(int argc, char *argv[])
+TEST(Homogenization, Basic)
 {
 
   // Input
@@ -94,10 +80,10 @@ int test_Homogenization(int argc, char *argv[])
     {
       for (int g = 0; g < 2; ++g)
       {
-        TEST(soft_equiv(mat->sigma_t(m, g),    mat2->sigma_t(m, g)));
-        TEST(soft_equiv(mat->sigma_a(m, g),    mat2->sigma_a(m, g)));
-        TEST(soft_equiv(mat->sigma_s(m, 0, g), mat2->sigma_s(m, 0, g)));
-        TEST(soft_equiv(mat->sigma_s(m, 1, g), mat2->sigma_s(m, 1, g)));
+        EXPECT_NEAR(mat->sigma_t(m, g),    mat2->sigma_t(m, g), 1.0e-12);
+        EXPECT_NEAR(mat->sigma_a(m, g),    mat2->sigma_a(m, g), 1.0e-12);
+        EXPECT_NEAR(mat->sigma_s(m, 0, g), mat2->sigma_s(m, 0, g), 1.0e-12);
+        EXPECT_NEAR(mat->sigma_s(m, 1, g), mat2->sigma_s(m, 1, g), 1.0e-12);
       }
     }
 
@@ -108,14 +94,14 @@ int test_Homogenization(int argc, char *argv[])
     else
       mat3 = H.homogenize(spectrum, "MATERIAL", mesh, "MATERIAL", cg);
 
-    TEST(soft_equiv(mat3->sigma_t(0, 0),     1.5));
-    TEST(soft_equiv(mat3->sigma_t(1, 0),     3.0));
-    TEST(soft_equiv(mat3->sigma_s(0, 0, 0),  0.5));
-    TEST(soft_equiv(mat3->sigma_s(1, 0, 0),  1.0));
-    TEST(soft_equiv(mat3->sigma_a(0, 0),     1.0));
-    TEST(soft_equiv(mat3->sigma_a(1, 0),     2.0));
-    TEST(soft_equiv(mat3->diff_coef(0, 0),   0.25));
-    TEST(soft_equiv(mat3->diff_coef(1, 0),   0.125));
+    EXPECT_NEAR(mat3->sigma_t(0, 0),     1.5, 1.0e-12);
+    EXPECT_NEAR(mat3->sigma_t(1, 0),     3.0, 1.0e-12);
+    EXPECT_NEAR(mat3->sigma_s(0, 0, 0),  0.5, 1.0e-12);
+    EXPECT_NEAR(mat3->sigma_s(1, 0, 0),  1.0, 1.0e-12);
+    EXPECT_NEAR(mat3->sigma_a(0, 0),     1.0, 1.0e-12);
+    EXPECT_NEAR(mat3->sigma_a(1, 0),     2.0, 1.0e-12);
+    EXPECT_NEAR(mat3->diff_coef(0, 0),   0.25, 1.0e-12);
+    EXPECT_NEAR(mat3->diff_coef(1, 0),   0.125, 1.0e-12);
   }
 
   // Test homogenization over partial groups
@@ -124,22 +110,21 @@ int test_Homogenization(int argc, char *argv[])
   Material::SP_material mat4;
   //   only 0th fine group
   mat4 = H.homogenize(spectrum, "MATERIAL", mesh, "MATERIAL", cg, fgroups);
-  TEST(soft_equiv(mat4->sigma_t(0, 0), mat->sigma_t(0, 0)));
-  TEST(soft_equiv(mat4->sigma_t(1, 0), mat->sigma_t(1, 0)));
+  EXPECT_NEAR(mat4->sigma_t(0, 0), mat->sigma_t(0, 0), 1.0e-12);
+  EXPECT_NEAR(mat4->sigma_t(1, 0), mat->sigma_t(1, 0), 1.0e-12);
   //   only 1st fine group
   fgroups[0] = 1;
   mat4 = H.homogenize(spectrum, "MATERIAL", mesh, "MATERIAL", cg, fgroups);
-  TEST(soft_equiv(mat4->sigma_t(0, 0), mat->sigma_t(0, 1)));
-  TEST(soft_equiv(mat4->sigma_t(1, 0), mat->sigma_t(1, 1)));
+  EXPECT_NEAR(mat4->sigma_t(0, 0), mat->sigma_t(0, 1), 1.0e-12);
+  EXPECT_NEAR(mat4->sigma_t(1, 0), mat->sigma_t(1, 1), 1.0e-12);
   //   over both, in reverse
   cg[0] = 2;
   fgroups.resize(2, 0);
   fgroups[0] = 1;
   mat4 = H.homogenize(spectrum, "MATERIAL", mesh, "MATERIAL", cg, fgroups);
-  TEST(soft_equiv(mat4->sigma_t(0, 0), 1.5));
-  TEST(soft_equiv(mat4->sigma_t(1, 0), 3.0));
+  EXPECT_NEAR(mat4->sigma_t(0, 0), 1.5, 1.0e-12);
+  EXPECT_NEAR(mat4->sigma_t(1, 0), 3.0, 1.0e-12);
 
-  return 0;
 }
 
 /*
@@ -167,7 +152,6 @@ int test_HomogenizeCoarseMesh(int argc, char *argv[])
 
   CoarseMesh::SP_coarsemesh mesher(new CoarseMesh(mesh, 3));
   mesher->get_coarse_mesh()->display();
-  return 0;
   vec_int mat_map(mesh->number_cells(), 0);
   State::SP_state state(new State(input, mesh));
   for (int cell = 0; cell < mesh->number_cells(); ++cell)
@@ -179,9 +163,8 @@ int test_HomogenizeCoarseMesh(int argc, char *argv[])
   Homogenize H(mat);
   Material::SP_material mat2 = H.homogenize(state, mesh, "COARSEMESH");
   mat2->display();
-  TEST(mat2->number_materials() == 4);
+  EXPECT_EQ(mat2->number_materials(), 4);
 
-  return 0;
 }
 
 //----------------------------------------------------------------------------//

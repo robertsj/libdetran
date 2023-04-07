@@ -6,11 +6,7 @@
  */
 //----------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                     \
-        FUNC(test_Equation_DD_2D_basic)
-
-#include "TestDriver.hh"
+#include <gtest/gtest.h>
 #include "Equation_DD_2D.hh"
 #include "geometry/test/mesh_fixture.hh"
 #include "material/test/material_fixture.hh"
@@ -24,17 +20,7 @@ using namespace detran_angle;
 using namespace detran_test;
 using namespace std;
 
-
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
-
-//----------------------------------------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------------------------------------//
-
-int test_Equation_DD_2D_basic(int argc, char *argv[])
+TEST(EquationDD2D, Basic)
 {
   // Get mesh, material, and quadrature
 
@@ -42,9 +28,9 @@ int test_Equation_DD_2D_basic(int argc, char *argv[])
   SP_material mat   = material_fixture_1g();
   LevelSymmetric::SP_quadrature q(new detran_angle::LevelSymmetric(2, 2));
 
-  TEST(mesh != NULL);
-  TEST(mat != NULL);
-  TEST(q != NULL);
+  EXPECT_TRUE(mesh != NULL);
+  EXPECT_TRUE(mat != NULL);
+  EXPECT_TRUE(q != NULL);
 
   // Create
   Equation_DD_2D eq(mesh, mat, q, false);
@@ -79,12 +65,11 @@ int test_Equation_DD_2D_basic(int argc, char *argv[])
            psi);    // reference
 
   // Check the results. FINISH.
-  //TEST(psi_out[0] == 0.0);
-  //TEST(psi_out[1] == 0.0);
-  //TEST(phi[0]     == 0.0);
-  //TEST(psi[0]     == 0.0);
+  //EXPECT_EQ(psi_out[0], 0.0);
+  //EXPECT_EQ(psi_out[1], 0.0);
+  //EXPECT_EQ(phi[0]    , 0.0);
+  //EXPECT_EQ(psi[0]    , 0.0);
 
-  return 0;
 }
 
 //----------------------------------------------------------------------------//
