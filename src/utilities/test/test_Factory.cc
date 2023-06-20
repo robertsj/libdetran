@@ -6,23 +6,19 @@
  */
 //----------------------------------------------------------------------------//
 
+#include <gtest/gtest.h>
+
 // LIST OF TEST FUNCTIONS
 #define TEST_LIST          \
         FUNC(test_Factory)
 
-#include "TestDriver.hh"
 #include "utilities/Factory.hh"
 #include <vector>
 #include <memory>
 
 using namespace std;
-using namespace detran_test;
 using namespace detran_utilities;
-
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
+#define PRINT(c) cout << c << endl;
 
 //----------------------------------------------------------------------------//
 // TEST DEFINITIONS
@@ -82,24 +78,21 @@ public:
 };
 REGISTER_CLASS(Foo, Noo, "Noo")
 
-#define PRINT(c) cout << c << endl;
-int test_Factory(int argc, char *argv[])
+TEST(Factory, FactoryBasic)
 {
   // illustrates creation as a base method (probably a preferred approach)
   Foo::SP_foo moo = Foo::Create("Moo", 3);
-  PRINT("hello")
-  TEST(moo != nullptr);
+  PRINT("hello");
+  EXPECT_NE(moo, nullptr);
   // illustrates creation as a standalone factory method
   Foo::SP_foo noo = Create("Noo", 3);
-  TEST(noo!= nullptr);
+  EXPECT_NE(noo, nullptr);
 
   std::cout << "moo=" << moo->value() << std::endl;
   std::cout << "noo=" << noo->value() << std::endl;
 
-  TEST(moo->value() == 3)
-  TEST(noo->value() == 6)
-
-  return 0;
+  EXPECT_EQ(moo->value(), 3);
+  EXPECT_EQ(noo->value(), 6);
 }
 
 //----------------------------------------------------------------------------//

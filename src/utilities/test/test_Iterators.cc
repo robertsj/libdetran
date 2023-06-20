@@ -6,30 +6,25 @@
  */
 //----------------------------------------------------------------------------//
 
+#include <gtest/gtest.h>
+
 // LIST OF TEST FUNCTIONS
 #define TEST_LIST                       \
         FUNC(test_Iterators_Reversible)
 
-#include "TestDriver.hh"
 #include "utilities/Iterators.hh"
 #include <vector>
 #include <cstdio>
 
-using namespace detran_test;
 using namespace detran_utilities;
 
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
 
 //----------------------------------------------------------------------------//
 // TEST DEFINITIONS
 //----------------------------------------------------------------------------//
 
-int test_Iterators_Reversible(int argc, char *argv[])
+TEST(Iterators, Reversible)
 {
-
   std::vector<int>  v = {1, 2, 3};
 
   Reversible<std::vector<int>> forward(&v, true);
@@ -38,18 +33,18 @@ int test_Iterators_Reversible(int argc, char *argv[])
   for (i = 0; i < 3; i++, forward++)
   {
     std::printf(" vf = %i\n", *forward);
-    TEST(*forward == v[i]);
+    EXPECT_EQ(*forward, v[i]);
   }
   i = 0;
   for (auto it = forward.begin(); it != forward.end(); ++it, ++i)
   {
     std::printf(" vf = %i   %i\n", *it, v[i]);
-    TEST(*it == v[i]);
+    EXPECT_EQ(*it, v[i]);
   }
   i = 0;
   for (auto &it: forward)
   {
-    TEST(it == v[i]);
+    EXPECT_EQ(it, v[i]);
     ++i;
   }
 
@@ -57,23 +52,20 @@ int test_Iterators_Reversible(int argc, char *argv[])
   for (i = 0; i < 3; i++, backward++)
   {
     std::printf(" vf = %i\n", *backward);
-    TEST(*backward == v[2 - i]);
+    EXPECT_EQ(*backward, v[2 - i]);
   }
   i = 0;
   for (auto it = backward.begin(); it != backward.end(); ++it, ++i)
   {
     std::printf(" vf = %i   %i\n", *it, v[2 - i]);
-    TEST(*it == v[2 - i]);
+    EXPECT_EQ(*it, v[2 - i]);
   }
   i = 0;
   for (auto &it : backward)
   {
-    TEST(it == v[2 - i]);
+    EXPECT_EQ(it, v[2 - i]);
     ++i;
   }
-
-
-  return 0;
 }
 
 //----------------------------------------------------------------------------//
