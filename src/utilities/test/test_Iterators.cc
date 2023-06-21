@@ -7,21 +7,11 @@
 //----------------------------------------------------------------------------//
 
 #include <gtest/gtest.h>
-
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                       \
-        FUNC(test_Iterators_Reversible)
-
 #include "utilities/Iterators.hh"
 #include <vector>
 #include <cstdio>
 
 using namespace detran_utilities;
-
-
-//----------------------------------------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------------------------------------//
 
 TEST(Iterators, Reversible)
 {

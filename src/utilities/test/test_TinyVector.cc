@@ -7,21 +7,11 @@
 //----------------------------------------------------------------------------//
 
 #include <gtest/gtest.h>
-
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST              \
-        FUNC(test_TinyVector)
-
 #include "utilities/TinyVector.hh"
 
 using namespace detran_utilities;
 
-
-//----------------------------------------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------------------------------------//
-
-TEST(TinyVector, TinyVectorBasic)
+TEST(TinyVector, Basic)
 {
   TinyVector<int, 2> V2(1, 2);
   EXPECT_EQ(V2.size(), 2);

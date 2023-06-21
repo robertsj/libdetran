@@ -6,31 +6,16 @@
  */
 //----------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                            \
-        FUNC(test_ProductQuadratures)        \
-        FUNC(test_ProductQuadratureIndexing)
-
-#include "TestDriver.hh"
+#include <gtest/gtest.h>
 #include "QuadratureFactory.hh"
 #include "ProductQuadrature.hh"
 
 using namespace detran_angle;
 using namespace detran_utilities;
-using namespace detran_test;
 using namespace std;
 
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
-
-//----------------------------------------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------------------------------------//
-
 // Make sure the a few quadratures give expected numbers
-int test_ProductQuadratures(int argc, char *argv[])
+TEST(ProductQuadratures, Basic)
 {
   int N = 3;
   const char* types[] = {"u-gl", "u-dgl", "asqr-asdr"};
@@ -56,11 +41,10 @@ int test_ProductQuadratures(int argc, char *argv[])
     QuadratureFactory::SP_quadrature q = QuadratureFactory::build(db, 3);
     for (int j = 0; j < q->number_angles_octant(); ++j)
     {
-      TEST(soft_equiv(mu[i][j], q->mu(0, j), 1e-11));
+      EXPECT_NEAR(mu[i][j], q->mu(0, j), 1e-11);
     }
   }
 
-  return 0;
 }
 
 /*
@@ -68,7 +52,7 @@ int test_ProductQuadratures(int argc, char *argv[])
  *  given a dimension and surface, an easy way to access the angles in
  *  order is crucial.
  */
-int test_ProductQuadratureIndexing(int argc, char *argv[])
+TEST(ProductQuadratures, Indexing)
 {
   InputDB::SP_input db = std::make_shared<InputDB>();
   db->put<int>("quad_number_azimuth_octant", 3);
@@ -128,7 +112,6 @@ int test_ProductQuadratureIndexing(int argc, char *argv[])
     }
   }
 
-  return 0;
 }
 
 //---------------------------------------------------------------------------//

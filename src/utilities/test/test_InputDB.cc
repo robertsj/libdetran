@@ -7,16 +7,7 @@
 //---------------------------------------------------------------------------//
 
 #include <gtest/gtest.h>
-
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                    \
-        FUNC(test_InputDB)           \
-        FUNC(test_InputDB_serialize)
-
-// Detran headers
 #include "InputDB.hh"
-
-// System headers
 #include <iostream>
 #include <cstdlib>
 #include <fstream>
@@ -24,10 +15,7 @@
 using namespace detran_utilities;
 using namespace std;
 
-
-// Test definitions.
-
-TEST(InputDB, IndputDBBasic)
+TEST(InputDB, Basic)
 {
  InputDB::SP_input db(new InputDB());
 

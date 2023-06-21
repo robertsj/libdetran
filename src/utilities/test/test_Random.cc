@@ -7,11 +7,6 @@
 //----------------------------------------------------------------------------//
 
 #include <gtest/gtest.h>
-
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST              \
-        FUNC(test_Random)
-
 #include "utilities/Random.hh"
 #include "utilities/SoftEquivalence.hh"
 #include <cstdio>
@@ -19,12 +14,7 @@
 using namespace std;
 using namespace detran_utilities;
 
-
-//----------------------------------------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------------------------------------//
-
-TEST(Random, RandomBasic)
+TEST(Random, Basic)
 {
   const double expected_vals[] =
   { 0.33480420098231534, 0.00626434885800720, 0.80570957030638723,
