@@ -1,2 +1,6 @@
+.cproject
+.project
+.settings
+.vscode
 *.pyc
 *~
