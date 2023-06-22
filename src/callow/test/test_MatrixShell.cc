@@ -6,37 +6,23 @@
  */
 //----------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                   \
-        FUNC(test_MatrixShell)      \
-        FUNC(test_MatrixShell_write)
-
-
-#include "TestDriver.hh"
+#include <gtest/gtest.h>
 #include "matrix/MatrixShell.hh"
 #include "utils/Initialization.hh"
 #include "test/matrixshell_fixture.hh"
 #include <iostream>
 
 using namespace callow;
-using namespace detran_test;
-using detran_utilities::soft_equiv;
+
 using std::cout;
 using std::endl;
-
-int main(int argc, char *argv[])
-{
-  callow_initialize(argc, argv);
-  RUN(argc, argv);
-  callow_finalize();
-}
 
 //----------------------------------------------------------------------------//
 // TEST DEFINITIONS
 //----------------------------------------------------------------------------//
 
 // Test of basic public interface
-int test_MatrixShell(int argc, char *argv[])
+TEST(MatrixShell, Basic)
 {
   typedef TestMatrixShell Mat_T;
   typedef Vector          Vec_T;
@@ -47,8 +33,8 @@ int test_MatrixShell(int argc, char *argv[])
     int n = 5;
     Mat_T A(n);
     A.display();
-    TEST(A.number_rows()    == n);
-    TEST(A.number_columns() == n);
+    EXPECT_EQ(A.number_rows()   , n);
+    EXPECT_EQ(A.number_columns(), n);
 
     // Create two vectors
     Vec_T X(n, 0.0);
@@ -67,7 +53,7 @@ int test_MatrixShell(int argc, char *argv[])
     Y.display();
     for (int i = 0; i < Y.size(); i++)
     {
-      TEST(soft_equiv(Y[i], ref[i]));
+      EXPECT_NEAR(Y[i], ref[i], 1.0e-12);
     }
 
     // Transpose
@@ -77,16 +63,14 @@ int test_MatrixShell(int argc, char *argv[])
 
     for (int i = 0; i < X.size(); i++)
     {
-      TEST(soft_equiv(X[i], ref2[i]));
+      EXPECT_NEAR(X[i], ref2[i], 1.0e-12);
     }
 
   } // end n * n
-
-  return 0;
 }
 
 // Test matlab writer
-int test_MatrixShell_write(int argc, char *argv[])
+TEST(MatrixShell, Write)
 {
   // n * n
   {
@@ -95,8 +79,6 @@ int test_MatrixShell_write(int argc, char *argv[])
     TestMatrixShell A(n);
     A.print_matlab("shell_matlab.out");
   } // end n * n
-
-  return 0;
 }
 
 //----------------------------------------------------------------------------//
