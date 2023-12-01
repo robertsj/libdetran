@@ -7,11 +7,9 @@
 //----------------------------------------------------------------------------//
 
 #include <gtest/gtest.h>
-
 #include "Point.hh"
 
 using namespace detran_geometry;
-
 
 TEST(Point, PointAccessors)
 {

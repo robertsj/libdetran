@@ -7,35 +7,17 @@
  */
 //---------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                       \
-        FUNC(test_KineticsMaterial)
-
-// Detran headers
-#include "utilities/TestDriver.hh"
+#include <gtest/gtest.h>
 #include "kinetics/KineticsMaterial.hh"
-
-// System
 #include <iostream>
 #include <fstream>
 
-using namespace detran_test;
 using namespace detran_utilities;
 using namespace detran;
 using namespace std;
-using detran_utilities::soft_equiv;
-
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
-
-//----------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------//
 
 // Test of basic public interface
-int test_KineticsMaterial(int argc, char *argv[])
+TEST(KineticsMaterial, Basic)
 {
   // Get the 1g KineticsParameters.
   KineticsMaterial::SP_material k(new KineticsMaterial(2, 1, 8));
@@ -59,18 +41,15 @@ int test_KineticsMaterial(int argc, char *argv[])
   k->finalize();
   for (int i = 0; i < 8; ++i)
   {
-    TEST(soft_equiv(k->lambda(i), lambda[i]));
+    EXPECT_NEAR(k->lambda(i), lambda[i], 1.0e-12);
 
     for (int m = 0; m < 2; ++m)
     {
-      TEST(soft_equiv(k->beta(m, i), beta[i]));
-      TEST(soft_equiv(k->beta_total(m), beta_total));
+      EXPECT_NEAR(k->beta(m, i), beta[i], 1.0e-12);
+      EXPECT_NEAR(k->beta_total(m), beta_total, 1.0e-12);
     }
   }
-  return 0;
 }
-
-
 
 //---------------------------------------------------------------------------//
 //              end of test_KineticsMaterial.cc

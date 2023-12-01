@@ -6,13 +6,7 @@
  */
 //----------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                       \
-        FUNC(test_BoundaryDiffusion_1D) \
-        FUNC(test_BoundaryDiffusion_2D) \
-        FUNC(test_BoundaryDiffusion_3D)
-
-#include "utilities/TestDriver.hh"
+#include <gtest/gtest.h>
 #include "boundary/BoundaryDiffusion.hh"
 #include "geometry/Mesh1D.hh"
 #include "geometry/Mesh2D.hh"
@@ -21,21 +15,11 @@
 using namespace detran;
 using namespace detran_geometry;
 using namespace detran_utilities;
-using namespace detran_test;
 using std::cout;
 using std::endl;
 using std::string;
 
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
-
-//----------------------------------------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------------------------------------//
-
-int test_BoundaryDiffusion_1D(int argc, char *argv[])
+TEST(BoundaryDiffusion, 1D)
 {
   // 1-D test
   {
@@ -63,19 +47,19 @@ int test_BoundaryDiffusion_1D(int argc, char *argv[])
     (*b)(Mesh::EAST, 0, Boundary_T::OUT) = 3.3;
     (*b)(Mesh::EAST, 1, Boundary_T::OUT) = 4.4;
     // Test
-    TEST(soft_equiv( BV_T::value((*b)(Mesh::WEST, 0, Boundary_T::IN)), 1.0 ));
-    TEST(soft_equiv( BV_T::value((*b)(Mesh::WEST, 1, Boundary_T::IN)), 2.0 ));
-    TEST(soft_equiv( BV_T::value((*b)(Mesh::EAST, 0, Boundary_T::IN)), 3.0 ));
-    TEST(soft_equiv( BV_T::value((*b)(Mesh::EAST, 1, Boundary_T::IN)), 4.0 ));
-    TEST(soft_equiv( BV_T::value((*b)(Mesh::WEST, 0, Boundary_T::OUT)), 1.1 ));
-    TEST(soft_equiv( BV_T::value((*b)(Mesh::WEST, 1, Boundary_T::OUT)), 2.2 ));
-    TEST(soft_equiv( BV_T::value((*b)(Mesh::EAST, 0, Boundary_T::OUT)), 3.3 ));
-    TEST(soft_equiv( BV_T::value((*b)(Mesh::EAST, 1, Boundary_T::OUT)), 4.4 ));
+    EXPECT_NEAR(BV_T::value((*b)(Mesh::WEST, 0, Boundary_T::IN)), 1.0 , 1.0e-12);
+    EXPECT_NEAR(BV_T::value((*b)(Mesh::WEST, 1, Boundary_T::IN)), 2.0 , 1.0e-12);
+    EXPECT_NEAR(BV_T::value((*b)(Mesh::EAST, 0, Boundary_T::IN)), 3.0 , 1.0e-12);
+    EXPECT_NEAR(BV_T::value((*b)(Mesh::EAST, 1, Boundary_T::IN)), 4.0 , 1.0e-12);
+    EXPECT_NEAR(BV_T::value((*b)(Mesh::WEST, 0, Boundary_T::OUT)), 1.1 , 1.0e-12);
+    EXPECT_NEAR(BV_T::value((*b)(Mesh::WEST, 1, Boundary_T::OUT)), 2.2 , 1.0e-12);
+    EXPECT_NEAR(BV_T::value((*b)(Mesh::EAST, 0, Boundary_T::OUT)), 3.3 , 1.0e-12);
+    EXPECT_NEAR(BV_T::value((*b)(Mesh::EAST, 1, Boundary_T::OUT)), 4.4 , 1.0e-12);
   }
-  return 0;
+
 }
 
-int test_BoundaryDiffusion_2D(int argc, char *argv[])
+TEST(BoundaryDiffusion, 2D)
 {
   // 2-D test
   {
@@ -106,13 +90,12 @@ int test_BoundaryDiffusion_2D(int argc, char *argv[])
       }
     }
     // Test
-    TEST(soft_equiv( BV_T::value(b(Mesh::WEST,  0, Boundary_T::IN),  5), 5.0));
-    TEST(soft_equiv( BV_T::value(b(Mesh::NORTH, 1, Boundary_T::OUT), 2), 1300.2));
+    EXPECT_NEAR(BV_T::value(b(Mesh::WEST,  0, Boundary_T::IN),  5), 5.0, 1.0e-12);
+    EXPECT_NEAR(BV_T::value(b(Mesh::NORTH, 1, Boundary_T::OUT), 2), 1300.2, 1.0e-12);
   }
-  return 0;
 }
 
-int test_BoundaryDiffusion_3D(int argc, char *argv[])
+TEST(BoundaryDiffusion, 3D)
 {
   // 3-D test
   {
@@ -148,10 +131,9 @@ int test_BoundaryDiffusion_3D(int argc, char *argv[])
       }
     }
     // Test
-    TEST(soft_equiv( BV_T::value(b(Mesh::WEST,  0, Boundary_T::IN),  5, 5),   55.0));
-    TEST(soft_equiv( BV_T::value(b(Mesh::NORTH, 1, Boundary_T::OUT), 2, 2), 1320.2));
+    EXPECT_NEAR(BV_T::value(b(Mesh::WEST,  0, Boundary_T::IN),  5, 5),   55.0, 1.0e-12);
+    EXPECT_NEAR(BV_T::value(b(Mesh::NORTH, 1, Boundary_T::OUT), 2, 2), 1320.2, 1.0e-12);
   }
-  return 0;
 }
 
 //----------------------------------------------------------------------------//

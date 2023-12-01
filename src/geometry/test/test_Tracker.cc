@@ -11,16 +11,14 @@
 #include "callow/utils/Initialization.hh"
 #include <cmath>
 
-
 using namespace detran_geometry;
 using namespace detran_angle;
 using namespace detran_utilities;
 using namespace std;
 #define COUT(c) std::cout << c << std::endl;
 
-
 // Checks tracking of 2-d mesh
-TEST(Tracker, TrackerBasic2D)
+TEST(Tracker, Basic2D)
 {
   vec_dbl cm(2, 0.0);
   cm[1] = 1.0;

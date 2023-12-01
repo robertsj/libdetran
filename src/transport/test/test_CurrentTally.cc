@@ -6,13 +6,7 @@
  */
 //----------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                     \
-        FUNC(test_CurrentTally_1D)    \
-        FUNC(test_CurrentTally_2D)    \
-        FUNC(test_CurrentTally_3D)
-
-#include "utilities/TestDriver.hh"
+#include <gtest/gtest.h>
 #include "CurrentTally.hh"
 #include "angle/PolarQuadrature.hh"
 #include "angle/LevelSymmetric.hh"
@@ -25,16 +19,7 @@ using namespace detran_geometry;
 using namespace detran_utilities;
 using namespace detran_test;
 
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
-
-//----------------------------------------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------------------------------------//
-
-int test_CurrentTally_1D(int argc, char *argv[])
+TEST(CurrentTally, 1D)
 {
   using detran_utilities::size_t;
   typedef CurrentTally<_1D> CurrentTally_T;
@@ -82,12 +67,12 @@ int test_CurrentTally_1D(int argc, char *argv[])
 
   // Get the coarse mesh
   CurrentTally_T::SP_coarsemesh mesh = coarsemesh_1d();
-  TEST(mesh != NULL);
+  EXPECT_TRUE(mesh != NULL);
 
   // Get the fine mesh.
   CoarseMesh::SP_mesh finemesh = mesh->get_fine_mesh();
-  TEST(finemesh->dimension() == 1);
-  TEST(finemesh->number_cells() == 15);
+  EXPECT_EQ(finemesh->dimension(), 1);
+  EXPECT_EQ(finemesh->number_cells(), 15);
 
   // Create an S4 quadrature.
   CurrentTally_T::SP_quadrature quad(new PolarGL(2));
@@ -136,14 +121,13 @@ int test_CurrentTally_1D(int argc, char *argv[])
   for (int i = 0; i < 8; i++)
   {
     printf("%20.12f %20.12f \n", Jright[i], tally->partial_current(i, 0, 0, 0, 0, true));
-    TEST(soft_equiv(Jright[i], tally->partial_current(i, 0, 0, 0, 0, true)));
-    TEST(soft_equiv(Jleft[i],  tally->partial_current(i, 0, 0, 0, 0, false)));
+    EXPECT_NEAR(Jright[i], tally->partial_current(i, 0, 0, 0, 0, true), 1.0e-12);
+    EXPECT_NEAR(Jleft[i],  tally->partial_current(i, 0, 0, 0, 0, false), 1.0e-12);
   }
 
-  return 0;
 }
 
-int test_CurrentTally_2D(int argc, char *argv[])
+TEST(CurrentTally, 2D)
 {
   using detran_utilities::size_t;
   typedef CurrentTally<_2D> CurrentTally_T;
@@ -171,19 +155,19 @@ int test_CurrentTally_2D(int argc, char *argv[])
 
   // Get the coarse mesh
   CurrentTally_T::SP_coarsemesh mesh = coarsemesh_2d();
-  TEST(mesh != NULL);
+  EXPECT_TRUE(mesh != NULL);
 
   //int ceflag[] = {0, -1, 1, -1, 2};
 
   // Get the fine mesh.
   CoarseMesh::SP_mesh finemesh = mesh->get_fine_mesh();
-  TEST(finemesh->dimension()    == 2);
-  TEST(finemesh->number_cells() == 15*15);
+  EXPECT_EQ(finemesh->dimension()   , 2);
+  EXPECT_EQ(finemesh->number_cells(), 15*15);
 
   // Get the coarse mesh.
   CoarseMesh::SP_mesh coarsemesh = mesh->get_coarse_mesh();
-  TEST(coarsemesh->dimension()    == 2);
-  TEST(coarsemesh->number_cells() == 7*7);
+  EXPECT_EQ(coarsemesh->dimension()   , 2);
+  EXPECT_EQ(coarsemesh->number_cells(), 7*7);
 
   // Create an S2 quadrature.
   CurrentTally_T::SP_quadrature quad(new LevelSymmetric(1, 2));
@@ -261,12 +245,14 @@ int test_CurrentTally_2D(int argc, char *argv[])
     for (int i = 0; i < coarsemesh->number_cells_x() + 1; i++)
     {
       double tmp = cos_times_weight * coarsemesh->dy(j);
-      TEST(soft_equiv(
+      EXPECT_NEAR(
            tally->partial_current(i, j, 0, 0,
-           CurrentTally_T::X_DIRECTED, CurrentTally_T::NEGATIVE), tmp));
-      TEST(soft_equiv(
+           CurrentTally_T::X_DIRECTED, CurrentTally_T::NEGATIVE), tmp,
+           1.0e-12);
+      EXPECT_NEAR(
            tally->partial_current(i, j, 0, 0,
-           CurrentTally_T::X_DIRECTED, CurrentTally_T::POSITIVE), tmp));
+           CurrentTally_T::X_DIRECTED, CurrentTally_T::POSITIVE), tmp,
+           1.0e-12);
     }
   }
   // Test y-directed.
@@ -275,19 +261,19 @@ int test_CurrentTally_2D(int argc, char *argv[])
     for (int j = 0; j < coarsemesh->number_cells_y() + 1; j++)
     {
       double tmp = cos_times_weight * coarsemesh->dx(i);
-      TEST(soft_equiv(
+      EXPECT_NEAR(
            tally->partial_current(i, j, 0, 0,
-           CurrentTally_T::Y_DIRECTED, CurrentTally_T::NEGATIVE), tmp));
-      TEST(soft_equiv(
+           CurrentTally_T::Y_DIRECTED, CurrentTally_T::NEGATIVE), tmp,
+           1.0e-12);
+      EXPECT_NEAR(
            tally->partial_current(i, j, 0, 0,
-           CurrentTally_T::Y_DIRECTED, CurrentTally_T::POSITIVE), tmp));
+           CurrentTally_T::Y_DIRECTED, CurrentTally_T::POSITIVE), tmp,
+           1.0e-12);
     }
   }
-
-  return 0;
 }
 
-int test_CurrentTally_3D(int argc, char *argv[])
+TEST(CurrentTally, 3D)
 {
   using detran_utilities::size_t;
   typedef CurrentTally<_3D> CurrentTally_T;
@@ -312,19 +298,19 @@ int test_CurrentTally_3D(int argc, char *argv[])
 
   // Get the coarse mesh
   CurrentTally_T::SP_coarsemesh mesh = coarsemesh_3d();
-  TEST(mesh != NULL);
+  EXPECT_TRUE(mesh != NULL);
 
   // Get the fine mesh.
   CoarseMesh::SP_mesh finemesh = mesh->get_fine_mesh();
-  TEST(finemesh->dimension()    == 3);
-  //TEST(finemesh->number_cells() == 4*4*4);
-  TEST(finemesh->number_cells() == 15*15*15);
+  EXPECT_EQ(finemesh->dimension()   , 3);
+  //EXPECT_EQ(finemesh->number_cells(), 4*4*4);
+  EXPECT_EQ(finemesh->number_cells(), 15*15*15);
 
   // Get the coarse mesh.
   CoarseMesh::SP_mesh coarsemesh = mesh->get_coarse_mesh();
-  TEST(coarsemesh->dimension()    == 3);
-  //TEST(coarsemesh->number_cells() == 2*2*2);
-  TEST(coarsemesh->number_cells() == 7*7*7);
+  EXPECT_EQ(coarsemesh->dimension()   , 3);
+  //EXPECT_EQ(coarsemesh->number_cells(), 2*2*2);
+  EXPECT_EQ(coarsemesh->number_cells(), 7*7*7);
 
   // Create an S2 quadrature.
   CurrentTally_T::SP_quadrature quad(new LevelSymmetric(1, 3));
@@ -456,12 +442,14 @@ int test_CurrentTally_3D(int argc, char *argv[])
       for (int i = 0; i < coarsemesh->number_cells_x() + 1; i++)
       {
         double tmp = cos_times_weight * coarsemesh->dy(j) * coarsemesh->dz(k);
-        TEST(soft_equiv(
+        EXPECT_NEAR(
              tally->partial_current(i, j, k, 0,
-             CurrentTally_T::X_DIRECTED, CurrentTally_T::NEGATIVE), tmp));
-        TEST(soft_equiv(
+             CurrentTally_T::X_DIRECTED, CurrentTally_T::NEGATIVE), tmp,
+             1.0e-12);
+        EXPECT_NEAR(
              tally->partial_current(i, j, k, 0,
-             CurrentTally_T::X_DIRECTED, CurrentTally_T::POSITIVE), tmp));
+             CurrentTally_T::X_DIRECTED, CurrentTally_T::POSITIVE), tmp,
+             1.0e-12);
       }
     }
   }
@@ -473,12 +461,14 @@ int test_CurrentTally_3D(int argc, char *argv[])
       for (int i = 0; i < coarsemesh->number_cells_x(); i++)
       {
         double tmp = cos_times_weight * coarsemesh->dx(i) * coarsemesh->dz(k);
-        TEST(soft_equiv(
+        EXPECT_NEAR(
              tally->partial_current(i, j, k, 0,
-             CurrentTally_T::Y_DIRECTED, CurrentTally_T::NEGATIVE), tmp));
-        TEST(soft_equiv(
+             CurrentTally_T::Y_DIRECTED, CurrentTally_T::NEGATIVE), tmp,
+             1.0e-12);
+        EXPECT_NEAR(
              tally->partial_current(i, j, k, 0,
-             CurrentTally_T::Y_DIRECTED, CurrentTally_T::POSITIVE), tmp));
+             CurrentTally_T::Y_DIRECTED, CurrentTally_T::POSITIVE), tmp,
+             1.0e-12);
       }
     }
   }
@@ -490,17 +480,17 @@ int test_CurrentTally_3D(int argc, char *argv[])
       for (int i = 0; i < coarsemesh->number_cells_x(); i++)
       {
         double tmp = cos_times_weight * coarsemesh->dx(i) * coarsemesh->dy(j);
-        TEST(soft_equiv(
+        EXPECT_NEAR(
              tally->partial_current(i, j, k, 0,
-             CurrentTally_T::Z_DIRECTED, CurrentTally_T::NEGATIVE), tmp));
-        TEST(soft_equiv(
+             CurrentTally_T::Z_DIRECTED, CurrentTally_T::NEGATIVE), tmp,
+             1.0e-12);
+        EXPECT_NEAR(
              tally->partial_current(i, j, k, 0,
-             CurrentTally_T::Z_DIRECTED, CurrentTally_T::POSITIVE), tmp));
+             CurrentTally_T::Z_DIRECTED, CurrentTally_T::POSITIVE), tmp,
+             1.0e-12);
       }
     }
   }
-
-  return 0;
 }
 
 //----------------------------------------------------------------------------//

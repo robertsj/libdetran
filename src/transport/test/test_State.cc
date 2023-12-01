@@ -6,13 +6,8 @@
  */
 //----------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                     \
-        FUNC(test_State_basic)
-
-#include "utilities/TestDriver.hh"
+#include <gtest/gtest.h>
 #include "State.hh"
-
 #include "geometry/test/mesh_fixture.hh"
 #include "angle/QuadratureFactory.hh"
 
@@ -21,16 +16,7 @@ using namespace detran_angle;
 using namespace detran_utilities;
 using namespace detran_test;
 
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
-
-//----------------------------------------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------------------------------------//
-
-int test_State_basic(int argc, char *argv[])
+TEST(State, Basic)
 {
 
   SP_mesh mesh          = mesh_2d_fixture();
@@ -59,16 +45,14 @@ int test_State_basic(int argc, char *argv[])
   State::moments_type phi_0 = state->phi(0);
   State::moments_type phi_1(state->phi(1));
 
-  TEST(phi_0[0] == 1.23);
-  TEST(phi_1[0] == 2.34);
+  EXPECT_EQ(phi_0[0], 1.23);
+  EXPECT_EQ(phi_1[0], 2.34);
 
   // Should not affect.
   phi_0[0] = 3.45;
-  TEST((state->phi(0))[0] == 1.23);
+  EXPECT_EQ((state->phi(0))[0], 1.23);
   state->phi(0) = phi_0;
-  TEST((state->phi(0))[0] == 3.45);
-
-  return 0;
+  EXPECT_EQ((state->phi(0))[0], 3.45);
 }
 
 //----------------------------------------------------------------------------//

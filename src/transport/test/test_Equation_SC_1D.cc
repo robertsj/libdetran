@@ -6,11 +6,7 @@
  */
 //----------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                     \
-        FUNC(test_Equation_SC_1D)
-
-#include "TestDriver.hh"
+#include <gtest/gtest.h>
 #include "Equation_SC_1D.hh"
 #include "utilities/Definitions.hh"
 #include "geometry/test/mesh_fixture.hh"
@@ -26,16 +22,7 @@ using namespace detran_angle;
 using namespace detran_test;
 using namespace std;
 
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
-
-//----------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------//
-
-int test_Equation_SC_1D(int argc, char *argv[])
+TEST(EquationSC1D, Basic)
 {
   // Mat
   SP_material mat(new Material(1, 1));
@@ -81,11 +68,10 @@ int test_Equation_SC_1D(int argc, char *argv[])
   // Check the results. FINISH.
   printf("%20.16f %20.16f %20.16f \n", psi_out, psi[0], phi[0]);
 
-  TEST(soft_equiv(psi_out, 0.686907416523104323));
-  TEST(soft_equiv(psi[0],  0.408479080928661801));
-  TEST(soft_equiv(phi[0],  0.142091427438347980));
+  EXPECT_NEAR(psi_out, 0.686907416523104323, 1.0e-12);
+  EXPECT_NEAR(psi[0],  0.408479080928661801, 1.0e-12);
+  EXPECT_NEAR(phi[0],  0.142091427438347980, 1.0e-12);
 
-  return 0;
 }
 
 //---------------------------------------------------------------------------//

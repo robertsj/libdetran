@@ -6,34 +6,18 @@
  */
 //----------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                     \
-        FUNC(test_Equation_SC_MOC)
-
-// Detran headers
-#include "TestDriver.hh"
+#include <gtest/gtest.h>
 #include "Equation_SC_MOC.hh"
 #include "Mesh2D.hh"
 #include "Uniform.hh"
 #include "Tracker.hh"
-
-// Setup
 #include "material/test/material_fixture.hh"
 
 using namespace detran;
 using namespace detran_test;
 using namespace std;
 
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
-
-//----------------------------------------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------------------------------------//
-
-int test_Equation_SC_MOC(int argc, char *argv[])
+TEST(EquationSCMOC, Basic)
 {
 
 //  // Create mesh
@@ -56,9 +40,9 @@ int test_Equation_SC_MOC(int argc, char *argv[])
 //  // Material
 //  SP_material mat = material_fixture_1g();
 //
-//  TEST(mesh);
-//  TEST(mat);
-//  TEST(quad);
+//  EXPECT_TRUE(mesh);
+//  EXPECT_TRUE(mat);
+//  EXPECT_TRUE(quad);
 //
 //  Equation_SC_MOC eq(mesh, mat, quad, true);
 //
@@ -104,11 +88,10 @@ int test_Equation_SC_MOC(int argc, char *argv[])
 //  cout << " psi_out " << psi_out << " ref " << ref_psi_out << endl;
 //  cout << " psi_avg " << psi[0]  << " ref " << ref_psi_avg << endl;
 //  cout << " psi_out " << phi[0]  << " ref " << ref_phi     << endl;
-//  TEST(soft_equiv(psi_out, ref_psi_out));
-//  TEST(soft_equiv(psi[0],  ref_psi_avg));
-//  TEST(soft_equiv(phi[0],  ref_phi));
+//  EXPECT_NEAR(psi_out, ref_psi_out, 1.0e-12);
+//  EXPECT_NEAR(psi[0],  ref_psi_avg, 1.0e-12);
+//  EXPECT_NEAR(phi[0],  ref_phi, 1.0e-12);
 
-  return 0;
 }
 
 //----------------------------------------------------------------------------//

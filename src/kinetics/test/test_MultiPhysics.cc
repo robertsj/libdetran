@@ -7,35 +7,17 @@
  */
 //---------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                       \
-        FUNC(test_MultiPhysics)
-
-// Detran headers
-#include "utilities/TestDriver.hh"
+#include <gtest/gtest.h>
 #include "kinetics/MultiPhysics.hh"
-
-// System
 #include <iostream>
 #include <fstream>
 
-using namespace detran_test;
 using namespace detran_utilities;
 using namespace detran;
 using namespace std;
-using detran_utilities::soft_equiv;
-
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
-
-//---------------------------------------------------------------------------//
-// TEST DEFINITIONS
-//---------------------------------------------------------------------------//
 
 // Test of basic public interface
-int test_MultiPhysics(int argc, char *argv[])
+TEST(MultiPhysics, Basic)
 {
   // Create physics container
   MultiPhysics physics(2);
@@ -51,17 +33,13 @@ int test_MultiPhysics(int argc, char *argv[])
   physics.add_variable(POWER, P);
   for (int i = 0; i < 5; ++i)
   {
-    TEST(soft_equiv(physics.variable(TEMPERATURE)[i], 1.0));
-    TEST(soft_equiv(physics.variable(POWER)[i],       0.2));
+    EXPECT_NEAR(physics.variable(TEMPERATURE)[i], 1.0, 1.0e-12);
+    EXPECT_NEAR(physics.variable(POWER)[i],       0.2, 1.0e-12);
     physics.variable(TEMPERATURE)[i] = 1.23;
-    TEST(soft_equiv(physics.variable(TEMPERATURE)[i], 1.23));
+    EXPECT_NEAR(physics.variable(TEMPERATURE)[i], 1.23, 1.0e-12);
   }
   physics.display();
-
-  return 0;
 }
-
-
 
 //---------------------------------------------------------------------------//
 //              end of test_MultiPhysics.cc

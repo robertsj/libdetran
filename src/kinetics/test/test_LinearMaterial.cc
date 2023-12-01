@@ -7,34 +7,17 @@
  */
 //---------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                       \
-        FUNC(test_LinearMaterial)
-
-// Detran headers
-#include "utilities/TestDriver.hh"
+#include <gtest/gtest.h>
 #include "kinetics/LinearMaterial.hh"
 #include "geometry/Mesh1D.hh"
-// System
 #include <iostream>
 #include <fstream>
 
-using namespace detran_test;
 using namespace detran;
 using namespace detran_utilities;
-using detran_utilities::soft_equiv;
-
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
-
-//----------------------------------------------//
-// TEST DEFINITIONS
-//----------------------------------------------//
 
 // Test of basic public interface
-int test_LinearMaterial(int argc, char *argv[])
+TEST(LinearMaterial, Basic)
 {
   // Kinetics data
   double lambda[]   = {0.1, 1.0};
@@ -88,11 +71,7 @@ int test_LinearMaterial(int argc, char *argv[])
   poo.display();
   LinearMaterial::SP_material
     mat(new LinearMaterial(times, materials));
-
-  return 0;
 }
-
-
 
 //---------------------------------------------------------------------------//
 //              end of test_KineticsMaterial.cc

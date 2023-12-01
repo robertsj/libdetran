@@ -6,12 +6,7 @@
  */
 //----------------------------------------------------------------------------//
 
-// LIST OF TEST FUNCTIONS
-#define TEST_LIST                  \
-        FUNC(test_ThreadedMatVec)  \
-        FUNC(test_ThreadedJacobi)
-
-#include "utilities/TestDriver.hh"
+#include <gtest/gtest.h>
 #include "callow/utils/Initialization.hh"
 // threaded objects
 #include "callow/solver/Jacobi.hh"
@@ -21,31 +16,20 @@
 #include <iostream>
 
 using namespace callow;
-using namespace detran_test;
-using detran_utilities::soft_equiv;
+
 using std::cout;
 using std::endl;
 
 #define COUT(c) cout << c << endl;
-
-//#ifndef DETRAN_ENABLE_OPENMP
-//#define double omp_get_wtime(){return 0.0;}
-//#endif
-
-int main(int argc, char *argv[])
-{
-  RUN(argc, argv);
-}
 
 //----------------------------------------------------------------------------//
 // TEST DEFINITIONS
 //----------------------------------------------------------------------------//
 
 //----------------------------------------------------------------------------//
-int test_ThreadedMatVec(int argc, char *argv[])
+TEST(Threading, ThreadedMatVec)
 {
-  callow_initialize(argc, argv);
-  {
+    {
     int n = 200;
     Matrix::SP_matrix A = test_matrix_2(n);
     Vector x(A->number_columns(), 1.0);
@@ -67,14 +51,12 @@ int test_ThreadedMatVec(int argc, char *argv[])
   }
   COUT("done!!")
   callow_finalize();
-  return 0;
 }
 
 //----------------------------------------------------------------------------//
-int test_ThreadedJacobi(int argc, char *argv[])
+TEST(Threading, ThreadedJacobi)
 {
-  callow_initialize(argc, argv);
-  {
+    {
     int n = 100;
     Matrix::SP_matrix A = test_matrix_2(n);
     Vector x(A->number_columns(), 0.0);
@@ -91,7 +73,6 @@ int test_ThreadedJacobi(int argc, char *argv[])
     //COUT("ELAPSED = " << t)
   }
   callow_finalize();
-  return 0;
 }
 
 //----------------------------------------------------------------------------//
