@@ -13,6 +13,7 @@
 #include "callow/utils/CallowDefinitions.hh"
 #include <memory>
 #include <vector>
+#include <string>
 
 namespace callow
 {
